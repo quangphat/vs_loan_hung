@@ -1,0 +1,478 @@
+﻿@using VS_LOAN.Core.Web.Resources;
+@{
+    ViewBag.Title = "Import";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model String
+<script type="text/javascript">
+    SetActiveMenu('@ViewBag.formindex', 2);
+</script>
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-caret-right"></i>
+                <a href="#">Import</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-offset-1 col-sm-2 control-label no-padding-right">Ngày <span class="required">(*)</span> </label>
+                        <div class="col-sm-2 col-xs-12">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtCreateDate" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+                        </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-8">
+                            <input multiple="" type="file" id="file" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"></label>
+                        <div class="col-sm-6">
+                            <a style="font-style: italic;" href="/SanPhamVay/DownloadFile?file=BieuMau.xlsx">Nhấp vào để download mẫu import</a>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div> 
+        <hr />
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="clearfix">
+                    <div class="pull-right tableTools-container"></div>
+                </div>
+                <div class="table-header">
+                    Danh sách sản phẩm
+                </div>
+                <!-- div.table-responsive -->
+                <!-- div.dataTables_borderWrap -->
+                <div>
+                    <table id="dtSource" class="table table-striped table-bordered table-hover" width="100%">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px" class="center">STT</th>
+                                <th >Mã</th>
+                                <th style="width: 180px">Trạng thái</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <hr>
+                <div class="pull-right">
+                    <button class="btn btn-sm btn-primary" id="btnLuu">Lưu</button>
+                    <button style="display:none" class="btn btn-sm btn-primary" id="btnThemMoi">Thêm mới</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var strLoading = '@Global.Message_Loading';
+    var lstSanPham = [];
+    var SanPhamModel = function () {
+        Ten = '';
+    };
+    $(document).ready(function e() {
+        $('#txtCreateDate').datepicker({
+            dateFormat: 'dd-mm-yy',
+            onSelect: function (datesel) {
+                $('#txtCreateDate').trigger('change');
+            }
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+        $("#txtCreateDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
+
+        $('#file').ace_file_input({
+            style: 'well',
+            btn_choose: 'Chọn file excel',
+            btn_change: null,
+            no_icon: 'ace-icon fa fa-cloud-upload',
+            allowExt: ["xlsx"],
+            //allowMime: ["application/zip"],
+            droppable: true,
+            //maxSize: 100000,
+            thumbnail: 'small'//large | fit
+            //,icon_remove:null//set null, to hide remove/reset button
+            /**,before_change:function(files, dropped) {
+                //Check an example below
+                //or examples/file-upload.html
+                return true;
+            }*/
+             , before_remove: function () {
+                 return true;
+             }
+            ,
+            preview_error: function (filename, error_code) {
+                //name of the file that failed
+                //error_code values
+                //1 = 'FILE_LOAD_FAILED',
+                //2 = 'IMAGE_LOAD_FAILED',
+                //3 = 'THUMBNAIL_FAILED'
+                //alert(error_code);
+
+            }
+
+        }).on('change', function (evt) {
+            if (lstSanPham.length > 0)
+                lstSanPham.splice(0, lstSanPham.length);
+            var f = evt.target.files[0];
+            {
+                var reader = new FileReader();
+                var name = f.name;
+                reader.onload = function (e) {
+                    var data = e.target.result;
+                    var arr = String.fromCharCode.apply(null, new Uint8Array(data));
+                    var wb = XLSX.read(btoa(arr), { type: 'base64' });
+                    process_wb(wb);
+                };
+                reader.readAsArrayBuffer(f);
+            }
+            this.value = null;
+        });
+    });
+    function process_wb(wb) {
+        try {
+            var isFlag = 0;
+            wb.SheetNames.forEach(function (sheetName) {
+                isFlag = 1;
+                var sheet = wb.Sheets[sheetName];
+                var formulae = XLSX.utils.get_formulae(sheet);
+                if (sheet == null || sheet["!ref"] == null) return "";
+                var iBegin = 7;// Bat dau lay tu dong nao
+                var r = safe_decode_range(sheet['!ref']), rr = "", cols = [], C;
+                for (C = r.s.c; C <= r.e.c; ++C) cols[C] = XLSX.utils.encode_col(C);
+                for (var R = r.s.r + iBegin; R <= r.e.r; ++R) {
+                    rr = XLSX.utils.encode_row(R);
+                    var sp = new SanPhamModel();
+                    for (C = r.s.c; C <= r.e.c; ++C) {
+                        y = cols[C] + rr;
+                        x = sheet[y];
+                        val = "";
+                        if (x != null) {
+                            val = x.w
+                             if (C == 1) {// Lấy mã
+                                sp.Ten = val
+                                if (sp.Ten == '') {
+                                    isFlag = 0;
+                                    break;
+                                }
+                                lstSanPham.push(sp);
+                            }
+                           
+
+                        }
+                    }
+                }
+
+            });
+            if (isFlag == 0) { 
+                swal({
+                    title: "",
+                    text: "Định dạng file không đúng!",
+                    type: "error",
+                    timer: 4000,
+                    showConfirmButton: true,
+                });
+                return;
+            }
+        }
+        catch (err) {
+            if (lstSanPham.length > 0)
+                lstSanPham.splice(0, lstSanPham.length);
+        }
+        var table = $('#dtSource').dataTable();
+        var oSettings = table.fnSettings();
+        oSettings.sAjaxSource = "/SanPhamVay/AjaxHandler";
+        oSettings.fnServerData = function (sSource, aoData, fnCallback) {
+            var lstDHV = [];
+            $.each(lstSanPham, function (index, item) {
+                lstDHV.push({ Ten: item.Ten });
+
+            });
+            var objectSend = JSON.stringify({
+                'param': {
+                    sEcho: aoData[0].value, iColumns: aoData[1].value, sColumns: aoData[2].value, iDisplayStart: aoData[3].value, iDisplayLength: aoData[4].value,
+                }, 'lstSanPham': lstDHV
+            });
+            $.ajax({
+                "traditional": "true",
+                // "dataType": 'json',
+                "contentType": "application/json; charset=utf-8",
+                "type": "POST",
+                "url": sSource,
+                "data": objectSend,
+                "success": function (json) {
+                    fnCallback(json);
+                },
+                "error": function (jqXHR, exception) {
+                    showError(jqXHR, exception);
+                }
+            });
+        }
+        table.fnDraw();
+    }
+    function safe_decode_range(range) {
+        var o = { s: { c: 0, r: 0 }, e: { c: 0, r: 0 } };
+        var idx = 0, i = 0, cc = 0;
+        var len = range.length;
+        for (idx = 0; i < len; ++i) {
+            if ((cc = range.charCodeAt(i) - 64) < 1 || cc > 26) break;
+            idx = 26 * idx + cc;
+        }
+        o.s.c = --idx;
+
+        for (idx = 0; i < len; ++i) {
+            if ((cc = range.charCodeAt(i) - 48) < 0 || cc > 9) break;
+            idx = 10 * idx + cc;
+        }
+        o.s.r = --idx;
+
+        if (i === len || range.charCodeAt(++i) === 58) { o.e.c = o.s.c; o.e.r = o.s.r; return o; }
+
+        for (idx = 0; i != len; ++i) {
+            if ((cc = range.charCodeAt(i) - 64) < 1 || cc > 26) break;
+            idx = 26 * idx + cc;
+        }
+        o.e.c = --idx;
+
+        for (idx = 0; i != len; ++i) {
+            if ((cc = range.charCodeAt(i) - 48) < 0 || cc > 9) break;
+            idx = 10 * idx + cc;
+        }
+        o.e.r = --idx;
+        return o;
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        $('#dtSource').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/SanPhamVay/AjaxHandler",
+            "bProcessing": true,
+            "language": {
+                "lengthMenu": "Hiển _MENU_ dòng trên trang",
+                "processing": "Đang xử lý...",
+                "search": "Tìm kiếm ",
+                "zeroRecords": "Không tìm thấy - sorry",
+                "info": "Hiển thị _PAGE_ trong _PAGES_ trang",
+                "infoEmpty": "Dòng không có giá trị",
+                "infoFiltered": "(Tìm kiếm từ _MAX_ tổng số dòng)",
+                "paginate": {
+                    "previous": "Lùi lại",
+                    "next": "Tiếp theo"
+                }
+            },
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                var lstDHV = [];
+                $.each(lstSanPham, function (index, item) {
+                    lstDHV.push({ Ten: item.Ten, TrangThai: item.TrangThai });
+
+                });
+                var objectSend = JSON.stringify({
+                    'param': {
+                        sEcho: aoData[0].value, iColumns: aoData[1].value, sColumns: aoData[2].value, iDisplayStart: aoData[3].value, iDisplayLength: aoData[4].value,
+                    }, 'lstSanPham': lstDHV
+                });
+                $.ajax({
+                    "traditional": "true",
+                    // "dataType": 'json',
+                    "contentType": "application/json; charset=utf-8",
+                    "type": "POST",
+                    "url": sSource,
+                    "data": objectSend,
+                    "success": function (json) {
+                        fnCallback(json);
+                    },
+                    "error": function (jqXHR, exception) {
+                        showError(jqXHR, exception);
+                    }
+                });
+
+            },
+            "aoColumns": [
+                            {
+                                "sName": "STT",
+                                //"sWidth": "80px",
+                                "mRender": function (data, type, oObj, rowIndex) {
+                                    return rowIndex.row + 1;
+                                }
+                            },
+                            {
+                                "sName": "Ho_Ten",
+                                "mRender": function (data, type, oObj) {
+                                    return oObj.Ten;
+                                }
+                            }
+                            ,
+                            {
+                                "sName": "TrangThai",
+                                //"sWidth": "150px",
+                                "mRender": function (data, type, oObj) {
+                                    if (oObj.TrangThai == 1)
+                                        return "Thành công";
+                                    else if (oObj.TrangThai == 2)
+                                        return "Mã sản phẩm bị trùng";
+                                    else if (oObj.TrangThai == 0)
+                                        return "Chưa upload";
+                                    else if (oObj.TrangThai == 3)
+                                        return "Không thành công";
+                                    else return "";
+                                }
+                            }
+            ]
+        });
+    });
+</script>
+
+<script>
+$("#btnLuu").click(function () {
+        var numUser=0;
+        var lstDHV = [];
+        $.each(lstSanPham, function (index, item) {
+            if (item.Ten == "" || item.Ten == null)
+                numUser++;
+            lstDHV.push({ Ten: item.Ten});
+        });
+        if(lstDHV.length==0)
+        {
+        
+            swal({
+                title: "",
+                text: "Vui lòng kiểm tra lại file input không đúng định dạng!",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        var objectSend = JSON.stringify({ 'lstSanPham': lstDHV, 'ngay': $('#txtCreateDate').val() });
+        showBlock($('#panel_body'), "Đang xử lý");
+        $.ajax({
+          traditional: true,
+          url: '@Url.Action("LuuImportSPV", "SanPhamVay")',
+          type: "POST",
+          contentType: "application/json; charset=utf-8",
+          data: objectSend,
+          success: function (data) {
+              if (data.Message.Result == true) {
+                  $('#btnLuu').attr("style","display:none");
+                  $('#btnThemMoi').attr("style","");
+                  swal({
+                      title: "",
+                      text: data.Message.ErrorMessage,
+                      type: "success",
+                      timer: 4000,
+                      showConfirmButton: true,
+                  });
+                  var table = $('#dtSource').dataTable();
+                  var oSettings = table.fnSettings();
+                  oSettings.sAjaxSource = "/SanPhamVay/AjaxHandler";
+                  oSettings.fnServerData = function (sSource, aoData, fnCallback) {
+                      var lstDHV = [];
+                      $.each(data.DSSPham, function (index, item) {
+                          lstDHV.push({ Ten: item.Ten, TrangThai: item.TrangThai});
+
+                      });
+                      var objectSend = JSON.stringify({
+                          'param': {
+                              sEcho: aoData[0].value, iColumns: aoData[1].value, sColumns: aoData[2].value, iDisplayStart: aoData[3].value, iDisplayLength: aoData[4].value,
+                          }, 'lstSanPham': lstDHV
+                      });
+                      $.ajax({
+                          "traditional": "true",
+                          // "dataType": 'json',
+                          "contentType": "application/json; charset=utf-8",
+                          "type": "POST",
+                          "url": sSource,
+                          "data": objectSend,
+                          "success": function (json) {
+                              fnCallback(json);
+                          },
+                          "error": function (jqXHR, exception) {
+                              showError(jqXHR, exception);
+                          }
+                      });
+
+                  }
+                  // table.fnClearTable();
+                  table.fnDraw();
+              }
+              else {
+               
+                  swal({
+                      title: "",
+                      text: data.Message.ErrorMessage,
+                      type: "error",
+                      timer: 4000,
+                      showConfirmButton: true,
+                  });
+              }
+
+          },
+          error: function (jqXHR, exception) {
+              showError(jqXHR,exception);
+          },
+          complete: function () {
+              $('#panel_body').unblock();
+          },
+      });
+
+    });
+</script>
+
+<script >
+
+    $('#btnThemMoi').click(function()
+    {
+        $('#btnLuu').attr("style","");
+        $('#btnThemMoi').attr("style","display:none");
+        lstSanPham = [];
+        var table = $('#dtSource').dataTable();
+        var oSettings = table.fnSettings();
+        oSettings.sAjaxSource = "/SanPhamVay/AjaxHandler";
+        oSettings.fnServerData=function (sSource, aoData, fnCallback) {
+            var lstDHV = [];
+            $.each(lstSanPham, function (index, item) {
+                lstDHV.push({ Ten: item.Ten, TrangThai: item.TrangThai});
+
+            });
+            var objectSend = JSON.stringify({
+                'param': {
+                    sEcho: aoData[0].value, iColumns: aoData[1].value, sColumns: aoData[2].value, iDisplayStart: aoData[3].value, iDisplayLength: aoData[4].value,
+                }, 'lstSanPham': lstDHV
+            });
+            $.ajax({
+                "traditional": "true",
+                // "dataType": 'json',
+                "contentType": "application/json; charset=utf-8",
+                "type": "POST",
+                "url": sSource,
+                "data": objectSend,
+                "success": function (json) {
+                    fnCallback(json);
+                },
+                "error": function (jqXHR, exception) {
+                    showError(jqXHR,exception);
+                }
+            });
+        }
+        table.fnDraw();
+    });
+</script>

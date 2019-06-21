@@ -1,0 +1,162 @@
+﻿html,body,h1,h2,h3,h4,h5,h6{ font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif; }
+/*font-size: 11px;*/
+
+/*.form-group input, .form-group label, .form-group select, .form-group textarea {
+  font-size: 11px !important;
+}*/
+.form-group label{
+  color: #060606
+}
+.form-group input, .form-group label, .form-group select, .form-group textarea {
+    color: #565050;
+}
+
+
+/*---ace.min.css------------------------------------*/
+/*
+.sidebar {
+    width: 250px;
+}
+.sidebar+.main-content {
+    margin-left: 250px;
+}
+.sidebar+.main-content .breadcrumbs-fixed {left: 250px;}
+.sidebar~.footer .footer-inner {
+    left: 250px;
+}
+
+.sidebar .my-nav-sidebar{
+    min-height: 40px;
+    line-height: 35px;
+    border-bottom: none;
+}
+.sidebar .my-nav-sidebar:before{
+    top: 20px;
+}
+.user-info {
+    max-width: 150px;
+}
+*/
+
+/*media screen*/
+/*
+@media 
+only screen and (max-width:1200px), 
+only screen and (max-width:1199px),
+only screen and (max-width:992px),
+only screen and (max-width:991px),
+only screen and (max-width:767px),
+only screen and (max-width:540px),
+only screen and (max-width:480px),
+only screen and (max-width:479px),
+only screen and (max-width:360px),
+only screen and (max-width:319px)
+{
+    .sidebar.responsive {left: 250px;margin-left: -250px;}
+    .sidebar+.main-content {margin-left: 0px;}
+    .sidebar~.footer .footer-inner {left: 0px;}
+    .sidebar+.main-content .breadcrumbs-fixed {left: 0px;}
+}
+
+@media only screen and (max-width: 479px)
+{
+    .navbar:not(.navbar-collapse) .navbar-header {
+      float: left;
+      display: block;
+    }
+}
+
+@media only screen and (max-width: 479px) {
+    .navbar:not(.navbar-collapse) .navbar-header 
+    {
+        float: left !important;
+    }
+}
+@media (max-width: 540px) and (min-width: 480px), (max-width: 360px), (max-width: 479px)
+{
+    .navbar:not(.navbar-collapse) .navbar-buttons .user-info {
+    }
+ }
+*/
+.ui-datepicker {
+    width: auto;
+}
+.width-106px {
+    width: 115px;
+}
+.my-widget-body {
+    overflow-x: auto;
+}
+.my-widget-main {
+    padding-left: 0px;padding-right: 0px;min-width: 1024px;    
+}
+.my-date-range {
+     width: 135px;
+}
+.my-date-range.from-date-range{
+     float: left !important ; margin-right: 3px;
+}
+/*---end of ace.min.css-----------------------------*/
+.qltb-grid {
+        height: 450px;
+        width: 100%;
+        font-size: small!important;
+    }
+
+.k-link, .k-header, .k-grid-content, .k-grid-content, .k-button, .k-grid-content {
+        font-size: small!important;
+}
+table {
+        font-size: small!important;
+}
+.k-dropdown, .k-numerictextbox, .k-datepicker, .k-textbox {
+        width: 90%;
+}
+
+.k-edit-label {
+        width: 35%!important;
+}
+
+span.required {
+    color: red;
+}
+
+
+.datepicker {
+        z-index: 1151 !important;
+}
+
+.fix-with-have-scroll {
+    /*min-width: 1024px!important;*/
+    overflow: auto;
+    overflow-y: hidden;
+    white-space:nowrap;
+	-webkit-overflow-scrolling-x: touch;
+}
+
+.my-data-table {
+    font-size: 12px!important;
+}
+.my-data-table table{
+    font-size: 12px!important;
+}
+.my-data-table .dataTables_wrapper .row:first-child {
+    display: none!important;
+}
+
+@media screen and (max-width:640px){
+    .my-data-table  .dataTables_wrapper .row:last-child div:first-child {
+        /*display: none!important;*/
+    }
+    .my-data-table  .dataTables_wrapper .row:last-child div:last-child {
+        width: 100%;
+    }
+}
+
+.steps li.reject:before, .steps li.active:before, .steps li.complete:before{
+    border-color:#CED1D6;
+}
+
+.steps li.reject .step {
+    border-color: #d15b47;
+}

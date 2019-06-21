@@ -1,0 +1,281 @@
+﻿@using VS_LOAN.Core.Web.Resources;
+@{
+    ViewBag.Title = "Tạo tổ nhóm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model String
+<script type="text/javascript">
+    SetActiveMenu('@ViewBag.formindex', 2);
+</script>
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-caret-right"></i>
+                <a href="#">Tạo tổ nhóm</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">1.Thông tổ nhóm:</h3>
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtTenNhom" placeholder="Nhập tên nhóm" class="form-control">
+                        </div>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên ngắn <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtTenNgan" placeholder="Nhập tên ngắn" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Người quản lý<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlNguoiQL" class="chosen-select form-control" data-placeholder="Chọn người quản lý">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right">Nhóm cha</label>
+                        <div class="col-sm-4">
+                            <select id="ddlNhomCha" class="chosen-select form-control" data-placeholder="Chọn nhóm cha">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">2.Thành viên nhóm:</h3>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <select multiple="multiple" size="10" name="duallistbox_demo1[]" id="duallistNhanVien"></select>
+                        <div class="hr hr-16 hr-dotted"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <hr />
+                <div class="pull-right">
+                    <a class="btn btn-sm btn-primary" id="btn_Save">
+                        Lưu
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Content/ace-master/assets/js/jquery.bootstrap-duallistbox.min.js"></script>
+<script>
+    $(document).ready(function () {
+        LayNhanVien();
+        LayDSNhanVienQL();
+        LayDSNhom();
+    });
+</script>
+<script>
+    jQuery(function ($) {
+        var demo1 = $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox({ infoTextFiltered: '<span class="label label-purple label-lg">Filtered</span>', filterPlaceHolder: '', filterTextClear: '', infoText: '', infoTextFiltered: '' });
+
+        var container1 = demo1.bootstrapDualListbox('getContainer');
+        container1.find('.btn').addClass('btn-white btn-info btn-bold');
+
+        ///////////////////
+        //example taken from plugin's page at: https://twitter.github.io/typeahead.js/examples/
+        var substringMatcher = function (strs) {
+            return function findMatches(q, cb) {
+                var matches, substringRegex;
+
+                // an array that will be populated with substring matches
+                matches = [];
+
+                // regex used to determine if a string contains the substring `q`
+                substrRegex = new RegExp(q, 'i');
+
+                // iterate through the pool of strings and for any string that
+                // contains the substring `q`, add it to the `matches` array
+                $.each(strs, function (i, str) {
+                    if (substrRegex.test(str)) {
+                        // the typeahead jQuery plugin expects suggestions to a
+                        // JavaScript object, refer to typeahead docs for more info
+                        matches.push({ value: str });
+                    }
+                });
+
+                cb(matches);
+            }
+        }
+
+        //in ajax mode, remove remaining elements before leaving page
+        $(document).one('ajaxloadstart.page', function (e) {
+            $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox('destroy');
+        });
+
+    });
+</script>
+<script>
+    function LayNhanVien() {
+        $('#duallistNhanVien').empty();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSNhanVien", "ToNhom")',
+            data: { },
+            success: function (data) {
+                if (data != null) {
+                    if (data.DSNhanVien != null && data.DSNhanVien.length > 0) {
+                        $.each(data.DSNhanVien, function (index, item) {
+                            $('#duallistNhanVien').append("<option value='" + item.IDUser + "'>" + item.FullName + "</option>");
+                        });
+                    }
+                }
+                $('#duallistNhanVien').bootstrapDualListbox('refresh', true);
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+    function LayDSNhanVienQL()
+    {
+        $('#ddlNguoiQL').empty();
+        $('#ddlNguoiQL').append("<option value='0'></option>");
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSNhanVien", "ToNhom")',
+            data: {},
+            success: function (data) {
+                if (data != null) {
+                    if (data.DSNhanVien != null && data.DSNhanVien.length > 0) {
+                        $.each(data.DSNhanVien, function (index, item) {
+                            $('#ddlNguoiQL').append("<option value='" + item.IDUser + "'>" + item.FullName + "</option>");
+                        });
+                        if (data.DSNhanVien.length == 1) {
+                            $('#ddlNguoiQL').val(data.DSNhanVien[0].IDUser);
+                        }
+                    }
+                }
+                $('#ddlNguoiQL').chosen().trigger("chosen:updated");
+                $('#ddlNguoiQL').trigger("change");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+    function LayDSNhom() {
+        $('#ddlNhomCha').empty();
+        $('#ddlNhomCha').append("<option value='0'></option>");
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSNhomCha", "ToNhom")',
+            data: {},
+            success: function (data) {
+                if (data != null) {
+                    if (data.DSNhom != null && data.DSNhom.length > 0) {
+                        $.each(data.DSNhom, function (index, item) {
+                            $('#ddlNhomCha').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
+                        });
+                        if (data.DSNhom.length == 1) {
+                            $('#ddlNhomCha').val(data.DSNhom[0].IDUser);
+                        }
+                    }
+                }
+                $('#ddlNhomCha').chosen().trigger("chosen:updated");
+                $('#ddlNhomCha').trigger("change");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+</script>
+<script>
+    $('#btn_Save').click(function (e) {
+        if ($('#txtTenNhom').val() == '') {
+            swal({
+                title: "",
+                text: "Vui lòng nhập tên nhóm!",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if ($('#txtTenNgan').val() == '') {
+            swal({
+                title: "",
+                text: "Vui lòng nhập tên ngắn!",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        var lstRightSelect = $('select[name="duallistbox_demo1[]_helper2"]')[0];
+        var lstSelectedId = [];
+        for (var i = 0; i < lstRightSelect.length; i++) {
+            lstSelectedId.push(lstRightSelect[i].attributes[0].value);
+        }
+        if (lstSelectedId.length == 0)
+        {
+            swal({
+                title: "",
+                text: "Vui lòng chọn thành viên nhóm!",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        var objectSend = JSON.stringify({ 'ten': $('#txtTenNhom').val(), 'tenNgan': $('#txtTenNgan').val(), 'maNguoiQuanLy': $('#ddlNguoiQL').val(), 'maNhomCha': $('#ddlNhomCha').val(), 'lstThanhVien': lstSelectedId });
+        $.ajax({
+            traditional: true,
+            url: '@Url.Action("ThemMoi", "ToNhom")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                if (data.Message.Result == true) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.Message.ErrorMessage,
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                        window.location = window.location;
+                    });
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.Message.ErrorMessage,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+    });
+</script>

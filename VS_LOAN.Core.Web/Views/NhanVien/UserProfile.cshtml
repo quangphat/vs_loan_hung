@@ -1,0 +1,360 @@
+﻿@using VS_LOAN.Core.Web.Resources;
+@{
+    ViewBag.Title = Global.NhanVien_Profile_Title;@*Thông tin người dùng*@
+Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+    SetActiveMenu('@ViewBag.formindex', 2);
+</script>
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="ace-icon fa fa-home home-icon"></i>
+                <a href="#">@Global.NhanVien_Profile_QLND@*Quản lý người dùng*@</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="page_content_panel">
+        <div class="page-header">
+            <h1>@Global.NhanVien_Profile_QLTTCN @*Quản lý thông tin cá nhân*@</h1>
+        </div>
+        <!--/. Page header-->
+        <div class="user-profile row">
+            <div class="col-xs-12 col-sm-3 center">
+                @if (ViewBag.ThongTin != null)
+                {
+                <div>
+                    <span class="profile-picture">
+                        <img id="avatar" class="editable img-responsive editable-click editable-empty" alt="Alex's Avatar" src="~/Content/ace-master/assets/avatars/profile-pic.jpg">
+                        @*@if (ViewBag.ThongTin.Gender == (int)VS_LOAN.Core.Utility.TypeUserGender.Male)
+                        {
+                        <img id="avatar" class="editable img-responsive editable-click editable-empty" alt="Alex's Avatar" src="~/Content/ace-master/assets/avatars/profile-pic.jpg">
+                        }
+                        else
+                        {
+                        <img id="avatar" class="editable img-responsive editable-click editable-empty" alt="Alex's Avatar" src="~/Content/ace-master/assets/avatars/profile-pic-girl.jpg">
+                        }*@
+                    </span>
+
+                    <div class="space-4"></div>
+
+                    <div class="width-80 label label-info label-xlg arrowed-in arrowed-in-right">
+                        <div class="inline position-relative">
+                            <a href="#" class="user-title-label dropdown-toggle" data-toggle="dropdown">
+                                <i class="ace-icon fa fa-circle light-green"></i>
+                                &nbsp;
+
+                                <span class="white">@ViewBag.ThongTin.UserName</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                }
+                <div class="space-6"></div>
+                <div class="hr hr16 dotted"></div>
+            </div>
+            <div class="col-sm-9" id="panel_body">
+                <form class="form-horizontal" role="form" autocomplete="off" id="frm_doimatkhau">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs padding-16">
+                            <li class="active">
+                                <a data-toggle="tab" href="#info" aria-expanded="true">
+                                    <i class="green ace-icon fa fa-info-circle bigger-125"></i>
+                                    @Global.NhanVien_UserProfile_Info
+                                </a>
+                            </li>
+                    
+                            @*<li>
+                                    <a data-toggle="tab" href="#edit-info">
+                                        <i class="purple ace-icon fa fa-cog bigger-125"></i>
+                                        Thay đổi thông tin
+                                    </a>
+                                </li>*@
+                            <li class="">
+                                <a data-toggle="tab" href="#edit-password" aria-expanded="false">
+                                    <i class="blue ace-icon fa fa-key bigger-125"></i>
+                                    @if (ViewBag.ThongTin != null)
+                                    {
+                                        if (ViewBag.ThongTin.Password != "")
+                                        {
+                                            @Global.NhanVien_UserProfile_Password;
+                                        }
+                                        else
+                                        {
+                                            @Global.NhanVien_UserProfile_SetPassword;
+                                        }
+
+                                    }
+
+                                </a>
+                            </li>
+                           
+                        </ul>
+                        <div class="tab-content profile-edit-tab-content">
+                            <div id="info" class="tab-pane  in active">
+                                <div class="space-10"></div>
+                                <div class="form-group">
+
+                                    @if (ViewBag.ThongTin != null)
+                                        {
+                                        <div class="profile-user-info profile-user-info-striped">
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name">Mã nhân viên:</div>
+
+                                                <div class="profile-info-value">
+                                                    <span class="editable" id="code">@ViewBag.ThongTin.Code</span>
+                                                </div>
+                                            </div>
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name">@Global.NhanVien_UserProfile_Name: </div>
+
+                                                <div class="profile-info-value">
+                                                    <span class="editable" id="username">@ViewBag.ThongTin.FullName</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> @Global.NhanVien_UserProfile_UserName: </div>
+
+                                                <div class="profile-info-value">
+                                                    <span class="editable" id="country">@ViewBag.ThongTin.UserName</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> @Global.NhanVien_UserProfile_Email: </div>
+
+                                                <div class="profile-info-value">
+                                                    <span class="editable" id="age">@ViewBag.ThongTin.Email</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> @Global.NhanVien_UserProfile_Phone: </div>
+
+                                                <div class="profile-info-value">
+                                                    <span class="editable" id="signup">@ViewBag.ThongTin.Phone</span>
+                                                </div>
+                                            </div>
+
+                                            @*<div class="profile-info-row">
+                                                <div class="profile-info-name"> @Global.NhanVien_UserProfile_Type:</div>
+
+                                                <div class="profile-info-value">
+                                                    @{
+                                                            if (ViewBag.ThongTin.TypeUser == ((int)KPMG_EI.Core.Utility.TypeUser.Employee))
+                                                            {
+                                                        <span class="editable">@Global.NhanVien_UserProfile_Type_Employee</span>
+                                                            }
+                                                            else
+                                                            {
+                                                        <span class="editable">@Global.NhanVien_UserProfile_Type_Client</span>
+                                                            }
+                                                    }
+                                                </div>
+                                            </div>*@
+
+                                            @*<div class="profile-info-row">
+                                                <div class="profile-info-name">@Global.NhanVien_UserProfile_Gender:</div>
+                                                <div class="profile-info-value">
+                                                    @{
+                                                            if (ViewBag.ThongTin.Gender == ((int)VS_LOAN.Core.Utility.TypeUserGender.Male))
+                                                            {
+                                                                <span class="editable">@Global.NhanVien_UserProfile_Gender_Man</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="editable">@Global.NhanVien_UserProfile_Gender_Girl</span>
+                                                            }
+                                                    }
+                                                </div>
+                                            </div>*@
+                                        </div>
+
+                                        @*<p><strong>Bộ phận:</strong>@ViewBag.ThongTin.BoPhan</p>*@
+                                        }
+                                </div>
+
+
+                            </div>
+                            @*<div id="edit-info" class="tab-pane">
+                                    <div class="space-10"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right">Tên nhân viên (<span class="required">*</span>)</label>
+                                        <div class="col-sm-3">
+                                            <input type="text" id="txtTenNhanVien" placeholder="Tên nhân viên" class="form-control">
+                                        </div>
+                                        <label class="col-sm-2 control-label no-padding-right">Tên đăng nhập (<span class="required">*</span>)</label>
+                                        <div class="col-sm-3">
+                                            <input type="text" id="txtTenDangNhap" readonly="" placeholder="Tên đăng nhập" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right">Email (<span class="required">*</span>)</label>
+                                        <div class="col-sm-3">
+                                            <input type="text" id="txtEmail" placeholder="Email" class="form-control">
+                                        </div>
+                                        <label class="col-sm-2 control-label no-padding-right">Số điện thoại (<span class="required">*</span>)</label>
+                                        <div class="col-sm-3">
+                                            <input type="text" id="txtSDT" placeholder="Số điện thoại" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right">Địa chỉ</label>
+                                        <div class="col-sm-10">
+                                            <textarea class="col-xs-10 col-sm-10" id="txtMoTa" placeholder="Địa chỉ"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix form-actions">
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <button class="btn btn-info" type="button" id="btn_luu_doi_info">
+                                                <i class="ace-icon fa fa-check bigger-110"></i>
+                                                Lưu
+                                            </button>
+                                            &nbsp; &nbsp;
+                                            <button class="btn" id="btn_luu_reset_info" type="button">
+                                                <i class="ace-icon fa fa-undo bigger-110"></i>
+                                                Thiết lập lại
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>*@
+                            @if (ViewBag.ThongTin != null)
+                            {
+                                if (ViewBag.ThongTin.Password != "")
+                                {
+                                    <div id="edit-password" class="tab-pane">
+                                        <div class="space-10"></div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-pass1">@Global.NhanVien_UserProfile_Password_PassOld</label>
+                                            <div class="col-sm-9">
+                                                <input type="password" class="col-sm-4" name="oldPassword" id="oldPassword" />
+                                            </div>
+                                            <div class="space-4"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-pass1">@Global.NhanVien_UserProfile_Password_PassNew</label>
+                                            <div class="col-sm-9">
+                                                <input type="password" class="col-sm-4" name="newPassword" id="newPassword" />
+                                            </div>
+                                            <div class="space-4"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-pass2">@Global.NhanVien_UserProfile_Password_PassConform</label>
+                                            <div class="col-sm-9">
+                                                <input type="password" class="col-sm-4" name="confirmPassword" id="confirmPassword" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div id="div_result_alert"></div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix form-actions">
+                                            <div class="col-md-offset-3 col-md-9">
+                                                <button class="btn btn-info" type="button" onclick="ChangePass(this)" id="btn_luu_doi_mat_khau">
+                                                    <i class="ace-icon fa fa-check bigger-110"></i>
+                                                   Lưu
+                                                </button>
+                                                &nbsp; &nbsp;
+                                                <button class="btn" id="btn_reset_matkhau" type="button">
+                                                    <i class="ace-icon fa fa-undo bigger-110"></i>
+                                                    @Global.Button_Reset
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div id="edit-password" class="tab-pane">
+                                        <div class="space-10"></div>
+                                        @*<div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-pass1">@Global.NhanVien_UserProfile_Password_PassOld</label>
+                                            <div class="col-sm-9">
+                                                <input type="password" class="col-sm-4" name="oldPassword" id="oldPassword" />
+                                            </div>
+                                            <div class="space-4"></div>
+                                        </div>*@
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-pass1">@Global.NhanVien_UserProfile_Password_PassNew</label>
+                                            <div class="col-sm-9">
+                                                <input type="password" class="col-sm-4" name="newPassword" id="newPassword" />
+                                            </div>
+                                            <div class="space-4"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-pass2">@Global.NhanVien_UserProfile_Password_PassConform</label>
+                                            <div class="col-sm-9">
+                                                <input type="password" class="col-sm-4" name="confirmPassword" id="confirmPassword" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div id="div_result_alert"></div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix form-actions">
+                                            <div class="col-md-offset-3 col-md-9">
+                                                <button class="btn btn-info" type="button" onclick="ChangePass(this)" id="btn_luu_doi_mat_khau">
+                                                    <i class="ace-icon fa fa-check bigger-110"></i>
+                                                   Lưu
+                                                </button>
+                                                &nbsp; &nbsp;
+                                                <button class="btn" id="btn_reset_matkhau" type="button">
+                                                    <i class="ace-icon fa fa-undo bigger-110"></i>
+                                                    @Global.Button_Reset
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                       
+                    </div>
+                </form>
+            </div>
+        </div>
+  
+    </div>
+</div>
+<script>
+    var strLoading = '@Html.Raw(Global.Message_Loading)';
+</script>
+<script type="text/ecmascript">
+    $('#btn_reset_matkhau').click(function (evt) {
+        $('#newPassword').val('');
+        $('#oldPassword').val('');
+        $('#confirmPassword').val('');
+    });
+</script>
+<script>
+    function ChangePass(e) {
+        showBlock($('#panel_body'), strLoading);
+        $.ajax({
+            type: "POST",
+            datatype: "JSON",
+            url: '@Url.Action("ChangePass", "NhanVien")',
+            data: $('#frm_doimatkhau').serialize(),
+            success: function (data) {
+                if (data.Message.Result == true) {
+                    $('#oldPassword').val('');
+                    $('#newPassword').val('');
+                    $('#confirmPassword').val('');
+                    addAlert("div_result_alert", data.Message.ErrorMessage, data.Message.Result);
+                }
+                else {
+                    addAlert("div_result_alert", data.Message.ErrorMessage, data.Message.Result);
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            }
+        });
+    }
+</script>

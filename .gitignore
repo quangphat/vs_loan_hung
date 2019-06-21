@@ -1,0 +1,13 @@
+/.vs
+/.nuget
+/VS_LOAN.Core.Business/obj
+/VS_LOAN.Core.Business/bin
+/VS_LOAN.Core.Entity/obj
+/VS_LOAN.Core.Entity/bin
+/VS_LOAN.Core.Nhibernate/obj
+/VS_LOAN.Core.Nhibernate/bin
+/VS_LOAN.Core.Utility/obj
+/VS_LOAN.Core.Utility/bin
+/VS_LOAN.Core.Web/obj
+/VS_LOAN.Core.Web/bin
+/VS_LOAN.Core.Web/.vs

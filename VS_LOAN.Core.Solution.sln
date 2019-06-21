@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{EC64C899-2255-4854-8855-114E503D2B37}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{EB62DF83-95AE-43D6-8844-2068CCC65F98}"
+	ProjectSection(SolutionItems) = preProject
+		Lib\Kendo.Mvc.dll = Lib\Kendo.Mvc.dll
+		Lib\RazorEngine.dll = Lib\RazorEngine.dll
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VS_LOAN.Core.Entity", "VS_LOAN.Core.Entity\VS_LOAN.Core.Entity.csproj", "{E86679D0-8E05-471F-8DA0-3E33E1F7D6BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VS_LOAN.Core.Business", "VS_LOAN.Core.Business\VS_LOAN.Core.Business.csproj", "{EEED2E30-177B-48FE-9B5E-879E0FFCB0E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VS_LOAN.Core.Utility", "VS_LOAN.Core.Utility\VS_LOAN.Core.Utility.csproj", "{D439D023-C499-4540-AF5A-7AC3D5C3A9A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VS_LOAN.Core.Nhibernate", "VS_LOAN.Core.Nhibernate\VS_LOAN.Core.Nhibernate.csproj", "{FA15CD3A-ED74-4444-8192-35B5604AA535}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VS_LOAN.Core.Web", "VS_LOAN.Core.Web\VS_LOAN.Core.Web.csproj", "{C245C455-753F-40FF-8D64-95F3C16BA6A4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E86679D0-8E05-471F-8DA0-3E33E1F7D6BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E86679D0-8E05-471F-8DA0-3E33E1F7D6BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E86679D0-8E05-471F-8DA0-3E33E1F7D6BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E86679D0-8E05-471F-8DA0-3E33E1F7D6BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEED2E30-177B-48FE-9B5E-879E0FFCB0E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEED2E30-177B-48FE-9B5E-879E0FFCB0E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEED2E30-177B-48FE-9B5E-879E0FFCB0E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEED2E30-177B-48FE-9B5E-879E0FFCB0E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D439D023-C499-4540-AF5A-7AC3D5C3A9A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D439D023-C499-4540-AF5A-7AC3D5C3A9A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D439D023-C499-4540-AF5A-7AC3D5C3A9A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D439D023-C499-4540-AF5A-7AC3D5C3A9A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA15CD3A-ED74-4444-8192-35B5604AA535}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA15CD3A-ED74-4444-8192-35B5604AA535}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA15CD3A-ED74-4444-8192-35B5604AA535}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA15CD3A-ED74-4444-8192-35B5604AA535}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C245C455-753F-40FF-8D64-95F3C16BA6A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C245C455-753F-40FF-8D64-95F3C16BA6A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C245C455-753F-40FF-8D64-95F3C16BA6A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C245C455-753F-40FF-8D64-95F3C16BA6A4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

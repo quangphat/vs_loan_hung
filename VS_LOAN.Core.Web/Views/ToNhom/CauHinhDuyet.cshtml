@@ -1,0 +1,191 @@
+﻿@using VS_LOAN.Core.Web.Resources;
+@{
+    ViewBag.Title = "Cấu hình duyệt";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model String
+<script type="text/javascript">
+    SetActiveMenu('@ViewBag.formindex', 2);
+</script>
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-caret-right"></i>
+                <a href="#">Cấu hình duyệt</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">Thông tin cấu hình</h3>
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Nhân viên <span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlNhanVien" class="chosen-select form-control" data-placeholder="Chọn nhân viên">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Nhóm <span class="required">(*)</span></label>
+                        <div class="col-sm-10">
+                            <select id="ddlNhom" class="chosen-select form-control" multiple data-placeholder="Chọn nhóm">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <hr />
+                <div class="pull-right">
+                    <a class="btn btn-sm btn-primary" id="btn_Save">
+                        Lưu
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Content/ace-master/assets/js/jquery.bootstrap-duallistbox.min.js"></script>
+<script>
+    $(document).ready(function () {
+        LayDSNhanVien();
+        LayDSNhom();
+    });
+</script>
+<script>
+    function LayDSNhanVien()
+    {
+        $('#ddlNhanVien').empty();
+        $('#ddlNhanVien').append("<option value='0'></option>");
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSNhanVien", "ToNhom")',
+            data: {},
+            success: function (data) {
+                if (data != null) {
+                    if (data.DSNhanVien != null && data.DSNhanVien.length > 0) {
+                        $.each(data.DSNhanVien, function (index, item) {
+                            $('#ddlNhanVien').append("<option value='" + item.IDUser + "'>" + item.FullName + "</option>");
+                        });
+                        if (data.DSNhanVien.length == 1) {
+                            $('#ddlNhanVien').val(data.DSNhanVien[0].IDUser);
+                        }
+                    }
+                }
+                $('#ddlNhanVien').chosen().trigger("chosen:updated");
+                $('#ddlNhanVien').trigger("change");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+    function LayDSNhom() {
+        $('#ddlNhom').empty();
+        $('#ddlNhom').append("<option value='0'></option>");
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSNhomCha", "ToNhom")',
+            data: {},
+            success: function (data) {
+                if (data != null) {
+                    if (data.DSNhom != null && data.DSNhom.length > 0) {
+                        $.each(data.DSNhom, function (index, item) {
+                            $('#ddlNhom').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
+                        });
+                    }
+                }
+                $('#ddlNhom').chosen().trigger("chosen:updated");
+                $('#ddlNhom').trigger("change");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+</script>
+<script>
+    $('#btn_Save').click(function (e) {
+        if ($('#ddlNhanVien').val() == '0') {
+            swal({
+                title: "",
+                text: "Vui lòng chọn nhân viên!",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        var lstIDNhom = [];
+        lstIDNhom = $('#ddlNhom').val();
+        if (lstIDNhom == null) {
+            swal({
+                title: "",
+                text: "Vui lòng chọn nhóm!",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if (lstIDNhom.length == 0)
+        {
+            swal({
+                title: "",
+                text: "Vui lòng chọn nhóm!",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        var objectSend = JSON.stringify({ 'maNhanVien': $('#ddlNhanVien').val(), 'lstIDNhom': lstIDNhom });
+        $.ajax({
+            traditional: true,
+            url: '@Url.Action("LuuCauHinh", "ToNhom")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                if (data.Message.Result == true) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.Message.ErrorMessage,
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                        window.location = window.location;
+                    });
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.Message.ErrorMessage,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+    });
+</script>
