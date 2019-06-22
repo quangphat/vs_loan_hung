@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
-
+using VS_LOAN.Core.Business;
 namespace VS_LOAN.Core.Web.Helpers
 {
     public class SiteMenuItem
@@ -80,7 +80,7 @@ namespace VS_LOAN.Core.Web.Helpers
         }
         public static string ReturnMenu()
         {
-            SiteMenuItem[] _siteMenu = new SiteMenuItem[]{
+            List<SiteMenuItem> _siteMenu = new List<SiteMenuItem>{
                     new SiteMenuItem(Resources.Global.Menu_TC,"menu-icon home",IndexMenu.M_0,"#",new int[] { (int)QuyenIndex.Public }),
                         new SiteMenuItem("Giới thiệu","",IndexMenu.M_0_1,HomeController.LstRole["Index"]._href,new int[] { (int)QuyenIndex.Public }),
                         //new SiteMenuItem("Hướng dẫn sử dụng","",IndexMenu.M_0_2,"#",new int[] { (int)QuyenIndex.Public }),
@@ -90,15 +90,26 @@ namespace VS_LOAN.Core.Web.Helpers
                         //new SiteMenuItem("Hồ sơ của tôi","", IndexMenu.M_1_2,HoSoController.LstRole["Index"]._href,HoSoController.LstRole["Index"]._mangChucNang), // 1.1 
                     new SiteMenuItem("Quản lý hồ sơ","menu-icon qlhs",IndexMenu.M_2,"#",new int[] { }),
                         new SiteMenuItem("Danh sách hồ sơ","", IndexMenu.M_2_2,QuanLyHoSoController.LstRole["DanhSachHoSo"]._href, QuanLyHoSoController.LstRole["DanhSachHoSo"]._mangChucNang), // 1.3     
-                        new SiteMenuItem("Duyệt hồ sơ","", IndexMenu.M_2_3,DuyetHoSoController.LstRole["Index"]._href, DuyetHoSoController.LstRole["Index"]._mangChucNang), // 1.2  
-                   new SiteMenuItem("Tổ nhóm","menu-icon group",IndexMenu.M_3,"#",new int[] { }),
+                        new SiteMenuItem("Duyệt hồ sơ","", IndexMenu.M_2_3,DuyetHoSoController.LstRole["Index"]._href, DuyetHoSoController.LstRole["Index"]._mangChucNang) // 1.2  
+                 
+                    
+            };
+            List<SiteMenuItem> siteMenuAdmin = new List<SiteMenuItem>
+            {
+                  new SiteMenuItem("Tổ nhóm","menu-icon group",IndexMenu.M_3,"#",new int[] { }),
                         new SiteMenuItem("Tạo mới","", IndexMenu.M_3_1,ToNhomController.LstRole["TaoMoi"]._href, ToNhomController.LstRole["TaoMoi"]._mangChucNang), // 1.3     
                         new SiteMenuItem("Quản lý tổ nhóm","", IndexMenu.M_3_2,ToNhomController.LstRole["QLToNhom"]._href, ToNhomController.LstRole["QLToNhom"]._mangChucNang), // 1.3     
                         new SiteMenuItem("Cấu hình duyệt","", IndexMenu.M_3_3,ToNhomController.LstRole["CauHinhDuyet"]._href, ToNhomController.LstRole["CauHinhDuyet"]._mangChucNang), // 1.3     
                     new SiteMenuItem("Nhập mã APP","menu-icon sanpham",IndexMenu.M_4,"#",new int[] { }),
                         new SiteMenuItem("Quản lý mã APP","", IndexMenu.M_4_1,SanPhamVayController.LstRole["QuanLySanPham"]._href, SanPhamVayController.LstRole["QuanLySanPham"]._mangChucNang), // 1.3     
-                        new SiteMenuItem("Import","", IndexMenu.M_4_2,SanPhamVayController.LstRole["Import"]._href, SanPhamVayController.LstRole["Import"]._mangChucNang), // 1.3     
+                        new SiteMenuItem("Import","", IndexMenu.M_4_2,SanPhamVayController.LstRole["Import"]._href, SanPhamVayController.LstRole["Import"]._mangChucNang) // 1.3  
             };
+            var isTeamLead = new NhomBLL().CheckIsTeamlead(GlobalData.User.IDUser);
+            var isAdmin = new NhomBLL().CheckIsAdmin(GlobalData.User.IDUser);
+            if (isAdmin)
+            {
+                _siteMenu = _siteMenu.Concat(siteMenuAdmin).ToList();
+            }
             StringBuilder menuHtml = new StringBuilder();
 
             menuHtml.Append("<ul class='nav nav-list'>");            
@@ -110,7 +121,7 @@ namespace VS_LOAN.Core.Web.Helpers
             StringBuilder menuTreeLv2 = new StringBuilder();
             StringBuilder menuTreeLv3 = new StringBuilder();
             bool addMenuTree = false; bool addMenuTreev2 = false;
-            for (int i = 0; i < _siteMenu.Length; i++)
+            for (int i = 0; i < _siteMenu.Count; i++)
             {
                 string[] indexes = _siteMenu[i].Index.Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
 

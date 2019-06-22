@@ -14,6 +14,39 @@ namespace VS_LOAN.Core.Business
 {
     public class NhomBLL
     {
+
+        public bool CheckIsTeamlead(int nhanvienId)
+        {
+
+            List<NhomDropDownModel> groups = LayDSNhomByNhanvienQuanly(nhanvienId);
+            if (groups == null || !groups.Any())
+                return false;
+            return true;
+        }
+        public bool CheckIsAdmin(int userId)
+        {
+            try
+            {
+                using (ISession session = LOANSessionManager.OpenSession())
+                {
+                    IDbCommand command = new SqlCommand();
+                    command.Connection = session.Connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "sp_CheckIsAdmin";
+                    command.Parameters.Clear();
+                    command.Parameters.Add(new SqlParameter("@userId", userId));
+                    var dt = new DataTable();
+                    dt.Load(command.ExecuteReader());
+                    if (dt == null || dt.Rows == null || dt.Rows.Count == 0)
+                        return false;
+                    return Convert.ToBoolean(dt.Rows[0]["isAdmin"]);
+                }
+            }
+            catch (BusinessException ex)
+            {
+                return false;
+            }
+        }
         // Danh sách quản lý hồ sơ (lấy từ quản lý nhóm)
         public List<NhomDropDownModel> LayDSCuaNhanVien(int userID)
         {
@@ -572,5 +605,43 @@ namespace VS_LOAN.Core.Business
                 throw ex;
             }
         }
+        
+        public List<NhomDropDownModel> LayDSNhomByNhanvienQuanly(int userId)
+        {
+            try
+            {
+                using (ISession session = LOANSessionManager.OpenSession())
+                {
+                    IDbCommand command = new SqlCommand();
+                    command.Connection = session.Connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "sp_CheckIsTeamlead";
+                    command.Parameters.Add(new SqlParameter("@userId", userId));
+                    DataTable dt = new DataTable();
+                    dt.Load(command.ExecuteReader());
+                    if (dt != null)
+                    {
+                        if (dt.Rows.Count > 0)
+                        {
+                            List<NhomDropDownModel> result = new List<NhomDropDownModel>();
+                            foreach (DataRow item in dt.Rows)
+                            {
+                                NhomDropDownModel nhom = new NhomDropDownModel();
+                                nhom.ID = Convert.ToInt32(item["ID"].ToString());
+                                nhom.Ten = item["Ten"].ToString();
+                                result.Add(nhom);
+                            }
+                            return result;
+                        }
+                    }
+                    return null;
+                }
+            }
+            catch (BusinessException ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

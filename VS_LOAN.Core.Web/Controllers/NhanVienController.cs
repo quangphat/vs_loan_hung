@@ -189,6 +189,13 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.ThongTin = new UserPMBLL().GetUserByID(GlobalData.User.IDUser.ToString());
             return View();
         }
-        
+        public JsonResult LayDSNhanVien()
+        {
+            List<UserPMModel> rs = new NhanVienBLL().LayDSNhanVien();
+            if (rs == null)
+                rs = new List<UserPMModel>();
+            return Json(new { DSNhanVien = rs });
+        }
+
     }
 }

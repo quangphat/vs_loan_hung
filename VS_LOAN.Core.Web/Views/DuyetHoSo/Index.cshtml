@@ -270,6 +270,12 @@
                             statusString = "<span class='label label-sm label-info arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
                         else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.GiaiNgan)')
                             statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
+                        else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.Cancel)')
+                            statusString = "<span class='label label-sm label-inverse arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
+                        else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.PCI)')
+                            statusString = "<span class='label label-sm label-inverse arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
+                        else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.DaDoiChieu)')
+                            statusString = "<span class='label label-sm label-inverse arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
                         return statusString;
 
                     },

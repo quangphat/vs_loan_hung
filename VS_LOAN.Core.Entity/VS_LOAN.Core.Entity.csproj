@@ -87,6 +87,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GhichuViewModel.cs" />
     <Compile Include="HoSoCuaToiModel.cs" />
     <Compile Include="HoSoDuyetModel.cs" />
     <Compile Include="HoSoQuanLyModel.cs" />
@@ -94,11 +95,13 @@
     <Compile Include="KetQuaHoSoModel.cs" />
     <Compile Include="Model\AutoIDModel.cs" />
     <Compile Include="Model\DoiTacModel.cs" />
+    <Compile Include="Model\GhichuModel.cs" />
     <Compile Include="Model\HoSoInfoModel .cs" />
     <Compile Include="Model\HoSoModel.cs" />
     <Compile Include="Model\KhuVucModel.cs" />
     <Compile Include="Model\LoaiTaiLieuModel.cs" />
     <Compile Include="Model\NhanVienInfoModel.cs" />
+    <Compile Include="Model\NhanvienQuyenModel.cs" />
     <Compile Include="Model\SanPhamModel.cs" />
     <Compile Include="Model\TaiLieuModel.cs" />
     <Compile Include="Model\UserPMModel.cs" />

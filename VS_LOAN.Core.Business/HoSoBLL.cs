@@ -436,6 +436,78 @@ namespace VS_LOAN.Core.Business
                 throw ex;
             }
         }
+        public bool AddGhichu(GhichuModel model)
+        {
+            if (model == null)
+                return false;
+            if (model.UserId <= 0 || model.HosoId <= 0)
+                return false;
+            if (string.IsNullOrWhiteSpace(model.Noidung) || model.Noidung.Length > 200)
+                return false;
+            try
+            {
+                using (var session = LOANSessionManager.OpenSession())
+                {
+                    using (var transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
+                    {
+                        IDbCommand command = new SqlCommand();
+                        command.Connection = session.Connection;
+                        command.CommandType = CommandType.Text;
+                        command.CommandText = "insert into Ghichu (UserId,Noidung,HosoId) values(@UserId,@Noidung,@HosoId)";
+                        session.Transaction.Enlist(command);
+                        command.Parameters.Clear();
+                        command.Parameters.Add(new SqlParameter("@UserId", model.UserId));
+                        command.Parameters.Add(new SqlParameter("@HosoId", model.HosoId));
+                        command.Parameters.Add(new SqlParameter("@Noidung", model.Noidung));
+                        command.ExecuteNonQuery();
+                        transaction.Commit();
+                        return true;
+                    }
+
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public List<GhichuViewModel> LayDanhsachGhichu(int hosoId)
+        {
+            if (hosoId <= 0)
+                return new List<GhichuViewModel>();
+            try
+            {
+                using (var session = LOANSessionManager.OpenSession())
+                {
+                    IDbCommand command = new SqlCommand();
+                    command.Connection = session.Connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "sp_GetGhichuByHosoId";
+                    command.Parameters.Clear();
+                    command.Parameters.Add(new SqlParameter("@hosoId", hosoId));
+                    var dt = new DataTable();
+                    dt.Load(command.ExecuteReader());
+                    List<GhichuViewModel> lstGhichu = new List<GhichuViewModel>();
+                    if (dt == null || dt.Rows == null || dt.Rows.Count == 0)
+                        return lstGhichu;
+                    GhichuViewModel ghichu;
+                    foreach (DataRow item in dt.Rows)
+                    {
+                        ghichu = new GhichuViewModel();
+                        ghichu.Id = Convert.ToInt32(item["Id"].ToString());
+                        ghichu.UserId = Convert.ToInt32(item["UserId"].ToString());
+                        ghichu.HosoId = Convert.ToInt32(item["HosoId"].ToString());
+                        ghichu.Noidung = item["Noidung"].ToString();
+                        ghichu.Commentator = item["Commentator"].ToString();
+                        lstGhichu.Add(ghichu);
+                    }
+                    return lstGhichu;
+                }
+            }
+            catch {
+                return null;
+            }
+        }
         public HoSoInfoModel LayChiTiet(int id)
         {
             try
@@ -755,7 +827,7 @@ namespace VS_LOAN.Core.Business
                     commandUpDate.Parameters.Add(new SqlParameter("@NgayThaoTac", ngayThaoTac));
                     commandUpDate.Parameters.Add(new SqlParameter("@MaTrangThai", maTrangThai));
                     commandUpDate.Parameters.Add(new SqlParameter("@MaKetQua", maKetQua));
-                    commandUpDate.Parameters.Add(new SqlParameter("@GhiChu", ghiChu));
+                    commandUpDate.Parameters.Add(new SqlParameter("@GhiChu", ""));
                     int result = commandUpDate.ExecuteNonQuery();
                     if (result > 0)
                         return true;

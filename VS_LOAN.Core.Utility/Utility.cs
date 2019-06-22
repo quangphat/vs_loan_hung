@@ -10,15 +10,18 @@ namespace VS_LOAN.Core.Utility
     {
         HoSo = 1
     }
-  
+
     public enum TrangThaiHoSo
     {
         Nhap = 0,
-        NhapLieu=1,// Nhập liệu
+        NhapLieu = 1,// Nhập liệu
         ThamDinh = 2,// Thẩm định
-        TuChoi=3,// Từ chối
-        BoSungHoSo=4,//
-        GiaiNgan=5
+        TuChoi = 3,// Từ chối
+        BoSungHoSo = 4,//
+        GiaiNgan = 5,
+        DaDoiChieu = 6,
+        Cancel = 7,
+        PCI =8
     }
     public enum KetQuaHoSo
     {
@@ -26,11 +29,11 @@ namespace VS_LOAN.Core.Utility
         GoiKhachHang = 2,
         ThamDinhDiaBan = 3,
         ChoKhoanVay = 4
-        
+
     }
     public enum IDDefaultDoiTac
     {
-        VietCreadit =3
+        VietCreadit = 3
     }
 
 

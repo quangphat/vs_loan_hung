@@ -50,7 +50,14 @@ namespace VS_LOAN.Core.Web.Controllers
                     dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTime(toDate);
                 message.Result = true;
                 string trangthai = "";
-                trangthai += ((int)TrangThaiHoSo.TuChoi).ToString() + "," + ((int)TrangThaiHoSo.NhapLieu).ToString() + "," + ((int)TrangThaiHoSo.ThamDinh).ToString() + "," + ((int)TrangThaiHoSo.BoSungHoSo).ToString() + "," + ((int)TrangThaiHoSo.GiaiNgan).ToString();
+                trangthai += ((int)TrangThaiHoSo.TuChoi).ToString() + "," 
+                    + ((int)TrangThaiHoSo.NhapLieu).ToString() + "," 
+                    + ((int)TrangThaiHoSo.ThamDinh).ToString() + "," 
+                    + ((int)TrangThaiHoSo.BoSungHoSo).ToString() + ","
+                    + ((int)TrangThaiHoSo.Cancel).ToString() + ","
+                    + ((int)TrangThaiHoSo.DaDoiChieu).ToString() + ","
+                    + ((int)TrangThaiHoSo.PCI).ToString() + ","
+                    + ((int)TrangThaiHoSo.GiaiNgan).ToString();
                 rs = new HoSoBLL().TimHoSoDuyet(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, loaiNgay, trangthai);
                 if (rs == null)
                     rs = new List<HoSoDuyetModel>();
@@ -259,6 +266,11 @@ namespace VS_LOAN.Core.Web.Controllers
                     message.ErrorMessage = "Vui lòng nhập số tiền vay";
                     isCheck = false;
                 }
+                if(!string.IsNullOrEmpty(ghiChu) && ghiChu.Length>200)
+                {
+                    message.ErrorMessage = "Vui lòng nhập số tiền vay";
+                    isCheck = false;
+                }
                 List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["Duyet_LstFileHoSo"];
                 List<LoaiTaiLieuModel> lstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
                 lstLoaiTaiLieu.RemoveAll(x => x.BatBuoc == 0);
@@ -332,6 +344,14 @@ namespace VS_LOAN.Core.Web.Controllers
                             message.ErrorMessage = Resources.Global.Message_Succ;
                         }
                     }
+
+                    GhichuModel ghichu = new GhichuModel
+                    {
+                        UserId = GlobalData.User.IDUser,
+                        HosoId = hs.ID,
+                        Noidung = ghiChu
+                    };
+                    new HoSoBLL().AddGhichu(ghichu);
                 }
                
             }
@@ -378,14 +398,29 @@ namespace VS_LOAN.Core.Web.Controllers
                 rs = new List<NhanVienNhomDropDownModel>();
             return Json(new { DSThanhVienNhom = rs });
         }
-
+        public JsonResult LayDSGhichu()
+        {
+            List<GhichuViewModel> rs = new HoSoBLL().LayDanhsachGhichu((int)Session["DuyetHoSo_ChiTietHoSo_ID"]);
+            if (rs == null)
+                rs = new List<GhichuViewModel>();
+            return Json(new { DSGhichu = rs });
+        }
         public JsonResult LayDSTrangThai()
         {
-            List<TrangThaiHoSoModel> rs = new TrangThaiHoSoBLL().LayDSTrangThai();
-            rs.RemoveAll(x => x.ID == (int)TrangThaiHoSo.Nhap);
-            rs.RemoveAll(x => x.ID == (int)TrangThaiHoSo.NhapLieu);
+            var isTeamlead = new NhomBLL().CheckIsTeamlead(GlobalData.User.IDUser);
+            var isAdmin = new NhomBLL().CheckIsAdmin(GlobalData.User.IDUser);
+            bool isLimit = false;
+            if (isTeamlead && !isAdmin)
+                isLimit = true;
+            else
+                isLimit = false;
+            if(!isTeamlead && !isAdmin)
+                return Json(new { DSTrangThai = new List<TrangThaiHoSoModel>() });
+            List<TrangThaiHoSoModel> rs = new TrangThaiHoSoBLL().LayDSTrangThai(isLimit);
             if (rs == null)
                 rs = new List<TrangThaiHoSoModel>();
+            rs.RemoveAll(x => x.ID == (int)TrangThaiHoSo.Nhap);
+            rs.RemoveAll(x => x.ID == (int)TrangThaiHoSo.NhapLieu);
             return Json(new { DSTrangThai = rs });
         }
 

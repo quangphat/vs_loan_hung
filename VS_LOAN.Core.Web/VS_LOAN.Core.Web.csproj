@@ -30,6 +30,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -221,6 +222,7 @@
     <Compile Include="Controllers\LanguageController.cs" />
     <Compile Include="Controllers\NoAuthoritiesController.cs" />
     <Compile Include="Controllers\NotPageController.cs" />
+    <Compile Include="Controllers\PermissionGroupController.cs" />
     <Compile Include="Controllers\ToNhomController.cs" />
     <Compile Include="Helpers\CaptchaImageResult.cs" />
     <Compile Include="Helpers\Constant.cs" />
@@ -1719,6 +1721,7 @@
     <Content Include="Views\ToNhom\CauHinhDuyet.cshtml" />
     <Content Include="Views\SanPhamVay\Import.cshtml" />
     <Content Include="Views\SanPhamVay\QuanLySanPham.cshtml" />
+    <Content Include="Views\PermissionGroup\TaoMoi.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
