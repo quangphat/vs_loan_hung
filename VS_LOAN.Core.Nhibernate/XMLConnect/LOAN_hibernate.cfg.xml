@@ -7,8 +7,8 @@ for your own use before compile tests in VisualStudio.
   <session-factory name="NHibernate.Test">
     <property name="connection.connection_string">
       <!--Data Source=VN-HCM3507;Initial Catalog=Test13;User ID=sa;Password=wUUvjyY/h8D5j8mhjWtQ0Q==;-->
-      Data Source=QUANGPHAT\CLARKKENT;Initial Catalog=Test13;User ID=sa;Password=bnVtYmVyOA==;
-      <!--Data Source=VN-HCM3604;Initial Catalog=Test13;User ID=sa;Password=tWxLjzFpK141f7Uc7MCRBQ==-->
+      <!--Data Source=VN-HCM3507;Initial Catalog=Test13;User ID=sa;Password=wUUvjyY/h8D5j8mhjWtQ0Q==;-->
+      Data Source=VN-HCM3604;Initial Catalog=Test13;User ID=sa;Password=tWxLjzFpK141f7Uc7MCRBQ==
       <!--Data Source=VN-HCM3604;Initial Catalog=fintechcom_vn_Portal;User ID=sa;Password=tWxLjzFpK141f7Uc7MCRBQ==-->
       <!--Data Source=mssql173.dotvndns.vn;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_Portal;Password=zSAndBB3gaU60X2yFRsIhw==;-->
     </property>
