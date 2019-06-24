@@ -450,6 +450,7 @@
     <Content Include="Content\ace-master\widgets.html" />
     <Content Include="Content\ace-master\wysiwyg.html" />
     <Content Include="Content\css\custom.css" />
+    <Content Include="Content\css\timeline.css" />
     <Content Include="Content\fileinput\css\fileinput-rtl.css" />
     <Content Include="Content\fileinput\css\fileinput-rtl.min.css" />
     <Content Include="Content\fileinput\css\fileinput.css" />

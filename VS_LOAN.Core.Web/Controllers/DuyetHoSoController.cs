@@ -401,7 +401,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public JsonResult LayDSGhichu()
         {
-            List<GhichuViewModel> rs = new HoSoBLL().LayDanhsachGhichu((int)Session["QL_HoSoID"]);
+            List<GhichuViewModel> rs = new HoSoBLL().LayDanhsachGhichu((int)Session["DuyetHoSo_ChiTietHoSo_ID"]);
             if (rs == null)
                 rs = new List<GhichuViewModel>();
             return Json(new { DSGhichu = rs });

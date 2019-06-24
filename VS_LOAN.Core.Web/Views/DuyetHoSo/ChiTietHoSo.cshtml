@@ -196,8 +196,15 @@
                         </div>
                     </div>
                 </form>
-                <div class="form-group" id="dsGhichu">
-                    
+                <div class="form-group">
+                    <div class="activity-log">
+                        <div class="timline-addNote only-new-note">
+                            <div class="timeline-date-event timline-date-event--margin mt-0" id="dsGhichu">
+
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -307,10 +314,12 @@
                 if (data.DSGhichu != null) {
                     $.each(data.DSGhichu, function (index, item) {
                         $('#dsGhichu').append(
-                            "<label class='col-sm-2 control-label no-padding-right'>" + item.Commentator +": </label>" +
-                            "<div class= 'col-sm-10'>" +
-                            "<label class='col-sm-2 control-label no-padding-right'>" +item.Noidung +  "</label>" +
-                            "</div>"
+                            '<div class="timeline-event-content  active">' +
+                            '<div class="timeline-item">' +
+                            '<div class="timeline-body">' +
+                            '<div class="timeline__message-container">' +
+                            '<strong>' + item.Commentator + ': </strong><span>' + item.Noidung + '</span>' +
+                            '</div></div></div></div>'
                         )
                     });
                 }

@@ -110,6 +110,13 @@ namespace VS_LOAN.Core.Web.Controllers
                     message.Result = true;
                     message.ErrorMessage = Resources.Global.NhanVien_Login_Message_DangNhap_Succ;
                     GlobalData.User = user;
+                    GlobalData.User.UserType = (int)UserTypeEnum.Sale;
+                    var isTeamLead = new NhomBLL().checkIsTeamLeadByUserId(user.IDUser);
+                    var isAdmin = new NhomBLL().CheckIsAdmin(user.IDUser);
+                    if(isAdmin)
+                        GlobalData.User.UserType = (int)UserTypeEnum.Admin;
+                    else if(isTeamLead)
+                        GlobalData.User.UserType = (int)UserTypeEnum.Teamlead;
                     var cookieUserName = new HttpCookie("userName");
                     var cookiePassword = new HttpCookie("password");
                     if (rememberMe != null && rememberMe.ToLower().Equals("on"))

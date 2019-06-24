@@ -386,9 +386,9 @@
                             thaoTac += "</a>";
                             thaoTac += "</a>";
                         }
-                        else
+                        else if(data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.NhapLieu)' || data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.BoSungHoSo)')
                         {
-                            thaoTac += "<span style='color:#C0C0C0;margin: 0 3px;' title='@Global.Button_Edit'  >";
+                            thaoTac += "<a title='@Global.Button_Edit' class=\"green\" style='cursor: pointer' ID=" + data.ID + " onclick='SuaHS(this)' >";
                             thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
                             thaoTac += "</i>";
                             thaoTac += "</a>";

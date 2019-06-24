@@ -371,6 +371,7 @@ namespace VS_LOAN.Core.Business
                         command.Parameters.Add(new SqlParameter("@NgayCapNhat", hoSoModel.NgayCapNhat));
                         command.Parameters.Add(new SqlParameter("@MaNguoiCapNhat", hoSoModel.MaNguoiCapNhat));
                         command.Parameters.Add(new SqlParameter("@HoSoCuaAi", hoSoModel.HoSoCuaAi));
+                        //command.Parameters.Add(new SqlParameter("@MaTrangThai", hoSoModel.MaTrangThai));
                         if (hoSoModel.MaKetQua == 0)
                         {
                             command.Parameters.Add(new SqlParameter("@KetQuaHS", DBNull.Value));

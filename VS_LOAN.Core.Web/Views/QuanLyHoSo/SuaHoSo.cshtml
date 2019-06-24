@@ -75,7 +75,7 @@
                             <input type="text" id="txtTenNV" data-toggle-tt="tooltip" placeholder="Tên nhân viên" class="form-control" />
                         </div>
                     </div>
-                    
+
 
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Tỉnh/TP<span class="required">(*)</span></label>
@@ -166,72 +166,125 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <hr />
-                <div class="pull-right">
-                    @if (ViewBag.HoSo.MaTrangThai == ((int)VS_LOAN.Core.Utility.TrangThaiHoSo.Nhap) || ViewBag.HoSo.MaTrangThai == ((int)VS_LOAN.Core.Utility.TrangThaiHoSo.TuChoi) || ViewBag.HoSo.MaTrangThai == ((int)VS_LOAN.Core.Utility.TrangThaiHoSo.BoSungHoSo))
-                    {
-                        <a class="btn btn-sm btn-primary" id="btn_Temp">
-                            Lưu tạm
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlTrangThai" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
+                        <div class="col-md-11 col-sm-12 col-xs-12">
+                            <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="pull-right">
+                        @if ((ViewBag.HoSo.MaTrangThai == ((int)VS_LOAN.Core.Utility.TrangThaiHoSo.Nhap)
+                            || ViewBag.HoSo.MaTrangThai == ((int)VS_LOAN.Core.Utility.TrangThaiHoSo.TuChoi)
+                            || ViewBag.HoSo.MaTrangThai == ((int)VS_LOAN.Core.Utility.TrangThaiHoSo.BoSungHoSo))
+                            && VS_LOAN.Core.Web.Helpers.GlobalData.User.UserType == (int)VS_LOAN.Core.Utility.UserTypeEnum.Admin)
+                        {
+                            <a class="btn btn-sm btn-primary" id="btn_Temp">
+                                Lưu tạm
+                            </a>
+                            <a class="btn btn-sm btn-primary" id="btn_Save">
+                                Nộp hồ sơ
+                            </a>
+                        }
+                        else if ((ViewBag.HoSo.MaTrangThai == ((int)VS_LOAN.Core.Utility.TrangThaiHoSo.NhapLieu)
+                        || ViewBag.HoSo.MaTrangThai == ((int)VS_LOAN.Core.Utility.TrangThaiHoSo.BoSungHoSo))
+                        && VS_LOAN.Core.Web.Helpers.GlobalData.User.UserType == (int)VS_LOAN.Core.Utility.UserTypeEnum.Teamlead)
+                        {
+                            <a class="btn btn-sm btn-primary" id="btn_Temp">
+                                Lưu tạm
+                            </a>
+                            <a class="btn btn-sm btn-primary" id="btn_Save">
+                                Nộp hồ sơ
+                            </a>
+                        }
+                        else if ((ViewBag.HoSo.MaTrangThai == ((int)VS_LOAN.Core.Utility.TrangThaiHoSo.BoSungHoSo))
+                        && VS_LOAN.Core.Web.Helpers.GlobalData.User.UserType == (int)VS_LOAN.Core.Utility.UserTypeEnum.Sale)
+                        {
+                            <a class="btn btn-sm btn-primary" id="btn_Temp">
+                                Lưu tạm
+                            </a>
+                            <a class="btn btn-sm btn-primary" id="btn_Save">
+                                Nộp hồ sơ
+                            </a>
+                        }
+                        <a class="btn btn-sm btn-primary" href="/QuanLyHoSo/DanhSachHoSo" id="btn_Back">
+                            Trở về
                         </a>
-                        <a class="btn btn-sm btn-primary" id="btn_Save">
-                            Nộp hồ sơ
-                        </a>
-                    }
-                    <a class="btn btn-sm btn-primary" href="/QuanLyHoSo/DanhSachHoSo" id="btn_Back">
-                        Trở về
-                    </a>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+        <div class="form-group">
+            <div class="activity-log">
+                <div class="timline-addNote only-new-note">
+                    <div class="timeline-date-event timline-date-event--margin mt-0" id="dsGhichu">
+                        
+                        
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    $(document).ready(function () {
-        $('#ddlSanPhamVay').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddlHuyen').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddlCourier').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddlTinh').chosen({ width: '100%', allow_single_deselect: true });
-        $('#txtToDate').datepicker({
-            dateFormat: 'dd-mm-yy'
+    <script>
+        $(document).ready(function () {
+            $('#ddlSanPhamVay').chosen({ width: '100%', allow_single_deselect: true });
+            $('#ddlHuyen').chosen({ width: '100%', allow_single_deselect: true });
+            $('#ddlCourier').chosen({ width: '100%', allow_single_deselect: true });
+            $('#ddlTinh').chosen({ width: '100%', allow_single_deselect: true });
+            $('#txtToDate').datepicker({
+                dateFormat: 'dd-mm-yy'
 
-        }).next().on(ace.click_event, function () {
-            $(this).prev().focus();
+            }).next().on(ace.click_event, function () {
+                $(this).prev().focus();
+            });
+            $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
         });
-        $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
-    });
-</script>
+    </script>
 
-<script>
-    jQuery.fn.ForceNumericOnly =
-function () {
-    return this.each(function () {
-        $(this).keydown(function (e) {
-            var key = e.charCode || e.keyCode || 0;
-            // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers ONLY
-            // home, end, period, and numpad decimal
-            return (
-                key == 8 ||
-                key == 9 ||
-                key == 13 ||
-                key == 46 ||
-                key == 110 ||
-                key == 190 ||
-                (key >= 35 && key <= 40) ||
-                (key >= 48 && key <= 57) ||
-                (key >= 96 && key <= 105));
+    <script>
+        jQuery.fn.ForceNumericOnly =
+            function () {
+                return this.each(function () {
+                    $(this).keydown(function (e) {
+                        var key = e.charCode || e.keyCode || 0;
+                        // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers ONLY
+                        // home, end, period, and numpad decimal
+                        return (
+                            key == 8 ||
+                            key == 9 ||
+                            key == 13 ||
+                            key == 46 ||
+                            key == 110 ||
+                            key == 190 ||
+                            (key >= 35 && key <= 40) ||
+                            (key >= 48 && key <= 57) ||
+                            (key >= 96 && key <= 105));
+                    });
+                });
+            };
+        $("#txtDienThoai").ForceNumericOnly();
+        $("#txtDienThoai2").ForceNumericOnly();
+        $("#txtTienDeNghiVay").ForceNumericOnly();
+        $("#txtCMND").ForceNumericOnly();
+        $("#txtTienDeNghiVay").change(function () {
+            $("#txtTienDeNghiVay").val(formatCurrency($("#txtTienDeNghiVay").val().replace(/\./g, '')));
         });
-    });
-};
-    $("#txtDienThoai").ForceNumericOnly();
-    $("#txtDienThoai2").ForceNumericOnly();
-    $("#txtTienDeNghiVay").ForceNumericOnly();
-    $("#txtCMND").ForceNumericOnly();
-    $("#txtTienDeNghiVay").change(function () {
-        $("#txtTienDeNghiVay").val(formatCurrency($("#txtTienDeNghiVay").val().replace(/\./g, '')));
-    });
-</script>
-<script>
+    </script>
+    <script>
     var hoSoID=0;
     $(document).ready(function () {
         var hosoInfo = @Html.Raw(Json.Encode(ViewBag.HoSo));
@@ -377,17 +430,72 @@ function () {
         $('#ddlInternalCode').on('change', function () {
              $('#txtTenNV').val( $('option:selected', this).attr('ten'));
         });
+        LayTrangThai(hosoInfo.MaTrangThai);
+        LayDanhsachGhichu()
     });
-</script>
-<script>
-    $('#spnThoiHanVay').ace_spinner({ value: 0, min: 0, max: 36, step: 3, btn_up_class: 'btn-info', btn_down_class: 'btn-info' })
-				.closest('.ace-spinner')
-				.on('changed.fu.spinbox', function () {
-				    //alert($('#spinner1').val())
-				});
-</script>
+    </script>
+    <script>
+        $('#spnThoiHanVay').ace_spinner({ value: 0, min: 0, max: 36, step: 3, btn_up_class: 'btn-info', btn_down_class: 'btn-info' })
+            .closest('.ace-spinner')
+            .on('changed.fu.spinbox', function () {
+                //alert($('#spinner1').val())
+            });
+    </script>
 
-<script>
+    <script>
+     function LayDanhsachGhichu() {
+        //$('#ddlTrangThai').empty();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSGhichu", "QuanLyHoSo")',
+            data: {},
+            success: function (data) {
+                if (data.DSGhichu != null) {
+                    $.each(data.DSGhichu, function (index, item) {
+                        $('#dsGhichu').append(
+                            '<div class="timeline-event-content  active">' +
+                            '<div class="timeline-item">'+
+                            '<div class="timeline-body">' +
+                            '<div class="timeline__message-container">' +
+                             '<strong>' + item.Commentator + ': </strong><span>' + item.Noidung + '</span>' +
+                            '</div></div></div></div>'
+
+                        )
+                    });
+                }
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+    function LayTrangThai(value) {
+        $('#ddlTrangThai').empty();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSTrangThai", "QuanLyHoSo")',
+            data: {},
+            success: function (data) {
+                $('#ddlTrangThai').append("<option value='0'></option>");
+                if (data.DSTrangThai != null) {
+                    $.each(data.DSTrangThai, function (index, item) {
+                        $('#ddlTrangThai').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
+                    });
+                    $('#ddlTrangThai').val(value);
+                    $('#ddlTrangThai').chosen().trigger("chosen:updated");
+                }
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
     function LayDSHuyen(maTinh) {
         $.ajax({
             type: "POST",
@@ -410,10 +518,10 @@ function () {
             }
         });
     }
-</script>
+    </script>
 
 
-<script>
+    <script>
     function LayDSTaiLieu(lstLoaiTaiLieu, lstTaiLieu) {
         if (lstLoaiTaiLieu != null) {
             var i = 0;
@@ -530,8 +638,8 @@ function () {
 
         }
     }
-</script>
-<script>
+    </script>
+    <script>
     function LayDSSanPham(maDoiTac) {
         $.ajax({
             type: "POST",
@@ -555,8 +663,8 @@ function () {
             }
         });
     }
-</script>
-<script>
+    </script>
+    <script>
     function LayDSale(maNV) {
         $.ajax({
             type: "POST",
@@ -583,9 +691,19 @@ function () {
             }
         });
     }
-</script>
-<script>
+    </script>
+    <script>
     $('#btn_Temp').click(function (e) {
+        if ($('#ddlTrangThai').val() == '0' || $('#ddlTrangThai').val() == undefined) {
+            swal({
+                title: "",
+                text: "Vui lòng chọn trạng thái",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
         if ($('#txtHoTen').val() == "" || $('#txtHoTen').val() == undefined) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
@@ -619,10 +737,11 @@ function () {
         var objectSend = JSON.stringify({
             'hoten': $('#txtHoTen').val(), 'phone': $('#txtDienThoai').val(),
             'phone2': $('#txtDienThoai2').val(), 'ngayNhanDon': $('#txtToDate').val(),
-            'hoSoCuaAi': $('#ddlInternalCode').val(), 'cmnd': $('#txtCMND').val(), 'gioiTinh': $('#ddlGioiTinh').val(),
-            'maKhuVuc': $('#ddlHuyen').val(), 'diaChi': $('#txtDiaChi').val(),'courier':$('#ddlCourier').val(),
-            'sanPhamVay': $('#ddlSanPhamVay').val(), 'tenCuaHang': $('#txtTenCuaHang').val(),
-            'baoHiem': $('#cbbaohiem').is(":checked"), 'thoiHanVay': $('#spnThoiHanVay').val(),
+            'hoSoCuaAi': $('#ddlInternalCode').val(), 'cmnd': $('#txtCMND').val(), 'gioiTinh': parseInt($('#ddlGioiTinh').val()),
+            'maKhuVuc': parseInt($('#ddlHuyen').val()), 'diaChi': $('#txtDiaChi').val(), 'courier': parseInt($('#ddlCourier').val()),
+            'sanPhamVay': parseInt($('#ddlSanPhamVay').val()), 'tenCuaHang': $('#txtTenCuaHang').val(),
+            'baoHiem': $('#cbbaohiem').is(":checked"), 'thoiHanVay': parseInt($('#spnThoiHanVay').val()),
+            'ghiChu': $('#txtGhiChu').val(), 'trangThai': parseInt($('#ddlTrangThai').val()),
             'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, '')
         });
         $.ajax({
@@ -661,9 +780,19 @@ function () {
             },
         });
     });
-</script>
-<script>
+    </script>
+    <script>
     $('#btn_Save').click(function (e) {
+        if ($('#ddlTrangThai').val() == '0' || $('#ddlTrangThai').val() == undefined) {
+            swal({
+                title: "",
+                text: "Vui lòng chọn trạng thái",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
         if ($('#txtHoTen').val() == "" || $('#txtHoTen').val() == undefined) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
@@ -732,6 +861,7 @@ function () {
             'maKhuVuc': parseInt($('#ddlHuyen').val()), 'diaChi': $('#txtDiaChi').val(), 'courier':parseInt($('#ddlCourier').val()),
             'sanPhamVay': parseInt($('#ddlSanPhamVay').val()), 'tenCuaHang': $('#txtTenCuaHang').val(),
             'baoHiem': $('#cbbaohiem').is(":checked"), 'thoiHanVay': parseInt($('#spnThoiHanVay').val()),
+            'ghiChu': $('#txtGhiChu').val(), 'trangThai': parseInt($('#ddlTrangThai').val()),
             'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, '')
         });
         $.ajax({
@@ -770,4 +900,4 @@ function () {
             },
         });
     });
-</script>
+    </script>

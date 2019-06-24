@@ -69,6 +69,7 @@
     <Compile Include="QuyenEnum.cs" />
     <Compile Include="RuleFunctionUtility.cs" />
     <Compile Include="Supports.cs" />
+    <Compile Include="UserTypeEnum.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="WebAPIUtility.cs" />
   </ItemGroup>

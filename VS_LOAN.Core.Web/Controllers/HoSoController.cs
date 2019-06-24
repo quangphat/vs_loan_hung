@@ -98,15 +98,32 @@ namespace VS_LOAN.Core.Web.Controllers
             rs = rs.GroupBy(p => p.IDUser).Select(g => g.First()).ToList();
             return Json(new { DSSale = rs });
         }
-
+        private bool AddGhichu(int hosoId, string ghiChu)
+        {
+            GhichuModel ghichu = new GhichuModel
+            {
+                UserId = GlobalData.User.IDUser,
+                HosoId = hosoId,
+                Noidung = ghiChu,
+                CommentTime = DateTime.Now
+            };
+            new HoSoBLL().AddGhichu(ghichu);
+            return true;
+        }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult Save(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
-           , int maKhuVuc, string diaChi,int courier, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay, string soTienVay)
+           , int maKhuVuc, string diaChi,int courier, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay, string soTienVay, string ghiChu)
         {
             var message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
+            bool isCheck = true;
+            if (!string.IsNullOrWhiteSpace(ghiChu) && ghiChu.Length>200)
+            {
+                message.ErrorMessage = "Nội dung ghi chú không được lớn hơn 200";
+                isCheck = false;
+            }
             try
             {
-                bool isCheck = true;
+                
                 if (hoten == string.Empty)
                 {
                     message.ErrorMessage = "Vui lòng nhập họ tên";
@@ -206,6 +223,7 @@ namespace VS_LOAN.Core.Web.Controllers
                             if(isCheckMaSanPham)
                                 message.ErrorMessage = "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác";
                         }
+                        AddGhichu(hs.ID, ghiChu);
                     }
                     else
                     {
@@ -222,6 +240,7 @@ namespace VS_LOAN.Core.Web.Controllers
                             if (isCheckMaSanPham)
                                 message.ErrorMessage = "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác";
                         }
+                        AddGhichu(result, ghiChu);
                     }
                     if (result > 0)
                     {
@@ -362,9 +381,15 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult SaveDaft(string hoten,string phone,string phone2,string ngayNhanDon,int hoSoCuaAi,string cmnd,int gioiTinh
-            ,int maKhuVuc, string diaChi, int courier, int sanPhamVay,string tenCuaHang, int baoHiem,int thoiHanVay,string soTienVay)
+            ,int maKhuVuc, string diaChi, int courier, int sanPhamVay,string tenCuaHang, int baoHiem,int thoiHanVay,string soTienVay, string ghiChu)
         {
             var message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
+            if (!string.IsNullOrWhiteSpace(ghiChu) && ghiChu.Length > 200)
+            {
+                message.ErrorMessage = "Nội dung ghi chú không được lớn hơn 200";
+                message.Result = false;
+                return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
+            }
             try
             {
                 if (hoten == string.Empty)
@@ -412,6 +437,7 @@ namespace VS_LOAN.Core.Web.Controllers
                             if (isCheckMaSanPham)
                                 message.ErrorMessage = "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác";
                         }
+                        AddGhichu(hs.ID, ghiChu);
                     }
                     else
                     {
@@ -424,6 +450,7 @@ namespace VS_LOAN.Core.Web.Controllers
                             if (isCheckMaSanPham)
                                 message.ErrorMessage = "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác";
                         }
+                        AddGhichu(result, ghiChu);
                     }
                     if (result > 0)
                     {
@@ -541,7 +568,7 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
         }
-       
 
+       
     }
 }
