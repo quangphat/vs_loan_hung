@@ -728,10 +728,10 @@ function () {
         var objectSend = JSON.stringify({
             'hoten': $('#txtHoTen').val(), 'phone': $('#txtDienThoai').val(),
             'phone2': $('#txtDienThoai2').val(), 'ngayNhanDon': $('#txtToDate').val(),
-            'hoSoCuaAi': $('#ddlInternalCode').val(), 'cmnd': $('#txtCMND').val(), 'gioiTinh': $('#ddlGioiTinh').val(),
-            'maKhuVuc': $('#ddlHuyen').val(), 'diaChi': $('#txtDiaChi').val(),'courier':$('#ddlCourier').val(),
-            'sanPhamVay': $('#ddlSanPhamVay').val(), 'tenCuaHang': $('#txtTenCuaHang').val(),
-            'baoHiem': $('#cbbaohiem').is(":checked"), 'thoiHanVay': $('#spnThoiHanVay').val(),
+            'hoSoCuaAi': $('#ddlInternalCode').val(), 'cmnd': $('#txtCMND').val(), 'gioiTinh': parseInt($('#ddlGioiTinh').val()),
+            'maKhuVuc': parseInt($('#ddlHuyen').val()), 'diaChi': $('#txtDiaChi').val(), 'courier':parseInt($('#ddlCourier').val()),
+            'sanPhamVay': parseInt($('#ddlSanPhamVay').val()), 'tenCuaHang': $('#txtTenCuaHang').val(),
+            'baoHiem': $('#cbbaohiem').is(":checked"), 'thoiHanVay': parseInt($('#spnThoiHanVay').val()),
             'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, '')
         });
         $.ajax({

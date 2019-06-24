@@ -137,7 +137,7 @@ namespace VS_LOAN.Core.Web.Controllers
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult Save(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
-           , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay, string soTienVay)
+           , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang, bool baoHiem, int thoiHanVay, string soTienVay)
         {
             var message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
             try
@@ -219,7 +219,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     hs.CourierCode = courier;
                     hs.SanPhamVay = sanPhamVay;
                     hs.TenCuaHang = tenCuaHang;
-                    hs.CoBaoHiem = baoHiem;
+                    hs.CoBaoHiem = baoHiem ? 1:0;
                     hs.HanVay = thoiHanVay;
                     if (soTienVay == string.Empty)
                         soTienVay = "0";

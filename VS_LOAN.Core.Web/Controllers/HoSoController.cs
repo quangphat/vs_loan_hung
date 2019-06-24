@@ -80,7 +80,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 foreach (var item in lstNhom)
                 {
-                    var lstNhanVien = new NhanVienNhomBLL().LayDSThanhVienNhomCaCon(item.MaNguoiQL);
+                    var lstNhanVien = new NhanVienNhomBLL().LayDSThanhVienNhomCaCon(item.ID);
                     if (lstNhanVien != null)
                     {
                         foreach (var jtem in lstNhanVien)
