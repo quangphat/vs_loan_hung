@@ -17,11 +17,11 @@ namespace VS_LOAN.Core.Business
 
         public bool CheckIsTeamlead(int nhanvienId)
         {
-
-            List<NhomDropDownModel> groups = LayDSNhomByNhanvienQuanly(nhanvienId);
-            if (groups == null || !groups.Any())
-                return false;
-            return true;
+            return checkIsTeamLeadByUserId(nhanvienId);
+            //List<NhomDropDownModel> groups = LayDSNhomByNhanvienQuanly(nhanvienId);
+            //if (groups == null || !groups.Any())
+            //    return false;
+            //return true;
         }
         public bool CheckIsAdmin(int userId)
         {
@@ -606,7 +606,7 @@ namespace VS_LOAN.Core.Business
             }
         }
         
-        public List<NhomDropDownModel> LayDSNhomByNhanvienQuanly(int userId)
+        public bool checkIsTeamLeadByUserId(int userId)
         {
             try
             {
@@ -619,22 +619,26 @@ namespace VS_LOAN.Core.Business
                     command.Parameters.Add(new SqlParameter("@userId", userId));
                     DataTable dt = new DataTable();
                     dt.Load(command.ExecuteReader());
-                    if (dt != null)
-                    {
-                        if (dt.Rows.Count > 0)
-                        {
-                            List<NhomDropDownModel> result = new List<NhomDropDownModel>();
-                            foreach (DataRow item in dt.Rows)
-                            {
-                                NhomDropDownModel nhom = new NhomDropDownModel();
-                                nhom.ID = Convert.ToInt32(item["ID"].ToString());
-                                nhom.Ten = item["Ten"].ToString();
-                                result.Add(nhom);
-                            }
-                            return result;
-                        }
-                    }
-                    return null;
+                    if (dt == null || dt.Rows == null || dt.Rows.Count == 0)
+                        return false;
+                    var result = Convert.ToBoolean(dt.Rows[0]["isTeamLead"]);
+                    return result;
+                    //if (dt != null)
+                    //{
+                    //    if (dt.Rows.Count > 0)
+                    //    {
+                    //        List<NhomDropDownModel> result = new List<NhomDropDownModel>();
+                    //        foreach (DataRow item in dt.Rows)
+                    //        {
+                    //            NhomDropDownModel nhom = new NhomDropDownModel();
+                    //            nhom.ID = Convert.ToInt32(item["ID"].ToString());
+                    //            nhom.Ten = item["Ten"].ToString();
+                    //            result.Add(nhom);
+                    //        }
+                    //        return result;
+                    //    }
+                    //}
+                    //return null;
                 }
             }
             catch (BusinessException ex)

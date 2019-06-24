@@ -12,5 +12,6 @@ namespace VS_LOAN.Core.Entity.Model
         public int UserId { get; set; }
         public int HosoId { get; set; }
         public string Noidung {get;set;}
+        public DateTime CommentTime { get; set; }
     }
 }

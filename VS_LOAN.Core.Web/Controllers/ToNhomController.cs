@@ -71,29 +71,8 @@ namespace VS_LOAN.Core.Web.Controllers
                 result = new NhomBLL().Them(nhom, lstThanhVien);
                 if (result > 0)
                 {
-                    if (nhom.MaNhomCha <= 0)
-                    {
-                        message.Result = true;
-                        message.ErrorMessage = Resources.Global.Message_Succ;
-                    }
-                    else
-                    {
-                        var updateQuyenResult = false;
-                        var nhomCha = new NhomBLL().LayTheoMa(nhom.MaNhomCha);
-                        if(nhomCha!=null && nhomCha.MaNguoiQuanLy>0)
-                            updateQuyenResult = updateNhanvienQuyen(nhomCha.MaNguoiQuanLy);
-                        if(updateQuyenResult)
-                        {
-                            message.Result = true;
-                            message.ErrorMessage = Resources.Global.Message_Succ;
-                        }
-                        else
-                        {
-                            message.Result = false;
-                            message.ErrorMessage = "Không thể cập nhật quyền";
-                        }
-                    }
-
+                    message.Result = true;
+                    message.ErrorMessage = Resources.Global.Message_Succ;
                 }
             }
             catch (BusinessException ex)
@@ -138,7 +117,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public ActionResult Sua()
         {
             ViewBag.formindex = LstRole["QLToNhom"]._formindex;
-            if (Session["ToNhom_Sua_ID"] == null)
+            if(Session["ToNhom_Sua_ID"] == null)
                 return RedirectToAction("QLToNhom");
             int idNhom = (int)Session["ToNhom_Sua_ID"];
             ViewBag.ThongTinNhom = new NhomBLL().LayTheoMa(idNhom);
@@ -157,12 +136,12 @@ namespace VS_LOAN.Core.Web.Controllers
             List<NhanVienNhomDropDownModel> lstKhongThanhVienNhom = new NhanVienNhomBLL().LayDSKhongThanhVienNhom(maNhom);
             return Json(new { DSThanhVien = lstThanhVienNhom, DSChuaThanhVien = lstKhongThanhVienNhom });
         }
-
+        
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
         public ActionResult ChiTiet()
         {
             ViewBag.formindex = LstRole["QLToNhom"]._formindex;
-            if (Session["ToNhom_ChiTiet_ID"] == null)
+            if(Session["ToNhom_ChiTiet_ID"] == null)
                 return RedirectToAction("QLToNhom");
             int idNhom = (int)Session["ToNhom_ChiTiet_ID"];
             ViewBag.ThongTinNhom = new NhomBLL().LayChiTietTheoMa(idNhom);
@@ -181,7 +160,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
             try
             {
-                var currentGroup = new NhomBLL().LayTheoMa(maNhom);
+
                 bool result = false;
                 NhomModel nhom = new NhomModel();
                 nhom.ID = maNhom;
@@ -196,35 +175,8 @@ namespace VS_LOAN.Core.Web.Controllers
                 result = new NhomBLL().Sua(nhom, lstThanhVien);
                 if (result)
                 {
-                    if (nhom.MaNhomCha <= 0)
-                    {
-                        message.Result = true;
-                        message.ErrorMessage = Resources.Global.Message_Succ;
-                    }
-                    else
-                    {
-                        if (currentGroup.MaNhomCha != nhom.MaNhomCha)
-                        {
-                            var updateOldResult = false;
-                            var updateNewResult = false;
-                            var nhomChaOld = new NhomBLL().LayTheoMa(currentGroup.MaNhomCha);
-                            if(nhomChaOld!=null && nhomChaOld.MaNguoiQuanLy>0)
-                                updateOldResult = updateNhanvienQuyen(nhomChaOld.MaNguoiQuanLy);
-                            var nhomChaNew = new NhomBLL().LayTheoMa(nhom.MaNhomCha);
-                            if (nhomChaNew != null && nhomChaNew.MaNguoiQuanLy > 0)
-                                updateNewResult = updateNhanvienQuyen(nhomChaNew.MaNguoiQuanLy);
-                            if(!updateNewResult || !updateOldResult)
-                            {
-                                message.Result = false;
-                                message.ErrorMessage = "Không thể cập nhật quyền";
-                            }
-                            else
-                            {
-                                message.Result = true;
-                                message.ErrorMessage = Resources.Global.Message_Succ;
-                            }
-                        }
-                    }
+                    message.Result = true;
+                    message.ErrorMessage = Resources.Global.Message_Succ;
                 }
             }
             catch (BusinessException ex)
@@ -286,28 +238,5 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
         }
-        private bool updateNhanvienQuyen(int userId)
-        {
-            if (userId <= 0)
-                return false;
-            var lstNhom = new NhomBLL().LayDSNhomByNhanvienQuanly(userId);
-            if (lstNhom == null || !lstNhom.Any())
-            {
-                new GrantRightBLL().DeleteNhanvienQuyen(userId);
-                return true;
-            }
-            var exist = new GrantRightBLL().GetNhanvienQuyenByUserId(userId);
-            if (exist != null)
-            {
-                new GrantRightBLL().UpdateNhanvienQuyen(new NhanvienQuyenModel { Ma_NV = userId, Quyen = "fffff" });
-                return true;
-            }
-            else
-            {
-                new GrantRightBLL().InsertNhanvienQuyen(new NhanvienQuyenModel { Ma_NV = userId, Quyen = "fffff" });
-                return true;
-            }
-        }
-
     }
 }

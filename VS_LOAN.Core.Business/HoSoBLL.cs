@@ -453,12 +453,13 @@ namespace VS_LOAN.Core.Business
                         IDbCommand command = new SqlCommand();
                         command.Connection = session.Connection;
                         command.CommandType = CommandType.Text;
-                        command.CommandText = "insert into Ghichu (UserId,Noidung,HosoId) values(@UserId,@Noidung,@HosoId)";
+                        command.CommandText = "insert into Ghichu (UserId,Noidung,HosoId, CommentTime) values(@UserId,@Noidung,@HosoId,@CommentTime)";
                         session.Transaction.Enlist(command);
                         command.Parameters.Clear();
                         command.Parameters.Add(new SqlParameter("@UserId", model.UserId));
                         command.Parameters.Add(new SqlParameter("@HosoId", model.HosoId));
                         command.Parameters.Add(new SqlParameter("@Noidung", model.Noidung));
+                        command.Parameters.Add(new SqlParameter("@CommentTime", model.CommentTime));
                         command.ExecuteNonQuery();
                         transaction.Commit();
                         return true;
@@ -499,6 +500,10 @@ namespace VS_LOAN.Core.Business
                         ghichu.HosoId = Convert.ToInt32(item["HosoId"].ToString());
                         ghichu.Noidung = item["Noidung"].ToString();
                         ghichu.Commentator = item["Commentator"].ToString();
+                        if(item["CommentTime"]!=null && !string.IsNullOrEmpty(item["CommentTime"].ToString()))
+                        {
+                            ghichu.CommentTime = Convert.ToDateTime(item["CommentTime"]);
+                        }
                         lstGhichu.Add(ghichu);
                     }
                     return lstGhichu;

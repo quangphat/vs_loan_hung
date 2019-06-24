@@ -349,7 +349,8 @@ namespace VS_LOAN.Core.Web.Controllers
                     {
                         UserId = GlobalData.User.IDUser,
                         HosoId = hs.ID,
-                        Noidung = ghiChu
+                        Noidung = ghiChu,
+                        CommentTime = DateTime.Now
                     };
                     new HoSoBLL().AddGhichu(ghichu);
                 }
@@ -400,7 +401,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public JsonResult LayDSGhichu()
         {
-            List<GhichuViewModel> rs = new HoSoBLL().LayDanhsachGhichu((int)Session["DuyetHoSo_ChiTietHoSo_ID"]);
+            List<GhichuViewModel> rs = new HoSoBLL().LayDanhsachGhichu((int)Session["QL_HoSoID"]);
             if (rs == null)
                 rs = new List<GhichuViewModel>();
             return Json(new { DSGhichu = rs });
