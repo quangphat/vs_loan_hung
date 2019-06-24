@@ -41,13 +41,13 @@
 
                     </div>
                     <div class="form-group">
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại di động <span class="required">(*)</span> </label>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại khách hàng <span class="required">(*)</span> </label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtDienThoai" placeholder="Nhập số điện thoại di động" class="form-control">
+                            <input type="text" id="txtDienThoai" placeholder="Nhập số điện thoại khách hàng" class="form-control">
                         </div>
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại di động 2</label>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại nhân viên</label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtDienThoai2" placeholder="Nhập số điện thoại di động" class="form-control">
+                            <input type="text" id="txtDienThoai2" placeholder="Nhập số điện thoại nhân viên" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
@@ -64,9 +64,9 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label no-padding-right">Sell code</label>
+                        <label class="col-sm-2 control-label no-padding-right">Sale code</label>
                         <div class="col-sm-4">
-                            <select id="ddlInternalCode" class="chosen-select form-control" data-placeholder="Chọn Sell code">
+                            <select id="ddlInternalCode" class="chosen-select form-control" data-placeholder="Chọn sale code">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -156,7 +156,7 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <h3 class="header smaller lighter blue">3.Hồ sơ dính kèm:</h3>
+                <h3 class="header smaller lighter blue">3.Hồ sơ đính kèm:</h3>
                 <div class="row">
                     <div class="col-xs-12" style="overflow-y: scroll;max-height:400px;">
                         <form class="form-horizontal" role="form" id="tbDoc"></form>
@@ -166,8 +166,10 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
+                <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Tình trạng hồ sơ</h4>
                 <form class="form-horizontal">
-                    <div class="form-group">
+                    @if (VS_LOAN.Core.Web.Helpers.GlobalData.User.UserType != (int)VS_LOAN.Core.Utility.UserTypeEnum.Sale)
+                    {<div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
                         <div class="col-sm-5 col-xs-12 ">
                             <select id="ddlTrangThai" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
@@ -176,6 +178,7 @@
                         </div>
 
                     </div>
+                    }
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
                         <div class="col-md-11 col-sm-12 col-xs-12">
@@ -193,7 +196,7 @@
                                 Lưu tạm
                             </a>
                             <a class="btn btn-sm btn-primary" id="btn_Save">
-                                Nộp hồ sơ
+                                Cập nhật
                             </a>
                         }
                         else if ((ViewBag.HoSo.MaTrangThai == ((int)VS_LOAN.Core.Utility.TrangThaiHoSo.NhapLieu)
@@ -204,7 +207,7 @@
                                 Lưu tạm
                             </a>
                             <a class="btn btn-sm btn-primary" id="btn_Save">
-                                Nộp hồ sơ
+                                Cập nhật
                             </a>
                         }
                         else if ((ViewBag.HoSo.MaTrangThai == ((int)VS_LOAN.Core.Utility.TrangThaiHoSo.BoSungHoSo))
@@ -214,7 +217,7 @@
                                 Lưu tạm
                             </a>
                             <a class="btn btn-sm btn-primary" id="btn_Save">
-                                Nộp hồ sơ
+                                Cập nhật
                             </a>
                         }
                         <a class="btn btn-sm btn-primary" href="/QuanLyHoSo/DanhSachHoSo" id="btn_Back">
@@ -457,7 +460,7 @@
                             '<div class="timeline-item">'+
                             '<div class="timeline-body">' +
                             '<div class="timeline__message-container">' +
-                             '<strong>' + item.Commentator + ': </strong><span>' + item.Noidung + '</span>' +
+                            '<strong>' + item.Commentator + ' (' + SetFormatDateTimeDMY(item.CommentTime) + '): </strong><span>' + item.Noidung + '</span>' +
                             '</div></div></div></div>'
 
                         )
@@ -694,16 +697,16 @@
     </script>
     <script>
     $('#btn_Temp').click(function (e) {
-        if ($('#ddlTrangThai').val() == '0' || $('#ddlTrangThai').val() == undefined) {
-            swal({
-                title: "",
-                text: "Vui lòng chọn trạng thái",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
+        //if ($('#ddlTrangThai').val() == '0' || $('#ddlTrangThai').val() == undefined) {
+        //    swal({
+        //        title: "",
+        //        text: "Vui lòng chọn trạng thái",
+        //        type: "error",
+        //        timer: 4000,
+        //        showConfirmButton: true,
+        //    });
+        //    return;
+        //}
         if ($('#txtHoTen').val() == "" || $('#txtHoTen').val() == undefined) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
@@ -734,6 +737,7 @@
             });
             return;
         }
+        var trangthai = ($('#ddlTrangThai').val() == '0' || $('#ddlTrangThai').val() == undefined || $('#ddlTrangThai').val() == null) ? 0 : parseInt($('#ddlTrangThai').val())
         var objectSend = JSON.stringify({
             'hoten': $('#txtHoTen').val(), 'phone': $('#txtDienThoai').val(),
             'phone2': $('#txtDienThoai2').val(), 'ngayNhanDon': $('#txtToDate').val(),
@@ -741,7 +745,7 @@
             'maKhuVuc': parseInt($('#ddlHuyen').val()), 'diaChi': $('#txtDiaChi').val(), 'courier': parseInt($('#ddlCourier').val()),
             'sanPhamVay': parseInt($('#ddlSanPhamVay').val()), 'tenCuaHang': $('#txtTenCuaHang').val(),
             'baoHiem': $('#cbbaohiem').is(":checked"), 'thoiHanVay': parseInt($('#spnThoiHanVay').val()),
-            'ghiChu': $('#txtGhiChu').val(), 'trangThai': parseInt($('#ddlTrangThai').val()),
+            'ghiChu': $('#txtGhiChu').val(), 'trangThai': trangthai,
             'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, '')
         });
         $.ajax({
@@ -783,16 +787,6 @@
     </script>
     <script>
     $('#btn_Save').click(function (e) {
-        if ($('#ddlTrangThai').val() == '0' || $('#ddlTrangThai').val() == undefined) {
-            swal({
-                title: "",
-                text: "Vui lòng chọn trạng thái",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
         if ($('#txtHoTen').val() == "" || $('#txtHoTen').val() == undefined) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
@@ -854,6 +848,7 @@
             });
             return;
         }
+        var trangthai = ($('#ddlTrangThai').val() == '0' || $('#ddlTrangThai').val() == undefined || $('#ddlTrangThai').val() == null) ? 0 : parseInt($('#ddlTrangThai').val())
         var objectSend = JSON.stringify({
             'hoten': $('#txtHoTen').val(), 'phone': $('#txtDienThoai').val(),
             'phone2': $('#txtDienThoai2').val(), 'ngayNhanDon': $('#txtToDate').val(),
@@ -861,7 +856,7 @@
             'maKhuVuc': parseInt($('#ddlHuyen').val()), 'diaChi': $('#txtDiaChi').val(), 'courier':parseInt($('#ddlCourier').val()),
             'sanPhamVay': parseInt($('#ddlSanPhamVay').val()), 'tenCuaHang': $('#txtTenCuaHang').val(),
             'baoHiem': $('#cbbaohiem').is(":checked"), 'thoiHanVay': parseInt($('#spnThoiHanVay').val()),
-            'ghiChu': $('#txtGhiChu').val(), 'trangThai': parseInt($('#ddlTrangThai').val()),
+            'ghiChu': $('#txtGhiChu').val(), 'trangThai': trangthai,
             'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, '')
         });
         $.ajax({

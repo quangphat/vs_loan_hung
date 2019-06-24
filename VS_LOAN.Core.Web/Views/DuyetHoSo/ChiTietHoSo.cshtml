@@ -40,13 +40,13 @@
 
                     </div>
                     <div class="form-group">
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại di động <span class="required">(*)</span> </label>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại khách hàng <span class="required">(*)</span> </label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtDienThoai" placeholder="Nhập số điện thoại di động" class="form-control">
+                            <input type="text" id="txtDienThoai" placeholder="Điện thoại khách hàng " class="form-control">
                         </div>
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại di động 2</label>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại nhân viên</label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtDienThoai2" placeholder="Nhập số điện thoại di động" class="form-control">
+                            <input type="text" id="txtDienThoai2" placeholder="Nhập số điện thoại nhân viên" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
@@ -63,9 +63,9 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label no-padding-right">Sell code</label>
+                        <label class="col-sm-2 control-label no-padding-right">Sale code</label>
                         <div class="col-sm-4">
-                            <select id="ddlInternalCode" class="chosen-select form-control" data-placeholder="Chọn Sell code">
+                            <select id="ddlInternalCode" class="chosen-select form-control" data-placeholder="Chọn sale code">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -165,7 +165,7 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Trình trạng hồ sơ</h4>
+                <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Tình trạng hồ sơ</h4>
                 <form class="form-horizontal">
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
@@ -318,7 +318,7 @@
                             '<div class="timeline-item">' +
                             '<div class="timeline-body">' +
                             '<div class="timeline__message-container">' +
-                            '<strong>' + item.Commentator + ': </strong><span>' + item.Noidung + '</span>' +
+                            '<strong>' + item.Commentator + ' (' + SetFormatDateTimeDMY(item.CommentTime) +'): </strong><span>' + item.Noidung + '</span>'+
                             '</div></div></div></div>'
                         )
                     });

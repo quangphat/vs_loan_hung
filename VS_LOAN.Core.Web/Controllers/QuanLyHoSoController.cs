@@ -194,7 +194,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     message.ErrorMessage = "Vui lòng nhập số tiền vay";
                     isCheck = false;
                 }
-                if(trangthai<=0)
+                if(trangthai<=0 && GlobalData.User.UserType != (int)UserTypeEnum.Sale)
                 {
                     message.ErrorMessage = "Vui lòng chọn trạng thái";
                     isCheck = false;
@@ -241,7 +241,12 @@ namespace VS_LOAN.Core.Web.Controllers
                     hs.SanPhamVay = sanPhamVay;
                     hs.TenCuaHang = tenCuaHang;
                     hs.CoBaoHiem = baoHiem ? 1:0;
-                    hs.MaTrangThai = trangthai;
+                    if(GlobalData.User.UserType==(int)UserTypeEnum.Sale)
+                    {
+                        hs.MaTrangThai = (int)TrangThaiHoSo.NhapLieu;
+                    }
+                    else
+                        hs.MaTrangThai = trangthai;
                     hs.HanVay = thoiHanVay;
                     if (soTienVay == string.Empty)
                         soTienVay = "0";
@@ -286,7 +291,7 @@ namespace VS_LOAN.Core.Web.Controllers
            , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay, string soTienVay,int trangthai, string ghiChu)
         {
             var message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
-            if(trangthai<=0)
+            if(trangthai<=0 && GlobalData.User.UserType != (int)UserTypeEnum.Sale)
             {
                 message.ErrorMessage = "Vui lòng nhập họ tên";
                 message.Result = false;
@@ -325,7 +330,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     if (soTienVay == string.Empty)
                         soTienVay = "0";
                     hs.SoTienVay = Convert.ToDecimal(soTienVay);
-                    hs.MaTrangThai =trangthai;
+                    hs.MaTrangThai =(int)TrangThaiHoSo.Nhap;
                     hs.MaKetQua = (int)KetQuaHoSo.Trong;
                     List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["QL_LstFileHoSo"];
                     int result = 0;

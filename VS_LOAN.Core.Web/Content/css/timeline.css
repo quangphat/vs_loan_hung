@@ -1,9 +1,30 @@
-﻿.timeline-container {
+﻿.label-dadoichieu, label.label-dadoichieu {
+    background-color: #006600;
+}
+.label-cancel, label.label-cancel {
+    background-color: #FF9966;
+}
+.label-pcb, label.label-pcb {
+    background-color: #777777;
+}
+.label.arrowed:before, .label.arrowed-in:before {
+    display: inline-block;
+    content: "";
+    position: absolute;
+    top: 0;
+    z-index: -1;
+    border: 1px solid transparent;
+    border-right-color: #abbac3;
+    -moz-border-right-colors: #abbac3;
+}
+.timeline-container {
     /* padding: 0 20px 20px; */
     position: relative;
     margin: 20px auto;
 }
-
+.ml-20{
+    margin-left:20px !important;
+}
 time[class='timeline__time'] span {
     color: #808080;
 }
@@ -155,7 +176,7 @@ time[class='timeline__time'] span {
     content: "";
     width: 12px;
     height: 12px;
-    background: #7790B6;
+    background: #0D622F;
     border-radius: 20px;
     position: absolute;
     top: 0px;

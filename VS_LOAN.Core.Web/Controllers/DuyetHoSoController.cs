@@ -56,7 +56,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     + ((int)TrangThaiHoSo.BoSungHoSo).ToString() + ","
                     + ((int)TrangThaiHoSo.Cancel).ToString() + ","
                     + ((int)TrangThaiHoSo.DaDoiChieu).ToString() + ","
-                    + ((int)TrangThaiHoSo.PCI).ToString() + ","
+                    + ((int)TrangThaiHoSo.PCB).ToString() + ","
                     + ((int)TrangThaiHoSo.GiaiNgan).ToString();
                 rs = new HoSoBLL().TimHoSoDuyet(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, loaiNgay, trangthai);
                 if (rs == null)

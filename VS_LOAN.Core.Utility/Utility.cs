@@ -21,7 +21,7 @@ namespace VS_LOAN.Core.Utility
         GiaiNgan = 5,
         DaDoiChieu = 6,
         Cancel = 7,
-        PCI =8
+        PCB =8
     }
     public enum KetQuaHoSo
     {

@@ -264,18 +264,18 @@
                             statusString = "<span class='label label-sm label-purple arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
                         else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.ThamDinh)')
                             statusString = "<span class='label label-sm label-danger arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
+                            else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.DaDoiChieu)')
+                            statusString = "<span class='label label-sm label-dadoichieu arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
                         else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.TuChoi)')
                             statusString = "<span class='label label-sm label-inverse arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
+                            else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.Cancel)')
+                            statusString = "<span class='label label-sm label-cancel arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
+                            else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.PCB)')
+                            statusString = "<span class='label label-sm label-pcb arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
                         else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.BoSungHoSo)')
                             statusString = "<span class='label label-sm label-info arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
                         else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.GiaiNgan)')
                             statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
-                        else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.Cancel)')
-                            statusString = "<span class='label label-sm label-inverse arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
-                        else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.PCI)')
-                            statusString = "<span class='label label-sm label-inverse arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
-                        else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.DaDoiChieu)')
-                            statusString = "<span class='label label-sm label-inverse arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
                         return statusString;
 
                     },
