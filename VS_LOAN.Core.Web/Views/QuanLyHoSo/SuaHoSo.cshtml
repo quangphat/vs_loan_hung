@@ -170,14 +170,14 @@
                 <form class="form-horizontal">
                     @if (VS_LOAN.Core.Web.Helpers.GlobalData.User.UserType != (int)VS_LOAN.Core.Utility.UserTypeEnum.Sale)
                     {<div class="form-group">
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
-                        <div class="col-sm-5 col-xs-12 ">
-                            <select id="ddlTrangThai" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
-                                <option value="0"></option>
-                            </select>
-                        </div>
+                            <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
+                            <div class="col-sm-5 col-xs-12 ">
+                                <select id="ddlTrangThai" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
+                                    <option value="0"></option>
+                                </select>
+                            </div>
 
-                    </div>
+                        </div>
                     }
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
@@ -220,6 +220,12 @@
                                 Cập nhật
                             </a>
                         }
+                        else if (ViewBag.HoSo.MaTrangThai == (int)VS_LOAN.Core.Utility.TrangThaiHoSo.Nhap)
+                        {
+                            <a class="btn btn-sm btn-primary" id="btn_Save">
+                                Nộp hồ sơ
+                            </a>
+                        }
                         <a class="btn btn-sm btn-primary" href="/QuanLyHoSo/DanhSachHoSo" id="btn_Back">
                             Trở về
                         </a>
@@ -234,8 +240,8 @@
             <div class="activity-log">
                 <div class="timline-addNote only-new-note">
                     <div class="timeline-date-event timline-date-event--margin mt-0" id="dsGhichu">
-                        
-                        
+
+
                     </div>
                 </div>
             </div>

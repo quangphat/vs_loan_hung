@@ -106,7 +106,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 rs = new List<NhanVienNhomDropDownModel>();
             return Json(new { DSThanhVienNhom = rs });
         }
-        
+
         //public JsonResult LayDSTrangThai()
         //{
         //    List<TrangThaiHoSoModel> rs = new TrangThaiHoSoBLL().LayDSTrangThai();
@@ -148,9 +148,14 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult Save(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
-           , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang, bool baoHiem, int thoiHanVay, string soTienVay,int trangthai, string ghiChu)
+           , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang, bool baoHiem, int thoiHanVay, string soTienVay, int trangthai, string ghiChu)
         {
             var message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
+            if (GlobalData.User.UserType == (int)UserTypeEnum.Sale
+                || trangthai == (int)TrangThaiHoSo.Nhap)
+            {
+                trangthai = (int)TrangThaiHoSo.NhapLieu;
+            }
             try
             {
                 bool isCheck = true;
@@ -194,12 +199,12 @@ namespace VS_LOAN.Core.Web.Controllers
                     message.ErrorMessage = "Vui lòng nhập số tiền vay";
                     isCheck = false;
                 }
-                if(trangthai<=0 && GlobalData.User.UserType != (int)UserTypeEnum.Sale)
+                if (trangthai <= 0)
                 {
                     message.ErrorMessage = "Vui lòng chọn trạng thái";
                     isCheck = false;
                 }
-                if(!string.IsNullOrWhiteSpace(ghiChu) && ghiChu.Length>200)
+                if (!string.IsNullOrWhiteSpace(ghiChu) && ghiChu.Length > 200)
                 {
                     message.ErrorMessage = "Nội dung ghi chú không được nhiều hơn 200 ký tự";
                     isCheck = false;
@@ -240,13 +245,8 @@ namespace VS_LOAN.Core.Web.Controllers
                     hs.CourierCode = courier;
                     hs.SanPhamVay = sanPhamVay;
                     hs.TenCuaHang = tenCuaHang;
-                    hs.CoBaoHiem = baoHiem ? 1:0;
-                    if(GlobalData.User.UserType==(int)UserTypeEnum.Sale)
-                    {
-                        hs.MaTrangThai = (int)TrangThaiHoSo.NhapLieu;
-                    }
-                    else
-                        hs.MaTrangThai = trangthai;
+                    hs.CoBaoHiem = baoHiem ? 1 : 0;
+                    hs.MaTrangThai = trangthai;
                     hs.HanVay = thoiHanVay;
                     if (soTienVay == string.Empty)
                         soTienVay = "0";
@@ -288,10 +288,10 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult SaveDaft(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
-           , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay, string soTienVay,int trangthai, string ghiChu)
+           , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay, string soTienVay, int trangthai, string ghiChu)
         {
             var message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
-            if(trangthai<=0 && GlobalData.User.UserType != (int)UserTypeEnum.Sale)
+            if (trangthai <= 0 && GlobalData.User.UserType != (int)UserTypeEnum.Sale)
             {
                 message.ErrorMessage = "Vui lòng nhập họ tên";
                 message.Result = false;
@@ -307,7 +307,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 else
                 {
                     HoSoModel hs = new HoSoModel();
-                    hs.ID = (int)Session["QL_HoSoID"]; 
+                    hs.ID = (int)Session["QL_HoSoID"];
                     hs.TenKhachHang = hoten;
                     hs.SDT = phone;
                     hs.SDT2 = phone2;
@@ -330,7 +330,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     if (soTienVay == string.Empty)
                         soTienVay = "0";
                     hs.SoTienVay = Convert.ToDecimal(soTienVay);
-                    hs.MaTrangThai =(int)TrangThaiHoSo.Nhap;
+                    hs.MaTrangThai = (int)TrangThaiHoSo.Nhap;
                     hs.MaKetQua = (int)KetQuaHoSo.Trong;
                     List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["QL_LstFileHoSo"];
                     int result = 0;
@@ -497,7 +497,7 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             return Json(new { Result = fileUrl });
         }
-      
+
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult SuaHSByID(int id, string fromDate, string toDate, string mahs)
         {
