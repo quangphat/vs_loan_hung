@@ -204,9 +204,9 @@ namespace VS_LOAN.Core.Web.Controllers
                     message.ErrorMessage = "Vui lòng chọn trạng thái";
                     isCheck = false;
                 }
-                if (!string.IsNullOrWhiteSpace(ghiChu) && ghiChu.Length > 200)
+                if (!string.IsNullOrWhiteSpace(ghiChu) && ghiChu.Length > 300)
                 {
-                    message.ErrorMessage = "Nội dung ghi chú không được nhiều hơn 200 ký tự";
+                    message.ErrorMessage = "Nội dung ghi chú không được nhiều hơn 300 ký tự";
                     isCheck = false;
                 }
                 List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["QL_LstFileHoSo"];

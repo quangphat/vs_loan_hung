@@ -61,7 +61,7 @@ namespace VS_LOAN.Core.Nhibernate
                         string password = tempArray[i].Substring(tempArray[i].IndexOf('=') + 1).TrimStart();
                         password = TripleDESProcessor.DecryptTripleDES("!123@", password);
                         //connectionString += "Password=" + password + ";";
-                        connectionString += "Password=number8;";
+                        connectionString += "Password=" + password+";";
                     }
                     else
                         connectionString += tempArray[i] + ";";

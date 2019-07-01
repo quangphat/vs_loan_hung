@@ -50,9 +50,9 @@ namespace VS_LOAN.Core.Web.Controllers
                     dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTime(toDate);
                 message.Result = true;
                 string trangthai = "";
-                trangthai += ((int)TrangThaiHoSo.TuChoi).ToString() + "," 
-                    + ((int)TrangThaiHoSo.NhapLieu).ToString() + "," 
-                    + ((int)TrangThaiHoSo.ThamDinh).ToString() + "," 
+                trangthai += ((int)TrangThaiHoSo.TuChoi).ToString() + ","
+                    + ((int)TrangThaiHoSo.NhapLieu).ToString() + ","
+                    + ((int)TrangThaiHoSo.ThamDinh).ToString() + ","
                     + ((int)TrangThaiHoSo.BoSungHoSo).ToString() + ","
                     + ((int)TrangThaiHoSo.Cancel).ToString() + ","
                     + ((int)TrangThaiHoSo.DaDoiChieu).ToString() + ","
@@ -220,7 +220,7 @@ namespace VS_LOAN.Core.Web.Controllers
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult CapNhat(int id, string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
-                   , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay, string soTienVay,int trangThai, int ketQua, string ghiChu)
+                   , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay, string soTienVay, int trangThai, int ketQua, string ghiChu)
         {
             RMessage message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
             try
@@ -266,9 +266,9 @@ namespace VS_LOAN.Core.Web.Controllers
                     message.ErrorMessage = "Vui lòng nhập số tiền vay";
                     isCheck = false;
                 }
-                if(!string.IsNullOrEmpty(ghiChu) && ghiChu.Length>200)
+                if (!string.IsNullOrEmpty(ghiChu) && ghiChu.Length > 300)
                 {
-                    message.ErrorMessage = "Vui lòng nhập số tiền vay";
+                    message.ErrorMessage = "Nội dung ghi chú không được nhiều hơn 300 ký tự";
                     isCheck = false;
                 }
                 List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["Duyet_LstFileHoSo"];
@@ -312,7 +312,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     if (soTienVay == string.Empty)
                         soTienVay = "0";
                     hs.SoTienVay = Convert.ToDecimal(soTienVay);
-                    hs.MaTrangThai =trangThai;
+                    hs.MaTrangThai = trangThai;
                     hs.MaKetQua = ketQua;
                     int result = 0;
                     if (hs.ID > 0)
@@ -324,7 +324,7 @@ namespace VS_LOAN.Core.Web.Controllers
                         }
                         bool isCheckMaSanPham = false;
                         //// chỉnh sửa
-                        if (new HoSoBLL().CapNhatHoSo(hs, lstTaiLieu,ref isCheckMaSanPham))
+                        if (new HoSoBLL().CapNhatHoSo(hs, lstTaiLieu, ref isCheckMaSanPham))
                         {
                             result = 1;
                         }
@@ -354,7 +354,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     };
                     new HoSoBLL().AddGhichu(ghichu);
                 }
-               
+
             }
             catch (Exception)
             {
@@ -415,13 +415,17 @@ namespace VS_LOAN.Core.Web.Controllers
                 isLimit = true;
             else
                 isLimit = false;
-            if(!isTeamlead && !isAdmin)
+            if (!isTeamlead && !isAdmin)
                 return Json(new { DSTrangThai = new List<TrangThaiHoSoModel>() });
             List<TrangThaiHoSoModel> rs = new TrangThaiHoSoBLL().LayDSTrangThai(isLimit);
             if (rs == null)
                 rs = new List<TrangThaiHoSoModel>();
             rs.RemoveAll(x => x.ID == (int)TrangThaiHoSo.Nhap);
             rs.RemoveAll(x => x.ID == (int)TrangThaiHoSo.NhapLieu);
+            if (isAdmin)
+            {
+                rs.RemoveAll(x => x.ID == (int)TrangThaiHoSo.DaDoiChieu);
+            }
             return Json(new { DSTrangThai = rs });
         }
 
@@ -479,7 +483,7 @@ namespace VS_LOAN.Core.Web.Controllers
                                 excelOOXML.SetCellData(nameSheet, "F" + rowindex, rs[i].TenKH);
                                 excelOOXML.SetCellData(nameSheet, "G" + rowindex, rs[i].TrangThaiHS);
                                 excelOOXML.SetCellData(nameSheet, "H" + rowindex, rs[i].KetQuaHS);
-                                excelOOXML.SetCellData(nameSheet, "I" + rowindex, rs[i].NgayCapNhat == DateTime.MinValue? "" : rs[i].NgayCapNhat.ToString("dd/MM/yyyy"));
+                                excelOOXML.SetCellData(nameSheet, "I" + rowindex, rs[i].NgayCapNhat == DateTime.MinValue ? "" : rs[i].NgayCapNhat.ToString("dd/MM/yyyy"));
                                 excelOOXML.SetCellData(nameSheet, "J" + rowindex, rs[i].MaNV);
                                 excelOOXML.SetCellData(nameSheet, "K" + rowindex, rs[i].NhanVienBanHang);
                                 excelOOXML.SetCellData(nameSheet, "L" + rowindex, rs[i].DoiNguBanHang);
