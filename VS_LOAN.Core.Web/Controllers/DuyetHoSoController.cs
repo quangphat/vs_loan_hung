@@ -187,6 +187,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public JsonResult Delete(string key)
         {
             string fileUrl = "";
+            key = Request["key"];
             try
             {
 
