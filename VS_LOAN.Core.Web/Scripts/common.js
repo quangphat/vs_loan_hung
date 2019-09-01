@@ -13,6 +13,31 @@
 //    });
 //}
 
+function setCheckedValueOfRadioButtonGroup(name, vValue) {
+    var radios = document.getElementsByName(name);
+    for (var j = 0; j < radios.length; j++) {
+        if (radios[j].value === vValue) {
+            radios[j].checked = true;
+            break;
+        }
+    }
+}
+function isNullOrNoItem(arr) {
+    if (arr === null || arr === undefined || arr.length === 0)
+        return true;
+    return false;
+}
+function isNullOrUndefined(value) {
+    if (value === null || value === undefined)
+        return true;
+    return false;
+}
+function isNullOrWhiteSpace(text) {
+    if (text === null || text === undefined || text === '' || text.trim() === '')
+        return true;
+    return false;
+}
+
 function showBlock(div, text) {
     div.block({
         css: {

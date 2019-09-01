@@ -37,10 +37,19 @@ namespace VS_LOAN.Core.Web.Controllers
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public JsonResult TimHS(int maNhom, int maThanhVien, string fromDate, string toDate, string maHS, string cmnd, int loaiNgay)
+        public JsonResult TimHS( int maThanhVien,
+            string fromDate, 
+            string toDate, 
+            string maHS, 
+            string cmnd, 
+            int loaiNgay,
+            int maNhom = 0,
+            string freetext = null,
+            int page = 1, int limit = 10)
         {
             RMessage message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
-            List<HoSoDuyetModel> rs = new List<HoSoDuyetModel>();
+            List<HoSoDuyetModel> lstHoso = new List<HoSoDuyetModel>();
+            int totalRecord = 0;
             try
             {
                 DateTime dtFromDate = DateTime.MinValue, dtToDate = DateTime.MinValue;
@@ -58,9 +67,10 @@ namespace VS_LOAN.Core.Web.Controllers
                     + ((int)TrangThaiHoSo.DaDoiChieu).ToString() + ","
                     + ((int)TrangThaiHoSo.PCB).ToString() + ","
                     + ((int)TrangThaiHoSo.GiaiNgan).ToString();
-                rs = new HoSoBLL().TimHoSoDuyet(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, loaiNgay, trangthai);
-                if (rs == null)
-                    rs = new List<HoSoDuyetModel>();
+                totalRecord = new HoSoBLL().CountHosoDuyet(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, loaiNgay, trangthai, freetext);
+                lstHoso = new HoSoBLL().TimHoSoDuyet(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, loaiNgay, trangthai, freetext, page, limit);
+                if (lstHoso == null)
+                    lstHoso = new List<HoSoDuyetModel>();
             }
             catch (BusinessException ex)
             {
@@ -69,7 +79,8 @@ namespace VS_LOAN.Core.Web.Controllers
                 message.ErrorMessage = ex.Message;
                 message.SystemMessage = ex.ToString();
             }
-            return Json(rs, JsonRequestBehavior.AllowGet);
+            var result = DataPaging.Create(lstHoso, totalRecord);
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]

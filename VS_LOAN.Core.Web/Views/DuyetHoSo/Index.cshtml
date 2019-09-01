@@ -10,8 +10,8 @@
     <div class="breadcrumbs" id="breadcrumbs">
         <ul class="breadcrumb">
             @*<li>
-                <a href="/HoSo/Index">Hồ sơ của tôi</a>
-            </li>*@
+                    <a href="/HoSo/Index">Hồ sơ của tôi</a>
+                </li>*@
             <li>
                 <a href="#" class="active">Duyệt hồ sơ</a>
             </li>
@@ -72,7 +72,12 @@
                             <input type="text" class="form-control" id="txtCMND" placeholder="Nhập CMND" />
                         </div>
                     </div>
-                   
+                    <div class="form-group">
+                        <label class="col-sm-1 col-xs-12  control-label no-padding-right">Tìm kiếm</label>
+                        <div class="col-sm-2 col-xs-12">
+                            <input type="text" class="form-control" id="txtFreeText" placeholder="Tìm kiếm" />
+                        </div>
+                    </div>
                     <div class="space-4"></div>
                     <div class="form-group">
                         <div class="col-md-12">
@@ -95,7 +100,21 @@
                 <div class="table-header">
                     Danh sách hồ sơ
                 </div>
-
+                <div class="dataTables_wrapper form-inline no-footer">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <label>
+                                Hiển thị
+                                <select id="ddlLimit" class="form-control input-sm" onchange="onSelectLimit()">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select> dòng mỗi trang
+                            </label>
+                        </div>
+                    </div>
+                </div>
                 <!-- div.table-responsive -->
                 <!-- div.dataTables_borderWrap -->
                 <div>
@@ -121,7 +140,20 @@
                                 <th style="width: 80px">Thao tác</th>
                             </tr>
                         </thead>
+                        <tbody></tbody>
                     </table>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="dataTables_info" id="dtSource_info" role="status" aria-live="polite">Hiển thị dòng 1 đến dòng 10 trên tổng số 12 dòng</div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="dataTables_paginate paging_simple_numbers" id="dtSource_paginate">
+                            <ul class="pagination" id="paging">
+                                
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- /.col -->
@@ -137,9 +169,23 @@
     </div>
 </div>
 <script>
+    var queries = new URLSearchParams(window.location.search);
+    var page = 1;
+    var limit = 10;
+    var pageMargin = 2;
+    var totalPage = 1;
+    var totalRecord = 0;
     $(document).ready(function e() {
+        var input = document.getElementById("txtFreeText");
+        input.addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                $("#btn_search").click();
+            }
+        });
         $('#ddlThanhVienNhom').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlNhom').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddllimit').chosen({ width: '100%', allow_single_deselect: true });
         $('#txtFromDate').datepicker({
             dateFormat: 'dd-mm-yy'
         }).next().on(ace.click_event, function () {
@@ -150,25 +196,254 @@
         }).next().on(ace.click_event, function () {
             $(this).prev().focus();
         });
-        $("#txtFromDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + -7);
-        $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 1);
+        var fromDate = queries.get("fromDate");
+        if (isNullOrWhiteSpace(fromDate)) {
+            fromDate = new Date().getDay + -7;
+        }
+        $("#txtFromDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", fromDate);
+        var toDate = queries.get("toDate");
+        if (isNullOrWhiteSpace(toDate)) {
+            toDate = new Date().getDay + 1;
+        }
+        $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", toDate);
+        var dateType = queries.get("loaiNgay");
+        setCheckedValueOfRadioButtonGroup("radio-ngay", dateType)
+        var maHS = queries.get("maHS");
+        $('#txtMaHS').val(maHS)
+        $('#txtFreeText').val(queries.get("freetext"))
+        var cmnd = queries.get("cmnd");
+        $('#txtCMND').val(cmnd)
+        page = queries.get("page");
+        if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+            page = 1;
+        else
+            page = parseInt(page)
+        limit = queries.get("limit")
+        if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+            limit = 10;
+        else
+            limit = parseInt(limit)
+        $("#ddlLimit").val(limit)
     });
-</script>
-<script>
+    function getTotalPage(totalRecord, limit) {
+        return totalRecord > limit ? Math.ceil(totalRecord / limit) : 1
+    }
+    function onClickPage(page) {
+        page = page;
+        getData(page, limit);
+    }
+    function renderGoPreviousPage(page) {
+        let newCurrentPage = page
+        if (page > 1) {
+            newCurrentPage = page - 1
+            return "<li class='paginate_button previous' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + newCurrentPage +")'>"
+                + "<a href='javascript:;'>Trước</a>"
+                + "</li>"
+            
+        } else {
+            return ""
+        }
+    }
+    function renderGoNextPage(page) {
+        if (page < totalPage) {
+            newCurrentPage = page + 1
+           return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + newCurrentPage +")' >"
+                +"<a href='javascript:;'>Sau</a>"
+                + "</li>"
+            
+        } else {
+            return ""
+        }
+    }
+    function renderPageList(page, limit, totalRc) {
+        totalPage = getTotalPage(totalRc, limit)
+        var startPage = page > pageMargin ? page - margin : 1;
+        var endPage = pageMargin + page > totalPage ? totalPage : pageMargin + page
+        var paging = $("#paging");
+        paging.empty();
+        var last = renderGoPreviousPage(page)
+        var next = renderGoNextPage(page);
+        paging.append(last)
+        for (var i = startPage; i <= endPage; i++) {
+            var active = page == i ? ' active' : '';
+            var item = "<li class='paginate_button" + active + " aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + i + ")' >"
+                + "<a href='javascript:;'>" + i + "</a>"
+                + "</li>"
+            paging.append(item)
+        }
+        paging.append(next);
+    }
+    function getValueDisplay(value, type) {
+        if (isNullOrWhiteSpace(type))
+            return value
+        var display = null
+        switch (type)
+        {
+            case 'datetime':
+                display = FormatDateTimeDMY(value);
+            default: break;
+        }
+        return display;
+    }
+    function renderStatus(MaTrangThai, TrangThaiHS) {
+        var statusString = "";
+        if (MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.Nhap)')
+            statusString = "<span class='label label-sm label-light arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.NhapLieu)')
+            statusString = "<span class='label label-sm label-purple arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.ThamDinh)')
+            statusString = "<span class='label label-sm label-danger arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.DaDoiChieu)')
+            statusString = "<span class='label label-sm label-dadoichieu arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.TuChoi)')
+            statusString = "<span class='label label-sm label-inverse arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.Cancel)')
+            statusString = "<span class='label label-sm label-cancel arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.PCB)')
+            statusString = "<span class='label label-sm label-pcb arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.BoSungHoSo)')
+            statusString = "<span class='label label-sm label-info arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.GiaiNgan)')
+            statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        return "<td class='text-left'>" + statusString + "</td>";;
+    }
+    function renderTextLeft(value, type) {
+        return "<td class='text-left'>" + getValueDisplay(value,type) + "</td>";
+    }
+    function renderTextCenter(value, type) {
+        return "<td class='text-center'>" + getValueDisplay(value, type) + "</td>";
+    }
+    function renderCoBaoHiem(CoBaoHiem) {
+        var value = ""
+        if (CoBaoHiem == true)
+            value = "<td class='text-left'> <div class='orange bolder' title='Không có bảo hiểm' ><i class=\"ace-icon fa fa-ban bigger-130\"></i></div> </td>";
+        else
+            value = "<td class='text-left'> <div class='green bolder'title = 'Có bảo hiểm' > <i class=\"ace-icon glyphicon glyphicon-ok bigger-130\"></i></div> </td>";
+        return value;
+    }
+    function renderAction(id) {
+        var thaotac = "<div class='action-buttons'>"
+            + "<a title='@Global.Button_View' class=\"blue\" style='cursor: pointer' id='" + id+ "' onClick='XemHS(this)'>"
+            + "<i class=\"ace-icon fa fa-eye bigger-130\">"
+            + "</i></a></div>"
+        return "<td class='text-center'>" + thaotac + "</td>"
+    }
+    function onSelectLimit() {
+        limit = $("#ddlLimit").val()
+        getData(page,limit)
+        //alert(limit)
+    }
+    function renderRow(index, rowData) {
+        page = queries.get("page");
+        if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+            page = 1;
+        else
+            page = parseInt(page)
+        limit = queries.get("limit")
+        if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+            limit = 10;
+        else
+            limit = parseInt(limit)
+        var stt = (page - 1) * limit + index + 1;
+        return "<tr role='row' class = 'odd'>"
+            + renderTextCenter(stt)
+            + renderTextLeft(rowData.MaHoSo)
+            + renderTextLeft(rowData.NgayTao, 'datetime')
+            + renderTextLeft(rowData.DoiTac)
+            + renderTextLeft(rowData.CMND)
+            + renderTextLeft(rowData.TenKH)
+            + renderStatus(rowData.MaTrangThai, rowData.TrangThaiHS)
+            + renderTextLeft(rowData.GhiChu)
+            + renderTextLeft(rowData.NgayCapNhat, 'datetime')
+            + renderTextLeft(rowData.TenSanPham)
+            + renderTextLeft(rowData.MaNV)
+            + renderTextLeft(rowData.NhanVienBanHang)
+            + renderTextLeft(rowData.DoiNguBanHang)
+            + renderTextLeft(rowData.MaNVLayHS)
+            + renderCoBaoHiem(rowData.CoBaoHiem)
+            + renderTextLeft(rowData.DiaChiKH)
+            + renderAction(rowData.ID)
+            + "</tr>";
+    }
+    function renderTableBody(datas) {
+        var table = $("#dtSource")
+        var tableBody = $("#dtSource").find("tbody");
+            tableBody.empty();
+        if (isNullOrNoItem(datas))
+            return;
+        $.each(datas, function (index, item) {
+            tableBody.append(renderRow(index, item));
+        });
+        
+    }
+
+    function getData(page, limit)
+    {
+        showBlock($('#panel_body'), strLoading);
+        $.ajax( {
+                url: '@Url.Action("TimHS", "DuyetHoSo")',
+                type: "GET",
+                contentType: "application/json",
+            data: {
+                'page': page,
+                'limit': limit,
+                  'maNhom': $('#ddlNhom').val(),
+                 'maThanhVien': $('#ddlThanhVienNhom').val(),
+                  'fromDate':$('#txtFromDate').val(),
+                  'toDate': $('#txtToDate').val(),
+                  'maHS':$('#txtMaHS').val(),
+                'cmnd': $('#txtCMND').val(),
+                'freetext': $("#txtFreeText").val(),
+                  'loaiNgay': $('input[name="radio-ngay"]:checked').val()
+            },
+            success: function (response) {
+                totalRecord = response.TotalRecord;
+                var search = this.url.replace("/DuyetHoSo/TimHS","");
+                queries = new URLSearchParams(search)
+                page = queries.get("page");
+                if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+                    page = 1;
+                else
+                    page = parseInt(page)
+                limit = queries.get("limit")
+                if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                    limit = 10;
+                else
+                    limit = parseInt(limit)
+                renderTableBody(response.Datas)
+                //renderGoPreviousPage(page);
+                renderPageList(page, limit,totalRecord)
+                //renderGoNextPage(page)
+            },
+                error: function (jqXHR, exception) {
+                    showError(jqXHR, exception);
+                },
+                complete: function () {
+                    $('#panel_body').unblock();
+                    var requestUrl = this.url.replace("TimHS", "Index")
+                    window.history.pushState(requestUrl,this.title, requestUrl)
+            }
+        })
+
+    }
     var strLoading = '@Global.Message_Loading';
+    var currentPage = 0;
     $('#btn_search').click(function (e) {
         showBlock($('#panel_body'), strLoading);
-        $('#dtSource').DataTable().ajax.reload();
-        $('#dtSource').DataTable().columns.adjust().draw();
+        currentPage += 1;
+        var isNewPage = currentPage > 1 ? true : false
+        getData(page, limit);
+        
+       //$('#dtSource').DataTable().ajax.reload();
+        //$('#dtSource').DataTable().columns.adjust().draw();
     });
-</script>
-<script type="text/javascript">
+
     $(document).ready(function () {
         LayNhom();
     });
 
     function InitTable() {
-        showBlock($('#panel_body'), strLoading);
+        //showBlock($('#panel_body'), strLoading);
         var table = $('#dtSource').DataTable({
             scrollX: true,
             //scrollCollapse: true,
@@ -432,8 +707,7 @@
         //    alert('You clicked on ' + data.ID);
         //});
     }
-</script>
-<script>
+
     function LayNhom() {
         $('#ddlNhom').empty();
         $.ajax({
@@ -446,9 +720,12 @@
                     $.each(data.DSNhom, function (index, item) {
                         $('#ddlNhom').append("<option value='" + item.ID + "'>" + item.Ten + "(" + item.TenQL + ")</option>");
                     });
+                    var maNhom = queries.get("maNhom");
+                    $('#ddlNhom').val(maNhom)
                     $('#ddlNhom').chosen().trigger("chosen:updated").change();
                 }
-                InitTable();
+                getData(page,limit);
+                //InitTable();
             },
             complete: function () {
             },
@@ -461,7 +738,9 @@
     $('#ddlNhom').change(function () {
         $('#ddlThanhVienNhom').empty();
         $('#ddlThanhVienNhom').append("<option value='0'></option>");
-        $.ajax({
+        var maNhom = $('#ddlNhom').val()
+        if (!isNullOrUndefined(maNhom)) {
+             $.ajax({
             type: "POST",
             url: '@Url.Action("LayDSThanhVienNhom", "DuyetHoSo")',
             data: { "maNhom": $('#ddlNhom').val() },
@@ -469,7 +748,9 @@
                 if (data.DSThanhVienNhom != null) {
                     $.each(data.DSThanhVienNhom, function (index, item) {
                         $('#ddlThanhVienNhom').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
-                    });                    
+                    });
+                    var memberId = queries.get("maThanhVien");
+                    $('#ddlThanhVienNhom').val(memberId)
                 }
             },
             complete: function () {
@@ -479,6 +760,8 @@
                 showError(jqXHR, exception);
             }
         });
+        }
+
     });
 
 </script>
@@ -491,8 +774,7 @@
     }
 </script>
 <script>
-    function DownloadReport(e)
-    {
+    function DownloadReport(e) {
         var maNhom = 0;
         var maThanhVien = 0;
         if ($('#ddlNhom').val() != undefined) {
@@ -532,4 +814,5 @@
             },
         });
     }
+
 </script>

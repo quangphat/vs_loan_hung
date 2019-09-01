@@ -226,6 +226,9 @@
     <Compile Include="Controllers\ToNhomController.cs" />
     <Compile Include="Helpers\CaptchaImageResult.cs" />
     <Compile Include="Helpers\Constant.cs" />
+    <Compile Include="Helpers\DataContractAttribute.cs" />
+    <Compile Include="Helpers\DataMemberAttribute.cs" />
+    <Compile Include="Helpers\DataPaging.cs" />
     <Compile Include="Helpers\DataTables\jQueryDataTableParamModel.cs" />
     <Compile Include="Helpers\EnumIndexMenu.cs" />
     <Compile Include="Controllers\NhanVienController.cs" />
