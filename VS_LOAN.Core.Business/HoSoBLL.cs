@@ -15,6 +15,7 @@ namespace VS_LOAN.Core.Business
 {
     public class HoSoBLL
     {
+        private const int Limit_Max_Page = 100;
         public int Them(HoSoModel hoSoModel, List<TaiLieuModel> lstTaiLieu, ref bool isCheckMaSanPham)
         {
             try
@@ -886,7 +887,7 @@ namespace VS_LOAN.Core.Business
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 totalRecord = 0;
             }
@@ -905,7 +906,7 @@ namespace VS_LOAN.Core.Business
             int page = 1, int limit = 10)
         {
             page = page <= 0 ? 1 : page;
-            limit = (limit <= 0 || limit >= 50) ? 10 : limit;
+            limit = (limit <= 0 || limit >= Limit_Max_Page) ? 10 : limit;
             int offset = (page - 1) * limit;
             string query = string.IsNullOrWhiteSpace(freeText) ? string.Empty : freeText;
             try
@@ -977,8 +978,70 @@ namespace VS_LOAN.Core.Business
                 throw ex;
             }
         }
-        public List<HoSoQuanLyModel> TimHoSoQuanLy(int maNVDangNhap, int maNhom, int maThanhVien, DateTime tuNgay, DateTime denNgay, string maHS, string cmnd, string trangthai, int loaiNgay)
+        public int CountHoSoQuanLy(int maNVDangNhap,
+            int maNhom,
+            int maThanhVien,
+            DateTime tuNgay,
+            DateTime denNgay,
+            string maHS,
+            string cmnd,
+            string trangthai,
+            int loaiNgay,
+            string freeText = null
+            )
         {
+            string query = string.IsNullOrWhiteSpace(freeText) ? string.Empty : freeText;
+            int totalRecord = 0;
+            try
+            {
+                using (var session = LOANSessionManager.OpenSession())
+                {
+                    IDbCommand command = new SqlCommand();
+                    command.Connection = session.Connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "sp_HO_SO_Count_TimHoSoQuanLy";
+
+                    command.Parameters.Add(new SqlParameter("@MaNVDangNhap", maNVDangNhap));
+                    command.Parameters.Add(new SqlParameter("@MaNhom", maNhom));
+                    command.Parameters.Add(new SqlParameter("@MaThanhVien", maThanhVien));
+                    command.Parameters.Add(new SqlParameter("@TuNgay", tuNgay));
+                    command.Parameters.Add(new SqlParameter("@DenNgay", denNgay));
+                    command.Parameters.Add(new SqlParameter("@MaHS", maHS));
+                    command.Parameters.Add(new SqlParameter("@CMND", cmnd));
+                    command.Parameters.Add(new SqlParameter("@TrangThai", trangthai));
+                    command.Parameters.Add(new SqlParameter("@LoaiNgay", loaiNgay));
+                    command.Parameters.Add(new SqlParameter("@freeText", query));
+                    DataTable dt = new DataTable();
+                    dt.Load(command.ExecuteReader());
+                    if (dt != null && dt.Rows != null && dt.Rows.Count > 0)
+                    {
+                        totalRecord = Convert.ToInt32(dt.Rows[0]["TotalRecord"].ToString());
+                    }
+                }
+            }
+            catch
+            {
+                totalRecord = 0;
+            }
+            return totalRecord;
+        }
+        public List<HoSoQuanLyModel> TimHoSoQuanLy(int maNVDangNhap,
+                int maNhom,
+                int maThanhVien,
+                DateTime tuNgay,
+                DateTime denNgay,
+                string maHS,
+                string cmnd,
+                string trangthai,
+                int loaiNgay,
+                string freeText = null,
+                int page = 1, int limit = 10
+                )
+        {
+            page = page <= 0 ? 1 : page;
+            limit = (limit <= 0 || limit >= Limit_Max_Page) ? 10 : limit;
+            int offset = (page - 1) * limit;
+            string query = string.IsNullOrWhiteSpace(freeText) ? string.Empty : freeText;
             try
             {
                 using (var session = LOANSessionManager.OpenSession())
@@ -997,6 +1060,9 @@ namespace VS_LOAN.Core.Business
                     command.Parameters.Add(new SqlParameter("@CMND", cmnd));
                     command.Parameters.Add(new SqlParameter("@TrangThai", trangthai));
                     command.Parameters.Add(new SqlParameter("@LoaiNgay", loaiNgay));
+                    command.Parameters.Add(new SqlParameter("@offset", offset));
+                    command.Parameters.Add(new SqlParameter("@limit", limit));
+                    command.Parameters.Add(new SqlParameter("@freeText", query));
                     DataTable dt = new DataTable();
                     dt.Load(command.ExecuteReader());
                     if (dt != null)

@@ -145,7 +145,7 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-6">
-                        <div class="dataTables_info" id="dtSource_info" role="status" aria-live="polite">Hiển thị dòng 1 đến dòng 10 trên tổng số 12 dòng</div>
+                        <div class="dataTables_info" id="dtSource_info" role="status" aria-live="polite"></div>
                     </div>
                     <div class="col-xs-6">
                         <div class="dataTables_paginate paging_simple_numbers" id="dtSource_paginate">
@@ -397,23 +397,34 @@
                   'loaiNgay': $('input[name="radio-ngay"]:checked').val()
             },
             success: function (response) {
-                totalRecord = response.TotalRecord;
-                var search = this.url.replace("/DuyetHoSo/TimHS","");
-                queries = new URLSearchParams(search)
-                page = queries.get("page");
-                if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
-                    page = 1;
-                else
-                    page = parseInt(page)
-                limit = queries.get("limit")
-                if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
-                    limit = 10;
-                else
-                    limit = parseInt(limit)
-                renderTableBody(response.Datas)
-                //renderGoPreviousPage(page);
-                renderPageList(page, limit,totalRecord)
-                //renderGoNextPage(page)
+                if (response.Message == null) {
+                    totalRecord = response.TotalRecord;
+                    var search = this.url.replace("/DuyetHoSo/TimHS", "");
+                    queries = new URLSearchParams(search)
+                    page = queries.get("page");
+                    if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+                        page = 1;
+                    else
+                        page = parseInt(page)
+                    limit = queries.get("limit")
+                    if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                        limit = 10;
+                    else
+                        limit = parseInt(limit)
+                    renderTableBody(response.Datas)
+                    //renderGoPreviousPage(page);
+                    renderPageList(page, limit, totalRecord)
+                    $("#dtSource_info").text("Tổng: " + response.TotalRecord + " items");
+                }
+                else {
+                    swal({
+                        title: "",
+                        text: response.Message.ErrorMessage,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
             },
                 error: function (jqXHR, exception) {
                     showError(jqXHR, exception);
@@ -427,11 +438,8 @@
 
     }
     var strLoading = '@Global.Message_Loading';
-    var currentPage = 0;
     $('#btn_search').click(function (e) {
         showBlock($('#panel_body'), strLoading);
-        currentPage += 1;
-        var isNewPage = currentPage > 1 ? true : false
         getData(page, limit);
         
        //$('#dtSource').DataTable().ajax.reload();

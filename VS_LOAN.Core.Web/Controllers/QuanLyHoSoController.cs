@@ -41,10 +41,29 @@ namespace VS_LOAN.Core.Web.Controllers
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public JsonResult TimHSQL(int maNhom, int maThanhVien, string fromDate, string toDate, string maHS, string cmnd, int loaiNgay)
+        public JsonResult TimHSQL(string fromDate,
+            string toDate,
+            string maHS,
+            string cmnd,
+            int loaiNgay = 1,
+            int maNhom = 0,
+            int maThanhVien = 0,
+            string freetext = null,
+            int page = 1, int limit = 10
+            )
         {
             RMessage message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
-            List<HoSoQuanLyModel> rs = new List<HoSoQuanLyModel>();
+            List<HoSoQuanLyModel> lstHoso = new List<HoSoQuanLyModel>();
+            int totalRecord = 0;
+            if (!string.IsNullOrWhiteSpace(freetext) && freetext.Length >50)
+            {
+                message.Result = false;
+                message.MessageId = string.Empty;
+                message.ErrorMessage = "Từ khóa tìm kiếm không được nhiều hơn 50 ký tự";
+                message.SystemMessage = "Từ khóa tìm kiếm không được nhiều hơn 50 ký tự";
+                return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
+            }
+            
             try
             {
                 DateTime dtFromDate = DateTime.MinValue, dtToDate = DateTime.MinValue;
@@ -55,9 +74,10 @@ namespace VS_LOAN.Core.Web.Controllers
                 message.Result = true;
                 string trangthai = "";
                 trangthai += ((int)TrangThaiHoSo.TuChoi).ToString() + "," + ((int)TrangThaiHoSo.NhapLieu).ToString() + "," + ((int)TrangThaiHoSo.ThamDinh).ToString() + "," + ((int)TrangThaiHoSo.BoSungHoSo).ToString() + "," + ((int)TrangThaiHoSo.GiaiNgan).ToString() + "," + ((int)TrangThaiHoSo.Nhap).ToString();
-                rs = new HoSoBLL().TimHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay);
-                if (rs == null)
-                    rs = new List<HoSoQuanLyModel>();
+                totalRecord = new HoSoBLL().CountHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freetext);
+                lstHoso = new HoSoBLL().TimHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freetext, page, limit);
+                if (lstHoso == null)
+                    lstHoso = new List<HoSoQuanLyModel>();
             }
             catch (BusinessException ex)
             {
@@ -66,7 +86,8 @@ namespace VS_LOAN.Core.Web.Controllers
                 message.ErrorMessage = ex.Message;
                 message.SystemMessage = ex.ToString();
             }
-            return Json(rs, JsonRequestBehavior.AllowGet);
+            var result = DataPaging.Create(lstHoso, totalRecord);
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult LayDSNhom()

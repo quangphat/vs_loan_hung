@@ -49,6 +49,14 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             RMessage message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
             List<HoSoDuyetModel> lstHoso = new List<HoSoDuyetModel>();
+            if (!string.IsNullOrWhiteSpace(freetext) && freetext.Length > 50)
+            {
+                message.Result = false;
+                message.MessageId = string.Empty;
+                message.ErrorMessage = "Từ khóa tìm kiếm không được nhiều hơn 50 ký tự";
+                message.SystemMessage = "Từ khóa tìm kiếm không được nhiều hơn 50 ký tự";
+                return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
+            }
             int totalRecord = 0;
             try
             {
