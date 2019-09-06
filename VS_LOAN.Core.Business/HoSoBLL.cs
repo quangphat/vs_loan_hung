@@ -906,7 +906,7 @@ namespace VS_LOAN.Core.Business
             int page = 1, int limit = 10)
         {
             page = page <= 0 ? 1 : page;
-            limit = (limit <= 0 || limit >= Limit_Max_Page) ? 10 : limit;
+            limit = (limit <= 0 || limit >= Limit_Max_Page) ? Limit_Max_Page : limit;
             int offset = (page - 1) * limit;
             string query = string.IsNullOrWhiteSpace(freeText) ? string.Empty : freeText;
             try
@@ -1039,7 +1039,7 @@ namespace VS_LOAN.Core.Business
                 )
         {
             page = page <= 0 ? 1 : page;
-            limit = (limit <= 0 || limit >= Limit_Max_Page) ? 10 : limit;
+            limit = (limit <= 0 || limit >= Limit_Max_Page) ? Limit_Max_Page : limit;
             int offset = (page - 1) * limit;
             string query = string.IsNullOrWhiteSpace(freeText) ? string.Empty : freeText;
             try

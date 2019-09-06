@@ -176,6 +176,34 @@
     var totalPage = 1;
     var totalRecord = 0;
     $(document).ready(function e() {
+        //window.onpopstate = function (event) {
+        //    queries = new URLSearchParams(window.location.search)
+        //    page = queries.get("page");
+        //    if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+        //        page = 1;
+        //    else
+        //        page = parseInt(page)
+        //    limit = queries.get("limit")
+        //    if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+        //        limit = 10;
+        //    else
+        //        limit = parseInt(limit)
+        //    getData(page, limit)
+        //};
+        window.addEventListener('popstate', function (e) {
+                 queries = new URLSearchParams(window.location.search)
+            page = queries.get("page");
+            if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+                page = 1;
+            else
+                page = parseInt(page)
+            limit = queries.get("limit")
+            if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                limit = 10;
+            else
+                limit = parseInt(limit)
+            getData(page, limit, true)
+        });
         var input = document.getElementById("txtFreeText");
         input.addEventListener("keyup", function (event) {
             if (event.keyCode === 13) {
@@ -257,7 +285,7 @@
     }
     function renderPageList(page, limit, totalRc) {
         totalPage = getTotalPage(totalRc, limit)
-        var startPage = page > pageMargin ? page - margin : 1;
+        var startPage = page > pageMargin ? page - pageMargin : 1;
         var endPage = pageMargin + page > totalPage ? totalPage : pageMargin + page
         var paging = $("#paging");
         paging.empty();
@@ -377,7 +405,7 @@
         
     }
 
-    function getData(page, limit)
+    function getData(page, limit, isPopState = false)
     {
         showBlock($('#panel_body'), strLoading);
         $.ajax( {
@@ -431,8 +459,11 @@
                 },
                 complete: function () {
                     $('#panel_body').unblock();
-                    var requestUrl = this.url.replace("TimHS", "Index")
-                    window.history.pushState(requestUrl,this.title, requestUrl)
+                    if (!isPopState) {
+                        var requestUrl = this.url.replace("TimHS", "Index")
+                        window.history.pushState(requestUrl, this.title, requestUrl)
+                    }
+                    
             }
         })
 
