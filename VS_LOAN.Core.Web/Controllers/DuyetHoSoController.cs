@@ -37,7 +37,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public JsonResult TimHS( int maThanhVien,
+        public JsonResult TimHS(
             string fromDate, 
             string toDate, 
             string maHS, 
@@ -45,7 +45,8 @@ namespace VS_LOAN.Core.Web.Controllers
             int loaiNgay,
             int maNhom = 0,
             string freetext = null,
-            int page = 1, int limit = 10)
+            int page = 1, int limit = 10, 
+            int maThanhVien = 0)
         {
             RMessage message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
             List<HoSoDuyetModel> lstHoso = new List<HoSoDuyetModel>();

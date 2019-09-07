@@ -78,6 +78,58 @@ only screen and (max-width:319px)
     }
  }
 */
+.col {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+.col {
+    -ms-flex-preferred-size: 0;
+    flex-basis: 0;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    max-width: 100%;
+}
+.table-header {
+    overflow: hidden;
+    position: relative;
+    border: 0px;
+    width: 100%;
+}
+.m-w-140{
+    min-width:140px!important;
+}
+.m-w-150 {
+    min-width: 150px !important;
+}
+.w-150{
+    width:150px!important;
+}
+.w-130 {
+    width: 130px !important;
+}
+.w-45{
+    width:45px!important;
+}
+.w-60 {
+    width: 60px !important;
+}
+.w-98 {
+    width: 98px !important;
+}
+.w-84 {
+    width: 84px !important;
+}
+.w-105 {
+    width: 105px !important;
+}
+.w-94 {
+    width: 94px !important;
+}
+.w-90 {
+    width: 90px !important;
+}
 .ui-datepicker {
     width: auto;
 }

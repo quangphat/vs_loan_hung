@@ -176,6 +176,7 @@
     $(document).ready(function e() {
         window.addEventListener('popstate', function (e) {
             queries = new URLSearchParams(window.location.search)
+            bindQueries()
             page = queries.get("page");
             if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
                 page = 1;
@@ -196,7 +197,29 @@
             }
         });
         function bindQueries() {
-
+            var dateType = queries.get("loaiNgay");
+            setCheckedValueOfRadioButtonGroup("radio-ngay", dateType)
+            var fromDate = queries.get("fromDate");
+            if (isNullOrWhiteSpace(fromDate)) {
+                fromDate = new Date().getDay + -7;
+            }
+            $("#txtFromDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", fromDate);
+            var toDate = queries.get("toDate");
+            if (isNullOrWhiteSpace(toDate)) {
+                toDate = new Date().getDay + 1;
+            }
+            $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", toDate);
+            var maHS = queries.get("maHS");
+            $('#txtMaHS').val(maHS)
+            $('#txtFreeText').val(queries.get("freetext"))
+            var cmnd = queries.get("cmnd");
+            $('#txtCMND').val(cmnd)
+            limit = queries.get("limit")
+            if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                limit = 10;
+            else
+                limit = parseInt(limit)
+            $("#ddlLimit").val(limit)
         }
         $('#ddlThanhVienNhom').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlNhom').chosen({ width: '100%', allow_single_deselect: true });
@@ -210,29 +233,7 @@
         }).next().on(ace.click_event, function () {
             $(this).prev().focus();
         });
-        var dateType = queries.get("loaiNgay");
-        setCheckedValueOfRadioButtonGroup("radio-ngay", dateType)
-        var fromDate = queries.get("fromDate");
-        if (isNullOrWhiteSpace(fromDate)) {
-            fromDate = new Date().getDay + -7;
-        }
-        $("#txtFromDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", fromDate);
-        var toDate = queries.get("toDate");
-        if (isNullOrWhiteSpace(toDate)) {
-            toDate = new Date().getDay + 1;
-        }
-        $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", toDate);
-        var maHS = queries.get("maHS");
-        $('#txtMaHS').val(maHS)
-        $('#txtFreeText').val(queries.get("freetext"))
-        var cmnd = queries.get("cmnd");
-        $('#txtCMND').val(cmnd)
-        limit = queries.get("limit")
-        if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
-            limit = 10;
-        else
-            limit = parseInt(limit)
-        $("#ddlLimit").val(limit)
+        bindQueries()
     });
 
     var strLoading = '@Global.Message_Loading';
