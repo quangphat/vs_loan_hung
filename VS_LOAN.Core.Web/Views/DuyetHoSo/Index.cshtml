@@ -73,20 +73,23 @@
                         </div>
                     </div>
                     <div class="space-4"></div>
-                    <div class="form-group">
-                        <div class="col-sm-5"></div>
-                        <div class="space-4"></div>
+                    <div style="width:100%">
+                        <div class="form-group">
+                            <div class="col-sm-5"></div>
+                            <div class="space-4"></div>
 
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Tìm kiếm</label>
-                        <div class="col-sm-5 col-xs-12 ">
-                            <input type="text" class="form-control" id="txtFreeText" placeholder="Tìm kiếm" />
-                        </div>
-                        <div class="col-sm-5 col-xs-12 ">
-                            <a class="btn btn-primary" id="btn_search">
-                                Tìm kiếm
-                            </a>
+                            <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Tìm kiếm</label>
+                            <div class="col-sm-5 col-xs-12 ">
+                                <input type="text" class="form-control" id="txtFreeText" placeholder="Tìm kiếm" />
+                            </div>
+                            <div class="col-sm-5 col-xs-12 ">
+                                <a class="btn btn-primary" id="btn_search">
+                                    Tìm kiếm
+                                </a>
+                            </div>
                         </div>
                     </div>
+                    
                 </form>
                 <hr>
             </div>
@@ -128,7 +131,7 @@
                                     <th class="w-105">CMND</th>
                                     <th class="m-w-150">Tên khách hàng</th>
                                     <th style="width: 150px">Trạng thái</th>
-                                    <th>Ghi chú</th>
+                                    <th class="m-w-300">Ghi chú</th>
                                     <th class="w-94">Ngày cập nhật cuối</th>
                                     <th class="w-150">Tên sản phẩm</th>
                                     <th class="w-84">Mã nhân viên</th>
@@ -146,15 +149,21 @@
                         </table>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-xs-6">
+                <div class="clearfix"/>
+                <div class="one-row no-gutters justify-content-between paginate">
+                    <div class="col-auto">
                         <div class="dataTables_info" id="dtSource_info" role="status" aria-live="polite"></div>
                     </div>
-                    <div class="col-xs-6">
-                        <div class="dataTables_paginate paging_simple_numbers" id="dtSource_paginate">
-                            <ul class="pagination" id="paging">
-                                
-                            </ul>
+                    <div class="col-auto">
+                        <div class="one-row no-gutters align-items-center">
+                            <div class="col-auto" >
+                                <span id="totalPage"></span>
+                            </div>
+                            <div class="col">
+                                <div class="dataTables_paginate paging_simple_numbers" id="dtSource_paginate">
+                                    <ul class="pagination" id="paging"></ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -180,14 +189,11 @@
     var totalRecord = 0;
     $(document).ready(function e() {
         window.addEventListener('popstate', function (e) {
-            debugger
             queries = new URLSearchParams(window.location.search)
             bindQueries()
             var maNhom = queries.get("maNhom");
             $('#ddlNhom').val(maNhom)
             $('#ddlNhom').chosen().trigger("chosen:updated").change();
-
-            debugger
             var memberId = queries.get("maThanhVien");
             if (isNullOrWhiteSpace(maNhom) || parseInt(maNhom) === 0 || isNullOrWhiteSpace(memberId) || parseInt(memberId) === 0) {
                 $('#ddlThanhVienNhom').empty();
@@ -294,15 +300,42 @@
             return ""
         }
     }
+    function renderGoLastPage(page) {
+        
+        if (totalPage > page) {
+            return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + totalPage + ")' >"
+                + "<a href='javascript:;'>Trang cuối</a>"
+                + "</li>"
+        } else {
+            return ""
+        }
+    }
+    function renderGoFirstPage(page) {
+        if (totalPage > 1 && page > 1) {
+            return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + 1 + ")' >"
+                + "<a href='javascript:;'>Trang đầu</a>"
+                + "</li>"
+        } else {
+            return ""
+        }
+    }
+    function renderTotalPage(totalPage) {
+        if (totalPage > 0)
+            return "<label>Tổng: " + totalPage + "</label>"
+        return "";
+    }
     function renderPageList(page, limit, totalRc) {
         totalPage = getTotalPage(totalRc, limit)
         var startPage = page > pageMargin ? page - pageMargin : 1;
         var endPage = pageMargin + page > totalPage ? totalPage : pageMargin + page
         var paging = $("#paging");
         paging.empty();
-        var last = renderGoPreviousPage(page)
+        var first = renderGoFirstPage(page)
         var next = renderGoNextPage(page);
-        paging.append(last)
+        var prev = renderGoPreviousPage(page)
+        var last = renderGoLastPage(page)
+        paging.append(first)
+        paging.append(prev)
         for (var i = startPage; i <= endPage; i++) {
             var active = page == i ? ' active' : '';
             var item = "<li class='paginate_button" + active + " aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + i + ")' >"
@@ -311,6 +344,7 @@
             paging.append(item)
         }
         paging.append(next);
+        paging.append(last)
     }
     function getValueDisplay(value, type) {
         if (isNullOrWhiteSpace(type))
@@ -346,8 +380,8 @@
             statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
         return "<td class='text-left'>" + statusString + "</td>";;
     }
-    function renderTextLeft(value, type) {
-        return "<td class='text-left'>" + getValueDisplay(value,type) + "</td>";
+    function renderTextLeft(value, type, className ='') {
+        return "<td class='text-left " + className + "'>" + getValueDisplay(value,type) + "</td>";
     }
     function renderTextCenter(value, type) {
         return "<td class='text-center'>" + getValueDisplay(value, type) + "</td>";
@@ -392,7 +426,7 @@
             + renderTextLeft(rowData.CMND)
             + renderTextLeft(rowData.TenKH)
             + renderStatus(rowData.MaTrangThai, rowData.TrangThaiHS)
-            + renderTextLeft(rowData.GhiChu)
+            + renderTextLeft(rowData.GhiChu, '','tb-row-breakword')
             + renderTextLeft(rowData.NgayCapNhat, 'datetime')
             + renderTextLeft(rowData.TenSanPham)
             + renderTextLeft(rowData.MaNV)
@@ -456,6 +490,7 @@
                     //renderGoPreviousPage(page);
                     renderPageList(page, limit, totalRecord)
                     $("#dtSource_info").text("Tổng: " + response.TotalRecord + " items");
+                    $("#totalPage").text("Tổng: " + totalPage + " trang");
                 }
                 else {
                     swal({

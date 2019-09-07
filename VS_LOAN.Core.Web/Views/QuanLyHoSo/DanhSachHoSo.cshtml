@@ -127,7 +127,7 @@
                                     <th class="w-105">CMND</th>
                                     <th class="m-w-150">Tên khách hàng</th>
                                     <th style="width: 150px">Trạng thái</th>
-                                    <th>Ghi chú</th>
+                                    <th class="m-w-300">Ghi chú</th>
                                     <th class="w-94">Ngày cập nhật cuối</th>
                                     <th class="w-150">Tên sản phẩm</th>
                                     <th class="w-84">Mã nhân viên</th>
@@ -144,13 +144,21 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-xs-6">
+                <div class="clearfix" />
+                <div class="one-row no-gutters justify-content-between paginate">
+                    <div class="col-auto">
                         <div class="dataTables_info" id="dtSource_info" role="status" aria-live="polite"></div>
                     </div>
-                    <div class="col-xs-6">
-                        <div class="dataTables_paginate paging_simple_numbers" id="dtSource_paginate">
-                            <ul class="pagination" id="paging"></ul>
+                    <div class="col-auto">
+                        <div class="one-row no-gutters align-items-center">
+                            <div class="col-auto">
+                                <span id="totalPage"></span>
+                            </div>
+                            <div class="col">
+                                <div class="dataTables_paginate paging_simple_numbers" id="dtSource_paginate">
+                                    <ul class="pagination" id="paging"></ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -178,6 +186,23 @@
         window.addEventListener('popstate', function (e) {
             queries = new URLSearchParams(window.location.search)
             bindQueries()
+            var maNhom = queries.get("maNhom");
+            $('#ddlNhom').val(maNhom)
+            $('#ddlNhom').chosen().trigger("chosen:updated").change();
+
+            debugger
+            var memberId = queries.get("maThanhVien");
+            if (isNullOrWhiteSpace(maNhom) || parseInt(maNhom) === 0 || isNullOrWhiteSpace(memberId) || parseInt(memberId) === 0) {
+                $('#ddlThanhVienNhom').empty();
+                $('#ddlThanhVienNhom').append("<option value='0'></option>");
+                $('#ddlThanhVienNhom').val('0');
+                $('#ddlThanhVienNhom').chosen().trigger("chosen:updated");
+            }
+            else {
+                $('#ddlThanhVienNhom').val(memberId)
+                $('#ddlThanhVienNhom').chosen().trigger("chosen:updated");
+            }
+
             page = queries.get("page");
             if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
                 page = 1;
@@ -188,7 +213,7 @@
                 limit = 10;
             else
                 limit = parseInt(limit)
-            getData(page, limit, true)
+            getData(page, limit, memberId, true)
         });
         var input = document.getElementById("txtFreeText");
         input.addEventListener("keyup", function (event) {
@@ -198,8 +223,6 @@
             }
         });
         function bindQueries() {
-            var dateType = queries.get("loaiNgay");
-            setCheckedValueOfRadioButtonGroup("radio-ngay", dateType)
             var fromDate = queries.get("fromDate");
             if (isNullOrWhiteSpace(fromDate)) {
                 fromDate = new Date().getDay + -7;
@@ -210,11 +233,18 @@
                 toDate = new Date().getDay + 1;
             }
             $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", toDate);
+            var dateType = queries.get("loaiNgay");
+            setCheckedValueOfRadioButtonGroup("radio-ngay", dateType)
             var maHS = queries.get("maHS");
             $('#txtMaHS').val(maHS)
             $('#txtFreeText').val(queries.get("freetext"))
             var cmnd = queries.get("cmnd");
             $('#txtCMND').val(cmnd)
+            page = queries.get("page");
+            if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+                page = 1;
+            else
+                page = parseInt(page)
             limit = queries.get("limit")
             if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
                 limit = 10;
@@ -224,19 +254,19 @@
         }
         $('#ddlThanhVienNhom').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlNhom').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddllimit').chosen({ width: '100%', allow_single_deselect: true });
         $('#txtFromDate').datepicker({
-                            dateFormat: 'dd-mm-yy'
+            dateFormat: 'dd-mm-yy'
         }).next().on(ace.click_event, function () {
             $(this).prev().focus();
-                        });
+        });
         $('#txtToDate').datepicker({
-                            dateFormat: 'dd-mm-yy'
+            dateFormat: 'dd-mm-yy'
         }).next().on(ace.click_event, function () {
             $(this).prev().focus();
         });
         bindQueries()
     });
-
     var strLoading = '@Global.Message_Loading';
     $('#btn_search').click(function (e) {
         showBlock($('#panel_body'), strLoading);
@@ -274,15 +304,37 @@
             return ""
         }
     }
+    function renderGoLastPage(page) {
+
+        if (totalPage > page) {
+            return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + totalPage + ")' >"
+                + "<a href='javascript:;'>Trang cuối</a>"
+                + "</li>"
+        } else {
+            return ""
+        }
+    }
+    function renderGoFirstPage(page) {
+        if (totalPage > 1 && page > 1) {
+            return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + 1 + ")' >"
+                + "<a href='javascript:;'>Trang đầu</a>"
+                + "</li>"
+        } else {
+            return ""
+        }
+    }
     function renderPageList(page, limit, totalRc) {
         totalPage = getTotalPage(totalRc, limit)
         var startPage = page > pageMargin ? page - pageMargin : 1;
         var endPage = pageMargin + page > totalPage ? totalPage : pageMargin + page
         var paging = $("#paging");
         paging.empty();
-        var last = renderGoPreviousPage(page)
+        var first = renderGoFirstPage(page)
         var next = renderGoNextPage(page);
-        paging.append(last)
+        var prev = renderGoPreviousPage(page)
+        var last = renderGoLastPage(page)
+        paging.append(first)
+        paging.append(prev)
         for (var i = startPage; i <= endPage; i++) {
             var active = page == i ? ' active' : '';
             var item = "<li class='paginate_button" + active + " aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + i + ")' >"
@@ -291,6 +343,7 @@
             paging.append(item)
         }
         paging.append(next);
+        paging.append(last)
     }
     function getValueDisplay(value, type) {
         if (isNullOrWhiteSpace(type))
@@ -308,8 +361,8 @@
         getData(page, limit)
         //alert(limit)
     }
-    function renderTextLeft(value, type) {
-        return "<td class='text-left'>" + getValueDisplay(value, type) + "</td>";
+    function renderTextLeft(value, type, className = '') {
+        return "<td class='text-left " + className + "'>" + getValueDisplay(value, type) + "</td>";
     }
     function renderTextCenter(value, type) {
         return "<td class='text-center'>" + getValueDisplay(value, type) + "</td>";
@@ -401,7 +454,7 @@
             + renderTextLeft(rowData.CMND)
             + renderTextLeft(rowData.TenKH)
             + renderStatus(rowData.MaTrangThai, rowData.TrangThaiHS)
-            + renderTextLeft(rowData.GhiChu)
+            + renderTextLeft(rowData.GhiChu, '', 'tb-row-breakword')
             + renderTextLeft(rowData.NgayCapNhat, 'datetime')
             + renderTextLeft(rowData.TenSanPham)
             + renderTextLeft(rowData.MaNV)
@@ -445,8 +498,13 @@
 
     });
 
-    function getData(page, limit, isPopState = false)
+    function getData(page, limit, memberId = 0, isPopState = false)
     {
+        if (isNaN(memberId) || memberId == 0) {
+            memberId =  dsNhom.length > 0 ? $('#ddlThanhVienNhom').val() : @VS_LOAN.Core.Web.Helpers.GlobalData.User.IDUser
+        }
+        
+        (isNaN(memberId) || memberId == 0) ? $('#ddlThanhVienNhom').val() : memberId
         showBlock($('#panel_body'), strLoading);
         $.ajax( {
                 url: '@Url.Action("TimHSQL", "QuanLyHoSo")',
@@ -456,7 +514,7 @@
                 'page': page,
                 'limit': limit,
                 'maNhom': dsNhom.length > 0 ? $('#ddlNhom').val() : 0,
-                 'maThanhVien': dsNhom.length > 0 ? $('#ddlThanhVienNhom').val() : @VS_LOAN.Core.Web.Helpers.GlobalData.User.IDUser,
+                'maThanhVien': memberId,
                   'fromDate':$('#txtFromDate').val(),
                 'toDate': $('#txtToDate').val(),
                 'maHS': $('#txtMaHS').val(),
@@ -468,7 +526,9 @@
                 if (response.Message == null) {
                     totalRecord = response.TotalRecord;
                     var search = this.url.replace("/QuanLyHoSo/DanhSachHoSo", "");
+                    search = search.replace("/QuanLyHoSo/TimHSQL","")
                     queries = new URLSearchParams(search)
+                    debugger
                     page = queries.get("page");
                     if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
                         page = 1;
@@ -484,6 +544,7 @@
                     //renderGoPreviousPage(page);
                     renderPageList(page, limit, totalRecord)
                     $("#dtSource_info").text("Tổng: " + response.TotalRecord + " items");
+                    $("#totalPage").text("Tổng: " + totalPage + " trang");
                 }
                 else {
                     swal({
@@ -812,7 +873,9 @@
                     });
                     $('#ddlNhom').chosen().trigger("chosen:updated").change();
                 }
-                getData()
+                queries = new URLSearchParams(window.location.search)
+                var memberId = queries.get("maThanhVien");
+                getData(page, limit, memberId);
             },
             complete: function () {
             },
