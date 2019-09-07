@@ -28,12 +28,12 @@ function isNullOrNoItem(arr) {
     return false;
 }
 function isNullOrUndefined(value) {
-    if (value === null || value === undefined)
+    if (value === null || value === undefined || isNaN(value))
         return true;
     return false;
 }
 function isNullOrWhiteSpace(text) {
-    if (text === null || text === undefined || text === '' || text.trim() === '')
+    if (text === null || text === undefined || text === '' || text.toString().trim() === '')
         return true;
     return false;
 }

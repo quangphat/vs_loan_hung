@@ -181,6 +181,7 @@
     var totalRecord = 0;
     $(document).ready(function e() {
         window.addEventListener('popstate', function (e) {
+            debugger
             queries = new URLSearchParams(window.location.search)
             bindQueries()
             var maNhom = queries.get("maNhom");
@@ -191,12 +192,15 @@
             var memberId = queries.get("maThanhVien");
             if (isNullOrWhiteSpace(maNhom) || parseInt(maNhom) === 0 || isNullOrWhiteSpace(memberId) || parseInt(memberId) === 0) {
                 $('#ddlThanhVienNhom').empty();
-                $('#ddlThanhVienNhom').append("<option value='0'></option>"); 
+                $('#ddlThanhVienNhom').append("<option value='0'></option>");
                 $('#ddlThanhVienNhom').val('0');
                 $('#ddlThanhVienNhom').chosen().trigger("chosen:updated");
             }
-            else
-                 $('#ddlThanhVienNhom').val(memberId)
+            else {
+                $('#ddlThanhVienNhom').val(memberId)
+                $('#ddlThanhVienNhom').chosen().trigger("chosen:updated");
+            }
+                 
             page = queries.get("page");
             if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
                 page = 1;
@@ -207,7 +211,7 @@
                 limit = 10;
             else
                 limit = parseInt(limit)
-            getData(page, limit, true)
+            getData(page, limit, memberId, true)
         });
         var input = document.getElementById("txtFreeText");
         input.addEventListener("keyup", function (event) {
@@ -413,9 +417,11 @@
         
     }
 
-    function getData(page, limit, isPopState = false)
+    function getData(page, limit,memberId=0, isPopState = false)
     {
         showBlock($('#panel_body'), strLoading);
+        //queries = new URLSearchParams(window.location.search);
+        //memberId = parseInt(queries.get("maThanhVien"));
         $.ajax( {
                 url: '@Url.Action("TimHS", "DuyetHoSo")',
                 type: "GET",
@@ -423,8 +429,8 @@
             data: {
                 'page': page,
                 'limit': limit,
-                  'maNhom': $('#ddlNhom').val(),
-                 'maThanhVien': $('#ddlThanhVienNhom').val(),
+                'maNhom': $('#ddlNhom').val(),
+                'maThanhVien': (isNaN(memberId) || memberId == 0) ? $('#ddlThanhVienNhom').val() : memberId,
                   'fromDate':$('#txtFromDate').val(),
                   'toDate': $('#txtToDate').val(),
                   'maHS':$('#txtMaHS').val(),
@@ -771,7 +777,9 @@
                     $('#ddlNhom').val(maNhom)
                     $('#ddlNhom').chosen().trigger("chosen:updated").change();
                 }
-                getData(page,limit);
+                queries = new URLSearchParams(window.location.search)
+                var memberId = queries.get("maThanhVien");
+                getData(page, limit, memberId);
                 //InitTable();
             },
             complete: function () {
