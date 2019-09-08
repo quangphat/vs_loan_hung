@@ -390,6 +390,7 @@
         return "<td class='text-left'>" + statusString + "</td>";;
     }
     function renderAction(id, MaTrangThai, MaNV) {
+        debugger
         var thaoTac = "<div class='action-buttons'>"
             + "<a title='@Global.Button_View' class=\"blue\" style='cursor: pointer' id='" + id+ "' onClick='XemHS(this)'>"
             + "<i class=\"ace-icon fa fa-eye bigger-130\">"
@@ -399,7 +400,7 @@
             || MaTrangThai == @((int)VS_LOAN.Core.Utility.TrangThaiHoSo.Nhap))
             && MaNV == '@VS_LOAN.Core.Web.Helpers.GlobalData.User.Code')
         {
-                thaoTac += "<a title='@Global.Button_Edit' class=\"green\" style='cursor: pointer' ID=" + data.ID + " onclick='SuaHS(this)' >";
+                thaoTac += "<a title='@Global.Button_Edit' class=\"green\" style='cursor: pointer' ID=" + id + " onclick='SuaHS(this)' >";
                 thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
                 thaoTac += "</i>";
                 thaoTac += "</a>";
@@ -408,7 +409,7 @@
         else if ((MaTrangThai == @((int)VS_LOAN.Core.Utility.TrangThaiHoSo.NhapLieu)
                  || MaTrangThai == @((int)VS_LOAN.Core.Utility.TrangThaiHoSo.BoSungHoSo))
                  && '@VS_LOAN.Core.Web.Helpers.GlobalData.User.UserType' == '@((int)VS_LOAN.Core.Utility.UserTypeEnum.Teamlead)') {
-            thaoTac += "<a title='@Global.Button_Edit' class=\"green\" style='cursor: pointer' ID=" + data.ID + " onclick='SuaHS(this)' >";
+            thaoTac += "<a title='@Global.Button_Edit' class=\"green\" style='cursor: pointer' ID=" + id + " onclick='SuaHS(this)' >";
             thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
             thaoTac += "</i>";
             thaoTac += "</a>";
@@ -463,7 +464,7 @@
             + renderTextLeft(rowData.MaNVLayHS)
             + renderCoBaoHiem(rowData.CoBaoHiem)
             + renderTextLeft(rowData.KhuVucText)
-            + renderAction(rowData.ID)
+            + renderAction(rowData.ID, rowData.MaTrangThai, rowData.MaNV)
             + "</tr>";
     }
     function renderTableBody(datas) {
@@ -528,7 +529,7 @@
                     var search = this.url.replace("/QuanLyHoSo/DanhSachHoSo", "");
                     search = search.replace("/QuanLyHoSo/TimHSQL","")
                     queries = new URLSearchParams(search)
-                    debugger
+                    
                     page = queries.get("page");
                     if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
                         page = 1;
