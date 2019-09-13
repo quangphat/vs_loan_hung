@@ -38,14 +38,14 @@ namespace VS_LOAN.Core.Web.Controllers
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult TimHS(
-            string fromDate, 
-            string toDate, 
-            string maHS, 
-            string cmnd, 
+            string fromDate,
+            string toDate,
+            string maHS,
+            string cmnd,
             int loaiNgay,
             int maNhom = 0,
             string freetext = null,
-            int page = 1, int limit = 10, 
+            int page = 1, int limit = 10,
             int maThanhVien = 0)
         {
             RMessage message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
@@ -473,8 +473,16 @@ namespace VS_LOAN.Core.Web.Controllers
                     dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTime(toDate);
                 message.Result = true;
                 string trangthai = "";
-                trangthai += ((int)TrangThaiHoSo.TuChoi).ToString() + "," + ((int)TrangThaiHoSo.NhapLieu).ToString() + "," + ((int)TrangThaiHoSo.ThamDinh).ToString() + "," + ((int)TrangThaiHoSo.BoSungHoSo).ToString() + "," + ((int)TrangThaiHoSo.GiaiNgan).ToString();
-                rs = new HoSoBLL().TimHoSoDuyet(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, loaiNgay, trangthai);
+                trangthai += ((int)TrangThaiHoSo.TuChoi).ToString() + ","
+                    + ((int)TrangThaiHoSo.NhapLieu).ToString() + ","
+                    + ((int)TrangThaiHoSo.ThamDinh).ToString() + ","
+                    + ((int)TrangThaiHoSo.BoSungHoSo).ToString() + ","
+                    + ((int)TrangThaiHoSo.Cancel).ToString() + ","
+                    + ((int)TrangThaiHoSo.DaDoiChieu).ToString() + ","
+                    + ((int)TrangThaiHoSo.PCB).ToString() + ","
+                    + ((int)TrangThaiHoSo.GiaiNgan).ToString();
+                int totalRecord = new HoSoBLL().CountHosoDuyet(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, loaiNgay, trangthai);
+                rs = new HoSoBLL().TimHoSoDuyet(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, loaiNgay, trangthai, string.Empty, 1, totalRecord, true);
                 if (rs == null)
                     rs = new List<HoSoDuyetModel>();
                 string destDirectory = VS_LOAN.Core.Utility.Path.DownloadBill + "/" + DateTime.Now.Year.ToString() + "/" + DateTime.Now.Month.ToString() + "/";
