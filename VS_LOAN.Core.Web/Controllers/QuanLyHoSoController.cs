@@ -49,12 +49,14 @@ namespace VS_LOAN.Core.Web.Controllers
             int maNhom = 0,
             int maThanhVien = 0,
             string freetext = null,
+            string status = null,
             int page = 1, int limit = 10
             )
         {
             RMessage message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
             List<HoSoQuanLyModel> lstHoso = new List<HoSoQuanLyModel>();
             int totalRecord = 0;
+            string statusStr = status;
             if (!string.IsNullOrWhiteSpace(freetext) && freetext.Length >50)
             {
                 message.Result = false;

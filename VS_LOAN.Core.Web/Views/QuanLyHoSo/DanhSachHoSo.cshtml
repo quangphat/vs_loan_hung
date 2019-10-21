@@ -36,55 +36,68 @@
                             </div>
                         </div>
                     }
-                    <div class="form-group">
-                        <div class="col-sm-2 col-xs-12 ">
-                            <label class="control-label no-padding-right">
-                                <input name="radio-ngay" type="radio" checked="checked" value="1" class="ace">
-                                <span class="lbl"> Ngày tạo</span>
-                            </label>
-                            <label class="control-label no-padding-right">
-                                <input name="radio-ngay" type="radio" value="2" class="ace">
-                                <span class="lbl"> Ngày cập nhật</span>
-                            </label>
-                        </div>
-                        <div class="col-sm-2 col-xs-12 ">
-                            <div class="input-group">
-                                <input class="form-control date-picker" id="txtFromDate" />
-                                <span class="input-group-addon">
-                                    <i class="fa fa-calendar bigger-110"></i>
-                                </span>
+                        <div class="form-group">
+                            <div class="col-sm-2 col-xs-12 ">
+                                <label class="control-label no-padding-right">
+                                    <input name="radio-ngay" type="radio" checked="checked" value="1" class="ace">
+                                    <span class="lbl"> Ngày tạo</span>
+                                </label>
+                                <label class="control-label no-padding-right">
+                                    <input name="radio-ngay" type="radio" value="2" class="ace">
+                                    <span class="lbl"> Ngày cập nhật</span>
+                                </label>
                             </div>
-                        </div>
-                        <div class="col-sm-2 col-xs-12 ">
-                            <div class="input-group">
-                                <input class="form-control date-picker" id="txtToDate" />
-                                <span class="input-group-addon">
-                                    <i class="fa fa-calendar bigger-110"></i>
-                                </span>
+                            <div class="col-sm-2 col-xs-12 ">
+                                <div class="input-group">
+                                    <input class="form-control date-picker" id="txtFromDate" />
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar bigger-110"></i>
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                        <label class="col-sm-1 col-xs-12  control-label no-padding-right">Mã hồ sơ</label>
-                        <div class="col-sm-2 col-xs-12">
-                            <input type="text" class="form-control" id="txtMaHS" placeholder="Nhập mã hồ sơ" />
-                        </div>
-                        <label class="col-sm-1 col-xs-12  control-label no-padding-right">CMND</label>
-                        <div class="col-sm-2 col-xs-12">
-                            <input type="text" class="form-control" id="txtCMND" placeholder="Nhập CMND" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-5"></div>
-                        <div class="space-4"></div>
+                            <div class="col-sm-2 col-xs-12 ">
+                                <div class="input-group">
+                                    <input class="form-control date-picker" id="txtToDate" />
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar bigger-110"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <label class="col-sm-1 col-xs-12  control-label no-padding-right">Mã hồ sơ</label>
+                            <div class="col-sm-2 col-xs-12">
+                                <input type="text" class="form-control" id="txtMaHS" placeholder="Nhập mã hồ sơ" />
+                            </div>
+                            <label class="col-sm-1 col-xs-12  control-label no-padding-right">CMND</label>
+                            <div class="col-sm-2 col-xs-12">
+                                <input type="text" class="form-control" id="txtCMND" placeholder="Nhập CMND" />
+                            </div>
+                            <div class="col-xs-12 ">
+                                <div class="col-xs-6">
+                                    <label class="control-label no-padding-right">
+                                        Tìm kiếm
+                                    </label>
 
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Tìm kiếm</label>
-                        <div class="col-sm-5 col-xs-12 ">
-                            <input type="text" class="form-control" id="txtFreeText" placeholder="Tìm kiếm" />
+                                    <input type="text" class="form-control" id="txtFreeText" placeholder="Tìm kiếm" />
+                                </div>
+                                <div class="col-xs-6">
+                                    <label class="control-label no-padding-right">
+                                        Trạng thái
+                                    </label>
+                                    <select id="ddlStatus" class="chosen-select form-control" multiple data-placeholder="Chọn nhóm">
+                                        
+                                    </select>
+                                </div>
+                            </div>
+                            
                         </div>
-                        <div class="col-sm-5 col-xs-12 ">
+                    <div class="form-group text-right">
+                        <div class="col-xs-12 ">
                             <a class="btn btn-primary" id="btn_search">
                                 Tìm kiếm
                             </a>
                         </div>
+
+
                     </div>
                 </form>
                 <hr>
@@ -182,15 +195,30 @@
     var pageMargin = 2;
     var totalPage = 1;
     var totalRecord = 0;
+    var lstStatus = [
+        { value: "-1", display: "Tất cả" },
+        { value: "0", display: "Nháp" },
+        { value: "1", display: "Nhập liệu" },
+        { value: "2", display: "Thẩm định" },
+        { value: "3", display: "Từ chối" },
+        { value: "4", display: "Bổ sung hồ sơ" },
+        { value: "5", display: "Giải ngân" },
+        { value: "6", display: "Đã đối chiếu" },
+        { value: "7", display: "Hủy" },
+        { value: "8", display: "PCB" },
+    ]
     $(document).ready(function e() {
+        renderStatusList();
+
         window.addEventListener('popstate', function (e) {
+
             queries = new URLSearchParams(window.location.search)
             bindQueries()
             var maNhom = queries.get("maNhom");
             $('#ddlNhom').val(maNhom)
             $('#ddlNhom').chosen().trigger("chosen:updated").change();
 
-            debugger
+
             var memberId = queries.get("maThanhVien");
             if (isNullOrWhiteSpace(maNhom) || parseInt(maNhom) === 0 || isNullOrWhiteSpace(memberId) || parseInt(memberId) === 0) {
                 $('#ddlThanhVienNhom').empty();
@@ -274,6 +302,15 @@
         //$('#dtSource').DataTable().ajax.reload();
         //$('#dtSource').DataTable().columns.adjust().draw();
     });
+    function renderStatusList() {
+        $("#ddlStatus").empty();
+        $.each(lstStatus, function (index, item) {
+            $("#ddlStatus").append("<option value='" + item.value + "'>" + item.display + "</option>")
+        })
+        $('#ddlStatus').chosen().trigger("chosen:updated");
+        $('#ddlStatus').trigger("change");
+        $('#ddlStatus').val(["-1"]).chosen().trigger("chosen:updated")
+    }
     function getTotalPage(totalRecord, limit) {
         return totalRecord > limit ? Math.ceil(totalRecord / limit) : 1
     }
@@ -390,7 +427,6 @@
         return "<td class='text-left'>" + statusString + "</td>";;
     }
     function renderAction(id, MaTrangThai, MaNV) {
-        debugger
         var thaoTac = "<div class='action-buttons'>"
             + "<a title='@Global.Button_View' class=\"blue\" style='cursor: pointer' id='" + id+ "' onClick='XemHS(this)'>"
             + "<i class=\"ace-icon fa fa-eye bigger-130\">"
@@ -504,7 +540,7 @@
         if (isNaN(memberId) || memberId == 0) {
             memberId =  dsNhom.length > 0 ? $('#ddlThanhVienNhom').val() : @VS_LOAN.Core.Web.Helpers.GlobalData.User.IDUser
         }
-        
+
         (isNaN(memberId) || memberId == 0) ? $('#ddlThanhVienNhom').val() : memberId
         showBlock($('#panel_body'), strLoading);
         $.ajax( {
@@ -521,7 +557,8 @@
                 'maHS': $('#txtMaHS').val(),
                 'cmnd': $('#txtCMND').val(),
                 'freetext': $("#txtFreeText").val(),
-                  'loaiNgay': $('input[name="radio-ngay"]:checked').val()
+                'loaiNgay': $('input[name="radio-ngay"]:checked').val(),
+                'status':$("#ddlStatus").val().toString()
             },
             success: function (response) {
                 if (response.Message == null) {
@@ -529,7 +566,7 @@
                     var search = this.url.replace("/QuanLyHoSo/DanhSachHoSo", "");
                     search = search.replace("/QuanLyHoSo/TimHSQL","")
                     queries = new URLSearchParams(search)
-                    
+
                     page = queries.get("page");
                     if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
                         page = 1;
@@ -556,7 +593,7 @@
                         showConfirmButton: true,
                     });
                 }
-                
+
             },
                 error: function (jqXHR, exception) {
                     showError(jqXHR, exception);
@@ -567,7 +604,7 @@
                         var requestUrl = this.url.replace("TimHSQL", "DanhSachHoSo")
                         window.history.pushState(requestUrl, this.title, requestUrl)
                     }
-                   
+
             }
         })
 
