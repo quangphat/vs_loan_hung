@@ -253,6 +253,7 @@
     <Compile Include="Helpers\DataTables\PostFilterTotal.cs" />
     <Compile Include="Helpers\DataTables\PreFilterTotal.cs" />
     <Compile Include="Helpers\DataTables\SearchExpression.cs" />
+    <Compile Include="Helpers\Helpers.cs" />
     <Compile Include="Helpers\HelpersParser.cs" />
     <Compile Include="Helpers\LanguageMang.cs" />
     <Compile Include="Helpers\Menu.cs" />

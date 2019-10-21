@@ -196,8 +196,7 @@
     var totalPage = 1;
     var totalRecord = 0;
     var lstStatus = [
-        { value: "-1", display: "Tất cả" },
-        { value: "0", display: "Nháp" },
+        { value: "0", display: "Lưu tạm" },
         { value: "1", display: "Nhập liệu" },
         { value: "2", display: "Thẩm định" },
         { value: "3", display: "Từ chối" },
@@ -293,6 +292,13 @@
         }).next().on(ace.click_event, function () {
             $(this).prev().focus();
         });
+        
+        var status = decodeURI(queries.get("status"))
+        if (!isNullOrWhiteSpace(status)) {
+            let arrStatus = status.split(',')
+            $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
+        }
+        
         bindQueries()
     });
     var strLoading = '@Global.Message_Loading';
@@ -309,7 +315,7 @@
         })
         $('#ddlStatus').chosen().trigger("chosen:updated");
         $('#ddlStatus').trigger("change");
-        $('#ddlStatus').val(["-1"]).chosen().trigger("chosen:updated")
+        
     }
     function getTotalPage(totalRecord, limit) {
         return totalRecord > limit ? Math.ceil(totalRecord / limit) : 1
@@ -558,7 +564,7 @@
                 'cmnd': $('#txtCMND').val(),
                 'freetext': $("#txtFreeText").val(),
                 'loaiNgay': $('input[name="radio-ngay"]:checked').val(),
-                'status':$("#ddlStatus").val().toString()
+                'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
             },
             success: function (response) {
                 if (response.Message == null) {

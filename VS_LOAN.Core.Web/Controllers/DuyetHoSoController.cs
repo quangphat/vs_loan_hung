@@ -44,6 +44,7 @@ namespace VS_LOAN.Core.Web.Controllers
             string cmnd,
             int loaiNgay,
             int maNhom = 0,
+            string status = null,
             string freetext = null,
             int page = 1, int limit = 10,
             int maThanhVien = 0)
@@ -67,15 +68,8 @@ namespace VS_LOAN.Core.Web.Controllers
                 if (toDate != "")
                     dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTime(toDate);
                 message.Result = true;
-                string trangthai = "";
-                trangthai += ((int)TrangThaiHoSo.TuChoi).ToString() + ","
-                    + ((int)TrangThaiHoSo.NhapLieu).ToString() + ","
-                    + ((int)TrangThaiHoSo.ThamDinh).ToString() + ","
-                    + ((int)TrangThaiHoSo.BoSungHoSo).ToString() + ","
-                    + ((int)TrangThaiHoSo.Cancel).ToString() + ","
-                    + ((int)TrangThaiHoSo.DaDoiChieu).ToString() + ","
-                    + ((int)TrangThaiHoSo.PCB).ToString() + ","
-                    + ((int)TrangThaiHoSo.GiaiNgan).ToString();
+                string trangthai = string.IsNullOrWhiteSpace(status) ? Helpers.Helpers.GetAllStatusString():status;
+                
                 totalRecord = new HoSoBLL().CountHosoDuyet(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, loaiNgay, trangthai, freetext);
                 lstHoso = new HoSoBLL().TimHoSoDuyet(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, loaiNgay, trangthai, freetext, page, limit);
                 if (lstHoso == null)

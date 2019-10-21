@@ -56,7 +56,6 @@ namespace VS_LOAN.Core.Web.Controllers
             RMessage message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
             List<HoSoQuanLyModel> lstHoso = new List<HoSoQuanLyModel>();
             int totalRecord = 0;
-            string statusStr = status;
             if (!string.IsNullOrWhiteSpace(freetext) && freetext.Length >50)
             {
                 message.Result = false;
@@ -74,8 +73,8 @@ namespace VS_LOAN.Core.Web.Controllers
                 if (toDate != "")
                     dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTime(toDate);
                 message.Result = true;
-                string trangthai = "";
-                trangthai += ((int)TrangThaiHoSo.TuChoi).ToString() + "," + ((int)TrangThaiHoSo.NhapLieu).ToString() + "," + ((int)TrangThaiHoSo.ThamDinh).ToString() + "," + ((int)TrangThaiHoSo.BoSungHoSo).ToString() + "," + ((int)TrangThaiHoSo.GiaiNgan).ToString() + "," + ((int)TrangThaiHoSo.Nhap).ToString();
+                string trangthai = string.IsNullOrWhiteSpace(status) ? Helpers.Helpers.GetLimitStatusString() :status;
+                //trangthai += 
                 totalRecord = new HoSoBLL().CountHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freetext);
                 lstHoso = new HoSoBLL().TimHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freetext, page, limit);
                 if (lstHoso == null)
