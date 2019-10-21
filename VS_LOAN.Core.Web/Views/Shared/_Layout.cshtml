@@ -161,6 +161,7 @@
     <script type="text/javascript">
         $(document).ajaxError(function (xhr, props) {
             if (props.status === 509) {
+                
                 location.reload();
             }
         });

@@ -1118,7 +1118,15 @@ namespace VS_LOAN.Core.Business
             }
         }
 
-        public List<HoSoDuyetModel> DSHoSoDuyetChuaXem(int maNVDangNhap, int maNhom, int maThanhVien, DateTime tuNgay, DateTime denNgay, string maHS, string cmnd, int loaiNgay, string trangThai)
+        public List<HoSoDuyetModel> DSHoSoDuyetChuaXem(int maNVDangNhap
+            , int maNhom, 
+            int maThanhVien, 
+            DateTime tuNgay, 
+            DateTime denNgay, 
+            string maHS, 
+            string cmnd, 
+            int loaiNgay,
+            string trangThai)
         {
             try
             {

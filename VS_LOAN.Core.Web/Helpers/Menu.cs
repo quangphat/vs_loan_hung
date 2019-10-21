@@ -104,7 +104,7 @@ namespace VS_LOAN.Core.Web.Helpers
                         new SiteMenuItem("Quản lý mã APP","", IndexMenu.M_4_1,SanPhamVayController.LstRole["QuanLySanPham"]._href, SanPhamVayController.LstRole["QuanLySanPham"]._mangChucNang), // 1.3     
                         new SiteMenuItem("Import","", IndexMenu.M_4_2,SanPhamVayController.LstRole["Import"]._href, SanPhamVayController.LstRole["Import"]._mangChucNang) // 1.3  
             };
-            var isTeamLead = new NhomBLL().CheckIsTeamlead(GlobalData.User.IDUser);
+            //var isTeamLead = new NhomBLL().CheckIsTeamlead(GlobalData.User.IDUser);
             var isAdmin = new NhomBLL().CheckIsAdmin(GlobalData.User.IDUser);
             if (isAdmin)
             {
