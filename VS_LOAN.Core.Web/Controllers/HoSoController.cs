@@ -269,7 +269,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     var fileContent = Request.Files[file];
                     if (fileContent != null && fileContent.ContentLength > 0)
                     {
-                        string[] p = fileContent.ContentType.Split('/');
+                        //string[] p = fileContent.ContentType.Split('/');
                         // get a stream
                         Stream stream = fileContent.InputStream;
                         // and optionally write the file to disk       

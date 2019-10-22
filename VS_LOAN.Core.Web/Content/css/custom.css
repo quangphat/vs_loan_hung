@@ -10,8 +10,12 @@
 .form-group input, .form-group label, .form-group select, .form-group textarea {
     color: #565050;
 }
-
-
+.chosen-container-multi ul{
+    padding:1px!important;
+}
+.form-control{
+    height:32px!important;
+}
 /*---ace.min.css------------------------------------*/
 /*
 .sidebar {
@@ -37,7 +41,6 @@
     max-width: 150px;
 }
 */
-
 /*media screen*/
 /*
 @media 
