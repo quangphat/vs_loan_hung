@@ -87,6 +87,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomerEditModel.cs" />
+    <Compile Include="CustomerModel.cs" />
     <Compile Include="GhichuViewModel.cs" />
     <Compile Include="HoSoCuaToiModel.cs" />
     <Compile Include="HoSoDuyetModel.cs" />
@@ -94,6 +96,9 @@
     <Compile Include="JsonFileResult.cs" />
     <Compile Include="KetQuaHoSoModel.cs" />
     <Compile Include="Model\AutoIDModel.cs" />
+    <Compile Include="Model\Customer.cs" />
+    <Compile Include="Model\CustomerCheck.cs" />
+    <Compile Include="Model\CustomerNote.cs" />
     <Compile Include="Model\DoiTacModel.cs" />
     <Compile Include="Model\GhichuModel.cs" />
     <Compile Include="Model\HoSoInfoModel .cs" />
@@ -103,12 +108,14 @@
     <Compile Include="Model\NhanVienInfoModel.cs" />
     <Compile Include="Model\NhanvienQuyenModel.cs" />
     <Compile Include="Model\SanPhamModel.cs" />
+    <Compile Include="Model\SqlBaseModel.cs" />
     <Compile Include="Model\TaiLieuModel.cs" />
     <Compile Include="Model\UserPMModel.cs" />
     <Compile Include="LanguageModel.cs" />
     <Compile Include="NhanVienNhomDropDownModel.cs" />
     <Compile Include="NhomDropDownModel.cs" />
     <Compile Include="NhomModel.cs" />
+    <Compile Include="OptionSimple.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RLanguage.cs" />
     <Compile Include="RMessage.cs" />

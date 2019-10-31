@@ -41,6 +41,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\KPMG.LIB\LibComment\ActiveDirectoryUtility.dll</HintPath>
     </Reference>
+    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.2.0.30\lib\net461\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="Iesi.Collections">
       <HintPath>..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
     </Reference>
@@ -92,7 +95,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoIDBLL.cs" />
+    <Compile Include="BaseBusiness.cs" />
     <Compile Include="CourierCodeBLL.cs" />
+    <Compile Include="CustomerBLL.cs" />
     <Compile Include="DoiTacBLL.cs" />
     <Compile Include="GrantRightBLL.cs" />
     <Compile Include="HoSoBLL.cs" />
@@ -105,6 +110,7 @@
     <Compile Include="NhanVienConfigBLL.cs" />
     <Compile Include="NhanVienNhomBLL.cs" />
     <Compile Include="NhomBLL.cs" />
+    <Compile Include="PartnerBLL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SanPhamBLL.cs" />
     <Compile Include="TrangThaiHoSoBLL.cs" />
@@ -112,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="Properties\DataSources\System.Data.DataTable.datasource" />
   </ItemGroup>
   <ItemGroup>
