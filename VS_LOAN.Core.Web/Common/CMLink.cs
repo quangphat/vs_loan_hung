@@ -8,6 +8,6 @@ namespace VS_LOAN.Core.Web.Common
 {
    public class CMLink
     {
-        public static string PathLogo = "http://portal.vietbankfc.vn/Content/images/FintechcomLogo.png";
+        public static string PathLogo = "http://vuavanphong.com/Content/images/FintechcomLogo.png";
     }
 }
