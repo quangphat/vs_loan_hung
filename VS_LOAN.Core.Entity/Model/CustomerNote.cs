@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Entity.Model
 {
-    public class CustomerNote:SqlBaseModel
+    public class CustomerNote : SqlBaseModel
     {
         public int Id { get; set; }
         public int CustomerId { get; set; }

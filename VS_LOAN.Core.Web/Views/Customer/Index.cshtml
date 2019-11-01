@@ -1,0 +1,416 @@
+﻿@using VS_LOAN.Core.Web.Resources;
+@{
+    ViewBag.Title = "Danh sách khách hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+    SetActiveMenu('@ViewBag.formindex', 2);
+</script>
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <a href="#" class="active">Danh sách khách hàng</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+                <form class="form-horizontal" role="form">
+                    <div class="space-4"></div>
+                    <div class="form-group">
+
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Tìm kiếm</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <input type="text" class="form-control" id="txtFreeText" placeholder="Tìm kiếm" />
+                        </div>
+
+                    </div>
+                    <div class="form-group text-right">
+                        <div class="col-xs-12 ">
+                            <a class="btn btn-primary" id="btn_search">
+                                Tìm kiếm
+                            </a>
+                        </div>
+                    </div>
+
+                </form>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="clearfix">
+                    <div class="pull-right tableTools-container"></div>
+                </div>
+                <div class="table-header">
+                    Danh sách hồ sơ
+                </div>
+                <div class="dataTables_wrapper form-inline no-footer">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <label>
+                                Hiển thị
+                                <select id="ddlLimit" class="form-control input-sm" onchange="onSelectLimit()">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select> dòng mỗi trang
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- div.table-responsive -->
+                <!-- div.dataTables_borderWrap -->
+                <div class="col">
+                    <div class="report-table-custom--overflow">
+                        <table id="dtSource" class="report-table-custom table table-striped table-bordered table-hover">
+                            <thead class="table-header">
+                                <tr>
+                                    <th class="center w-45">STT</th>
+                                    <th class="m-w-150">Tên khách hàng</th>
+                                    <th class="w-105">CMND</th>
+                                    <th class="w-105">Số điện thoại</th>
+                                    <th style="width: 150px">CIC</th>
+                                    <th class="m-w-150">Đủ điều kiện</th>
+                                    <th class="m-w-150">Không đủ điều kiện</th>
+                                    <th class="m-w-300">Ghi chú</th>
+                                    <th class="w-84">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="clearfix" />
+                <div class="one-row no-gutters justify-content-between paginate">
+                    <div class="col-auto">
+                        <div class="dataTables_info" id="dtSource_info" role="status" aria-live="polite"></div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="one-row no-gutters align-items-center">
+                            <div class="col-auto">
+                                <span id="totalPage"></span>
+                            </div>
+                            <div class="col">
+                                <div class="dataTables_paginate paging_simple_numbers" id="dtSource_paginate">
+                                    <ul class="pagination" id="paging"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+        <div class="clearfix"></div>
+        <div class="row">
+
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<script>
+
+    var queries = new URLSearchParams(window.location.search);
+    var page = 1;
+    var limit = 10;
+    var pageMargin = 2;
+    var totalPage = 1;
+    var totalRecord = 0;
+    $(document).ready(function e() {
+        window.addEventListener('popstate', function (e) {
+
+            queries = new URLSearchParams(window.location.search)
+            bindQueries()
+           
+            page = queries.get("page");
+            if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+                page = 1;
+            else
+                page = parseInt(page)
+            limit = queries.get("limit")
+            if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                limit = 10;
+            else
+                limit = parseInt(limit)
+            getData(page, limit, memberId, true)
+        });
+        
+        function bindQueries() {
+
+            $('#txtFreeText').val(queries.get("freetext"))
+
+            page = queries.get("page");
+            if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+                page = 1;
+            else
+                page = parseInt(page)
+            limit = queries.get("limit")
+            if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                limit = 10;
+            else
+                limit = parseInt(limit)
+            $("#ddlLimit").val(limit)
+        }
+
+        $('#ddllimit').chosen({ width: '100%', allow_single_deselect: true });
+
+        bindQueries()
+    });
+    var strLoading = '@Global.Message_Loading';
+    $('#btn_search').click(function (e) {
+        showBlock($('#panel_body'), strLoading);
+        getData(page, limit);
+    });
+    function getTotalPage(totalRecord, limit) {
+        return totalRecord > limit ? Math.ceil(totalRecord / limit) : 1
+    }
+    function onClickPage(page) {
+        page = page;
+        getData(page, limit);
+    }
+    function renderGoPreviousPage(page) {
+        let newCurrentPage = page
+        if (page > 1) {
+            newCurrentPage = page - 1
+            return "<li class='paginate_button previous' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + newCurrentPage +")'>"
+                + "<a href='javascript:;'>Trước</a>"
+                + "</li>"
+
+        } else {
+            return ""
+        }
+    }
+    function renderGoNextPage(page) {
+        if (page < totalPage) {
+            newCurrentPage = page + 1
+           return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + newCurrentPage +")' >"
+                +"<a href='javascript:;'>Sau</a>"
+                + "</li>"
+
+        } else {
+            return ""
+        }
+    }
+    function renderGoLastPage(page) {
+
+        if (totalPage > page) {
+            return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + totalPage + ")' >"
+                + "<a href='javascript:;'>Trang cuối</a>"
+                + "</li>"
+        } else {
+            return ""
+        }
+    }
+    function renderGoFirstPage(page) {
+        if (totalPage > 1 && page > 1) {
+            return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + 1 + ")' >"
+                + "<a href='javascript:;'>Trang đầu</a>"
+                + "</li>"
+        } else {
+            return ""
+        }
+    }
+    function renderTotalPage(totalPage) {
+        if (totalPage > 0)
+            return "<label>Tổng: " + totalPage + "</label>"
+        return "";
+    }
+    function renderPageList(page, limit, totalRc) {
+        totalPage = getTotalPage(totalRc, limit)
+        var startPage = page > pageMargin ? page - pageMargin : 1;
+        var endPage = pageMargin + page > totalPage ? totalPage : pageMargin + page
+        var paging = $("#paging");
+        paging.empty();
+        var first = renderGoFirstPage(page)
+        var next = renderGoNextPage(page);
+        var prev = renderGoPreviousPage(page)
+        var last = renderGoLastPage(page)
+        paging.append(first)
+        paging.append(prev)
+        for (var i = startPage; i <= endPage; i++) {
+            var active = page == i ? ' active' : '';
+            var item = "<li class='paginate_button" + active + " aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + i + ")' >"
+                + "<a href='javascript:;'>" + i + "</a>"
+                + "</li>"
+            paging.append(item)
+        }
+        paging.append(next);
+        paging.append(last)
+    }
+    function getValueDisplay(value, type) {
+        if (isNullOrWhiteSpace(type)) {
+            if (isNullOrWhiteSpace(value))
+                return "";
+            return value
+        }
+
+        var display = null
+        switch (type)
+        {
+            case 'datetime':
+                display = FormatDateTimeDMY(value);
+            default: break;
+        }
+        return display;
+    }
+    function renderTextLeft(value, type, className ='') {
+        return "<td class='text-left " + className + "'>" + getValueDisplay(value,type) + "</td>";
+    }
+    function renderTextCenter(value, type) {
+        return "<td class='text-center'>" + getValueDisplay(value, type) + "</td>";
+    }
+    function renderAction(id) {
+        let thaoTac = "<div class='action-buttons'><a title='@Global.Button_Edit' class='green' style='cursor: pointer'  onclick='onEdit("+ id +")' >";
+                thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
+                thaoTac += "</i>";
+                thaoTac += "</a>";
+                thaoTac += "</a></div>";
+        return "<td class='text-center'>" + thaoTac + "</td>"
+    }
+     function renderStatus(statusId) {
+        var statusString = "";
+         if (statusId == '@((int)VS_LOAN.Core.Utility.CICStatus.NotDebt)')
+            statusString = "<span class='label label-sm label-light arrowed arrowed-righ'>Không nợ xấu</span>";
+         else if (statusId == '@((int)VS_LOAN.Core.Utility.CICStatus.Warning)')
+            statusString = "<span class='label label-sm label-purple arrowed arrowed-righ'>Nợ chú ý</span>";
+         else if (statusId == '@((int)VS_LOAN.Core.Utility.CICStatus.Debt)')
+            statusString = "<span class='label label-sm label-danger arrowed arrowed-righ'>Nợ xấu</span>";
+        return "<td class='text-left'>" + statusString + "</td>";;
+    }
+    function onSelectLimit() {
+        limit = $("#ddlLimit").val()
+        getData(page,limit)
+        //alert(limit)
+    }
+    function renderRow(index, rowData) {
+        page = queries.get("page");
+        if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+            page = 1;
+        else
+            page = parseInt(page)
+        limit = queries.get("limit")
+        if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+            limit = 10;
+        else
+            limit = parseInt(limit)
+        var stt = (page - 1) * limit + index + 1;
+        return "<tr role='row' class = 'odd'>"
+            + renderTextCenter(stt)
+            + renderTextLeft(rowData.FullName, '', "m-w-150")
+            + renderTextLeft(rowData.Cmnd, '', "w-105")
+            + renderTextLeft(rowData.Phone, '', "w-105")
+            + renderStatus(rowData.CICStatus)
+            + renderTextLeft(rowData.MatchCondition, '', "m-w-150")
+            + renderTextLeft(rowData.NotMatch, '', "m-w-150")
+            + renderTextLeft(rowData.LastNote, '', 'tb-row-breakword')
+            + renderAction(rowData.Id)
+            + "</tr>";
+    }
+    function renderTableBody(datas) {
+        var table = $("#dtSource")
+        var tableBody = $("#dtSource").find("tbody");
+            tableBody.empty();
+        if (isNullOrNoItem(datas))
+            return;
+        $.each(datas, function (index, item) {
+            tableBody.append(renderRow(index, item));
+        });
+
+    }
+    $(document).ready(function () {
+        var input = document.getElementById("txtFreeText");
+        input.addEventListener("keydown", function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                
+            }
+        });
+        input.addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                $("#btn_search").click();
+            }
+        });
+        
+            page = queries.get("page");
+            if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+                page = 1;
+            else
+                page = parseInt(page)
+            limit = queries.get("limit")
+            if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                limit = 10;
+            else
+                limit = parseInt(limit)
+            getData(page, limit)
+
+    });
+    function getData(page, limit,memberId=0, isPopState = false)
+    {
+        showBlock($('#panel_body'), strLoading);
+
+        $.ajax( {
+                url: '@Url.Action("Search", "Customer")',
+                type: "GET",
+                contentType: "application/json",
+            data: {
+                'page': page,
+                'limit': limit,
+                'freetext': $("#txtFreeText").val(),
+
+            },
+            success: function (response) {
+
+                if (response.Message == null) {
+                    totalRecord = response.datas.TotalRecord;
+                    var search = this.url.replace("/Customer/Search", "");
+                    queries = new URLSearchParams(search)
+                    page = queries.get("page");
+                    if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+                        page = 1;
+                    else
+                        page = parseInt(page)
+                    limit = queries.get("limit")
+                    if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                        limit = 10;
+                    else
+                        limit = parseInt(limit)
+                    renderTableBody(response.datas.Datas)
+                    //renderGoPreviousPage(page);
+                    renderPageList(page, limit, totalRecord)
+                    $("#dtSource_info").text("Tổng: " + totalRecord + " items");
+                    $("#totalPage").text("Tổng: " + totalPage + " trang");
+                }
+                else {
+                    swal({
+                        title: "",
+                        text: response.Message.ErrorMessage,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+                error: function (jqXHR, exception) {
+                    showError(jqXHR, exception);
+                },
+                complete: function () {
+                    $('#panel_body').unblock();
+                    if (!isPopState) {
+                        var requestUrl = this.url.replace("Search", "Index")
+                        window.history.pushState(requestUrl, this.title, requestUrl)
+                    }
+
+            }
+        })
+
+    }
+    function onEdit(id) {
+        window.location = "/Customer/Edit/" + id
+    }
+</script>
+

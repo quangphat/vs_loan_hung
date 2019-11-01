@@ -56,10 +56,10 @@
 
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-4  col-md-offset-2" id="lstPartner">
+                        <div id="lstPartner">
 
                         </div>
-
+                        
                     </div>
                 </form>
             </div>
@@ -75,12 +75,24 @@
                             <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
                         </div>
                     </div>
-                    <div class="pull-right">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <div class="col-md-8 activity-log">
+                                <div class="timline-addNote only-new-note">
+                                    <div class="timeline-date-event timline-date-event--margin mt-0" id="dsGhichu">
 
-                        <a class="btn btn-sm btn-primary" id="btnSave">
-                            Lưu
-                        </a>
 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pull-right">
+
+                                <a class="btn btn-sm btn-primary" id="btnSave">
+                                    Lưu
+                                </a>
+
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -97,7 +109,7 @@
     var partners = null
     $(document).ready(function () {
         getPartner()
-
+        GetNotes(customer.Id)
         let gender = customer.Gender == false ? "0" :"1"
         $("#txtHoTen").val(customer.FullName)
         $("#txtDienThoai").val(customer.Phone)
@@ -116,11 +128,11 @@
                     let content = ''
                     $.each(data.datas, function (index, item) {
                         var checked = item.IsSelect ? "checked" : ""
-                        content += '<div class="checkbox"> <label>'
+                        content += '<label class="col-sm-2 control-label no-padding-right">' + item.Name + ': </label><div  class="col-sm-10"><div class="checkbox"> <label>'
                             + '<input name="form-field-checkbox" id="partner_' + item.Id + '" type="checkbox" ' + checked
                             + ' onchange ="onPartnerCheck(' + item.Id + ')" class="ace">'
-                            + '<span class="lbl">' + item.Name + '</span>'
-                            + '</label></div>';
+                            + '<span class="lbl"> Đủ điều kiện</span>'
+                            + '</label></div></div>';
 
                     });
                     $('#lstPartner').append(content)
@@ -193,7 +205,7 @@
             customer.CICStatus = $("#ddlCIC").val()
             model.Customer = customer;
             model.Partners = partners;
-            
+
 
             var objectSend = JSON.stringify(model);
         $.ajax({
@@ -211,7 +223,7 @@
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-                        window.location = window.location;
+                        window.location = "/Customer/Index";
                     });
                 }
                 else {
@@ -232,5 +244,36 @@
             },
         });
         });
+    function GetNotes(id) {
+        //$('#ddlTrangThai').empty();
+        if (isNullOrUndefined(id))
+            return;
+        $.ajax({
+            type: "GET",
+            url: '/Customer/GetNotes?customerId=' + id,
+            data: {},
+            success: function (data) {
+                
+                if (data.datas != null) {
+                    $.each(data.datas, function (index, item) {
+                        $('#dsGhichu').append(
+                            '<div class="timeline-event-content  active">' +
+                            '<div class="timeline-item">'+
+                            '<div class="timeline-body">' +
+                            '<div class="timeline__message-container">' +
+                            '<strong>' + item.Commentator + ' (' + SetFormatDateTimeDMY(item.CreatedTime) + '): </strong><span>' + item.Note + '</span>' +
+                            '</div></div></div></div>'
 
+                        )
+                    });
+                }
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
 </script>

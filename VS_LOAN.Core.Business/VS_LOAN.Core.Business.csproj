@@ -96,6 +96,7 @@
   <ItemGroup>
     <Compile Include="AutoIDBLL.cs" />
     <Compile Include="BaseBusiness.cs" />
+    <Compile Include="Constant.cs" />
     <Compile Include="CourierCodeBLL.cs" />
     <Compile Include="CustomerBLL.cs" />
     <Compile Include="DoiTacBLL.cs" />

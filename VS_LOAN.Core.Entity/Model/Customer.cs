@@ -15,5 +15,7 @@ namespace VS_LOAN.Core.Entity.Model
         public int CICStatus { get; set; }
         public bool Gender { get; set; }
         public string LastNote { get; set; }
+        public string MatchCondition { get; set; }
+        public string NotMatch { get; set; }
     }
 }

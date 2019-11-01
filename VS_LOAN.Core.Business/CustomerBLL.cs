@@ -6,18 +6,19 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Nhibernate;
 
 namespace VS_LOAN.Core.Business
 {
-    public class CustomerBLL :BaseBusiness
+    public class CustomerBLL : BaseBusiness
     {
-        public CustomerBLL() :base()
+        public CustomerBLL() : base()
         {
 
         }
-        public int  Create(Customer customer)
+        public int Create(Customer customer)
         {
             var p = AddOutputParam("id");
             p.Add("fullname", customer.FullName);
@@ -34,7 +35,8 @@ namespace VS_LOAN.Core.Business
         public bool AddNote(CustomerNote note)
         {
             string sql = $"insert into CustomerNote(CustomerId, Note,CreatedTime,CreatedBy) values (@customerId,@note,@createdTime,@createdBy)";
-            _connection.Execute(sql, new {
+            _connection.Execute(sql, new
+            {
                 customerId = note.CustomerId,
                 note = note.Note,
                 createdTime = DateTime.Now,
@@ -52,6 +54,8 @@ namespace VS_LOAN.Core.Business
             p.Add("status", customer.CICStatus);
             p.Add("note", customer.LastNote);
             p.Add("gender", customer.Gender);
+            p.Add("match", customer.MatchCondition);
+            p.Add("notmatch", customer.NotMatch);
             p.Add("updatedtime", DateTime.Now);
             p.Add("updatedby", customer.CreatedBy);
             _connection.Execute("sp_UpdateCustomer", p, commandType: CommandType.StoredProcedure);
@@ -92,34 +96,42 @@ namespace VS_LOAN.Core.Business
             p.Add("status", check.Status);
             p.Add("createdtime", DateTime.Now);
             p.Add("createdby", check.CreatedBy);
-            
+
             _connection.Execute("sp_InserCustomerCheck", p, commandType: CommandType.StoredProcedure);
             return true;
         }
         public int Count(string freeText)
         {
             var p = new DynamicParameters();
-           
+            if (string.IsNullOrWhiteSpace(freeText))
+                freeText = "";
             p.Add("freeText", freeText);
             var total = _connection.ExecuteScalar<int>("sp_CountCustomer", p, commandType: CommandType.StoredProcedure);
             return total;
         }
-        public async Task<List<Customer>> Gets(
-            DateTime fromDate,
-            DateTime toDate,
-            int dateFilterType,
+        public List<Customer> Gets(
             string freeText,
-            int offset,
+            int page,
             int limit)
         {
+            page = page <= 0 ? 1 : page;
+            limit = (limit <= 0 || limit >= Constant.Limit_Max_Page) ? Constant.Limit_Max_Page : limit;
+            int offset = (page - 1) * limit;
+            if (string.IsNullOrWhiteSpace(freeText))
+                freeText = "";
             var p = new DynamicParameters();
-            p.Add("fromDate", fromDate);
-            p.Add("toDate", toDate);
             p.Add("freeText", freeText);
-            p.Add("dateFilterType", dateFilterType);
             p.Add("offset", offset);
             p.Add("limit", limit);
             var results = _connection.Query<Customer>("sp_GetCustomer", p, commandType: CommandType.StoredProcedure);
+            return results.ToList();
+        }
+        public List<CustomerNoteViewModel>  GetNoteByCustomerId(int customerId)
+        {
+            var p = new DynamicParameters();
+            p.Add("customerId", customerId);
+            
+            var results = _connection.Query<CustomerNoteViewModel>("sp_GetNotesByCustomerId", p, commandType: CommandType.StoredProcedure);
             return results.ToList();
         }
     }

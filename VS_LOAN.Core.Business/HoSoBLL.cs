@@ -15,7 +15,7 @@ namespace VS_LOAN.Core.Business
 {
     public class HoSoBLL
     {
-        private const int Limit_Max_Page = 100;
+        
         public int Them(HoSoModel hoSoModel, List<TaiLieuModel> lstTaiLieu, ref bool isCheckMaSanPham)
         {
             try
@@ -908,7 +908,7 @@ namespace VS_LOAN.Core.Business
 
             page = page <= 0 ? 1 : page;
             if(!isDowload)
-                limit = (limit <= 0 || limit >= Limit_Max_Page) ? Limit_Max_Page : limit;
+                limit = (limit <= 0 || limit >= Constant.Limit_Max_Page) ? Constant.Limit_Max_Page : limit;
             int offset = (page - 1) * limit;
             string query = string.IsNullOrWhiteSpace(freeText) ? string.Empty : freeText;
             try
@@ -1043,7 +1043,7 @@ namespace VS_LOAN.Core.Business
         {
             page = page <= 0 ? 1 : page;
             if(!isDownload)
-                limit = (limit <= 0 || limit >= Limit_Max_Page) ? Limit_Max_Page : limit;
+                limit = (limit <= 0 || limit >= Constant.Limit_Max_Page) ? Constant.Limit_Max_Page : limit;
             int offset = (page - 1) * limit;
             string query = string.IsNullOrWhiteSpace(freeText) ? string.Empty : freeText;
             try

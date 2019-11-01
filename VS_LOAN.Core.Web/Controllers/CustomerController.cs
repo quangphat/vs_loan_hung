@@ -26,6 +26,18 @@ namespace VS_LOAN.Core.Web.Controllers
             }
 
         }
+        public ActionResult Index()
+        {
+            return View();
+        }
+        public JsonResult Search(string freeText = null, int page = 1,int  limit = 10)
+        {
+            var bzCustomer = new CustomerBLL();
+            var totalRecord = bzCustomer.Count(freeText);
+            var datas = bzCustomer.Gets(freeText, page, limit);
+            var result = DataPaging.Create(datas, totalRecord);
+            return ToJsonResponse<DataPaging<List<Customer>>>(result);
+        }
         public ActionResult AddNew()
         {
             ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;
@@ -79,6 +91,14 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToResponse(false, "Dữ liệu không hợp lệ");
             }
             var bizCustomer = new CustomerBLL();
+            var match = string.Empty;
+            var notmatch = string.Empty;
+            if(model.Partners !=null)
+            {
+                match = string.Join(",", model.Partners.Where(p => p.IsSelect == true).Select(p => p.Name).ToArray());
+                notmatch = string.Join(",", model.Partners.Where(p => !p.IsSelect ).Select(p => p.Name).ToArray());
+            }
+            
             var customer = new Customer
             {
                 Id = model.Customer.Id,
@@ -88,7 +108,9 @@ namespace VS_LOAN.Core.Web.Controllers
                 CICStatus = model.Customer.CICStatus,
                 LastNote = model.Customer.Note,
                 UpdatedBy = GlobalData.User.IDUser,
-                Gender = model.Customer.Gender
+                Gender = model.Customer.Gender,
+                MatchCondition = match,
+                NotMatch = notmatch
             };
 
             var result = bizCustomer.Update(customer);
@@ -144,6 +166,12 @@ namespace VS_LOAN.Core.Web.Controllers
             }
 
             return ToJsonResponse<List<OptionSimple>>(partners);
+        }
+        public  JsonResult GetNotes(int customerId)
+        {
+            var bizCustomer = new CustomerBLL();
+            var datas = bizCustomer.GetNoteByCustomerId(customerId);
+            return ToJsonResponse<List<CustomerNoteViewModel>>(datas);
         }
     }
 }

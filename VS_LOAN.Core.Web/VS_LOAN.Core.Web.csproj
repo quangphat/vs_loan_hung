@@ -1731,6 +1731,7 @@
     <Content Include="Views\PermissionGroup\TaoMoi.cshtml" />
     <Content Include="Views\Customer\AddNew.cshtml" />
     <Content Include="Views\Customer\Edit.cshtml" />
+    <Content Include="Views\Customer\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
