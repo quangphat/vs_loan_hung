@@ -210,6 +210,8 @@
     <Compile Include="Common\CMLink.cs" />
     <Compile Include="Common\GroupPositionAD.cs" />
     <Compile Include="Common\MailCM.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\DuyetHoSoController.cs" />
     <Compile Include="Controllers\QuanLyHoSoController.cs" />
     <Compile Include="Controllers\SanPhamVayController.cs" />
@@ -1727,6 +1729,9 @@
     <Content Include="Views\SanPhamVay\Import.cshtml" />
     <Content Include="Views\SanPhamVay\QuanLySanPham.cshtml" />
     <Content Include="Views\PermissionGroup\TaoMoi.cshtml" />
+    <Content Include="Views\Customer\AddNew.cshtml" />
+    <Content Include="Views\Customer\Edit.cshtml" />
+    <Content Include="Views\Customer\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

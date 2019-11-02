@@ -11,10 +11,10 @@ using VS_LOAN.Core.Utility.Exceptions;
 
 namespace VS_LOAN.Core.Business
 {
-   public class CourierCodeBLL
+    public class CourierCodeBLL
     {
-        
-         public List<NhanVienInfoModel> LayDS()
+
+        public List<NhanVienInfoModel> LayDS()
         {
             try
             {
@@ -34,7 +34,7 @@ namespace VS_LOAN.Core.Business
                         NhanVienInfoModel us = new NhanVienInfoModel();
                         us.ID = Convert.ToInt32(item["ID"].ToString());
                         us.FullText = item["FullText"].ToString();
-                    
+
                         rs.Add(us);
                     }
                     return rs;
