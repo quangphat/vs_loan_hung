@@ -3,6 +3,9 @@
     ViewBag.Title = "Tạo khách hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<script type="text/javascript">
+    SetActiveMenu('5_1', 2);
+</script>
 <div class="main-content-inner">
     <div class="breadcrumbs" id="breadcrumbs">
         <ul class="breadcrumb">
@@ -25,24 +28,28 @@
 
                     </div>
                     <div class="form-group">
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại khách hàng<span class="required">(*)</span> </label>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày Check<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtDienThoai" placeholder="Nhập số điện thoại khách hàng" class="form-control">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtCheckDate" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
                         </div>
-
                     </div>
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CMND<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <input type="text" id="txtCMND" placeholder="Nhập số CMND" class="form-control" />
                         </div>
-                        <label class="col-sm-2 control-label no-padding-right">Giới tính</label>
+                        @*<label class="col-sm-2 control-label no-padding-right">Giới tính</label>
                         <div class="col-sm-4">
                             <select id="ddlGioiTinh" class="chosen-select form-control">
                                 <option value="1">Nam</option>
                                 <option value="0">Nữ</option>
                             </select>
-                        </div>
+                        </div>*@
                     </div>
 
 
@@ -74,8 +81,15 @@
     </div>
 </div>
 <script>
-    jQuery.fn.ForceNumericOnly =
-function () {
+    $(document).ready(function () {
+        $('#txtCheckDate').datepicker({
+            dateFormat: 'dd/mm/yy'
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+        $("#txtCheckDate").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker("setDate", new Date().getDay + 0);
+    });
+    jQuery.fn.ForceNumericOnly = function () {
     return this.each(function () {
         $(this).keydown(function (e) {
             var key = e.charCode || e.keyCode || 0;
@@ -94,13 +108,13 @@ function () {
         });
     });
 };
-    $("#txtDienThoai").ForceNumericOnly();
+   
     $("#txtCMND").ForceNumericOnly();
         $('#btnSave').click(function (e) {
-        if ($('#txtDienThoai').val().length != 10) {
+         if (isNullOrWhiteSpace($('#txtCheckDate').val())) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
-                text: "Số điện thoại di động phải đúng 10 số!",
+                text: "Ngày check không hợp lệ",
                 type: "error",
                 timer: 4000,
                 showConfirmButton: true,
@@ -120,10 +134,10 @@ function () {
         }
         var objectSend = JSON.stringify({
             'FullName': $('#txtHoTen').val(),
-            'Phone': $('#txtDienThoai').val(),
+            'CheckDate': $('#txtCheckDate').val(),
             'Note': $('#txtGhiChu').val(),
             'Cmnd': $('#txtCMND').val(),
-            'Gender': (isNullOrWhiteSpace($('#ddlGioiTinh').val()) || isNullOrUndefined($('#ddlGioiTinh').val())) ? 0 : parseInt($('#ddlGioiTinh').val())
+            'Gender': 0
 
         });
         $.ajax({

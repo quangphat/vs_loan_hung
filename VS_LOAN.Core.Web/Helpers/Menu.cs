@@ -90,7 +90,10 @@ namespace VS_LOAN.Core.Web.Helpers
                         //new SiteMenuItem("Hồ sơ của tôi","", IndexMenu.M_1_2,HoSoController.LstRole["Index"]._href,HoSoController.LstRole["Index"]._mangChucNang), // 1.1 
                     new SiteMenuItem("Quản lý hồ sơ","menu-icon qlhs",IndexMenu.M_2,"#",new int[] { }),
                         new SiteMenuItem("Danh sách hồ sơ","", IndexMenu.M_2_2,QuanLyHoSoController.LstRole["DanhSachHoSo"]._href, QuanLyHoSoController.LstRole["DanhSachHoSo"]._mangChucNang), // 1.3     
-                        new SiteMenuItem("Duyệt hồ sơ","", IndexMenu.M_2_3,DuyetHoSoController.LstRole["Index"]._href, DuyetHoSoController.LstRole["Index"]._mangChucNang) // 1.2  
+                        new SiteMenuItem("Duyệt hồ sơ","", IndexMenu.M_2_3,DuyetHoSoController.LstRole["Index"]._href, DuyetHoSoController.LstRole["Index"]._mangChucNang) ,// 1.2  
+                    new SiteMenuItem("Check Duplicate","menu-icon qlhs",IndexMenu.M_5,"#",new int[] { }),
+                        new SiteMenuItem("Tạo mới","", IndexMenu.M_5_1,CustomerController.LstRole["AddNew"]._href, QuanLyHoSoController.LstRole["DanhSachHoSo"]._mangChucNang), // 1.3     
+                        new SiteMenuItem("Danh sách","", IndexMenu.M_5_2,CustomerController.LstRole["Index"]._href, DuyetHoSoController.LstRole["Index"]._mangChucNang) // 1.2  
                  
                     
             };

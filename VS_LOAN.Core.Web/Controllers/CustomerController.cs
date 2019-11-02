@@ -20,8 +20,8 @@ namespace VS_LOAN.Core.Web.Controllers
             get
             {
                 Dictionary<string, ActionInfo> _lstRole = new Dictionary<string, ActionInfo>();
-                _lstRole.Add("AddNew", new ActionInfo() { _formindex = IndexMenu.M_1_1, _href = "Customer/AddNew", _mangChucNang = new int[] { (int)QuyenIndex.Public } });
-                _lstRole.Add("Index", new ActionInfo() { _formindex = IndexMenu.M_1_2, _href = "Customer/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } });
+                _lstRole.Add("AddNew", new ActionInfo() { _formindex = IndexMenu.M_5_1, _href = "Customer/AddNew", _mangChucNang = new int[] { (int)QuyenIndex.Public } });
+                _lstRole.Add("Index", new ActionInfo() { _formindex = IndexMenu.M_5_2, _href = "Customer/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } });
                 return _lstRole;
             }
 
@@ -49,7 +49,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var customer = new Customer
             {
                 FullName = model.FullName,
-                Phone = model.Phone,
+                CheckDate = model.CheckDate,
                 Cmnd = model.Cmnd,
                 CICStatus = 0,
                 LastNote = model.Note,
@@ -103,7 +103,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 Id = model.Customer.Id,
                 FullName = model.Customer.FullName,
-                Phone = model.Customer.Phone,
+                CheckDate = model.Customer.CheckDate,
                 Cmnd = model.Customer.Cmnd,
                 CICStatus = model.Customer.CICStatus,
                 LastNote = model.Customer.Note,

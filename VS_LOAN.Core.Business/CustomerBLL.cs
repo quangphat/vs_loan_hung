@@ -22,7 +22,7 @@ namespace VS_LOAN.Core.Business
         {
             var p = AddOutputParam("id");
             p.Add("fullname", customer.FullName);
-            p.Add("phone", customer.Phone);
+            p.Add("checkdate", customer.CheckDate);
             p.Add("cmnd", customer.Cmnd);
             p.Add("createdtime", DateTime.Now);
             p.Add("status", customer.CICStatus);
@@ -49,10 +49,10 @@ namespace VS_LOAN.Core.Business
             var p = new DynamicParameters();
             p.Add("id", customer.Id);
             p.Add("fullname", customer.FullName);
-            p.Add("phone", customer.Phone);
+            p.Add("checkdate", customer.CheckDate);
             p.Add("cmnd", customer.Cmnd);
             p.Add("status", customer.CICStatus);
-            p.Add("note", customer.LastNote);
+            p.Add("note", string.IsNullOrWhiteSpace(customer.LastNote) ? null : customer.LastNote);
             p.Add("gender", customer.Gender);
             p.Add("match", customer.MatchCondition);
             p.Add("notmatch", customer.NotMatch);

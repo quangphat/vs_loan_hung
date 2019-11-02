@@ -10,7 +10,7 @@ namespace VS_LOAN.Core.Entity
     {
         public int Id { get; set; }
         public string FullName { get; set; }
-        public string Phone { get; set; }
+        public DateTime CheckDate { get; set; }
         public string Cmnd { get; set; }
         public int CICStatus { get; set; }
         public bool Gender { get; set; }
