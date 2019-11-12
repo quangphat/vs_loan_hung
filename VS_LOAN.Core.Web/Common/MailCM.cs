@@ -18,7 +18,7 @@ namespace VS_LOAN.Core.Web.Common
 {
     public class MailCM
     {
-        private static string hostLink = "http://vuavanphong.com/";
+        private static string hostLink = "http://portal.vietbankfc.vn/";
         public static void SendMailToAdmin(int id,string url)
         {
             try
@@ -49,8 +49,8 @@ namespace VS_LOAN.Core.Web.Common
                             mailBody += "Đây là một email được tạo ra hệ thống. Xin vui lòng không trả lời tin nhắn này.\r\n";
                             //mailBody += "Nếu bạn có bất kỳ thắc mắc, xin vui lòng liên hệ {7}\r\n";
                             mailBody += "Trân trọng,\r\n\r\n";
-                            mailBody += "VUA VĂN PHÒNG – HỆ THỐNG KIỂM DUYỆT HỒ SƠ\r\n\r\n</font></p>";
-                            template += "<html><table style=\"width: 700px\"  cellpadding=\"0\" cellspacing=\"0\"><tr style =\"background-color:#0D622F\"><td style =\"width:15%;float:left\"><img style=\"width:120px;margin-left: 20px;margin-top: 20px;\" src ='" + CMLink.PathLogo + "'></td><td style=\"width:85%\"><p style=\"float:left; margin: 10px 0px 10px 15px\"><font size=\"6\" face=\"VUAVANPHONG – HỆ THỐNG KIỂM DUYỆT HỒ SƠ\" style=\"color:white\">HỆ THỐNG KIỂM DUYỆT HỒ SƠ</font></p ></td></tr>";
+                            mailBody += "VIETBANK – HỆ THỐNG KIỂM DUYỆT HỒ SƠ\r\n\r\n</font></p>";
+                            template += "<html><table style=\"width: 700px\"  cellpadding=\"0\" cellspacing=\"0\"><tr style =\"background-color:#0D622F\"><td style =\"width:15%;float:left\"><img style=\"width:120px;margin-left: 20px;margin-top: 20px;\" src ='" + CMLink.PathLogo + "'></td><td style=\"width:85%\"><p style=\"float:left; margin: 10px 0px 10px 15px\"><font size=\"6\" face=\"VIETBANK – HỆ THỐNG KIỂM DUYỆT HỒ SƠ\" style=\"color:white\">HỆ THỐNG KIỂM DUYỆT HỒ SƠ</font></p ></td></tr>";
                             template += "<tr style=\"background-color:#61ec66\" align=\"left\" ><td colspan='2'>###</td></tr>";
                             template += "</table></html>";
                             mailBody = mailBody.Replace("\r\n", "<br>");
