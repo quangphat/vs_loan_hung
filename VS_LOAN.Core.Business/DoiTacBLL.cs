@@ -33,6 +33,7 @@ namespace VS_LOAN.Core.Business
                         DoiTacModel cm = new DoiTacModel();
                         cm.ID = Convert.ToInt32(item["ID"].ToString());
                         cm.Ten = item["Ten"].ToString();
+                        cm.F88Value = Convert.ToInt32(item["F88Value"].ToString());
                         rs.Add(cm);
                     }
                     return rs;

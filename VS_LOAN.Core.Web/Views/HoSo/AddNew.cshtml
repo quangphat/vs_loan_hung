@@ -203,10 +203,8 @@
         });
         $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
     });
-</script>
-<script>
-    jQuery.fn.ForceNumericOnly =
-function () {
+
+    jQuery.fn.ForceNumericOnly =function () {
     return this.each(function () {
         $(this).keydown(function (e) {
             var key = e.charCode || e.keyCode || 0;
@@ -232,8 +230,7 @@ function () {
     $("#txtTienDeNghiVay").change(function () {
         $("#txtTienDeNghiVay").val(formatCurrency($("#txtTienDeNghiVay").val().replace(/\./g, '')));
     });
-</script>
-<script>
+
     $(document).ready(function () {
         LayDSTaiLieu();
         LayDSNganHang();
@@ -250,15 +247,12 @@ function () {
              $('#txtTenNV').val( $('option:selected', this).attr('ten'));
         });
     });
-</script>
-<script>
+
     $('#spnThoiHanVay').ace_spinner({ value: 0, min: 0, max: 36, step: 3, btn_up_class: 'btn-info', btn_down_class: 'btn-info' })
 				.closest('.ace-spinner')
 				.on('changed.fu.spinbox', function () {
 				    //alert($('#spinner1').val())
 				});
-</script>
-<script>
     function LayDSTinh() {
         $.ajax({
             type: "POST",
@@ -281,8 +275,7 @@ function () {
             }
         });
     }
-</script>
-<script>
+
     function LayDSCourier() {
         $.ajax({
             type: "POST",
@@ -305,8 +298,7 @@ function () {
             }
         });
     }
-</script>
-<script>
+
     function LayDSHuyen(maTinh) {
         $.ajax({
             type: "POST",
@@ -329,8 +321,7 @@ function () {
             }
         });
     }
-</script>
-<script>
+    var lstDoitac =[]
     function LayDSNganHang() {
         $.ajax({
             type: "POST",
@@ -340,6 +331,8 @@ function () {
                 $('#ddlDoiTac').empty();
                 $('#ddlDoiTac').append("<option value='0'></option>");
                 if (data != null) {
+                    debugger
+                    lstDoitac = data.DSDoiTac
                     $.each(data.DSDoiTac, function (index, optionData) {
                         $('#ddlDoiTac').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
@@ -353,9 +346,7 @@ function () {
             }
         });
     }
-</script>
 
-<script>
     function LayDSTaiLieu() {
         $.ajax({
             type: "POST",
@@ -443,8 +434,7 @@ function () {
             }
         });
     }
-</script>
-<script>
+
     function LayDSSanPham(maDoiTac) {
         $.ajax({
             type: "POST",
@@ -468,8 +458,7 @@ function () {
             }
         });
     }
-</script>
-<script>
+
     function LayDSale(maNV) {
         $.ajax({
             type: "POST",
@@ -496,8 +485,7 @@ function () {
             }
         });
     }
-</script>
-<script>
+
     $('#btn_Temp').click(function (e) {
         if ($('#txtHoTen').val() == "" || $('#txtHoTen').val() == undefined) {
             swal({
@@ -579,8 +567,7 @@ function () {
             },
         });
     });
-</script>
-<script>
+
     $('#btn_Save').click(function (e) {
 
         if ($('#ddlDoiTac').val() == "0" || $('#ddlDoiTac').val() == undefined ) {
@@ -624,6 +611,15 @@ function () {
             });
             return;
         }
+        let doitacF88Value = 0;
+        debugger
+        if (!isNullOrNoItem(lstDoitac)) {
+            let doitacId = !isNullOrUndefined($('#ddlDoiTac').val()) ? parseInt($('#ddlDoiTac').val()) : 0;
+            let doitac = lstDoitac.find(p => p.ID == doitacId);
+            if (!isNullOrUndefined(doitac)) {
+                doitacF88Value = doitac.F88Value;
+            }
+        }
         if ($('#txtCMND').val().length != 9 && $('#txtCMND').val().length != 12) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
@@ -642,7 +638,10 @@ function () {
             'sanPhamVay': $('#ddlSanPhamVay').val(), 'tenCuaHang': $('#txtTenCuaHang').val(),
             'baoHiem': $('#cbbaohiem').is(":checked"), 'thoiHanVay': $('#spnThoiHanVay').val(),
             'ghiChu': $('#txtGhiChu').val(),
-            'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, '')
+            'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, ''),
+            'link': window.location.href,
+            'provinceId': parseInt($('#ddlTinh').val()),
+            'doitacF88Value': doitacF88Value
         });
         $.ajax({
             traditional: true,
@@ -659,7 +658,7 @@ function () {
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-                        window.location = window.location;
+                        //window.location = window.location;
                     });
                 }
                 else {

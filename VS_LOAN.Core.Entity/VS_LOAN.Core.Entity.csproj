@@ -90,6 +90,7 @@
     <Compile Include="CustomerEditModel.cs" />
     <Compile Include="CustomerModel.cs" />
     <Compile Include="CustomerNoteViewModel.cs" />
+    <Compile Include="F88Model\LadipageModel.cs" />
     <Compile Include="GhichuViewModel.cs" />
     <Compile Include="HoSoCuaToiModel.cs" />
     <Compile Include="HoSoDuyetModel.cs" />

@@ -1757,6 +1757,10 @@
     <Folder Include="App_Data\ImportSanPham\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\F88Service\F88Service.csproj">
+      <Project>{F0429BA6-9FA4-48B8-B793-46FC793517A6}</Project>
+      <Name>F88Service</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VS_LOAN.Core.Business\VS_LOAN.Core.Business.csproj">
       <Project>{eeed2e30-177b-48fe-9b5e-879e0ffcb0e3}</Project>
       <Name>VS_LOAN.Core.Business</Name>
@@ -1781,6 +1785,9 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
@@ -1802,6 +1809,9 @@
           <CustomServerUrl>
           </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <servers defaultServer="SelfHostServer">
+            <server name="SelfHostServer" exePath="" cmdArgs="" url="http://localhost:45491/" workingDir="" />
+          </servers>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

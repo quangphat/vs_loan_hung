@@ -41,5 +41,4 @@ namespace VS_LOAN.Core.Utility
         VietCreadit = 3
     }
 
-
 }

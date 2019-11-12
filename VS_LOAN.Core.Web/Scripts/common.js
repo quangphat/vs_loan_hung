@@ -28,7 +28,7 @@ function isNullOrNoItem(arr) {
     return false;
 }
 function isNullOrUndefined(value) {
-    if (value === null || value === undefined || isNaN(value))
+    if (value === null || value === undefined)
         return true;
     return false;
 }
