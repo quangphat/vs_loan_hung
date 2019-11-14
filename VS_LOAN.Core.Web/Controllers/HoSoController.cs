@@ -19,7 +19,7 @@ using F88Service;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
-    public class HoSoController :Controller
+    public class HoSoController : BaseController
     {
         public static Dictionary<string, ActionInfo> LstRole
         {
@@ -132,58 +132,57 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<ActionResult> Save(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
-           , int maKhuVuc, string diaChi,int courier, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay, 
-            string soTienVay, string ghiChu, string link = null, int provinceId = 0, int doitacF88Value = 0)
+           , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay,
+            string soTienVay, string ghiChu, string birthDayStr, string cmndDayStr, string link = null, int provinceId = 0, int doitacF88Value = 0)
         {
-            var message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
-            bool isCheck = true;
-            if (!string.IsNullOrWhiteSpace(ghiChu) && ghiChu.Length>200)
+            if (!string.IsNullOrWhiteSpace(ghiChu) && ghiChu.Length > 200)
             {
-                message.ErrorMessage = "Nội dung ghi chú không được lớn hơn 200";
-                isCheck = false;
+                return ToResponse(false, "Nội dung ghi chú không được lớn hơn 200");
             }
             try
             {
-                
+
                 if (hoten == string.Empty)
                 {
-                    message.ErrorMessage = "Vui lòng nhập họ tên";
-                    isCheck = false;
+                    return ToResponse(false, "Vui lòng nhập họ tên");
                 }
-                else if(phone==string.Empty)
+                if (phone == string.Empty)
                 {
-                    message.ErrorMessage = "Vui lòng nhập số điện thoại";
-                    isCheck = false;
+                    return ToResponse(false, "Vui lòng nhập số điện thoại");
                 }
-                else if (ngayNhanDon== string.Empty)
+                if (ngayNhanDon == string.Empty)
                 {
-                    message.ErrorMessage = "Vui lòng nhập ngày nhận đơn";
-                    isCheck = false;
+                    return ToResponse(false, "Vui lòng nhập ngày nhận đơn");
                 }
-                else if (cmnd == string.Empty)
+                if (cmnd == string.Empty)
                 {
-                    message.ErrorMessage = "Vui lòng nhập CMND";
-                    isCheck = false;
+                    return ToResponse(false, "Vui lòng nhập CMND");
                 }
-                else if (diaChi == string.Empty)
+                if (diaChi == string.Empty)
                 {
-                    message.ErrorMessage = "Vui lòng nhập địa chỉ";
-                    isCheck = false;
+                    return ToResponse(false, "Vui lòng nhập địa chỉ");
                 }
-                else if (maKhuVuc == 0)
+                if (maKhuVuc == 0)
                 {
-                    message.ErrorMessage = "Vui lòng chọn quận/ huyện";
-                    isCheck = false;
+                    return ToResponse(false, "Vui lòng chọn quận/ huyện");
                 }
-                else if (sanPhamVay == 0)
+                if (sanPhamVay == 0)
                 {
-                    message.ErrorMessage = "Vui lòng chọn sản phẩm vay";
-                    isCheck = false;
+                    return ToResponse(false, "Vui lòng chọn sản phẩm vay");
                 }
-                else if (soTienVay == string.Empty)
+                if (soTienVay == string.Empty)
                 {
-                    message.ErrorMessage = "Vui lòng nhập số tiền vay";
-                    isCheck = false;
+                    return ToResponse(false, "Vui lòng nhập số tiền vay");
+                }
+                if (string.IsNullOrWhiteSpace(birthDayStr))
+                {
+                    return ToResponse(false, "Vui lòng nhập ngày sinh");
+
+                }
+                if (string.IsNullOrWhiteSpace(cmndDayStr))
+                {
+                    return ToResponse(false, "Vui lòng nhập ngày cấp cmnd");
+
                 }
                 List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["LstFileHoSo"];
                 List<LoaiTaiLieuModel> lstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
@@ -195,105 +194,91 @@ namespace VS_LOAN.Core.Web.Controllers
                         var iFind = lstTaiLieu.Find(x => x.MaLoai == item.ID);
                         if (iFind == null)
                         {
-                            message.ErrorMessage = "Vui lòng dính kèm \"" + item.Ten.ToUpper() + "\"";
-                            isCheck = false;
+                            return ToResponse(false, "Vui lòng dính kèm \"" + item.Ten.ToUpper() + "\"");
                         }
                     }
+                    //return ToResponse(false,"");
                 }
-                if (isCheck)
+                HoSoModel hs = new HoSoModel();
+                hs.ID = (int)Session["AddNewHoSoID"];
+                hs.TenKhachHang = hoten;
+                hs.SDT = phone;
+                hs.SDT2 = phone2;
+                if (ngayNhanDon != string.Empty)
                 {
-                    HoSoModel hs = new HoSoModel();
-                    hs.ID= (int)Session["AddNewHoSoID"];
-                    hs.TenKhachHang = hoten;
-                    hs.SDT = phone;
-                    hs.SDT2 = phone2;
-                    if (ngayNhanDon != string.Empty)
+                    hs.NgayNhanDon = DateTimeFormat.ConvertddMMyyyyToDateTime(ngayNhanDon);
+                }
+                hs.BirthDay = string.IsNullOrWhiteSpace(birthDayStr) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(birthDayStr);
+                hs.CmndDay = string.IsNullOrWhiteSpace(cmndDayStr) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(cmndDayStr);
+                hs.HoSoCuaAi = hoSoCuaAi;
+                hs.MaNguoiTao = GlobalData.User.IDUser;
+                hs.NgayTao = DateTime.Now;
+                hs.CMND = cmnd;
+                hs.GioiTinh = gioiTinh;
+                hs.MaKhuVuc = maKhuVuc;
+                hs.DiaChi = diaChi;
+                hs.CourierCode = courier;
+                hs.SanPhamVay = sanPhamVay;
+                hs.TenCuaHang = tenCuaHang;
+                hs.CoBaoHiem = baoHiem;
+                hs.HanVay = thoiHanVay;
+                if (soTienVay == string.Empty)
+                    soTienVay = "0";
+                hs.SoTienVay = Convert.ToDecimal(soTienVay);
+                hs.MaTrangThai = (int)TrangThaiHoSo.NhapLieu;
+                hs.MaKetQua = (int)KetQuaHoSo.Trong;
+                int result = 0;
+                
+                if (hs.ID > 0)
+                {
+                    bool isCheckMaSanPham = false;
+                    //// chỉnh sửa
+                    if (new HoSoBLL().Luu(hs, lstTaiLieu, ref isCheckMaSanPham))
                     {
-                        hs.NgayNhanDon = DateTimeFormat.ConvertddMMyyyyToDateTime(ngayNhanDon);
-                    }
-                    hs.HoSoCuaAi = hoSoCuaAi;
-                    hs.MaNguoiTao = GlobalData.User.IDUser;
-                    hs.NgayTao = DateTime.Now;
-                    hs.CMND = cmnd;
-                    hs.GioiTinh = gioiTinh;
-                    hs.MaKhuVuc = maKhuVuc;
-                    hs.DiaChi = diaChi;
-                    hs.CourierCode = courier;
-                    hs.SanPhamVay = sanPhamVay;
-                    hs.TenCuaHang = tenCuaHang;
-                    hs.CoBaoHiem = baoHiem;
-                    hs.HanVay = thoiHanVay;
-                    if (soTienVay == string.Empty)
-                        soTienVay = "0";
-                    hs.SoTienVay = Convert.ToDecimal(soTienVay);
-                    hs.MaTrangThai = (int)TrangThaiHoSo.NhapLieu;
-                    hs.MaKetQua = (int)KetQuaHoSo.Trong;
-                    int result = 0;
-                    var f88Service = new F88Service.F88Service();
-                    var f88Model = new Entity.F88Model.LadipageModel
-                    {
-                        Name = hoten,
-                        Phone = phone,
-                        Link = link,
-                        Select1 = null,
-                        Select2 = provinceId.ToString(),
-                        TransactionId = hs.ID,
-                        ReferenceType = doitacF88Value
-                    };
-                    if (hs.ID > 0)
-                    {
-                        bool isCheckMaSanPham = false;
-                        //// chỉnh sửa
-                        if (new HoSoBLL().Luu(hs, lstTaiLieu, ref isCheckMaSanPham))
-                        {
-                            result = 1;
-                            var f88Result = await f88Service.LadipageReturnID(f88Model);
-                            new HoSoDuyetXemBLL().Them(hs.ID);
-                            MailCM.SendMailToAdmin(hs.ID, Request.Url.Authority);
-                        }
-                        else
-                        {
-                            if(isCheckMaSanPham)
-                                message.ErrorMessage = "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác";
-                        }
-                        AddGhichu(hs.ID, ghiChu);
+                        result = 1;
+                        new HoSoDuyetXemBLL().Them(hs.ID);
+                        MailCM.SendMailToAdmin(hs.ID, Request.Url.Authority);
                     }
                     else
                     {
-                        bool isCheckMaSanPham = false;
-                        result = new HoSoBLL().Them(hs,lstTaiLieu, ref isCheckMaSanPham);
-                        if (result > 0)
-                        {
-
-                            Session["AddNewHoSoID"] = result;
-                            new HoSoDuyetXemBLL().Them(result);
-                            MailCM.SendMailToAdmin(result, Request.Url.Authority);
-                            f88Model.TransactionId = result;
-                            var f88Result = await f88Service.LadipageReturnID(f88Model);
-                        }
-                       else
-                        {
-                            if (isCheckMaSanPham)
-                                message.ErrorMessage = "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác";
-                        }
-                        AddGhichu(result, ghiChu);
+                        if (isCheckMaSanPham)
+                            return ToResponse(false, "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác");
                     }
+                    AddGhichu(hs.ID, ghiChu);
+                }
+                else
+                {
+                    bool isCheckMaSanPham = false;
+                    result = new HoSoBLL().Them(hs, lstTaiLieu, ref isCheckMaSanPham);
                     if (result > 0)
                     {
-                        
-                        message.Result = true;
-                        message.ErrorMessage = Resources.Global.Message_Succ;
+
+                        Session["AddNewHoSoID"] = result;
+                        new HoSoDuyetXemBLL().Them(result);
+                        MailCM.SendMailToAdmin(result, Request.Url.Authority);
                     }
+                    else
+                    {
+                        if (isCheckMaSanPham)
+                            return ToResponse(false, "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác");
+                    }
+                    AddGhichu(result, ghiChu);
                 }
+                if (result > 0)
+                {
+                    return ToResponse(true, Resources.Global.Message_Succ);
+                }
+                else
+                {
+                    return ToResponse(false, "Không thành công, vui lòng thử lại sau");
+                }
+
             }
             catch (BusinessException ex)
             {
-                message.Result = false;
-                message.MessageId = ex.getExceptionId();
-                message.ErrorMessage = ex.Message;
-                message.SystemMessage = ex.ToString();
+                return ToResponse(false, ex.Message);
             }
-            return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
+            
         }
         public JsonResult UploadHoSo(string key)
         {
@@ -333,11 +318,11 @@ namespace VS_LOAN.Core.Web.Controllers
                             fileStream.Close();
                             fileUrl = "/Upload/HoSo/" + pathTemp + "/" + fileName;
                         }
-                        string deleteURL = Url.Action("Delete", "HoSo")+"?key="+key;
+                        string deleteURL = Url.Action("Delete", "HoSo") + "?key=" + key;
                         var _type = System.IO.Path.GetExtension(fileContent.FileName);
                         List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["LstFileHoSo"];
                         var find = lstTaiLieu.Find(x => x.MaLoai.ToString().Equals(key.Trim()));
-                        if(find!=null)
+                        if (find != null)
                         {
                             find.LstFile[0].DuongDan = fileUrl;
                             find.LstFile[0].Ten = fileName;
@@ -388,7 +373,7 @@ namespace VS_LOAN.Core.Web.Controllers
                             };
                             return Json(config);
                         }
-                       
+
                     }
 
                 }
@@ -416,8 +401,8 @@ namespace VS_LOAN.Core.Web.Controllers
             return Json(new { Result = fileUrl });
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public ActionResult SaveDaft(string hoten,string phone,string phone2,string ngayNhanDon,int hoSoCuaAi,string cmnd,int gioiTinh
-            ,int maKhuVuc, string diaChi, int courier, int sanPhamVay,string tenCuaHang, int baoHiem,int thoiHanVay,string soTienVay, string ghiChu)
+        public ActionResult SaveDaft(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
+            , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay, string soTienVay, string ghiChu)
         {
             var message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
             if (!string.IsNullOrWhiteSpace(ghiChu) && ghiChu.Length > 200)
@@ -435,7 +420,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 else
                 {
                     HoSoModel hs = new HoSoModel();
-                    hs.ID =(int)Session["AddNewHoSoID"];
+                    hs.ID = (int)Session["AddNewHoSoID"];
                     hs.TenKhachHang = hoten;
                     hs.SDT = phone;
                     hs.SDT2 = phone2;
@@ -466,7 +451,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     {
                         bool isCheckMaSanPham = false;
                         //// chỉnh sửa
-                        if (new HoSoBLL().Luu(hs, lstTaiLieu,ref isCheckMaSanPham))
+                        if (new HoSoBLL().Luu(hs, lstTaiLieu, ref isCheckMaSanPham))
                             result = 1;
                         else
                         {
@@ -478,7 +463,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     else
                     {
                         bool isCheckMaSanPham = false;
-                        result = new HoSoBLL().Them(hs,lstTaiLieu, ref isCheckMaSanPham);
+                        result = new HoSoBLL().Them(hs, lstTaiLieu, ref isCheckMaSanPham);
                         if (result > 0)
                             Session["AddNewHoSoID"] = result;
                         else
@@ -560,7 +545,7 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.MaDoiTac = new DoiTacBLL().LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
             ViewBag.LstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
-           
+
             return View();
         }
 
@@ -605,6 +590,6 @@ namespace VS_LOAN.Core.Web.Controllers
             return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
         }
 
-       
+
     }
 }

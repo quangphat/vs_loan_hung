@@ -357,5 +357,7 @@ namespace VS_LOAN.Core.Entity.Model
                 _courierCode = value;
             }
         }
+        public DateTime BirthDay { get; set; }
+        public DateTime CmndDay { get; set; }
     }
 }

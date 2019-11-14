@@ -399,5 +399,7 @@ namespace VS_LOAN.Core.Entity.Model
                 _ketQuaText = value;
             }
         }
+        public DateTime BirthDay { get; set; }
+        public DateTime CmndDay { get; set; }
     }
 }

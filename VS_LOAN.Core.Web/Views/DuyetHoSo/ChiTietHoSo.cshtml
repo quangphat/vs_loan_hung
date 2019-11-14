@@ -40,6 +40,21 @@
 
                     </div>
                     <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày tháng năm sinh<span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtBirhDay" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại khách hàng <span class="required">(*)</span> </label>
                         <div class="col-sm-4">
                             <input type="text" id="txtDienThoai" placeholder="Điện thoại khách hàng " class="form-control">
@@ -50,10 +65,21 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CMND<span class="required">(*)</span></label>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CMND/CCCD<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <input type="text" id="txtCMND" placeholder="Nhập số CMND" class="form-control" />
                         </div>
+                        <label class="col-sm-2 control-label no-padding-right">Ngày cấp CMND/CCCD<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtCmndDay" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Giới tính</label>
                         <div class="col-sm-4">
                             <select id="ddlGioiTinh" class="chosen-select form-control">
@@ -201,16 +227,17 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="pull-right">
+                                    <a id="btn_F88" data-content="@ViewBag.ID" class="btn btn-sm btn-primary" onclick="SendToF88(this)">Gửi đến F88</a>
                                     <a id="btn_CapNhat" data-content="@ViewBag.ID" class="btn btn-sm btn-primary" onclick="CapNhat(this)">Cập nhật</a>
                                     <a href="/DuyetHoSo/Index/?fromdate=@Request.Params["fromdate"]&todate=@Request.Params["todate"]&makh=@Request.Params["makh"]" title="@Global.Button_Return" class="btn btn-sm btn-primary on-top-return"><i class="ace-icon glyphicon glyphicon-backward"></i></a>
                                 </div>
                             </div>
-                           
+
                         </div>
                     </div>
                 </form>
                 <div class="form-group">
-                   
+
                 </div>
             </div>
         </div>
@@ -222,9 +249,7 @@
     $(document).ready(function () {
         $('.chosen-select').chosen({ width: '100%', allow_single_deselect: true });
     });
-</script>
 
-<script>
     function CapNhat(e) {
         var element = $(e);
         if ($('#ddlTrangThai').val() == '0'||$('#ddlTrangThai').val()==undefined) {
@@ -267,7 +292,12 @@
                 'maKhuVuc': $('#ddlHuyen').val(), 'diaChi': $('#txtDiaChi').val(),'courier':$('#ddlCourier').val(),
                 'sanPhamVay': $('#ddlSanPhamVay').val(), 'tenCuaHang': $('#txtTenCuaHang').val(),
                 'baoHiem': $('#cbbaohiem').is(":checked"), 'thoiHanVay': $('#spnThoiHanVay').val(),
-                'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, ''), 'trangThai': $('#ddlTrangThai').val(), 'ketQua': $('#ddlKetQua').val(), 'ghiChu': $('#txtGhiChu').val()
+                'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, ''),
+                'trangThai': $('#ddlTrangThai').val(),
+                'ketQua': $('#ddlKetQua').val(),
+                'ghiChu': $('#txtGhiChu').val(),
+                'birthDayStr': $('#txtBirhDay').val(),
+                'cmndDayStr': $('#txtCmndDay').val()
             });
 
             $.ajax({
@@ -308,8 +338,78 @@
         }
         );
     }
-</script>
-<script>
+    function SendToF88(e) {
+        var element = $(e);
+        debugger
+        swal({
+            title: "@Html.Raw(Global.DialogConfirmYesNo)",
+            text: "",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            cancelButtonText: "@Html.Raw(Global.DialogConfirmNo)",
+            confirmButtonText: "@Html.Raw(Global.DialogConfirmYes)",
+            closeOnConfirm: false
+
+        }, function () {
+            var id = element.attr("data-content");
+                showBlock($('#panel_body'), strLoading);
+                let doitacF88Value = 0;
+                if (!isNullOrNoItem(lstDoitac)) {
+                    let doitacId = !isNullOrUndefined($('#ddlDoiTac').val()) ? parseInt($('#ddlDoiTac').val()) : 0;
+                    let doitac = lstDoitac.find(p => p.ID == doitacId);
+                    if (!isNullOrUndefined(doitac)) {
+                        doitacF88Value = doitac.F88Value;
+                    }
+                }
+            var objectSend = JSON.stringify({
+                'hosoId': id,
+                'customerName': $('#txtHoTen').val(),
+                'phone': $('#txtDienThoai').val(),
+                'link': window.location.href,
+                'provinceId': parseInt($('#ddlTinh').val()),
+                'doitacF88Value': doitacF88Value,
+            });
+
+            $.ajax({
+                url: '/DuyetHoSo/SendToF88',
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                processData: false,
+                data: objectSend,
+                success: function (data) {
+                    debugger
+                    if (data.datas.Success == true) {
+                        swal({
+                            title: "Thành công",
+                            text: "Thành công",
+                            type: "success",
+                            timer: 4000,
+                            showConfirmButton: true,
+                        }, function () {
+                            window.location = window.location
+                        });
+                    }
+                    else {
+                        swal({
+                            title: "",
+                            text: data.datas.Message,
+                            type: "error",
+                            timer: 4000,
+                            showConfirmButton: true,
+                        });
+                    }
+                },
+                error: function (jqXHR, exception) {
+                    showError(jqXHR, exception);
+                },
+                complete: function () {
+                    $('#panel_body').unblock();
+                },
+            });
+        }
+        );
+    }
     function LayDanhsachGhichu() {
         //$('#ddlTrangThai').empty();
         $.ajax({
@@ -329,7 +429,7 @@
                         )
                     });
                 }
-               
+
             },
             complete: function () {
             },
@@ -385,16 +485,13 @@
             }
         });
     }
-</script>
-<script>
+
     $('#spnThoiHanVay').ace_spinner({ value: 0, min: 0, max: 36, step: 3, btn_up_class: 'btn-info', btn_down_class: 'btn-info' })
         .closest('.ace-spinner')
         .on('changed.fu.spinbox', function () {
             //alert($('#spinner1').val())
         });
-</script>
 
-<script>
     $(document).ready(function () {
         $('#ddlSanPhamVay').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlHuyen').chosen({ width: '100%', allow_single_deselect: true });
@@ -406,14 +503,27 @@
             $(this).prev().focus();
         });
         $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
+        $('#txtBirhDay').datepicker({
+            dateFormat: 'dd-mm-yy'
+
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+        //$("#txtBirhDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
+        $('#txtCmndDay').datepicker({
+            dateFormat: 'dd-mm-yy'
+
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
     });
-</script>
-<script>
-    var hoSoID=0;
+    var hoSoID = 0;
+    var lstDoitac = [];
     $(document).ready(function () {
         var hosoInfo = @Html.Raw(Json.Encode(ViewBag.HoSo));
         if(hosoInfo!=null)
         {
+
             hoSoID=hosoInfo.ID;
             $('#txtHoTen').val(hosoInfo.TenKhachHang);
             $('#txtDienThoai').val(hosoInfo.SDT);
@@ -424,6 +534,8 @@
             $('#txtTenCuaHang').val(hosoInfo.TenCuaHang);
             $('#txtTienDeNghiVay').val(formatCurrency(hosoInfo.SoTienVay.toString()));
             $('#spnThoiHanVay').val(hosoInfo.HanVay);
+            $('#txtBirhDay').val(SetFormatDateTimeDMY(hosoInfo.BirthDay));
+            $('#txtCmndDay').val(SetFormatDateTimeDMY(hosoInfo.CmndDay));
             if(hosoInfo.CoBaoHiem>0)
                 $('#cbbaohiem').attr('checked', false);
             else
@@ -441,6 +553,7 @@
                 $('#ddlDoiTac').empty();
                 $('#ddlDoiTac').append("<option value='0'></option>");
                 if (data != null) {
+                    lstDoitac = data.DSDoiTac
                     $.each(data.DSDoiTac, function (index, optionData) {
                         $('#ddlDoiTac').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
@@ -563,8 +676,7 @@
         LayDanhsachGhichu();
         $('#txtGhiChu').val(hosoInfo.GhiChu);
     });
-</script>
-<script>
+
     function LayDSSanPham(maDoiTac) {
         $.ajax({
             type: "POST",
@@ -588,8 +700,7 @@
             }
         });
     }
-</script>
-<script>
+
     function LayDSTaiLieu(lstLoaiTaiLieu, lstTaiLieu) {
         if (lstLoaiTaiLieu != null) {
             var i = 0;

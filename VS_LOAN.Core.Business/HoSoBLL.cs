@@ -103,6 +103,8 @@ namespace VS_LOAN.Core.Business
                                 commandAdd.Parameters.Add(new SqlParameter("@NgayTao", hoSoModel.NgayTao));
                                 commandAdd.Parameters.Add(new SqlParameter("@MaNguoiTao", hoSoModel.MaNguoiTao));
                                 commandAdd.Parameters.Add(new SqlParameter("@HoSoCuaAi", hoSoModel.HoSoCuaAi));
+                                commandAdd.Parameters.Add(new SqlParameter("@birthDay", hoSoModel.BirthDay));
+                                commandAdd.Parameters.Add(new SqlParameter("@cmndDay", hoSoModel.CmndDay));
                                 if (hoSoModel.MaKetQua == 0)
                                 {
                                     commandAdd.Parameters.Add(new SqlParameter("@KetQuaHS", DBNull.Value));
@@ -243,6 +245,8 @@ namespace VS_LOAN.Core.Business
                         command.Parameters.Add(new SqlParameter("@NgayTao", hoSoModel.NgayTao));
                         command.Parameters.Add(new SqlParameter("@MaNguoiTao", hoSoModel.MaNguoiTao));
                         command.Parameters.Add(new SqlParameter("@HoSoCuaAi", hoSoModel.HoSoCuaAi));
+                        command.Parameters.Add(new SqlParameter("@birthDay", hoSoModel.BirthDay));
+                        command.Parameters.Add(new SqlParameter("@cmndDay", hoSoModel.CmndDay));
                         if (hoSoModel.MaKetQua == 0)
                         {
                             command.Parameters.Add(new SqlParameter("@KetQuaHS", DBNull.Value));
@@ -372,6 +376,8 @@ namespace VS_LOAN.Core.Business
                         command.Parameters.Add(new SqlParameter("@NgayCapNhat", hoSoModel.NgayCapNhat));
                         command.Parameters.Add(new SqlParameter("@MaNguoiCapNhat", hoSoModel.MaNguoiCapNhat));
                         command.Parameters.Add(new SqlParameter("@HoSoCuaAi", hoSoModel.HoSoCuaAi));
+                        command.Parameters.Add(new SqlParameter("@birthDay", hoSoModel.BirthDay));
+                        command.Parameters.Add(new SqlParameter("@cmndDay", hoSoModel.CmndDay));
                         //command.Parameters.Add(new SqlParameter("@MaTrangThai", hoSoModel.MaTrangThai));
                         if (hoSoModel.MaKetQua == 0)
                         {
@@ -581,6 +587,22 @@ namespace VS_LOAN.Core.Business
                         try
                         {
                             hs.NgayNhanDon = (DateTime)(item["NgayNhanDon"]);
+                        }
+                        catch
+                        {
+
+                        }
+                        try
+                        {
+                            hs.BirthDay = (DateTime)(item["BirthDay"]);
+                        }
+                        catch
+                        {
+
+                        }
+                        try
+                        {
+                            hs.CmndDay = (DateTime)(item["CmndDay"]);
                         }
                         catch
                         {

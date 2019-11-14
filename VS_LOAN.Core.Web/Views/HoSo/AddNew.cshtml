@@ -38,6 +38,21 @@
 
                     </div>
                     <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày tháng năm sinh<span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtBirhDay" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại khách hàng<span class="required">(*)</span> </label>
                         <div class="col-sm-4">
                             <input type="text" id="txtDienThoai" placeholder="Nhập số điện thoại khách hàng" class="form-control">
@@ -48,10 +63,21 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CMND<span class="required">(*)</span></label>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CMND/CCCD<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <input type="text" id="txtCMND" placeholder="Nhập số CMND" class="form-control" />
                         </div>
+                        <label class="col-sm-2 control-label no-padding-right">Ngày cấp CMND/CCCD<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtCmndDay" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Giới tính</label>
                         <div class="col-sm-4">
                             <select id="ddlGioiTinh" class="chosen-select form-control">
@@ -202,6 +228,20 @@
             $(this).prev().focus();
         });
         $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
+        $('#txtBirhDay').datepicker({
+            dateFormat: 'dd-mm-yy'
+
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+        //$("#txtBirhDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
+        $('#txtCmndDay').datepicker({
+            dateFormat: 'dd-mm-yy'
+
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+        //$("#txtCmndDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
     });
 
     jQuery.fn.ForceNumericOnly =function () {
@@ -612,7 +652,6 @@
             return;
         }
         let doitacF88Value = 0;
-        debugger
         if (!isNullOrNoItem(lstDoitac)) {
             let doitacId = !isNullOrUndefined($('#ddlDoiTac').val()) ? parseInt($('#ddlDoiTac').val()) : 0;
             let doitac = lstDoitac.find(p => p.ID == doitacId);
@@ -641,7 +680,9 @@
             'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, ''),
             'link': window.location.href,
             'provinceId': parseInt($('#ddlTinh').val()),
-            'doitacF88Value': doitacF88Value
+            'doitacF88Value': doitacF88Value,
+            'birthDayStr': $('#txtBirhDay').val(),
+            'cmndDayStr': $('#txtCmndDay').val()
         });
         $.ajax({
             traditional: true,

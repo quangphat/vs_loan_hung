@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
-    public class LoanController : Controller
+    public class LoanController : BaseController
     {
         protected override IAsyncResult BeginExecuteCore(AsyncCallback callback, object state)
         {
