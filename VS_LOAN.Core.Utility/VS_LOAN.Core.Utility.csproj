@@ -127,6 +127,12 @@
     <Content Include="Lib\Microsoft.Practices.EnterpriseLibrary.Common.dll" />
     <Content Include="Lib\Microsoft.Practices.EnterpriseLibrary.Data.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VS_LOAN.Core.Entity\VS_LOAN.Core.Entity.csproj">
+      <Project>{E86679D0-8E05-471F-8DA0-3E33E1F7D6BC}</Project>
+      <Name>VS_LOAN.Core.Entity</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

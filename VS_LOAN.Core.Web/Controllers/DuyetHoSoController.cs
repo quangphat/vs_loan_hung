@@ -320,8 +320,26 @@ namespace VS_LOAN.Core.Web.Controllers
                 hs.TenCuaHang = tenCuaHang;
                 hs.CoBaoHiem = baoHiem;
                 hs.HanVay = thoiHanVay;
-                hs.BirthDay = string.IsNullOrWhiteSpace(birthDayStr) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(birthDayStr);
-                hs.CmndDay = string.IsNullOrWhiteSpace(cmndDayStr) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(cmndDayStr);
+                var dtBirthDayConvert = DateTimeFormat.ConvertddMMyyyyToDateTimeV2(birthDayStr);
+                if (!dtBirthDayConvert.Success)
+                {
+                    return ToJsonResponse(false, dtBirthDayConvert.Message);
+                }
+                else
+                {
+                    hs.BirthDay = dtBirthDayConvert.Value;
+                }
+                
+                var dtCmnd = DateTimeFormat.ConvertddMMyyyyToDateTimeV2(cmndDayStr);
+                if(!dtCmnd.Success)
+                {
+                    return ToJsonResponse(false, dtCmnd.Message);
+                }
+                else
+                {
+                    hs.CmndDay = dtCmnd.Value;
+                }
+                
                 if (soTienVay == string.Empty)
                     soTienVay = "0";
                 hs.SoTienVay = Convert.ToDecimal(soTienVay);
