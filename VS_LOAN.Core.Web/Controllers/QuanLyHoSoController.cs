@@ -56,7 +56,7 @@ namespace VS_LOAN.Core.Web.Controllers
             RMessage message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
             List<HoSoQuanLyModel> lstHoso = new List<HoSoQuanLyModel>();
             int totalRecord = 0;
-            if (!string.IsNullOrWhiteSpace(freetext) && freetext.Length >50)
+            if (!string.IsNullOrWhiteSpace(freetext) && freetext.Length > 50)
             {
                 message.Result = false;
                 message.MessageId = string.Empty;
@@ -64,7 +64,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 message.SystemMessage = "Từ khóa tìm kiếm không được nhiều hơn 50 ký tự";
                 return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
             }
-            
+
             try
             {
                 DateTime dtFromDate = DateTime.MinValue, dtToDate = DateTime.MinValue;
@@ -73,7 +73,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 if (toDate != "")
                     dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTime(toDate);
                 message.Result = true;
-                string trangthai = string.IsNullOrWhiteSpace(status) ? Helpers.Helpers.GetLimitStatusString() :status;
+                string trangthai = string.IsNullOrWhiteSpace(status) ? Helpers.Helpers.GetLimitStatusString() : status;
                 //trangthai += 
                 totalRecord = new HoSoBLL().CountHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freetext);
                 lstHoso = new HoSoBLL().TimHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freetext, page, limit);
@@ -170,9 +170,11 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult Save(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
-           , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang, bool baoHiem, int thoiHanVay, string soTienVay, int trangthai, string ghiChu)
+           , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang,
+            bool baoHiem, int thoiHanVay, string soTienVay, int trangthai, string ghiChu,
+             string birthDayStr, string cmndDayStr)
         {
-            var message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
+
             if (GlobalData.User.UserType == (int)UserTypeEnum.Sale
                 || trangthai == (int)TrangThaiHoSo.Nhap)
             {
@@ -180,56 +182,56 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             try
             {
-                bool isCheck = true;
                 if (hoten == string.Empty)
                 {
-                    message.ErrorMessage = "Vui lòng nhập họ tên";
-                    isCheck = false;
+                    return ToJsonResponse(false, "Vui lòng nhập họ tên");
                 }
-                else if (phone == string.Empty)
+                if (phone == string.Empty)
                 {
-                    message.ErrorMessage = "Vui lòng nhập số điện thoại";
-                    isCheck = false;
+                    return ToJsonResponse(false, "Vui lòng nhập số điện thoại");
                 }
-                else if (ngayNhanDon == string.Empty)
+                if (ngayNhanDon == string.Empty)
                 {
-                    message.ErrorMessage = "Vui lòng nhập ngày nhận đơn";
-                    isCheck = false;
+                    return ToJsonResponse(false, "Vui lòng nhập ngày nhận đơn");
                 }
-                else if (cmnd == string.Empty)
+                if (cmnd == string.Empty)
                 {
-                    message.ErrorMessage = "Vui lòng nhập CMND";
-                    isCheck = false;
+                    return ToJsonResponse(false, "Vui lòng nhập CMND");
                 }
-                else if (diaChi == string.Empty)
+                if (diaChi == string.Empty)
                 {
-                    message.ErrorMessage = "Vui lòng nhập địa chỉ";
-                    isCheck = false;
+                    return ToJsonResponse(false, "Vui lòng nhập địa chỉ");
                 }
-                else if (maKhuVuc == 0)
+                if (maKhuVuc == 0)
                 {
-                    message.ErrorMessage = "Vui lòng chọn quận/ huyện";
-                    isCheck = false;
+                    return ToJsonResponse(false, "Vui lòng chọn quận/ huyện");
                 }
                 else if (sanPhamVay == 0)
                 {
-                    message.ErrorMessage = "Vui lòng chọn sản phẩm vay";
-                    isCheck = false;
+                    return ToJsonResponse(false, "Vui lòng chọn sản phẩm vay");
                 }
-                else if (soTienVay == string.Empty)
+                if (soTienVay == string.Empty)
                 {
-                    message.ErrorMessage = "Vui lòng nhập số tiền vay";
-                    isCheck = false;
+                    return ToJsonResponse(false, "Vui lòng nhập số tiền vay");
+                }
+                if (string.IsNullOrWhiteSpace(birthDayStr))
+                {
+                    return ToJsonResponse(false, "Vui lòng nhập ngày sinh");
+
+                }
+                if (string.IsNullOrWhiteSpace(cmndDayStr))
+                {
+                    return ToJsonResponse(false, "Vui lòng nhập ngày cấp cmnd");
+
                 }
                 if (trangthai <= 0)
                 {
-                    message.ErrorMessage = "Vui lòng chọn trạng thái";
-                    isCheck = false;
+                    return ToJsonResponse(false, "Vui lòng chọn trạng thái");
                 }
                 if (!string.IsNullOrWhiteSpace(ghiChu) && ghiChu.Length > 300)
                 {
-                    message.ErrorMessage = "Nội dung ghi chú không được nhiều hơn 300 ký tự";
-                    isCheck = false;
+                    return ToJsonResponse(false, "Nội dung ghi chú không được nhiều hơn 300 ký tự");
+
                 }
                 List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["QL_LstFileHoSo"];
                 List<LoaiTaiLieuModel> lstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
@@ -241,163 +243,196 @@ namespace VS_LOAN.Core.Web.Controllers
                         var iFind = lstTaiLieu.Find(x => x.MaLoai == item.ID);
                         if (iFind == null)
                         {
-                            message.ErrorMessage = "Vui lòng dính kèm \"" + item.Ten.ToUpper() + "\"";
-                            isCheck = false;
+                            return ToJsonResponse(false, "Vui lòng dính kèm \"" + item.Ten.ToUpper() + "\"");
                         }
                     }
                 }
-                if (isCheck)
-                {
-                    HoSoModel hs = new HoSoModel();
-                    hs.ID = (int)Session["QL_HoSoID"];
-                    hs.TenKhachHang = hoten;
-                    hs.SDT = phone;
-                    hs.SDT2 = phone2;
-                    if (ngayNhanDon != string.Empty)
-                    {
-                        hs.NgayNhanDon = DateTimeFormat.ConvertddMMyyyyToDateTime(ngayNhanDon);
-                    }
-                    hs.HoSoCuaAi = hoSoCuaAi;
-                    hs.MaNguoiCapNhat = GlobalData.User.IDUser;
-                    hs.NgayCapNhat = DateTime.Now;
-                    hs.CMND = cmnd;
-                    hs.GioiTinh = gioiTinh;
-                    hs.MaKhuVuc = maKhuVuc;
-                    hs.DiaChi = diaChi;
-                    hs.CourierCode = courier;
-                    hs.SanPhamVay = sanPhamVay;
-                    hs.TenCuaHang = tenCuaHang;
-                    hs.CoBaoHiem = baoHiem ? 1 : 0;
-                    hs.MaTrangThai = trangthai;
-                    hs.HanVay = thoiHanVay;
-                    if (soTienVay == string.Empty)
-                        soTienVay = "0";
-                    hs.SoTienVay = Convert.ToDecimal(soTienVay);
-                    //hs.MaTrangThai = (int)TrangThaiHoSo.NhapLieu;
-                    hs.MaKetQua = (int)KetQuaHoSo.Trong;
-                    int result = 0;
-                    if (hs.ID > 0)
-                    {
-                        bool isCheckMaSanPham = false;
-                        //// chỉnh sửa
-                        if (new HoSoBLL().CapNhatHoSo(hs, lstTaiLieu, ref isCheckMaSanPham))
-                        {
-                            new HoSoDuyetXemBLL().Them(hs.ID);
-                            result = 1;
-                        }
-                        else
-                        {
-                            if (isCheckMaSanPham)
-                                message.ErrorMessage = "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác";
-                        }
-                    }
-                    AddGhichu(hs.ID, ghiChu);
-                    if (result > 0)
-                    {
-                        message.Result = true;
-                        message.ErrorMessage = Resources.Global.Message_Succ;
-                    }
-                }
-            }
-            catch (BusinessException ex)
-            {
-                message.Result = false;
-                message.MessageId = ex.getExceptionId();
-                message.ErrorMessage = ex.Message;
-                message.SystemMessage = ex.ToString();
-            }
-            return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
-        }
-        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public ActionResult SaveDaft(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
-           , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay, string soTienVay, int trangthai, string ghiChu)
-        {
-            var message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
-            if (trangthai <= 0 && GlobalData.User.UserType != (int)UserTypeEnum.Sale)
-            {
-                message.ErrorMessage = "Vui lòng nhập họ tên";
-                message.Result = false;
-                return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
-            }
-            try
-            {
 
-                if (hoten == string.Empty)
+                HoSoModel hs = new HoSoModel();
+                hs.ID = (int)Session["QL_HoSoID"];
+                hs.TenKhachHang = hoten;
+                hs.SDT = phone;
+                hs.SDT2 = phone2;
+                if (ngayNhanDon != string.Empty)
                 {
-                    message.ErrorMessage = "Vui lòng nhập họ tên";
+                    hs.NgayNhanDon = DateTimeFormat.ConvertddMMyyyyToDateTime(ngayNhanDon);
+                }
+                hs.HoSoCuaAi = hoSoCuaAi;
+                hs.MaNguoiCapNhat = GlobalData.User.IDUser;
+                hs.NgayCapNhat = DateTime.Now;
+                hs.CMND = cmnd;
+                hs.GioiTinh = gioiTinh;
+                hs.MaKhuVuc = maKhuVuc;
+                hs.DiaChi = diaChi;
+                hs.CourierCode = courier;
+                hs.SanPhamVay = sanPhamVay;
+                hs.TenCuaHang = tenCuaHang;
+                hs.CoBaoHiem = baoHiem ? 1 : 0;
+                hs.MaTrangThai = trangthai;
+                hs.HanVay = thoiHanVay;
+                if (soTienVay == string.Empty)
+                    soTienVay = "0";
+                hs.SoTienVay = Convert.ToDecimal(soTienVay);
+                var dtBirthDayConvert = DateTimeFormat.ConvertddMMyyyyToDateTimeV2(birthDayStr);
+                if (!dtBirthDayConvert.Success)
+                {
+                    return ToJsonResponse(false, dtBirthDayConvert.Message);
                 }
                 else
                 {
-                    HoSoModel hs = new HoSoModel();
-                    hs.ID = (int)Session["QL_HoSoID"];
-                    hs.TenKhachHang = hoten;
-                    hs.SDT = phone;
-                    hs.SDT2 = phone2;
-                    if (ngayNhanDon != string.Empty)
+                    hs.BirthDay = dtBirthDayConvert.Value;
+                }
+
+                var dtCmnd = DateTimeFormat.ConvertddMMyyyyToDateTimeV2(cmndDayStr);
+                if (!dtCmnd.Success)
+                {
+                    return ToJsonResponse(false, dtCmnd.Message);
+                }
+                else
+                {
+                    hs.CmndDay = dtCmnd.Value;
+                }
+                //hs.MaTrangThai = (int)TrangThaiHoSo.NhapLieu;
+                hs.MaKetQua = (int)KetQuaHoSo.Trong;
+                int result = 0;
+                if (hs.ID > 0)
+                {
+                    bool isCheckMaSanPham = false;
+                    //// chỉnh sửa
+                    if (new HoSoBLL().CapNhatHoSo(hs, lstTaiLieu, ref isCheckMaSanPham))
                     {
-                        hs.NgayNhanDon = DateTimeFormat.ConvertddMMyyyyToDateTime(ngayNhanDon);
-                    }
-                    hs.HoSoCuaAi = hoSoCuaAi;
-                    hs.MaNguoiTao = GlobalData.User.IDUser;
-                    hs.NgayTao = DateTime.Now;
-                    hs.CMND = cmnd;
-                    hs.GioiTinh = gioiTinh;
-                    hs.MaKhuVuc = maKhuVuc;
-                    hs.DiaChi = diaChi;
-                    hs.CourierCode = courier;
-                    hs.SanPhamVay = sanPhamVay;
-                    hs.TenCuaHang = tenCuaHang;
-                    hs.CoBaoHiem = baoHiem;
-                    hs.HanVay = thoiHanVay;
-                    if (soTienVay == string.Empty)
-                        soTienVay = "0";
-                    hs.SoTienVay = Convert.ToDecimal(soTienVay);
-                    hs.MaTrangThai = (int)TrangThaiHoSo.Nhap;
-                    hs.MaKetQua = (int)KetQuaHoSo.Trong;
-                    List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["QL_LstFileHoSo"];
-                    int result = 0;
-                    if (hs.ID > 0)
-                    {
-                        bool isCheckMaSanPham = false;
-                        //// chỉnh sửa
-                        if (new HoSoBLL().Luu(hs, lstTaiLieu, ref isCheckMaSanPham))
-                            result = 1;
-                        else
-                        {
-                            if (isCheckMaSanPham)
-                                message.ErrorMessage = "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác";
-                        }
+                        new HoSoDuyetXemBLL().Them(hs.ID);
+                        result = 1;
                     }
                     else
                     {
-                        bool isCheckMaSanPham = false;
-                        result = new HoSoBLL().Them(hs, lstTaiLieu, ref isCheckMaSanPham);
-                        if (result > 0)
-                            Session["QL_LstFileHoSo"] = result;
-                        else
-                        {
-                            if (isCheckMaSanPham)
-                                message.ErrorMessage = "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác";
-                        }
-                    }
-                    AddGhichu(hs.ID, ghiChu);
-                    if (result > 0)
-                    {
-
-                        //Session["AddNewHoSoID"] = 0;
-                        message.Result = true;
-                        message.ErrorMessage = Resources.Global.Message_Succ;
+                        if (isCheckMaSanPham)
+                            return ToJsonResponse(false, "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác");
                     }
                 }
+                AddGhichu(hs.ID, ghiChu);
+                if (result > 0)
+                {
+                    return ToJsonResponse(true, Resources.Global.Message_Succ);
+                }
+                return ToJsonResponse(false, "Không thành công, xin thử lại sau");
             }
             catch (BusinessException ex)
             {
-                message.Result = false;
-                message.MessageId = ex.getExceptionId();
-                message.ErrorMessage = ex.Message;
-                message.SystemMessage = ex.ToString();
+                return ToJsonResponse(false, ex.Message);
             }
-            return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
+        }
+        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
+        public ActionResult SaveDaft(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
+           , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay, string soTienVay, int trangthai,
+            string ghiChu, string birthDayStr, string cmndDayStr)
+        {
+
+            if (trangthai <= 0 && GlobalData.User.UserType != (int)UserTypeEnum.Sale)
+            {
+
+                return ToJsonResponse(false, "Vui lòng chọn trạng thái");
+            }
+            if (hoten == string.Empty)
+            {
+                return ToJsonResponse(false, "Vui lòng nhập họ tên");
+            }
+            if (string.IsNullOrWhiteSpace(birthDayStr))
+            {
+                return ToJsonResponse(false, "Vui lòng nhập ngày sinh");
+
+            }
+            if (string.IsNullOrWhiteSpace(cmndDayStr))
+            {
+                return ToJsonResponse(false, "Vui lòng nhập ngày cấp cmnd");
+
+            }
+            try
+            {
+                HoSoModel hs = new HoSoModel();
+                hs.ID = (int)Session["QL_HoSoID"];
+                hs.TenKhachHang = hoten;
+                hs.SDT = phone;
+                hs.SDT2 = phone2;
+                if (ngayNhanDon != string.Empty)
+                {
+                    hs.NgayNhanDon = DateTimeFormat.ConvertddMMyyyyToDateTime(ngayNhanDon);
+                }
+                hs.HoSoCuaAi = hoSoCuaAi;
+                hs.MaNguoiTao = GlobalData.User.IDUser;
+                hs.NgayTao = DateTime.Now;
+                hs.CMND = cmnd;
+                hs.GioiTinh = gioiTinh;
+                hs.MaKhuVuc = maKhuVuc;
+                hs.DiaChi = diaChi;
+                hs.CourierCode = courier;
+                hs.SanPhamVay = sanPhamVay;
+                hs.TenCuaHang = tenCuaHang;
+                hs.CoBaoHiem = baoHiem;
+                hs.HanVay = thoiHanVay;
+                if (soTienVay == string.Empty)
+                    soTienVay = "0";
+                hs.SoTienVay = Convert.ToDecimal(soTienVay);
+                hs.MaTrangThai = (int)TrangThaiHoSo.Nhap;
+                hs.MaKetQua = (int)KetQuaHoSo.Trong;
+                var dtBirthDayConvert = DateTimeFormat.ConvertddMMyyyyToDateTimeV2(birthDayStr);
+                if (!dtBirthDayConvert.Success)
+                {
+                    return ToJsonResponse(false, dtBirthDayConvert.Message);
+                }
+                else
+                {
+                    hs.BirthDay = dtBirthDayConvert.Value;
+                }
+
+                var dtCmnd = DateTimeFormat.ConvertddMMyyyyToDateTimeV2(cmndDayStr);
+                if (!dtCmnd.Success)
+                {
+                    return ToJsonResponse(false, dtCmnd.Message);
+                }
+                else
+                {
+                    hs.CmndDay = dtCmnd.Value;
+                }
+                List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["QL_LstFileHoSo"];
+                int result = 0;
+                if (hs.ID > 0)
+                {
+                    bool isCheckMaSanPham = false;
+                    //// chỉnh sửa
+                    if (new HoSoBLL().Luu(hs, lstTaiLieu, ref isCheckMaSanPham))
+                        result = 1;
+                    else
+                    {
+                        if (isCheckMaSanPham)
+                            return ToJsonResponse(false, "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác");
+                    }
+                }
+                else
+                {
+                    bool isCheckMaSanPham = false;
+                    result = new HoSoBLL().Them(hs, lstTaiLieu, ref isCheckMaSanPham);
+                    if (result > 0)
+                        Session["QL_LstFileHoSo"] = result;
+                    else
+                    {
+                        if (isCheckMaSanPham)
+                            return ToJsonResponse(false, "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác");
+                    }
+                }
+                AddGhichu(hs.ID, ghiChu);
+                if (result > 0)
+                {
+
+                    return ToJsonResponse(true, Resources.Global.Message_Succ);
+                }
+                return ToJsonResponse(false, "Không thành công, xin thử lại sau");
+            }
+            catch (BusinessException ex)
+            {
+                return ToJsonResponse(false, ex.Message);
+            }
+            
         }
         public JsonResult UploadHoSo(string key)
         {
@@ -566,7 +601,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 string trangthai = "";
                 trangthai += ((int)TrangThaiHoSo.TuChoi).ToString() + "," + ((int)TrangThaiHoSo.NhapLieu).ToString() + "," + ((int)TrangThaiHoSo.ThamDinh).ToString() + "," + ((int)TrangThaiHoSo.BoSungHoSo).ToString() + "," + ((int)TrangThaiHoSo.GiaiNgan).ToString() + "," + ((int)TrangThaiHoSo.Nhap).ToString();
                 int totalRecord = new HoSoBLL().CountHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay);
-                rs = new HoSoBLL().TimHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay,string.Empty,1,totalRecord,true);
+                rs = new HoSoBLL().TimHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, string.Empty, 1, totalRecord, true);
                 if (rs == null)
                     rs = new List<HoSoQuanLyModel>();
                 string destDirectory = VS_LOAN.Core.Utility.Path.DownloadBill + "/" + DateTime.Now.Year.ToString() + "/" + DateTime.Now.Month.ToString() + "/";
