@@ -18,6 +18,8 @@ namespace F88Service
 
         private async Task<ResponseModel> PostLadipageReturnID(LadipageModel model)
         {
+            model.Select1 = "";
+            model.ReferenceType = 10;
             HttpClient _httpClient = new HttpClient();
             var response = await _httpClient.Post(F88BasePath, "/LadipageReturnID", null, model);
             if (response == null || response.Content == null)

@@ -695,7 +695,7 @@
                 '<div class="clearfix"></div>';
             //noinspection HtmlUnknownAttribute
             tActionDelete = '<button type="button" class="kv-file-remove {removeClass}" ' +
-                'title="{removeTitle}" {dataUrl}{dataKey}>{removeIcon}</button>\n';
+                'title="{removeTitle}" {dataUrl}{dataKey} {dataId}>{removeIcon}</button>\n';
             tActionUpload = '<button type="button" class="kv-file-upload {uploadClass}" title="{uploadTitle}">' +
                 '{uploadIcon}</button>';
             tActionDownload = '<a class="kv-file-download {downloadClass}" title="{downloadTitle}" ' +
@@ -3365,6 +3365,7 @@
                     'removeClass': removeClass,
                     'removeIcon': config.removeIcon,
                     'removeTitle': config.removeTitle,
+                    'dataId':'id="btn-remove-file-' + key +'"',
                     'dataUrl': vUrl,
                     'dataKey': vKey,
                     'key': key

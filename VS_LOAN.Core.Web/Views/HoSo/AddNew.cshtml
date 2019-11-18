@@ -451,10 +451,8 @@
                             //layoutTemplates: { footer: '' },
 
                         }).on("filebatchselected", function (event, files) {
-                            console.log(option)
                             $(option).fileinput("upload");
                         }).on("filedeleted", function (event, files) {
-                            alert(1)
                             $(option).fileinput("upload");
                         });
                         $(option).on('filesuccessremove', function (event, key, jqXHR, data) {
@@ -565,7 +563,9 @@
             'sanPhamVay': $('#ddlSanPhamVay').val(), 'tenCuaHang': $('#txtTenCuaHang').val(),
             'baoHiem': $('#cbbaohiem').is(":checked"), 'thoiHanVay': $('#spnThoiHanVay').val(),
             'ghiChu': $('#txtGhiChu').val(),
-            'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, '')
+            'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, ''),
+            'birthDayStr': $('#txtBirhDay').val(),
+            'cmndDayStr': $('#txtCmndDay').val()
         });
         $.ajax({
             traditional: true,

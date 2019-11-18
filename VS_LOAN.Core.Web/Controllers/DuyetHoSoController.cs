@@ -392,7 +392,7 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             
         }
-        public async Task<JsonResult> SendToF88(int hosoId, string customerName, string phone, string link = null, int provinceId = 0, int doitacF88Value = 0)
+        public async Task<JsonResult> SendToF88(int hosoId, string customerName, string phone, string provinceName, string district, string link = null)
         {
             if(hosoId <=0)
             {
@@ -413,9 +413,10 @@ namespace VS_LOAN.Core.Web.Controllers
                 Phone = phone,
                 Link = link,
                 Select1 = null,
-                Select2 = provinceId.ToString(),
+                Select2 = district,
                 TransactionId = hosoId,
-                ReferenceType = doitacF88Value
+                ReferenceType = 0,
+                Province = provinceName
             };
             var result = await f88Service.LadipageReturnID(f88Model);
             return ToJsonResponse(result);

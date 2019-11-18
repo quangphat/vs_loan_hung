@@ -367,8 +367,8 @@
                 'customerName': $('#txtHoTen').val(),
                 'phone': $('#txtDienThoai').val(),
                 'link': window.location.href,
-                'provinceId': parseInt($('#ddlTinh').val()),
-                'doitacF88Value': doitacF88Value,
+                'provinceName': $("#ddlTinh option:selected").text(),
+                'district': $("#ddlHuyen option:selected").text() + " - " + $("#ddlTinh option:selected").text()
             });
 
             $.ajax({
