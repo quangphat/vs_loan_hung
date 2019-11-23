@@ -406,6 +406,25 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "Số điện thoại khách hàng không được bỏ trống");
             }
+            if(!string.IsNullOrWhiteSpace(district))
+            {
+                if(district.Contains("Huyện"))
+                {
+                    district = district.Replace("Huyện", "").Trim();
+                }
+                if(district.Contains("Quận"))
+                {
+                    district = district.Replace("Quận", "").Trim();
+                }
+                if (district.Contains("Thành phố"))
+                {
+                    district = district.Replace("Thành phố", "").Trim();
+                }
+                if (district.Contains("Thị xã"))
+                {
+                    district = district.Replace("Thị xã", "").Trim();
+                }
+            }
             var f88Service = new F88Service.F88Service();
             var f88Model = new Entity.F88Model.LadipageModel
             {
@@ -413,7 +432,8 @@ namespace VS_LOAN.Core.Web.Controllers
                 Phone = phone,
                 Link = link,
                 Select1 = null,
-                Select2 = district,
+                District = district,
+                Select2 = district + " - " + provinceName,
                 TransactionId = hosoId,
                 ReferenceType = 0,
                 Province = provinceName

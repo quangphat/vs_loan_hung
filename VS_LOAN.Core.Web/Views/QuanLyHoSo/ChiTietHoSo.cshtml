@@ -454,7 +454,6 @@
                                         width:"120px"
                                     });
                                 }
-
                             }
                             else
                             {
@@ -509,14 +508,15 @@
                         showRemove: false,
                         showUpload: true,
                         showZoom: true,
-                        showDrag: false},
-                    append: true
+                        showDrag: false
+                    },
+                     append: true
 
                 }).on("filebatchselected", function (event, files) {
                     $(option).fileinput("upload");
                 });
                 $(option).on('filesuccessremove', function (event, key, jqXHR, data) {
-                    console.log('Key = ' + key);
+                    //console.log('Key = ' + key);
                     //alert(1);
                 })
 

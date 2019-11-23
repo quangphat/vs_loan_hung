@@ -12,6 +12,7 @@ namespace VS_LOAN.Core.Entity.F88Model
         public string Phone { get; set; }
         public string Select1 { get; set; }
         public string Select2 { get; set; }
+        public string District { get; set; }
         public string Province { get; set; }
         public string Link { get; set; }
         public int ReferenceType { get; set; }
