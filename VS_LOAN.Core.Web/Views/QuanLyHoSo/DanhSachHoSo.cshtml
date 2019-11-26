@@ -246,7 +246,7 @@
             }
         });
         function bindQueries() {
-            debugger
+            
             var fromDate = queries.get("fromDate");
             if (isNullOrWhiteSpace(fromDate)) {
                 fromDate = new Date().getDay + -7;
@@ -475,6 +475,7 @@
         return value;
     }
     function renderRow(index, rowData) {
+        debugger
         page = queries.get("page");
         if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
             page = 1;

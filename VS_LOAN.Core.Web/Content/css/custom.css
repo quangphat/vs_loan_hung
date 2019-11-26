@@ -13,8 +13,9 @@
 .chosen-container-multi ul{
     padding:1px!important;
 }
-.form-control{
-    height:32px!important;
+
+.h-32{
+    height: 32px !important;
 }
 /*---ace.min.css------------------------------------*/
 /*
