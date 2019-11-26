@@ -13,15 +13,14 @@ namespace F88Service
 {
     public class F88Service
     {
-        //public static readonly string F88BasePath = "http://118.70.129.116:1809";
-        public static readonly string F88BasePath = "https://apilienket.f88.vn";
+        
 
         private async Task<ResponseModel> PostLadipageReturnID(LadipageModel model)
         {
             model.Select1 = "";
             model.ReferenceType = 10;
             HttpClient _httpClient = new HttpClient();
-            var response = await _httpClient.Post(F88BasePath, "/LadipageReturnID", null, model);
+            var response = await _httpClient.Post(F88ApiPath.F88BasePath, "/LadipageReturnID", null, model);
             if (response == null || response.Content == null)
                 return null;
             var json = response.Content.ReadAsStringAsync().Result;

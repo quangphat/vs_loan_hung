@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="F88ApiPath.cs" />
     <Compile Include="F88Service.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
