@@ -142,22 +142,22 @@ namespace VS_LOAN.Core.Business
                                     int result = commandUpdateAutoID.ExecuteNonQuery();
                                     if (lstTaiLieu != null)
                                     {
-                                        IDbCommand commandTaiLieuThem = new SqlCommand();
-                                        commandTaiLieuThem.Connection = session.Connection;
-                                        commandTaiLieuThem.CommandType = CommandType.StoredProcedure;
-                                        commandTaiLieuThem.CommandText = "sp_TAI_LIEU_HS_Them";
-                                        commandTaiLieuThem.Parameters.Clear();
-                                        session.Transaction.Enlist(commandTaiLieuThem);
-                                        commandTaiLieuThem.Parameters.Clear();
-                                        foreach (var item in lstTaiLieu)
-                                        {
-                                            commandTaiLieuThem.Parameters.Clear();
-                                            commandTaiLieuThem.Parameters.Add(new SqlParameter("@Maloai", item.MaLoai));
-                                            commandTaiLieuThem.Parameters.Add(new SqlParameter("@DuongDan", item.LstFile[0].DuongDan));
-                                            commandTaiLieuThem.Parameters.Add(new SqlParameter("@Ten", item.LstFile[0].Ten));
-                                            commandTaiLieuThem.Parameters.Add(new SqlParameter("@MaHS", idHoSo));
-                                            commandTaiLieuThem.ExecuteNonQuery();
-                                        }
+                                        //IDbCommand commandTaiLieuThem = new SqlCommand();
+                                        //commandTaiLieuThem.Connection = session.Connection;
+                                        //commandTaiLieuThem.CommandType = CommandType.StoredProcedure;
+                                        //commandTaiLieuThem.CommandText = "sp_TAI_LIEU_HS_Them";
+                                        //commandTaiLieuThem.Parameters.Clear();
+                                        //session.Transaction.Enlist(commandTaiLieuThem);
+                                        //commandTaiLieuThem.Parameters.Clear();
+                                        //foreach (var item in lstTaiLieu)
+                                        //{
+                                        //    commandTaiLieuThem.Parameters.Clear();
+                                        //    commandTaiLieuThem.Parameters.Add(new SqlParameter("@Maloai", item.MaLoai));
+                                        //    commandTaiLieuThem.Parameters.Add(new SqlParameter("@DuongDan", item.LstFile[0].DuongDan));
+                                        //    commandTaiLieuThem.Parameters.Add(new SqlParameter("@Ten", item.LstFile[0].Ten));
+                                        //    commandTaiLieuThem.Parameters.Add(new SqlParameter("@MaHS", idHoSo));
+                                        //    commandTaiLieuThem.ExecuteNonQuery();
+                                        //}
                                     }
 
                                     transaction.Commit();
@@ -242,8 +242,11 @@ namespace VS_LOAN.Core.Business
                         command.Parameters.Add(new SqlParameter("@SDT", hoSoModel.SDT));
                         command.Parameters.Add(new SqlParameter("@SDT2", hoSoModel.SDT2));
                         command.Parameters.Add(new SqlParameter("@GioiTinh", hoSoModel.GioiTinh));
-                        command.Parameters.Add(new SqlParameter("@NgayTao", hoSoModel.NgayTao));
-                        command.Parameters.Add(new SqlParameter("@MaNguoiTao", hoSoModel.MaNguoiTao));
+                        if(hoSoModel.ID <=0)
+                        {
+                            command.Parameters.Add(new SqlParameter("@NgayTao", hoSoModel.NgayTao));
+                            command.Parameters.Add(new SqlParameter("@MaNguoiTao", hoSoModel.MaNguoiTao));
+                        }
                         command.Parameters.Add(new SqlParameter("@HoSoCuaAi", hoSoModel.HoSoCuaAi));
                         command.Parameters.Add(new SqlParameter("@birthDay", hoSoModel.BirthDay));
                         command.Parameters.Add(new SqlParameter("@cmndDay", hoSoModel.CmndDay));
@@ -268,32 +271,32 @@ namespace VS_LOAN.Core.Business
                         int rs = command.ExecuteNonQuery();
                         if (rs > 0)
                         {
-                            IDbCommand commandTaiLieuXoaTatCa = new SqlCommand();
-                            commandTaiLieuXoaTatCa.Connection = session.Connection;
-                            commandTaiLieuXoaTatCa.CommandType = CommandType.StoredProcedure;
-                            commandTaiLieuXoaTatCa.CommandText = "sp_TAI_LIEU_HS_XoaTatCa";
-                            session.Transaction.Enlist(commandTaiLieuXoaTatCa);
-                            commandTaiLieuXoaTatCa.Parameters.Clear();
-                            commandTaiLieuXoaTatCa.Parameters.Add(new SqlParameter("@MaHS", hoSoModel.ID));
-                            commandTaiLieuXoaTatCa.ExecuteNonQuery();
-                            if (lstTaiLieu != null)
-                            {
-                                IDbCommand commandTaiLieuThem = new SqlCommand();
-                                commandTaiLieuThem.Connection = session.Connection;
-                                commandTaiLieuThem.CommandType = CommandType.StoredProcedure;
-                                commandTaiLieuThem.CommandText = "sp_TAI_LIEU_HS_Them";
-                                session.Transaction.Enlist(commandTaiLieuThem);
-                                commandTaiLieuThem.Parameters.Clear();
-                                foreach (var item in lstTaiLieu)
-                                {
-                                    commandTaiLieuThem.Parameters.Clear();
-                                    commandTaiLieuThem.Parameters.Add(new SqlParameter("@Maloai", item.MaLoai));
-                                    commandTaiLieuThem.Parameters.Add(new SqlParameter("@DuongDan", item.LstFile[0].DuongDan));
-                                    commandTaiLieuThem.Parameters.Add(new SqlParameter("@Ten", item.LstFile[0].Ten));
-                                    commandTaiLieuThem.Parameters.Add(new SqlParameter("@MaHS", hoSoModel.ID));
-                                    commandTaiLieuThem.ExecuteNonQuery();
-                                }
-                            }
+                            //IDbCommand commandTaiLieuXoaTatCa = new SqlCommand();
+                            //commandTaiLieuXoaTatCa.Connection = session.Connection;
+                            //commandTaiLieuXoaTatCa.CommandType = CommandType.StoredProcedure;
+                            //commandTaiLieuXoaTatCa.CommandText = "sp_TAI_LIEU_HS_XoaTatCa";
+                            //session.Transaction.Enlist(commandTaiLieuXoaTatCa);
+                            //commandTaiLieuXoaTatCa.Parameters.Clear();
+                            //commandTaiLieuXoaTatCa.Parameters.Add(new SqlParameter("@MaHS", hoSoModel.ID));
+                            //commandTaiLieuXoaTatCa.ExecuteNonQuery();
+                            //if (lstTaiLieu != null)
+                            //{
+                            //    IDbCommand commandTaiLieuThem = new SqlCommand();
+                            //    commandTaiLieuThem.Connection = session.Connection;
+                            //    commandTaiLieuThem.CommandType = CommandType.StoredProcedure;
+                            //    commandTaiLieuThem.CommandText = "sp_TAI_LIEU_HS_Them";
+                            //    session.Transaction.Enlist(commandTaiLieuThem);
+                            //    commandTaiLieuThem.Parameters.Clear();
+                            //    foreach (var item in lstTaiLieu)
+                            //    {
+                            //        commandTaiLieuThem.Parameters.Clear();
+                            //        commandTaiLieuThem.Parameters.Add(new SqlParameter("@Maloai", item.MaLoai));
+                            //        commandTaiLieuThem.Parameters.Add(new SqlParameter("@DuongDan", item.LstFile[0].DuongDan));
+                            //        commandTaiLieuThem.Parameters.Add(new SqlParameter("@Ten", item.LstFile[0].Ten));
+                            //        commandTaiLieuThem.Parameters.Add(new SqlParameter("@MaHS", hoSoModel.ID));
+                            //        commandTaiLieuThem.ExecuteNonQuery();
+                            //    }
+                            //}
                             transaction.Commit();
                             return true;
                         }
@@ -400,32 +403,32 @@ namespace VS_LOAN.Core.Business
                         int rs = command.ExecuteNonQuery();
                         if (rs > 0)
                         {
-                            IDbCommand commandTaiLieuXoaTatCa = new SqlCommand();
-                            commandTaiLieuXoaTatCa.Connection = session.Connection;
-                            commandTaiLieuXoaTatCa.CommandType = CommandType.StoredProcedure;
-                            commandTaiLieuXoaTatCa.CommandText = "sp_TAI_LIEU_HS_XoaTatCa";
-                            session.Transaction.Enlist(commandTaiLieuXoaTatCa);
-                            commandTaiLieuXoaTatCa.Parameters.Clear();
-                            commandTaiLieuXoaTatCa.Parameters.Add(new SqlParameter("@MaHS", hoSoModel.ID));
-                            commandTaiLieuXoaTatCa.ExecuteNonQuery();
-                            if (lstTaiLieu != null)
-                            {
-                                IDbCommand commandTaiLieuThem = new SqlCommand();
-                                commandTaiLieuThem.Connection = session.Connection;
-                                commandTaiLieuThem.CommandType = CommandType.StoredProcedure;
-                                commandTaiLieuThem.CommandText = "sp_TAI_LIEU_HS_Them";
-                                session.Transaction.Enlist(commandTaiLieuThem);
-                                commandTaiLieuThem.Parameters.Clear();
-                                foreach (var item in lstTaiLieu)
-                                {
-                                    commandTaiLieuThem.Parameters.Clear();
-                                    commandTaiLieuThem.Parameters.Add(new SqlParameter("@Maloai", item.MaLoai));
-                                    commandTaiLieuThem.Parameters.Add(new SqlParameter("@DuongDan", item.LstFile[0].DuongDan));
-                                    commandTaiLieuThem.Parameters.Add(new SqlParameter("@Ten", item.LstFile[0].Ten));
-                                    commandTaiLieuThem.Parameters.Add(new SqlParameter("@MaHS", hoSoModel.ID));
-                                    commandTaiLieuThem.ExecuteNonQuery();
-                                }
-                            }
+                            //IDbCommand commandTaiLieuXoaTatCa = new SqlCommand();
+                            //commandTaiLieuXoaTatCa.Connection = session.Connection;
+                            //commandTaiLieuXoaTatCa.CommandType = CommandType.StoredProcedure;
+                            //commandTaiLieuXoaTatCa.CommandText = "sp_TAI_LIEU_HS_XoaTatCa";
+                            //session.Transaction.Enlist(commandTaiLieuXoaTatCa);
+                            //commandTaiLieuXoaTatCa.Parameters.Clear();
+                            //commandTaiLieuXoaTatCa.Parameters.Add(new SqlParameter("@MaHS", hoSoModel.ID));
+                            //commandTaiLieuXoaTatCa.ExecuteNonQuery();
+                            //if (lstTaiLieu != null)
+                            //{
+                            //    IDbCommand commandTaiLieuThem = new SqlCommand();
+                            //    commandTaiLieuThem.Connection = session.Connection;
+                            //    commandTaiLieuThem.CommandType = CommandType.StoredProcedure;
+                            //    commandTaiLieuThem.CommandText = "sp_TAI_LIEU_HS_Them";
+                            //    session.Transaction.Enlist(commandTaiLieuThem);
+                            //    commandTaiLieuThem.Parameters.Clear();
+                            //    foreach (var item in lstTaiLieu)
+                            //    {
+                            //        commandTaiLieuThem.Parameters.Clear();
+                            //        commandTaiLieuThem.Parameters.Add(new SqlParameter("@Maloai", item.MaLoai));
+                            //        commandTaiLieuThem.Parameters.Add(new SqlParameter("@DuongDan", item.LstFile[0].DuongDan));
+                            //        commandTaiLieuThem.Parameters.Add(new SqlParameter("@Ten", item.LstFile[0].Ten));
+                            //        commandTaiLieuThem.Parameters.Add(new SqlParameter("@MaHS", hoSoModel.ID));
+                            //        commandTaiLieuThem.ExecuteNonQuery();
+                            //    }
+                            //}
                             transaction.Commit();
                             return true;
                         }
@@ -660,28 +663,28 @@ namespace VS_LOAN.Core.Business
                         hs.GhiChu = item["GhiChu"].ToString();
                         hs.TenTrangThai = item["TenTrangThai"].ToString();
                         hs.KetQuaText = item["KetQuaText"].ToString();
-                        IDbCommand commandTaiLieu = new SqlCommand();
-                        commandTaiLieu.Connection = session.Connection;
-                        commandTaiLieu.CommandType = CommandType.StoredProcedure;
-                        commandTaiLieu.CommandText = "sp_TAI_LIEU_HS_LayDS";
-                        commandTaiLieu.Parameters.Clear();
-                        commandTaiLieu.Parameters.Add(new SqlParameter("@MaHS", hs.ID));
-                        var dtTaiLieu = new DataTable();
-                        dtTaiLieu.Load(commandTaiLieu.ExecuteReader());
-                        if (dtTaiLieu != null)
-                        {
-                            foreach (DataRow rowTaiLieu in dtTaiLieu.Rows)
-                            {
-                                TaiLieuModel taiLieu = new TaiLieuModel();
-                                taiLieu.MaLoai = Convert.ToInt32(rowTaiLieu["MaLoai"].ToString());
-                                taiLieu.LstFile.Add(new FileInfo()
-                                {
-                                    Ten = rowTaiLieu["Ten"].ToString(),
-                                    DuongDan = rowTaiLieu["DuongDanFile"].ToString()
-                                });
-                                hs.LstTaiLieu.Add(taiLieu);
-                            }
-                        }
+                        //IDbCommand commandTaiLieu = new SqlCommand();
+                        //commandTaiLieu.Connection = session.Connection;
+                        //commandTaiLieu.CommandType = CommandType.StoredProcedure;
+                        //commandTaiLieu.CommandText = "sp_TAI_LIEU_HS_LayDS";
+                        //commandTaiLieu.Parameters.Clear();
+                        //commandTaiLieu.Parameters.Add(new SqlParameter("@MaHS", hs.ID));
+                        //var dtTaiLieu = new DataTable();
+                        //dtTaiLieu.Load(commandTaiLieu.ExecuteReader());
+                        //if (dtTaiLieu != null)
+                        //{
+                        //    foreach (DataRow rowTaiLieu in dtTaiLieu.Rows)
+                        //    {
+                        //        TaiLieuModel taiLieu = new TaiLieuModel();
+                        //        taiLieu.MaLoai = Convert.ToInt32(rowTaiLieu["MaLoai"].ToString());
+                        //        taiLieu.LstFile.Add(new FileInfo()
+                        //        {
+                        //            Ten = rowTaiLieu["Ten"].ToString(),
+                        //            DuongDan = rowTaiLieu["DuongDanFile"].ToString()
+                        //        });
+                        //        hs.LstTaiLieu.Add(taiLieu);
+                        //    }
+                        //}
 
                     }
                     return hs;

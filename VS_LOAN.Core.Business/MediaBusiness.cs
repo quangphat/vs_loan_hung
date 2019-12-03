@@ -12,6 +12,8 @@ namespace VS_LOAN.Core.Business
 {
     public class MediaBusiness : BaseBusiness
     {
+
+        
         public async Task<bool> UpdateExistingFile(int fileId, string name, string url)
         {
             var p = new DynamicParameters();

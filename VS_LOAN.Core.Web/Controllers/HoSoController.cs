@@ -43,9 +43,10 @@ namespace VS_LOAN.Core.Web.Controllers
             return View();
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public JsonResult LayDSTaiLieu()
+        public async Task<JsonResult> LayDSTaiLieu()
         {
-            List<LoaiTaiLieuModel> rs = new LoaiTaiLieuBLL().LayDS();
+            var bizTailieu = new TailieuBusiness();
+            List<LoaiTaiLieuModel> rs =await bizTailieu.GetLoaiTailieuList();
             return Json(new { DSLoaiTaiLieu = rs });
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
@@ -117,16 +118,6 @@ namespace VS_LOAN.Core.Web.Controllers
         [Route("PostToF88")]
         public async Task<ActionResult> PostToF88([FromBody] Entity.F88Model.LadipageModel model)
         {
-            //var f88Model = new Entity.F88Model.LadipageModel
-            //{
-            //    Name = "test",
-            //    Phone = phone,
-            //    Link = link,
-            //    Select1 = null,
-            //    Select2 = provinceId.ToString(),
-            //    TransactionId = hs.ID,
-            //    ReferenceType = 0
-            //};
             var f88Service = new F88Service.F88Service();
             var result = await f88Service.LadipageReturnID(model);
             return Json(new { Message = result }, JsonRequestBehavior.AllowGet);
@@ -134,7 +125,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<ActionResult> Save(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
            , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay,
-            string soTienVay, string ghiChu, string birthDayStr, string cmndDayStr, string link = null, int provinceId = 0, int doitacF88Value = 0)
+            string soTienVay, string ghiChu, string birthDayStr, string cmndDayStr, string link = null, int provinceId = 0, int doitacF88Value = 0, List<int> FileRequireIds = null)
         {
             if (!string.IsNullOrWhiteSpace(ghiChu) && ghiChu.Length > 200)
             {
@@ -186,19 +177,16 @@ namespace VS_LOAN.Core.Web.Controllers
 
                 }
                 List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["LstFileHoSo"];
-                List<LoaiTaiLieuModel> lstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
+                var _bizTailieu = new TailieuBusiness();
+                List<LoaiTaiLieuModel> lstLoaiTaiLieu = await _bizTailieu.GetLoaiTailieuList();
                 lstLoaiTaiLieu.RemoveAll(x => x.BatBuoc == 0);
                 if (lstLoaiTaiLieu != null)
                 {
-                    foreach (var item in lstLoaiTaiLieu)
+                    var missingNames = BusinessExtension.GetFilesMissingV2(lstLoaiTaiLieu, FileRequireIds);
+                    if (!string.IsNullOrWhiteSpace(missingNames))
                     {
-                        var iFind = lstTaiLieu.Find(x => x.MaLoai == item.ID);
-                        if (iFind == null)
-                        {
-                            return ToResponse(false, "Vui lòng dính kèm \"" + item.Ten.ToUpper() + "\"");
-                        }
+                        return ToResponse(false, missingNames, 0);
                     }
-                    //return ToResponse(false,"");
                 }
                 HoSoModel hs = new HoSoModel();
                 hs.ID = (int)Session["AddNewHoSoID"];
@@ -281,120 +269,39 @@ namespace VS_LOAN.Core.Web.Controllers
             }
 
         }
-        public JsonResult UploadToHoso(int hosoId, bool isReset, List<FileUploadModelGroupByKey> files)
+        public async Task<JsonResult> UploadToHoso(int hosoId, bool isReset, List<FileUploadModelGroupByKey> filesGroup)
         {
+            if (hosoId <= 0 || filesGroup==null)
+                return ToJsonResponse(false);
+            var bizTailieu = new TailieuBusiness();
+            if (isReset)
+            {
+                var deleteAll = await bizTailieu.RemoveAllTailieu(hosoId);
+                if (!deleteAll)
+                    return ToJsonResponse(false);
+            }
+            foreach (var item in filesGroup)
+            {
+                if (item.files.Any())
+                {
+                    foreach (var file in item.files)
+                    {
+                        var tailieu = new TaiLieu
+                        {
+                            FileName = file.FileName,
+                            FilePath = file.FileUrl,
+                            HosoId = hosoId,
+                            TypeId = Convert.ToInt32(file.Key)
+                        };
+                        await bizTailieu.Add(tailieu);
+                    }
+                }
+            }
             return ToJsonResponse(true);
         }
-        //public JsonResult UploadFile(int key, int fileId)
-        //{
-        //    string fileUrl = "";
-        //    try
-        //    {
-        //        foreach (string file in Request.Files)
-        //        {
-        //            var fileContent = Request.Files[file];
-        //            if (fileContent != null && fileContent.ContentLength > 0)
-        //            {
-        //                string[] p = fileContent.ContentType.Split('/');
-        //                get a stream
-        //               Stream stream = fileContent.InputStream;
-        //                and optionally write the file to disk
-        //                string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + fileContent.FileName.Trim().Replace(" ", "_");
-        //                string root = System.IO.Path.Combine(Server.MapPath("~/Upload"), "HoSo");
-        //                string pathTemp = "";
-        //                if (!Directory.Exists(root))
-        //                    Directory.CreateDirectory(root);
-        //                pathTemp = DateTime.Now.Year.ToString();
-        //                string pathYear = System.IO.Path.Combine(root, pathTemp);
-        //                if (!Directory.Exists(pathYear))
-        //                    Directory.CreateDirectory(pathYear);
-        //                pathTemp += "/" + DateTime.Now.Month.ToString();
-        //                string pathMonth = System.IO.Path.Combine(root, pathTemp);
-        //                if (!Directory.Exists(pathMonth))
-        //                    Directory.CreateDirectory(pathMonth);
-        //                pathTemp += "/" + DateTime.Now.Day.ToString();
-        //                string pathDay = System.IO.Path.Combine(root, pathTemp);
-        //                if (!Directory.Exists(pathDay))
-        //                    Directory.CreateDirectory(pathDay);
-        //                string path = System.IO.Path.Combine(pathDay, fileName);
-        //                using (var fileStream = System.IO.File.Create(path))
-        //                {
-        //                    stream.CopyTo(fileStream);
-        //                    fileStream.Close();
-        //                    fileUrl = "/Upload/HoSo/" + pathTemp + "/" + fileName;
-        //                }
-        //                string deleteURL = Url.Action("Delete", "HoSo") + "?key=" + key;
-        //                string deleteURL = fileId <= 0 ? $"/Hoso/delete?key={key}" : $"/hoso/delete?key=0&fileId={fileId}";
-        //                var _type = System.IO.Path.GetExtension(fileContent.FileName);
-        //                List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["LstFileHoSo"];
-        //                var find = lstTaiLieu.Find(x => x.MaLoai.ToString().Equals(key.Trim()));
-        //                if (find != null)
-        //                {
-        //                    find.LstFile[0].DuongDan = fileUrl;
-        //                    find.LstFile[0].Ten = fileName;
-        //                }
-        //                else
-        //                {
-        //                    TaiLieuModel taiLieu = new TaiLieuModel();
-        //                    taiLieu.MaLoai = Convert.ToInt32(key.Trim());
-        //                    Entity.Model.FileInfo _file = new Entity.Model.FileInfo();
-        //                    _file.Ten = fileName;
-        //                    _file.DuongDan = fileUrl;
-        //                    taiLieu.LstFile.Add(_file);
-        //                    lstTaiLieu.Add(taiLieu);
-        //                }
-        //                Session["LstFileHoSo"] = lstTaiLieu;
-
-        //                if (_type.IndexOf("pdf") > 0)
-        //                {
-        //                    var config = new
-        //                    {
-        //                        initialPreview = fileUrl,
-        //                        initialPreviewConfig = new[] {
-        //                            new {
-        //                                caption = fileName,
-        //                                url = deleteURL,
-        //                                key =key,
-        //                                type="pdf",
-        //                                width ="120px"
-        //                                }
-        //                        },
-        //                        append = false
-        //                    };
-        //                    return Json(config);
-        //                }
-        //                else
-        //                {
-        //                    var config = new
-        //                    {
-        //                        initialPreview = fileUrl,
-        //                        initialPreviewConfig = new[] {
-        //                            new {
-        //                                caption = fileName,
-        //                                url = deleteURL,
-        //                                key =key,
-        //                                width ="120px"
-        //                            }
-        //                        },
-        //                        append = false
-        //                    };
-        //                    return Json(config);
-        //                }
-
-        //            }
-
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        Session["LstFileHoSo"] = null;
-        //    }
-        //    return Json(new { Result = fileUrl });
-        //}
         public async Task<JsonResult> UploadFile(int key, int fileId)
         {
             string fileUrl = "";
-            MediaUploadConfig result = null;
             var _type = string.Empty;
             string deleteURL = string.Empty;
             var file = new FileModel();
@@ -468,6 +375,56 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             return Json(new { Result = fileUrl });
         }
+        public async Task<JsonResult> RemoveTailieuByHoso(int hosoId, int fileId)
+        {
+            if (fileId <= 0)
+            {
+                return ToJsonResponse("Dữ liệu không hợp lệ", false);
+            }
+            var bizHoso = new HosoBusiness();
+            var result = await bizHoso.RemoveTailieu(hosoId, fileId);
+            return ToJsonResponse("Thành công", true);
+        }
+        public async Task<JsonResult> TailieuByHosoForEdit(int hosoId)
+        {
+            if (hosoId <= 0)
+            {
+                return ToJsonResponse("Dữ liệu không hợp lệ", false);
+            }
+            var bizHoso = new HosoBusiness();
+            var bizTailieu = new TailieuBusiness();
+            var lstLoaiTailieu = await bizTailieu.GetLoaiTailieuList();
+            if (lstLoaiTailieu == null || !lstLoaiTailieu.Any())
+                return ToJsonResponse(null,false);
+
+            var filesExist = await bizHoso.GetTailieuByHosoId(hosoId);
+
+            var result = new List<HosoTailieu>();
+
+            foreach (var loai in lstLoaiTailieu)
+            {
+                var tailieus = filesExist.Where(p => p.Key == loai.ID);
+
+                var item = new HosoTailieu
+                {
+                    ID = loai.ID,
+                    Ten = loai.Ten,
+                    BatBuoc = loai.BatBuoc,
+                    Tailieus = tailieus != null ? tailieus.ToList() : new List<FileUploadModel>()
+                };
+                result.Add(item);
+
+            }
+            return ToJsonResponse(result);
+        }
+        public async Task<JsonResult> TailieuByHoso(int hosoId)
+        {
+            var bizHoso = new HosoBusiness();
+            var result = await bizHoso.GetTailieuByHosoId(hosoId);
+            if (result == null)
+                result = new List<FileUploadModel>();
+            return ToJsonResponse(result);
+        }
         public JsonResult Delete(string key, int fileId)
         {
             string fileUrl = "";
@@ -529,7 +486,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 hs.SoTienVay = Convert.ToDecimal(soTienVay);
                 hs.MaTrangThai = (int)TrangThaiHoSo.Nhap;
                 hs.MaKetQua = (int)KetQuaHoSo.Trong;
-                List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["LstFileHoSo"];
+                List<TaiLieuModel> lstTaiLieu = new List<TaiLieuModel>();
                 int result = 0;
                 if (hs.ID > 0)
                 {
@@ -617,7 +574,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public ActionResult ChiTietHoSo()
+        public async Task<ActionResult> ChiTietHoSo()
         {
             ViewBag.formindex = LstRole["Index"]._formindex;
             if (Session["HoSo_ChiTietHoSo_ID"] == null)
@@ -626,7 +583,8 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.HoSo = hoso;
             ViewBag.MaDoiTac = new DoiTacBLL().LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
-            ViewBag.LstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
+            var bizTailieu = new TailieuBusiness();
+            ViewBag.LstLoaiTaiLieu = await bizTailieu.GetLoaiTailieuList();
 
             return View();
         }
@@ -649,7 +607,8 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.MaDoiTac = new DoiTacBLL().LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
             Session["LstFileHoSo"] = hoso.LstTaiLieu;
-            ViewBag.LstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
+            var bizTailieu = new TailieuBusiness();
+            //ViewBag.LstLoaiTaiLieu = bizTailieu.GetLoaiTailieuList();
             return View();
         }
 

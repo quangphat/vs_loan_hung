@@ -11,6 +11,6 @@ namespace VS_LOAN.Core.Entity.Model
         public string MessageId { get; set; }
         public string ErrorMessage { get; set; }
         public string SystemMessage { get; set; }
-
+        public int ReturnId { get; set; }
     }
 }

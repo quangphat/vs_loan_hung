@@ -229,7 +229,7 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
             ViewBag.LstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
             ViewBag.SellCode = new UserPMBLL().GetUserByID(hoso.HoSoCuaAi.ToString());
-            Session["Duyet_LstFileHoSo"] = hoso.LstTaiLieu;
+            //Session["Duyet_LstFileHoSo"] = hoso.LstTaiLieu;
             new HoSoDuyetXemBLL().DaXem(hoso.ID);
             return View();
         }
@@ -238,7 +238,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public JsonResult CapNhat(int id, string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
                    , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang,
             int baoHiem, int thoiHanVay, string soTienVay, int trangThai,
-            int ketQua, string ghiChu, string birthDayStr, string cmndDayStr)
+            int ketQua, string ghiChu, string birthDayStr, string cmndDayStr, List<int> FileRequireIds = null)
         {
             try
             {
@@ -289,13 +289,10 @@ namespace VS_LOAN.Core.Web.Controllers
                 lstLoaiTaiLieu.RemoveAll(x => x.BatBuoc == 0);
                 if (lstLoaiTaiLieu != null)
                 {
-                    foreach (var item in lstLoaiTaiLieu)
+                    var missingNames = BusinessExtension.GetFilesMissingV2(lstLoaiTaiLieu, FileRequireIds);
+                    if (!string.IsNullOrWhiteSpace(missingNames))
                     {
-                        var iFind = lstTaiLieu.Find(x => x.MaLoai == item.ID);
-                        if (iFind == null)
-                        {
-                            return ToJsonResponse(false, "Vui lòng dính kèm \"" + item.Ten.ToUpper() + "\"");
-                        }
+                        return ToJsonResponse(false, missingNames, 0);
                     }
                 }
 

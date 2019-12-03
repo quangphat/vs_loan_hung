@@ -147,7 +147,7 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.HoSo = hoso;
             ViewBag.MaDoiTac = new DoiTacBLL().LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
-            ViewBag.LstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
+            //ViewBag.LstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
             return View();
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
@@ -394,7 +394,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 {
                     hs.CmndDay = dtCmnd.Value;
                 }
-                List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["QL_LstFileHoSo"];
+                List<TaiLieuModel> lstTaiLieu = null;
                 int result = 0;
                 if (hs.ID > 0)
                 {
@@ -573,7 +573,7 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.HoSo = hoso;
             ViewBag.MaDoiTac = new DoiTacBLL().LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
-            Session["QL_LstFileHoSo"] = hoso.LstTaiLieu;
+            //Session["QL_LstFileHoSo"] = hoso.LstTaiLieu;
             ViewBag.LstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
             return View();
         }

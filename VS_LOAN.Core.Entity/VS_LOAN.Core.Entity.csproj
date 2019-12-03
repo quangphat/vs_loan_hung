@@ -99,6 +99,7 @@
     <Compile Include="HoSoQuanLyModel.cs" />
     <Compile Include="JsonFileResult.cs" />
     <Compile Include="KetQuaHoSoModel.cs" />
+    <Compile Include="LoaiTaiLieuModel.cs" />
     <Compile Include="Model\AutoIDModel.cs" />
     <Compile Include="Model\Customer.cs" />
     <Compile Include="Model\CustomerCheck.cs" />

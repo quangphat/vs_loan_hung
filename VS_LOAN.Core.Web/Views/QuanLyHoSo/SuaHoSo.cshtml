@@ -183,10 +183,12 @@
                 <h3 class="header smaller lighter blue">3.Hồ sơ đính kèm:</h3>
                 <div class="row">
                     <div class="col-xs-12" style="overflow-y: scroll;max-height:400px;">
-                        <form class="form-horizontal" role="form" id="tbDoc"></form>
+                        <form class="form-horizontal" role="form" id="lstTailieu"></form>
                     </div>
                 </div>
+
             </div>
+
         </div>
         <div class="row">
             <div class="col-xs-12">
@@ -270,7 +272,7 @@
                     </div>
                     <div class="clear-fix" />
                     <hr />
-                    
+
 
                 </form>
 
@@ -281,6 +283,8 @@
     </div>
 
     <script>
+        var fileRequireIds = [];
+        var hoso = @Html.Raw(Json.Encode(ViewBag.HoSo));
         $(document).ready(function () {
             $('#ddlSanPhamVay').chosen({ width: '100%', allow_single_deselect: true });
             $('#ddlHuyen').chosen({ width: '100%', allow_single_deselect: true });
@@ -306,64 +310,28 @@
             }).next().on(ace.click_event, function () {
                 $(this).prev().focus();
             });
-        });
-    </script>
 
-    <script>
-        jQuery.fn.ForceNumericOnly =
-            function () {
-                return this.each(function () {
-                    $(this).keydown(function (e) {
-                        var key = e.charCode || e.keyCode || 0;
-                        // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers ONLY
-                        // home, end, period, and numpad decimal
-                        return (
-                            key == 8 ||
-                            key == 9 ||
-                            key == 13 ||
-                            key == 46 ||
-                            key == 110 ||
-                            key == 190 ||
-                            (key >= 35 && key <= 40) ||
-                            (key >= 48 && key <= 57) ||
-                            (key >= 96 && key <= 105));
-                    });
-                });
-            };
-        $("#txtDienThoai").ForceNumericOnly();
-        $("#txtDienThoai2").ForceNumericOnly();
-        $("#txtTienDeNghiVay").ForceNumericOnly();
-        $("#txtCMND").ForceNumericOnly();
-        $("#txtTienDeNghiVay").change(function () {
-            $("#txtTienDeNghiVay").val(formatCurrency($("#txtTienDeNghiVay").val().replace(/\./g, '')));
-        });
-    </script>
-    <script>
-    var hoSoID=0;
-    $(document).ready(function () {
-        var hosoInfo = @Html.Raw(Json.Encode(ViewBag.HoSo));
-        if(hosoInfo!=null)
+        if(hoso!=null)
         {
-            hoSoID=hosoInfo.ID;
-            $('#txtHoTen').val(hosoInfo.TenKhachHang);
-            $('#txtDienThoai').val(hosoInfo.SDT);
-            $('#txtDienThoai2').val(hosoInfo.SDT2);
-            $('#txtToDate').val(SetFormatDateTimeDMY(hosoInfo.NgayNhanDon));
-            $('#txtCMND').val(hosoInfo.CMND);
-            $('#txtDiaChi').val(hosoInfo.DiaChi);
-            $('#txtTenCuaHang').val(hosoInfo.TenCuaHang);
-            $('#txtTienDeNghiVay').val(formatCurrency(hosoInfo.SoTienVay.toString()));
-            $('#spnThoiHanVay').val(hosoInfo.HanVay);
-            $('#txtBirhDay').val(SetFormatDateTimeDMY(hosoInfo.BirthDay));
-            $('#txtCmndDay').val(SetFormatDateTimeDMY(hosoInfo.CmndDay));
-            if(hosoInfo.CoBaoHiem>0)
+            hoSoID=hoso.ID;
+            $('#txtHoTen').val(hoso.TenKhachHang);
+            $('#txtDienThoai').val(hoso.SDT);
+            $('#txtDienThoai2').val(hoso.SDT2);
+            $('#txtToDate').val(SetFormatDateTimeDMY(hoso.NgayNhanDon));
+            $('#txtCMND').val(hoso.CMND);
+            $('#txtDiaChi').val(hoso.DiaChi);
+            $('#txtTenCuaHang').val(hoso.TenCuaHang);
+            $('#txtTienDeNghiVay').val(formatCurrency(hoso.SoTienVay.toString()));
+            $('#spnThoiHanVay').val(hoso.HanVay);
+            $('#txtBirhDay').val(SetFormatDateTimeDMY(hoso.BirthDay));
+            $('#txtCmndDay').val(SetFormatDateTimeDMY(hoso.CmndDay));
+            if(hoso.CoBaoHiem>0)
                 $('#cbbaohiem').attr('checked', false);
             else
                 $('#cbbaohiem').attr('checked', true);
 
         }
-        var lstLoaiTaiLieu = @Html.Raw(Json.Encode(ViewBag.LstLoaiTaiLieu));
-        LayDSTaiLieu(lstLoaiTaiLieu,hosoInfo.LstTaiLieu);
+        LayDSTaiLieu2();
         var maDoiTac='@ViewBag.MaDoiTac';
         $.ajax({
             type: "POST",
@@ -386,7 +354,7 @@
                 showError(jqXHR, exception);
             }
         });
-        var sanPhamVay=hosoInfo.SanPhamVay;
+        var sanPhamVay=hoso.SanPhamVay;
          $.ajax({
             type: "POST",
             url: '@Url.Action("LayDSSanPhamByHS", "HoSo")',
@@ -431,7 +399,7 @@
                 showError(jqXHR, exception);
             }
         });
-        var maHuyen=hosoInfo.MaKhuVuc;
+        var maHuyen=hoso.MaKhuVuc;
         $.ajax({
             type: "POST",
             url: '@Url.Action("LayDSHuyen", "KhuVuc")',
@@ -453,7 +421,7 @@
                 showError(jqXHR, exception);
             }
         });
-        var courierCode =hosoInfo.CourierCode;
+        var courierCode =hoso.CourierCode;
        $.ajax({
             type: "POST",
             url: '@Url.Action("LayDSCourier", "HoSo")',
@@ -475,7 +443,7 @@
                 showError(jqXHR, exception);
             }
         });
-        LayDSale(hosoInfo.HoSoCuaAi);
+        LayDSale(hoso.HoSoCuaAi);
 
         $('#ddlDoiTac').on('change', function () {
             LayDSSanPham(this.value);
@@ -486,19 +454,45 @@
         $('#ddlInternalCode').on('change', function () {
              $('#txtTenNV').val( $('option:selected', this).attr('ten'));
         });
-        LayTrangThai(hosoInfo.MaTrangThai);
+        LayTrangThai(hoso.MaTrangThai);
         LayDanhsachGhichu()
-    });
-    </script>
-    <script>
+        });
+
+        jQuery.fn.ForceNumericOnly =
+            function () {
+                return this.each(function () {
+                    $(this).keydown(function (e) {
+                        var key = e.charCode || e.keyCode || 0;
+                        // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers ONLY
+                        // home, end, period, and numpad decimal
+                        return (
+                            key == 8 ||
+                            key == 9 ||
+                            key == 13 ||
+                            key == 46 ||
+                            key == 110 ||
+                            key == 190 ||
+                            (key >= 35 && key <= 40) ||
+                            (key >= 48 && key <= 57) ||
+                            (key >= 96 && key <= 105));
+                    });
+                });
+            };
+        $("#txtDienThoai").ForceNumericOnly();
+        $("#txtDienThoai2").ForceNumericOnly();
+        $("#txtTienDeNghiVay").ForceNumericOnly();
+        $("#txtCMND").ForceNumericOnly();
+        $("#txtTienDeNghiVay").change(function () {
+            $("#txtTienDeNghiVay").val(formatCurrency($("#txtTienDeNghiVay").val().replace(/\./g, '')));
+        });
+
+
         $('#spnThoiHanVay').ace_spinner({ value: 0, min: 0, max: 36, step: 3, btn_up_class: 'btn-info', btn_down_class: 'btn-info' })
             .closest('.ace-spinner')
             .on('changed.fu.spinbox', function () {
                 //alert($('#spinner1').val())
             });
-    </script>
 
-    <script>
      function LayDanhsachGhichu() {
         //$('#ddlTrangThai').empty();
         $.ajax({
@@ -574,128 +568,9 @@
             }
         });
     }
-    </script>
 
 
-    <script>
-    function LayDSTaiLieu(lstLoaiTaiLieu, lstTaiLieu) {
-        if (lstLoaiTaiLieu != null) {
-            var i = 0;
-            var htmlContent = "";
-            $.each(lstLoaiTaiLieu, function (index, optionData) {
-                if (i < 4) {
-                    htmlContent += "<div class='col-sm-3'>"
-                    if (optionData.BatBuoc > 0)
-                        htmlContent += "<h5 style='padding: 0px;margin-top: -0px;' class=\"header green\">" + optionData.Ten + "<span class=\"required\">(*)</span></h5>";
-                    else
-                        htmlContent += "<h5 style='padding: 0px;margin-top: -0px;' class=\"header green\">" + optionData.Ten + "</h5>";
-                    htmlContent += "<div class=\"file-loading\">";
-                    htmlContent += "<input class='attachFile' key=" + optionData.ID + " id=\"fileCVUngTuyen_" + optionData.ID + "\" type=\"file\">";
-                    htmlContent += "</div>";
-                    htmlContent += "</div>";
-                    i++;
-                }
-                if (i == 4 || index == lstLoaiTaiLieu.length - 1) {
-                    i = 0;
-                    $('#tbDoc').append("<div class=\"form-group\">" + htmlContent + "</div>");
-                    htmlContent = "";
-                }
-            });
-            var lstFile = $(".attachFile");
-            $.each(lstFile, function (index, option) {
-                _initialPreview=[];
-                _initialPreviewConfig=[];
-                if(lstTaiLieu!=null)
-                {
-                    var key=$(option).attr("key");
-                    var result = $.grep(lstTaiLieu, function(e){ return e.MaLoai == key; });
-                    if (result.length == 0) {
-                        // not found
-                    } else if (result.length == 1) {
-                        // access the foo property using result[0].foo
-                        var deleteURL = '@Url.Action("Delete", "QuanLyHoSo")'+"?key="+key;
-                        var _imgExts = ["jpg", "jpeg", "png", "pdf"];
-                        var extn = result[0].LstFile[0].DuongDan.split('.').pop();
-                        var isImg = isExtension(extn, _imgExts);
-                        if(isImg)
-                        {
-                            if(extn.indexOf('pdf')>-1)
-                            {
-                                if(result[0].LstFile.length>0){
-                                    _initialPreview.push(result[0].LstFile[0].DuongDan);
-                                    _initialPreviewConfig.push({
-                                        caption:result[0].LstFile[0].Ten,
-                                        url:deleteURL,
-                                        type:"pdf",
-                                        width:"120px"
-                                    });
-                                }
 
-                            }
-                            else
-                            {
-                                if(result[0].LstFile.length>0){
-                                    _initialPreview.push(result[0].LstFile[0].DuongDan);
-                                    _initialPreviewConfig.push({
-                                        caption:result[0].LstFile[0].Ten,
-                                        url:deleteURL,
-                                        width:"120px"
-                                    });
-                                }
-                            }
-                        }
-                    } else {
-                        // multiple items found
-                    }
-                }
-                $(option).fileinput({
-                    uploadUrl: '@Url.Action("UploadHoSo", "QuanLyHoSo")' + "?key=" + $(option).attr("key"),
-                    validateInitialCount: true,
-                    maxFileSize: 25 * 1024,
-                    msgSizeTooLarge: 'File "{name}" (<b>{size} KB</b>)'
-                                    + 'exceeds maximum allowed upload size of <b>{25} MB</b>. '
-                                    + 'Please retry your upload!',
-                    allowedFileExtensions: [ 'png', 'jpg','pdf'],
-                    initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
-                    initialPreviewFileType: 'image',
-                    overwriteInitial: false,
-                    showUpload: false,
-                    showUploadedThumbs:false,
-                    uploadAsync: false,
-                    showClose: false,
-                    showCaption: false,
-                    showBrowse: false,
-                    showUpload: false, // hide upload button
-                    showRemove: false, // hide remove button
-                    browseOnZoneClick: true,
-                    removeLabel: '',
-                    dropZoneTitle: 'Kéo và thả tập tin vào đây',
-                    dropZoneClickTitle:'<br>(hoặc nhấp để chọn)',
-                    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
-                    removeTitle: 'Cancel or reset changes',
-                    elErrorContainer: '#kv-avatar-errors-2',
-                    msgErrorClass: 'alert alert-block alert-danger',
-                    //layoutTemplates: { main2: '{preview} ' + btnCust + ' {remove} {browse}' },
-                    //layoutTemplates: { footer: '' },
-                    initialPreview:_initialPreview,
-                    initialPreviewConfig:_initialPreviewConfig,
-                    append: true
-
-                }).on("filebatchselected", function (event, files) {
-                    $(option).fileinput("upload");
-                });
-                $(option).on('filesuccessremove', function (event, key, jqXHR, data) {
-                    console.log('Key = ' + key);
-                    //alert(1);
-                })
-
-
-            });
-
-        }
-    }
-    </script>
-    <script>
     function LayDSSanPham(maDoiTac) {
         $.ajax({
             type: "POST",
@@ -719,8 +594,7 @@
             }
         });
     }
-    </script>
-    <script>
+
     function LayDSale(maNV) {
         $.ajax({
             type: "POST",
@@ -747,8 +621,7 @@
             }
         });
     }
-    </script>
-    <script>
+
     $('#btn_Temp').click(function (e) {
         //if ($('#ddlTrangThai').val() == '0' || $('#ddlTrangThai').val() == undefined) {
         //    swal({
@@ -819,6 +692,7 @@
                         showConfirmButton: true,
                     }, function () {
                         //window.location = window.location;
+                            uploadHoso3(hoso.ID, true)
                     });
                 }
                 else {
@@ -839,8 +713,7 @@
             },
         });
     });
-    </script>
-    <script>
+
     $('#btn_Save').click(function (e) {
         if ($('#txtHoTen').val() == "" || $('#txtHoTen').val() == undefined) {
             swal({
@@ -943,7 +816,7 @@
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-                        window.location = window.location;
+                            uploadHoso3(hoso.ID, true);
                     });
                 }
                 else {
@@ -967,4 +840,167 @@
         )
 
     });
+        var filesUpload = [];
+      function uploadHoso3(hosoId, reloadOnSuccess = false) {
+        if (isNullOrNoItem(filesUpload)) {
+            if (reloadOnSuccess == true) {
+                window.location = window.location;
+            }
+            return;
+        }
+
+            $.ajax({
+                traditional: true,
+                url: `/hoso/UploadToHoso?hosoId=${hosoId}&isReset=false`,
+                type: "POST",
+                contentType: "application/json;",
+                dataType: 'json',
+                data: JSON.stringify(filesUpload),
+                success: function (data) {
+                    if (data.Message != null && data.Message.Result == true) {
+
+                        if (reloadOnSuccess == true) {
+                            window.location = window.location;
+                        }
+                    }
+                     else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.Message.ErrorMessage,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+               
+                
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+            });
+        }
+        function LayDSTaiLieu2() {
+
+            $.ajax({
+                type: "GET",
+                url: "/hoso/TailieuByHosoForEdit?hosoId=" + hoso.ID,
+                success: function (data) {
+                    if (data.success ==true && data.datas != null) {
+                        var i = 0;
+                        var content = "";
+                        let keys = [];
+                        $.each(data.datas, function (index, item) {
+
+
+                            $("#lstTailieu").append("<div class='form-group'><div id='tailieu-" + item.ID + "'></div></div > ");
+                            if (!isNullOrNoItem(item.Tailieus)) {
+                                fileRequireIds.push(item.ID);
+                                let _initialPreview = [];
+                                let _initialPreviewConfig = [];
+                                $.each(item.Tailieus, function (i, tailieu) {
+                                    fileRequireIds.push(item.ID);
+                                    _initialPreview = [];
+                                    _initialPreviewConfig = [];
+                                    var _imgExts = ["jpg", "jpeg", "png", "pdf"];
+                                    var extn = tailieu.FileUrl.split('.').pop();
+                                    var isImg = isExtension(extn, _imgExts);
+                                    if (isImg) {
+                                        _initialPreview.push(tailieu.FileUrl);
+                                        _initialPreviewConfig.push({
+                                            caption: tailieu.FileName,
+                                            url: "/hoso/RemoveTailieuByHoso?hosoId=" + hoso.ID + "&fileId=" + tailieu.FileId,
+                                            type: extn.indexOf('pdf') > -1 ? "pdf" : "jpg",
+                                            width: "120px"
+                                        });
+                                    }
+                                    let name = '',
+                                        isrequire = false,
+                                        className = ''
+                                    if (keys.indexOf(tailieu.Key) < 0) {
+                                        name = tailieu.KeyName;
+                                        isrequire = true
+                                    }
+                                    else {
+                                        className = 'mt-46'
+                                    }
+                                    renderOneItemFile(tailieu.Key, tailieu.FileId, name, isrequire, className, true, _initialPreview, _initialPreviewConfig, true, true, onUploadFile, onDeleteFile)
+
+                                    keys.push(item.ID)
+                                })
+                                if (item.Tailieus.length < 5) {
+                                    renderOneItemFile(item.ID, item.ID, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile)
+                                }
+
+                            }
+                            else {
+                                renderOneItemFile(item.ID, item.ID, item.Ten, item.BatBuoc, '', true, [], [], true, false, onUploadFile, onDeleteFile)
+                            }
+
+                        });
+                    }
+
+                },
+                complete: function () {
+                },
+                error: function (jqXHR, exception) {
+                    showError(jqXHR, exception);
+                }
+            });;
+            function onUploadFile(key, fileId, data, isExist) {
+                if (isReach5Files(filesUpload, key))
+                    return;
+                let response = data;
+                if (isNullOrNoItem(filesUpload)) {
+                    filesUpload = []
+                }
+
+                fileRequireIds.push(key);
+                if (isExist == false) {
+                    let file = {
+                        Key: parseInt(response.initialPreviewConfig[0].key),
+                        FileName: response.initialPreviewConfig[0].caption,
+                        FileUrl: response.initialPreview,
+                        KeyName: "",
+                        Id: fileId
+                    }
+                    let existKeyIndex = filesUpload.findIndex(p => p.key == key)
+                    if (existKeyIndex < 0) {
+                        filesUpload.push({ key: parseInt(key), files: [file] })
+                    }
+                    else {
+                        if (filesUpload[existKeyIndex].files == null)
+                            filesUpload[existKeyIndex].files = []
+                        filesUpload[existKeyIndex].files.push(file);
+                    }
+                }
+
+                if (isReach5Files(filesUpload, key) === false) {
+                    let newAttachhFileId = getNewGuid();
+                    renderOneItemFile(key, newAttachhFileId, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile)
+                }
+            }
+            function onDeleteFile(key, fileId, isExist) {
+
+                let index = fileRequireIds.findIndex(p => p == key)
+                fileRequireIds.splice(index, 1);
+                removeFile(key, fileId);
+            }
+            function removeFile(key, fileId) {
+                if (isNullOrNoItem(filesUpload))
+                    return;
+                let index = filesUpload.findIndex(p => p.key == key);
+                if (index >= 0) {
+                    if (!isNullOrNoItem(filesUpload[index].files)) {
+                        let indexOfFile = filesUpload[index].files.findIndex(p => p.Id == fileId);
+                        if (indexOfFile >= 0)
+                            filesUpload[index].files.splice(indexOfFile, 1);
+                    }
+                }
+            }
+
+        }
     </script>

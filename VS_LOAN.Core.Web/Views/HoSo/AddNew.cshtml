@@ -372,7 +372,7 @@
                 $('#ddlDoiTac').empty();
                 $('#ddlDoiTac').append("<option value='0'></option>");
                 if (data != null) {
-                    debugger
+                    
                     lstDoitac = data.DSDoiTac
                     $.each(data.DSDoiTac, function (index, optionData) {
                         $('#ddlDoiTac').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
@@ -394,8 +394,7 @@
             url: '@Url.Action("LayDSTaiLieu", "HoSo")',
             data: {},
             success: function (data) {
-                if (data.DSLoaiTaiLieu != null)
-                {
+                if (data.DSLoaiTaiLieu != null) {
                     var i = 0;
                     var htmlContent = "";
                     let keys = [];
@@ -412,68 +411,7 @@
 
                         renderOneItemFile(item.ID, item.ID, name, item.BatBuoc, className, true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
                         keys.push(item.ID);
-
-                        //if (i < 4) {
-                        //    htmlContent += "<div class='col-sm-3'>"
-                        //    if (optionData.BatBuoc > 0)
-                        //        htmlContent += "<h5 style='padding: 0px;margin-top: -0px;' class=\"header green\">" + optionData.Ten + "<span class=\"required\">(*)</span></h5>";
-                        //    else
-                        //        htmlContent += "<h5 style='padding: 0px;margin-top: -0px;' class=\"header green\">" + optionData.Ten + "</h5>";
-                        //    htmlContent += "<div class=\"file-loading\">";
-                        //    htmlContent += "<input class='attachFile' key=" + optionData.ID + " id=\"fileCVUngTuyen_" + optionData.ID + "\" type=\"file\">";
-                        //    htmlContent += "</div>";
-                        //    htmlContent += "</div>";
-                        //    i++;
-                        //}
-                        //if (i == 4 || index == data.DSLoaiTaiLieu.length - 1) {
-                        //    i = 0;
-                        //    $('#tbDoc').append("<div class=\"form-group\">" + htmlContent + "</div>");
-                        //    htmlContent = "";
-                        //}
-                    });
-                    @*var lstFile = $(".attachFile");
-                    $.each(lstFile, function (index, option) {
-                        
-                        $(option).fileinput({
-                            uploadUrl: '@Url.Action("UploadHoSo", "HoSo")' + "?key=" + $(option).attr("key"),
-                            validateInitialCount: true,
-                            maxFileSize: 25 * 1024,
-                            msgSizeTooLarge: 'File "{name}" (<b>{size} KB</b>)'
-                                            + 'exceeds maximum allowed upload size of <b>{25} MB</b>. '
-                                            + 'Please retry your upload!',
-                            allowedFileExtensions: [ 'png', 'jpg','pdf'],
-                            initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
-                            initialPreviewFileType: 'image',
-                            overwriteInitial: false,
-                            showUpload: false,
-                            showUploadedThumbs:false,
-                            uploadAsync: false,
-                            showClose: false,
-                            showCaption: false,
-                            showBrowse: false,
-                            showUpload: false, // hide upload button
-                            showRemove: false, // hide remove button
-                            browseOnZoneClick: true,
-                            removeLabel: '',
-                            dropZoneTitle: 'Kéo và thả tập tin vào đây',
-                            dropZoneClickTitle:'<br>(hoặc nhấp để chọn)',
-                            removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
-                            removeTitle: 'Cancel or reset changes',
-                            elErrorContainer: '#kv-avatar-errors-2',
-                            msgErrorClass: 'alert alert-block alert-danger',
-                            //layoutTemplates: { main2: '{preview} ' + btnCust + ' {remove} {browse}' },
-                            //layoutTemplates: { footer: '' },
-
-                        }).on("filebatchselected", function (event, files) {
-                            $(option).fileinput("upload");
-                        }).on("filedeleted", function (event, files) {
-                            $(option).fileinput("upload");
-                        });
-                        $(option).on('filesuccessremove', function (event, key, jqXHR, data) {
-                        })
-
-
-                    });*@
+                    })
                 }
                
             },
@@ -639,8 +577,8 @@
                         showConfirmButton: true,
                     }, function () {
                         //window.location = window.location;
-                        debugger
-                        uploadHoso2(parseInt(data.Message.MessageId), true);
+
+                            uploadHoso2(data.Message.ReturnId, false);
                     });
                 }
                 else {
@@ -736,7 +674,8 @@
             'provinceId': parseInt($('#ddlTinh').val()),
             'doitacF88Value': doitacF88Value,
             'birthDayStr': $('#txtBirhDay').val(),
-            'cmndDayStr': $('#txtCmndDay').val()
+            'cmndDayStr': $('#txtCmndDay').val(),
+            'FileRequireIds': filesUpload.map(p => model.FileRequireIds.push(p.key))
         });
         $.ajax({
             traditional: true,
@@ -753,7 +692,7 @@
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-                        //window.location = window.location;
+                            uploadHoso2(data.Message.ReturnId, true);
                     });
                 }
                 else {
@@ -785,7 +724,7 @@
                 //dataType: 'json',
                 data: JSON.stringify(filesUpload),
                 success: function (data) {
-                    if (data.success == true) {
+                    if (data.Message != null && data.Message.Result == true) {
                         if (reloadOnSuccess == true) {
                             window.location = window.location;
                         }
@@ -793,7 +732,7 @@
                 else {
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
-                        text: data.code,
+                        text: data.Message.ErrorMessage,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,
