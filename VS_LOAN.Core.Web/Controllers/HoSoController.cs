@@ -395,21 +395,72 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             string fileUrl = "";
             MediaUploadConfig result = null;
+            var _type = string.Empty;
+            string deleteURL = string.Empty;
+            var file = new FileModel();
             try
             {
-                foreach (string file in Request.Files)
+                foreach (string f in Request.Files)
                 {
-                    var fileContent = Request.Files[file];
+                    var fileContent = Request.Files[f];
                     if (fileContent != null && fileContent.ContentLength > 0)
                     {
                         Stream stream = fileContent.InputStream;
                         string root = Server.MapPath("~/Upload");
                         var _bizMedia = new MediaBusiness();
-                        result = await _bizMedia.UploadSingle(stream, key.ToString(), fileId, fileContent.FileName, root);
+                        stream.Position = 0;
+                        file = _bizMedia.GetFileUploadUrl(fileContent.FileName, root);
+                        using (var fileStream = System.IO.File.Create(file.FullPath))
+                        {
+                            await stream.CopyToAsync(fileStream);
+                            fileStream.Close();
+                            fileUrl = file.FileUrl;
+                        }
+                        deleteURL = fileId <= 0 ? $"/hoso/delete?key={key}" : $"/hoso/delete/0/{fileId}";
+                        if (fileId > 0)
+                        {
+                            await _bizMedia.UpdateExistingFile(fileId, file.Name, file.FileUrl);
+                        }
+                        _type = System.IO.Path.GetExtension(fileContent.FileName);
                     }
 
                 }
-                return Json(result);
+                if (_type.IndexOf("pdf") > 0)
+                {
+                    var config = new
+                    {
+                        initialPreview = fileUrl,
+                        initialPreviewConfig = new[] {
+                                            new {
+                                                caption = file.Name,
+                                                url = deleteURL,
+                                                key =key,
+                                                type="pdf",
+                                                width ="120px"
+                                                }
+                                        },
+                        append = false
+                    };
+                    return Json(config);
+                }
+                else
+                {
+                    var config = new
+                    {
+                        initialPreview = fileUrl,
+                        initialPreviewConfig = new[] {
+                                            new {
+                                                caption = file.Name,
+                                                url = deleteURL,
+                                                key =key,
+                                                width ="120px"
+                                            }
+                                        },
+                        append = false
+                    };
+                    return Json(config);
+                }
+                //return Json(result);
             }
             catch (Exception)
             {

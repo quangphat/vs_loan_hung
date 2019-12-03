@@ -36,7 +36,7 @@ namespace VS_LOAN.Core.Business
                 fileStream.Close();
                 fileUrl = file.FileUrl;
             }
-            string deleteURL = fileId <= 0 ? $"/media/delete?key={key}" : $"/hoso/tailieu/delete/0/{fileId}";
+            string deleteURL = fileId <= 0 ? $"/hoso/delete?key={key}" : $"/hoso/delete/0/{fileId}";
             if (fileId > 0)
             {
                 await UpdateExistingFile(fileId, file.Name, file.FileUrl);
@@ -61,7 +61,7 @@ namespace VS_LOAN.Core.Business
 
             //return new MediaUploadConfig();
         }
-        private static FileModel GetFileUploadUrl(string fileInputName, string webRootPath)
+        public  FileModel GetFileUploadUrl(string fileInputName, string webRootPath)
         {
             string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + fileInputName.Trim().Replace(" ", "_");
             string root = System.IO.Path.Combine(webRootPath, "HoSo");
