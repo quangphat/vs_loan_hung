@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.Model;
-using VS_LOAN.Core.Nhibernate;
 
 namespace VS_LOAN.Core.Business
 {

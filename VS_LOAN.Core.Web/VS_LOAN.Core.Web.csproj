@@ -1774,7 +1774,7 @@
       <Name>VS_LOAN.Core.Nhibernate</Name>
     </ProjectReference>
     <ProjectReference Include="..\VS_LOAN.Core.Utility\VS_LOAN.Core.Utility.csproj">
-      <Project>{d439d023-c499-4540-af5a-7ac3d5c3a9a1}</Project>
+      <Project>{D439D023-C499-4540-AF5A-7AC3D5C3A9A1}</Project>
       <Name>VS_LOAN.Core.Utility</Name>
     </ProjectReference>
   </ItemGroup>
