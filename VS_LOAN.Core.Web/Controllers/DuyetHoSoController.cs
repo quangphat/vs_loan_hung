@@ -284,7 +284,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     return ToJsonResponse(false, "Vui lòng nhập ngày cấp cmnd");
 
                 }
-                List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["Duyet_LstFileHoSo"];
+                //List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["Duyet_LstFileHoSo"];
                 List<LoaiTaiLieuModel> lstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
                 lstLoaiTaiLieu.RemoveAll(x => x.BatBuoc == 0);
                 if (lstLoaiTaiLieu != null)
@@ -352,7 +352,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     }
                     bool isCheckMaSanPham = false;
                     //// chỉnh sửa
-                    if (new HoSoBLL().CapNhatHoSo(hs, lstTaiLieu, ref isCheckMaSanPham))
+                    if (new HoSoBLL().CapNhatHoSo(hs, null, ref isCheckMaSanPham))
                     {
                         result = 1;
                     }

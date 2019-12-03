@@ -172,7 +172,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public ActionResult Save(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
            , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang,
             bool baoHiem, int thoiHanVay, string soTienVay, int trangthai, string ghiChu,
-             string birthDayStr, string cmndDayStr)
+             string birthDayStr, string cmndDayStr, List<int> FileRequireIds = null)
         {
 
             if (GlobalData.User.UserType == (int)UserTypeEnum.Sale
@@ -233,18 +233,14 @@ namespace VS_LOAN.Core.Web.Controllers
                     return ToJsonResponse(false, "Nội dung ghi chú không được nhiều hơn 300 ký tự");
 
                 }
-                List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["QL_LstFileHoSo"];
                 List<LoaiTaiLieuModel> lstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
                 lstLoaiTaiLieu.RemoveAll(x => x.BatBuoc == 0);
                 if (lstLoaiTaiLieu != null)
                 {
-                    foreach (var item in lstLoaiTaiLieu)
+                    var missingNames = BusinessExtension.GetFilesMissingV2(lstLoaiTaiLieu, FileRequireIds);
+                    if (!string.IsNullOrWhiteSpace(missingNames))
                     {
-                        var iFind = lstTaiLieu.Find(x => x.MaLoai == item.ID);
-                        if (iFind == null)
-                        {
-                            return ToJsonResponse(false, "Vui lòng dính kèm \"" + item.Ten.ToUpper() + "\"");
-                        }
+                        return ToJsonResponse(false, missingNames, 0);
                     }
                 }
 
@@ -299,7 +295,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 {
                     bool isCheckMaSanPham = false;
                     //// chỉnh sửa
-                    if (new HoSoBLL().CapNhatHoSo(hs, lstTaiLieu, ref isCheckMaSanPham))
+                    if (new HoSoBLL().CapNhatHoSo(hs, null, ref isCheckMaSanPham))
                     {
                         new HoSoDuyetXemBLL().Them(hs.ID);
                         result = 1;
