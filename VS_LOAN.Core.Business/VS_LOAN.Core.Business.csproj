@@ -107,6 +107,7 @@
     <Compile Include="KetQuaHoSoBLL.cs" />
     <Compile Include="KhuVucBLL.cs" />
     <Compile Include="LoaiTaiLieuBLL.cs" />
+    <Compile Include="MediaBusiness.cs" />
     <Compile Include="NhanVienBLL.cs" />
     <Compile Include="NhanVienConfigBLL.cs" />
     <Compile Include="NhanVienNhomBLL.cs" />

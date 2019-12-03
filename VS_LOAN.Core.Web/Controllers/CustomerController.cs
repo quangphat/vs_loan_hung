@@ -58,7 +58,6 @@ namespace VS_LOAN.Core.Web.Controllers
             };
             var _bizCustomer = new CustomerBLL();
             var id = _bizCustomer.Create(customer);
-            _bizCustomer.CloseConnection();
             if (id > 0)
             {
                 if(!string.IsNullOrWhiteSpace(model.Note))

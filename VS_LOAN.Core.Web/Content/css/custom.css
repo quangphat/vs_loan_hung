@@ -4,6 +4,9 @@
 /*.form-group input, .form-group label, .form-group select, .form-group textarea {
   font-size: 11px !important;
 }*/
+.mt-46 {
+    margin-top: 46px;
+}
 .form-group label{
   color: #060606
 }

@@ -180,11 +180,12 @@
                 <h3 class="header smaller lighter blue">3.Hồ sơ đính kèm:</h3>
                 <div class="row">
                     <div class="col-xs-12" style="overflow-y: scroll;max-height:400px;">
-                        <form class="form-horizontal"  role="form" id="tbDoc"></form>
+                        <form class="form-horizontal" role="form" id="lstTailieu"></form>
                     </div>
                 </div>
-                
+
             </div>
+
         </div>
         <div class="row">
             <div class="col-xs-12">
@@ -397,27 +398,40 @@
                 {
                     var i = 0;
                     var htmlContent = "";
-                    $.each(data.DSLoaiTaiLieu, function (index, optionData) {
-                        
-                        if (i < 4) {
-                            htmlContent += "<div class='col-sm-3'>"
-                            if (optionData.BatBuoc > 0)
-                                htmlContent += "<h5 style='padding: 0px;margin-top: -0px;' class=\"header green\">" + optionData.Ten + "<span class=\"required\">(*)</span></h5>";
-                            else
-                                htmlContent += "<h5 style='padding: 0px;margin-top: -0px;' class=\"header green\">" + optionData.Ten + "</h5>";
-                            htmlContent += "<div class=\"file-loading\">";
-                            htmlContent += "<input class='attachFile' key=" + optionData.ID + " id=\"fileCVUngTuyen_" + optionData.ID + "\" type=\"file\">";
-                            htmlContent += "</div>";
-                            htmlContent += "</div>";
-                            i++;
+                    let keys = [];
+                    $.each(data.DSLoaiTaiLieu, function (index, item) {
+                        $("#lstTailieu").append("<div class='form-group'><div id='tailieu-" + item.ID + "'></div></div > ");
+                        let name = '',
+                            className = ''
+                        if (keys.indexOf(item.ID) < 0) {
+                            name = item.Ten;
                         }
-                        if (i == 4 || index == data.DSLoaiTaiLieu.length - 1) {
-                            i = 0;
-                            $('#tbDoc').append("<div class=\"form-group\">" + htmlContent + "</div>");
-                            htmlContent = "";
+                        else {
+                            className = 'mt-46'
                         }
+
+                        renderOneItemFile(item.ID, item.ID, name, item.BatBuoc, className, true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
+                        keys.push(item.ID);
+
+                        //if (i < 4) {
+                        //    htmlContent += "<div class='col-sm-3'>"
+                        //    if (optionData.BatBuoc > 0)
+                        //        htmlContent += "<h5 style='padding: 0px;margin-top: -0px;' class=\"header green\">" + optionData.Ten + "<span class=\"required\">(*)</span></h5>";
+                        //    else
+                        //        htmlContent += "<h5 style='padding: 0px;margin-top: -0px;' class=\"header green\">" + optionData.Ten + "</h5>";
+                        //    htmlContent += "<div class=\"file-loading\">";
+                        //    htmlContent += "<input class='attachFile' key=" + optionData.ID + " id=\"fileCVUngTuyen_" + optionData.ID + "\" type=\"file\">";
+                        //    htmlContent += "</div>";
+                        //    htmlContent += "</div>";
+                        //    i++;
+                        //}
+                        //if (i == 4 || index == data.DSLoaiTaiLieu.length - 1) {
+                        //    i = 0;
+                        //    $('#tbDoc').append("<div class=\"form-group\">" + htmlContent + "</div>");
+                        //    htmlContent = "";
+                        //}
                     });
-                    var lstFile = $(".attachFile");
+                    @*var lstFile = $(".attachFile");
                     $.each(lstFile, function (index, option) {
                         
                         $(option).fileinput({
@@ -459,7 +473,7 @@
                         })
 
 
-                    });
+                    });*@
                 }
                
             },
@@ -470,7 +484,51 @@
             }
         });
     }
+    let filesUpload = [];
+    function onDeleteFile(key, fileId, isExist) {
+        removeFile(key, fileId);
+    }
+    function onUploadFile(key, fileId, data, isExist) {
 
+        if (isReach5Files(filesUpload, key))
+            return;
+        let response = data;
+        if (isNullOrNoItem(filesUpload)) {
+            filesUpload = []
+        }
+        let file = {
+            Key: parseInt(response.initialPreviewConfig[0].key),
+            FileName: response.initialPreviewConfig[0].caption,
+            FileUrl: response.initialPreview,
+            KeyName: "",
+            Id: fileId
+        }
+        let existKeyIndex = filesUpload.findIndex(p => p.key == key)
+        if (existKeyIndex < 0) {
+            filesUpload.push({ key: parseInt(key), files: [file] })
+        }
+        else {
+            if (filesUpload[existKeyIndex].files == null)
+                filesUpload[existKeyIndex].files = []
+            filesUpload[existKeyIndex].files.push(file);
+        }
+        if (isReach5Files(filesUpload, key) === false) {
+            let newAttachhFileId = getNewGuid();
+            renderOneItemFile(key, newAttachhFileId, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
+        }
+    }
+    function removeFile(key, fileId) {
+        if (isNullOrNoItem(filesUpload))
+            return;
+        let index = filesUpload.findIndex(p => p.key == key);
+        if (index >= 0) {
+            if (!isNullOrNoItem(filesUpload[index].files)) {
+                let indexOfFile = filesUpload[index].files.findIndex(p => p.Id == fileId);
+                if (indexOfFile >= 0)
+                    filesUpload[index].files.splice(indexOfFile, 1);
+            }
+        }
+    }
     function LayDSSanPham(maDoiTac) {
         $.ajax({
             type: "POST",
@@ -581,10 +639,8 @@
                         showConfirmButton: true,
                     }, function () {
                         //window.location = window.location;
-                            var lstFile = $(".attachFile");
-                            $.each(lstFile, function (index, item) {
-                                debugger
-                            })
+                        debugger
+                        uploadHoso2(parseInt(data.Message.MessageId), true);
                     });
                 }
                 else {
@@ -718,4 +774,38 @@
             },
         });
     });
+         function uploadHoso2(hosoId, reloadOnSuccess = false) {
+            if (isNullOrNoItem(filesUpload))
+                return;
+            $.ajax({
+                traditional: true,
+                url: `/HoSo/UploadToHoso?hosoId=${hosoId}&isReset=true`,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                //dataType: 'json',
+                data: JSON.stringify(filesUpload),
+                success: function (data) {
+                    if (data.success == true) {
+                        if (reloadOnSuccess == true) {
+                            window.location = window.location;
+                        }
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+        }
 </script>
