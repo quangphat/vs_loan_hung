@@ -9,7 +9,7 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class BaseController : Controller
     {
-        public ActionResult ToResponse(bool success,  string message = null)
+        public ActionResult ToResponse(bool success,  string message = null, int id = 0)
         {
             var result = new RMessage();
             if(success)
@@ -22,9 +22,11 @@ namespace VS_LOAN.Core.Web.Controllers
                 result.ErrorMessage = string.IsNullOrWhiteSpace(message) ? Resources.Global.Message_Error : message;
             }
             result.Result = success;
+            result.MessageId = id.ToString();
             return Json(new { Message = result }, JsonRequestBehavior.AllowGet);
             
         }
+
         public JsonResult ToJsonResponse(bool success, string message = null)
         {
             var result = new RMessage();

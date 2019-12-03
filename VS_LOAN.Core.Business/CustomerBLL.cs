@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.Model;
-using VS_LOAN.Core.Nhibernate;
 
 namespace VS_LOAN.Core.Business
 {
@@ -20,17 +19,21 @@ namespace VS_LOAN.Core.Business
         }
         public int Create(Customer customer)
         {
-            var p = AddOutputParam("id");
-            p.Add("fullname", customer.FullName);
-            p.Add("checkdate", customer.CheckDate);
-            p.Add("cmnd", customer.Cmnd);
-            p.Add("createdtime", DateTime.Now);
-            p.Add("status", customer.CICStatus);
-            p.Add("note", customer.LastNote);
-            p.Add("createdby", customer.CreatedBy);
-            p.Add("gender", customer.Gender);
-            _connection.Execute("sp_InsertCustomer", p, commandType: CommandType.StoredProcedure);
-            return p.Get<int>("id");
+            using (var con = GetConnection())
+            {
+                var p = AddOutputParam("id");
+                p.Add("fullname", customer.FullName);
+                p.Add("checkdate", customer.CheckDate);
+                p.Add("cmnd", customer.Cmnd);
+                p.Add("createdtime", DateTime.Now);
+                p.Add("status", customer.CICStatus);
+                p.Add("note", customer.LastNote);
+                p.Add("createdby", customer.CreatedBy);
+                p.Add("gender", customer.Gender);
+                con.Execute("sp_InsertCustomer", p, commandType: CommandType.StoredProcedure);
+                return p.Get<int>("id");
+            }
+               
         }
         public bool AddNote(CustomerNote note)
         {

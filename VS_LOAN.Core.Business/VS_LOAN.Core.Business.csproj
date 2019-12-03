@@ -107,6 +107,7 @@
     <Compile Include="KetQuaHoSoBLL.cs" />
     <Compile Include="KhuVucBLL.cs" />
     <Compile Include="LoaiTaiLieuBLL.cs" />
+    <Compile Include="MediaBusiness.cs" />
     <Compile Include="NhanVienBLL.cs" />
     <Compile Include="NhanVienConfigBLL.cs" />
     <Compile Include="NhanVienNhomBLL.cs" />
@@ -131,16 +132,15 @@
       <Name>KPMG_PD.Core.Entity</Name>
     </ProjectReference>
     <ProjectReference Include="..\VS_LOAN.Core.Nhibernate\VS_LOAN.Core.Nhibernate.csproj">
-      <Project>{fa15cd3a-ed74-4444-8192-35b5604aa535}</Project>
-      <Name>KPMG_PD.Core.Nhibernate</Name>
+      <Project>{FA15CD3A-ED74-4444-8192-35B5604AA535}</Project>
+      <Name>VS_LOAN.Core.Nhibernate</Name>
     </ProjectReference>
     <ProjectReference Include="..\VS_LOAN.Core.Utility\VS_LOAN.Core.Utility.csproj">
-      <Project>{d439d023-c499-4540-af5a-7ac3d5c3a9a1}</Project>
-      <Name>KPMG_PD.Core.Utility</Name>
+      <Project>{D439D023-C499-4540-AF5A-7AC3D5C3A9A1}</Project>
+      <Name>VS_LOAN.Core.Utility</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -16,6 +16,7 @@ using VS_LOAN.Core.Web.Common;
 using VS_LOAN.Core.Web.Helpers;
 using System.Threading.Tasks;
 using F88Service;
+using VS_LOAN.Core.Entity.UploadModel;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
@@ -280,103 +281,186 @@ namespace VS_LOAN.Core.Web.Controllers
             }
 
         }
-        public JsonResult UploadHoSo(string key)
+        public JsonResult UploadToHoso(int hosoId, bool isReset, List<FileUploadModelGroupByKey> files)
+        {
+            return ToJsonResponse(true);
+        }
+        //public JsonResult UploadFile(int key, int fileId)
+        //{
+        //    string fileUrl = "";
+        //    try
+        //    {
+        //        foreach (string file in Request.Files)
+        //        {
+        //            var fileContent = Request.Files[file];
+        //            if (fileContent != null && fileContent.ContentLength > 0)
+        //            {
+        //                string[] p = fileContent.ContentType.Split('/');
+        //                get a stream
+        //               Stream stream = fileContent.InputStream;
+        //                and optionally write the file to disk
+        //                string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + fileContent.FileName.Trim().Replace(" ", "_");
+        //                string root = System.IO.Path.Combine(Server.MapPath("~/Upload"), "HoSo");
+        //                string pathTemp = "";
+        //                if (!Directory.Exists(root))
+        //                    Directory.CreateDirectory(root);
+        //                pathTemp = DateTime.Now.Year.ToString();
+        //                string pathYear = System.IO.Path.Combine(root, pathTemp);
+        //                if (!Directory.Exists(pathYear))
+        //                    Directory.CreateDirectory(pathYear);
+        //                pathTemp += "/" + DateTime.Now.Month.ToString();
+        //                string pathMonth = System.IO.Path.Combine(root, pathTemp);
+        //                if (!Directory.Exists(pathMonth))
+        //                    Directory.CreateDirectory(pathMonth);
+        //                pathTemp += "/" + DateTime.Now.Day.ToString();
+        //                string pathDay = System.IO.Path.Combine(root, pathTemp);
+        //                if (!Directory.Exists(pathDay))
+        //                    Directory.CreateDirectory(pathDay);
+        //                string path = System.IO.Path.Combine(pathDay, fileName);
+        //                using (var fileStream = System.IO.File.Create(path))
+        //                {
+        //                    stream.CopyTo(fileStream);
+        //                    fileStream.Close();
+        //                    fileUrl = "/Upload/HoSo/" + pathTemp + "/" + fileName;
+        //                }
+        //                string deleteURL = Url.Action("Delete", "HoSo") + "?key=" + key;
+        //                string deleteURL = fileId <= 0 ? $"/Hoso/delete?key={key}" : $"/hoso/delete?key=0&fileId={fileId}";
+        //                var _type = System.IO.Path.GetExtension(fileContent.FileName);
+        //                List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["LstFileHoSo"];
+        //                var find = lstTaiLieu.Find(x => x.MaLoai.ToString().Equals(key.Trim()));
+        //                if (find != null)
+        //                {
+        //                    find.LstFile[0].DuongDan = fileUrl;
+        //                    find.LstFile[0].Ten = fileName;
+        //                }
+        //                else
+        //                {
+        //                    TaiLieuModel taiLieu = new TaiLieuModel();
+        //                    taiLieu.MaLoai = Convert.ToInt32(key.Trim());
+        //                    Entity.Model.FileInfo _file = new Entity.Model.FileInfo();
+        //                    _file.Ten = fileName;
+        //                    _file.DuongDan = fileUrl;
+        //                    taiLieu.LstFile.Add(_file);
+        //                    lstTaiLieu.Add(taiLieu);
+        //                }
+        //                Session["LstFileHoSo"] = lstTaiLieu;
+
+        //                if (_type.IndexOf("pdf") > 0)
+        //                {
+        //                    var config = new
+        //                    {
+        //                        initialPreview = fileUrl,
+        //                        initialPreviewConfig = new[] {
+        //                            new {
+        //                                caption = fileName,
+        //                                url = deleteURL,
+        //                                key =key,
+        //                                type="pdf",
+        //                                width ="120px"
+        //                                }
+        //                        },
+        //                        append = false
+        //                    };
+        //                    return Json(config);
+        //                }
+        //                else
+        //                {
+        //                    var config = new
+        //                    {
+        //                        initialPreview = fileUrl,
+        //                        initialPreviewConfig = new[] {
+        //                            new {
+        //                                caption = fileName,
+        //                                url = deleteURL,
+        //                                key =key,
+        //                                width ="120px"
+        //                            }
+        //                        },
+        //                        append = false
+        //                    };
+        //                    return Json(config);
+        //                }
+
+        //            }
+
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        Session["LstFileHoSo"] = null;
+        //    }
+        //    return Json(new { Result = fileUrl });
+        //}
+        public async Task<JsonResult> UploadFile(int key, int fileId)
         {
             string fileUrl = "";
+            MediaUploadConfig result = null;
+            var _type = string.Empty;
+            string deleteURL = string.Empty;
+            var file = new FileModel();
             try
             {
-                foreach (string file in Request.Files)
+                foreach (string f in Request.Files)
                 {
-                    var fileContent = Request.Files[file];
+                    var fileContent = Request.Files[f];
                     if (fileContent != null && fileContent.ContentLength > 0)
                     {
-                        //string[] p = fileContent.ContentType.Split('/');
-                        // get a stream
                         Stream stream = fileContent.InputStream;
-                        // and optionally write the file to disk       
-                        string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + fileContent.FileName.Trim().Replace(" ", "_");
-                        string root = System.IO.Path.Combine(Server.MapPath("~/Upload"), "HoSo");
-                        string pathTemp = "";
-                        if (!Directory.Exists(root))
-                            Directory.CreateDirectory(root);
-                        pathTemp = DateTime.Now.Year.ToString();
-                        string pathYear = System.IO.Path.Combine(root, pathTemp);
-                        if (!Directory.Exists(pathYear))
-                            Directory.CreateDirectory(pathYear);
-                        pathTemp += "/" + DateTime.Now.Month.ToString();
-                        string pathMonth = System.IO.Path.Combine(root, pathTemp);
-                        if (!Directory.Exists(pathMonth))
-                            Directory.CreateDirectory(pathMonth);
-                        pathTemp += "/" + DateTime.Now.Day.ToString();
-                        string pathDay = System.IO.Path.Combine(root, pathTemp);
-                        if (!Directory.Exists(pathDay))
-                            Directory.CreateDirectory(pathDay);
-                        string path = System.IO.Path.Combine(pathDay, fileName);
-                        using (var fileStream = System.IO.File.Create(path))
+                        string root = Server.MapPath("~/Upload");
+                        var _bizMedia = new MediaBusiness();
+                        stream.Position = 0;
+                        file = _bizMedia.GetFileUploadUrl(fileContent.FileName, root);
+                        using (var fileStream = System.IO.File.Create(file.FullPath))
                         {
-                            stream.CopyTo(fileStream);
+                            await stream.CopyToAsync(fileStream);
                             fileStream.Close();
-                            fileUrl = "/Upload/HoSo/" + pathTemp + "/" + fileName;
+                            fileUrl = file.FileUrl;
                         }
-                        string deleteURL = Url.Action("Delete", "HoSo") + "?key=" + key;
-                        var _type = System.IO.Path.GetExtension(fileContent.FileName);
-                        List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["LstFileHoSo"];
-                        var find = lstTaiLieu.Find(x => x.MaLoai.ToString().Equals(key.Trim()));
-                        if (find != null)
+                        deleteURL = fileId <= 0 ? $"/hoso/delete?key={key}" : $"/hoso/delete/0/{fileId}";
+                        if (fileId > 0)
                         {
-                            find.LstFile[0].DuongDan = fileUrl;
-                            find.LstFile[0].Ten = fileName;
+                            await _bizMedia.UpdateExistingFile(fileId, file.Name, file.FileUrl);
                         }
-                        else
-                        {
-                            TaiLieuModel taiLieu = new TaiLieuModel();
-                            taiLieu.MaLoai = Convert.ToInt32(key.Trim());
-                            Entity.Model.FileInfo _file = new Entity.Model.FileInfo();
-                            _file.Ten = fileName;
-                            _file.DuongDan = fileUrl;
-                            taiLieu.LstFile.Add(_file);
-                            lstTaiLieu.Add(taiLieu);
-                        }
-                        Session["LstFileHoSo"] = lstTaiLieu;
-                        if (_type.IndexOf("pdf") > 0)
-                        {
-                            var config = new
-                            {
-                                initialPreview = fileUrl,
-                                initialPreviewConfig = new[] {
-                                    new {
-                                        caption = fileName,
-                                        url = deleteURL,
-                                        key =key,
-                                        type="pdf",
-                                        width ="120px"
-                                        }
-                                },
-                                append = false
-                            };
-                            return Json(config);
-                        }
-                        else
-                        {
-                            var config = new
-                            {
-                                initialPreview = fileUrl,
-                                initialPreviewConfig = new[] {
-                                    new {
-                                        caption = fileName,
-                                        url = deleteURL,
-                                        key =key,
-                                        width ="120px"
-                                    }
-                                },
-                                append = false
-                            };
-                            return Json(config);
-                        }
-
+                        _type = System.IO.Path.GetExtension(fileContent.FileName);
                     }
 
                 }
+                if (_type.IndexOf("pdf") > 0)
+                {
+                    var config = new
+                    {
+                        initialPreview = fileUrl,
+                        initialPreviewConfig = new[] {
+                                            new {
+                                                caption = file.Name,
+                                                url = deleteURL,
+                                                key =key,
+                                                type="pdf",
+                                                width ="120px"
+                                                }
+                                        },
+                        append = false
+                    };
+                    return Json(config);
+                }
+                else
+                {
+                    var config = new
+                    {
+                        initialPreview = fileUrl,
+                        initialPreviewConfig = new[] {
+                                            new {
+                                                caption = file.Name,
+                                                url = deleteURL,
+                                                key =key,
+                                                width ="120px"
+                                            }
+                                        },
+                        append = false
+                    };
+                    return Json(config);
+                }
+                //return Json(result);
             }
             catch (Exception)
             {
@@ -384,7 +468,7 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             return Json(new { Result = fileUrl });
         }
-        public JsonResult Delete(string key)
+        public JsonResult Delete(string key, int fileId)
         {
             string fileUrl = "";
             try
@@ -475,7 +559,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 }
                 if (result > 0)
                 {
-                    return ToResponse(true, Resources.Global.Message_Succ);
+                    return ToResponse(true, Resources.Global.Message_Succ, result);
                 }
                 else
                 {
