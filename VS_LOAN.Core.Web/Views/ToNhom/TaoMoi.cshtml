@@ -131,7 +131,7 @@
                 if (data != null) {
                     if (data.DSNhanVien != null && data.DSNhanVien.length > 0) {
                         $.each(data.DSNhanVien, function (index, item) {
-                            $('#duallistNhanVien').append("<option value='" + item.IDUser + "'>" + item.FullName + "</option>");
+                            $('#duallistNhanVien').append("<option value='" + item.IDUser + "'>" + item.Code + "-" + item.FullName + "</option>");
                         });
                     }
                 }
@@ -157,7 +157,7 @@
                 if (data != null) {
                     if (data.DSNhanVien != null && data.DSNhanVien.length > 0) {
                         $.each(data.DSNhanVien, function (index, item) {
-                            $('#ddlNguoiQL').append("<option value='" + item.IDUser + "'>" + item.FullName + "</option>");
+                            $('#ddlNguoiQL').append("<option value='" + item.IDUser + "'>"  + item.Code + "-" + item.FullName + "</option>");
                         });
                         if (data.DSNhanVien.length == 1) {
                             $('#ddlNguoiQL').val(data.DSNhanVien[0].IDUser);
