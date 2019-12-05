@@ -105,7 +105,9 @@ namespace VS_LOAN.Core.Web.Helpers
                         new SiteMenuItem("Cấu hình duyệt","", IndexMenu.M_3_3,ToNhomController.LstRole["CauHinhDuyet"]._href, ToNhomController.LstRole["CauHinhDuyet"]._mangChucNang), // 1.3     
                     new SiteMenuItem("Nhập mã APP","menu-icon sanpham",IndexMenu.M_4,"#",new int[] { }),
                         new SiteMenuItem("Quản lý mã APP","", IndexMenu.M_4_1,SanPhamVayController.LstRole["QuanLySanPham"]._href, SanPhamVayController.LstRole["QuanLySanPham"]._mangChucNang), // 1.3     
-                        new SiteMenuItem("Import","", IndexMenu.M_4_2,SanPhamVayController.LstRole["Import"]._href, SanPhamVayController.LstRole["Import"]._mangChucNang) // 1.3  
+                        new SiteMenuItem("Import","", IndexMenu.M_4_2,SanPhamVayController.LstRole["Import"]._href, SanPhamVayController.LstRole["Import"]._mangChucNang) ,// 1.3  
+                    new SiteMenuItem("Nhân sự","menu-icon sanpham",IndexMenu.M_6,EmployeeController.LstRole["Index"]._href,new int[] { }), 
+                        new SiteMenuItem("Import","", IndexMenu.M_6_1,EmployeeController.LstRole["AddNew"]._href, EmployeeController.LstRole["AddNew"]._mangChucNang) // 1.3  
             };
             //var isTeamLead = new NhomBLL().CheckIsTeamlead(GlobalData.User.IDUser);
             var isAdmin = new NhomBLL().CheckIsAdmin(GlobalData.User.IDUser);

@@ -211,6 +211,7 @@
     <Compile Include="Common\GroupPositionAD.cs" />
     <Compile Include="Common\MailCM.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\DuyetHoSoController.cs" />
     <Compile Include="Controllers\F88Controller.cs" />
@@ -1733,6 +1734,7 @@
     <Content Include="Views\Customer\AddNew.cshtml" />
     <Content Include="Views\Customer\Edit.cshtml" />
     <Content Include="Views\Customer\Index.cshtml" />
+    <Content Include="Views\Employee\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

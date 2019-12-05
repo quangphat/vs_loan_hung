@@ -18,7 +18,7 @@ using VS_LOAN.Core.Web.Helpers;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
-    public class DuyetHoSoController : LoanController
+    public class DuyetHoSoController : BaseController
     {
         public static Dictionary<string, ActionInfo> LstRole
         {
@@ -50,15 +50,11 @@ namespace VS_LOAN.Core.Web.Controllers
             int page = 1, int limit = 10,
             int maThanhVien = 0)
         {
-            RMessage message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
             List<HoSoDuyetModel> lstHoso = new List<HoSoDuyetModel>();
             if (!string.IsNullOrWhiteSpace(freetext) && freetext.Length > 50)
             {
-                message.Result = false;
-                message.MessageId = string.Empty;
-                message.ErrorMessage = "Từ khóa tìm kiếm không được nhiều hơn 50 ký tự";
-                message.SystemMessage = "Từ khóa tìm kiếm không được nhiều hơn 50 ký tự";
-                return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
+
+                return ToJsonResponse(false, "Từ khóa tìm kiếm không được nhiều hơn 50 ký tự");
             }
             int totalRecord = 0;
             try
@@ -68,23 +64,19 @@ namespace VS_LOAN.Core.Web.Controllers
                     dtFromDate = DateTimeFormat.ConvertddMMyyyyToDateTime(fromDate);
                 if (toDate != "")
                     dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTime(toDate);
-                message.Result = true;
                 string trangthai = string.IsNullOrWhiteSpace(status) ? Helpers.Helpers.GetAllStatusString() : status;
 
                 totalRecord = new HoSoBLL().CountHosoDuyet(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, loaiNgay, trangthai, freetext);
                 lstHoso = new HoSoBLL().TimHoSoDuyet(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, loaiNgay, trangthai, freetext, page, limit);
                 if (lstHoso == null)
                     lstHoso = new List<HoSoDuyetModel>();
+                var result = DataPaging.Create(lstHoso, totalRecord);
+                return ToJsonResponse(true, result);
             }
             catch (BusinessException ex)
             {
-                message.Result = false;
-                message.MessageId = ex.getExceptionId();
-                message.ErrorMessage = ex.Message;
-                message.SystemMessage = ex.ToString();
+                return ToJsonResponse(false, ex.Message);
             }
-            var result = DataPaging.Create(lstHoso, totalRecord);
-            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
@@ -292,7 +284,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     var missingNames = BusinessExtension.GetFilesMissingV2(lstLoaiTaiLieu, FileRequireIds);
                     if (!string.IsNullOrWhiteSpace(missingNames))
                     {
-                        return ToJsonResponse(false, missingNames, 0);
+                        return ToJsonResponse(false, missingNames);
                     }
                 }
 
@@ -326,9 +318,9 @@ namespace VS_LOAN.Core.Web.Controllers
                 {
                     hs.BirthDay = dtBirthDayConvert.Value;
                 }
-                
+
                 var dtCmnd = DateTimeFormat.ConvertddMMyyyyToDateTimeV2(cmndDayStr);
-                if(!dtCmnd.Success)
+                if (!dtCmnd.Success)
                 {
                     return ToJsonResponse(false, dtCmnd.Message);
                 }
@@ -336,7 +328,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 {
                     hs.CmndDay = dtCmnd.Value;
                 }
-                
+
                 if (soTienVay == string.Empty)
                     soTienVay = "0";
                 hs.SoTienVay = Convert.ToDecimal(soTienVay);
@@ -387,11 +379,11 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, e.Message);
             }
-            
+
         }
         public async Task<JsonResult> SendToF88(int hosoId, string customerName, string phone, string provinceName, string district, string link = null)
         {
-            if(hosoId <=0)
+            if (hosoId <= 0)
             {
                 return ToJsonResponse(false, "Mã hồ sơ không hợp lệ");
             }
@@ -403,13 +395,13 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "Số điện thoại khách hàng không được bỏ trống");
             }
-            if(!string.IsNullOrWhiteSpace(district))
+            if (!string.IsNullOrWhiteSpace(district))
             {
-                if(district.Contains("Huyện"))
+                if (district.Contains("Huyện"))
                 {
                     district = district.Replace("Huyện", "").Trim();
                 }
-                if(district.Contains("Quận"))
+                if (district.Contains("Quận"))
                 {
                     district = district.Replace("Quận", "").Trim();
                 }
@@ -436,7 +428,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 Province = provinceName
             };
             var result = await f88Service.LadipageReturnID(f88Model);
-            return ToJsonResponse(result);
+            return ToJsonResponse(result.Success, result.Message);
         }
         public JsonResult LayDSNhom()
         {
@@ -516,7 +508,6 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult DownloadReport(int maNhom, int maThanhVien, string fromDate, string toDate, string maHS, string cmnd, int loaiNgay)
         {
-            var message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
             string newUrl = string.Empty;
             try
             {
@@ -526,7 +517,6 @@ namespace VS_LOAN.Core.Web.Controllers
                     dtFromDate = DateTimeFormat.ConvertddMMyyyyToDateTime(fromDate);
                 if (toDate != "")
                     dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTime(toDate);
-                message.Result = true;
                 string trangthai = "";
                 trangthai += ((int)TrangThaiHoSo.TuChoi).ToString() + ","
                     + ((int)TrangThaiHoSo.NhapLieu).ToString() + ","
@@ -587,18 +577,14 @@ namespace VS_LOAN.Core.Web.Controllers
                 if (result)
                 {
                     newUrl = "/File/GetFile?path=" + destDirectory + fileName;
-                    message.Result = true;
+                    return ToJsonResponse(true, newUrl);
                 }
-                message.ErrorMessage = Resources.Global.Message_Succ;
+                return ToJsonResponse(false);
             }
             catch (BusinessException ex)
             {
-                message.Result = false;
-                message.MessageId = ex.getExceptionId();
-                message.ErrorMessage = ex.Message;
-                message.SystemMessage = ex.ToString();
+                return ToJsonResponse(false, ex.Message);
             }
-            return Json(new { Message = message, newurl = newUrl }, JsonRequestBehavior.AllowGet);
         }
     }
 }

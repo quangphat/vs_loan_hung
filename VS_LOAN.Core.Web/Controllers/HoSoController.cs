@@ -272,13 +272,13 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<JsonResult> UploadToHoso(int hosoId, bool isReset, List<FileUploadModelGroupByKey> filesGroup)
         {
             if (hosoId <= 0 || filesGroup==null)
-                return ToJsonResponse(false);
+                return ToJsonResponse((object)false);
             var bizTailieu = new TailieuBusiness();
             if (isReset)
             {
                 var deleteAll = await bizTailieu.RemoveAllTailieu(hosoId);
                 if (!deleteAll)
-                    return ToJsonResponse(false);
+                    return ToJsonResponse((object)false);
             }
             foreach (var item in filesGroup)
             {
@@ -297,7 +297,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     }
                 }
             }
-            return ToJsonResponse(true);
+            return ToJsonResponse((object)true);
         }
         public async Task<JsonResult> UploadFile(int key, int fileId)
         {
@@ -540,7 +540,6 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult TimHS(string fromDate, string toDate, string maHS, string sdt)
         {
-            RMessage message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
             List<HoSoCuaToiModel> rs = new List<HoSoCuaToiModel>();
             try
             {
@@ -549,21 +548,17 @@ namespace VS_LOAN.Core.Web.Controllers
                     dtFromDate = DateTimeFormat.ConvertddMMyyyyToDateTime(fromDate);
                 if (toDate != "")
                     dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTime(toDate);
-                message.Result = true;
                 string trangthai = "";
                 //trangthai +=  ((int)TrangThaiHoSo.KhongDuyet).ToString()+"," + ((int)TrangThaiHoSo.Nhap).ToString() + "," + ((int)TrangThaiHoSo.Duyet).ToString() + "," + ((int)TrangThaiHoSo.ChoDuyet).ToString();
                 rs = new HoSoBLL().TimHoSoCuaToi(GlobalData.User.IDUser, dtFromDate, dtToDate, maHS, sdt, trangthai);
                 if (rs == null)
                     rs = new List<HoSoCuaToiModel>();
+                return ToJsonResponse(rs);
             }
             catch (BusinessException ex)
             {
-                message.Result = false;
-                message.MessageId = ex.getExceptionId();
-                message.ErrorMessage = ex.Message;
-                message.SystemMessage = ex.ToString();
+                return ToJsonResponse(false,ex.Message);
             }
-            return Json(rs, JsonRequestBehavior.AllowGet);
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
@@ -615,20 +610,20 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult XoaHS(int hsID)
         {
-            RMessage message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
             try
             {
                 bool rs = new HoSoBLL().XoaHS(hsID, GlobalData.User.IDUser, DateTime.Now);
                 if (rs)
                 {
-                    message.Result = true;
-                    message.ErrorMessage = Resources.Global.Message_Succ;
+                    return ToJsonResponse(true);
                 }
+                return ToJsonResponse(false);
             }
             catch (Exception)
             {
+                return ToJsonResponse(false);
             }
-            return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
+            
         }
 
 

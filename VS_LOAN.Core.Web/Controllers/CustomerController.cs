@@ -36,7 +36,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var totalRecord = bzCustomer.Count(freeText);
             var datas = bzCustomer.Gets(freeText, page, limit);
             var result = DataPaging.Create(datas, totalRecord);
-            return ToJsonResponse(result);
+            return ToJsonResponse(true,result);
         }
         public ActionResult AddNew()
         {
@@ -158,19 +158,19 @@ namespace VS_LOAN.Core.Web.Controllers
             var customerCheck = bizCustomer.GetCustomerCheckByCustomerId(customerId);
             var partners = bizPartner.GetListForCheckCustomerDuplicate();
             if (partners == null)
-                return ToJsonResponse(new List<OptionSimple>());
+                return ToJsonResponse(true,new List<OptionSimple>());
             foreach(var item in partners)
             {
                 item.IsSelect = customerCheck.Contains(item.Id);
             }
 
-            return ToJsonResponse(partners);
+            return ToJsonResponse(true,partners);
         }
         public  JsonResult GetNotes(int customerId)
         {
             var bizCustomer = new CustomerBLL();
             var datas = bizCustomer.GetNoteByCustomerId(customerId);
-            return ToJsonResponse(datas);
+            return ToJsonResponse(true,datas);
         }
     }
 }

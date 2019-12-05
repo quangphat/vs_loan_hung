@@ -661,6 +661,7 @@
             });
             return;
         }
+        let FileRequireIds = [];
         var objectSend = JSON.stringify({
             'hoten': $('#txtHoTen').val(), 'phone': $('#txtDienThoai').val(),
             'phone2': $('#txtDienThoai2').val(), 'ngayNhanDon': $('#txtToDate').val(),
@@ -675,7 +676,7 @@
             'doitacF88Value': doitacF88Value,
             'birthDayStr': $('#txtBirhDay').val(),
             'cmndDayStr': $('#txtCmndDay').val(),
-            'FileRequireIds': filesUpload.map(p => model.FileRequireIds.push(p.key))
+            'FileRequireIds': filesUpload.map(p => FileRequireIds.push(p.key))
         });
         $.ajax({
             traditional: true,

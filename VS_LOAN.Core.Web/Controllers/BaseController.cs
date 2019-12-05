@@ -9,44 +9,43 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class BaseController : Controller
     {
-        public ActionResult ToResponse(bool success,  string message = null, int id = 0)
+        public ActionResult ToResponse(bool success = true, object data = null,  string message = null)
         {
             var result = new RMessage();
             if(success)
             {
 
-                result.ErrorMessage = string.IsNullOrWhiteSpace(message) ? Resources.Global.Message_Succ : message;
+                result.code = string.IsNullOrWhiteSpace(message) ? Resources.Global.Message_Succ : message;
             }
             else
             {
-                result.ErrorMessage = string.IsNullOrWhiteSpace(message) ? Resources.Global.Message_Error : message;
+                result.code = string.IsNullOrWhiteSpace(message) ? Resources.Global.Message_Error : message;
             }
-            result.Result = success;
-            result.ReturnId = id;
-            return Json(new { Message = result }, JsonRequestBehavior.AllowGet);
+            result.success = success;
+            result.data = data;
+            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
             
         }
-
-        public JsonResult ToJsonResponse(bool success, string message = null, int id = 0)
+        public JsonResult ToJsonResponse(bool success = true, object data = null, string message = null)
         {
-            var result = new RMessage();
-            if (success)
-            {
-
-                result.ErrorMessage = string.IsNullOrWhiteSpace(message) ? Resources.Global.Message_Succ : message;
-            }
-            else
-            {
-                result.ErrorMessage = string.IsNullOrWhiteSpace(message) ? Resources.Global.Message_Error : message;
-            }
-            result.Result = success;
-            result.ReturnId = id;
-            return Json(new { Message = result }, JsonRequestBehavior.AllowGet);
-
+            string code = !string.IsNullOrWhiteSpace(message) ? success ? Resources.Global.Message_Succ : Resources.Global.Message_Error : message;
+            return Json(new { data, success, code }, JsonRequestBehavior.AllowGet);
         }
-        public JsonResult ToJsonResponse(object data, bool success = true)
-        {
-            return Json(new { datas = data, success }, JsonRequestBehavior.AllowGet);
-        }
+        //public JsonResult ToJsonResponse(bool success, string message = null, object data = null)
+        //{
+        //    var result = new RMessage();
+        //    if (success)
+        //    {
+
+        //        result.code = string.IsNullOrWhiteSpace(message) ? Resources.Global.Message_Succ : message;
+        //    }
+        //    else
+        //    {
+        //        result.code = string.IsNullOrWhiteSpace(message) ? Resources.Global.Message_Error : message;
+        //    }
+        //    result.success = success;
+        //    result.data = data;
+        //    return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+        //}
     }
 }

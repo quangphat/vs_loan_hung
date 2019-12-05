@@ -12,6 +12,49 @@
 //        message: '<h2 style="color:#fff">' + text + ' ...</h2>'
 //    });
 //}
+function setTableLimit(controlId = "#ddlLimit") {
+    $(controlId).chosen({ width: '100%', allow_single_deselect: true });
+}
+function preventTxtSearchEnter(controlId = "txtFreeText", btnSearchId = "#btnSearch") {
+    var input = document.getElementById(controlId);
+    input.addEventListener("keydown", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+
+        }
+    });
+    input.addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            $(btnSearchId).click();
+        }
+    });
+}
+function setValueForDateInput(controlId, value) {
+    if (value === null)
+        value = new Date().getDay + 1;
+    $(controlId).datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", value);
+}
+
+function setDateTimeInput(controlId, isSetDefaultDate = true, day = 0, format = 'dd-mm-yy') {
+
+    $(controlId).datepicker({
+        dateFormat: format//'mm-dd-yy'
+    }).next().on(ace.click_event, function () {
+        $(this).prev().focus();
+    });
+    if (isSetDefaultDate === true) {
+        if (isNullOrUndefined(day))
+            day = 0;
+        if (day === 0) {
+            $(controlId).datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date());
+        }
+        else {
+            $(controlId).datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + day);
+        }
+
+    }
+}
 function renderOneItemFile(key, fileId, titleName, isRequire = false, className = '', generateInput = false,
     _initialPreview = [],
     _initialPreviewConfig = [],

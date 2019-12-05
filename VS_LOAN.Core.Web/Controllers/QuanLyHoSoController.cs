@@ -53,16 +53,13 @@ namespace VS_LOAN.Core.Web.Controllers
             int page = 1, int limit = 10
             )
         {
-            RMessage message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
+           
             List<HoSoQuanLyModel> lstHoso = new List<HoSoQuanLyModel>();
             int totalRecord = 0;
             if (!string.IsNullOrWhiteSpace(freetext) && freetext.Length > 50)
             {
-                message.Result = false;
-                message.MessageId = string.Empty;
-                message.ErrorMessage = "Từ khóa tìm kiếm không được nhiều hơn 50 ký tự";
-                message.SystemMessage = "Từ khóa tìm kiếm không được nhiều hơn 50 ký tự";
-                return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
+                return ToJsonResponse(false,null, "Từ khóa tìm kiếm không được nhiều hơn 50 ký tự");
+               
             }
 
             try
@@ -72,23 +69,22 @@ namespace VS_LOAN.Core.Web.Controllers
                     dtFromDate = DateTimeFormat.ConvertddMMyyyyToDateTime(fromDate);
                 if (toDate != "")
                     dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTime(toDate);
-                message.Result = true;
+                
                 string trangthai = string.IsNullOrWhiteSpace(status) ? Helpers.Helpers.GetLimitStatusString() : status;
                 //trangthai += 
                 totalRecord = new HoSoBLL().CountHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freetext);
                 lstHoso = new HoSoBLL().TimHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freetext, page, limit);
                 if (lstHoso == null)
                     lstHoso = new List<HoSoQuanLyModel>();
+                var result = DataPaging.Create(lstHoso, totalRecord);
+                return ToJsonResponse(true, result);
             }
             catch (BusinessException ex)
             {
-                message.Result = false;
-                message.MessageId = ex.getExceptionId();
-                message.ErrorMessage = ex.Message;
-                message.SystemMessage = ex.ToString();
+                return ToJsonResponse(false, ex.Message);
             }
-            var result = DataPaging.Create(lstHoso, totalRecord);
-            return Json(result, JsonRequestBehavior.AllowGet);
+            
+            
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult LayDSNhom()
@@ -240,7 +236,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     var missingNames = BusinessExtension.GetFilesMissingV2(lstLoaiTaiLieu, FileRequireIds);
                     if (!string.IsNullOrWhiteSpace(missingNames))
                     {
-                        return ToJsonResponse(false, missingNames, 0);
+                        return ToJsonResponse(false,true, missingNames);
                     }
                 }
 
@@ -298,20 +294,20 @@ namespace VS_LOAN.Core.Web.Controllers
                     if (new HoSoBLL().CapNhatHoSo(hs, null, ref isCheckMaSanPham))
                     {
                         new HoSoDuyetXemBLL().Them(hs.ID);
-                        result = 1;
+                        
                     }
                     else
                     {
                         if (isCheckMaSanPham)
-                            return ToJsonResponse(false, "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác");
+                            return ToJsonResponse(false,null, "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác");
                     }
                 }
                 AddGhichu(hs.ID, ghiChu);
                 if (result > 0)
                 {
-                    return ToJsonResponse(true, Resources.Global.Message_Succ);
+                    return ToJsonResponse(true,null, Resources.Global.Message_Succ);
                 }
-                return ToJsonResponse(false, "Không thành công, xin thử lại sau");
+                return ToJsonResponse(false, null,"Không thành công, xin thử lại sau");
             }
             catch (BusinessException ex)
             {
@@ -583,7 +579,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult DownloadReport(int maNhom, int maThanhVien, string fromDate, string toDate, string maHS, string cmnd, int loaiNgay)
         {
-            var message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
+            
             string newUrl = string.Empty;
             try
             {
@@ -593,7 +589,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     dtFromDate = DateTimeFormat.ConvertddMMyyyyToDateTime(fromDate);
                 if (toDate != "")
                     dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTime(toDate);
-                message.Result = true;
+                
                 string trangthai = "";
                 trangthai += ((int)TrangThaiHoSo.TuChoi).ToString() + "," + ((int)TrangThaiHoSo.NhapLieu).ToString() + "," + ((int)TrangThaiHoSo.ThamDinh).ToString() + "," + ((int)TrangThaiHoSo.BoSungHoSo).ToString() + "," + ((int)TrangThaiHoSo.GiaiNgan).ToString() + "," + ((int)TrangThaiHoSo.Nhap).ToString();
                 int totalRecord = new HoSoBLL().CountHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay);
@@ -647,18 +643,15 @@ namespace VS_LOAN.Core.Web.Controllers
                 if (result)
                 {
                     newUrl = "/File/GetFile?path=" + destDirectory + fileName;
-                    message.Result = true;
+                    return ToResponse(true, newUrl);
                 }
-                message.ErrorMessage = Resources.Global.Message_Succ;
+                return ToResponse(false, null);
             }
             catch (BusinessException ex)
             {
-                message.Result = false;
-                message.MessageId = ex.getExceptionId();
-                message.ErrorMessage = ex.Message;
-                message.SystemMessage = ex.ToString();
+                return ToResponse(false, ex.Message);
             }
-            return Json(new { Message = message, newurl = newUrl }, JsonRequestBehavior.AllowGet);
+            
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult LayDSTrangThai()
