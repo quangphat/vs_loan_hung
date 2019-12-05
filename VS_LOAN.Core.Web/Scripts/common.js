@@ -85,7 +85,7 @@ function renderOneItemFile(key, fileId, titleName, isRequire = false, className 
             append: true
 
         }).on("filebatchselected", function (event, files) {
-            if (countFilesByKey(filesUploaded, parseInt(key)) >= 5)
+            if (countFilesByKey(filesUploaded, parseInt(key)) >= 15)
                 return;
             $(item).fileinput("upload");
         }).on("filebeforedelete", function (event, key2, fileId) {
@@ -112,7 +112,7 @@ function isReach5Files(filesUpload, key) {
         return false;
     if (isNullOrNoItem(sameKeyFile.files))
         return 0;
-    if (sameKeyFile.files.length === 5)
+    if (sameKeyFile.files.length === 15)
         return true;
     return false;
 }
