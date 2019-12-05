@@ -727,7 +727,7 @@
                                     _initialPreview.push(tailieu.FileUrl);
                                     _initialPreviewConfig.push({
                                         caption: tailieu.FileName,
-                                        url: "/hoso/tailieu/delete/" + hoso.ID + "/" + tailieu.FileId,
+                                        url: "/hoso/RemoveTailieuByHoso?hosoId=" + hoso.ID + "&fileId=" + tailieu.FileId,
                                         type: extn.indexOf('pdf') > -1 ? "pdf" : "jpg",
                                         width: "120px"
                                     });
