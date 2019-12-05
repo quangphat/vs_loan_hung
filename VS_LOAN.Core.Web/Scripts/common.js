@@ -21,7 +21,7 @@ function renderOneItemFile(key, fileId, titleName, isRequire = false, className 
     onDelete = null,
     filesUploaded = []) {
 
-    let content = "<div class='col-sm-3' style='width:20%'>";
+    let content = "<div class='col-sm-3'";
 
     if (!isNullOrUndefined(titleName)) {
         if (isRequire) {
