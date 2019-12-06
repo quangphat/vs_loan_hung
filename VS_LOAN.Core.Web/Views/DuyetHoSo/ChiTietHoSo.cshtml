@@ -303,11 +303,12 @@
             url: '@Url.Action("LayDSDoiTac", "HoSo")',
             data: {},
             success: function (data) {
+                
                 $('#ddlDoiTac').empty();
                 $('#ddlDoiTac').append("<option value='0'></option>");
-                if (data != null) {
-                    lstDoitac = data.DSDoiTac
-                    $.each(data.DSDoiTac, function (index, optionData) {
+                if (data.data != null) {
+                    lstDoitac = data.data
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlDoiTac').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
@@ -328,8 +329,8 @@
             success: function (data) {
                 $('#ddlSanPhamVay').empty();
                 $('#ddlSanPhamVay').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.DSSanPham, function (index, optionData) {
+                if (data.data != null) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlSanPhamVay').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
@@ -351,8 +352,8 @@
             success: function (data) {
                 $('#ddlTinh').empty();
                 $('#ddlTinh').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.DSTinh, function (index, optionData) {
+                if (data.data != null) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlTinh').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
@@ -373,8 +374,8 @@
             success: function (data) {
                 $('#ddlHuyen').empty();
                 $('#ddlHuyen').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.DSHuyen, function (index, optionData) {
+                if (data.data != null) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlHuyen').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
@@ -395,8 +396,8 @@
             success: function (data) {
                 $('#ddlCourier').empty();
                 $('#ddlCourier').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.DSCourier, function (index, optionData) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlCourier').append("<option value='" + optionData.ID + "'>" + optionData.FullText + "</option>");
                     });
                 }
@@ -488,10 +489,10 @@
                 processData: false,
                 data: objectSend,
                 success: function (data) {
-                    if (data.Message.Result == true) {
+                    if (data.success == true) {
                         swal({
                             title: "",
-                            text: data.Message.ErrorMessage,
+                            text: "Thành công",
                             type: "success",
                             timer: 4000,
                             showConfirmButton: true,
@@ -502,7 +503,7 @@
                     else {
                         swal({
                             title: "",
-                            text: data.Message.ErrorMessage,
+                            text: data.code,
                             type: "error",
                             timer: 4000,
                             showConfirmButton: true,
@@ -559,8 +560,8 @@
                 processData: false,
                 data: objectSend,
                 success: function (data) {
-                    debugger
-                    if (data.datas.Success == true) {
+                    
+                    if (data.success == true) {
                         swal({
                             title: "Thành công",
                             text: "Thành công",
@@ -574,7 +575,7 @@
                     else {
                         swal({
                             title: "",
-                            text: data.datas.Message,
+                            text: data.code,
                             type: "error",
                             timer: 4000,
                             showConfirmButton: true,
@@ -598,8 +599,8 @@
             url: '@Url.Action("LayDSGhichu", "DuyetHoSo")',
             data: {},
             success: function (data) {
-                if (data.DSGhichu != null) {
-                    $.each(data.DSGhichu, function (index, item) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, item) {
                         $('#dsGhichu').append(
                             '<div class="timeline-event-content  active">' +
                             '<div class="timeline-item">' +
@@ -626,9 +627,10 @@
             url: '@Url.Action("LayDSTrangThai", "DuyetHoSo")',
             data: {},
             success: function (data) {
+                debugger
                 $('#ddlTrangThai').append("<option value='0'></option>");
-                if (data.DSTrangThai != null) {
-                    $.each(data.DSTrangThai, function (index, item) {
+                if (data.success == true) {
+                    $.each(data.data, function (index, item) {
                         $('#ddlTrangThai').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
                     });
                     $('#ddlTrangThai').val(value);
@@ -642,7 +644,28 @@
             }
         });
     }
-
+      function LayDSHuyen(maTinh) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSHuyen", "KhuVuc")',
+            data: {'maTinh':maTinh},
+            success: function (data) {
+                $('#ddlHuyen').empty();
+                $('#ddlHuyen').append("<option value='0'></option>");
+                if (data.data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#ddlHuyen').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                    });
+                }
+                $('#ddlHuyen').chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
     function LayKetQua(value) {
         $('#ddlKetQua').empty();
         $.ajax({
@@ -651,8 +674,8 @@
             data: {},
             success: function (data) {
                 $('#ddlKetQua').append("<option value='1'></option>");
-                if (data.DSKetQua != null) {
-                    $.each(data.DSKetQua, function (index, item) {
+                if (data.data != null) {
+                    $.each(data.data, function (index, item) {
                         $('#ddlKetQua').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
                     });
                     $('#ddlKetQua').val(value);
@@ -684,7 +707,7 @@
                 $('#ddlSanPhamVay').empty();
                 $('#ddlSanPhamVay').append("<option value='0'></option>");
                 if (data != null) {
-                    $.each(data.DSSanPham, function (index, optionData) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlSanPhamVay').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
@@ -704,11 +727,11 @@
             type: "GET",
             url: "/hoso/TailieuByHosoForEdit?hosoId=" + hoso.ID,
             success: function (data) {
-                if (data.datas != null && data.success == true) {
+                if (data.data != null && data.success == true) {
                     var i = 0;
                     var content = "";
                     let keys = [];
-                    $.each(data.datas, function (index, item) {
+                    $.each(data.data, function (index, item) {
                         
                         
                         $("#lstTailieu").append("<div class='form-group'><div id='tailieu-" + item.ID + "'></div></div > ");
@@ -835,7 +858,7 @@
                 dataType: 'json',
                 data: JSON.stringify(filesUpload),
                 success: function (data) {
-                    if (data.Message != null && data.Message.Result == true) {
+                    if (data.data != null && data.success == true) {
                         if (reloadOnSuccess == true) {
                             window.location = window.location;
                         }

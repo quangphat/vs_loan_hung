@@ -503,8 +503,8 @@
                 'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
             },
             success: function (response) {
-                if (response.Message == null) {
-                    totalRecord = response.TotalRecord;
+                if (response.success == true) {
+                    totalRecord = response.data.TotalRecord;
                     var search = this.url.replace("/DuyetHoSo/TimHS", "");
                     queries = new URLSearchParams(search)
                     page = queries.get("page");
@@ -517,10 +517,10 @@
                         limit = 10;
                     else
                         limit = parseInt(limit)
-                    renderTableBody(response.Datas)
+                    renderTableBody(response.data.Datas)
                     //renderGoPreviousPage(page);
                     renderPageList(page, limit, totalRecord)
-                    $("#dtSource_info").text("Tổng: " + response.TotalRecord + " items");
+                    $("#dtSource_info").text("Tổng: " + totalRecord + " items");
                     $("#totalPage").text("Tổng: " + totalPage + " trang");
                 }
                 else {
@@ -834,8 +834,8 @@
             data: {},
             success: function (data) {
                 $('#ddlNhom').append("<option value='0'></option>");
-                if (data.DSNhom != null) {
-                    $.each(data.DSNhom, function (index, item) {
+                if (data.data != null) {
+                    $.each(data.data, function (index, item) {
                         $('#ddlNhom').append("<option value='" + item.ID + "'>" + item.Ten + "(" + item.TenQL + ")</option>");
                     });
                     var maNhom = queries.get("maNhom");
@@ -865,8 +865,8 @@
             url: '@Url.Action("LayDSThanhVienNhom", "DuyetHoSo")',
             data: { "maNhom": $('#ddlNhom').val() },
             success: function (data) {
-                if (data.DSThanhVienNhom != null) {
-                    $.each(data.DSThanhVienNhom, function (index, item) {
+                if (data.data != null) {
+                    $.each(data.data, function (index, item) {
                         $('#ddlThanhVienNhom').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
                     });
                     var memberId = queries.get("maThanhVien");
@@ -911,15 +911,15 @@
             contentType: "application/json; charset=utf-8",
             data: objectSend,
             success: function (data) {
-                if (data.Message.Result == true) {
+                if (data.success == true) {
                     var link = document.createElement("a");
-                    link.href = data.newurl;
+                    link.href = data.data;
                     link.click();
                 }
                 else {
                     swal({
                         title: "",
-                        text: data.Message.ErrorMessage,
+                        text: data.code,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,

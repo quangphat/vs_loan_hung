@@ -147,10 +147,10 @@
             contentType: "application/json; charset=utf-8",
             data: objectSend,
             success: function (data) {
-                if (data.Message.Result == true) {
+                if (data.success == true) {
                     swal({
                         title: "Thành công",
-                        text: data.Message.ErrorMessage,
+                        text: "Tạo khách hàng thành công",
                         type: "success",
                         timer: 4000,
                         showConfirmButton: true,
@@ -161,7 +161,7 @@
                 else {
                     swal({
                         title: "Lỗi",
-                        text: data.Message.ErrorMessage,
+                        text: data.code,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,

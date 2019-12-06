@@ -9,24 +9,23 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class BaseController : Controller
     {
-        public ActionResult ToResponse(bool success = true, object data = null,  string message = null)
+        public ActionResult ToResponse(bool success = true, string message = null, object data = null)
         {
-            var result = new RMessage();
+            string code = string.Empty;
             if(success)
             {
 
-                result.code = string.IsNullOrWhiteSpace(message) ? Resources.Global.Message_Succ : message;
+                code = string.IsNullOrWhiteSpace(message) ? Resources.Global.Message_Succ : message;
             }
             else
             {
-                result.code = string.IsNullOrWhiteSpace(message) ? Resources.Global.Message_Error : message;
+                code = string.IsNullOrWhiteSpace(message) ? Resources.Global.Message_Error : message;
             }
-            result.success = success;
-            result.data = data;
-            return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+            return Json(new { data, success, code }, JsonRequestBehavior.AllowGet);
             
         }
-        public JsonResult ToJsonResponse(bool success = true, object data = null, string message = null)
+
+        public JsonResult ToJsonResponse(bool success = true, string message = null, object data = null)
         {
             string code = !string.IsNullOrWhiteSpace(message) ? success ? Resources.Global.Message_Succ : Resources.Global.Message_Error : message;
             return Json(new { data, success, code }, JsonRequestBehavior.AllowGet);

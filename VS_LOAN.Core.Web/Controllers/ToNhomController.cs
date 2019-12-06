@@ -54,7 +54,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
         public ActionResult ThemMoi(string ten, string tenNgan, int maNguoiQuanLy, int maNhomCha, List<int> lstThanhVien)
         {
-            var message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
+            
             try
             {
 
@@ -71,18 +71,16 @@ namespace VS_LOAN.Core.Web.Controllers
                 result = new NhomBLL().Them(nhom, lstThanhVien);
                 if (result > 0)
                 {
-                    message.Result = true;
-                    message.ErrorMessage = Resources.Global.Message_Succ;
+                    return ToResponse(true,null, result);
+                    
                 }
+                return ToResponse(false,"Không thành công", 0);
             }
             catch (BusinessException ex)
             {
-                message.Result = false;
-                message.MessageId = ex.getExceptionId();
-                message.ErrorMessage = ex.Message;
-                message.SystemMessage = ex.ToString();
+                return ToResponse(false, ex.Message, 0);
             }
-            return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
+            
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
@@ -95,22 +93,20 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
         public JsonResult LayDSToNhomCon(int maNhomCha)
         {
-            RMessage message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
+            
             List<ThongTinToNhomModel> rs = new List<ThongTinToNhomModel>();
             try
             {
                 rs = new NhomBLL().LayDSNhomCon(maNhomCha);
                 if (rs == null)
                     rs = new List<ThongTinToNhomModel>();
+                return ToJsonResponse(true, null, rs);
             }
             catch (BusinessException ex)
             {
-                message.Result = false;
-                message.MessageId = ex.getExceptionId();
-                message.ErrorMessage = ex.Message;
-                message.SystemMessage = ex.ToString();
+                return ToJsonResponse(false, ex.Message);
+
             }
-            return Json(rs, JsonRequestBehavior.AllowGet);
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
@@ -157,7 +153,6 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
         public ActionResult LuuSua(int maNhom, string ten, string tenNgan, int maNguoiQuanLy, int maNhomCha, List<int> lstThanhVien)
         {
-            var message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
             try
             {
 
@@ -175,38 +170,32 @@ namespace VS_LOAN.Core.Web.Controllers
                 result = new NhomBLL().Sua(nhom, lstThanhVien);
                 if (result)
                 {
-                    message.Result = true;
-                    message.ErrorMessage = Resources.Global.Message_Succ;
+                    return ToResponse(true,null, result);
                 }
+                return ToResponse(false);
             }
             catch (BusinessException ex)
             {
-                message.Result = false;
-                message.MessageId = ex.getExceptionId();
-                message.ErrorMessage = ex.Message;
-                message.SystemMessage = ex.ToString();
+                return ToResponse(false, ex.Message, null);
             }
-            return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
+            
         }
 
         public JsonResult LayDSChiTietThanhVien(int maNhom)
         {
-            RMessage message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
+            
             List<ThongTinNhanVienModel> rs = new List<ThongTinNhanVienModel>();
             try
             {
                 rs = new NhanVienNhomBLL().LayDSChiTietThanhVienNhom(maNhom);
                 if (rs == null)
                     rs = new List<ThongTinNhanVienModel>();
+                return ToJsonResponse(true,null, rs);
             }
             catch (BusinessException ex)
             {
-                message.Result = false;
-                message.MessageId = ex.getExceptionId();
-                message.ErrorMessage = ex.Message;
-                message.SystemMessage = ex.ToString();
+                return ToJsonResponse(false, ex.Message);
             }
-            return Json(rs, JsonRequestBehavior.AllowGet);
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.CauHinhDuyet })]
@@ -219,24 +208,16 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
         public ActionResult LuuCauHinh(int maNhanVien, List<int> lstIDNhom)
         {
-            var message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
+            
             try
             {
                 bool result = new NhanVienConfigBLL().CapNhat(maNhanVien, lstIDNhom);
-                if (result)
-                {
-                    message.Result = true;
-                    message.ErrorMessage = Resources.Global.Message_Succ;
-                }
+                return ToResponse(result);
             }
             catch (BusinessException ex)
             {
-                message.Result = false;
-                message.MessageId = ex.getExceptionId();
-                message.ErrorMessage = ex.Message;
-                message.SystemMessage = ex.ToString();
+                return ToResponse(false, null, ex.Message);
             }
-            return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
         }
     }
 }

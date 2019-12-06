@@ -475,7 +475,7 @@
         return value;
     }
     function renderRow(index, rowData) {
-        debugger
+        
         page = queries.get("page");
         if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
             page = 1;
@@ -565,8 +565,8 @@
                 'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
             },
             success: function (response) {
-                if (response.Message == null) {
-                    totalRecord = response.TotalRecord;
+                if (response.success == true) {
+                    totalRecord = response.data.TotalRecord;
                     var search = this.url.replace("/QuanLyHoSo/DanhSachHoSo", "");
                     search = search.replace("/QuanLyHoSo/TimHSQL","")
                     queries = new URLSearchParams(search)
@@ -582,16 +582,16 @@
                         limit = 10;
                     else
                         limit = parseInt(limit)
-                    renderTableBody(response.Datas)
+                    renderTableBody(response.data.Datas)
                     //renderGoPreviousPage(page);
                     renderPageList(page, limit, totalRecord)
-                    $("#dtSource_info").text("Tổng: " + response.TotalRecord + " items");
+                    $("#dtSource_info").text("Tổng: " + totalRecord + " items");
                     $("#totalPage").text("Tổng: " + totalPage + " trang");
                 }
                 else {
                     swal({
                         title: "",
-                        text: response.Message.ErrorMessage,
+                        text: response.code,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,

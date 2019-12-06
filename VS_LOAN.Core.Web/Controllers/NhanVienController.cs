@@ -87,7 +87,7 @@ namespace VS_LOAN.Core.Web.Controllers
                         {
 
                             newUrl = Url.Action("UserProfile", "NhanVien");
-                            return ToResponse(true, newUrl);
+                            return ToResponse(true,null, newUrl);
                         }
                         return ToResponse(false, string.Empty);
                     }
@@ -150,7 +150,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     {
                         newUrl = "/Home/Index";
                     }
-                    return ToResponse(true, newUrl);    
+                    return ToResponse(true,null, newUrl);    
                 }
                 else
                 {
@@ -200,7 +200,7 @@ namespace VS_LOAN.Core.Web.Controllers
             List<UserPMModel> rs = new NhanVienBLL().LayDSNhanVien();
             if (rs == null)
                 rs = new List<UserPMModel>();
-            return Json(new { DSNhanVien = rs });
+            return ToJsonResponse(true, null, rs);
         }
 
     }

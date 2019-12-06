@@ -368,8 +368,8 @@
             },
             success: function (response) {
 
-                if (response.Message == null) {
-                    totalRecord = response.datas.TotalRecord;
+                if (response.success == true) {
+                    totalRecord = response.data.TotalRecord;
                     var search = this.url.replace("/Customer/Search", "");
                     queries = new URLSearchParams(search)
                     page = queries.get("page");
@@ -382,7 +382,7 @@
                         limit = 10;
                     else
                         limit = parseInt(limit)
-                    renderTableBody(response.datas.Datas)
+                    renderTableBody(response.data.Datas)
                     //renderGoPreviousPage(page);
                     renderPageList(page, limit, totalRecord)
                     $("#dtSource_info").text("Tổng: " + totalRecord + " items");
@@ -391,7 +391,7 @@
                 else {
                     swal({
                         title: "",
-                        text: response.Message.ErrorMessage,
+                        text: response.code,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,

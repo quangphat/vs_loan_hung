@@ -219,10 +219,10 @@
             contentType: "application/json; charset=utf-8",
             data: objectSend,
             success: function (data) {
-                if (data.Message.Result == true) {
+                if (data.success == true) {
                     swal({
                         title: "Thành công",
-                        text: data.Message.ErrorMessage,
+                        text: "Cập nhật thành công",
                         type: "success",
                         timer: 4000,
                         showConfirmButton: true,
@@ -233,7 +233,7 @@
                 else {
                     swal({
                         title: "Lỗi",
-                        text: data.Message.ErrorMessage,
+                        text: data.code,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,
@@ -259,7 +259,7 @@
             success: function (data) {
 
                 if (data.datas != null) {
-                    $.each(data.datas, function (index, item) {
+                    $.each(data.Datas, function (index, item) {
                         $('#dsGhichu').append(
                             '<div class="timeline-event-content  active">' +
                             '<div class="timeline-item">'+

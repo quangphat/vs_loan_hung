@@ -54,7 +54,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (!string.IsNullOrWhiteSpace(freetext) && freetext.Length > 50)
             {
 
-                return ToJsonResponse(false, "Từ khóa tìm kiếm không được nhiều hơn 50 ký tự");
+                return ToJsonResponse(false, null, "Từ khóa tìm kiếm không được nhiều hơn 50 ký tự");
             }
             int totalRecord = 0;
             try
@@ -71,7 +71,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 if (lstHoso == null)
                     lstHoso = new List<HoSoDuyetModel>();
                 var result = DataPaging.Create(lstHoso, totalRecord);
-                return ToJsonResponse(true, result);
+                return ToJsonResponse(true,null, result);
             }
             catch (BusinessException ex)
             {
@@ -435,7 +435,7 @@ namespace VS_LOAN.Core.Web.Controllers
             List<NhomDropDownModel> rs = new NhomBLL().LayDSDuyetCuaNhanVien(GlobalData.User.IDUser);
             if (rs == null)
                 rs = new List<NhomDropDownModel>();
-            return Json(new { DSNhom = rs });
+            return ToJsonResponse(true,null,rs);
         }
 
         public JsonResult LayDSThanhVienNhom(int maNhom)
@@ -465,14 +465,14 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             if (rs == null)
                 rs = new List<NhanVienNhomDropDownModel>();
-            return Json(new { DSThanhVienNhom = rs });
+            return ToJsonResponse(true, null, rs);
         }
         public JsonResult LayDSGhichu()
         {
             List<GhichuViewModel> rs = new HoSoBLL().LayDanhsachGhichu((int)Session["DuyetHoSo_ChiTietHoSo_ID"]);
             if (rs == null)
                 rs = new List<GhichuViewModel>();
-            return Json(new { DSGhichu = rs });
+            return ToJsonResponse(true, null, rs);
         }
         public JsonResult LayDSTrangThai()
         {
@@ -494,7 +494,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 rs.RemoveAll(x => x.ID == (int)TrangThaiHoSo.DaDoiChieu);
             }
-            return Json(new { DSTrangThai = rs });
+            return ToJsonResponse(true, null, rs);
         }
 
         public JsonResult LayDSKetQua()
@@ -502,7 +502,7 @@ namespace VS_LOAN.Core.Web.Controllers
             List<KetQuaHoSoModel> rs = new KetQuaHoSoBLL().LayDSKetQua();
             if (rs == null)
                 rs = new List<KetQuaHoSoModel>();
-            return Json(new { DSKetQua = rs });
+            return ToJsonResponse(true, null, rs);
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
@@ -577,7 +577,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 if (result)
                 {
                     newUrl = "/File/GetFile?path=" + destDirectory + fileName;
-                    return ToJsonResponse(true, newUrl);
+                    return ToJsonResponse(true,null, newUrl);
                 }
                 return ToJsonResponse(false);
             }

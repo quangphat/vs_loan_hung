@@ -7,10 +7,9 @@ namespace VS_LOAN.Core.Entity.Model
 {
     public class RMessage
     {
-        public bool Result { get; set; }
-        public string MessageId { get; set; }
-        public string ErrorMessage { get; set; }
-        public string SystemMessage { get; set; }
-        public int ReturnId { get; set; }
+        public bool success { get; set; }
+        public object data { get; set; }
+        public string code { get; set; }
+        
     }
 }

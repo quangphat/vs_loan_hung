@@ -241,8 +241,8 @@
             success: function (data) {
                 $('#ddlDoiTac').empty();
                 $('#ddlDoiTac').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.DSDoiTac, function (index, optionData) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlDoiTac').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
@@ -263,8 +263,8 @@
             success: function (data) {
                 $('#ddlSanPhamVay').empty();
                 $('#ddlSanPhamVay').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.DSSanPham, function (index, optionData) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlSanPhamVay').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
@@ -286,8 +286,8 @@
             success: function (data) {
                 $('#ddlTinh').empty();
                 $('#ddlTinh').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.DSTinh, function (index, optionData) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlTinh').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
@@ -308,8 +308,8 @@
             success: function (data) {
                 $('#ddlHuyen').empty();
                 $('#ddlHuyen').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.DSHuyen, function (index, optionData) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlHuyen').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
@@ -330,8 +330,8 @@
             success: function (data) {
                 $('#ddlCourier').empty();
                 $('#ddlCourier').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.DSCourier, function (index, optionData) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlCourier').append("<option value='" + optionData.ID + "'>" + optionData.FullText + "</option>");
                     });
                 }
@@ -367,8 +367,8 @@
                 $('#ddlInternalCode').empty();
                 $('#ddlInternalCode').append("<option value='0'></option>");
                 var ten = '';
-                if (data != null) {
-                    $.each(data.DSSale, function (index, optionData) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlInternalCode').append("<option  ten='" + optionData.FullName + "' value='" + optionData.IDUser + "'>" + optionData.Code + "</option>");
                     });
                 }
@@ -391,14 +391,14 @@
             type: "GET",
             url: "/hoso/tailieubyhoso?hosoId=" + hoso.ID,
             success: function (data) {
-                if (data.success == true && data.datas != null)
+                if (data.success == true && data.data != null)
                 {
                     
                     var i = 0;
                     var content = "";
                     let keys = [];
                     
-                    $.each(data.datas, function (index, item) {
+                    $.each(data.data, function (index, item) {
                        
                         $("#lstTailieu").append("<div class='form-group'><div id='tailieu-" + item.Key + "'></div></div > ");
                         var _imgExts = ["jpg", "jpeg", "png", "pdf"];

@@ -12,6 +12,109 @@
 //        message: '<h2 style="color:#fff">' + text + ' ...</h2>'
 //    });
 //}
+function getTotalPage(totalRecord, limit = 10) {
+    return totalRecord > limit ? Math.ceil(totalRecord / limit) : 1;
+}
+function renderGoPreviousPage(page) {
+    let newCurrentPage = page;
+    if (page > 1) {
+        newCurrentPage = page - 1;
+        return "<li class='paginate_button previous' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + newCurrentPage + ")'>"
+            + "<a href='javascript:;'>Trước</a>"
+            + "</li>";
+
+    } else {
+        return "";
+    }
+}
+function renderGoNextPage(page) {
+    if (page < totalPage) {
+        newCurrentPage = page + 1;
+        return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + newCurrentPage + ")' >"
+            + "<a href='javascript:;'>Sau</a>"
+            + "</li>";
+
+    } else {
+        return "";
+    }
+}
+function renderGoLastPage(page) {
+
+    if (totalPage > page) {
+        return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + totalPage + ")' >"
+            + "<a href='javascript:;'>Trang cuối</a>"
+            + "</li>";
+    } else {
+        return "";
+    }
+}
+function renderGoFirstPage(page) {
+    if (totalPage > 1 && page > 1) {
+        return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + 1 + ")' >"
+            + "<a href='javascript:;'>Trang đầu</a>"
+            + "</li>";
+    } else {
+        return "";
+    }
+}
+function renderTotalPage(totalPage) {
+    if (totalPage > 0)
+        return "<label>Tổng: " + totalPage + "</label>";
+    return "";
+}
+function renderPageList(page, limit, totalRc) {
+    let pageMargin = 2;
+    totalPage = getTotalPage(totalRc, limit);
+    var startPage = page > pageMargin ? page - pageMargin : 1;
+    var endPage = pageMargin + page > totalPage ? totalPage : pageMargin + page;
+    var paging = $("#paging");
+    paging.empty();
+    var first = renderGoFirstPage(page);
+    var next = renderGoNextPage(page);
+    var prev = renderGoPreviousPage(page);
+    var last = renderGoLastPage(page);
+    paging.append(first);
+    paging.append(prev);
+    for (var i = startPage; i <= endPage; i++) {
+        var active = page === i ? ' active' : '';
+        var item = "<li class='paginate_button" + active + " aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + i + ")' >"
+            + "<a href='javascript:;'>" + i + "</a>"
+            + "</li>";
+        paging.append(item);
+    }
+    paging.append(next);
+    paging.append(last);
+}
+function getValueDisplay(value, type) {
+    if (isNullOrWhiteSpace(type)) {
+        if (isNullOrWhiteSpace(value))
+            return "";
+        return value;
+    }
+
+    var display = null;
+    switch (type) {
+        case 'datetime':
+            display = FormatDateTimeDMY(value);
+            break;
+        default: break;
+    }
+    return display;
+}
+function renderTextLeft(value, type, className = '') {
+    return "<td class='text-left " + className + "'>" + getValueDisplay(value, type) + "</td>";
+}
+function renderTextCenter(value, type) {
+    return "<td class='text-center'>" + getValueDisplay(value, type) + "</td>";
+}
+function renderAction(id) {
+    let thaoTac = "<div class='action-buttons'><a title='Chỉnh sửa' class='green' style='cursor: pointer'  onclick='onEdit(" + id + ")' >";
+    thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
+    thaoTac += "</i>";
+    thaoTac += "</a>";
+    thaoTac += "</a></div>";
+    return "<td class='text-center'>" + thaoTac + "</td>";
+}
 function setTableLimit(controlId = "#ddlLimit") {
     $(controlId).chosen({ width: '100%', allow_single_deselect: true });
 }

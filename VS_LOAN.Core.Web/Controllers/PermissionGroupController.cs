@@ -54,10 +54,10 @@ namespace VS_LOAN.Core.Web.Controllers
                 result = new NhomBLL().Them(nhom, lstThanhVien);
                 if (result > 0)
                 {
-                    return ToResponse(true, result, Resources.Global.Message_Succ);
+                    return ToResponse(true, Resources.Global.Message_Succ, result);
                     
                 }
-                return ToResponse(false, 0);
+                return ToResponse(false,"Không thành công", 0);
             }
             catch (BusinessException ex)
             {
@@ -93,7 +93,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 rs = new NhomBLL().LayDSNhomCon(maNhomCha);
                 if (rs == null)
                     rs = new List<ThongTinToNhomModel>();
-                return ToJsonResponse(true, rs);
+                return ToJsonResponse(true,null, rs);
             }
             catch (BusinessException ex)
             {
@@ -163,9 +163,9 @@ namespace VS_LOAN.Core.Web.Controllers
                 result = new NhomBLL().Sua(nhom, lstThanhVien);
                 if (result)
                 {
-                    return ToResponse(true, result);
+                    return ToResponse(true,null, result);
                 }
-                return ToResponse(false, 0);
+                return ToResponse(false,"Không thành công", 0);
             }
             catch (BusinessException ex)
             {
@@ -183,13 +183,12 @@ namespace VS_LOAN.Core.Web.Controllers
                 rs = new NhanVienNhomBLL().LayDSChiTietThanhVienNhom(maNhom);
                 if (rs == null)
                     rs = new List<ThongTinNhanVienModel>();
-                return ToJsonResponse(true, rs);
+                return ToJsonResponse(true,null, rs);
             }
             catch (BusinessException ex)
             {
                 return ToJsonResponse(false, ex.Message);
             }
-            return Json(rs, JsonRequestBehavior.AllowGet);
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.CauHinhDuyet })]

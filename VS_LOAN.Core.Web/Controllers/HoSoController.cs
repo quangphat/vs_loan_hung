@@ -47,32 +47,32 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             var bizTailieu = new TailieuBusiness();
             List<LoaiTaiLieuModel> rs =await bizTailieu.GetLoaiTailieuList();
-            return Json(new { DSLoaiTaiLieu = rs });
+            return ToJsonResponse(true,null, rs);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult LayDSDoiTac()
         {
             List<DoiTacModel> rs = new DoiTacBLL().LayDS();
-            return Json(new { DSDoiTac = rs });
+            return ToJsonResponse(true, null, rs);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult LayDSCourier()
         {
             List<NhanVienInfoModel> rs = new CourierCodeBLL().LayDS();
-            return Json(new { DSCourier = rs });
+            return ToJsonResponse(true, null, rs);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult LayDSSanPham(int maDoiTac)
         {
             List<SanPhamModel> rs = new SanPhamBLL().LaySanPhamByID(maDoiTac);
-            return Json(new { DSSanPham = rs });
+            return ToJsonResponse(true, null, rs);
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult LayDSSanPhamByHS(int maDoiTac, int maHS)
         {
             List<SanPhamModel> rs = new SanPhamBLL().LaySanPhamByID(maDoiTac, maHS);
-            return Json(new { DSSanPham = rs });
+            return ToJsonResponse(true, null, rs);
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
@@ -100,7 +100,7 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             rs.Add(GlobalData.User);
             rs = rs.GroupBy(p => p.IDUser).Select(g => g.First()).ToList();
-            return Json(new { DSSale = rs });
+            return ToJsonResponse(true, null, rs);
         }
         private bool AddGhichu(int hosoId, string ghiChu)
         {
@@ -120,7 +120,9 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             var f88Service = new F88Service.F88Service();
             var result = await f88Service.LadipageReturnID(model);
-            return Json(new { Message = result }, JsonRequestBehavior.AllowGet);
+            if(result.Success)
+                return ToJsonResponse(true, null, result);
+            return ToJsonResponse(false, result.Message, null);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<ActionResult> Save(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
@@ -185,7 +187,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     var missingNames = BusinessExtension.GetFilesMissingV2(lstLoaiTaiLieu, FileRequireIds);
                     if (!string.IsNullOrWhiteSpace(missingNames))
                     {
-                        return ToResponse(false, missingNames, 0);
+                        return ToResponse(false, null, missingNames);
                     }
                 }
                 HoSoModel hs = new HoSoModel();
@@ -272,13 +274,13 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<JsonResult> UploadToHoso(int hosoId, bool isReset, List<FileUploadModelGroupByKey> filesGroup)
         {
             if (hosoId <= 0 || filesGroup==null)
-                return ToJsonResponse((object)false);
+                return ToJsonResponse(false);
             var bizTailieu = new TailieuBusiness();
             if (isReset)
             {
                 var deleteAll = await bizTailieu.RemoveAllTailieu(hosoId);
                 if (!deleteAll)
-                    return ToJsonResponse((object)false);
+                    return ToJsonResponse(false);
             }
             foreach (var item in filesGroup)
             {
@@ -297,7 +299,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     }
                 }
             }
-            return ToJsonResponse((object)true);
+            return ToJsonResponse(true);
         }
         public async Task<JsonResult> UploadFile(int key, int fileId)
         {
@@ -379,23 +381,23 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             if (fileId <= 0)
             {
-                return ToJsonResponse("Dữ liệu không hợp lệ", false);
+                return ToJsonResponse(false,null,"Dữ liệu không hợp lệ");
             }
             var bizHoso = new HosoBusiness();
             var result = await bizHoso.RemoveTailieu(hosoId, fileId);
-            return ToJsonResponse("Thành công", true);
+            return ToJsonResponse(true);
         }
         public async Task<JsonResult> TailieuByHosoForEdit(int hosoId)
         {
             if (hosoId <= 0)
             {
-                return ToJsonResponse("Dữ liệu không hợp lệ", false);
+                return ToJsonResponse(false,null,"Dữ liệu không hợp lệ");
             }
             var bizHoso = new HosoBusiness();
             var bizTailieu = new TailieuBusiness();
             var lstLoaiTailieu = await bizTailieu.GetLoaiTailieuList();
             if (lstLoaiTailieu == null || !lstLoaiTailieu.Any())
-                return ToJsonResponse(null,false);
+                return ToJsonResponse(false);
 
             var filesExist = await bizHoso.GetTailieuByHosoId(hosoId);
 
@@ -415,7 +417,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 result.Add(item);
 
             }
-            return ToJsonResponse(result);
+            return ToJsonResponse(true,null,result);
         }
         public async Task<JsonResult> TailieuByHoso(int hosoId)
         {
@@ -423,7 +425,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = await bizHoso.GetTailieuByHosoId(hosoId);
             if (result == null)
                 result = new List<FileUploadModel>();
-            return ToJsonResponse(result);
+            return ToJsonResponse(true,null,result);
         }
         public JsonResult Delete(string key, int fileId)
         {
@@ -437,7 +439,7 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             catch (BusinessException ex)
             {
-
+                
             }
             return Json(new { Result = fileUrl });
         }
@@ -553,7 +555,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 rs = new HoSoBLL().TimHoSoCuaToi(GlobalData.User.IDUser, dtFromDate, dtToDate, maHS, sdt, trangthai);
                 if (rs == null)
                     rs = new List<HoSoCuaToiModel>();
-                return ToJsonResponse(rs);
+                return ToJsonResponse(true,null,rs);
             }
             catch (BusinessException ex)
             {

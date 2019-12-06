@@ -25,5 +25,10 @@ namespace VS_LOAN.Core.Business
                 return string.Empty;
             return fileRequires.Where(p => p.ID == missing[0]).FirstOrDefault().Ten;
         }
+        public static void ProcessPaging(ref int page, ref int limit)
+        {
+            page = page <= 0 ? 1 : page;
+            limit = (limit <= 0 || limit >= 150) ? 150 : limit;
+        }
     }
 }

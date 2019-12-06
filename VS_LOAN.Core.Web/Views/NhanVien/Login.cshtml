@@ -203,12 +203,13 @@
                     url: '/NhanVien/DangNhap',
                     data: $('#form_login').serialize(),
                     success: function (data) {
-                        if (data.Message.Result == false) {
-                            addAlert(data.Message.ErrorMessage);
+                        debugger
+                        if (data.success == false) {
+                            addAlert(data.code);
                             $("#userName").focus();
                         }
                         else {
-                            window.location = data.newurl;
+                            window.location = data.data;
                         }
                     },
                     error: function (jqXHR, exception) {

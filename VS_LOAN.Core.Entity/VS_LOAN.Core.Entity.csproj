@@ -91,6 +91,7 @@
     <Compile Include="CustomerModel.cs" />
     <Compile Include="CustomerNoteViewModel.cs" />
     <Compile Include="DatetimeConvertModel.cs" />
+    <Compile Include="Employee\EmployeeViewModel.cs" />
     <Compile Include="F88Model\LadipageModel.cs" />
     <Compile Include="F88ResponseModel.cs" />
     <Compile Include="GhichuViewModel.cs" />

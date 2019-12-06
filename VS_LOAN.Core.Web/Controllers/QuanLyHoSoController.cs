@@ -58,7 +58,7 @@ namespace VS_LOAN.Core.Web.Controllers
             int totalRecord = 0;
             if (!string.IsNullOrWhiteSpace(freetext) && freetext.Length > 50)
             {
-                return ToJsonResponse(false,null, "Từ khóa tìm kiếm không được nhiều hơn 50 ký tự");
+                return ToJsonResponse(false, "Từ khóa tìm kiếm không được nhiều hơn 50 ký tự");
                
             }
 
@@ -77,7 +77,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 if (lstHoso == null)
                     lstHoso = new List<HoSoQuanLyModel>();
                 var result = DataPaging.Create(lstHoso, totalRecord);
-                return ToJsonResponse(true, result);
+                return ToJsonResponse(true,null, result);
             }
             catch (BusinessException ex)
             {
@@ -92,7 +92,7 @@ namespace VS_LOAN.Core.Web.Controllers
             List<NhomDropDownModel> rs = new NhomBLL().LayDSCuaNhanVien(GlobalData.User.IDUser);
             if (rs == null)
                 rs = new List<NhomDropDownModel>();
-            return Json(new { DSNhom = rs });
+            return ToJsonResponse(true, null, rs);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult LayDSThanhVienNhom(int maNhom)
@@ -122,7 +122,7 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             if (rs == null)
                 rs = new List<NhanVienNhomDropDownModel>();
-            return Json(new { DSThanhVienNhom = rs });
+            return ToJsonResponse(true, null, rs);
         }
 
         //public JsonResult LayDSTrangThai()
@@ -236,7 +236,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     var missingNames = BusinessExtension.GetFilesMissingV2(lstLoaiTaiLieu, FileRequireIds);
                     if (!string.IsNullOrWhiteSpace(missingNames))
                     {
-                        return ToJsonResponse(false,true, missingNames);
+                        return ToJsonResponse(false, missingNames);
                     }
                 }
 
@@ -299,15 +299,11 @@ namespace VS_LOAN.Core.Web.Controllers
                     else
                     {
                         if (isCheckMaSanPham)
-                            return ToJsonResponse(false,null, "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác");
+                            return ToJsonResponse(false, "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác");
                     }
                 }
                 AddGhichu(hs.ID, ghiChu);
-                if (result > 0)
-                {
-                    return ToJsonResponse(true,null, Resources.Global.Message_Succ);
-                }
-                return ToJsonResponse(false, null,"Không thành công, xin thử lại sau");
+                return ToJsonResponse(true, Resources.Global.Message_Succ, result);
             }
             catch (BusinessException ex)
             {
@@ -416,7 +412,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 if (result > 0)
                 {
 
-                    return ToJsonResponse(true, Resources.Global.Message_Succ);
+                    return ToJsonResponse(true, Resources.Global.Message_Succ, result);
                 }
                 return ToJsonResponse(false, "Không thành công, xin thử lại sau");
             }
@@ -574,7 +570,7 @@ namespace VS_LOAN.Core.Web.Controllers
             List<GhichuViewModel> rs = new HoSoBLL().LayDanhsachGhichu((int)Session["QL_HoSoID"]);
             if (rs == null)
                 rs = new List<GhichuViewModel>();
-            return Json(new { DSGhichu = rs });
+            return ToJsonResponse(true, null, rs);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult DownloadReport(int maNhom, int maThanhVien, string fromDate, string toDate, string maHS, string cmnd, int loaiNgay)
@@ -663,7 +659,7 @@ namespace VS_LOAN.Core.Web.Controllers
             rs.RemoveAll(x => x.ID == (int)TrangThaiHoSo.Nhap);
             if (GlobalData.User.UserType != (int)UserTypeEnum.Teamlead)
                 rs.RemoveAll(x => x.ID == (int)TrangThaiHoSo.NhapLieu);
-            return Json(new { DSTrangThai = rs });
+            return ToJsonResponse(true, null, rs);
         }
     }
 }
