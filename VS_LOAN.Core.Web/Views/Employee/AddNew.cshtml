@@ -139,7 +139,11 @@
                                         <div class="profile-info-row">
                                             <div class="profile-info-name">Loại nhân viên: </div>
                                             <div class="profile-info-value col-sm-4">
-                                                <select id="ddlRole" class="chosen-select form-control" data-placeholder="Chọn loại"></select>
+                                                <select id="ddlRole" class="chosen-select form-control" data-placeholder="Chọn loại">
+
+
+                                                </select>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -195,7 +199,7 @@
         $('#btnSave').click(function (e) {
             createUser();
         })
-        getRoles("#ddlRole", false);
+        getRoles("#ddlRole", true,"Chọn loại nhân viên");
     })
 
     function createUser() {

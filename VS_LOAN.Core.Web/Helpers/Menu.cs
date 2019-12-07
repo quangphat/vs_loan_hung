@@ -91,7 +91,7 @@ namespace VS_LOAN.Core.Web.Helpers
                     new SiteMenuItem("Quản lý hồ sơ","menu-icon qlhs",IndexMenu.M_2,"#",new int[] { }),
                         new SiteMenuItem("Danh sách hồ sơ","", IndexMenu.M_2_2,QuanLyHoSoController.LstRole["DanhSachHoSo"]._href, QuanLyHoSoController.LstRole["DanhSachHoSo"]._mangChucNang), // 1.3     
                         new SiteMenuItem("Duyệt hồ sơ","", IndexMenu.M_2_3,DuyetHoSoController.LstRole["Index"]._href, DuyetHoSoController.LstRole["Index"]._mangChucNang) ,// 1.2  
-                    new SiteMenuItem("Check Duplicate","menu-icon qlhs",IndexMenu.M_5,"#",new int[] { }),
+                    new SiteMenuItem("Check Duplicate","menu-icon duplicate",IndexMenu.M_5,"#",new int[] { }),
                         new SiteMenuItem("Tạo mới","", IndexMenu.M_5_1,CustomerController.LstRole["AddNew"]._href, CustomerController.LstRole["AddNew"]._mangChucNang), // 1.3     
                         new SiteMenuItem("Danh sách","", IndexMenu.M_5_2,CustomerController.LstRole["Index"]._href, CustomerController.LstRole["Index"]._mangChucNang) // 1.2  
                  
@@ -106,7 +106,7 @@ namespace VS_LOAN.Core.Web.Helpers
                     new SiteMenuItem("Nhập mã APP","menu-icon sanpham",IndexMenu.M_4,"#",new int[] { }),
                         new SiteMenuItem("Quản lý mã APP","", IndexMenu.M_4_1,SanPhamVayController.LstRole["QuanLySanPham"]._href, SanPhamVayController.LstRole["QuanLySanPham"]._mangChucNang), // 1.3     
                         new SiteMenuItem("Import","", IndexMenu.M_4_2,SanPhamVayController.LstRole["Import"]._href, SanPhamVayController.LstRole["Import"]._mangChucNang) ,// 1.3  
-                    new SiteMenuItem("Nhân sự","menu-icon sanpham",IndexMenu.M_6,EmployeeController.LstRole["Index"]._href,new int[] { }), 
+                    new SiteMenuItem("Nhân sự","menu-icon employee",IndexMenu.M_6,EmployeeController.LstRole["Index"]._href,new int[] { }), 
                         new SiteMenuItem("Thêm mới","", IndexMenu.M_6_1,EmployeeController.LstRole["AddNew"]._href, EmployeeController.LstRole["AddNew"]._mangChucNang) // 1.3  
             };
             //var isTeamLead = new NhomBLL().CheckIsTeamlead(GlobalData.User.IDUser);
