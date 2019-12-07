@@ -51,7 +51,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var totalRecord = await bzEmployee.Count(fromDate, toDate, roleId, freetext);
             var datas = await bzEmployee.Gets(fromDate, toDate, roleId, freetext, page, limit);
             var result = DataPaging.Create(datas, totalRecord);
-            return ToJsonResponse(true,null, result);
+            return ToJsonResponse(true, null, result);
         }
         public ActionResult AddNew()
         {
@@ -61,6 +61,9 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> Create([FromBody] UserCreateModel entity)
         {
+            var isAdmin = new NhomBLL().CheckIsAdmin(GlobalData.User.IDUser);
+            if (!isAdmin)
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             if (entity == null)
             {
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
@@ -131,6 +134,11 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<ActionResult> Edit(int id)
         {
+            var isAdmin = new NhomBLL().CheckIsAdmin(GlobalData.User.IDUser);
+            if (!isAdmin)
+            {
+                return View();
+            }
             var bzEmployee = new EmployeeBusiness();
             var employee = await bzEmployee.GetById(id);
             ViewBag.employee = employee;
@@ -140,7 +148,12 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<JsonResult> Update([FromBody] EmployeeEditModel model)
         {
 
-            if (model == null || model.Id <=0)
+            var isAdmin = new NhomBLL().CheckIsAdmin(GlobalData.User.IDUser);
+            if (!isAdmin)
+            {
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            }
+            if (model == null || model.Id <= 0)
             {
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             }
@@ -153,9 +166,9 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 model.WorkDate = DateTimeFormat.ConvertddMMyyyyToDateTime(model.WorkDateStr);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return ToJsonResponse(false,"Định dạng ngày tháng không hợp lệ", null);
+                return ToJsonResponse(false, "Định dạng ngày tháng không hợp lệ", null);
             }
             model.UpdatedBy = GlobalData.User.IDUser;
             var result = await bzEmployee.Update(model);
@@ -168,19 +181,19 @@ namespace VS_LOAN.Core.Web.Controllers
             var customerCheck = bizCustomer.GetCustomerCheckByCustomerId(customerId);
             var partners = bizPartner.GetListForCheckCustomerDuplicate();
             if (partners == null)
-                return ToJsonResponse(true,null,new List<OptionSimple>());
+                return ToJsonResponse(true, null, new List<OptionSimple>());
             foreach (var item in partners)
             {
                 item.IsSelect = customerCheck.Contains(item.Id);
             }
 
-            return ToJsonResponse(true,null,partners);
+            return ToJsonResponse(true, null, partners);
         }
         public JsonResult GetNotes(int customerId)
         {
             var bizCustomer = new CustomerBLL();
             var datas = bizCustomer.GetNoteByCustomerId(customerId);
-            return ToJsonResponse(true,null, datas);
+            return ToJsonResponse(true, null, datas);
         }
     }
 }
