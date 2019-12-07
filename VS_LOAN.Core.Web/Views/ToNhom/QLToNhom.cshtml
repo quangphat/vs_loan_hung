@@ -112,6 +112,7 @@
                    data: null,
                    bSortable: false,
                    "render": function (data, type, full, meta) {
+                       debugger
                        return data.TenNgan;
                    },
                    className: 'hidden-480 text-left'
@@ -203,8 +204,8 @@
             data: {},
             success: function (data) {
                 $('#ddlNhomCha').append("<option value='0'></option>");
-                if (data.DSNhom != null) {
-                    $.each(data.DSNhom, function (index, item) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, item) {
                         $('#ddlNhomCha').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
                     });
                     $('#ddlNhomCha').chosen().trigger("chosen:updated");

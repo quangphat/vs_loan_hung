@@ -118,9 +118,9 @@
             url: '@Url.Action("LayDSNhanVien", "ToNhom")',
             data: { },
             success: function (data) {
-                if (data != null) {
-                    if (data.DSNhanVien != null && data.DSNhanVien.length > 0) {
-                        $.each(data.DSNhanVien, function (index, item) {
+                if (data.data != null && data.success == true) {
+                    if (data.data != null && data.data.length > 0) {
+                        $.each(data.data, function (index, item) {
                             $('#duallistNhanVien').append("<option value='" + item.IDUser + "'>" + item.FullName + "</option>");
                         });
                     }
@@ -144,13 +144,13 @@
             url: '@Url.Action("LayDSNhanVien", "ToNhom")',
             data: {},
             success: function (data) {
-                if (data != null) {
-                    if (data.DSNhanVien != null && data.DSNhanVien.length > 0) {
-                        $.each(data.DSNhanVien, function (index, item) {
+                if (data.data != null && data.success == true) {
+                    if (data.data != null && data.data.length > 0) {
+                        $.each(data.data, function (index, item) {
                             $('#ddlNguoiQL').append("<option value='" + item.IDUser + "'>" + item.FullName + "</option>");
                         });
-                        if (data.DSNhanVien.length == 1) {
-                            $('#ddlNguoiQL').val(data.DSNhanVien[0].IDUser);
+                        if (data.data.length == 1) {
+                            $('#ddlNguoiQL').val(data.data[0].IDUser);
                         }
                     }
                 }
@@ -173,13 +173,13 @@
             url: '@Url.Action("LayDSNhomCha", "ToNhom")',
             data: {},
             success: function (data) {
-                if (data != null) {
-                    if (data.DSNhom != null && data.DSNhom.length > 0) {
-                        $.each(data.DSNhom, function (index, item) {
+                if (data.data != null && data.success == true) {
+                    if (data.data != null && data.data.length > 0) {
+                        $.each(data.data, function (index, item) {
                             $('#ddlNhomCha').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
                         });
-                        if (data.DSNhom.length == 1) {
-                            $('#ddlNhomCha').val(data.DSNhom[0].IDUser);
+                        if (data.data.length == 1) {
+                            $('#ddlNhomCha').val(data.data[0].IDUser);
                         }
                     }
                 }
@@ -240,10 +240,10 @@
             contentType: "application/json; charset=utf-8",
             data: objectSend,
             success: function (data) {
-                if (data.Message.Result == true) {
+                if (data.success == true) {
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
-                        text: data.Message.ErrorMessage,
+                        text: "Thành công",
                         type: "success",
                         timer: 4000,
                         showConfirmButton: true,
@@ -254,7 +254,7 @@
                 else {
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
-                        text: data.Message.ErrorMessage,
+                        text: data.code,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,

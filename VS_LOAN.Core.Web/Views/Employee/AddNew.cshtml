@@ -1,0 +1,313 @@
+﻿@using VS_LOAN.Core.Web.Resources;
+@{
+    ViewBag.Title = "Thêm mới nhân viên";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+    SetActiveMenu('@ViewBag.formindex', 2);
+</script>
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="ace-icon fa fa-home home-icon"></i>
+                <a href="/employee">Nhân sự</a><span><a href="#"> /Thêm mới nhân viên</a></span>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="page_content_panel">
+        <div class="page-header">
+            <h1>Thông tin cá nhân</h1>
+        </div>
+        <!--/. Page header-->
+        <div class="user-profile row">
+            <div class="col-xs-12 col-sm-3 center">
+                @if (ViewBag.ThongTin != null)
+                {
+                    <div>
+                        <span class="profile-picture">
+                            <img id="avatar" class="editable img-responsive editable-click editable-empty" alt="Alex's Avatar" src="~/Content/ace-master/assets/avatars/profile-pic.jpg">
+
+                        </span>
+
+                        <div class="space-4"></div>
+
+                        <div class="width-80 label label-info label-xlg arrowed-in arrowed-in-right">
+                            <div class="inline position-relative">
+                                <a href="#" class="user-title-label dropdown-toggle" data-toggle="dropdown">
+                                    <i class="ace-icon fa fa-circle light-green"></i>
+                                    &nbsp;
+
+                                    <span class="white">@ViewBag.ThongTin.UserName</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="space-6"></div>
+                <div class="hr hr16 dotted"></div>
+            </div>
+            <div class="col-sm-9" id="panel_body">
+                <form class="form-horizontal" role="form" autocomplete="off" id="frm_doimatkhau">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs padding-16">
+                            <li class="active">
+                                <a data-toggle="tab" href="#info" aria-expanded="true">
+                                    <i class="green ace-icon fa fa-info-circle bigger-125"></i>
+                                    @Global.NhanVien_UserProfile_Info
+                                </a>
+                            </li>
+
+                        </ul>
+                        <div class="tab-content profile-edit-tab-content">
+                            <div id="info" class="tab-pane  in active">
+                                <div class="space-10"></div>
+                                <div class="form-group">
+
+                                    <div class="profile-user-info profile-user-info-striped">
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name">@Global.NhanVien_UserProfile_Name: </div>
+
+                                            <div class="profile-info-value col-sm-4">
+                                                <input type="text" id="txtFullName" placeholder="Họ tên" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name"> @Global.NhanVien_UserProfile_Email: </div>
+
+                                            <div class="profile-info-value col-sm-4">
+                                                <input type="text" id="txtEmail" placeholder="Email" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name"> @Global.NhanVien_UserProfile_Phone: </div>
+
+                                            <div class="profile-info-value col-sm-4">
+                                                <input type="text" id="txtPhone" placeholder="Số điện thoại" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name"> Ngày vào làm: </div>
+
+                                            <div class="profile-info-value col-sm-4">
+                                                <div class="input-group">
+                                                    <input class="form-control date-picker" id="txtWorkDate" />
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-calendar bigger-110"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name"> @Global.NhanVien_UserProfile_UserName: </div>
+
+                                            <div class="profile-info-value col-sm-4">
+                                                <input type="text" id="txtUserName" placeholder="Nhập mã nhân viên" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name">Mật khẩu: </div>
+
+                                            <div class="profile-info-value col-sm-4">
+                                                <input type="password" id="txtPass" placeholder="Mật khẩu" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name">Xác nhận mật khẩu: </div>
+
+                                            <div class="profile-info-value col-sm-4">
+                                                <input type="password" id="txtConfirmPass" placeholder="Xác nhận mật khẩu" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name">Tỉnh/Thành phố: </div>
+
+                                            <div class="profile-info-value col-sm-4">
+                                                <select id="ddlProvince" class="chosen-select form-control" data-placeholder="Chọn tỉnh/thành phố">
+                                                    <option value="0"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name">Quận/Huyện: </div>
+                                            <div class="profile-info-value col-sm-4">
+                                                <select id="ddlDistrict" class="chosen-select form-control" data-placeholder="Chọn quận/huyện">
+                                                    <option value="0"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="profile-info-row">
+                                            <div class="profile-info-name">Loại nhân viên: </div>
+                                            <div class="profile-info-value col-sm-4">
+                                                <select id="ddlRole" class="chosen-select form-control" data-placeholder="Chọn loại"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix form-actions">
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <button class="btn btn-info" type="button" id="btnSave">
+                                                <i class="ace-icon fa fa-check bigger-110"></i>
+                                                Lưu
+                                            </button>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    var strLoading = '@Html.Raw(Global.Message_Loading)';
+</script>
+<script type="text/ecmascript">
+    $('#btn_reset_matkhau').click(function (evt) {
+        $('#newPassword').val('');
+        $('#oldPassword').val('');
+        $('#confirmPassword').val('');
+    });
+</script>
+<script>
+    var nhanvien = {
+        UserName: '',
+        Password: '',
+        PasswordConfirm: '',
+        Email: '',
+        FullName: '',
+        Phone: '',
+        ProvinceId: 0,
+        DistrictId: 0,
+        WorkDate:''
+    }
+    $(document).ready(function e() {
+        setDateTimeInput("#txtWorkDate")
+        $("#txtPhone").ForceNumericOnly();
+        getProvinces("#ddlProvince");
+        $('#ddlProvince').on('change', function () {
+            getDistricts(this.value,"#ddlDistrict");
+        });
+        $('#btnSave').click(function (e) {
+            createUser();
+        })
+        getRoles("#ddlRole", false);
+    })
+
+    function createUser() {
+        nhanvien.FullName = $("#txtFullName").val();
+        nhanvien.Email = $("#txtEmail").val();
+        nhanvien.Phone = $("#txtPhone").val();
+        nhanvien.WorkDateStr = $("#txtWorkDate").val();
+        nhanvien.UserName = $("#txtUserName").val();
+        nhanvien.RoleId = $("#ddlRole").val();
+        nhanvien.Password = $("#txtPass").val();
+        nhanvien.PasswordConfirm = $("#txtConfirmPass").val();
+        nhanvien.ProvinceId = (!isNullOrWhiteSpace($("#ddlProvince").val()) && !isNullOrUndefined($("#ddlProvince").val())) ? parseInt($("#ddlProvince").val()) : 0;
+        nhanvien.DistrictId = (!isNullOrWhiteSpace($("#ddlDistrict").val()) && !isNullOrUndefined($("#ddlDistrict").val())) ? parseInt($("#ddlDistrict").val()) : 0;
+        if (isNullOrWhiteSpace(nhanvien.UserName)) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Tên đăng nhập không được để trống",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if (isNullOrWhiteSpace(nhanvien.WorkDateStr) || isNullOrUndefined(nhanvien.WorkDateStr)) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn ngày vào làm",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        @*if (isNullOrWhiteSpace(nhanvien.Email)) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Email không được để trống",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }*@
+        if (isNullOrWhiteSpace(nhanvien.FullName)) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Họ tên không được để trống",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if (nhanvien.ProvinceId<=0) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn tỉnh/thành phố",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if (nhanvien.DistrictId <=0 ) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn quận/huyện",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        $.ajax({
+            traditional: true,
+            url: '/employee/Create',
+            type: "POST",
+            contentType: "application/json;",
+            dataType: 'json',
+            data: JSON.stringify(nhanvien),
+            success: function (data) {
+                if (data.success == true && data.data >0 ) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: 'Thành công',
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                        window.location = window.location
+                    });
+
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.error.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+    }
+
+
+</script>

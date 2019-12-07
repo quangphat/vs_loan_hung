@@ -87,9 +87,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseSqlEntity.cs" />
     <Compile Include="CustomerEditModel.cs" />
     <Compile Include="CustomerModel.cs" />
     <Compile Include="CustomerNoteViewModel.cs" />
+    <Compile Include="Employee\EmployeeEditModel.cs" />
+    <Compile Include="Employee\EmployeeViewModel.cs" />
+    <Compile Include="Employee\Nhanvien.cs" />
+    <Compile Include="Employee\UserCreateModel.cs" />
     <Compile Include="F88Model\LadipageModel.cs" />
     <Compile Include="GhichuViewModel.cs" />
     <Compile Include="HoSoCuaToiModel.cs" />

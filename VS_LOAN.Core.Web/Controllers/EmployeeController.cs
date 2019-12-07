@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using VS_LOAN.Core.Business;
 using VS_LOAN.Core.Entity;
+using VS_LOAN.Core.Entity.Employee;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Web.Helpers;
@@ -26,6 +27,12 @@ namespace VS_LOAN.Core.Web.Controllers
                 return _lstRole;
             }
 
+        }
+        public async Task<JsonResult> GetRoles()
+        {
+            var bizEmployee = new EmployeeBusiness();
+            var rs = await bizEmployee.GetRoleList();
+            return ToJsonResponse(true, null, rs);
         }
         public ActionResult Index()
         {
@@ -49,115 +56,110 @@ namespace VS_LOAN.Core.Web.Controllers
         public ActionResult AddNew()
         {
             ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;
-            ViewBag.MaNV = GlobalData.User.IDUser;
+            ViewBag.account = GlobalData.User;
             return View();
         }
-        public ActionResult Create(CustomerModel model)
+        public async Task<JsonResult> Create([FromBody] UserCreateModel entity)
         {
-            var customer = new Customer
+            if (entity == null)
             {
-                FullName = model.FullName,
-                CheckDate = model.CheckDate,
-                Cmnd = model.Cmnd,
-                CICStatus = 0,
-                LastNote = model.Note,
-                CreatedBy = GlobalData.User.IDUser,
-                Gender = model.Gender
-            };
-            var _bizCustomer = new CustomerBLL();
-            var id = _bizCustomer.Create(customer);
-            if (id > 0)
-            {
-                if (!string.IsNullOrWhiteSpace(model.Note))
-                {
-                    var note = new CustomerNote
-                    {
-                        Note = model.Note,
-                        CustomerId = id,
-                        CreatedBy = customer.CreatedBy
-                    };
-                    _bizCustomer.AddNote(note);
-                }
-
-                return ToResponse(true);
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             }
-            return ToResponse(false);
-
+            if (string.IsNullOrWhiteSpace(entity.UserName))
+            {
+                return ToJsonResponse(false, "Tên đăng nhập không được để trống");
+            }
+            if (string.IsNullOrWhiteSpace(entity.Password))
+            {
+                return ToJsonResponse(false, "Mật khẩu không được để trống");
+            }
+            if (entity.Password.Trim().Length < 8)
+            {
+                return ToJsonResponse(false, "Mật khẩu phải có ít nhất 8 ký tự");
+            }
+            if (string.IsNullOrWhiteSpace(entity.PasswordConfirm))
+            {
+                return ToJsonResponse(false, "Mật khẩu xác thực không được để trống");
+            }
+            if (entity.Password != entity.PasswordConfirm)
+            {
+                return ToJsonResponse(false, "Mật khẩu không khớp");
+            }
+            //if (string.IsNullOrWhiteSpace(entity.Email))
+            //{
+            //    return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            //}
+            if (!string.IsNullOrWhiteSpace(entity.Email) && !BusinessExtension.IsValidEmail(entity.Email, 50))
+            {
+                return ToJsonResponse(false, "Email không hợp lệ");
+            }
+            if (entity.ProvinceId <= 0)
+            {
+                return ToJsonResponse(false, "Vui lòng chọn tỉnh");
+            }
+            if (entity.DistrictId <= 0)
+            {
+                return ToJsonResponse(false, "Vui lòng chọn quận/huyện");
+            }
+            var bizEmployee = new EmployeeBusiness();
+            var existUserName = await bizEmployee.GetByUserName(entity.UserName.Trim(), 0);
+            if (existUserName != null)
+            {
+                return ToJsonResponse(false, "Tên đăng nhập đã tồn tại");
+            }
+            if (entity.WorkDateStr == null)
+            {
+                return ToJsonResponse(false, "Vui lòng chọn ngày vào làm");
+            }
+            if (string.IsNullOrWhiteSpace(entity.WorkDateStr))
+            {
+                return ToJsonResponse(false, "Vui lòng chọn ngày vào làm", null);
+            }
+            try
+            {
+                entity.WorkDate = DateTimeFormat.ConvertddMMyyyyToDateTime(entity.WorkDateStr);
+            }
+            catch (Exception ex)
+            {
+                return ToJsonResponse(false, "Định dạng ngày tháng không hợp lệ", null);
+            }
+            entity.UserName = entity.UserName.Trim();
+            entity.Password = entity.Password.Trim();
+            entity.Password = MD5.getMD5(entity.Password);
+            var result = await bizEmployee.Create(entity);
+            return ToJsonResponse(true, null, result);
         }
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            var customer = new CustomerBLL().GetById(id);
-            ViewBag.customer = customer;
+            var bzEmployee = new EmployeeBusiness();
+            var employee = await bzEmployee.GetById(id);
+            ViewBag.employee = employee;
+            ViewBag.account = GlobalData.User;
             return View();
         }
-        public ActionResult Update(CustomerEditModel model)
+        public async Task<JsonResult> Update([FromBody] EmployeeEditModel model)
         {
 
-            if (model == null || model.Customer == null)
+            if (model == null || model.Id <=0)
             {
-                return ToResponse(false, "Dữ liệu không hợp lệ");
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             }
-            var bizCustomer = new CustomerBLL();
-            var match = string.Empty;
-            var notmatch = string.Empty;
-            if (model.Partners != null)
+            var bzEmployee = new EmployeeBusiness();
+            if (string.IsNullOrWhiteSpace(model.WorkDateStr))
             {
-                match = string.Join(",", model.Partners.Where(p => p.IsSelect == true).Select(p => p.Name).ToArray());
-                notmatch = string.Join(",", model.Partners.Where(p => !p.IsSelect).Select(p => p.Name).ToArray());
+                return ToJsonResponse(false, "Vui lòng chọn ngày vào làm", null);
             }
-
-            var customer = new Customer
+            try
             {
-                Id = model.Customer.Id,
-                FullName = model.Customer.FullName,
-                CheckDate = model.Customer.CheckDate,
-                Cmnd = model.Customer.Cmnd,
-                CICStatus = model.Customer.CICStatus,
-                LastNote = model.Customer.Note,
-                UpdatedBy = GlobalData.User.IDUser,
-                Gender = model.Customer.Gender,
-                MatchCondition = match,
-                NotMatch = notmatch
-            };
-
-            var result = bizCustomer.Update(customer);
-            if (!result)
-                return ToResponse(false);
-            if (!string.IsNullOrWhiteSpace(model.Customer.Note))
-            {
-                var note = new CustomerNote
-                {
-                    Note = model.Customer.Note,
-                    CustomerId = customer.Id,
-                    CreatedBy = customer.UpdatedBy
-                };
-                bizCustomer.AddNote(note);
+                model.WorkDate = DateTimeFormat.ConvertddMMyyyyToDateTime(model.WorkDateStr);
             }
-            if (!model.Partners.Any())
+            catch(Exception ex)
             {
-                return ToResponse(true);
+                return ToJsonResponse(false,"Định dạng ngày tháng không hợp lệ", null);
             }
-            var bizPartner = new PartnerBLL();
-            var deleteCustomerCheck = bizCustomer.DeleteCustomerCheck(customer.Id);
-            if (deleteCustomerCheck)
-            {
-                var selectedPartner = model.Partners.Where(p => p.IsSelect == true).ToList();
-                if (selectedPartner.Any())
-                {
-                    foreach (var item in selectedPartner)
-                    {
-                        var partner = new CustomerCheck
-                        {
-                            CustomerId = customer.Id,
-                            PartnerId = item.Id,
-                            Status = 1,
-                            CreatedBy = customer.UpdatedBy
-                        };
-                        bizCustomer.InserCustomerCheck(partner);
-                    }
-                }
-            }
-            return ToResponse(true);
+            model.UpdatedBy = GlobalData.User.IDUser;
+            var result = await bzEmployee.Update(model);
+            return ToJsonResponse(result);
         }
         public JsonResult GetPartner(int customerId)
         {
