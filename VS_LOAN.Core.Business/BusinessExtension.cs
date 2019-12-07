@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using VS_LOAN.Core.Entity;
 
@@ -29,6 +30,20 @@ namespace VS_LOAN.Core.Business
         {
             page = page <= 0 ? 1 : page;
             limit = (limit <= 0 || limit >= 150) ? 150 : limit;
+        }
+        public static bool IsValidEmail(string email, int maxLength = 255)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+            if (email.Length > maxLength)
+            {
+                return false;
+            }
+
+            var patternEmail =
+            "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$";
+
+            return Regex.IsMatch(email, patternEmail);
         }
     }
 }

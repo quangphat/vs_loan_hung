@@ -1735,6 +1735,8 @@
     <Content Include="Views\Customer\Edit.cshtml" />
     <Content Include="Views\Customer\Index.cshtml" />
     <Content Include="Views\Employee\Index.cshtml" />
+    <Content Include="Views\Employee\Edit.cshtml" />
+    <Content Include="Views\Employee\AddNew.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

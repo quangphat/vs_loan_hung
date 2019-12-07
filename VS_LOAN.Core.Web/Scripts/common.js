@@ -12,6 +12,110 @@
 //        message: '<h2 style="color:#fff">' + text + ' ...</h2>'
 //    });
 //}
+function getRoles(controlId, appendDefault = true, defaultText = "Tất cả", value = 0, onSuccess = null) {
+    $.ajax({
+        type: "GET",
+        url: '/employee/GetRoles',
+        success: function (data) {
+            if (onSuccess === null) {
+                $(controlId).empty();
+                if (appendDefault === true)
+                    $(controlId).append('<option value="0">' + defaultText + '</option > ');
+                if (data !== null) {
+                    $.each(data.data, function (index, optionData) {
+                        $(controlId).append("<option value='" + optionData.Id + "'>" + optionData.Name + "</option>");
+                    });
+                }
+                if (value > 0) {
+                    $(controlId).val(value);
+                }
+                $(controlId).chosen().trigger("chosen:updated");
+            }
+            else {
+                onSuccess();
+            }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+function getProvinces(controlId, value = null, districtValue = 0) {
+    $.ajax({
+        type: "GET",
+        url: '/khuvuc/LayDSTinh',
+        success: function (data) {
+            $(controlId).empty();
+            $(controlId).append("<option value='0'></option>");
+            if (data !== null) {
+                $.each(data.data, function (index, optionData) {
+                    $(controlId).append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                });
+            }
+            if (value !== null)
+                $(controlId).val(value);
+            $(controlId).chosen().trigger("chosen:updated");
+
+        },
+        complete: function () {
+            setTimeout(function () {
+                getDistricts(value, "#ddlDistrict", districtValue);
+            }, 1000);
+
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+function getDistricts(provinceId, controlId, value = null) {
+
+    if (isNullOrUndefined(provinceId))
+        return;
+    $.ajax({
+        type: "GET",
+        url: '/khuvuc/LayDSHuyen?maTinh=' + provinceId,
+        success: function (data) {
+            $(controlId).empty();
+            $(controlId).append("<option value='0'></option>");
+            if (data !== null) {
+                $.each(data.data, function (index, optionData) {
+                    $(controlId).append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                });
+            }
+            if (value !== null)
+                $(controlId).val(value);
+            $(controlId).chosen().trigger("chosen:updated");
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+jQuery.fn.ForceNumericOnly =
+    function () {
+        return this.each(function () {
+            $(this).keydown(function (e) {
+                var key = e.charCode || e.keyCode || 0;
+                // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers ONLY
+                // home, end, period, and numpad decimal
+                return (
+                    key === 8 ||
+                    key === 9 ||
+                    key === 13 ||
+                    key === 46 ||
+                    key === 110 ||
+                    key === 190 ||
+                    (key >= 35 && key <= 40) ||
+                    (key >= 48 && key <= 57) ||
+                    (key >= 96 && key <= 105));
+            });
+        });
+    };
 function getTotalPage(totalRecord, limit = 10) {
     return totalRecord > limit ? Math.ceil(totalRecord / limit) : 1;
 }

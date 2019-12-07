@@ -137,7 +137,7 @@
                     </div>
                 </div>
                 <div class="clearfix" />
-                <div class="one-row no-gutters justify-content-between paginate">
+                <div class="one-row no-gutters justify-content-between paginate mb-50">
                     <div class="col-auto">
                         <div class="dataTables_info" id="dtSource_info" role="status" aria-live="polite"></div>
                     </div>
@@ -242,7 +242,7 @@
     }
     function onSelectLimit() {
         limit = $("#ddlLimit").val()
-        getData(page, limit)
+        getData(1, limit)
     }
     function renderRow(index, rowData) {
         page = queries.get("page");
@@ -306,6 +306,7 @@
                 if (response.Message == null) {
                     totalRecord = response.data.TotalRecord;
                     let search = this.url.replace("/Employee/Index", "");
+                    debugger
                     search = search.replace("/Employee/Search", "")
                     queries = new URLSearchParams(search)
                     page = queries.get("page");
@@ -340,7 +341,7 @@
                 complete: function () {
                     $('#panel_body').unblock();
                     if (!isPopState) {
-                        var requestUrl = this.url.replace("/search", "index")
+                        var requestUrl = this.url.replace("/Search", "/index")
                         window.history.pushState(requestUrl, this.title, requestUrl)
                     }
 

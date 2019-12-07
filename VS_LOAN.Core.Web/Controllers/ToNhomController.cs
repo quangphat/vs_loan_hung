@@ -40,7 +40,7 @@ namespace VS_LOAN.Core.Web.Controllers
             List<UserPMModel> rs = new NhanVienBLL().LayDSNhanVien();
             if (rs == null)
                 rs = new List<UserPMModel>();
-            return Json(new { DSNhanVien = rs });
+            return ToJsonResponse(true,null,rs);
         }
 
         public JsonResult LayDSNhomCha()
@@ -48,7 +48,7 @@ namespace VS_LOAN.Core.Web.Controllers
             List<NhomDropDownModel> rs = new NhomBLL().LayTatCa();
             if (rs == null)
                 rs = new List<NhomDropDownModel>();
-            return Json(new { DSNhom = rs });
+            return   ToJsonResponse(true, null, rs);
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
@@ -93,20 +93,21 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
         public JsonResult LayDSToNhomCon(int maNhomCha)
         {
-            
+
+            RMessage message = new RMessage { code = Resources.Global.Message_Succ, success = true };
             List<ThongTinToNhomModel> rs = new List<ThongTinToNhomModel>();
             try
             {
                 rs = new NhomBLL().LayDSNhomCon(maNhomCha);
                 if (rs == null)
                     rs = new List<ThongTinToNhomModel>();
-                return ToJsonResponse(true, null, rs);
             }
             catch (BusinessException ex)
             {
-                return ToJsonResponse(false, ex.Message);
-
+                message.success = false;
+                message.code = ex.Message;
             }
+            return Json(rs, JsonRequestBehavior.AllowGet);
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
@@ -183,19 +184,21 @@ namespace VS_LOAN.Core.Web.Controllers
 
         public JsonResult LayDSChiTietThanhVien(int maNhom)
         {
-            
+
+            RMessage message = new RMessage { code = Resources.Global.Message_Error, success = false };
             List<ThongTinNhanVienModel> rs = new List<ThongTinNhanVienModel>();
             try
             {
                 rs = new NhanVienNhomBLL().LayDSChiTietThanhVienNhom(maNhom);
                 if (rs == null)
                     rs = new List<ThongTinNhanVienModel>();
-                return ToJsonResponse(true,null, rs);
             }
             catch (BusinessException ex)
             {
-                return ToJsonResponse(false, ex.Message);
+                message.success = false;
+                message.code = ex.Message;
             }
+            return Json(rs, JsonRequestBehavior.AllowGet);
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.CauHinhDuyet })]
