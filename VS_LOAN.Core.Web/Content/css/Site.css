@@ -110,6 +110,22 @@
         background: url('/Content/images/iconmenu/sanpham.png') no-repeat;
         background-size: auto 100%;
     }
+.menu-icon.employee {
+    display: inline-block;
+    /*width: auto; /* Generic width */
+    height: 24px;
+    width: 24px;
+    background: url('/Content/images/iconmenu/employee.png') no-repeat;
+    background-size: auto 100%;
+}
+.menu-icon.duplicate {
+    display: inline-block;
+    /*width: auto; /* Generic width */
+    height: 24px;
+    width: 24px;
+    background: url('/Content/images/iconmenu/employee.png') no-repeat;
+    background-size: auto 100%;
+}
 
 .trippurpose {
     position: relative;
