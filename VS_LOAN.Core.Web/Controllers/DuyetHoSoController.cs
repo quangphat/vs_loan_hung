@@ -284,7 +284,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     var missingNames = BusinessExtension.GetFilesMissingV2(lstLoaiTaiLieu, FileRequireIds);
                     if (!string.IsNullOrWhiteSpace(missingNames))
                     {
-                        return ToJsonResponse(false, missingNames);
+                        return ToJsonResponse(false,$"Vui lòng nhập: {missingNames}");
                     }
                 }
 
@@ -369,7 +369,7 @@ namespace VS_LOAN.Core.Web.Controllers
                             CommentTime = DateTime.Now
                         };
                         new HoSoBLL().AddGhichu(ghichu);
-                        return ToJsonResponse(true, Resources.Global.Message_Succ);
+                        return ToJsonResponse(true, Resources.Global.Message_Succ, hs.ID);
                     }
                     return ToJsonResponse(false, "Không thành công, xin thử lại sau");
                 }

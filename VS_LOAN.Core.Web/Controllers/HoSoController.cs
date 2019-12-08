@@ -187,7 +187,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     var missingNames = BusinessExtension.GetFilesMissingV2(lstLoaiTaiLieu, FileRequireIds);
                     if (!string.IsNullOrWhiteSpace(missingNames))
                     {
-                        return ToResponse(false, null, missingNames);
+                        return ToResponse(false, $"Vui lòng nhập: {missingNames}", 0);
                     }
                 }
                 HoSoModel hs = new HoSoModel();
@@ -236,6 +236,7 @@ namespace VS_LOAN.Core.Web.Controllers
                             return ToResponse(false, "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác");
                     }
                     AddGhichu(hs.ID, ghiChu);
+                    return ToResponse(true, Resources.Global.Message_Succ, hs.ID);
                 }
                 else
                 {
@@ -257,7 +258,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 }
                 if (result > 0)
                 {
-                    return ToResponse(true, Resources.Global.Message_Succ);
+                    return ToResponse(true, Resources.Global.Message_Succ, result);
                 }
                 else
                 {
@@ -502,6 +503,7 @@ namespace VS_LOAN.Core.Web.Controllers
                             return ToResponse(false, "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác");
                     }
                     AddGhichu(hs.ID, ghiChu);
+                    return ToResponse(true, Resources.Global.Message_Succ, hs.ID);
                 }
                 else
                 {

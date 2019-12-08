@@ -568,7 +568,7 @@
             contentType: "application/json; charset=utf-8",
             data: objectSend,
             success: function (data) {
-                if (data.Message.Result == true) {
+                if (data.success == true) {
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
                         text: "Thành công",
@@ -578,7 +578,7 @@
                     }, function () {
                         //window.location = window.location;
 
-                            uploadHoso2(data.Message.ReturnId, false);
+                            uploadHoso2(data.data, false);
                     });
                 }
                 else {
