@@ -78,7 +78,7 @@ namespace VS_LOAN.Core.Business
         }
         public async Task<List<OptionSimple>> GetRoleList()
         {
-            string query = "select Id, Name from Role where Deleted <> 1";
+            string query = "select Id, Name from Role where isnull(Deleted,0) =0";
             using (var con = GetConnection())
             {
                 var result = await con.QueryAsync<OptionSimple>(query, commandType: CommandType.Text);

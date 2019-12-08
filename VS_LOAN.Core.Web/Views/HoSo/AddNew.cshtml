@@ -303,7 +303,7 @@
                 $('#ddlTinh').empty();
                 $('#ddlTinh').append("<option value='0'></option>");
                 if (data != null) {
-                    $.each(data.DSTinh, function (index, optionData) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlTinh').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
@@ -326,7 +326,7 @@
                 $('#ddlCourier').empty();
                 $('#ddlCourier').append("<option value='0'></option>");
                 if (data != null) {
-                    $.each(data.DSCourier, function (index, optionData) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlCourier').append("<option value='" + optionData.ID + "'>" + optionData.FullText + "</option>");
                     });
                 }
@@ -349,7 +349,7 @@
                 $('#ddlHuyen').empty();
                 $('#ddlHuyen').append("<option value='0'></option>");
                 if (data != null) {
-                    $.each(data.DSHuyen, function (index, optionData) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlHuyen').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
@@ -372,9 +372,9 @@
                 $('#ddlDoiTac').empty();
                 $('#ddlDoiTac').append("<option value='0'></option>");
                 if (data != null) {
-                    
-                    lstDoitac = data.DSDoiTac
-                    $.each(data.DSDoiTac, function (index, optionData) {
+
+                    lstDoitac = data.data
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlDoiTac').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
@@ -398,7 +398,7 @@
                     var i = 0;
                     var htmlContent = "";
                     let keys = [];
-                    $.each(data.DSLoaiTaiLieu, function (index, item) {
+                    $.each(data.data, function (index, item) {
                         $("#lstTailieu").append("<div class='form-group'><div id='tailieu-" + item.ID + "'></div></div > ");
                         let name = '',
                             className = ''
@@ -476,7 +476,7 @@
                 $('#ddlSanPhamVay').empty();
                 $('#ddlSanPhamVay').append("<option value='0'></option>");
                 if (data != null) {
-                    $.each(data.DSSanPham, function (index, optionData) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlSanPhamVay').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
@@ -501,7 +501,7 @@
                 $('#ddlInternalCode').append("<option value='0'></option>");
                 var ten = '';
                 if (data != null) {
-                    $.each(data.DSSale, function (index, optionData) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlInternalCode').append("<option  ten='" + optionData.FullName + "' value='" + optionData.IDUser + "'>" + optionData.Code + "</option>");
                     });
                 }
@@ -571,7 +571,7 @@
                 if (data.Message.Result == true) {
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
-                        text: data.Message.ErrorMessage,
+                        text: "Thành công",
                         type: "success",
                         timer: 4000,
                         showConfirmButton: true,
@@ -584,7 +584,7 @@
                 else {
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
-                        text: data.Message.ErrorMessage,
+                        text: data.code,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,
@@ -685,21 +685,21 @@
             contentType: "application/json; charset=utf-8",
             data: objectSend,
             success: function (data) {
-                if (data.Message.Result == true) {
+                if (data.success == true) {
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
-                        text: data.Message.ErrorMessage,
+                        text: "Thành công",
                         type: "success",
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-                            uploadHoso2(data.Message.ReturnId, true);
+                        uploadHoso2(data.data, true);
                     });
                 }
                 else {
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
-                        text: data.Message.ErrorMessage,
+                        text: data.code,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,
@@ -725,7 +725,7 @@
                 //dataType: 'json',
                 data: JSON.stringify(filesUpload),
                 success: function (data) {
-                    if (data.Message != null && data.Message.Result == true) {
+                    if (data.success == true) {
                         if (reloadOnSuccess == true) {
                             window.location = window.location;
                         }
@@ -733,7 +733,7 @@
                 else {
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
-                        text: data.Message.ErrorMessage,
+                        text: data.code,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,
