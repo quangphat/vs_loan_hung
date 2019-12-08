@@ -32,7 +32,7 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             var bizEmployee = new EmployeeBusiness();
             var rs = await bizEmployee.GetRoleList();
-            return ToJsonResponse(true, null, rs);
+            return Json(new { success = true, data = rs }, JsonRequestBehavior.AllowGet);
         }
         public ActionResult Index()
         {
@@ -51,7 +51,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var totalRecord = await bzEmployee.Count(fromDate, toDate, roleId, freetext);
             var datas = await bzEmployee.Gets(fromDate, toDate, roleId, freetext, page, limit);
             var result = DataPaging.Create(datas, totalRecord);
-            return ToJsonResponse(true, result);
+            return Json(new { success = true, data = result }, JsonRequestBehavior.AllowGet);
         }
         public ActionResult AddNew()
         {
@@ -63,27 +63,33 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             if (entity == null)
             {
-                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+                return Json(new { success = false, code = "Dữ liệu không hợp lệ" }, JsonRequestBehavior.AllowGet);
             }
             if (string.IsNullOrWhiteSpace(entity.UserName))
             {
-                return ToJsonResponse(false, "Tên đăng nhập không được để trống");
+                return Json(new { success = false, code = "Tên đăng nhập không được để trống" }, JsonRequestBehavior.AllowGet);
+                
             }
             if (string.IsNullOrWhiteSpace(entity.Password))
             {
-                return ToJsonResponse(false, "Mật khẩu không được để trống");
+
+                return Json(new { success = false, code = "Mật khẩu không được để trống" }, JsonRequestBehavior.AllowGet);
+                
             }
             if (entity.Password.Trim().Length < 8)
             {
-                return ToJsonResponse(false, "Mật khẩu phải có ít nhất 8 ký tự");
+                return Json(new { success = false, code = "Mật khẩu phải có ít nhất 8 ký tự" }, JsonRequestBehavior.AllowGet);
+                
             }
             if (string.IsNullOrWhiteSpace(entity.PasswordConfirm))
             {
-                return ToJsonResponse(false, "Mật khẩu xác thực không được để trống");
+                return Json(new { success = false, code = "Mật khẩu xác thực không được để trống" }, JsonRequestBehavior.AllowGet);
+                
             }
             if (entity.Password != entity.PasswordConfirm)
             {
-                return ToJsonResponse(false, "Mật khẩu không khớp");
+                return Json(new { success = false, code = "Mật khẩu không khớp" }, JsonRequestBehavior.AllowGet);
+                
             }
             //if (string.IsNullOrWhiteSpace(entity.Email))
             //{
@@ -91,29 +97,35 @@ namespace VS_LOAN.Core.Web.Controllers
             //}
             if (!string.IsNullOrWhiteSpace(entity.Email) && !BusinessExtension.IsValidEmail(entity.Email, 50))
             {
-                return ToJsonResponse(false, "Email không hợp lệ");
+                return Json(new { success = false, code = "Email không hợp lệ" }, JsonRequestBehavior.AllowGet);
+                
             }
             if (entity.ProvinceId <= 0)
             {
-                return ToJsonResponse(false, "Vui lòng chọn tỉnh");
+                return Json(new { success = false, code = "Dữ liệu không hợp lệ" }, JsonRequestBehavior.AllowGet);
+               
             }
             if (entity.DistrictId <= 0)
             {
-                return ToJsonResponse(false, "Vui lòng chọn quận/huyện");
+                return Json(new { success = false, code = "Vui lòng chọn quận/huyện" }, JsonRequestBehavior.AllowGet);
+                
             }
             var bizEmployee = new EmployeeBusiness();
             var existUserName = await bizEmployee.GetByUserName(entity.UserName.Trim(), 0);
             if (existUserName != null)
             {
-                return ToJsonResponse(false, "Tên đăng nhập đã tồn tại");
+                return Json(new { success = false, code = "Tên đăng nhập đã tồn tại" }, JsonRequestBehavior.AllowGet);
+                
             }
             if (entity.WorkDateStr == null)
             {
-                return ToJsonResponse(false, "Vui lòng chọn ngày vào làm");
+                return Json(new { success = false, code = "Vui lòng chọn ngày vào làm" }, JsonRequestBehavior.AllowGet);
+                
             }
             if (string.IsNullOrWhiteSpace(entity.WorkDateStr))
             {
-                return ToJsonResponse(false, "Vui lòng chọn ngày vào làm", null);
+                return Json(new { success = false, code = "Vui lòng chọn ngày vào làm" }, JsonRequestBehavior.AllowGet);
+           
             }
             try
             {
@@ -121,13 +133,15 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             catch (Exception ex)
             {
-                return ToJsonResponse(false, "Định dạng ngày tháng không hợp lệ", null);
+                return Json(new { success = false, code = "Định dạng ngày tháng không hợp lệ" }, JsonRequestBehavior.AllowGet);
+                
             }
             entity.UserName = entity.UserName.Trim();
             entity.Password = entity.Password.Trim();
             entity.Password = MD5.getMD5(entity.Password);
             var result = await bizEmployee.Create(entity);
-            return ToJsonResponse(true, null, result);
+            return Json(new { success = true, data = result }, JsonRequestBehavior.AllowGet);
+            
         }
         public async Task<ActionResult> Edit(int id)
         {
@@ -142,12 +156,14 @@ namespace VS_LOAN.Core.Web.Controllers
 
             if (model == null || model.Id <=0)
             {
-                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+                return Json(new { success = false, code = "Dữ liệu không hợp lệ" }, JsonRequestBehavior.AllowGet);
+                
             }
             var bzEmployee = new EmployeeBusiness();
             if (string.IsNullOrWhiteSpace(model.WorkDateStr))
             {
-                return ToJsonResponse(false, "Vui lòng chọn ngày vào làm", null);
+                return Json(new { success = false, code = "Vui lòng chọn ngày vào làm" }, JsonRequestBehavior.AllowGet);
+                
             }
             try
             {
@@ -155,11 +171,13 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             catch(Exception ex)
             {
-                return ToJsonResponse(false,"Định dạng ngày tháng không hợp lệ", null);
+                return Json(new { success = false, code = "Định dạng ngày tháng không hợp lệ" }, JsonRequestBehavior.AllowGet);
+                
             }
             model.UpdatedBy = GlobalData.User.IDUser;
             var result = await bzEmployee.Update(model);
-            return ToJsonResponse(result);
+            return Json(new { success = true, data = result }, JsonRequestBehavior.AllowGet);
+
         }
         public JsonResult GetPartner(int customerId)
         {
@@ -168,19 +186,23 @@ namespace VS_LOAN.Core.Web.Controllers
             var customerCheck = bizCustomer.GetCustomerCheckByCustomerId(customerId);
             var partners = bizPartner.GetListForCheckCustomerDuplicate();
             if (partners == null)
-                return ToJsonResponse(true,new List<OptionSimple>());
+                return Json(new { success = true, data = new List<OptionSimple>() }, JsonRequestBehavior.AllowGet);
+
+           
             foreach (var item in partners)
             {
                 item.IsSelect = customerCheck.Contains(item.Id);
             }
 
-            return ToJsonResponse(true,partners);
+            return Json(new { success = true, data =partners }, JsonRequestBehavior.AllowGet);
+
         }
         public JsonResult GetNotes(int customerId)
         {
             var bizCustomer = new CustomerBLL();
             var datas = bizCustomer.GetNoteByCustomerId(customerId);
-            return ToJsonResponse(true, datas);
+            return Json(new { success = true, data = datas }, JsonRequestBehavior.AllowGet);
+
         }
     }
 }

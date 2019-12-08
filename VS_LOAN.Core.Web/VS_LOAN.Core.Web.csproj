@@ -213,6 +213,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\DuyetHoSoController.cs" />
+    <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\QuanLyHoSoController.cs" />
     <Compile Include="Controllers\SanPhamVayController.cs" />
     <Compile Include="Controllers\TestController.cs" />
@@ -1734,6 +1735,7 @@
     <Content Include="Views\Customer\Index.cshtml" />
     <Content Include="Views\Employee\Edit.cshtml" />
     <Content Include="Views\Employee\AddNew.cshtml" />
+    <Content Include="Views\Employee\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
