@@ -130,14 +130,14 @@
             url: '@Url.Action("LayThongTinThanhVienSuaNhom", "ToNhom")',
             data: { 'maNhom' : thongTinNhom.ID },
             success: function (data) {
-                if (data.data != null && data.success == true) {
-                    if (data.data != null && data.data.length > 0) {
-                        $.each(data.data, function (index, item) {
+                if (data != null) {
+                    if (data.DSChuaThanhVien != null && data.DSChuaThanhVien.length > 0) {
+                        $.each(data.DSChuaThanhVien, function (index, item) {
                             $('#duallistNhanVien').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
                         });
                     }
-                    if (data.data != null && data.data.length > 0) {
-                        $.each(data.data, function (index, item) {
+                    if (data.DSThanhVien != null && data.DSThanhVien.length > 0) {
+                        $.each(data.DSThanhVien, function (index, item) {
                             $('#duallistNhanVien').append("<option value='" + item.ID + "' selected='selected'>" + item.Ten + "</option>");
                         });
                     }
