@@ -38,7 +38,8 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult LayDS(string ngay)
         {
-            
+
+            RMessage message = new RMessage { code = Resources.Global.Message_Error, success = false };
             List<ThongTinSanPhamVayModel> rs = new List<ThongTinSanPhamVayModel>();
             try
             {
@@ -48,13 +49,13 @@ namespace VS_LOAN.Core.Web.Controllers
                 rs = new SanPhamBLL().LayThongTinSanPhamByID(3, dtDate);
                 if (rs == null)
                     rs = new List<ThongTinSanPhamVayModel>();
-                return ToJsonResponse(true,null, rs);
             }
             catch (BusinessException ex)
             {
-                return ToJsonResponse(false, ex.Message);
+                message.success = false;
+                message.code = ex.Message;
             }
-            
+            return Json(rs, JsonRequestBehavior.AllowGet);
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
