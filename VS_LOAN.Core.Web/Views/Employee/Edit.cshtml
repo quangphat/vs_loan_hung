@@ -77,6 +77,13 @@
                                             </div>
                                         </div>
                                         <div class="profile-info-row">
+                                            <div class="profile-info-name"> Mã nhân viên: </div>
+
+                                            <div class="profile-info-value col-sm-4">
+                                                <input type="text" id="txtCode" disabled placeholder="MÃ" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="profile-info-row">
                                             <div class="profile-info-name"> @Global.NhanVien_UserProfile_Email: </div>
 
                                             <div class="profile-info-value col-sm-4">
@@ -243,6 +250,7 @@
         $("#txtFullName").val(employee.Ho_Ten);
         $("#txtEmail").val(employee.Email);
         $("#txtPhone").val(employee.Dien_Thoai);
+        $("#txtCode").val(employee.Ma);
         setValueForDateInput("#txtWorkDate",SetFormatDateTimeDMY(employee.WorkDate));
         $("#txtUserName").val(employee.Ten_Dang_Nhap);
     }
@@ -265,7 +273,7 @@
             });
             return;
         }
-        if (isNullOrWhiteSpace(employee.Email)) {
+        @*if (isNullOrWhiteSpace(employee.Email)) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
                 text: "Email không được để trống",
@@ -274,7 +282,7 @@
                 showConfirmButton: true,
             });
             return;
-        }
+        }*@
         if (isNullOrWhiteSpace(employee.FullName)) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
@@ -285,25 +293,27 @@
             });
             return;
         }
-        if (employee.ProvinceId<=0) {
-            swal({
+        if (employee.ProvinceId <= 0) {
+            employee.ProvinceId=0
+            @*swal({
                 title: "@Html.Raw(Global.Message_Title)",
                 text: "Vui lòng chọn tỉnh/thành phố",
                 type: "error",
                 timer: 4000,
                 showConfirmButton: true,
             });
-            return;
+            return;*@
         }
-        if (employee.DistrictId <=0 ) {
-            swal({
+        if (employee.DistrictId <= 0) {
+            employee.DistrictId = 0;
+            @*swal({
                 title: "@Html.Raw(Global.Message_Title)",
                 text: "Vui lòng chọn quận/huyện",
                 type: "error",
                 timer: 4000,
                 showConfirmButton: true,
             });
-            return;
+            return;*@
         }
         if (employee.RoleId <= 0) {
             swal({

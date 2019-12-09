@@ -96,14 +96,14 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "Email không hợp lệ");
             }
-            if (entity.ProvinceId <= 0)
-            {
-                return ToJsonResponse(false, "Vui lòng chọn tỉnh");
-            }
-            if (entity.DistrictId <= 0)
-            {
-                return ToJsonResponse(false, "Vui lòng chọn quận/huyện");
-            }
+            //if (entity.ProvinceId <= 0)
+            //{
+            //    return ToJsonResponse(false, "Vui lòng chọn tỉnh");
+            //}
+            //if (entity.DistrictId <= 0)
+            //{
+            //    return ToJsonResponse(false, "Vui lòng chọn quận/huyện");
+            //}
             var bizEmployee = new EmployeeBusiness();
             var existUserName = await bizEmployee.GetByUserName(entity.UserName.Trim(), 0);
             if (existUserName != null)
@@ -125,6 +125,15 @@ namespace VS_LOAN.Core.Web.Controllers
             catch (Exception ex)
             {
                 return ToJsonResponse(false, "Định dạng ngày tháng không hợp lệ", null);
+            }
+            if(string.IsNullOrWhiteSpace(entity.Code))
+            {
+                return ToJsonResponse(false, "MÃ nhân viên không được để trống", 0);
+            }
+            var existCode = await bizEmployee.GetByCode(entity.Code.Trim());
+            if(existCode!=null)
+            {
+                return ToJsonResponse(false, "Mã đã tồn tại",0);
             }
             entity.UserName = entity.UserName.Trim();
             entity.Password = entity.Password.Trim();

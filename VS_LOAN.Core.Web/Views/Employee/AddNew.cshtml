@@ -120,6 +120,13 @@
                                             </div>
                                         </div>
                                         <div class="profile-info-row">
+                                            <div class="profile-info-name">Mã nhân viên: </div>
+
+                                            <div class="profile-info-value col-sm-4">
+                                                <input type="text" id="txtCode" placeholder="Mã nhân viên" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="profile-info-row">
                                             <div class="profile-info-name">Tỉnh/Thành phố: </div>
 
                                             <div class="profile-info-value col-sm-4">
@@ -139,11 +146,8 @@
                                         <div class="profile-info-row">
                                             <div class="profile-info-name">Loại nhân viên: </div>
                                             <div class="profile-info-value col-sm-4">
-                                                <select id="ddlRole" class="chosen-select form-control" data-placeholder="Chọn loại">
+                                                <select id="ddlRole" class="chosen-select form-control" data-placeholder="Chọn loại"></select>
 
-
-                                                </select>
-                                                
                                             </div>
                                         </div>
                                     </div>
@@ -210,6 +214,7 @@
         nhanvien.UserName = $("#txtUserName").val();
         nhanvien.RoleId = $("#ddlRole").val();
         nhanvien.Password = $("#txtPass").val();
+        nhanvien.Code = $("#txtCode").val();
         nhanvien.PasswordConfirm = $("#txtConfirmPass").val();
         nhanvien.ProvinceId = (!isNullOrWhiteSpace($("#ddlProvince").val()) && !isNullOrUndefined($("#ddlProvince").val())) ? parseInt($("#ddlProvince").val()) : 0;
         nhanvien.DistrictId = (!isNullOrWhiteSpace($("#ddlDistrict").val()) && !isNullOrUndefined($("#ddlDistrict").val())) ? parseInt($("#ddlDistrict").val()) : 0;
@@ -253,25 +258,37 @@
             });
             return;
         }
-        if (nhanvien.ProvinceId<=0) {
+         if (isNullOrWhiteSpace(nhanvien.Code)) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn tỉnh/thành phố",
+                text: "Mã nhân viên không được để trống",
                 type: "error",
                 timer: 4000,
                 showConfirmButton: true,
             });
             return;
         }
-        if (nhanvien.DistrictId <=0 ) {
-            swal({
+        if (nhanvien.ProvinceId <= 0) {
+            nhanvien.ProvinceId = 0;
+            @*swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn tỉnh/thành phố",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;*@
+        }
+        if (nhanvien.DistrictId <= 0) {
+            nhanvien.DistrictId =0
+            @*swal({
                 title: "@Html.Raw(Global.Message_Title)",
                 text: "Vui lòng chọn quận/huyện",
                 type: "error",
                 timer: 4000,
                 showConfirmButton: true,
             });
-            return;
+            return;*@
         }
         $.ajax({
             traditional: true,
