@@ -858,7 +858,7 @@
                 dataType: 'json',
                 data: JSON.stringify(filesUpload),
                 success: function (data) {
-                    if (data.da != null && data.success == true) {
+                    if ( data.success == true) {
 
                         if (reloadOnSuccess == true) {
                             window.location = window.location;
