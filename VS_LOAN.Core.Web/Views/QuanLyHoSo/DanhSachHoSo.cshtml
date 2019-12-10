@@ -909,8 +909,8 @@
             data: {},
             success: function (data) {
                 $('#ddlNhom').append("<option value='0'></option>");
-                if (data.DSNhom != null) {
-                    $.each(data.DSNhom, function (index, item) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, item) {
                         $('#ddlNhom').append("<option value='" + item.ID + "'>" + item.Ten + "(" + item.TenQL + ")</option>");
                     });
                     $('#ddlNhom').chosen().trigger("chosen:updated").change();
@@ -935,8 +935,8 @@
             url: '@Url.Action("LayDSThanhVienNhom", "QuanLyHoSo")',
             data: { "maNhom": $('#ddlNhom').val() },
             success: function (data) {
-                if (data.DSThanhVienNhom != null) {
-                    $.each(data.DSThanhVienNhom, function (index, item) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, item) {
                         $('#ddlThanhVienNhom').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
                     });
                 }

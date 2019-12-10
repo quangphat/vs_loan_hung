@@ -76,9 +76,9 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "Mật khẩu không được để trống");
             }
-            if (entity.Password.Trim().Length < 8)
+            if (entity.Password.Trim().Length < 5)
             {
-                return ToJsonResponse(false, "Mật khẩu phải có ít nhất 8 ký tự");
+                return ToJsonResponse(false, "Mật khẩu phải có ít nhất 5 ký tự");
             }
             if (string.IsNullOrWhiteSpace(entity.PasswordConfirm))
             {
