@@ -19,5 +19,6 @@ namespace VS_LOAN.Core.Entity.Employee
         public string WorkDateStr { get; set; }
         public DateTime? WorkDate { get; set; }
         public int? UpdatedBy { get; set; }
+        public string Code { get; set; }
     }
 }

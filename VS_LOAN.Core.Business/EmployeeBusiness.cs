@@ -26,6 +26,20 @@ namespace VS_LOAN.Core.Business
             }
 
         }
+        public async Task<Nhanvien> GetByCode(string code, int id = 0)
+        {
+            string query = "select * from Nhan_Vien where Ma = @code";
+            if (id > 0)
+            {
+                query += " and ID <> @id";
+            }
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryFirstOrDefaultAsync<Nhanvien>(query, new { code = code, @id = id }, commandType: CommandType.Text);
+                return result;
+            }
+
+        }
         public async Task<int> Count(
             DateTime workFromDate,
             DateTime workToDate,
@@ -110,6 +124,7 @@ namespace VS_LOAN.Core.Business
         public async Task<int> Create(UserCreateModel entity)
         {
             var p = AddOutputParam("id");
+            p.Add("code", entity.Code);
             p.Add("ProvinceId", entity.ProvinceId);
             p.Add("DistrictId", entity.DistrictId);
             p.Add("userName", entity.UserName);
