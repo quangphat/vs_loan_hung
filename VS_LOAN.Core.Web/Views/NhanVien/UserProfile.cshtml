@@ -349,14 +349,14 @@ Layout = "~/Views/Shared/_Layout.cshtml";
             url: '@Url.Action("ChangePass", "NhanVien")',
             data: $('#frm_doimatkhau').serialize(),
             success: function (data) {
-                if (data.Message.Result == true) {
+                if (data.success == true) {
                     $('#oldPassword').val('');
                     $('#newPassword').val('');
                     $('#confirmPassword').val('');
-                    addAlert("div_result_alert", data.Message.ErrorMessage, data.Message.Result);
+                    addAlert("div_result_alert", data.code, true);
                 }
                 else {
-                    addAlert("div_result_alert", data.Message.ErrorMessage, data.Message.Result);
+                    addAlert("div_result_alert", data.code, false);
                 }
             },
             error: function (jqXHR, exception) {
