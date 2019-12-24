@@ -1,0 +1,577 @@
+﻿@using VS_LOAN.Core.Web.Resources;
+@{
+    ViewBag.Title = "Tạo hồ sơ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model String
+<script type="text/javascript">
+    SetActiveMenu('@ViewBag.formindex', 2);
+</script>
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-caret-right"></i>
+                <a href="#">Tạo hợp đồng</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">1.Thông tin khách hàng:</h3>
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Họ và tên <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtHoTen" placeholder="Nhập họ tên" class="form-control">
+                        </div>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày nhận đơn đề nghị<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtToDate" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại khách hàng<span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtDienThoai" placeholder="Nhập số điện thoại khách hàng" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CMND/CCCD<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtCMND" placeholder="Nhập số CMND" class="form-control" />
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right">Ngày cấp CMND/CCCD<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtCmndDay" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Tỉnh/TP<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlTinh" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right">Quận/huyện<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlHuyen" class="chosen-select form-control" data-placeholder="Chọn quận huyện">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Địa chỉ<span class="required">(*)</span></label>
+                        <div class="col-sm-10">
+                            <textarea type="text" id="txtDiaChi" placeholder="Nhập địa chỉ" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">2.Thông tin khoản vay và sản phẩm:</h3>
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Tên ngân hàng<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlDoiTac" class="chosen-select form-control" data-placeholder="Chọn đối tác">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right">Sản phẩm vay<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlSanPhamVay" class="chosen-select form-control" data-placeholder="Chọn sản phẩm vay">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">3.Hồ sơ đính kèm:</h3>
+                <div class="row">
+                    <div class="col-xs-12" style="overflow-y: scroll;max-height:400px;">
+                        <form class="form-horizontal" role="form" id="lstTailieu"></form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <hr />
+                <form class="form-horizontal">
+                    <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Ghi chú hồ sơ</h4>
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
+                        <div class="col-md-11 col-sm-12 col-xs-12">
+                            <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
+                        </div>
+                    </div>
+                    <div class="pull-right">
+                        <a class="btn btn-sm btn-primary" id="btn_Save">
+                            Nộp hồ sơ
+                        </a>
+                        @*<a class="btn btn-sm btn-primary" href="/HoSo/AddNew" id="btn_addNew">
+                                Tạo mới
+                            </a>*@
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlSanPhamVay').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlHuyen').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlTinh').chosen({ width: '100%', allow_single_deselect: true });
+        
+    });
+
+    jQuery.fn.ForceNumericOnly =function () {
+    return this.each(function () {
+        $(this).keydown(function (e) {
+            var key = e.charCode || e.keyCode || 0;
+            // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers ONLY
+            // home, end, period, and numpad decimal
+            return (
+                key == 8 ||
+                key == 9 ||
+                key == 13 ||
+                key == 46 ||
+                key == 110 ||
+                key == 190 ||
+                (key >= 35 && key <= 40) ||
+                (key >= 48 && key <= 57) ||
+                (key >= 96 && key <= 105));
+        });
+    });
+};
+    $("#txtDienThoai").ForceNumericOnly();
+    $("#txtCMND").ForceNumericOnly();
+
+    $(document).ready(function () {
+        LayDSTaiLieu();
+        LayDSNganHang();
+        LayDSTinh();
+        $('#ddlDoiTac').on('change', function () {
+            LayDSSanPham(this.value);
+        });
+        $('#ddlTinh').on('change', function () {
+            LayDSHuyen(this.value);
+        });
+    });
+    function LayDSTinh() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSTinh", "KhuVuc")',
+            data: {},
+            success: function (data) {
+                $('#ddlTinh').empty();
+                $('#ddlTinh').append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#ddlTinh').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                    });
+                }
+                $('#ddlTinh').chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+    function LayDSHuyen(maTinh) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSHuyen", "KhuVuc")',
+            data: {'maTinh':maTinh},
+            success: function (data) {
+                $('#ddlHuyen').empty();
+                $('#ddlHuyen').append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#ddlHuyen').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                    });
+                }
+                $('#ddlHuyen').chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+    var lstDoitac =[]
+    function LayDSNganHang() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSDoiTac", "HoSo")',
+            data: {},
+            success: function (data) {
+                $('#ddlDoiTac').empty();
+                $('#ddlDoiTac').append("<option value='0'></option>");
+                if (data != null) {
+
+                    lstDoitac = data.data
+                    $.each(data.data, function (index, optionData) {
+                        $('#ddlDoiTac').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                    });
+                }
+                $('#ddlDoiTac').chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+    function LayDSTaiLieu() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSTaiLieu", "HoSo")',
+            data: {},
+            success: function (data) {
+                if (data.data != null) {
+                    var i = 0;
+                    var htmlContent = "";
+                    let keys = [];
+                    $.each(data.data, function (index, item) {
+                        $("#lstTailieu").append("<div class='form-group'><div id='tailieu-" + item.ID + "'></div></div > ");
+                        let name = '',
+                            className = ''
+                        if (keys.indexOf(item.ID) < 0) {
+                            name = item.Ten;
+                        }
+                        else {
+                            className = 'mt-46'
+                        }
+
+                        renderOneItemFile(item.ID, item.ID, name, item.BatBuoc, className, true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
+                        keys.push(item.ID);
+                    })
+                }
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+    let filesUpload = [];
+    function onDeleteFile(key, fileId, isExist) {
+        removeFile(key, fileId);
+    }
+    function onUploadFile(key, fileId, data, isExist) {
+
+        if (isReach5Files(filesUpload, key))
+            return;
+        let response = data;
+        if (isNullOrNoItem(filesUpload)) {
+            filesUpload = []
+        }
+        let file = {
+            Key: parseInt(response.initialPreviewConfig[0].key),
+            FileName: response.initialPreviewConfig[0].caption,
+            FileUrl: response.initialPreview,
+            KeyName: "",
+            Id: fileId
+        }
+        let existKeyIndex = filesUpload.findIndex(p => p.key == key)
+        if (existKeyIndex < 0) {
+            filesUpload.push({ key: parseInt(key), files: [file] })
+        }
+        else {
+            if (filesUpload[existKeyIndex].files == null)
+                filesUpload[existKeyIndex].files = []
+            filesUpload[existKeyIndex].files.push(file);
+        }
+        if (isReach5Files(filesUpload, key) === false) {
+            let newAttachhFileId = getNewGuid();
+            renderOneItemFile(key, newAttachhFileId, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
+        }
+    }
+    function removeFile(key, fileId) {
+        if (isNullOrNoItem(filesUpload))
+            return;
+        let index = filesUpload.findIndex(p => p.key == key);
+        if (index >= 0) {
+            if (!isNullOrNoItem(filesUpload[index].files)) {
+                let indexOfFile = filesUpload[index].files.findIndex(p => p.Id == fileId);
+                if (indexOfFile >= 0)
+                    filesUpload[index].files.splice(indexOfFile, 1);
+            }
+        }
+    }
+    function LayDSSanPham(maDoiTac) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSSanPham", "HoSo")',
+            data: { 'maDoiTac': maDoiTac },
+            success: function (data) {
+                $('#ddlSanPhamVay').empty();
+                $('#ddlSanPhamVay').append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#ddlSanPhamVay').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                    });
+                }
+                $('#ddlSanPhamVay').chosen().trigger("chosen:updated");
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+    $('#btn_Save').click(function (e) {
+        if ($('#txtHoTen').val() == "" || $('#txtHoTen').val() == undefined) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng nhập tên",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if ($('#ddlDoiTac').val() == "0" || $('#ddlDoiTac').val() == undefined) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn đối tác",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if ($('#ddlSanPhamVay').val() == "0" || $('#ddlSanPhamVay').val() == undefined) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn sản phẩm vay",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        var objectSend = JSON.stringify({
+            'CustomerName': $('#txtHoTen').val(),
+            'phone': $('#txtDienThoai').val(),
+            'cmnd': $('#txtCMND').val(),
+            'provinceId': $('#ddlTinh').val(),
+            'districtId': $('#ddlHuyen').val(),
+            'address': $('#txtDiaChi').val(),
+            'partnerId': $('#ddlDoiTac').val(), 
+            'productId': $('#ddlSanPhamVay').val(), 
+            'LastNote': $('#txtGhiChu').val(),
+        });
+        $.ajax({
+            traditional: true,
+            url: '@Url.Action("Create", "Courrier")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                if (data.success == true) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: "Thành công",
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                        //window.location = window.location;
+
+                            uploadHoso2(data.data, false);
+                    });
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+    });
+
+    $('#btn_Save').click(function (e) {
+
+        if ($('#ddlDoiTac').val() == "0" || $('#ddlDoiTac').val() == undefined ) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn đối tác",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if ($('#ddlSanPhamVay').val() == "0" || $('#ddlSanPhamVay').val() == undefined) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn sản phẩm vay",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+
+        if ($('#txtDienThoai').val().length != 10) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Số điện thoại di động phải đúng 10 số!",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+
+        let doitacF88Value = 0;
+        if (!isNullOrNoItem(lstDoitac)) {
+            let doitacId = !isNullOrUndefined($('#ddlDoiTac').val()) ? parseInt($('#ddlDoiTac').val()) : 0;
+            let doitac = lstDoitac.find(p => p.ID == doitacId);
+            if (!isNullOrUndefined(doitac)) {
+                doitacF88Value = doitac.F88Value;
+            }
+        }
+        if ($('#txtCMND').val().length != 9 && $('#txtCMND').val().length != 12) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Số CMND chỉ 9 hoặc 12 số!",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        let FileRequireIds = [];
+        var objectSend = JSON.stringify({
+            'hoten': $('#txtHoTen').val(), 'phone': $('#txtDienThoai').val(),
+            'phone2': $('#txtDienThoai2').val(), 'ngayNhanDon': $('#txtToDate').val(),
+            'hoSoCuaAi': $('#ddlInternalCode').val(), 'cmnd': $('#txtCMND').val(), 'gioiTinh': $('#ddlGioiTinh').val(),
+            'maKhuVuc': $('#ddlHuyen').val(), 'diaChi': $('#txtDiaChi').val(),'courier':$('#ddlCourier').val(),
+            'sanPhamVay': $('#ddlSanPhamVay').val(), 'tenCuaHang': $('#txtTenCuaHang').val(),
+            'baoHiem': $('#cbbaohiem').is(":checked"), 'thoiHanVay': $('#spnThoiHanVay').val(),
+            'ghiChu': $('#txtGhiChu').val(),
+            'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, ''),
+            'link': window.location.href,
+            'provinceId': parseInt($('#ddlTinh').val()),
+            'doitacF88Value': doitacF88Value,
+            'birthDayStr': $('#txtBirhDay').val(),
+            'cmndDayStr': $('#txtCmndDay').val(),
+            'FileRequireIds': filesUpload.map(p => FileRequireIds.push(p.key))
+        });
+        $.ajax({
+            traditional: true,
+            url: '@Url.Action("Save", "HoSo")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                if (data.success == true) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: "Thành công",
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                        uploadHoso2(data.data, true);
+                    });
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+    });
+         function uploadHoso2(hosoId, reloadOnSuccess = false) {
+            if (isNullOrNoItem(filesUpload))
+                return;
+            $.ajax({
+                traditional: true,
+                url: `/HoSo/UploadToHoso?hosoId=${hosoId}&isReset=true`,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                //dataType: 'json',
+                data: JSON.stringify(filesUpload),
+                success: function (data) {
+                    if (data.success == true) {
+                        if (reloadOnSuccess == true) {
+                            window.location = window.location;
+                        }
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+        }
+</script>

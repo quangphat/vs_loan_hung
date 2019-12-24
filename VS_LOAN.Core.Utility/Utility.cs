@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Utility
 {
+    public enum HosoType
+    {
+        Hoso = 1,
+        HosoCourrier = 2
+    }
     public enum AutoID
     {
         HoSo = 1

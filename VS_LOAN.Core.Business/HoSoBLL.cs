@@ -464,13 +464,14 @@ namespace VS_LOAN.Core.Business
                         IDbCommand command = new SqlCommand();
                         command.Connection = session.Connection;
                         command.CommandType = CommandType.Text;
-                        command.CommandText = "insert into Ghichu (UserId,Noidung,HosoId, CommentTime) values(@UserId,@Noidung,@HosoId,@CommentTime)";
+                        command.CommandText = "insert into Ghichu (UserId,Noidung,HosoId, CommentTime,TypeId) values(@UserId,@Noidung,@HosoId,@CommentTime,@typeId)";
                         session.Transaction.Enlist(command);
                         command.Parameters.Clear();
                         command.Parameters.Add(new SqlParameter("@UserId", model.UserId));
                         command.Parameters.Add(new SqlParameter("@HosoId", model.HosoId));
                         command.Parameters.Add(new SqlParameter("@Noidung", model.Noidung));
                         command.Parameters.Add(new SqlParameter("@CommentTime", model.CommentTime));
+                        command.Parameters.Add(new SqlParameter("@typeId", (int)HosoType.Hoso));
                         command.ExecuteNonQuery();
                         transaction.Commit();
                         return true;
