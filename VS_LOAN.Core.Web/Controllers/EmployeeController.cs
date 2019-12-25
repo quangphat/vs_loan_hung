@@ -204,5 +204,17 @@ namespace VS_LOAN.Core.Web.Controllers
             var datas = bizCustomer.GetNoteByCustomerId(customerId);
             return ToJsonResponse(true, null, datas);
         }
+        public async Task<JsonResult> GetUserByProvinceId(int provinceId)
+        {
+            var bizEmployee = new EmployeeBusiness();
+            var datas = await bizEmployee.GetByProvinceId(provinceId);
+            return ToJsonResponse(true, null, datas);
+        }
+        public JsonResult GetUserByDistrictId(int districtId)
+        {
+            var bizEmployee = new EmployeeBusiness();
+            var datas = bizEmployee.GetByDistrictId(districtId);
+            return ToJsonResponse(true, null, datas);
+        }
     }
 }

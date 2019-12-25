@@ -12,6 +12,27 @@ namespace VS_LOAN.Core.Business
 {
     public class EmployeeBusiness :BaseBusiness
     {
+
+        public async Task<List<OptionSimple>> GetByProvinceId(int provinceId)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryAsync<OptionSimple>("spGetAllUserByProvinceId",new { provinceId }, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+
+
+        }
+        public async Task<List<OptionSimple>> GetByDistrictId(int districtId)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryAsync<OptionSimple>("spGetAllUserByDistrictId", new { districtId }, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+
+
+        }
         public async Task<Nhanvien> GetByUserName(string userName, int id = 0)
         {
             string query = "select * from Nhan_Vien where Ten_Dang_Nhap = @userName";

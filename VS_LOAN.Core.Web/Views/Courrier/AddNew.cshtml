@@ -1,6 +1,6 @@
 ﻿@using VS_LOAN.Core.Web.Resources;
 @{
-    ViewBag.Title = "Tạo hồ sơ";
+    ViewBag.Title = "Hồ sơ courier";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @model String
@@ -12,7 +12,7 @@
         <ul class="breadcrumb">
             <li>
                 <i class="fa fa-caret-right"></i>
-                <a href="#">Tạo hợp đồng</a>
+                <a href="#">Hồ sơ courier</a>
             </li>
         </ul>
     </div>
@@ -26,16 +26,7 @@
                         <div class="col-sm-4">
                             <input type="text" id="txtHoTen" placeholder="Nhập họ tên" class="form-control">
                         </div>
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày nhận đơn đề nghị<span class="required">(*)</span></label>
-                        <div class="col-sm-4">
-                            <div class="input-group">
-                                <input class="form-control date-picker" id="txtToDate" />
-                                <span class="input-group-addon">
-                                    <i class="fa fa-calendar bigger-110"></i>
-                                </span>
-                            </div>
-                        </div>
-
+                        
                     </div>
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại khách hàng<span class="required">(*)</span> </label>
@@ -48,15 +39,7 @@
                         <div class="col-sm-4">
                             <input type="text" id="txtCMND" placeholder="Nhập số CMND" class="form-control" />
                         </div>
-                        <label class="col-sm-2 control-label no-padding-right">Ngày cấp CMND/CCCD<span class="required">(*)</span></label>
-                        <div class="col-sm-4">
-                            <div class="input-group">
-                                <input class="form-control date-picker" id="txtCmndDay" />
-                                <span class="input-group-addon">
-                                    <i class="fa fa-calendar bigger-110"></i>
-                                </span>
-                            </div>
-                        </div>
+                        
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Tỉnh/TP<span class="required">(*)</span></label>
@@ -65,19 +48,14 @@
                                 <option value="0"></option>
                             </select>
                         </div>
-                        <label class="col-sm-2 control-label no-padding-right">Quận/huyện<span class="required">(*)</span></label>
+                        <label class="col-sm-2 control-label no-padding-right">Courrier<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlHuyen" class="chosen-select form-control" data-placeholder="Chọn quận huyện">
+                            <select id="ddlCourrier" class="chosen-select form-control" data-placeholder="Chọn Courrier">
                                 <option value="0"></option>
                             </select>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Địa chỉ<span class="required">(*)</span></label>
-                        <div class="col-sm-10">
-                            <textarea type="text" id="txtDiaChi" placeholder="Nhập địa chỉ" class="form-control"></textarea>
-                        </div>
-                    </div>
+                    
                 </form>
             </div>
         </div>
@@ -143,7 +121,7 @@
 <script>
     $(document).ready(function () {
         $('#ddlSanPhamVay').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddlHuyen').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlCourrier').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlTinh').chosen({ width: '100%', allow_single_deselect: true });
         
     });
@@ -178,7 +156,7 @@
             LayDSSanPham(this.value);
         });
         $('#ddlTinh').on('change', function () {
-            LayDSHuyen(this.value);
+            getCourrier(this.value);
         });
     });
     function LayDSTinh() {
@@ -203,20 +181,20 @@
             }
         });
     }
-    function LayDSHuyen(maTinh) {
+    function getCourrier(maTinh) {
         $.ajax({
             type: "POST",
-            url: '@Url.Action("LayDSHuyen", "KhuVuc")',
-            data: {'maTinh':maTinh},
+            url: '@Url.Action("GetUserByProvinceId", "Employee")',
+            data: {'provinceID':maTinh},
             success: function (data) {
-                $('#ddlHuyen').empty();
-                $('#ddlHuyen').append("<option value='0'></option>");
+                $('#ddlCourrier').empty();
+                $('#ddlCourrier').append("<option value='0'></option>");
                 if (data != null) {
                     $.each(data.data, function (index, optionData) {
-                        $('#ddlHuyen').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                        $('#ddlCourrier').append("<option value='" + optionData.Id + "'>" + optionData.Name + "</option>");
                     });
                 }
-                $('#ddlHuyen').chosen().trigger("chosen:updated");
+                $('#ddlCourrier').chosen().trigger("chosen:updated");
             },
             complete: function () {
             },
@@ -365,20 +343,10 @@
             });
             return;
         }
-        if ($('#ddlDoiTac').val() == "0" || $('#ddlDoiTac').val() == undefined) {
+        if ($('#ddlCourrier').val() == "0" || $('#ddlCourrier').val() == undefined) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn đối tác",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if ($('#ddlSanPhamVay').val() == "0" || $('#ddlSanPhamVay').val() == undefined) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn sản phẩm vay",
+                text: "Vui lòng chọn Courier",
                 type: "error",
                 timer: 4000,
                 showConfirmButton: true,
@@ -389,9 +357,7 @@
             'CustomerName': $('#txtHoTen').val(),
             'phone': $('#txtDienThoai').val(),
             'cmnd': $('#txtCMND').val(),
-            'provinceId': $('#ddlTinh').val(),
-            'districtId': $('#ddlHuyen').val(),
-            'address': $('#txtDiaChi').val(),
+            'AssignId': $('#ddlCourrier').val(),
             'partnerId': $('#ddlDoiTac').val(), 
             'productId': $('#ddlSanPhamVay').val(), 
             'LastNote': $('#txtGhiChu').val(),
@@ -435,111 +401,6 @@
         });
     });
 
-    $('#btn_Save').click(function (e) {
-
-        if ($('#ddlDoiTac').val() == "0" || $('#ddlDoiTac').val() == undefined ) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn đối tác",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if ($('#ddlSanPhamVay').val() == "0" || $('#ddlSanPhamVay').val() == undefined) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn sản phẩm vay",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-
-        if ($('#txtDienThoai').val().length != 10) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Số điện thoại di động phải đúng 10 số!",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-
-        let doitacF88Value = 0;
-        if (!isNullOrNoItem(lstDoitac)) {
-            let doitacId = !isNullOrUndefined($('#ddlDoiTac').val()) ? parseInt($('#ddlDoiTac').val()) : 0;
-            let doitac = lstDoitac.find(p => p.ID == doitacId);
-            if (!isNullOrUndefined(doitac)) {
-                doitacF88Value = doitac.F88Value;
-            }
-        }
-        if ($('#txtCMND').val().length != 9 && $('#txtCMND').val().length != 12) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Số CMND chỉ 9 hoặc 12 số!",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        let FileRequireIds = [];
-        var objectSend = JSON.stringify({
-            'hoten': $('#txtHoTen').val(), 'phone': $('#txtDienThoai').val(),
-            'phone2': $('#txtDienThoai2').val(), 'ngayNhanDon': $('#txtToDate').val(),
-            'hoSoCuaAi': $('#ddlInternalCode').val(), 'cmnd': $('#txtCMND').val(), 'gioiTinh': $('#ddlGioiTinh').val(),
-            'maKhuVuc': $('#ddlHuyen').val(), 'diaChi': $('#txtDiaChi').val(),'courier':$('#ddlCourier').val(),
-            'sanPhamVay': $('#ddlSanPhamVay').val(), 'tenCuaHang': $('#txtTenCuaHang').val(),
-            'baoHiem': $('#cbbaohiem').is(":checked"), 'thoiHanVay': $('#spnThoiHanVay').val(),
-            'ghiChu': $('#txtGhiChu').val(),
-            'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, ''),
-            'link': window.location.href,
-            'provinceId': parseInt($('#ddlTinh').val()),
-            'doitacF88Value': doitacF88Value,
-            'birthDayStr': $('#txtBirhDay').val(),
-            'cmndDayStr': $('#txtCmndDay').val(),
-            'FileRequireIds': filesUpload.map(p => FileRequireIds.push(p.key))
-        });
-        $.ajax({
-            traditional: true,
-            url: '@Url.Action("Save", "HoSo")',
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            data: objectSend,
-            success: function (data) {
-                if (data.success == true) {
-                    swal({
-                        title: "@Html.Raw(Global.Message_Title)",
-                        text: "Thành công",
-                        type: "success",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    }, function () {
-                        uploadHoso2(data.data, true);
-                    });
-                }
-                else {
-                    swal({
-                        title: "@Html.Raw(Global.Message_Title)",
-                        text: data.code,
-                        type: "error",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    });
-                }
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            },
-            complete: function () {
-                $('#panel_body').unblock();
-            },
-        });
-    });
          function uploadHoso2(hosoId, reloadOnSuccess = false) {
             if (isNullOrNoItem(filesUpload))
                 return;

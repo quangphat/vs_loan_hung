@@ -24,15 +24,16 @@ namespace VS_LOAN.Core.Business
                 p.Add("note", hoso.LastNote);
                 p.Add("createdby", hoso.CreatedBy);
                 p.Add("phone", hoso.Phone);
-                p.Add("address", hoso.Address);
-                p.Add("districtId", hoso.DistrictId);
-                p.Add("provinceId", hoso.ProvinceId);
+                p.Add("assignId", hoso.AssignId);
                 p.Add("partnerId", hoso.PartnerId);
-                await con.ExecuteAsync("sp_InsertCustomer", p, commandType: CommandType.StoredProcedure);
+                await con.ExecuteAsync("sp_InsertHosoCourrier", p, commandType: CommandType.StoredProcedure);
                 return p.Get<int>("id");
             }
 
         }
-        
+        public async Task<int> CountHosoCourrier(string freeText, int courrierId)
+        {
+            return 1;
+        }
     }
 }

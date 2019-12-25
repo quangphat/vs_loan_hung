@@ -62,10 +62,8 @@ namespace VS_LOAN.Core.Web.Controllers
                 CreatedBy = GlobalData.User.IDUser,
                 ProductId = model.ProductId,
                 PartnerId = model.PartnerId,
-                ProvinceId = model.ProvinceId,
                 Phone = model.Phone,
-                DistrictId = model.DistrictId,
-                Address = model.Address,
+                AssignId = model.AssignId,
                 
             };
             var _bizCourrier = new HosoCourrierBusiness();
