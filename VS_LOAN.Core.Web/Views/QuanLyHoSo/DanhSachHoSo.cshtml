@@ -82,7 +82,7 @@
                         </div>
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
                         <div class="col-sm-5 col-xs-12 ">
-                            <select id="ddlStatus" class="chosen-select form-control" multiple data-placeholder="Chọn nhóm"></select>
+                            <select id="ddlStatus" class="chosen-select form-control" multiple data-placeholder="Chọn trạng thái"></select>
                         </div>
 
                     </div>
@@ -407,7 +407,7 @@
     function renderTextCenter(value, type) {
         return "<td class='text-center'>" + getValueDisplay(value, type) + "</td>";
     }
-        function renderStatus(MaTrangThai, TrangThaiHS) {
+   function renderStatus(MaTrangThai, TrangThaiHS) {
         var statusString = "";
         if (MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.Nhap)')
             statusString = "<span class='label label-sm label-light arrowed arrowed-righ'>" + TrangThaiHS + "</span>";

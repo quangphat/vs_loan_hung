@@ -14,12 +14,13 @@ namespace VS_LOAN.Core.Business
     {
 
         
-        public async Task<bool> UpdateExistingFile(int fileId, string name, string url)
+        public async Task<bool> UpdateExistingFile(int fileId, string name, string url, int typeId = 1)
         {
             var p = new DynamicParameters();
             p.Add("fileId", fileId);
             p.Add("name", name);
             p.Add("url", url);
+            p.Add("typeId", typeId);
             using (var con = GetConnection())
             {
                 var result = await con.ExecuteAsync("updateExistingFile", p,

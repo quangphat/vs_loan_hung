@@ -19,6 +19,7 @@ namespace VS_LOAN.Core.Entity
         public string FilePath { get; set; }
         public string FileName { get; set; }
         public int HosoId { get; set; }
+        public int LoaiHoso { get; set; }
     }
     public class HosoTailieu : LoaiTaiLieuModel
     {

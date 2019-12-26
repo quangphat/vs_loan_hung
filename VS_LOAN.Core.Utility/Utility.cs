@@ -21,6 +21,15 @@ namespace VS_LOAN.Core.Utility
         Warning = 1, //nợ chú ý
         Debt = 2 //nợ xấu
     }
+    public enum HosoCourierStatus
+    {
+        New = 1,
+        InProgress = 2,
+        Deny = 3,
+        Accept = 4,
+        Giaingan = 5,
+        Finish = 6,
+    }
     public enum TrangThaiHoSo
     {
         Nhap = 0,
@@ -31,7 +40,7 @@ namespace VS_LOAN.Core.Utility
         GiaiNgan = 5,
         DaDoiChieu = 6,
         Cancel = 7,
-        PCB =8
+        PCB = 8
     }
     public enum KetQuaHoSo
     {

@@ -10,6 +10,7 @@ using VS_LOAN.Core.Business;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.HosoCourrier;
 using VS_LOAN.Core.Entity.Model;
+using VS_LOAN.Core.Entity.UploadModel;
 using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Web.Helpers;
 
@@ -32,13 +33,13 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             return View();
         }
-        public JsonResult Search(string freeText = null, int page = 1,int  limit = 10)
+        public async Task<JsonResult> Search(string freeText = null,int provinceId =0, int courierId = 0,string status = null, int page = 1, int limit = 10)
         {
-            var bzCustomer = new CustomerBLL();
-            var totalRecord = bzCustomer.Count(freeText);
-            var datas = bzCustomer.Gets(freeText, page, limit);
+            var bzCourier = new HosoCourrierBusiness();
+            var totalRecord = await bzCourier.CountHosoCourrier(freeText, courierId, status);
+            var datas = await bzCourier.GetHosoCourrier(freeText, courierId, status, page, limit);
             var result = DataPaging.Create(datas, totalRecord);
-            return ToJsonResponse(true,null,result);
+            return ToJsonResponse(true, null, result);
         }
         public ActionResult AddNew()
         {
@@ -48,29 +49,29 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<ActionResult> Create(HosoCorrierRequestModel model)
         {
-            if(model==null)
+            if (model == null)
             {
                 return ToResponse(false, "Dữ liệu không hợp lệ", 0);
             }
-            var hoso = new HosoCourrier
+            var hoso = new HosoCourier
             {
                 CustomerName = model.CustomerName,
                 ReceiveDate = DateTime.Now,
                 Cmnd = model.Cmnd,
-                Status = (int)TrangThaiHoSo.Nhap,
+                Status = (int)HosoCourierStatus.New,
                 LastNote = model.LastNote,
                 CreatedBy = GlobalData.User.IDUser,
                 ProductId = model.ProductId,
                 PartnerId = model.PartnerId,
                 Phone = model.Phone,
                 AssignId = model.AssignId,
-                
+
             };
             var _bizCourrier = new HosoCourrierBusiness();
             var id = await _bizCourrier.Create(hoso);
             if (id > 0)
             {
-                if(!string.IsNullOrWhiteSpace(model.LastNote))
+                if (!string.IsNullOrWhiteSpace(model.LastNote))
                 {
                     var bizNote = new NoteBusiness();
                     var note = new GhichuModel
@@ -82,84 +83,66 @@ namespace VS_LOAN.Core.Web.Controllers
                     };
                     await bizNote.AddNote(note);
                 }
-                
-                return ToResponse(true);
-            }        
+
+                return ToResponse(true,"",id);
+            }
             return ToResponse(false);
-            
+
         }
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            var customer = new CustomerBLL().GetById(id);
-            ViewBag.customer = customer;
+            var hoso =await new HosoCourrierBusiness().GetById(id);
+            ViewBag.hoso = hoso;
             return View();
         }
-        public ActionResult Update(CustomerEditModel model)
+        public JsonResult LayDSGhichu(int hosoId)
         {
-            
-            if(model == null || model.Customer == null)
+            List<GhichuViewModel> rs = new HoSoBLL().LayDanhsachGhichu(hosoId, (int)HosoType.HosoCourrier);
+            if (rs == null)
+                rs = new List<GhichuViewModel>();
+            return ToJsonResponse(true, null, rs);
+        }
+        public async Task<ActionResult> Update(HosoCorrierRequestModel model)
+        {
+
+            if (model == null || model.Id <=0)
             {
                 return ToResponse(false, "Dữ liệu không hợp lệ");
             }
-            var bizCustomer = new CustomerBLL();
-            var match = string.Empty;
-            var notmatch = string.Empty;
-            if(model.Partners !=null)
+            if(string.IsNullOrWhiteSpace(model.CustomerName))
             {
-                match = string.Join(",", model.Partners.Where(p => p.IsSelect == true).Select(p => p.Name).ToArray());
-                notmatch = string.Join(",", model.Partners.Where(p => !p.IsSelect ).Select(p => p.Name).ToArray());
+                return ToResponse(false, "Tên khách hàng không được để trống");
             }
-            
-            var customer = new Customer
+            if (model.AssignId <=0)
             {
-                Id = model.Customer.Id,
-                FullName = model.Customer.FullName,
-                CheckDate = model.Customer.CheckDate,
-                Cmnd = model.Customer.Cmnd,
-                CICStatus = model.Customer.CICStatus,
-                LastNote = model.Customer.Note,
+                return ToResponse(false, "Vui lòng chọn courier");
+            }
+            var hoso = new HosoCourier
+            {
+                CustomerName = model.CustomerName,
+                Cmnd = model.Cmnd,
+                Status = model.Status ,
+                LastNote = model.LastNote,
                 UpdatedBy = GlobalData.User.IDUser,
-                Gender = model.Customer.Gender,
-                MatchCondition = match,
-                NotMatch = notmatch
+                ProductId = model.ProductId,
+                PartnerId = model.PartnerId,
+                Phone = model.Phone,
+                AssignId = model.AssignId,
+                Id = model.Id
             };
-
-            var result = bizCustomer.Update(customer);
-            if (!result)
-                return ToResponse(false);
-            if(!string.IsNullOrWhiteSpace(model.Customer.Note))
+            var _bizCourrier = new HosoCourrierBusiness();
+            var result = await _bizCourrier.Update(model.Id, hoso);
+            if(result && !string.IsNullOrWhiteSpace(model.LastNote))
             {
-                var note = new CustomerNote
+                var bizNote = new NoteBusiness();
+                var note = new GhichuModel
                 {
-                    Note = model.Customer.Note,
-                    CustomerId = customer.Id,
-                    CreatedBy = customer.UpdatedBy
+                    Noidung = model.LastNote,
+                    HosoId = model.Id,
+                    UserId = hoso.UpdatedBy,
+                    TypeId = (int)HosoType.HosoCourrier
                 };
-                bizCustomer.AddNote(note);
-            }
-            if(model.Partners ==null || !model.Partners.Any())
-            {
-                return ToResponse(true);
-            }
-            var bizPartner = new PartnerBLL();
-            var deleteCustomerCheck = bizCustomer.DeleteCustomerCheck(customer.Id);
-            if(deleteCustomerCheck)
-            {
-                var selectedPartner = model.Partners.Where(p => p.IsSelect == true).ToList();
-                if(selectedPartner.Any())
-                {
-                    foreach(var item in selectedPartner)
-                    {
-                        var partner = new CustomerCheck
-                        {
-                            CustomerId = customer.Id,
-                            PartnerId = item.Id,
-                            Status = 1,
-                            CreatedBy = customer.UpdatedBy
-                        };
-                        bizCustomer.InserCustomerCheck(partner);
-                    }
-                }
+                await bizNote.AddNote(note);
             }
             return ToResponse(true);
         }
@@ -170,19 +153,56 @@ namespace VS_LOAN.Core.Web.Controllers
             var customerCheck = bizCustomer.GetCustomerCheckByCustomerId(customerId);
             var partners = bizPartner.GetListForCheckCustomerDuplicate();
             if (partners == null)
-                return ToJsonResponse(true,null,new List<OptionSimple>());
-            foreach(var item in partners)
+                return ToJsonResponse(true, null, new List<OptionSimple>());
+            foreach (var item in partners)
             {
                 item.IsSelect = customerCheck.Contains(item.Id);
             }
 
-            return ToJsonResponse(true,null,partners);
+            return ToJsonResponse(true, null, partners);
         }
-        public  JsonResult GetNotes(int customerId)
+        public JsonResult GetNotes(int customerId)
         {
             var bizCustomer = new CustomerBLL();
             var datas = bizCustomer.GetNoteByCustomerId(customerId);
-            return ToJsonResponse(true,null,datas);
+            return ToJsonResponse(true, null, datas);
+        }
+        public async Task<JsonResult> GetStatusList()
+        {
+            var bizHoso = new HosoBusiness();
+            var result = await bizHoso.GetStatusListByType((int)HosoType.HosoCourrier);
+            return ToJsonResponse(true, string.Empty, result);
+        }
+        public async Task<JsonResult> UploadToHoso(int hosoId, bool isReset, List<FileUploadModelGroupByKey> filesGroup)
+        {
+            if (hosoId <= 0 || filesGroup == null)
+                return ToJsonResponse(false);
+            var bizTailieu = new TailieuBusiness();
+            if (isReset)
+            {
+                var deleteAll = await bizTailieu.RemoveAllTailieu(hosoId, (int)HosoType.HosoCourrier);
+                if (!deleteAll)
+                    return ToJsonResponse(false);
+            }
+            foreach (var item in filesGroup)
+            {
+                if (item.files.Any())
+                {
+                    foreach (var file in item.files)
+                    {
+                        var tailieu = new TaiLieu
+                        {
+                            FileName = file.FileName,
+                            FilePath = file.FileUrl,
+                            HosoId = hosoId,
+                            TypeId = Convert.ToInt32(file.Key),
+                            LoaiHoso = (int)HosoType.HosoCourrier
+                        };
+                        await bizTailieu.Add(tailieu);
+                    }
+                }
+            }
+            return ToJsonResponse(true);
         }
     }
 }

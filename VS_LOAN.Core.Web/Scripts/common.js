@@ -269,7 +269,9 @@ function renderOneItemFile(key, fileId, titleName, isRequire = false, className 
     isFileExist = false,
     onUpload = null,
     onDelete = null,
-    filesUploaded = []) {
+    filesUploaded = [],
+    type = 1
+) {
 
     let content = "<div class='col-sm-3'";
 
@@ -289,9 +291,9 @@ function renderOneItemFile(key, fileId, titleName, isRequire = false, className 
     $('#tailieu-' + key).append(content);
     if (generateInput === true) {
         let item = $("#attachFile-" + fileId);
-
+        
         fileId = (isFileExist === true) ? fileId : getNewGuid();
-        let uploadUrl = isFileExist === true ? '/Hoso/UploadFile?key=' + key + "&fileId=" + fileId : '/Hoso/UploadFile?key=' + key + "&fileId=0";
+        let uploadUrl = isFileExist === true ? '/Hoso/UploadFile?key=' + key + "&fileId=" + fileId + "&type=" + type : '/Hoso/UploadFile?key=' + key + "&fileId=0" + "&type=" + type;
         $(item).fileinput({
             uploadUrl: allowUpload === true ? uploadUrl : null,
             validateInitialCount: true,

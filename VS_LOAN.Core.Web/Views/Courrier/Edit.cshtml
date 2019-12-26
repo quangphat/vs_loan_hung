@@ -12,7 +12,7 @@
         <ul class="breadcrumb">
             <li>
                 <i class="fa fa-caret-right"></i>
-                <a href="#">Hồ sơ courier</a>
+                <a href="#">Chỉnh sửa hồ sơ</a>
             </li>
         </ul>
     </div>
@@ -26,7 +26,7 @@
                         <div class="col-sm-4">
                             <input type="text" id="txtHoTen" placeholder="Nhập họ tên" class="form-control">
                         </div>
-                        
+
                     </div>
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại khách hàng<span class="required">(*)</span> </label>
@@ -39,7 +39,7 @@
                         <div class="col-sm-4">
                             <input type="text" id="txtCMND" placeholder="Nhập số CMND" class="form-control" />
                         </div>
-                        
+
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Tỉnh/TP<span class="required">(*)</span></label>
@@ -55,7 +55,7 @@
                             </select>
                         </div>
                     </div>
-                    
+
                 </form>
             </div>
         </div>
@@ -96,20 +96,36 @@
             <div class="col-xs-12">
                 <hr />
                 <form class="form-horizontal">
-                    <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Ghi chú hồ sơ</h4>
+                    <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Tình trạng hồ sơ</h4>
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+
+                    </div>
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
                         <div class="col-md-11 col-sm-12 col-xs-12">
                             <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
                         </div>
+                        <div class="col-md-8">
+                            <div class="activity-log">
+                                <div class="timline-addNote only-new-note">
+                                    <div class="timeline-date-event timline-date-event--margin mt-0" id="dsGhichu">
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="pull-right">
                         <a class="btn btn-sm btn-primary" id="btn_Save">
-                            Nộp hồ sơ
+                            Cập nhật
                         </a>
-                        @*<a class="btn btn-sm btn-primary" href="/HoSo/AddNew" id="btn_addNew">
-                                Tạo mới
-                            </a>*@
                     </div>
                 </form>
             </div>
@@ -119,13 +135,7 @@
 </div>
 
 <script>
-    $(document).ready(function () {
-        $('#ddlSanPhamVay').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddlCourier').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddlTinh').chosen({ width: '100%', allow_single_deselect: true });
-        
-    });
-
+    var hoso = @Html.Raw(Json.Encode(ViewBag.HoSo));
     jQuery.fn.ForceNumericOnly =function () {
     return this.each(function () {
         $(this).keydown(function (e) {
@@ -149,15 +159,23 @@
     $("#txtCMND").ForceNumericOnly();
 
     $(document).ready(function () {
+        $('#ddlSanPhamVay').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlCourier').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlTinh').chosen({ width: '100%', allow_single_deselect: true });
         LayDSTaiLieu();
         LayDSNganHang();
         LayDSTinh();
+        getStatusList(hoso.Status);
         $('#ddlDoiTac').on('change', function () {
             LayDSSanPham(this.value);
         });
         $('#ddlTinh').on('change', function () {
             getCourrier(this.value);
         });
+        $("#txtHoTen").val(hoso.CustomerName)
+        $("#txtDienThoai").val(hoso.Phone)
+        $("#txtCMND").val(hoso.Cmnd);
+        LayDanhsachGhichu();
     });
     function LayDSTinh() {
         $.ajax({
@@ -172,9 +190,12 @@
                         $('#ddlTinh').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
+                
+                $('#ddlTinh').val(hoso.ProvinceId);
                 $('#ddlTinh').chosen().trigger("chosen:updated");
             },
             complete: function () {
+                getCourrier(hoso.ProvinceId);
             },
             error: function (jqXHR, exception) {
                 showError(jqXHR, exception);
@@ -194,6 +215,7 @@
                         $('#ddlCourier').append("<option value='" + optionData.Id + "'>" + optionData.Name + "</option>");
                     });
                 }
+                $('#ddlCourier').val(hoso.AssignId);
                 $('#ddlCourier').chosen().trigger("chosen:updated");
             },
             complete: function () {
@@ -219,7 +241,32 @@
                         $('#ddlDoiTac').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
+                $('#ddlDoiTac').val(hoso.PartnerId);
                 $('#ddlDoiTac').chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+                LayDSSanPham(hoso.PartnerId)
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+    function getStatusList(value) {
+        $('#ddlStatus').empty();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetStatusList", "Courrier")',
+            data: {},
+            success: function (data) {
+                $('#ddlStatus').append("<option value='0'></option>");
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, item) {
+                        $('#ddlStatus').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                    });
+                    $('#ddlStatus').val(value);
+                    $('#ddlStatus').chosen().trigger("chosen:updated");
+                }
             },
             complete: function () {
             },
@@ -228,31 +275,79 @@
             }
         });
     }
-
+        var fileRequireIds =[]
     function LayDSTaiLieu() {
+        
         $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSTaiLieu", "HoSo")',
-            data: {},
+            type: "GET",
+            url: "/hoso/TailieuByHosoForEdit?hosoId=" + hoso.Id + "&typeId=2",
             success: function (data) {
-                if (data.data != null) {
+                if (data.data != null && data.success == true) {
                     var i = 0;
-                    var htmlContent = "";
+                    var content = "";
                     let keys = [];
                     $.each(data.data, function (index, item) {
+                        
+                        
                         $("#lstTailieu").append("<div class='form-group'><div id='tailieu-" + item.ID + "'></div></div > ");
-                        let name = '',
-                            className = ''
-                        if (keys.indexOf(item.ID) < 0) {
-                            name = item.Ten;
+                        if (!isNullOrNoItem(item.Tailieus)) {
+                            
+                            let _initialPreview = [];
+                            let _initialPreviewConfig = [];
+                            $.each(item.Tailieus, function (i, tailieu) {
+                                fileRequireIds.push(item.ID);
+                                _initialPreview = [];
+                                _initialPreviewConfig = [];
+                                var _imgExts = ["jpg", "jpeg", "png", "pdf"];
+                                var extn = tailieu.FileUrl.split('.').pop();
+                                var isImg = isExtension(extn, _imgExts);
+                                if (isImg) {
+                                    _initialPreview.push(tailieu.FileUrl);
+                                    _initialPreviewConfig.push({
+                                        caption: tailieu.FileName,
+                                        url: "/hoso/RemoveTailieuByHoso?hosoId=" + hoso.Id + "&fileId=" + tailieu.FileId,
+                                        type: extn.indexOf('pdf') > -1 ? "pdf" : "jpg",
+                                        width: "120px"
+                                    });
+                                }
+                                let name = '',
+                                    isrequire = false,
+                                    className = ''
+                                if (keys.indexOf(tailieu.Key) < 0) {
+                                    name = tailieu.KeyName;
+                                    isrequire = true
+                                }
+                                else {
+                                    className = 'mt-46'
+                                }
+                                renderOneItemFile(tailieu.Key
+                                    , tailieu.FileId
+                                    , name
+                                    , isrequire
+                                    , className
+                                    , true
+                                    , _initialPreview
+                                    , _initialPreviewConfig
+                                    , true
+                                    , true
+                                    , onUploadFile
+                                    , onDeleteFile
+                                    , []
+                                    ,2
+                                )
+                                
+                                keys.push(item.ID)
+                            })
+                            if (item.Tailieus.length < 5) {
+                                renderOneItemFile(item.ID, item.ID, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, [], 2);
+                            }
+                            
                         }
                         else {
-                            className = 'mt-46'
+                            renderOneItemFile(item.ID, item.ID, item.Ten, item.BatBuoc, '', true, [], [], true, false, onUploadFile, onDeleteFile, [], 2);
                         }
-
-                        renderOneItemFile(item.ID, item.ID, name, item.BatBuoc, className, true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload,2);
-                        keys.push(item.ID);
-                    })
+                       
+                    });
                 }
 
             },
@@ -262,6 +357,7 @@
                 showError(jqXHR, exception);
             }
         });
+
     }
     let filesUpload = [];
     function onDeleteFile(key, fileId, isExist) {
@@ -321,6 +417,7 @@
                         $('#ddlSanPhamVay').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
+                $('#ddlSanPhamVay').val(hoso.ProductId);
                 $('#ddlSanPhamVay').chosen().trigger("chosen:updated");
 
             },
@@ -357,14 +454,16 @@
             'CustomerName': $('#txtHoTen').val(),
             'phone': $('#txtDienThoai').val(),
             'cmnd': $('#txtCMND').val(),
+            'Status': $('#ddlStatus').val(),
             'AssignId': $('#ddlCourier').val(),
-            'partnerId': $('#ddlDoiTac').val(), 
-            'productId': $('#ddlSanPhamVay').val(), 
+            'partnerId': $('#ddlDoiTac').val(),
+            'productId': $('#ddlSanPhamVay').val(),
             'LastNote': $('#txtGhiChu').val(),
+            'Id': hoso.Id,
         });
         $.ajax({
             traditional: true,
-            url: '@Url.Action("Create", "Courrier")',
+            url: '@Url.Action("Update", "Courrier")',
             type: "POST",
             contentType: "application/json; charset=utf-8",
             data: objectSend,
@@ -377,9 +476,8 @@
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-                        //window.location = window.location;
-
-                            uploadHoso2(data.data, false);
+                            $("#txtGhiChu").val("");
+                            uploadHoso2(hoso.Id, true);
                     });
                 }
                 else {
@@ -406,7 +504,7 @@
                 return;
             $.ajax({
                 traditional: true,
-                url: `/Courrier/UploadToHoso?hosoId=${hosoId}&isReset=true`,
+                url: `/Courrier/UploadToHoso?hosoId=${hosoId}&isReset=false`,
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 //dataType: 'json',
@@ -434,5 +532,33 @@
                 $('#panel_body').unblock();
             },
         });
-        }
+    }
+        function LayDanhsachGhichu() {
+        //$('#ddlTrangThai').empty();
+        $.ajax({
+            type: "POST",
+            url: '/Courrier/LayDSGhichu?hosoId=' + hoso.Id,
+            data: {},
+            success: function (data) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, item) {
+                        $('#dsGhichu').append(
+                            '<div class="timeline-event-content  active">' +
+                            '<div class="timeline-item">' +
+                            '<div class="timeline-body">' +
+                            '<div class="timeline__message-container">' +
+                            '<strong>' + item.Commentator + ' (' + SetFormatDateTimeDMY(item.CommentTime) +'): </strong><span>' + item.Noidung + '</span>'+
+                            '</div></div></div></div>'
+                        )
+                    });
+                }
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
 </script>

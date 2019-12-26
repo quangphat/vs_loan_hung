@@ -206,19 +206,19 @@
             queries = new URLSearchParams(window.location.search)
             bindQueries()
             var maNhom = queries.get("maNhom");
-            $('#ddlNhom').val(maNhom)
-            $('#ddlNhom').chosen().trigger("chosen:updated").change();
-            var memberId = queries.get("maThanhVien");
-            if (isNullOrWhiteSpace(maNhom) || parseInt(maNhom) === 0 || isNullOrWhiteSpace(memberId) || parseInt(memberId) === 0) {
-                $('#ddlThanhVienNhom').empty();
-                $('#ddlThanhVienNhom').append("<option value='0'></option>");
-                $('#ddlThanhVienNhom').val('0');
-                $('#ddlThanhVienNhom').chosen().trigger("chosen:updated");
-            }
-            else {
-                $('#ddlThanhVienNhom').val(memberId)
-                $('#ddlThanhVienNhom').chosen().trigger("chosen:updated");
-            }
+            //$('#ddlNhom').val(maNhom)
+            //$('#ddlNhom').chosen().trigger("chosen:updated").change();
+            //var memberId = queries.get("maThanhVien");
+            //if (isNullOrWhiteSpace(maNhom) || parseInt(maNhom) === 0 || isNullOrWhiteSpace(memberId) || parseInt(memberId) === 0) {
+            //    $('#ddlThanhVienNhom').empty();
+            //    $('#ddlThanhVienNhom').append("<option value='0'></option>");
+            //    $('#ddlThanhVienNhom').val('0');
+            //    $('#ddlThanhVienNhom').chosen().trigger("chosen:updated");
+            //}
+            //else {
+            //    $('#ddlThanhVienNhom').val(memberId)
+            //    $('#ddlThanhVienNhom').chosen().trigger("chosen:updated");
+            //}
 
             page = queries.get("page");
             if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
@@ -270,6 +270,7 @@
                 limit = parseInt(limit)
             $("#ddlLimit").val(limit)
         }
+
         $('#ddlThanhVienNhom').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlNhom').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddllimit').chosen({ width: '100%', allow_single_deselect: true });

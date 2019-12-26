@@ -21,12 +21,13 @@ namespace VS_LOAN.Core.Business
             }
 
         }
-        public async Task<bool> RemoveAllTailieu(int hosoId)
+        public async Task<bool> RemoveAllTailieu(int hosoId, int typeId)
         {
             using (var con = GetConnection())
             {
                 var p = new DynamicParameters();
                 p.Add("MaHS", hosoId);
+                p.Add("typeId", typeId);
                 await con.ExecuteAsync("sp_TAI_LIEU_HS_XoaTatCa", p,
                     commandType: CommandType.StoredProcedure);
                 return true;
@@ -42,6 +43,7 @@ namespace VS_LOAN.Core.Business
                 p.Add("DuongDan", model.FilePath);
                 p.Add("Ten", model.FileName);
                 p.Add("MaHS", model.HosoId);
+                p.Add("typeId", model.LoaiHoso);
                 await con.ExecuteAsync("sp_TAI_LIEU_HS_Them", p,
                     commandType: CommandType.StoredProcedure);
                 return true;

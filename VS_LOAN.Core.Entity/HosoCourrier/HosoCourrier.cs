@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Entity.HosoCourrier
 {
-    public class HosoCourrier:BaseSqlEntity
+    public class HosoCourier:BaseSqlEntity
     {
         public int Id { get; set; }
         public string CustomerName { get; set; }

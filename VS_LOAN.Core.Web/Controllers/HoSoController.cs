@@ -279,7 +279,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var bizTailieu = new TailieuBusiness();
             if (isReset)
             {
-                var deleteAll = await bizTailieu.RemoveAllTailieu(hosoId);
+                var deleteAll = await bizTailieu.RemoveAllTailieu(hosoId,(int)HosoType.Hoso);
                 if (!deleteAll)
                     return ToJsonResponse(false);
             }
@@ -294,7 +294,8 @@ namespace VS_LOAN.Core.Web.Controllers
                             FileName = file.FileName,
                             FilePath = file.FileUrl,
                             HosoId = hosoId,
-                            TypeId = Convert.ToInt32(file.Key)
+                            TypeId = Convert.ToInt32(file.Key),
+                            LoaiHoso = (int)HosoType.Hoso
                         };
                         await bizTailieu.Add(tailieu);
                     }
@@ -302,7 +303,7 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             return ToJsonResponse(true);
         }
-        public async Task<JsonResult> UploadFile(int key, int fileId)
+        public async Task<JsonResult> UploadFile(int key, int fileId, int type)
         {
             string fileUrl = "";
             var _type = string.Empty;
@@ -329,7 +330,7 @@ namespace VS_LOAN.Core.Web.Controllers
                         deleteURL = fileId <= 0 ? $"/hoso/delete?key={key}" : $"/hoso/delete/0/{fileId}";
                         if (fileId > 0)
                         {
-                            await _bizMedia.UpdateExistingFile(fileId, file.Name, file.FileUrl);
+                            await _bizMedia.UpdateExistingFile(fileId, file.Name, file.FileUrl,type );
                         }
                         _type = System.IO.Path.GetExtension(fileContent.FileName);
                     }
@@ -388,7 +389,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = await bizHoso.RemoveTailieu(hosoId, fileId);
             return ToJsonResponse(true);
         }
-        public async Task<JsonResult> TailieuByHosoForEdit(int hosoId)
+        public async Task<JsonResult> TailieuByHosoForEdit(int hosoId, int typeId = 1)
         {
             if (hosoId <= 0)
             {
@@ -400,7 +401,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (lstLoaiTailieu == null || !lstLoaiTailieu.Any())
                 return ToJsonResponse(false);
 
-            var filesExist = await bizHoso.GetTailieuByHosoId(hosoId);
+            var filesExist = await bizHoso.GetTailieuByHosoId(hosoId, typeId);
 
             var result = new List<HosoTailieu>();
 
@@ -420,28 +421,18 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             return ToJsonResponse(true,null,result);
         }
-        public async Task<JsonResult> TailieuByHoso(int hosoId)
+        public async Task<JsonResult> TailieuByHoso(int hosoId, int type=1)
         {
             var bizHoso = new HosoBusiness();
-            var result = await bizHoso.GetTailieuByHosoId(hosoId);
+            var result = await bizHoso.GetTailieuByHosoId(hosoId, type);
             if (result == null)
                 result = new List<FileUploadModel>();
             return ToJsonResponse(true,null,result);
         }
-        public JsonResult Delete(string key, int fileId)
+        public JsonResult Delete(int key)
         {
             string fileUrl = "";
-            try
-            {
-
-                List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["LstFileHoSo"];
-                lstTaiLieu.RemoveAll(x => x.MaLoai.ToString().Equals(key.ToString()));
-                Session["LstFileHoSo"] = lstTaiLieu;
-            }
-            catch (BusinessException ex)
-            {
-                
-            }
+            
             return Json(new { Result = fileUrl });
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]

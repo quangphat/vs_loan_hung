@@ -484,7 +484,7 @@ namespace VS_LOAN.Core.Business
                 return false;
             }
         }
-        public List<GhichuViewModel> LayDanhsachGhichu(int hosoId)
+        public List<GhichuViewModel> LayDanhsachGhichu(int hosoId, int typeId = 1)
         {
             if (hosoId <= 0)
                 return new List<GhichuViewModel>();
@@ -498,6 +498,7 @@ namespace VS_LOAN.Core.Business
                     command.CommandText = "sp_GetGhichuByHosoId";
                     command.Parameters.Clear();
                     command.Parameters.Add(new SqlParameter("@hosoId", hosoId));
+                    command.Parameters.Add(new SqlParameter("@typeId", typeId));
                     var dt = new DataTable();
                     dt.Load(command.ExecuteReader());
                     List<GhichuViewModel> lstGhichu = new List<GhichuViewModel>();
