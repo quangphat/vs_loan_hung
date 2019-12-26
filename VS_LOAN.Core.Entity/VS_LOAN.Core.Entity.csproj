@@ -140,6 +140,7 @@
     <Compile Include="ThongTinToNhomModel.cs" />
     <Compile Include="ThongTinToNhomSuaModel.cs" />
     <Compile Include="TrangThaiHoSoModel.cs" />
+    <Compile Include="TupleModel.cs" />
     <Compile Include="UploadModel\FileUploadModelGroupByKey.cs" />
   </ItemGroup>
   <ItemGroup>

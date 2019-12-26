@@ -47,7 +47,7 @@ namespace VS_LOAN.Core.Business
             {
                 var p = AddOutputParam("id");
                 p.Add("customerName", hoso.CustomerName);
-                p.Add("receiveDate", hoso.ReceiveDate);
+                p.Add("receiveDate", DateTime.Now);
                 p.Add("cmnd", hoso.Cmnd);
                 p.Add("createddate", DateTime.Now);
                 p.Add("status", hoso.Status);

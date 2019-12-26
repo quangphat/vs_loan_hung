@@ -1,4 +1,6 @@
 ﻿using Dapper;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -6,14 +8,17 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VS_LOAN.Core.Entity;
+using VS_LOAN.Core.Entity.HosoCourrier;
 using VS_LOAN.Core.Entity.UploadModel;
+using VS_LOAN.Core.Utility;
 
 namespace VS_LOAN.Core.Business
 {
     public class MediaBusiness : BaseBusiness
     {
 
-        
+
         public async Task<bool> UpdateExistingFile(int fileId, string name, string url, int typeId = 1)
         {
             var p = new DynamicParameters();
@@ -64,7 +69,7 @@ namespace VS_LOAN.Core.Business
 
             //return new MediaUploadConfig();
         }
-        public  FileModel GetFileUploadUrl(string fileInputName, string webRootPath)
+        public FileModel GetFileUploadUrl(string fileInputName, string webRootPath)
         {
             string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + fileInputName.Trim().Replace(" ", "_");
             string root = System.IO.Path.Combine(webRootPath, "HoSo");
@@ -106,6 +111,52 @@ namespace VS_LOAN.Core.Business
                 FullPath = path
             };
 
+        }
+        public async Task<TupleModel> ReadXlsxFile(MemoryStream stream, int createBy)
+        {
+            var result = new TupleModel();
+            var workBook = WorkbookFactory.Create(stream);
+            var sheet = workBook.GetSheetAt(0);
+            var rows = sheet.GetRowEnumerator();
+            var hasData = rows.MoveNext();
+            //if (((HSSFRow)rows.Current).Cells.Count < 3)
+            //{
+            //    return new TupleModel { success = false, message = "Dữ liệu không hợp lệ" };
+            //}
+            var bizCourier = new HosoCourrierBusiness();
+            int count = 0;
+            for(int i =1;i<sheet.LastRowNum;i++)
+            {
+                var row = sheet.GetRow(i);
+                if(row!=null)
+                {
+                    if (row.Cells.Count > 1)
+                    {
+                        bool isNullRow = row.Cells.Count < 3 ? true : false;
+                    }
+                    var hoso = new HosoCourier()
+                    {
+                        CustomerName = row.Cells[0] != null ? row.Cells[0].ToString() : "",
+                        Phone = row.Cells[1] != null ? row.Cells[1].ToString() : "",
+                        Cmnd = row.Cells[2] != null ? row.Cells[2].ToString() : "",
+                        Status= (int)HosoCourierStatus.New,
+                        CreatedBy = createBy
+                    };
+                    if (!string.IsNullOrWhiteSpace(hoso.CustomerName) && !string.IsNullOrWhiteSpace(hoso.Phone))
+                    {
+                        await bizCourier.Create(hoso);
+                        count++;
+                    }
+                }
+                
+            }
+            
+            result = new TupleModel
+            {
+                success = true,
+                message = $"Import thành công {count} dòng."
+            };
+            return result;
         }
     }
 }

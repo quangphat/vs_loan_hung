@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -203,6 +204,22 @@ namespace VS_LOAN.Core.Web.Controllers
                 }
             }
             return ToJsonResponse(true);
+        }
+        public async Task<JsonResult> Import()
+        {
+            var file = Request.Files[0];
+            if (file == null)
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            Stream stream = file.InputStream;
+            stream.Position = 0;
+            var bizMedia = new MediaBusiness();
+            using (var fileStream = new MemoryStream())
+            {
+                await stream.CopyToAsync(fileStream);
+                var result = await bizMedia.ReadXlsxFile(fileStream, GlobalData.User.IDUser);
+                return ToJsonResponse(result.success, result.message);
+            }
+            
         }
     }
 }

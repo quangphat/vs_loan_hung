@@ -23,7 +23,7 @@
                         <div class="col-sm-5 col-xs-12 ">
                             <select id="ddlProvince" class="chosen-select form-control" data-placeholder="Tỉnh thành của courier"></select>
                         </div>
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Tìm kiếm</label>
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Courier</label>
                         <div class="col-sm-5 col-xs-12 ">
                             <select id="ddlCourier" class="chosen-select form-control" data-placeholder="Courier">
                                 <option value="0">Tất cả</option>
@@ -42,6 +42,7 @@
                         </div>
 
                     </div>
+
                     <div class="form-group text-right">
                         <div class="col-xs-12 ">
                             <a class="btn btn-primary" id="btnSearch">
@@ -52,7 +53,14 @@
                             </a>
                         </div>
                     </div>
-
+                    <div class="form-group">
+                        <div class=" col-sm-8">
+                            <input multiple="" class="col-sm-4" type="file" id="file" />
+                            <a class="btn btn-primary" id="btnImport">Import file</a>
+                        </div>
+                        
+                    </div>
+                    
                 </form>
                 <hr>
             </div>
@@ -209,6 +217,49 @@
             }
         });
     }
+    $('#btnImport').click(function (e) {
+        debugger
+        var formData = new FormData();
+        formData.append('file', $('#file')[0].files[0]);
+
+        $.ajax({
+            url: '/Courrier/Import',
+            type: 'POST',
+            data: formData,
+            processData: false,  // tell jQuery not to process the data
+            contentType: false,  // tell jQuery not to set contentType
+            success: function (data) {
+
+                if (data != null && data.success) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                        window.location = window.location
+                    });
+                }
+
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    })
+    
     function LayDSTinh() {
         $.ajax({
             type: "POST",
