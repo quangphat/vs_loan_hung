@@ -60,7 +60,12 @@
                         </div>
                         
                     </div>
-                    
+                    <div class="form-group">
+                        <div class=" col-sm-8">
+                            <a style="font-style: italic;" href="/Courrier/DownloadTemplateFile?fileName=ImportCourierTemplate.xlsx">Nhấp vào để download mẫu import</a>
+                        </div>
+
+                    </div>
                 </form>
                 <hr>
             </div>
@@ -145,15 +150,12 @@
     var totalRecord = 0;
     var provinceId = 0;
     var lstStatus = [
-        { value: "0", display: "Lưu tạm" },
-        { value: "1", display: "Nhập liệu" },
-        { value: "2", display: "Thẩm định" },
+        { value: "1", display: "Mới" },
+        { value: "2", display: "Đang xử lý" },
         { value: "3", display: "Từ chối" },
-        { value: "4", display: "Bổ sung hồ sơ" },
+        { value: "4", display: "Chấp nhận" },
         { value: "5", display: "Giải ngân" },
-        { value: "6", display: "Đã đối chiếu" },
-        { value: "7", display: "Hủy" },
-        { value: "8", display: "PCB" },
+        { value: "6", display: "Hoàn thành" }
     ]
     
     $(document).ready(function e() {
@@ -179,6 +181,11 @@
         });
         renderStatusList();
         setTableLimit("#ddlLimit");
+        var status = decodeURI(queries.get("status"))
+        if (!isNullOrWhiteSpace(status)) {
+            let arrStatus = status.split(',')
+            $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
+        }
         bindQueries()
         let courierId = queries.get("courierId");
         provinceId = queries.get("provinceId");
@@ -218,7 +225,7 @@
         });
     }
     $('#btnImport').click(function (e) {
-        debugger
+        
         var formData = new FormData();
         formData.append('file', $('#file')[0].files[0]);
 
@@ -395,7 +402,7 @@
                 'provinceId': (isNaN(provinceId) || provinceId == 0) ? $('#ddlProvince').val() : provinceId,
                 'courierId': (isNaN(courierId) || courierId == 0) ? $('#ddlCourier').val() : courierId,
                 'freetext': $("#txtFreeText").val(),
-
+                'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
             },
             success: function (response) {
                 if (response.Message == null) {

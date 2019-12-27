@@ -221,5 +221,12 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             
         }
+        public FileResult DownloadTemplateFile(string fileName)
+        {
+            byte[] fileBytes = System.IO.File.ReadAllBytes(AppDomain.CurrentDomain.BaseDirectory + "App_Data\\ImportSanPham\\" + fileName);
+            var response = new FileContentResult(fileBytes, "application/octet-stream");
+            response.FileDownloadName = fileName;
+            return response;
+        }
     }
 }

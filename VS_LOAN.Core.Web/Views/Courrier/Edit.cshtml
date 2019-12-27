@@ -203,6 +203,8 @@
         });
     }
     function getCourrier(maTinh) {
+        if (isNullOrWhiteSpace(maTinh))
+            return;
         $.ajax({
             type: "POST",
             url: '@Url.Action("GetUserByProvinceId", "Employee")',
