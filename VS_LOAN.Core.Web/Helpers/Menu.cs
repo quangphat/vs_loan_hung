@@ -94,7 +94,7 @@ namespace VS_LOAN.Core.Web.Helpers
                     new SiteMenuItem("Check Duplicate","menu-icon duplicate",IndexMenu.M_5,"#",new int[] { }),
                         new SiteMenuItem("Tạo mới","", IndexMenu.M_5_1,CustomerController.LstRole["AddNew"]._href, CustomerController.LstRole["AddNew"]._mangChucNang), // 1.3     
                         new SiteMenuItem("Danh sách","", IndexMenu.M_5_2,CustomerController.LstRole["Index"]._href, CustomerController.LstRole["Index"]._mangChucNang), // 1.2  
-                   new SiteMenuItem("Courrier","menu-icon duplicate",IndexMenu.M_7,"#",new int[] { }),
+                   new SiteMenuItem("Courrier","menu-icon courier",IndexMenu.M_7,"#",new int[] { }),
                         new SiteMenuItem("Tạo mới","", IndexMenu.M_7_1,CourrierController.LstRole["AddNew"]._href, CourrierController.LstRole["AddNew"]._mangChucNang), // 1.3     
                         new SiteMenuItem("Danh sách","", IndexMenu.M_7_2,CourrierController.LstRole["Index"]._href, CourrierController.LstRole["Index"]._mangChucNang) // 1.2  
                  
