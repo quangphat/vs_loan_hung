@@ -228,9 +228,9 @@ namespace VS_LOAN.Core.Web.Controllers
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult CapNhat(int id, string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
-                   , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang,
+                   , int maKhuVuc, string diaChi, int sanPhamVay, string tenCuaHang,
             int baoHiem, int thoiHanVay, string soTienVay, int trangThai,
-            int ketQua, string ghiChu, string birthDayStr, string cmndDayStr, List<int> FileRequireIds = null)
+            int ketQua, string ghiChu, string birthDayStr, string cmndDayStr, int courier =0, List<int> FileRequireIds = null)
         {
             try
             {
