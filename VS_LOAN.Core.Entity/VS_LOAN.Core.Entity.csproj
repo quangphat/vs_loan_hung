@@ -96,6 +96,8 @@
     <Compile Include="Employee\EmployeeViewModel.cs" />
     <Compile Include="Employee\Nhanvien.cs" />
     <Compile Include="Employee\UserCreateModel.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="F88Model\F88ResultModel.cs" />
     <Compile Include="F88Model\LadipageModel.cs" />
     <Compile Include="F88ResponseModel.cs" />
     <Compile Include="GhichuViewModel.cs" />
