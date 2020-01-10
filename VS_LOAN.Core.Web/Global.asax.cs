@@ -23,20 +23,19 @@ namespace VS_LOAN.Core.Web
         {
             log4net.Config.XmlConfigurator.Configure();
             AreaRegistration.RegisterAllAreas();
-
-            WebApiConfig.Register(GlobalConfiguration.Configuration);
+            GlobalConfiguration.Configure(WebApiConfig.Register);
+           // WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            GlobalConfiguration.Configure(config =>
-            {
-                config.MapHttpAttributeRoutes();
-
-                config.Routes.MapHttpRoute(
-         name: "Api",
-         routeTemplate: "api/{controller}/{action}/{id}",
-         defaults: new { id = System.Web.Http.RouteParameter.Optional }
-     );
-            });
+            //GlobalConfiguration.Configure(config =>
+            //{
+            //    config.MapHttpAttributeRoutes();
+            //    config.Routes.MapHttpRoute(
+            //         name: "Api",
+            //         routeTemplate: "api/{controller}/{action}/{id}",
+            //         defaults: new { id = System.Web.Http.RouteParameter.Optional }
+            //     );
+            //});
             //RouteConfig.Register();
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
