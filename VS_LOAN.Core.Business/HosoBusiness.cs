@@ -24,6 +24,19 @@ namespace VS_LOAN.Core.Business
                 return result.ToList();
             }
         }
+        public async Task<bool> UpdateF88Result(int hosoId, int f88Result, string reason)
+        {
+            using (var con = GetConnection())
+            {
+                var p = new DynamicParameters();
+                p.Add("hosoId", hosoId);
+                p.Add("result", f88Result);
+                p.Add("reason", reason);
+                await con.ExecuteAsync("updateF88Result", p,
+                    commandType: CommandType.StoredProcedure);
+                return true;
+            }
+        }
         public async Task<List<FileUploadModel>> GetTailieuByHosoId(int hosoId, int type)
         {
             using (var con = GetConnection())

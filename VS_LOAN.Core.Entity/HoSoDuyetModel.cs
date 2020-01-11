@@ -27,5 +27,6 @@ namespace VS_LOAN.Core.Entity
         public string DiaChiKH { get; set; }
         public string GhiChu { get; set; }
         public string TenSanPham { get; set; }
+        public int F88Result { get; set; }
     }
 }

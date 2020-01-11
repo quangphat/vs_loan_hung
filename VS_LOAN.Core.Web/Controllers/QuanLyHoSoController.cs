@@ -166,9 +166,9 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult Save(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
-           , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang,
+           , int maKhuVuc, string diaChi, int sanPhamVay, string tenCuaHang,
             bool baoHiem, int thoiHanVay, string soTienVay, int trangthai, string ghiChu,
-             string birthDayStr, string cmndDayStr, List<int> FileRequireIds = null)
+             string birthDayStr, string cmndDayStr, int courier = 0, List<int> FileRequireIds = null)
         {
 
             if (GlobalData.User.UserType == (int)UserTypeEnum.Sale
@@ -313,8 +313,8 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult SaveDaft(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
-           , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay, string soTienVay, int trangthai,
-            string ghiChu, string birthDayStr, string cmndDayStr)
+           , int maKhuVuc, string diaChi, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay, string soTienVay, int trangthai,
+            string ghiChu, string birthDayStr, string cmndDayStr, int courier = 0)
         {
 
             if (trangthai <= 0 && GlobalData.User.UserType != (int)UserTypeEnum.Sale)

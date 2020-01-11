@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Http;
 using System.Web.Mvc;
 using VS_LOAN.Core.Entity.Model;
 
@@ -55,5 +56,19 @@ namespace VS_LOAN.Core.Web.Controllers
         //    result.data = data;
         //    return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         //}
+    }
+    public class BaseApiController : ApiController
+    {
+        protected JsonnResponseModel ToResponse(bool success = true, string message = null)
+        {
+            return new JsonnResponseModel { Success = success, Message = message };
+        }
+    }
+    public class JsonnResponseModel
+
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
+
     }
 }
