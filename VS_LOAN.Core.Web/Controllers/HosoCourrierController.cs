@@ -34,11 +34,11 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             return View();
         }
-        public async Task<JsonResult> Search(string freeText = null,int provinceId =0, int courierId = 0,string status = null, int page = 1, int limit = 10)
+        public async Task<JsonResult> Search(string freeText = null,int provinceId =0, int courierId = 0,string status = null, int groupId = 0, int page = 1, int limit = 10)
         {
             var bzCourier = new HosoCourrierBusiness();
-            var totalRecord = await bzCourier.CountHosoCourrier(freeText, courierId, status);
-            var datas = await bzCourier.GetHosoCourrier(freeText, courierId, status, page, limit);
+            var totalRecord = await bzCourier.CountHosoCourrier(freeText, courierId, status, groupId);
+            var datas = await bzCourier.GetHosoCourrier(freeText, courierId, status, page, limit,groupId);
             var result = DataPaging.Create(datas, totalRecord);
             return ToJsonResponse(true, null, result);
         }
@@ -205,7 +205,7 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             return ToJsonResponse(true);
         }
-        public async Task<JsonResult> Import()
+        public async Task<JsonResult> Import(int groupId = 0)
         {
             var file = Request.Files[0];
             if (file == null)
@@ -216,7 +216,7 @@ namespace VS_LOAN.Core.Web.Controllers
             using (var fileStream = new MemoryStream())
             {
                 await stream.CopyToAsync(fileStream);
-                var result = await bizMedia.ReadXlsxFile(fileStream, GlobalData.User.IDUser);
+                var result = await bizMedia.ReadXlsxFile(fileStream, GlobalData.User.IDUser,groupId);
                 return ToJsonResponse(result.success, result.message);
             }
             

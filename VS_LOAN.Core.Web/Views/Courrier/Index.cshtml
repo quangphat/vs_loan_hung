@@ -42,7 +42,14 @@
                         </div>
 
                     </div>
-
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Nhóm cha</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlNhomCha" class="chosen-select form-control" data-placeholder="Chọn nhóm cha">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="form-group text-right">
                         <div class="col-xs-12 ">
                             <a class="btn btn-primary" id="btnSearch">
@@ -58,7 +65,7 @@
                             <input multiple="" class="col-sm-4" type="file" id="file" />
                             <a class="btn btn-primary" id="btnImport">Import file</a>
                         </div>
-                        
+
                     </div>
                     <div class="form-group">
                         <div class=" col-sm-8">
@@ -149,6 +156,7 @@
     var totalPage = 1;
     var totalRecord = 0;
     var provinceId = 0;
+    var groupId = 0;
     var lstStatus = [
         { value: "1", display: "Mới" },
         { value: "2", display: "Đang xử lý" },
@@ -159,10 +167,13 @@
     ]
     
     $(document).ready(function e() {
+        $(document).ready(function e() {
+            $('#ddlNhomCha').chosen({ width: '100%', allow_single_deselect: true });
+        });
         $('#ddlProvince').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlCourier').chosen({ width: '100%', allow_single_deselect: true });
         LayDSTinh();
-
+        LayNhom();
         preventTxtSearchEnter();
         window.addEventListener('popstate', function (e) {
 
@@ -177,7 +188,8 @@
                 limit = 10;
             else
                 limit = parseInt(limit)
-            getData(page, limit, memberId, true)
+            groupId = queries.get("groupId");
+            getData(page, limit, memberId, groupId, true)
         });
         renderStatusList();
         setTableLimit("#ddlLimit");
@@ -189,9 +201,36 @@
         bindQueries()
         let courierId = queries.get("courierId");
         provinceId = queries.get("provinceId");
-        getData(page, limit, courierId);
+        groupId = queries.get("groupId");
+        getData(page, limit, courierId, groupId);
     })
-
+    function LayNhom() {
+        $('#ddlNhomCha').empty();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSNhomCha", "ToNhom")',
+            data: {},
+            success: function (data) {
+                $('#ddlNhomCha').append("<option value='0'></option>");
+                if (data.data != null && data.success == true) {
+                    data.data.unshift({ ID: 0, Ten: 'Tất cả', MaNguoiQL: -1, ChuoiMaCha: "0"})
+                    $.each(data.data, function (index, item) {
+                        $('#ddlNhomCha').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
+                    });
+                    let groupId = queries.get("groupId");
+                    $('#ddlNhomCha').val(groupId)
+                    $('#ddlNhomCha').chosen().trigger("chosen:updated").change();
+                   
+                }
+            },
+            complete: function () {
+                
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
     var strLoading = '@Global.Message_Loading';
     $('#btnSearch').click(function (e) {
         getData(page, limit);
@@ -230,7 +269,7 @@
         formData.append('file', $('#file')[0].files[0]);
 
         $.ajax({
-            url: '/Courrier/Import',
+            url: '/Courrier/Import?groupId=' + $('#ddlNhomCha').val(),
             type: 'POST',
             data: formData,
             processData: false,  // tell jQuery not to process the data
@@ -389,11 +428,11 @@
             return;
         window.location = "/Courrier/edit/" + id;
     }
-    function getData(page, limit,courierId=0, isPopState = false)
+    function getData(page, limit,courierId=0,groupId =0, isPopState = false)
     {
-        $.ajax( {
+        $.ajax({
             url: '/Courrier/Search',
-                type: "GET",
+            type: "GET",
             contentType: "application/json",
 
             data: {
@@ -402,6 +441,7 @@
                 'provinceId': (isNaN(provinceId) || provinceId == 0) ? $('#ddlProvince').val() : provinceId,
                 'courierId': (isNaN(courierId) || courierId == 0) ? $('#ddlCourier').val() : courierId,
                 'freetext': $("#txtFreeText").val(),
+                'groupId': (isNaN(groupId) || groupId == 0) ? $('#ddlNhomCha').val() : groupId,
                 'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
             },
             success: function (response) {

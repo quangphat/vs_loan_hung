@@ -40,21 +40,26 @@ namespace VS_LOAN.Core.Web.Controllers
             List<UserPMModel> rs = new NhanVienBLL().LayDSNhanVien();
             if (rs == null)
                 rs = new List<UserPMModel>();
-            return ToJsonResponse(true,null,rs);
+            return ToJsonResponse(true, null, rs);
         }
 
-        public JsonResult LayDSNhomCha()
+        public JsonResult LayDSNhomCha(bool isAddAll = false)
         {
             List<NhomDropDownModel> rs = new NhomBLL().LayTatCa();
+
             if (rs == null)
                 rs = new List<NhomDropDownModel>();
-            return   ToJsonResponse(true, null, rs);
+            if (isAddAll)
+            {
+                rs.Add(new NhomDropDownModel { ID = 0, Ten = "Tất cả" });
+            }
+            return ToJsonResponse(true, null, rs);
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
         public ActionResult ThemMoi(string ten, string tenNgan, int maNguoiQuanLy, int maNhomCha, List<int> lstThanhVien)
         {
-            
+
             try
             {
 
@@ -71,16 +76,16 @@ namespace VS_LOAN.Core.Web.Controllers
                 result = new NhomBLL().Them(nhom, lstThanhVien);
                 if (result > 0)
                 {
-                    return ToResponse(true,null, result);
-                    
+                    return ToResponse(true, null, result);
+
                 }
-                return ToResponse(false,"Không thành công", 0);
+                return ToResponse(false, "Không thành công", 0);
             }
             catch (BusinessException ex)
             {
                 return ToResponse(false, ex.Message, 0);
             }
-            
+
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
@@ -114,7 +119,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public ActionResult Sua()
         {
             ViewBag.formindex = LstRole["QLToNhom"]._formindex;
-            if(Session["ToNhom_Sua_ID"] == null)
+            if (Session["ToNhom_Sua_ID"] == null)
                 return RedirectToAction("QLToNhom");
             int idNhom = (int)Session["ToNhom_Sua_ID"];
             ViewBag.ThongTinNhom = new NhomBLL().LayTheoMa(idNhom);
@@ -133,12 +138,12 @@ namespace VS_LOAN.Core.Web.Controllers
             List<NhanVienNhomDropDownModel> lstKhongThanhVienNhom = new NhanVienNhomBLL().LayDSKhongThanhVienNhom(maNhom);
             return Json(new { DSThanhVien = lstThanhVienNhom, DSChuaThanhVien = lstKhongThanhVienNhom });
         }
-        
+
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
         public ActionResult ChiTiet()
         {
             ViewBag.formindex = LstRole["QLToNhom"]._formindex;
-            if(Session["ToNhom_ChiTiet_ID"] == null)
+            if (Session["ToNhom_ChiTiet_ID"] == null)
                 return RedirectToAction("QLToNhom");
             int idNhom = (int)Session["ToNhom_ChiTiet_ID"];
             ViewBag.ThongTinNhom = new NhomBLL().LayChiTietTheoMa(idNhom);
@@ -171,7 +176,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 result = new NhomBLL().Sua(nhom, lstThanhVien);
                 if (result)
                 {
-                    return ToResponse(true,null, result);
+                    return ToResponse(true, null, result);
                 }
                 return ToResponse(false);
             }
@@ -179,7 +184,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToResponse(false, ex.Message, null);
             }
-            
+
         }
 
         public JsonResult LayDSChiTietThanhVien(int maNhom)
@@ -211,7 +216,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
         public ActionResult LuuCauHinh(int maNhanVien, List<int> lstIDNhom)
         {
-            
+
             try
             {
                 bool result = new NhanVienConfigBLL().CapNhat(maNhanVien, lstIDNhom);
