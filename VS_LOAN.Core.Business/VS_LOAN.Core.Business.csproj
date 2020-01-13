@@ -123,6 +123,7 @@
     <Compile Include="HosoCourrierBusiness.cs" />
     <Compile Include="HoSoDuyetXemBLL.cs" />
     <Compile Include="HoSoXemBLL.cs" />
+    <Compile Include="Interfaces\IHosoBusiness.cs" />
     <Compile Include="KetQuaHoSoBLL.cs" />
     <Compile Include="KhuVucBLL.cs" />
     <Compile Include="LoaiTaiLieuBLL.cs" />
