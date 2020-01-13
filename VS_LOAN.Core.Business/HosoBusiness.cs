@@ -5,12 +5,13 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.UploadModel;
 
 namespace VS_LOAN.Core.Business
 {
-    public class HosoBusiness : BaseBusiness
+    public class HosoBusiness : BaseBusiness, IHosoBusiness
     {
         public async Task<List<OptionSimple>> GetStatusListByType(int typeId)
         {

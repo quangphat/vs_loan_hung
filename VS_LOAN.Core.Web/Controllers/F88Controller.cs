@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using VS_LOAN.Core.Business;
+using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity.F88Model;
 
 namespace VS_LOAN.Core.Web.Controllers
@@ -13,6 +14,11 @@ namespace VS_LOAN.Core.Web.Controllers
     [RoutePrefix("api/f88")]
     public class F88Controller : BaseApiController
     {
+        protected readonly IHosoBusiness _bizHoso;
+        public F88Controller(IHosoBusiness hosoBusiness)
+        {
+            _bizHoso = hosoBusiness;
+        }
         [HttpPost]
         [Route("receiveResult")]
         public async Task<IHttpActionResult> F88Result([FromBody] F88ResultModel model)
@@ -28,7 +34,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 return Ok(ToResponse(false, "Kết quả không hợp lệ"));
             }
             var bizHoso = new HosoBusiness();
-            await bizHoso.UpdateF88Result(model.HosoId, model.ResultId, model.Reason);
+            await _bizHoso.UpdateF88Result(model.HosoId, model.ResultId, model.Reason);
             return Ok(ToResponse(true, "Thành công"));
         }
             
