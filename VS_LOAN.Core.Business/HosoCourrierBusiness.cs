@@ -41,7 +41,7 @@ namespace VS_LOAN.Core.Business
             }
 
         }
-        public async Task<int> Create(HosoCourier hoso)
+        public async Task<int> Create(HosoCourier hoso, int groupId =0)
         {
             using (var con = GetConnection())
             {
@@ -56,27 +56,28 @@ namespace VS_LOAN.Core.Business
                 p.Add("phone", hoso.Phone);
                 p.Add("assignId", hoso.AssignId);
                 p.Add("partnerId", hoso.PartnerId);
+                p.Add("groupId",groupId);
                 await con.ExecuteAsync("sp_InsertHosoCourrier", p, commandType: CommandType.StoredProcedure);
                 return p.Get<int>("id");
             }
 
         }
-        public async Task<int> CountHosoCourrier(string freeText, int courierId,string status)
+        public async Task<int> CountHosoCourrier(string freeText, int courierId,string status, int groupId = 0)
         {
             status = string.IsNullOrWhiteSpace(status) ? string.Empty : status;
             using (var con = GetConnection())
             {
-               return  await con.ExecuteScalarAsync<int>("sp_CountHosoCourier", new {freeText, courierId, status }, commandType: CommandType.StoredProcedure);
+               return  await con.ExecuteScalarAsync<int>("sp_CountHosoCourier", new {freeText, courierId, status,groupId }, commandType: CommandType.StoredProcedure);
                 
             }
         }
-        public async Task<List<HosoCourierViewModel>> GetHosoCourrier(string freeText, int courierId,string status, int page, int limit)
+        public async Task<List<HosoCourierViewModel>> GetHosoCourrier(string freeText, int courierId,string status, int page, int limit, int groupId = 0)
         {
             status = string.IsNullOrWhiteSpace(status) ? string.Empty : status;
             using (var con = GetConnection())
             {
                 var result = await con.QueryAsync<HosoCourierViewModel>("sp_GetHosoCourier",
-                    new { freeText, courierId, page, limit_tmp = limit,status },
+                    new { freeText, courierId, page, limit_tmp = limit,status, groupId },
                     commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }

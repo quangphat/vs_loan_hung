@@ -112,7 +112,7 @@ namespace VS_LOAN.Core.Business
             };
 
         }
-        public async Task<TupleModel> ReadXlsxFile(MemoryStream stream, int createBy)
+        public async Task<TupleModel> ReadXlsxFile(MemoryStream stream, int createBy, int groupId =0)
         {
             var result = new TupleModel();
             var workBook = WorkbookFactory.Create(stream);
@@ -144,7 +144,7 @@ namespace VS_LOAN.Core.Business
                     };
                     if (!string.IsNullOrWhiteSpace(hoso.CustomerName) && !string.IsNullOrWhiteSpace(hoso.Phone))
                     {
-                        await bizCourier.Create(hoso);
+                        await bizCourier.Create(hoso, groupId);
                         count++;
                     }
                 }
