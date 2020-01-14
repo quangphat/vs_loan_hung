@@ -1,0 +1,22 @@
+2020-01-14 16:21:02,669 [10] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-01-14 16:21:02,684 [10] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-01-14 16:21:02,685 [10] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-01-14 16:21:02,685 [10] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-01-14 16:21:02,707 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=DOANLT-DC3;Initial Catalog=Test13;User ID=sa;Password=franklampard.no8;
+2020-01-14 16:21:02,707 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-01-14 16:21:02,709 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-01-14 16:21:02,709 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-01-14 16:21:02,709 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-01-14 16:21:02,709 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-01-14 16:21:02,710 [10] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-01-14 16:21:02,710 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-01-14 16:21:02,905 [10] INFO  VS_LOAN.Core.Business.HosoBusiness [(null)] - Log: ddddddd
+2020-01-14 16:21:21,384 [11] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=DOANLT-DC3;Initial Catalog=Test13;User ID=sa;Password=franklampard.no8;
+2020-01-14 16:21:21,384 [11] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-01-14 16:21:21,384 [11] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-01-14 16:21:21,384 [11] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-01-14 16:21:21,385 [11] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-01-14 16:21:21,385 [11] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-01-14 16:21:21,385 [11] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-01-14 16:21:21,385 [11] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-01-14 16:21:21,386 [11] INFO  VS_LOAN.Core.Business.HosoBusiness [(null)] - Log: ssssssss
