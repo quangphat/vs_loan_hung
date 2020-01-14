@@ -12,6 +12,7 @@ namespace VS_LOAN.Core.Business
 {
     public class TailieuBusiness:BaseBusiness
     {
+        public TailieuBusiness() : base(typeof(TailieuBusiness)) { }
         public async Task<List<LoaiTaiLieuModel>> GetLoaiTailieuList()
         {
             using (var con = GetConnection())

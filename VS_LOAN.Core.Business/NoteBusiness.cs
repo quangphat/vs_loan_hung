@@ -11,6 +11,7 @@ namespace VS_LOAN.Core.Business
 {
     public class NoteBusiness:BaseBusiness
     {
+        public NoteBusiness() : base(typeof(NoteBusiness)) { }
         public async Task AddNote(GhichuModel model)
         {
             using (var con = GetConnection())

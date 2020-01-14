@@ -11,6 +11,10 @@ namespace VS_LOAN.Core.Business
 {
     public class HosoCourrierBusiness:BaseBusiness
     {
+        public HosoCourrierBusiness():base(typeof(HosoCourrierBusiness))
+        {
+
+        }
         public async Task<HosoCourierViewModel> GetById(int id)
         {
             using (var con = GetConnection())

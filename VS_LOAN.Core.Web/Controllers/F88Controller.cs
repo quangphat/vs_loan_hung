@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using VS_LOAN.Core.Business;
 using VS_LOAN.Core.Business.Interfaces;
+using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.F88Model;
 
 namespace VS_LOAN.Core.Web.Controllers
@@ -37,6 +38,13 @@ namespace VS_LOAN.Core.Web.Controllers
             await _bizHoso.UpdateF88Result(model.HosoId, model.ResultId, model.Reason);
             return Ok(ToResponse(true, "Thành công"));
         }
-            
+        [HttpPost]
+        [Route("test")]
+        public async Task<IHttpActionResult> Test([FromBody] StringModel model)
+        {
+            _bizHoso.TestLog(model.Value);
+            return Ok();
+        }
+
     }
 }

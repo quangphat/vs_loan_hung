@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using log4net;
 using NHibernate.Cfg;
 using System;
 using System.Collections.Generic;
@@ -15,12 +16,14 @@ namespace VS_LOAN.Core.Business
     {
         protected IDbConnection _connection;
         private readonly string _connectionString;
-        public BaseBusiness()
+        protected readonly ILog _log;
+        public BaseBusiness(Type inheritBiz)
         {
             var cfg = new Configuration();
             cfg.Configure(System.IO.Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, DBConfig.DB_LOAN));
             _connectionString = cfg.GetProperty("connection.connection_string");
             _connection = new SqlConnection(_connectionString);
+            _log = LogManager.GetLogger(inheritBiz);
         }
 
         protected DynamicParameters AddOutputParam(string name, DbType type = DbType.Int32)
@@ -35,5 +38,6 @@ namespace VS_LOAN.Core.Business
             con.Open();
             return con;
         }
+         
     }
 }

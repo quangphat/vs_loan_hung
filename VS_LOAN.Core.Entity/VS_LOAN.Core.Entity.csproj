@@ -136,6 +136,7 @@
     <Compile Include="RLanguage.cs" />
     <Compile Include="RMessage.cs" />
     <Compile Include="SanPhamVayModel.cs" />
+    <Compile Include="StringModel.cs" />
     <Compile Include="ThongTinChiTietToNhomModel.cs" />
     <Compile Include="ThongTinNhanVienModel.cs" />
     <Compile Include="ThongTinSanPhamVayModel.cs" />

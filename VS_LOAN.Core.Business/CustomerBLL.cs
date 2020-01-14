@@ -13,7 +13,7 @@ namespace VS_LOAN.Core.Business
 {
     public class CustomerBLL : BaseBusiness
     {
-        public CustomerBLL() : base()
+        public CustomerBLL() : base(typeof(CustomerBLL))
         {
 
         }

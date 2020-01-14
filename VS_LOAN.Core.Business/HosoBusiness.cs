@@ -13,6 +13,14 @@ namespace VS_LOAN.Core.Business
 {
     public class HosoBusiness : BaseBusiness, IHosoBusiness
     {
+        public HosoBusiness():base(typeof(HosoBusiness))
+        {
+
+        }
+        public void TestLog(string log)
+        {
+            _log.InfoFormat("Log: {0}",log);
+        }
         public async Task<List<OptionSimple>> GetStatusListByType(int typeId)
         {
             using (var con = GetConnection())
