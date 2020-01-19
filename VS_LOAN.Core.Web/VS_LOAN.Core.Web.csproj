@@ -224,6 +224,7 @@
     <Compile Include="Common\GroupPositionAD.cs" />
     <Compile Include="Common\MailCM.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\EcController.cs" />
     <Compile Include="Controllers\HosoCourrierController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
@@ -1779,6 +1780,10 @@
     <Folder Include="App_Data\ImportSanPham\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EasyCreditService\EasyCreditService.csproj">
+      <Project>{7BCE1FAF-DC05-49D1-8D0E-E1C9A8F12A6A}</Project>
+      <Name>EasyCreditService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\F88Service\F88Service.csproj">
       <Project>{F0429BA6-9FA4-48B8-B793-46FC793517A6}</Project>
       <Name>F88Service</Name>

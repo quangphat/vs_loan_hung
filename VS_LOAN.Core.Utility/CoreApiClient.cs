@@ -18,7 +18,7 @@ namespace VS_LOAN.Core.Utility
             return await httpClient.Call( HttpMethod.Post, basePath, path, param, data);
         }
         private static async Task<HttpResponseMessage> Call(this HttpClient httpClient,
-            HttpMethod method,string basePath, string path = "/", object param = null, object data = null)
+            HttpMethod method,string basePath, string path = "/", object param = null, object data = null, string bearer = null)
         {
             //if (param != null)
             //    path = path.AddQuery(param);
@@ -59,7 +59,10 @@ namespace VS_LOAN.Core.Utility
 
             if (string.IsNullOrWhiteSpace(originalData))
                 originalData = string.Empty;
-            
+            if(!string.IsNullOrWhiteSpace(bearer))
+            {
+                requestMessage.Headers.Add("Authorization", "Bearer write:loan_request");
+            }
             requestMessage.Content = content;
             var response = await httpClient.SendAsync(requestMessage).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();

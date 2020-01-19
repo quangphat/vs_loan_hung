@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using EasyCreditService.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,15 +8,22 @@ using System.Text;
 using System.Threading.Tasks;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
+using VS_LOAN.Core.Entity.EasyCredit;
 using VS_LOAN.Core.Entity.UploadModel;
 
 namespace VS_LOAN.Core.Business
 {
     public class HosoBusiness : BaseBusiness, IHosoBusiness
     {
+        protected ILoanRequest _svLoanrequest;
         public HosoBusiness():base(typeof(HosoBusiness))
         {
-
+        }
+        public async Task CreateLoanToEc(LoanInfoRequestModel model)
+        {
+            if (model == null)
+                return;
+            await _svLoanrequest.CreateLoan(model);
         }
         public void TestLog(string log)
         {

@@ -116,6 +116,7 @@
     <Compile Include="CourierCodeBLL.cs" />
     <Compile Include="CustomerBLL.cs" />
     <Compile Include="DoiTacBLL.cs" />
+    <Compile Include="EasyCredit\ECLoanBusiness.cs" />
     <Compile Include="EmployeeBusiness.cs" />
     <Compile Include="GrantRightBLL.cs" />
     <Compile Include="HoSoBLL.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="HosoCourrierBusiness.cs" />
     <Compile Include="HoSoDuyetXemBLL.cs" />
     <Compile Include="HoSoXemBLL.cs" />
+    <Compile Include="Interfaces\IECLoanBusiness.cs" />
     <Compile Include="Interfaces\IHosoBusiness.cs" />
     <Compile Include="KetQuaHoSoBLL.cs" />
     <Compile Include="KhuVucBLL.cs" />
@@ -149,6 +151,10 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EasyCreditService\EasyCreditService.csproj">
+      <Project>{7BCE1FAF-DC05-49D1-8D0E-E1C9A8F12A6A}</Project>
+      <Name>EasyCreditService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VS_LOAN.Core.Entity\VS_LOAN.Core.Entity.csproj">
       <Project>{e86679d0-8e05-471f-8da0-3e33e1f7d6bc}</Project>
       <Name>KPMG_PD.Core.Entity</Name>

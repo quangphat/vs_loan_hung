@@ -353,3 +353,41 @@ System.TypeLoadException: Could not load type managed_web. Possible cause: no as
 2020-01-19 20:41:07,834 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
 2020-01-19 20:41:07,835 [7] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
 2020-01-19 20:41:07,835 [7] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-01-19 21:45:19,345 [7] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-01-19 21:45:19,372 [7] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-01-19 21:45:19,374 [7] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-01-19 21:45:19,376 [7] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-01-19 21:45:19,413 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=QUANGPHAT\CLARKKENT;Initial Catalog=Test13;User ID=sa;Password=number8;
+2020-01-19 21:45:19,414 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-01-19 21:45:19,414 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-01-19 21:45:19,414 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-01-19 21:45:19,414 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-01-19 21:45:19,414 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-01-19 21:45:19,415 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-01-19 21:45:19,415 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-01-19 21:46:00,555 [7] INFO  EasyCreditService.Classes.LoanRequest [(null)] - start send loan request
+2020-01-19 21:46:03,412 [7] INFO  EasyCreditService.Classes.LoanRequest [(null)] - exception while sending loan request
+2020-01-19 21:46:03,934 [7] INFO  EasyCreditService.Classes.LoanRequest [(null)] - An invalid request URI was provided. The request URI must either be an absolute URI or BaseAddress must be set.
+2020-01-19 21:48:29,661 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=QUANGPHAT\CLARKKENT;Initial Catalog=Test13;User ID=sa;Password=number8;
+2020-01-19 21:48:29,662 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-01-19 21:48:29,663 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-01-19 21:48:29,663 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-01-19 21:48:29,664 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-01-19 21:48:29,664 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-01-19 21:48:29,664 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-01-19 21:48:29,665 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-01-19 21:50:28,449 [6] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-01-19 21:50:28,468 [6] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-01-19 21:50:28,468 [6] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-01-19 21:50:28,469 [6] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-01-19 21:50:28,499 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=QUANGPHAT\CLARKKENT;Initial Catalog=Test13;User ID=sa;Password=number8;
+2020-01-19 21:50:28,500 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-01-19 21:50:28,500 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-01-19 21:50:28,500 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-01-19 21:50:28,500 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-01-19 21:50:28,500 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-01-19 21:50:28,501 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-01-19 21:50:28,501 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-01-19 21:50:30,788 [6] INFO  EasyCreditService.Classes.LoanRequest [(null)] - start send loan request
+2020-01-19 21:50:56,743 [5] INFO  EasyCreditService.Classes.LoanRequest [(null)] - exception while sending loan request
+2020-01-19 21:50:56,743 [5] INFO  EasyCreditService.Classes.LoanRequest [(null)] - An error occurred while sending the request.

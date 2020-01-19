@@ -11,4 +11,9 @@ namespace VS_LOAN.Core.Entity
         Approve = 1,
         Deny = 2
     }
+    public enum ServiceType
+    {
+        F88 = 1,
+        EasyCredit = 2
+    }
 }

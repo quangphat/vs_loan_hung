@@ -92,6 +92,7 @@
     <Compile Include="CustomerModel.cs" />
     <Compile Include="CustomerNoteViewModel.cs" />
     <Compile Include="DatetimeConvertModel.cs" />
+    <Compile Include="EasyCredit\LoanInfoRequestModel.cs" />
     <Compile Include="Employee\EmployeeEditModel.cs" />
     <Compile Include="Employee\EmployeeViewModel.cs" />
     <Compile Include="Employee\Nhanvien.cs" />

@@ -16,9 +16,11 @@ namespace VS_LOAN.Core.Web.Controllers
     public class F88Controller : BaseApiController
     {
         protected readonly IHosoBusiness _bizHoso;
-        public F88Controller(IHosoBusiness hosoBusiness)
+        protected readonly HttpClient _httpClient;
+        public F88Controller(HttpClient httpClient ,IHosoBusiness hosoBusiness)
         {
             _bizHoso = hosoBusiness;
+            _httpClient = httpClient;
         }
         [HttpPost]
         [Route("receiveResult")]

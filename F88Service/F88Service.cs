@@ -13,8 +13,7 @@ namespace F88Service
 {
     public class F88Service
     {
-        
-
+       
         private async Task<ResponseModel> PostLadipageReturnID(LadipageModel model)
         {
             model.Select1 = "";
