@@ -11,7 +11,7 @@ namespace VS_LOAN.Core.Business
 {
     public class PartnerBLL:BaseBusiness
     {
-        public PartnerBLL():base()
+        public PartnerBLL():base(typeof(PartnerBLL))
         {
 
         }

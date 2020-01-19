@@ -12,7 +12,10 @@ namespace VS_LOAN.Core.Business
 {
     public class EmployeeBusiness :BaseBusiness
     {
+        public EmployeeBusiness():base(typeof(EmployeeBusiness))
+        {
 
+        }
         public async Task<List<OptionSimple>> GetByProvinceId(int provinceId)
         {
             using (var con = GetConnection())

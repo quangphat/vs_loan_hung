@@ -17,7 +17,7 @@ namespace VS_LOAN.Core.Business
 {
     public class MediaBusiness : BaseBusiness
     {
-
+        public MediaBusiness() : base(typeof(MediaBusiness)) { }
 
         public async Task<bool> UpdateExistingFile(int fileId, string name, string url, int typeId = 1)
         {

@@ -4,7 +4,6 @@ using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Utility.Exceptions;
 using VS_LOAN.Core.Web.Helpers;
-using log4net;
 using System;
 using System.Collections.Generic;
 using System.Web;
