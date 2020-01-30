@@ -107,6 +107,9 @@
     <Compile Include="HoSoCuaToiModel.cs" />
     <Compile Include="HoSoDuyetModel.cs" />
     <Compile Include="HoSoQuanLyModel.cs" />
+    <Compile Include="Infrastructures\CurrentProcess.cs" />
+    <Compile Include="Infrastructures\ErrorMessage.cs" />
+    <Compile Include="Infrastructures\ResponseJsonModel.cs" />
     <Compile Include="JsonFileResult.cs" />
     <Compile Include="KetQuaHoSoModel.cs" />
     <Compile Include="LoaiTaiLieuModel.cs" />

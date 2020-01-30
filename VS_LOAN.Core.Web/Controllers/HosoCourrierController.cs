@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using VS_LOAN.Core.Business;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.HosoCourrier;
+using VS_LOAN.Core.Entity.Infrastructures;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Entity.UploadModel;
 using VS_LOAN.Core.Utility;
@@ -19,6 +20,10 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class CourrierController : BaseController
     {
+        public CourrierController(CurrentProcess currentProcess) : base(currentProcess)
+        {
+
+        }
         public static Dictionary<string, ActionInfo> LstRole
         {
             get

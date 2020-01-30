@@ -7,13 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
+using VS_LOAN.Core.Entity.Infrastructures;
 using VS_LOAN.Core.Entity.UploadModel;
 
 namespace VS_LOAN.Core.Business
 {
     public class HosoBusiness : BaseBusiness, IHosoBusiness
     {
-        public HosoBusiness():base(typeof(HosoBusiness))
+        public HosoBusiness(CurrentProcess currentProcess):base(typeof(HosoBusiness))
         {
 
         }

@@ -17,11 +17,16 @@ using VS_LOAN.Core.Web.Helpers;
 using System.Threading.Tasks;
 using F88Service;
 using VS_LOAN.Core.Entity.UploadModel;
+using VS_LOAN.Core.Entity.Infrastructures;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class HoSoController : BaseController
     {
+        public HoSoController(CurrentProcess currentProcess) : base(currentProcess)
+        {
+
+        }
         public static Dictionary<string, ActionInfo> LstRole
         {
             get
