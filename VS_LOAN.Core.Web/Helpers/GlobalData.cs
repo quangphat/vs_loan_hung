@@ -9,6 +9,7 @@ namespace VS_LOAN.Core.Web.Helpers
 {
     public class GlobalData
     {
+        
         public static UserPMModel User
         {
             get

@@ -12,6 +12,8 @@ namespace VS_LOAN.Core.Utility
         DuyetHoSo=1,
         QLToNhom = 2,
         CauHinhDuyet = 3,
-        QLSanPhamVay=4
+        QLSanPhamVay=4,
+        QLNHomQuyen=5
+
     }
 }

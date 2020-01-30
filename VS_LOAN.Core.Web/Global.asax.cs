@@ -23,16 +23,27 @@ namespace VS_LOAN.Core.Web
         {
             log4net.Config.XmlConfigurator.Configure();
             AreaRegistration.RegisterAllAreas();
-
-            WebApiConfig.Register(GlobalConfiguration.Configuration);
+            UnityConfig.RegisterComponents();
+            GlobalConfiguration.Configure(WebApiConfig.Register);
+           // WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            //GlobalConfiguration.Configure(config =>
+            //{
+            //    config.MapHttpAttributeRoutes();
+            //    config.Routes.MapHttpRoute(
+            //         name: "Api",
+            //         routeTemplate: "api/{controller}/{action}/{id}",
+            //         defaults: new { id = System.Web.Http.RouteParameter.Optional }
+            //     );
+            //});
+            //RouteConfig.Register();
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             ModelBinders.Binders.Add(typeof(DateTime), new DateTimeModelBinder());
             ModelBinders.Binders.Add(typeof(DateTime?), new DateTimeModelBinder());
-        
-         
+
+
         }
         void Application_BeginRequest(object sender, EventArgs e)
         {

@@ -18,7 +18,7 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -30,6 +30,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -67,8 +68,8 @@
     <Reference Include="Kendo.Mvc">
       <HintPath>..\Lib\Kendo.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp">
       <Private>True</Private>
@@ -111,6 +112,9 @@
     <Reference Include="System.Net.Http.WebRequest">
       <HintPath>..\packages\System.Net.Http.2.0.20126.16343\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData">
       <Private>True</Private>
@@ -191,6 +195,15 @@
       <HintPath>..\packages\Microsoft.AspNet.Providers.Core.1.1\lib\net40\System.Web.Providers.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="Unity.Abstractions, Version=5.11.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.11.1\lib\net46\Unity.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Container, Version=5.11.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.11.1\lib\net46\Unity.Container.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.WebApi, Version=5.4.0.0, Culture=neutral, PublicKeyToken=43da31bc42a85347, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.WebAPI.5.4.0\lib\net45\Unity.WebApi.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.1.0\lib\WebGrease.dll</HintPath>
@@ -205,11 +218,17 @@
     <Compile Include="App_Start\DateTimeModelBinder.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Common\CMLink.cs" />
     <Compile Include="Common\GroupPositionAD.cs" />
     <Compile Include="Common\MailCM.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\HosoCourrierController.cs" />
+    <Compile Include="Controllers\EmployeeController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\DuyetHoSoController.cs" />
+    <Compile Include="Controllers\F88Controller.cs" />
     <Compile Include="Controllers\QuanLyHoSoController.cs" />
     <Compile Include="Controllers\SanPhamVayController.cs" />
     <Compile Include="Controllers\TestController.cs" />
@@ -221,9 +240,13 @@
     <Compile Include="Controllers\LanguageController.cs" />
     <Compile Include="Controllers\NoAuthoritiesController.cs" />
     <Compile Include="Controllers\NotPageController.cs" />
+    <Compile Include="Controllers\PermissionGroupController.cs" />
     <Compile Include="Controllers\ToNhomController.cs" />
     <Compile Include="Helpers\CaptchaImageResult.cs" />
     <Compile Include="Helpers\Constant.cs" />
+    <Compile Include="Helpers\DataContractAttribute.cs" />
+    <Compile Include="Helpers\DataMemberAttribute.cs" />
+    <Compile Include="Helpers\DataPaging.cs" />
     <Compile Include="Helpers\DataTables\jQueryDataTableParamModel.cs" />
     <Compile Include="Helpers\EnumIndexMenu.cs" />
     <Compile Include="Controllers\NhanVienController.cs" />
@@ -248,6 +271,7 @@
     <Compile Include="Helpers\DataTables\PostFilterTotal.cs" />
     <Compile Include="Helpers\DataTables\PreFilterTotal.cs" />
     <Compile Include="Helpers\DataTables\SearchExpression.cs" />
+    <Compile Include="Helpers\Helpers.cs" />
     <Compile Include="Helpers\HelpersParser.cs" />
     <Compile Include="Helpers\LanguageMang.cs" />
     <Compile Include="Helpers\Menu.cs" />
@@ -448,6 +472,7 @@
     <Content Include="Content\ace-master\widgets.html" />
     <Content Include="Content\ace-master\wysiwyg.html" />
     <Content Include="Content\css\custom.css" />
+    <Content Include="Content\css\timeline.css" />
     <Content Include="Content\fileinput\css\fileinput-rtl.css" />
     <Content Include="Content\fileinput\css\fileinput-rtl.min.css" />
     <Content Include="Content\fileinput\css\fileinput.css" />
@@ -1719,6 +1744,16 @@
     <Content Include="Views\ToNhom\CauHinhDuyet.cshtml" />
     <Content Include="Views\SanPhamVay\Import.cshtml" />
     <Content Include="Views\SanPhamVay\QuanLySanPham.cshtml" />
+    <Content Include="Views\PermissionGroup\TaoMoi.cshtml" />
+    <Content Include="Views\Customer\AddNew.cshtml" />
+    <Content Include="Views\Customer\Edit.cshtml" />
+    <Content Include="Views\Customer\Index.cshtml" />
+    <Content Include="Views\Employee\Index.cshtml" />
+    <Content Include="Views\Employee\Edit.cshtml" />
+    <Content Include="Views\Employee\AddNew.cshtml" />
+    <Content Include="Views\Courrier\AddNew.cshtml" />
+    <Content Include="Views\Courrier\Index.cshtml" />
+    <Content Include="Views\Courrier\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -1744,6 +1779,10 @@
     <Folder Include="App_Data\ImportSanPham\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\F88Service\F88Service.csproj">
+      <Project>{F0429BA6-9FA4-48B8-B793-46FC793517A6}</Project>
+      <Name>F88Service</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VS_LOAN.Core.Business\VS_LOAN.Core.Business.csproj">
       <Project>{eeed2e30-177b-48fe-9b5e-879e0ffcb0e3}</Project>
       <Name>VS_LOAN.Core.Business</Name>
@@ -1757,7 +1796,7 @@
       <Name>VS_LOAN.Core.Nhibernate</Name>
     </ProjectReference>
     <ProjectReference Include="..\VS_LOAN.Core.Utility\VS_LOAN.Core.Utility.csproj">
-      <Project>{d439d023-c499-4540-af5a-7ac3d5c3a9a1}</Project>
+      <Project>{D439D023-C499-4540-AF5A-7AC3D5C3A9A1}</Project>
       <Name>VS_LOAN.Core.Utility</Name>
     </ProjectReference>
   </ItemGroup>
@@ -1767,6 +1806,9 @@
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
@@ -1789,6 +1831,9 @@
           <CustomServerUrl>
           </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <servers defaultServer="SelfHostServer">
+            <server name="SelfHostServer" exePath="" cmdArgs="" url="http://localhost:45491/" workingDir="" />
+          </servers>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

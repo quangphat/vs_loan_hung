@@ -11,3 +11,9 @@
 /VS_LOAN.Core.Web/obj
 /VS_LOAN.Core.Web/bin
 /VS_LOAN.Core.Web/.vs
+/VS_LOAN.Core.Web/Upload
+/VS_LOAN.Core.Web/App_Data/Download
+/VS_LOAN.Core.Nhibernate/XMLConnect
+/F88Service/obj
+/F88Service/bin
+/VS_LOAN.Core.Nhibernate/XMLConnect/LOAN_hibernate.cfg.xml

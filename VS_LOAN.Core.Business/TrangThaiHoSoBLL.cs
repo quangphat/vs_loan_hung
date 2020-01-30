@@ -14,7 +14,7 @@ namespace VS_LOAN.Core.Business
 {
     public class TrangThaiHoSoBLL
     {
-        public List<TrangThaiHoSoModel> LayDSTrangThai()
+        public List<TrangThaiHoSoModel> LayDSTrangThai(bool isTeamLead = false)
         {
             try
             {
@@ -24,6 +24,8 @@ namespace VS_LOAN.Core.Business
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = "sp_TRANG_THAI_HS_LayDSTrangThai";
+                    command.Parameters.Clear();
+                    command.Parameters.Add(new SqlParameter("@isTeamlead", isTeamLead));
                     DataTable dt = new DataTable();
                     dt.Load(command.ExecuteReader());
                     if (dt != null)

@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using VS_LOAN.Core.Business;
 using VS_LOAN.Core.Entity;
+using VS_LOAN.Core.Entity.Infrastructures;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Utility.Exceptions;
@@ -17,6 +18,10 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class SanPhamVayController : LoanController
     {
+        public SanPhamVayController(CurrentProcess currentProcess) : base(currentProcess)
+        {
+
+        }
         public static Dictionary<string, ActionInfo> LstRole
         {
             get
@@ -38,7 +43,8 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult LayDS(string ngay)
         {
-            RMessage message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
+
+            RMessage message = new RMessage { code = Resources.Global.Message_Error, success = false };
             List<ThongTinSanPhamVayModel> rs = new List<ThongTinSanPhamVayModel>();
             try
             {
@@ -51,10 +57,8 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             catch (BusinessException ex)
             {
-                message.Result = false;
-                message.MessageId = ex.getExceptionId();
-                message.ErrorMessage = ex.Message;
-                message.SystemMessage = ex.ToString();
+                message.success = false;
+                message.code = ex.Message;
             }
             return Json(rs, JsonRequestBehavior.AllowGet);
         }
@@ -62,13 +66,13 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
         public ActionResult ThemMoi(string ma, string ngay)
         {
-            var message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
+            
             try
             {
                 if (new SanPhamBLL().Trung(ma) == true)
                 {
-                    message.Result = false;
-                    message.ErrorMessage = "Mã sản phẩm bị trùng!";
+                    return ToResponse(false, "Mã sản phẩm bị trùng!", 0);
+                    
                 }
                 else
                 {
@@ -80,8 +84,8 @@ namespace VS_LOAN.Core.Web.Controllers
                     }
                     catch (Exception)
                     {
-                        message.Result = false;
-                        message.ErrorMessage = "Ngày không đúng định dạng!";
+                        return ToResponse(false, "Ngày không đúng định dạng!", 0);
+                        
                     }
 
                     int result = 0;
@@ -95,44 +99,35 @@ namespace VS_LOAN.Core.Web.Controllers
                     result = new SanPhamBLL().Them(sp);
                     if (result > 0)
                     {
-                        message.Result = true;
-                        message.ErrorMessage = Resources.Global.Message_Succ;
+                        return ToResponse(true, Resources.Global.Message_Succ, result);
                     }
+                    return ToResponse(false,"Không thành công", 0);
                 }
             }
             catch (BusinessException ex)
             {
-                message.Result = false;
-                message.MessageId = ex.getExceptionId();
-                message.ErrorMessage = ex.Message;
-                message.SystemMessage = ex.ToString();
+                return ToResponse(false, ex.Message);
             }
-            return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
+           
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLSanPhamVay })]
         public ActionResult Xoa(int id)
         {
-            var message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
+            
             try
             {
 
                 bool result = false;
                 result = new SanPhamBLL().Xoa(id);
-                if (result)
-                {
-                    message.Result = true;
-                    message.ErrorMessage = Resources.Global.Message_Succ;
-                }
+                
+                return ToResponse(result);
             }
             catch (BusinessException ex)
             {
-                message.Result = false;
-                message.MessageId = ex.getExceptionId();
-                message.ErrorMessage = ex.Message;
-                message.SystemMessage = ex.ToString();
+                return ToResponse(false, ex.Message);
             }
-            return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
+            
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLSanPhamVay })]
@@ -160,7 +155,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLSanPhamVay })]
         public ActionResult LuuImportSPV(List<SanPhamModel> lstSanPham, string ngay)
         {
-            RMessage message = new RMessage() { Result = false, ErrorMessage = "Thao tác không thành công" };
+           
             try
             {
                 bool result = true;
@@ -182,9 +177,8 @@ namespace VS_LOAN.Core.Web.Controllers
                             }
                             catch (Exception)
                             {
-                                message.Result = false;
-                                message.ErrorMessage = "Ngày không đúng định dạng!";
-                                result = false;
+                                return ToResponse(false, null, "Ngày không đúng định dạng!");
+                                
                             }
                             SanPhamVayModel sp = new SanPhamVayModel();
                             sp.Ma = item.Ten;
@@ -207,20 +201,17 @@ namespace VS_LOAN.Core.Web.Controllers
                     }
                     if (result)
                     {
-                        message.ErrorMessage = "Thao tác thành công";
-                        message.Result = true;
+                        return ToResponse(true,null, lstSanPham);
                     }
+                    return ToResponse(false);
                 }
-               
+                return ToResponse(false);
             }
             catch (BusinessException ex)
             {
-                message.Result = false;
-                message.MessageId = ex.getExceptionId();
-                message.ErrorMessage = "Thao tác không thành công";
-                message.SystemMessage = ex.ToString();
+                return ToResponse(false, ex.Message);
             }
-            return Json(new { Message = message, DSSPham = lstSanPham });
+            
         }
         public FileResult DownloadFile(string file)
         {

@@ -132,5 +132,6 @@ namespace VS_LOAN.Core.Entity.Model
                 _code = value;
             }
         }
+        public int UserType { get; set; }
     }
 }

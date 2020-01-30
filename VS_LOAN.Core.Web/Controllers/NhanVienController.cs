@@ -4,17 +4,21 @@ using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Utility.Exceptions;
 using VS_LOAN.Core.Web.Helpers;
-using log4net;
 using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using VS_LOAN.Core.Entity.Infrastructures;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class NhanVienController : LoanController
     {
+        public NhanVienController(CurrentProcess currentProcess) : base(currentProcess)
+        {
+
+        }
         public static Dictionary<string, ActionInfo> LstRole
         {
             get
@@ -46,7 +50,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult ChangePass(string newPassword, string oldPassword, string confirmPassword)
         {
-            var message = new RMessage { ErrorMessage = Resources.Global.NhanVien_UserProfile_Password_Error, Result = false };
+            
             string newUrl = string.Empty;
             try
             {
@@ -57,23 +61,28 @@ namespace VS_LOAN.Core.Web.Controllers
                 {
                     if (oldPassword.Trim().Equals(string.Empty)&& !user.Password.Equals(string.Empty))
                     {
-                        message.ErrorMessage = Resources.Global.NhanVien_UserProfile_Password_Error_PassOld_Empty;
+                        return ToResponse(false, null, Resources.Global.NhanVien_UserProfile_Password_Error_PassOld_Empty);
+                        
                     }
                     else if (newPassword.Trim().Equals(string.Empty))
                     {
-                        message.ErrorMessage = Resources.Global.NhanVien_UserProfile_Password_Error_PassNew_Empty;
+                        return ToResponse(false, null, Resources.Global.NhanVien_UserProfile_Password_Error_PassNew_Empty);
+
                     }
                     else if (confirmPassword.Trim().Equals(string.Empty))
                     {
-                        message.ErrorMessage = Resources.Global.NhanVien_UserProfile_Password_Error_PassComfirm_Empty;
+                        return ToResponse(false, null, Resources.Global.NhanVien_UserProfile_Password_Error_PassComfirm_Empty);
+
                     }
                     else if (!newPassword.Trim().Equals(confirmPassword.Trim()))
                     {
-                        message.ErrorMessage = Resources.Global.NhanVien_UserProfile_Password_Error_PassNewConform;
+                        return ToResponse(false, null, Resources.Global.NhanVien_UserProfile_Password_Error_PassNewConform);
+
                     }
                     else if (MD5.getMD5(oldPassword.Trim()) != user.Password.Trim()&& user.Password!=string.Empty)
                     {
-                        message.ErrorMessage = Resources.Global.NhanVien_UserProfile_Password_Error_Old;
+                        return ToResponse(false, null, Resources.Global.NhanVien_UserProfile_Password_Error_Old);
+                        
                     }
                     else
                     {
@@ -81,35 +90,39 @@ namespace VS_LOAN.Core.Web.Controllers
                         if (result)
                         {
 
-                            message.ErrorMessage = Resources.Global.NhanVien_UserProfile_Password_Succ;
-                            message.Result = true;
                             newUrl = Url.Action("UserProfile", "NhanVien");
+                            return ToResponse(true,null, newUrl);
                         }
+                        return ToResponse(false, string.Empty);
                     }
                 }
-
+                return ToResponse(false, string.Empty);
 
             }
             catch (Exception ex)
             {
-                message.Result = false;
-                message.MessageId = ex.Message;
-                message.SystemMessage = ex.ToString();
+                return ToResponse(false, ex.Message);
             }
-            return Json(new { Message = message, newurl = newUrl });
+           
         }
         public ActionResult DangNhap(string userName, string password, string rememberMe)
         {
-            var message = new RMessage { ErrorMessage =Resources.Global.NhanVien_Login_Message_DangNhap_Error, Result = false };
+           
             string newUrl = string.Empty;
             try
             {
                 UserPMModel user = new UserPMBLL().DangNhap(userName, MD5.getMD5(password));
                 if (user != null)
                 {
-                    message.Result = true;
-                    message.ErrorMessage = Resources.Global.NhanVien_Login_Message_DangNhap_Succ;
+                   
                     GlobalData.User = user;
+                    GlobalData.User.UserType = (int)UserTypeEnum.Sale;
+                    var isTeamLead = new NhomBLL().checkIsTeamLeadByUserId(user.IDUser);
+                    var isAdmin = new NhomBLL().CheckIsAdmin(user.IDUser);
+                    if(isAdmin)
+                        GlobalData.User.UserType = (int)UserTypeEnum.Admin;
+                    else if(isTeamLead)
+                        GlobalData.User.UserType = (int)UserTypeEnum.Teamlead;
                     var cookieUserName = new HttpCookie("userName");
                     var cookiePassword = new HttpCookie("password");
                     if (rememberMe != null && rememberMe.ToLower().Equals("on"))
@@ -141,22 +154,19 @@ namespace VS_LOAN.Core.Web.Controllers
                     {
                         newUrl = "/Home/Index";
                     }
-             
+                    return ToResponse(true,null, newUrl);    
                 }
                 else
                 {
-                    message.Result = false;
-                    message.ErrorMessage = Resources.Global.NhanVien_Login_Message_DangNhap_Error_TDNORMK;
+                    return ToResponse(false, null, Resources.Global.NhanVien_Login_Message_DangNhap_Error_TDNORMK);
+                   
                 }
             }
             catch (BusinessException ex)                        
             {
-                message.Result = false;
-                message.MessageId = ex.getExceptionId();
-                message.ErrorMessage = "";
-                message.SystemMessage = ex.ToString();                 
+                return ToResponse(false, ex.Message);          
             }
-            return Json(new { Message = message, newurl = newUrl });
+            
         }
         
         public ActionResult DangXuat()
@@ -189,6 +199,13 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.ThongTin = new UserPMBLL().GetUserByID(GlobalData.User.IDUser.ToString());
             return View();
         }
-        
+        public JsonResult LayDSNhanVien()
+        {
+            List<UserPMModel> rs = new NhanVienBLL().LayDSNhanVien();
+            if (rs == null)
+                rs = new List<UserPMModel>();
+            return ToJsonResponse(true, null, rs);
+        }
+
     }
 }

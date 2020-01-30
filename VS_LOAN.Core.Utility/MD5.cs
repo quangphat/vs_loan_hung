@@ -5,10 +5,10 @@ using System.Text;
 
 namespace VS_LOAN.Core.Utility
 {
-   public static class MD5
+    public static class MD5
     {
-        static string  start= "KPMG_EV";
-        static string  end= "KPMG_PM";
+        static string start = "KPMG_EV";
+        static string end = "KPMG_PM";
         private static byte[] encryptData(string data)
         {
             System.Security.Cryptography.MD5CryptoServiceProvider md5Hasher = new System.Security.Cryptography.MD5CryptoServiceProvider();
@@ -19,7 +19,7 @@ namespace VS_LOAN.Core.Utility
         }
         public static string getMD5(string data)
         {
-            return BitConverter.ToString(encryptData(start+data+end)).Replace("-", "").ToLower();
+            return BitConverter.ToString(encryptData(start + data + end)).Replace("-", "").ToLower();
         }
     }
 }

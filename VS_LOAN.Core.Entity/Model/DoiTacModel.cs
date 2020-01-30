@@ -23,7 +23,7 @@ namespace VS_LOAN.Core.Entity.Model
                 _iD = value;
             }
         }
-
+        public int F88Value { get; set; }
         public string Ten
         {
             get

@@ -47,7 +47,7 @@
                 <h3 class="header smaller lighter blue">1.Thông tin khách hàng:</h3>
                 <form class="form-horizontal" role="form">
                     <div class="form-group">
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Họ và tên  </label>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Họ và tên</label>
                         <div class="col-sm-4">
                             <input type="text" disabled id="txtHoTen" placeholder="Nhập họ tên" class="form-control">
                         </div>
@@ -63,13 +63,13 @@
 
                     </div>
                     <div class="form-group">
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại di động  </label>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại khách hàng</label>
                         <div class="col-sm-4">
-                            <input type="text" disabled id="txtDienThoai" placeholder="Nhập số điện thoại di động" class="form-control">
+                            <input type="text" disabled id="txtDienThoai" placeholder="Nhập số điện thoại khách hàng" class="form-control">
                         </div>
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại di động 2</label>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại nhân viên</label>
                         <div class="col-sm-4">
-                            <input type="text" disabled id="txtDienThoai2" placeholder="Nhập số điện thoại di động" class="form-control">
+                            <input type="text" disabled id="txtDienThoai2" placeholder="Nhập số điện thoại nhân viên" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
@@ -86,9 +86,9 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label no-padding-right">Sell code</label>
+                        <label class="col-sm-2 control-label no-padding-right">Sale Code</label>
                         <div class="col-sm-4">
-                            <select id="ddlInternalCode" disabled class="chosen-select form-control" data-placeholder="Chọn Sell code">
+                            <select id="ddlInternalCode" disabled class="chosen-select form-control" data-placeholder="Chọn Sale code">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -118,9 +118,9 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Courier code</label>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Data Entry Code</label>
                         <div class="col-sm-4">
-                            <select id="ddlCourier" disabled class="chosen-select form-control" data-placeholder="Chọn courier code">
+                            <select id="ddlCourier" disabled class="chosen-select form-control" data-placeholder="Chọn Data Entry code">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -176,13 +176,15 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <h3 class="header smaller lighter blue">3.Hồ sơ dính kèm:</h3>
+                <h3 class="header smaller lighter blue">3.Hồ sơ đính kèm:</h3>
                 <div class="row">
                     <div class="col-xs-12" style="overflow-y: scroll;max-height:400px;">
-                        <form class="form-horizontal" role="form" id="tbDoc"></form>
+                        <form class="form-horizontal" role="form" id="lstTailieu"></form>
                     </div>
                 </div>
+
             </div>
+
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -196,12 +198,9 @@
 </div>
 <script>
     var strLoading = '@Global.Message_Loading';
+    var hoso = @Html.Raw(Json.Encode(ViewBag.HoSo));
     $(document).ready(function () {
         $('.chosen-select').chosen({ width: '100%', allow_single_deselect: true });
-    });
-</script>
-<script>
-    $(document).ready(function () {
         $('#ddlSanPhamVay').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlHuyen').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlTinh').chosen({ width: '100%', allow_single_deselect: true });
@@ -212,35 +211,28 @@
             $(this).prev().focus();
         });
 
-    });
-</script>
-<script>
-    var hoSoID=0;
-    $(document).ready(function () {
-        var hosoInfo = @Html.Raw(Json.Encode(ViewBag.HoSo));
-        if(hosoInfo!=null)
-        {
-            hoSoID=hosoInfo.ID;
-            $('#txtHoTen').val(hosoInfo.TenKhachHang);
-            $('#txtDienThoai').val(hosoInfo.SDT);
-            $('#txtDienThoai2').val(hosoInfo.SDT2);
-            $('#txtToDate').val(SetFormatDateTimeDMY(hosoInfo.NgayNhanDon));
-            $('#txtCMND').val(hosoInfo.CMND);
-            $('#txtDiaChi').val(hosoInfo.DiaChi);
-            $('#txtTenCuaHang').val(hosoInfo.TenCuaHang);
-            $('#txtTienDeNghiVay').val(formatCurrency(hosoInfo.SoTienVay.toString()));
-            $('#spnThoiHanVay').val(hosoInfo.HanVay);
-            if(hosoInfo.CoBaoHiem>0)
+        if (hoso != null) {
+            hoSoID = hoso.ID;
+            $('#txtHoTen').val(hoso.TenKhachHang);
+            $('#txtDienThoai').val(hoso.SDT);
+            $('#txtDienThoai2').val(hoso.SDT2);
+            $('#txtToDate').val(SetFormatDateTimeDMY(hoso.NgayNhanDon));
+            $('#txtCMND').val(hoso.CMND);
+            $('#txtDiaChi').val(hoso.DiaChi);
+            $('#txtTenCuaHang').val(hoso.TenCuaHang);
+            $('#txtTienDeNghiVay').val(formatCurrency(hoso.SoTienVay.toString()));
+            $('#spnThoiHanVay').val(hoso.HanVay);
+            if (hoso.CoBaoHiem > 0)
                 $('#cbbaohiem').attr('checked', false);
             else
-                $('#cbbaohiem').attr('checked',true );
-            $('#txtGhiChu').val(hosoInfo.GhiChu);
-            $('#txtTrangThai').val(hosoInfo.TenTrangThai);
-            $('#txtKetQuaHoatDong').val(hosoInfo.KetQuaText);
+                $('#cbbaohiem').attr('checked', true);
+            $('#txtGhiChu').val(hoso.GhiChu);
+            $('#txtTrangThai').val(hoso.TenTrangThai);
+            $('#txtKetQuaHoatDong').val(hoso.KetQuaText);
 
         }
-        var lstLoaiTaiLieu = @Html.Raw(Json.Encode(ViewBag.LstLoaiTaiLieu));
-        LayDSTaiLieu(lstLoaiTaiLieu,hosoInfo.LstTaiLieu);
+
+        LayDSTaiLieu();
         var maDoiTac='@ViewBag.MaDoiTac';
         $.ajax({
             type: "POST",
@@ -249,8 +241,8 @@
             success: function (data) {
                 $('#ddlDoiTac').empty();
                 $('#ddlDoiTac').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.DSDoiTac, function (index, optionData) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlDoiTac').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
@@ -263,7 +255,7 @@
                 showError(jqXHR, exception);
             }
         });
-        var sanPhamVay=hosoInfo.SanPhamVay;
+        var sanPhamVay=hoso.SanPhamVay;
          $.ajax({
             type: "POST",
             url: '@Url.Action("LayDSSanPhamByHS", "HoSo")',
@@ -271,8 +263,8 @@
             success: function (data) {
                 $('#ddlSanPhamVay').empty();
                 $('#ddlSanPhamVay').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.DSSanPham, function (index, optionData) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlSanPhamVay').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
@@ -294,8 +286,8 @@
             success: function (data) {
                 $('#ddlTinh').empty();
                 $('#ddlTinh').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.DSTinh, function (index, optionData) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlTinh').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
@@ -308,7 +300,7 @@
                 showError(jqXHR, exception);
             }
         });
-        var maHuyen=hosoInfo.MaKhuVuc;
+        var maHuyen=hoso.MaKhuVuc;
         $.ajax({
             type: "POST",
             url: '@Url.Action("LayDSHuyen", "KhuVuc")',
@@ -316,8 +308,8 @@
             success: function (data) {
                 $('#ddlHuyen').empty();
                 $('#ddlHuyen').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.DSHuyen, function (index, optionData) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlHuyen').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
@@ -330,7 +322,7 @@
                 showError(jqXHR, exception);
             }
         });
-        var courierCode =hosoInfo.CourierCode;
+        var courierCode =hoso.CourierCode;
         $.ajax({
             type: "POST",
             url: '@Url.Action("LayDSCourier", "HoSo")',
@@ -338,8 +330,8 @@
             success: function (data) {
                 $('#ddlCourier').empty();
                 $('#ddlCourier').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.DSCourier, function (index, optionData) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlCourier').append("<option value='" + optionData.ID + "'>" + optionData.FullText + "</option>");
                     });
                 }
@@ -352,7 +344,7 @@
                 showError(jqXHR, exception);
             }
         });
-        LayDSale(hosoInfo.HoSoCuaAi);
+        LayDSale(hoso.HoSoCuaAi);
 
         $('#ddlDoiTac').on('change', function () {
             LayDSSanPham(this.value);
@@ -363,9 +355,9 @@
         $('#ddlInternalCode').on('change', function () {
              $('#txtTenNV').val( $('option:selected', this).attr('ten'));
         });
+
     });
-</script>
-<script>
+
     function LayDSale(maNV) {
         $.ajax({
             type: "POST",
@@ -375,8 +367,8 @@
                 $('#ddlInternalCode').empty();
                 $('#ddlInternalCode').append("<option value='0'></option>");
                 var ten = '';
-                if (data != null) {
-                    $.each(data.DSSale, function (index, optionData) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, optionData) {
                         $('#ddlInternalCode').append("<option  ten='" + optionData.FullName + "' value='" + optionData.IDUser + "'>" + optionData.Code + "</option>");
                     });
                 }
@@ -392,137 +384,59 @@
             }
         });
     }
-</script>
 
-<script>
-    function LayDSTaiLieu(lstLoaiTaiLieu, lstTaiLieu) {
-        if (lstLoaiTaiLieu != null) {
-            var i=0;
-            var htmlContent="";
-            $.each(lstLoaiTaiLieu, function (index, optionData) {
-                var result = $.grep(lstTaiLieu, function(e){ return e.MaLoai == optionData.ID; });
-                if (result.length == 0) {
-                    // not found
-                } else if (result.length == 1) {
-                    if(i<4)
-                    {
-                        htmlContent +="<div class='col-sm-3'>"
-                        if (optionData.BatBuoc>0)
-                            htmlContent += "<h5 style='padding: 0px;margin-top: -0px;' class=\"header green\">" + optionData.Ten + "</h5>";
-                        else
-                            htmlContent += "<h5 style='padding: 0px;margin-top: -0px;' class=\"header green\">" + optionData.Ten + "</h5>";
-                        htmlContent += "<div class=\"file-loading\">";
-                        htmlContent += "<input class='attachFile' key=" + optionData.ID + " id=\"fileCVUngTuyen_" + optionData.ID + "\" type=\"file\">";
-                        htmlContent += "</div>";
-                        htmlContent +="</div>";
-                        i++;
-                    }
-                    if(i==4||index==lstTaiLieu.length-1)
-                    {
-                        i=0;
-                        $('#tbDoc').append("<div class=\"form-group\">"+htmlContent+"</div>");
-                        htmlContent="";
-                    }
-                }
-            });
-            var lstFile = $(".attachFile");
-            $.each(lstFile, function (index, option) {
-                _initialPreview=[];
-                _initialPreviewConfig=[];
-                if(lstTaiLieu!=null)
+  
+    function LayDSTaiLieu() {
+        $.ajax({
+            type: "GET",
+            url: "/hoso/tailieubyhoso?hosoId=" + hoso.ID,
+            success: function (data) {
+                if (data.success == true && data.data != null)
                 {
-                    var key=$(option).attr("key");
-                    var result = $.grep(lstTaiLieu, function(e){ return e.MaLoai == key; });
-                    if (result.length == 0) {
-                        // not found
-                    } else if (result.length == 1) {
-                        // access the foo property using result[0].foo
-                        var deleteURL = '@Url.Action("Delete", "HoSo")'+"?key="+key;
+                    
+                    var i = 0;
+                    var content = "";
+                    let keys = [];
+                    
+                    $.each(data.data, function (index, item) {
+                       
+                        $("#lstTailieu").append("<div class='form-group'><div id='tailieu-" + item.Key + "'></div></div > ");
                         var _imgExts = ["jpg", "jpeg", "png", "pdf"];
-                        var extn = result[0].LstFile[0].DuongDan.split('.').pop();
+                        var extn = item.FileUrl.split('.').pop();
                         var isImg = isExtension(extn, _imgExts);
-                        if(isImg)
-                        {
-                            if(extn.indexOf('pdf')>-1)
-                            {
-                                if(result[0].LstFile.length>0){
-                                    _initialPreview.push(result[0].LstFile[0].DuongDan);
-                                    _initialPreviewConfig.push({
-                                        caption:result[0].LstFile[0].Ten,
-                                        url:deleteURL,
-                                        type:"pdf",
-                                        width:"120px"
-                                    });
-                                }
-
-                            }
-                            else
-                            {
-                                if(result[0].LstFile.length>0){
-                                    _initialPreview.push(result[0].LstFile[0].DuongDan);
-                                    _initialPreviewConfig.push({
-                                        caption:result[0].LstFile[0].Ten,
-                                        url:deleteURL,
-                                        width:"120px"
-                                    });
-                                }
-                            }
+                        let _initialPreview = [];
+                        let _initialPreviewConfig = [];
+                        if (isImg) {
+                            _initialPreview.push(item.FileUrl);
+                            _initialPreviewConfig.push({
+                                caption: item.FileName,
+                                url: "dsd",
+                                type: extn.indexOf('pdf') > -1 ? "pdf" : "jpg",
+                                width: "120px"
+                            });
                         }
-                    } else {
-                        // multiple items found
-                    }
+                        let name =  '',
+                            isrequire = false,
+                            className =''
+                        if (keys.indexOf(item.Key) < 0) {
+                            name = item.KeyName;
+                            isrequire = true
+                        }
+                        else {
+                            className = 'mt-46'
+                        }
+
+                        renderOneItemFile(item.Key, item.FileId, name, isrequire, className, true, _initialPreview, _initialPreviewConfig);
+                        keys.push(item.Key)
+                    });
                 }
-                $(option).fileinput({
-                    @*uploadUrl: '@Url.Action("UploadHoSo", "HoSo")' + "?key=" + $(option).attr("key"),*@
-                    validateInitialCount: true,
-                    maxFileSize: 25 * 1024,
-                    msgSizeTooLarge: 'File "{name}" (<b>{size} KB</b>)'
-                                    + 'exceeds maximum allowed upload size of <b>{25} MB</b>. '
-                                    + 'Please retry your upload!',
-                    allowedFileExtensions: [ 'png', 'jpg','pdf'],
-                    initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
-                    initialPreviewFileType: 'image',
-                    overwriteInitial: false,
-                    showUpload: false,
-                    showUploadedThumbs:false,
-                    uploadAsync: false,
-                    showClose: false,
-                    showCaption: false,
-                    showBrowse: false,
-                    showUpload: false, // hide upload button
-                    showRemove: false, // hide remove button
-                    browseOnZoneClick: true,
-                    removeLabel: '',
-                    dropZoneTitle: 'Kéo và thả tập tin vào đây',
-                    dropZoneClickTitle:'<br>(hoặc nhấp để chọn)',
-                    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
-                    removeTitle: 'Cancel or reset changes',
-                    elErrorContainer: '#kv-avatar-errors-2',
-                    msgErrorClass: 'alert alert-block alert-danger',
-                    //layoutTemplates: { main2: '{preview} ' + btnCust + ' {remove} {browse}' },
-                    //layoutTemplates: { footer: '' },
-                    initialPreview:_initialPreview,
-                    initialPreviewDownloadUrl:_initialPreview,
-                    initialPreviewConfig:_initialPreviewConfig,
-                    fileActionSettings: {
-                        showDownload:true,
-                        showRemove: false,
-                        showUpload: true,
-                        showZoom: true,
-                        showDrag: false},
-                    append: true
 
-                }).on("filebatchselected", function (event, files) {
-                    $(option).fileinput("upload");
-                });
-                $(option).on('filesuccessremove', function (event, key, jqXHR, data) {
-                    console.log('Key = ' + key);
-                    //alert(1);
-                })
-
-
-            });
-
-        }
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
     }
 </script>

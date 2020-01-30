@@ -15,6 +15,7 @@ namespace VS_LOAN.Core.Business
 {
     public class HoSoBLL
     {
+        
         public int Them(HoSoModel hoSoModel, List<TaiLieuModel> lstTaiLieu, ref bool isCheckMaSanPham)
         {
             try
@@ -102,6 +103,8 @@ namespace VS_LOAN.Core.Business
                                 commandAdd.Parameters.Add(new SqlParameter("@NgayTao", hoSoModel.NgayTao));
                                 commandAdd.Parameters.Add(new SqlParameter("@MaNguoiTao", hoSoModel.MaNguoiTao));
                                 commandAdd.Parameters.Add(new SqlParameter("@HoSoCuaAi", hoSoModel.HoSoCuaAi));
+                                commandAdd.Parameters.Add(new SqlParameter("@birthDay", hoSoModel.BirthDay));
+                                commandAdd.Parameters.Add(new SqlParameter("@cmndDay", hoSoModel.CmndDay));
                                 if (hoSoModel.MaKetQua == 0)
                                 {
                                     commandAdd.Parameters.Add(new SqlParameter("@KetQuaHS", DBNull.Value));
@@ -139,22 +142,22 @@ namespace VS_LOAN.Core.Business
                                     int result = commandUpdateAutoID.ExecuteNonQuery();
                                     if (lstTaiLieu != null)
                                     {
-                                        IDbCommand commandTaiLieuThem = new SqlCommand();
-                                        commandTaiLieuThem.Connection = session.Connection;
-                                        commandTaiLieuThem.CommandType = CommandType.StoredProcedure;
-                                        commandTaiLieuThem.CommandText = "sp_TAI_LIEU_HS_Them";
-                                        commandTaiLieuThem.Parameters.Clear();
-                                        session.Transaction.Enlist(commandTaiLieuThem);
-                                        commandTaiLieuThem.Parameters.Clear();
-                                        foreach (var item in lstTaiLieu)
-                                        {
-                                            commandTaiLieuThem.Parameters.Clear();
-                                            commandTaiLieuThem.Parameters.Add(new SqlParameter("@Maloai", item.MaLoai));
-                                            commandTaiLieuThem.Parameters.Add(new SqlParameter("@DuongDan", item.LstFile[0].DuongDan));
-                                            commandTaiLieuThem.Parameters.Add(new SqlParameter("@Ten", item.LstFile[0].Ten));
-                                            commandTaiLieuThem.Parameters.Add(new SqlParameter("@MaHS", idHoSo));
-                                            commandTaiLieuThem.ExecuteNonQuery();
-                                        }
+                                        //IDbCommand commandTaiLieuThem = new SqlCommand();
+                                        //commandTaiLieuThem.Connection = session.Connection;
+                                        //commandTaiLieuThem.CommandType = CommandType.StoredProcedure;
+                                        //commandTaiLieuThem.CommandText = "sp_TAI_LIEU_HS_Them";
+                                        //commandTaiLieuThem.Parameters.Clear();
+                                        //session.Transaction.Enlist(commandTaiLieuThem);
+                                        //commandTaiLieuThem.Parameters.Clear();
+                                        //foreach (var item in lstTaiLieu)
+                                        //{
+                                        //    commandTaiLieuThem.Parameters.Clear();
+                                        //    commandTaiLieuThem.Parameters.Add(new SqlParameter("@Maloai", item.MaLoai));
+                                        //    commandTaiLieuThem.Parameters.Add(new SqlParameter("@DuongDan", item.LstFile[0].DuongDan));
+                                        //    commandTaiLieuThem.Parameters.Add(new SqlParameter("@Ten", item.LstFile[0].Ten));
+                                        //    commandTaiLieuThem.Parameters.Add(new SqlParameter("@MaHS", idHoSo));
+                                        //    commandTaiLieuThem.ExecuteNonQuery();
+                                        //}
                                     }
 
                                     transaction.Commit();
@@ -239,9 +242,14 @@ namespace VS_LOAN.Core.Business
                         command.Parameters.Add(new SqlParameter("@SDT", hoSoModel.SDT));
                         command.Parameters.Add(new SqlParameter("@SDT2", hoSoModel.SDT2));
                         command.Parameters.Add(new SqlParameter("@GioiTinh", hoSoModel.GioiTinh));
-                        command.Parameters.Add(new SqlParameter("@NgayTao", hoSoModel.NgayTao));
-                        command.Parameters.Add(new SqlParameter("@MaNguoiTao", hoSoModel.MaNguoiTao));
+                        if(hoSoModel.ID <=0)
+                        {
+                            command.Parameters.Add(new SqlParameter("@NgayTao", hoSoModel.NgayTao));
+                            command.Parameters.Add(new SqlParameter("@MaNguoiTao", hoSoModel.MaNguoiTao));
+                        }
                         command.Parameters.Add(new SqlParameter("@HoSoCuaAi", hoSoModel.HoSoCuaAi));
+                        command.Parameters.Add(new SqlParameter("@birthDay", hoSoModel.BirthDay));
+                        command.Parameters.Add(new SqlParameter("@cmndDay", hoSoModel.CmndDay));
                         if (hoSoModel.MaKetQua == 0)
                         {
                             command.Parameters.Add(new SqlParameter("@KetQuaHS", DBNull.Value));
@@ -263,32 +271,32 @@ namespace VS_LOAN.Core.Business
                         int rs = command.ExecuteNonQuery();
                         if (rs > 0)
                         {
-                            IDbCommand commandTaiLieuXoaTatCa = new SqlCommand();
-                            commandTaiLieuXoaTatCa.Connection = session.Connection;
-                            commandTaiLieuXoaTatCa.CommandType = CommandType.StoredProcedure;
-                            commandTaiLieuXoaTatCa.CommandText = "sp_TAI_LIEU_HS_XoaTatCa";
-                            session.Transaction.Enlist(commandTaiLieuXoaTatCa);
-                            commandTaiLieuXoaTatCa.Parameters.Clear();
-                            commandTaiLieuXoaTatCa.Parameters.Add(new SqlParameter("@MaHS", hoSoModel.ID));
-                            commandTaiLieuXoaTatCa.ExecuteNonQuery();
-                            if (lstTaiLieu != null)
-                            {
-                                IDbCommand commandTaiLieuThem = new SqlCommand();
-                                commandTaiLieuThem.Connection = session.Connection;
-                                commandTaiLieuThem.CommandType = CommandType.StoredProcedure;
-                                commandTaiLieuThem.CommandText = "sp_TAI_LIEU_HS_Them";
-                                session.Transaction.Enlist(commandTaiLieuThem);
-                                commandTaiLieuThem.Parameters.Clear();
-                                foreach (var item in lstTaiLieu)
-                                {
-                                    commandTaiLieuThem.Parameters.Clear();
-                                    commandTaiLieuThem.Parameters.Add(new SqlParameter("@Maloai", item.MaLoai));
-                                    commandTaiLieuThem.Parameters.Add(new SqlParameter("@DuongDan", item.LstFile[0].DuongDan));
-                                    commandTaiLieuThem.Parameters.Add(new SqlParameter("@Ten", item.LstFile[0].Ten));
-                                    commandTaiLieuThem.Parameters.Add(new SqlParameter("@MaHS", hoSoModel.ID));
-                                    commandTaiLieuThem.ExecuteNonQuery();
-                                }
-                            }
+                            //IDbCommand commandTaiLieuXoaTatCa = new SqlCommand();
+                            //commandTaiLieuXoaTatCa.Connection = session.Connection;
+                            //commandTaiLieuXoaTatCa.CommandType = CommandType.StoredProcedure;
+                            //commandTaiLieuXoaTatCa.CommandText = "sp_TAI_LIEU_HS_XoaTatCa";
+                            //session.Transaction.Enlist(commandTaiLieuXoaTatCa);
+                            //commandTaiLieuXoaTatCa.Parameters.Clear();
+                            //commandTaiLieuXoaTatCa.Parameters.Add(new SqlParameter("@MaHS", hoSoModel.ID));
+                            //commandTaiLieuXoaTatCa.ExecuteNonQuery();
+                            //if (lstTaiLieu != null)
+                            //{
+                            //    IDbCommand commandTaiLieuThem = new SqlCommand();
+                            //    commandTaiLieuThem.Connection = session.Connection;
+                            //    commandTaiLieuThem.CommandType = CommandType.StoredProcedure;
+                            //    commandTaiLieuThem.CommandText = "sp_TAI_LIEU_HS_Them";
+                            //    session.Transaction.Enlist(commandTaiLieuThem);
+                            //    commandTaiLieuThem.Parameters.Clear();
+                            //    foreach (var item in lstTaiLieu)
+                            //    {
+                            //        commandTaiLieuThem.Parameters.Clear();
+                            //        commandTaiLieuThem.Parameters.Add(new SqlParameter("@Maloai", item.MaLoai));
+                            //        commandTaiLieuThem.Parameters.Add(new SqlParameter("@DuongDan", item.LstFile[0].DuongDan));
+                            //        commandTaiLieuThem.Parameters.Add(new SqlParameter("@Ten", item.LstFile[0].Ten));
+                            //        commandTaiLieuThem.Parameters.Add(new SqlParameter("@MaHS", hoSoModel.ID));
+                            //        commandTaiLieuThem.ExecuteNonQuery();
+                            //    }
+                            //}
                             transaction.Commit();
                             return true;
                         }
@@ -371,6 +379,9 @@ namespace VS_LOAN.Core.Business
                         command.Parameters.Add(new SqlParameter("@NgayCapNhat", hoSoModel.NgayCapNhat));
                         command.Parameters.Add(new SqlParameter("@MaNguoiCapNhat", hoSoModel.MaNguoiCapNhat));
                         command.Parameters.Add(new SqlParameter("@HoSoCuaAi", hoSoModel.HoSoCuaAi));
+                        command.Parameters.Add(new SqlParameter("@birthDay", hoSoModel.BirthDay));
+                        command.Parameters.Add(new SqlParameter("@cmndDay", hoSoModel.CmndDay));
+                        //command.Parameters.Add(new SqlParameter("@MaTrangThai", hoSoModel.MaTrangThai));
                         if (hoSoModel.MaKetQua == 0)
                         {
                             command.Parameters.Add(new SqlParameter("@KetQuaHS", DBNull.Value));
@@ -392,32 +403,32 @@ namespace VS_LOAN.Core.Business
                         int rs = command.ExecuteNonQuery();
                         if (rs > 0)
                         {
-                            IDbCommand commandTaiLieuXoaTatCa = new SqlCommand();
-                            commandTaiLieuXoaTatCa.Connection = session.Connection;
-                            commandTaiLieuXoaTatCa.CommandType = CommandType.StoredProcedure;
-                            commandTaiLieuXoaTatCa.CommandText = "sp_TAI_LIEU_HS_XoaTatCa";
-                            session.Transaction.Enlist(commandTaiLieuXoaTatCa);
-                            commandTaiLieuXoaTatCa.Parameters.Clear();
-                            commandTaiLieuXoaTatCa.Parameters.Add(new SqlParameter("@MaHS", hoSoModel.ID));
-                            commandTaiLieuXoaTatCa.ExecuteNonQuery();
-                            if (lstTaiLieu != null)
-                            {
-                                IDbCommand commandTaiLieuThem = new SqlCommand();
-                                commandTaiLieuThem.Connection = session.Connection;
-                                commandTaiLieuThem.CommandType = CommandType.StoredProcedure;
-                                commandTaiLieuThem.CommandText = "sp_TAI_LIEU_HS_Them";
-                                session.Transaction.Enlist(commandTaiLieuThem);
-                                commandTaiLieuThem.Parameters.Clear();
-                                foreach (var item in lstTaiLieu)
-                                {
-                                    commandTaiLieuThem.Parameters.Clear();
-                                    commandTaiLieuThem.Parameters.Add(new SqlParameter("@Maloai", item.MaLoai));
-                                    commandTaiLieuThem.Parameters.Add(new SqlParameter("@DuongDan", item.LstFile[0].DuongDan));
-                                    commandTaiLieuThem.Parameters.Add(new SqlParameter("@Ten", item.LstFile[0].Ten));
-                                    commandTaiLieuThem.Parameters.Add(new SqlParameter("@MaHS", hoSoModel.ID));
-                                    commandTaiLieuThem.ExecuteNonQuery();
-                                }
-                            }
+                            //IDbCommand commandTaiLieuXoaTatCa = new SqlCommand();
+                            //commandTaiLieuXoaTatCa.Connection = session.Connection;
+                            //commandTaiLieuXoaTatCa.CommandType = CommandType.StoredProcedure;
+                            //commandTaiLieuXoaTatCa.CommandText = "sp_TAI_LIEU_HS_XoaTatCa";
+                            //session.Transaction.Enlist(commandTaiLieuXoaTatCa);
+                            //commandTaiLieuXoaTatCa.Parameters.Clear();
+                            //commandTaiLieuXoaTatCa.Parameters.Add(new SqlParameter("@MaHS", hoSoModel.ID));
+                            //commandTaiLieuXoaTatCa.ExecuteNonQuery();
+                            //if (lstTaiLieu != null)
+                            //{
+                            //    IDbCommand commandTaiLieuThem = new SqlCommand();
+                            //    commandTaiLieuThem.Connection = session.Connection;
+                            //    commandTaiLieuThem.CommandType = CommandType.StoredProcedure;
+                            //    commandTaiLieuThem.CommandText = "sp_TAI_LIEU_HS_Them";
+                            //    session.Transaction.Enlist(commandTaiLieuThem);
+                            //    commandTaiLieuThem.Parameters.Clear();
+                            //    foreach (var item in lstTaiLieu)
+                            //    {
+                            //        commandTaiLieuThem.Parameters.Clear();
+                            //        commandTaiLieuThem.Parameters.Add(new SqlParameter("@Maloai", item.MaLoai));
+                            //        commandTaiLieuThem.Parameters.Add(new SqlParameter("@DuongDan", item.LstFile[0].DuongDan));
+                            //        commandTaiLieuThem.Parameters.Add(new SqlParameter("@Ten", item.LstFile[0].Ten));
+                            //        commandTaiLieuThem.Parameters.Add(new SqlParameter("@MaHS", hoSoModel.ID));
+                            //        commandTaiLieuThem.ExecuteNonQuery();
+                            //    }
+                            //}
                             transaction.Commit();
                             return true;
                         }
@@ -434,6 +445,86 @@ namespace VS_LOAN.Core.Business
             catch (BusinessException ex)
             {
                 throw ex;
+            }
+        }
+        public bool AddGhichu(GhichuModel model)
+        {
+            if (model == null)
+                return false;
+            if (model.UserId <= 0 || model.HosoId <= 0)
+                return false;
+            if (string.IsNullOrWhiteSpace(model.Noidung) || model.Noidung.Length > 200)
+                return false;
+            try
+            {
+                using (var session = LOANSessionManager.OpenSession())
+                {
+                    using (var transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
+                    {
+                        IDbCommand command = new SqlCommand();
+                        command.Connection = session.Connection;
+                        command.CommandType = CommandType.Text;
+                        command.CommandText = "insert into Ghichu (UserId,Noidung,HosoId, CommentTime,TypeId) values(@UserId,@Noidung,@HosoId,@CommentTime,@typeId)";
+                        session.Transaction.Enlist(command);
+                        command.Parameters.Clear();
+                        command.Parameters.Add(new SqlParameter("@UserId", model.UserId));
+                        command.Parameters.Add(new SqlParameter("@HosoId", model.HosoId));
+                        command.Parameters.Add(new SqlParameter("@Noidung", model.Noidung));
+                        command.Parameters.Add(new SqlParameter("@CommentTime", model.CommentTime));
+                        command.Parameters.Add(new SqlParameter("@typeId", (int)HosoType.Hoso));
+                        command.ExecuteNonQuery();
+                        transaction.Commit();
+                        return true;
+                    }
+
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public List<GhichuViewModel> LayDanhsachGhichu(int hosoId, int typeId = 1)
+        {
+            if (hosoId <= 0)
+                return new List<GhichuViewModel>();
+            try
+            {
+                using (var session = LOANSessionManager.OpenSession())
+                {
+                    IDbCommand command = new SqlCommand();
+                    command.Connection = session.Connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "sp_GetGhichuByHosoId";
+                    command.Parameters.Clear();
+                    command.Parameters.Add(new SqlParameter("@hosoId", hosoId));
+                    command.Parameters.Add(new SqlParameter("@typeId", typeId));
+                    var dt = new DataTable();
+                    dt.Load(command.ExecuteReader());
+                    List<GhichuViewModel> lstGhichu = new List<GhichuViewModel>();
+                    if (dt == null || dt.Rows == null || dt.Rows.Count == 0)
+                        return lstGhichu;
+                    GhichuViewModel ghichu;
+                    foreach (DataRow item in dt.Rows)
+                    {
+                        ghichu = new GhichuViewModel();
+                        ghichu.Id = Convert.ToInt32(item["Id"].ToString());
+                        ghichu.UserId = Convert.ToInt32(item["UserId"].ToString());
+                        ghichu.HosoId = Convert.ToInt32(item["HosoId"].ToString());
+                        ghichu.Noidung = item["Noidung"].ToString();
+                        ghichu.Commentator = item["Commentator"].ToString();
+                        if (item["CommentTime"] != null && !string.IsNullOrEmpty(item["CommentTime"].ToString()))
+                        {
+                            ghichu.CommentTime = Convert.ToDateTime(item["CommentTime"]);
+                        }
+                        lstGhichu.Add(ghichu);
+                    }
+                    return lstGhichu;
+                }
+            }
+            catch
+            {
+                return null;
             }
         }
         public HoSoInfoModel LayChiTiet(int id)
@@ -508,6 +599,22 @@ namespace VS_LOAN.Core.Business
                         }
                         try
                         {
+                            hs.BirthDay = (DateTime)(item["BirthDay"]);
+                        }
+                        catch
+                        {
+
+                        }
+                        try
+                        {
+                            hs.CmndDay = (DateTime)(item["CmndDay"]);
+                        }
+                        catch
+                        {
+
+                        }
+                        try
+                        {
                             hs.MaTrangThai = Convert.ToInt32(item["MaTrangThai"].ToString());
 
                         }
@@ -558,28 +665,28 @@ namespace VS_LOAN.Core.Business
                         hs.GhiChu = item["GhiChu"].ToString();
                         hs.TenTrangThai = item["TenTrangThai"].ToString();
                         hs.KetQuaText = item["KetQuaText"].ToString();
-                        IDbCommand commandTaiLieu = new SqlCommand();
-                        commandTaiLieu.Connection = session.Connection;
-                        commandTaiLieu.CommandType = CommandType.StoredProcedure;
-                        commandTaiLieu.CommandText = "sp_TAI_LIEU_HS_LayDS";
-                        commandTaiLieu.Parameters.Clear();
-                        commandTaiLieu.Parameters.Add(new SqlParameter("@MaHS", hs.ID));
-                        var dtTaiLieu = new DataTable();
-                        dtTaiLieu.Load(commandTaiLieu.ExecuteReader());
-                        if (dtTaiLieu != null)
-                        {
-                            foreach (DataRow rowTaiLieu in dtTaiLieu.Rows)
-                            {
-                                TaiLieuModel taiLieu = new TaiLieuModel();
-                                taiLieu.MaLoai = Convert.ToInt32(rowTaiLieu["MaLoai"].ToString());
-                                taiLieu.LstFile.Add(new FileInfo()
-                                {
-                                    Ten = rowTaiLieu["Ten"].ToString(),
-                                    DuongDan = rowTaiLieu["DuongDanFile"].ToString()
-                                });
-                                hs.LstTaiLieu.Add(taiLieu);
-                            }
-                        }
+                        //IDbCommand commandTaiLieu = new SqlCommand();
+                        //commandTaiLieu.Connection = session.Connection;
+                        //commandTaiLieu.CommandType = CommandType.StoredProcedure;
+                        //commandTaiLieu.CommandText = "sp_TAI_LIEU_HS_LayDS";
+                        //commandTaiLieu.Parameters.Clear();
+                        //commandTaiLieu.Parameters.Add(new SqlParameter("@MaHS", hs.ID));
+                        //var dtTaiLieu = new DataTable();
+                        //dtTaiLieu.Load(commandTaiLieu.ExecuteReader());
+                        //if (dtTaiLieu != null)
+                        //{
+                        //    foreach (DataRow rowTaiLieu in dtTaiLieu.Rows)
+                        //    {
+                        //        TaiLieuModel taiLieu = new TaiLieuModel();
+                        //        taiLieu.MaLoai = Convert.ToInt32(rowTaiLieu["MaLoai"].ToString());
+                        //        taiLieu.LstFile.Add(new FileInfo()
+                        //        {
+                        //            Ten = rowTaiLieu["Ten"].ToString(),
+                        //            DuongDan = rowTaiLieu["DuongDanFile"].ToString()
+                        //        });
+                        //        hs.LstTaiLieu.Add(taiLieu);
+                        //    }
+                        //}
 
                     }
                     return hs;
@@ -755,7 +862,7 @@ namespace VS_LOAN.Core.Business
                     commandUpDate.Parameters.Add(new SqlParameter("@NgayThaoTac", ngayThaoTac));
                     commandUpDate.Parameters.Add(new SqlParameter("@MaTrangThai", maTrangThai));
                     commandUpDate.Parameters.Add(new SqlParameter("@MaKetQua", maKetQua));
-                    commandUpDate.Parameters.Add(new SqlParameter("@GhiChu", ghiChu));
+                    commandUpDate.Parameters.Add(new SqlParameter("@GhiChu", ""));
                     int result = commandUpDate.ExecuteNonQuery();
                     if (result > 0)
                         return true;
@@ -767,8 +874,20 @@ namespace VS_LOAN.Core.Business
                 }
             }
         }
-        public List<HoSoDuyetModel> TimHoSoDuyet(int maNVDangNhap, int maNhom, int maThanhVien, DateTime tuNgay, DateTime denNgay, string maHS, string cmnd, int loaiNgay, string trangThai)
+        public int CountHosoDuyet(int maNVDangNhap,
+            int maNhom,
+            int maThanhVien,
+            DateTime tuNgay,
+            DateTime denNgay,
+            string maHS,
+            string cmnd,
+            int loaiNgay,
+            string trangThai,
+            string freeText = null
+            )
         {
+            string query = string.IsNullOrWhiteSpace(freeText) ? string.Empty : freeText;
+            int totalRecord = 0;
             try
             {
                 using (var session = LOANSessionManager.OpenSession())
@@ -776,8 +895,7 @@ namespace VS_LOAN.Core.Business
                     IDbCommand command = new SqlCommand();
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_HO_SO_TimHoSoDuyet";
-
+                    command.CommandText = "sp_HO_SO_Count_TimHoSoDuyet";
                     command.Parameters.Add(new SqlParameter("@MaNVDangNhap", maNVDangNhap));
                     command.Parameters.Add(new SqlParameter("@MaNhom", maNhom));
                     command.Parameters.Add(new SqlParameter("@MaThanhVien", maThanhVien));
@@ -787,6 +905,59 @@ namespace VS_LOAN.Core.Business
                     command.Parameters.Add(new SqlParameter("@CMND", cmnd));
                     command.Parameters.Add(new SqlParameter("@LoaiNgay", loaiNgay));
                     command.Parameters.Add(new SqlParameter("@TrangThai", trangThai));
+                    command.Parameters.Add(new SqlParameter("@freeText", query));
+                    DataTable dt = new DataTable();
+                    dt.Load(command.ExecuteReader());
+                    if (dt != null && dt.Rows != null && dt.Rows.Count > 0)
+                    {
+                        totalRecord = Convert.ToInt32(dt.Rows[0]["TotalRecord"].ToString());
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                totalRecord = 0;
+            }
+            return totalRecord;
+        }
+        public List<HoSoDuyetModel> TimHoSoDuyet(int maNVDangNhap,
+            int maNhom,
+            int maThanhVien,
+            DateTime tuNgay,
+            DateTime denNgay,
+            string maHS,
+            string cmnd,
+            int loaiNgay,
+            string trangThai,
+            string freeText = null,
+            int page = 1, int limit = 10, bool isDowload = false)
+        {
+
+            page = page <= 0 ? 1 : page;
+            if(!isDowload)
+                limit = (limit <= 0 || limit >= Constant.Limit_Max_Page) ? Constant.Limit_Max_Page : limit;
+            int offset = (page - 1) * limit;
+            string query = string.IsNullOrWhiteSpace(freeText) ? string.Empty : freeText;
+            try
+            {
+                using (var session = LOANSessionManager.OpenSession())
+                {
+                    IDbCommand command = new SqlCommand();
+                    command.Connection = session.Connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "sp_HO_SO_TimHoSoDuyet";
+                    command.Parameters.Add(new SqlParameter("@MaNVDangNhap", maNVDangNhap));
+                    command.Parameters.Add(new SqlParameter("@MaNhom", maNhom));
+                    command.Parameters.Add(new SqlParameter("@MaThanhVien", maThanhVien));
+                    command.Parameters.Add(new SqlParameter("@TuNgay", tuNgay));
+                    command.Parameters.Add(new SqlParameter("@DenNgay", denNgay));
+                    command.Parameters.Add(new SqlParameter("@MaHS", maHS));
+                    command.Parameters.Add(new SqlParameter("@CMND", cmnd));
+                    command.Parameters.Add(new SqlParameter("@LoaiNgay", loaiNgay));
+                    command.Parameters.Add(new SqlParameter("@TrangThai", trangThai));
+                    command.Parameters.Add(new SqlParameter("@offset", offset));
+                    command.Parameters.Add(new SqlParameter("@limit", limit));
+                    command.Parameters.Add(new SqlParameter("@freeText", query));
                     DataTable dt = new DataTable();
                     dt.Load(command.ExecuteReader());
                     if (dt != null)
@@ -815,6 +986,7 @@ namespace VS_LOAN.Core.Business
 
                                 }
                                 hs.NhanVienBanHang = item["NhanVienBanHang"].ToString();
+                                hs.F88Result = item["F88Result"] != null ? Convert.ToInt32(item["F88Result"]):0;
                                 hs.MaNVLayHS = item["MaNVLayHS"].ToString();
                                 hs.DoiNguBanHang = item["DoiNguBanHang"].ToString();
                                 hs.MaNV = item["MaNV"].ToString();
@@ -836,8 +1008,72 @@ namespace VS_LOAN.Core.Business
                 throw ex;
             }
         }
-        public List<HoSoQuanLyModel> TimHoSoQuanLy(int maNVDangNhap, int maNhom, int maThanhVien, DateTime tuNgay, DateTime denNgay, string maHS, string cmnd, string trangthai, int loaiNgay)
+        public int CountHoSoQuanLy(int maNVDangNhap,
+            int maNhom,
+            int maThanhVien,
+            DateTime tuNgay,
+            DateTime denNgay,
+            string maHS,
+            string cmnd,
+            string trangthai,
+            int loaiNgay,
+            string freeText = null
+            )
         {
+            string query = string.IsNullOrWhiteSpace(freeText) ? string.Empty : freeText;
+            int totalRecord = 0;
+            try
+            {
+                using (var session = LOANSessionManager.OpenSession())
+                {
+                    IDbCommand command = new SqlCommand();
+                    command.Connection = session.Connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "sp_HO_SO_Count_TimHoSoQuanLy";
+
+                    command.Parameters.Add(new SqlParameter("@MaNVDangNhap", maNVDangNhap));
+                    command.Parameters.Add(new SqlParameter("@MaNhom", maNhom));
+                    command.Parameters.Add(new SqlParameter("@MaThanhVien", maThanhVien));
+                    command.Parameters.Add(new SqlParameter("@TuNgay", tuNgay));
+                    command.Parameters.Add(new SqlParameter("@DenNgay", denNgay));
+                    command.Parameters.Add(new SqlParameter("@MaHS", maHS));
+                    command.Parameters.Add(new SqlParameter("@CMND", cmnd));
+                    command.Parameters.Add(new SqlParameter("@TrangThai", trangthai));
+                    command.Parameters.Add(new SqlParameter("@LoaiNgay", loaiNgay));
+                    command.Parameters.Add(new SqlParameter("@freeText", query));
+                    DataTable dt = new DataTable();
+                    dt.Load(command.ExecuteReader());
+                    if (dt != null && dt.Rows != null && dt.Rows.Count > 0)
+                    {
+                        totalRecord = Convert.ToInt32(dt.Rows[0]["TotalRecord"].ToString());
+                    }
+                }
+            }
+            catch
+            {
+                totalRecord = 0;
+            }
+            return totalRecord;
+        }
+        public List<HoSoQuanLyModel> TimHoSoQuanLy(int maNVDangNhap,
+                int maNhom,
+                int maThanhVien,
+                DateTime tuNgay,
+                DateTime denNgay,
+                string maHS,
+                string cmnd,
+                string trangthai,
+                int loaiNgay,
+                string freeText = null,
+                int page = 1, int limit = 10,
+                bool isDownload = false
+                )
+        {
+            page = page <= 0 ? 1 : page;
+            if(!isDownload)
+                limit = (limit <= 0 || limit >= Constant.Limit_Max_Page) ? Constant.Limit_Max_Page : limit;
+            int offset = (page - 1) * limit;
+            string query = string.IsNullOrWhiteSpace(freeText) ? string.Empty : freeText;
             try
             {
                 using (var session = LOANSessionManager.OpenSession())
@@ -856,6 +1092,9 @@ namespace VS_LOAN.Core.Business
                     command.Parameters.Add(new SqlParameter("@CMND", cmnd));
                     command.Parameters.Add(new SqlParameter("@TrangThai", trangthai));
                     command.Parameters.Add(new SqlParameter("@LoaiNgay", loaiNgay));
+                    command.Parameters.Add(new SqlParameter("@offset", offset));
+                    command.Parameters.Add(new SqlParameter("@limit", limit));
+                    command.Parameters.Add(new SqlParameter("@freeText", query));
                     DataTable dt = new DataTable();
                     dt.Load(command.ExecuteReader());
                     if (dt != null)
@@ -907,7 +1146,15 @@ namespace VS_LOAN.Core.Business
             }
         }
 
-        public List<HoSoDuyetModel> DSHoSoDuyetChuaXem(int maNVDangNhap, int maNhom, int maThanhVien, DateTime tuNgay, DateTime denNgay, string maHS, string cmnd, int loaiNgay, string trangThai)
+        public List<HoSoDuyetModel> DSHoSoDuyetChuaXem(int maNVDangNhap
+            , int maNhom, 
+            int maThanhVien, 
+            DateTime tuNgay, 
+            DateTime denNgay, 
+            string maHS, 
+            string cmnd, 
+            int loaiNgay,
+            string trangThai)
         {
             try
             {

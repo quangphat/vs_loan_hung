@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Nhibernate;
 using VS_LOAN.Core.Utility.Exceptions;
 

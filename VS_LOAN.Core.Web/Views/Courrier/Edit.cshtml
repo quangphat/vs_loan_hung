@@ -1,0 +1,566 @@
+﻿@using VS_LOAN.Core.Web.Resources;
+@{
+    ViewBag.Title = "Hồ sơ courier";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model String
+<script type="text/javascript">
+    SetActiveMenu('@ViewBag.formindex', 2);
+</script>
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-caret-right"></i>
+                <a href="#">Chỉnh sửa hồ sơ</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">1.Thông tin khách hàng:</h3>
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Họ và tên <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtHoTen" placeholder="Nhập họ tên" class="form-control">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại khách hàng<span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtDienThoai" placeholder="Nhập số điện thoại khách hàng" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CMND/CCCD<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtCMND" placeholder="Nhập số CMND" class="form-control" />
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Tỉnh/TP<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlTinh" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right">Courrier<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlCourier" class="chosen-select form-control" data-placeholder="Chọn Courrier">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">2.Thông tin khoản vay và sản phẩm:</h3>
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Tên ngân hàng<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlDoiTac" class="chosen-select form-control" data-placeholder="Chọn đối tác">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right">Sản phẩm vay<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlSanPhamVay" class="chosen-select form-control" data-placeholder="Chọn sản phẩm vay">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">3.Hồ sơ đính kèm:</h3>
+                <div class="row">
+                    <div class="col-xs-12" style="overflow-y: scroll;max-height:400px;">
+                        <form class="form-horizontal" role="form" id="lstTailieu"></form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <hr />
+                <form class="form-horizontal">
+                    <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Tình trạng hồ sơ</h4>
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
+                        <div class="col-md-11 col-sm-12 col-xs-12">
+                            <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="activity-log">
+                                <div class="timline-addNote only-new-note">
+                                    <div class="timeline-date-event timline-date-event--margin mt-0" id="dsGhichu">
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pull-right">
+                        <a class="btn btn-sm btn-primary" id="btn_Save">
+                            Cập nhật
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    var hoso = @Html.Raw(Json.Encode(ViewBag.HoSo));
+    jQuery.fn.ForceNumericOnly =function () {
+    return this.each(function () {
+        $(this).keydown(function (e) {
+            var key = e.charCode || e.keyCode || 0;
+            // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers ONLY
+            // home, end, period, and numpad decimal
+            return (
+                key == 8 ||
+                key == 9 ||
+                key == 13 ||
+                key == 46 ||
+                key == 110 ||
+                key == 190 ||
+                (key >= 35 && key <= 40) ||
+                (key >= 48 && key <= 57) ||
+                (key >= 96 && key <= 105));
+        });
+    });
+};
+    $("#txtDienThoai").ForceNumericOnly();
+    $("#txtCMND").ForceNumericOnly();
+
+    $(document).ready(function () {
+        $('#ddlSanPhamVay').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlCourier').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlTinh').chosen({ width: '100%', allow_single_deselect: true });
+        LayDSTaiLieu();
+        LayDSNganHang();
+        LayDSTinh();
+        getStatusList(hoso.Status);
+        $('#ddlDoiTac').on('change', function () {
+            LayDSSanPham(this.value);
+        });
+        $('#ddlTinh').on('change', function () {
+            getCourrier(this.value);
+        });
+        $("#txtHoTen").val(hoso.CustomerName)
+        $("#txtDienThoai").val(hoso.Phone)
+        $("#txtCMND").val(hoso.Cmnd);
+        LayDanhsachGhichu();
+    });
+    function LayDSTinh() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSTinh", "KhuVuc")',
+            data: {},
+            success: function (data) {
+                $('#ddlTinh').empty();
+                $('#ddlTinh').append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#ddlTinh').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                    });
+                }
+                
+                $('#ddlTinh').val(hoso.ProvinceId);
+                $('#ddlTinh').chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+                getCourrier(hoso.ProvinceId);
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+    function getCourrier(maTinh) {
+        if (isNullOrWhiteSpace(maTinh))
+            return;
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetUserByProvinceId", "Employee")',
+            data: {'provinceID':maTinh},
+            success: function (data) {
+                $('#ddlCourier').empty();
+                $('#ddlCourier').append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#ddlCourier').append("<option value='" + optionData.Id + "'>" + optionData.Name + "</option>");
+                    });
+                }
+                $('#ddlCourier').val(hoso.AssignId);
+                $('#ddlCourier').chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+    var lstDoitac =[]
+    function LayDSNganHang() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSDoiTac", "HoSo")',
+            data: {},
+            success: function (data) {
+                $('#ddlDoiTac').empty();
+                $('#ddlDoiTac').append("<option value='0'></option>");
+                if (data != null) {
+
+                    lstDoitac = data.data
+                    $.each(data.data, function (index, optionData) {
+                        $('#ddlDoiTac').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                    });
+                }
+                $('#ddlDoiTac').val(hoso.PartnerId);
+                $('#ddlDoiTac').chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+                LayDSSanPham(hoso.PartnerId)
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+    function getStatusList(value) {
+        $('#ddlStatus').empty();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetStatusList", "Courrier")',
+            data: {},
+            success: function (data) {
+                $('#ddlStatus').append("<option value='0'></option>");
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, item) {
+                        $('#ddlStatus').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                    });
+                    $('#ddlStatus').val(value);
+                    $('#ddlStatus').chosen().trigger("chosen:updated");
+                }
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+        var fileRequireIds =[]
+    function LayDSTaiLieu() {
+        
+        $.ajax({
+            type: "GET",
+            url: "/hoso/TailieuByHosoForEdit?hosoId=" + hoso.Id + "&typeId=2",
+            success: function (data) {
+                if (data.data != null && data.success == true) {
+                    var i = 0;
+                    var content = "";
+                    let keys = [];
+                    $.each(data.data, function (index, item) {
+                        
+                        
+                        $("#lstTailieu").append("<div class='form-group'><div id='tailieu-" + item.ID + "'></div></div > ");
+                        if (!isNullOrNoItem(item.Tailieus)) {
+                            
+                            let _initialPreview = [];
+                            let _initialPreviewConfig = [];
+                            $.each(item.Tailieus, function (i, tailieu) {
+                                fileRequireIds.push(item.ID);
+                                _initialPreview = [];
+                                _initialPreviewConfig = [];
+                                var _imgExts = ["jpg", "jpeg", "png", "pdf"];
+                                var extn = tailieu.FileUrl.split('.').pop();
+                                var isImg = isExtension(extn, _imgExts);
+                                if (isImg) {
+                                    _initialPreview.push(tailieu.FileUrl);
+                                    _initialPreviewConfig.push({
+                                        caption: tailieu.FileName,
+                                        url: "/hoso/RemoveTailieuByHoso?hosoId=" + hoso.Id + "&fileId=" + tailieu.FileId,
+                                        type: extn.indexOf('pdf') > -1 ? "pdf" : "jpg",
+                                        width: "120px"
+                                    });
+                                }
+                                let name = '',
+                                    isrequire = false,
+                                    className = ''
+                                if (keys.indexOf(tailieu.Key) < 0) {
+                                    name = tailieu.KeyName;
+                                    isrequire = true
+                                }
+                                else {
+                                    className = 'mt-46'
+                                }
+                                renderOneItemFile(tailieu.Key
+                                    , tailieu.FileId
+                                    , name
+                                    , isrequire
+                                    , className
+                                    , true
+                                    , _initialPreview
+                                    , _initialPreviewConfig
+                                    , true
+                                    , true
+                                    , onUploadFile
+                                    , onDeleteFile
+                                    , []
+                                    ,2
+                                )
+                                
+                                keys.push(item.ID)
+                            })
+                            if (item.Tailieus.length < 5) {
+                                renderOneItemFile(item.ID, item.ID, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, [], 2);
+                            }
+                            
+                        }
+                        else {
+                            renderOneItemFile(item.ID, item.ID, item.Ten, item.BatBuoc, '', true, [], [], true, false, onUploadFile, onDeleteFile, [], 2);
+                        }
+                       
+                    });
+                }
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+
+    }
+    let filesUpload = [];
+    function onDeleteFile(key, fileId, isExist) {
+        removeFile(key, fileId);
+    }
+    function onUploadFile(key, fileId, data, isExist) {
+
+        if (isReach5Files(filesUpload, key))
+            return;
+        let response = data;
+        if (isNullOrNoItem(filesUpload)) {
+            filesUpload = []
+        }
+        let file = {
+            Key: parseInt(response.initialPreviewConfig[0].key),
+            FileName: response.initialPreviewConfig[0].caption,
+            FileUrl: response.initialPreview,
+            KeyName: "",
+            Id: fileId
+        }
+        let existKeyIndex = filesUpload.findIndex(p => p.key == key)
+        if (existKeyIndex < 0) {
+            filesUpload.push({ key: parseInt(key), files: [file] })
+        }
+        else {
+            if (filesUpload[existKeyIndex].files == null)
+                filesUpload[existKeyIndex].files = []
+            filesUpload[existKeyIndex].files.push(file);
+        }
+        if (isReach5Files(filesUpload, key) === false) {
+            let newAttachhFileId = getNewGuid();
+            renderOneItemFile(key, newAttachhFileId, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload,2);
+        }
+    }
+    function removeFile(key, fileId) {
+        if (isNullOrNoItem(filesUpload))
+            return;
+        let index = filesUpload.findIndex(p => p.key == key);
+        if (index >= 0) {
+            if (!isNullOrNoItem(filesUpload[index].files)) {
+                let indexOfFile = filesUpload[index].files.findIndex(p => p.Id == fileId);
+                if (indexOfFile >= 0)
+                    filesUpload[index].files.splice(indexOfFile, 1);
+            }
+        }
+    }
+    function LayDSSanPham(maDoiTac) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSSanPham", "HoSo")',
+            data: { 'maDoiTac': maDoiTac },
+            success: function (data) {
+                $('#ddlSanPhamVay').empty();
+                $('#ddlSanPhamVay').append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#ddlSanPhamVay').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                    });
+                }
+                $('#ddlSanPhamVay').val(hoso.ProductId);
+                $('#ddlSanPhamVay').chosen().trigger("chosen:updated");
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+    $('#btn_Save').click(function (e) {
+        if ($('#txtHoTen').val() == "" || $('#txtHoTen').val() == undefined) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng nhập tên",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if ($('#ddlCourier').val() == "0" || $('#ddlCourier').val() == undefined) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn Courier",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        var objectSend = JSON.stringify({
+            'CustomerName': $('#txtHoTen').val(),
+            'phone': $('#txtDienThoai').val(),
+            'cmnd': $('#txtCMND').val(),
+            'Status': $('#ddlStatus').val(),
+            'AssignId': $('#ddlCourier').val(),
+            'partnerId': $('#ddlDoiTac').val(),
+            'productId': $('#ddlSanPhamVay').val(),
+            'LastNote': $('#txtGhiChu').val(),
+            'Id': hoso.Id,
+        });
+        $.ajax({
+            traditional: true,
+            url: '@Url.Action("Update", "Courrier")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                if (data.success == true) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: "Thành công",
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                            $("#txtGhiChu").val("");
+                            uploadHoso2(hoso.Id, true);
+                    });
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+    });
+
+         function uploadHoso2(hosoId, reloadOnSuccess = false) {
+            if (isNullOrNoItem(filesUpload))
+                return;
+            $.ajax({
+                traditional: true,
+                url: `/Courrier/UploadToHoso?hosoId=${hosoId}&isReset=false`,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                //dataType: 'json',
+                data: JSON.stringify(filesUpload),
+                success: function (data) {
+                    if (data.success == true) {
+                        if (reloadOnSuccess == true) {
+                            window.location = window.location;
+                        }
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+    }
+        function LayDanhsachGhichu() {
+        //$('#ddlTrangThai').empty();
+        $.ajax({
+            type: "POST",
+            url: '/Courrier/LayDSGhichu?hosoId=' + hoso.Id,
+            data: {},
+            success: function (data) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, item) {
+                        $('#dsGhichu').append(
+                            '<div class="timeline-event-content  active">' +
+                            '<div class="timeline-item">' +
+                            '<div class="timeline-body">' +
+                            '<div class="timeline__message-container">' +
+                            '<strong>' + item.Commentator + ' (' + SetFormatDateTimeDMY(item.CommentTime) +'): </strong><span>' + item.Noidung + '</span>'+
+                            '</div></div></div></div>'
+                        )
+                    });
+                }
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+</script>

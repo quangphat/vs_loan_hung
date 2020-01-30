@@ -219,6 +219,7 @@
                 "url": sSource,
                 "data": objectSend,
                 "success": function (json) {
+                    debugger
                     fnCallback(json);
                 },
                 "error": function (jqXHR, exception) {
@@ -386,6 +387,7 @@ $("#btnLuu").click(function () {
                   oSettings.sAjaxSource = "/SanPhamVay/AjaxHandler";
                   oSettings.fnServerData = function (sSource, aoData, fnCallback) {
                       var lstDHV = [];
+                      debugger
                       $.each(data.DSSPham, function (index, item) {
                           lstDHV.push({ Ten: item.Ten, TrangThai: item.TrangThai});
 

@@ -6,50 +6,50 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Business
 {
-   public class LoaiTaiLieuModel
-    {
-        private int _id;
-        private string _ten;
+   //public class LoaiTaiLieuModel
+   // {
+   //     private int _id;
+   //     private string _ten;
 
-        public int ID
-        {
-            get
-            {
-                return _id;
-            }
+   //     public int ID
+   //     {
+   //         get
+   //         {
+   //             return _id;
+   //         }
 
-            set
-            {
-                _id = value;
-            }
-        }
+   //         set
+   //         {
+   //             _id = value;
+   //         }
+   //     }
 
-        public string Ten
-        {
-            get
-            {
-                return _ten;
-            }
+   //     public string Ten
+   //     {
+   //         get
+   //         {
+   //             return _ten;
+   //         }
 
-            set
-            {
-                _ten = value;
-            }
-        }
+   //         set
+   //         {
+   //             _ten = value;
+   //         }
+   //     }
 
-        public int BatBuoc
-        {
-            get
-            {
-                return _batBuoc;
-            }
+   //     public int BatBuoc
+   //     {
+   //         get
+   //         {
+   //             return _batBuoc;
+   //         }
 
-            set
-            {
-                _batBuoc = value;
-            }
-        }
+   //         set
+   //         {
+   //             _batBuoc = value;
+   //         }
+   //     }
 
-        private int _batBuoc;
-    }
+   //     private int _batBuoc;
+   // }
 }

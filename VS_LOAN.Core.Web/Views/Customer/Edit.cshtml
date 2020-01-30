@@ -1,0 +1,280 @@
+﻿@using VS_LOAN.Core.Web.Resources;
+@{
+    ViewBag.Title = "Tạo khách hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-caret-right"></i>
+                <a href="#">Tạo Khách hàng</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">1.Thông tin khách hàng:</h3>
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Họ và tên <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtHoTen" placeholder="Nhập họ tên" class="form-control">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày Check<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtCheckDate" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CMND<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtCMND" placeholder="Nhập số CMND" class="form-control" />
+                        </div>
+                        
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">CIC<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlCIC" class="chosen-select form-control" data-placeholder="">
+                                <option value="0">Không nợ xấu</option>
+                                <option value="1">Nợ chú ý</option>
+                                <option value="2">Nợ xấu</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <div id="lstPartner">
+
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <hr />
+                <form class="form-horizontal">
+                    <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Ghi chú</h4>
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
+                        <div class="col-md-11 col-sm-12 col-xs-12">
+                            <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <div class="col-md-8 activity-log">
+                                <div class="timline-addNote only-new-note">
+                                    <div class="timeline-date-event timline-date-event--margin mt-0" id="dsGhichu">
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pull-right">
+
+                                <a class="btn btn-sm btn-primary" id="btnSave">
+                                    Lưu
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    var customer = @Html.Raw(Json.Encode(ViewBag.Customer));
+    var model = {
+        Customer: customer,
+        Partners:[]
+    }
+    var partners = null
+    $(document).ready(function () {
+        getPartner()
+        GetNotes(customer.Id)
+        let gender = customer.Gender == false ? "0" :"1"
+        $("#txtHoTen").val(customer.FullName)
+        setDateTimeInput('#txtCheckDate')
+        setValueForDateInput("#txtCheckDate", customer.CheckDate)
+        //$("#txtCheckDate").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker("setDate", new Date().getDay + 0);
+        //let checkDate = isNullOrUndefined(customer.CheckDate) ? new Date().getDay + 0 : customer.CheckDate
+        //$('#txtToDate').val(SetFormatDateTimeDMY(checkDate));
+        $("#txtCMND").val(customer.Cmnd)
+        
+        $("#ddlCIC").val(customer.CICStatus)
+    })
+    function getPartner() {
+         $.ajax({
+             type: "GET",
+             url: '/Customer/GetPartner?customerId=' + customer.Id,
+             success: function (data) {
+                 partners = data.datas
+                $('#lstPartner').empty();
+                if (data != null) {
+                    let content = ''
+                    $.each(data.data, function (index, item) {
+                        var checked = item.IsSelect ? "checked" : ""
+                        content += '<label class="col-sm-2 control-label no-padding-right">' + item.Name + ': </label><div  class="col-sm-10"><div class="checkbox"> <label>'
+                            + '<input name="form-field-checkbox" id="partner_' + item.Id + '" type="checkbox" ' + checked
+                            + ' onchange ="onPartnerCheck(' + item.Id + ')" class="ace">'
+                            + '<span class="lbl"> Đủ điều kiện</span>'
+                            + '</label></div></div>';
+
+                    });
+                    $('#lstPartner').append(content)
+                }
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+    function onPartnerCheck(id) {
+        var checked = $("#partner_" + id).is(':checked');
+        var index = partners.findIndex(p => p.Id == id)
+        if (index < 0)
+            return;
+        partners[index].IsSelect = checked
+
+    }
+    jQuery.fn.ForceNumericOnly = function () {
+    return this.each(function () {
+        $(this).keydown(function (e) {
+            var key = e.charCode || e.keyCode || 0;
+            // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers ONLY
+            // home, end, period, and numpad decimal
+            return (
+                key == 8 ||
+                key == 9 ||
+                key == 13 ||
+                key == 46 ||
+                key == 110 ||
+                key == 190 ||
+                (key >= 35 && key <= 40) ||
+                (key >= 48 && key <= 57) ||
+                (key >= 96 && key <= 105));
+        });
+    });
+};
+    $("#txtDienThoai").ForceNumericOnly();
+    $("#txtCMND").ForceNumericOnly();
+    $('#btnSave').click(function (e) {
+        debugger
+        if (isNullOrWhiteSpace($('#txtCheckDate').val())) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Ngày check không hợp lệ",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+
+        if ($('#txtCMND').val().length != 9 && $('#txtCMND').val().length != 12) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Số CMND chỉ 9 hoặc 12 số!",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+            }
+        customer.FullName = $('#txtHoTen').val()
+        customer.CheckDate = $('#txtCheckDate').val()
+            customer.Note = $('#txtGhiChu').val()
+            customer.Cmnd = $('#txtCMND').val()
+            customer.Gender = 0
+            customer.CICStatus = $("#ddlCIC").val()
+            model.Customer = customer;
+            model.Partners = partners;
+            var objectSend = JSON.stringify(model);
+        $.ajax({
+            traditional: true,
+            url: '@Url.Action("Update", "Customer")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                if (data.success == true) {
+                    swal({
+                        title: "Thành công",
+                        text: "Cập nhật thành công",
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                        window.location = "/Customer/Index";
+                    });
+                }
+                else {
+                    swal({
+                        title: "Lỗi",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+        });
+    function GetNotes(id) {
+        //$('#ddlTrangThai').empty();
+        if (isNullOrUndefined(id))
+            return;
+        $.ajax({
+            type: "GET",
+            url: '/Customer/GetNotes?customerId=' + id,
+            data: {},
+            success: function (data) {
+
+                if (data.datas != null) {
+                    $.each(data.Datas, function (index, item) {
+                        $('#dsGhichu').append(
+                            '<div class="timeline-event-content  active">' +
+                            '<div class="timeline-item">'+
+                            '<div class="timeline-body">' +
+                            '<div class="timeline__message-container">' +
+                            '<strong>' + item.Commentator + ' (' + SetFormatDateTimeDMY(item.CreatedTime) + '): </strong><span>' + item.Note + '</span>' +
+                            '</div></div></div></div>'
+
+                        )
+                    });
+                }
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+</script>

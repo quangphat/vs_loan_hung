@@ -12,6 +12,402 @@
 //        message: '<h2 style="color:#fff">' + text + ' ...</h2>'
 //    });
 //}
+function getRoles(controlId, appendDefault = true, defaultText = "Tất cả", value = 0, onSuccess = null) {
+    $.ajax({
+        type: "GET",
+        url: '/employee/GetRoles',
+        success: function (data) {
+            if (onSuccess === null) {
+                $(controlId).empty();
+                if (appendDefault === true)
+                    $(controlId).append('<option value="0">' + defaultText + '</option > ');
+                if (data !== null) {
+                    $.each(data.data, function (index, optionData) {
+                        $(controlId).append("<option value='" + optionData.Id + "'>" + optionData.Name + "</option>");
+                    });
+                }
+                if (value > 0) {
+                    $(controlId).val(value);
+                }
+                $(controlId).chosen().trigger("chosen:updated");
+            }
+            else {
+                onSuccess();
+            }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+function getProvinces(controlId, value = null, districtValue = 0) {
+    $.ajax({
+        type: "GET",
+        url: '/khuvuc/LayDSTinh',
+        success: function (data) {
+            $(controlId).empty();
+            $(controlId).append("<option value='0'></option>");
+            if (data !== null) {
+                $.each(data.data, function (index, optionData) {
+                    $(controlId).append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                });
+            }
+            if (value !== null)
+                $(controlId).val(value);
+            $(controlId).chosen().trigger("chosen:updated");
+
+        },
+        complete: function () {
+            setTimeout(function () {
+                getDistricts(value, "#ddlDistrict", districtValue);
+            }, 1000);
+
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+function getDistricts(provinceId, controlId, value = null) {
+
+    if (isNullOrUndefined(provinceId))
+        return;
+    $.ajax({
+        type: "GET",
+        url: '/khuvuc/LayDSHuyen?maTinh=' + provinceId,
+        success: function (data) {
+            $(controlId).empty();
+            $(controlId).append("<option value='0'></option>");
+            if (data !== null) {
+                $.each(data.data, function (index, optionData) {
+                    $(controlId).append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                });
+            }
+            if (value !== null)
+                $(controlId).val(value);
+            $(controlId).chosen().trigger("chosen:updated");
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+jQuery.fn.ForceNumericOnly =
+    function () {
+        return this.each(function () {
+            $(this).keydown(function (e) {
+                var key = e.charCode || e.keyCode || 0;
+                // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers ONLY
+                // home, end, period, and numpad decimal
+                return (
+                    key === 8 ||
+                    key === 9 ||
+                    key === 13 ||
+                    key === 46 ||
+                    key === 110 ||
+                    key === 190 ||
+                    (key >= 35 && key <= 40) ||
+                    (key >= 48 && key <= 57) ||
+                    (key >= 96 && key <= 105));
+            });
+        });
+    };
+function getTotalPage(totalRecord, limit = 10) {
+    return totalRecord > limit ? Math.ceil(totalRecord / limit) : 1;
+}
+function renderGoPreviousPage(page) {
+    let newCurrentPage = page;
+    if (page > 1) {
+        newCurrentPage = page - 1;
+        return "<li class='paginate_button previous' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + newCurrentPage + ")'>"
+            + "<a href='javascript:;'>Trước</a>"
+            + "</li>";
+
+    } else {
+        return "";
+    }
+}
+function renderGoNextPage(page) {
+    if (page < totalPage) {
+        newCurrentPage = page + 1;
+        return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + newCurrentPage + ")' >"
+            + "<a href='javascript:;'>Sau</a>"
+            + "</li>";
+
+    } else {
+        return "";
+    }
+}
+function renderGoLastPage(page) {
+
+    if (totalPage > page) {
+        return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + totalPage + ")' >"
+            + "<a href='javascript:;'>Trang cuối</a>"
+            + "</li>";
+    } else {
+        return "";
+    }
+}
+function renderGoFirstPage(page) {
+    if (totalPage > 1 && page > 1) {
+        return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + 1 + ")' >"
+            + "<a href='javascript:;'>Trang đầu</a>"
+            + "</li>";
+    } else {
+        return "";
+    }
+}
+function renderTotalPage(totalPage) {
+    if (totalPage > 0)
+        return "<label>Tổng: " + totalPage + "</label>";
+    return "";
+}
+function renderPageList(page, limit, totalRc) {
+    let pageMargin = 2;
+    totalPage = getTotalPage(totalRc, limit);
+    var startPage = page > pageMargin ? page - pageMargin : 1;
+    var endPage = pageMargin + page > totalPage ? totalPage : pageMargin + page;
+    var paging = $("#paging");
+    paging.empty();
+    var first = renderGoFirstPage(page);
+    var next = renderGoNextPage(page);
+    var prev = renderGoPreviousPage(page);
+    var last = renderGoLastPage(page);
+    paging.append(first);
+    paging.append(prev);
+    for (var i = startPage; i <= endPage; i++) {
+        var active = page === i ? ' active' : '';
+        var item = "<li class='paginate_button" + active + " aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + i + ")' >"
+            + "<a href='javascript:;'>" + i + "</a>"
+            + "</li>";
+        paging.append(item);
+    }
+    paging.append(next);
+    paging.append(last);
+}
+function getValueDisplay(value, type) {
+    if (isNullOrWhiteSpace(type)) {
+        if (isNullOrWhiteSpace(value))
+            return "";
+        return value;
+    }
+
+    var display = null;
+    switch (type) {
+        case 'datetime':
+            display = FormatDateTimeDMY(value);
+            break;
+        default: break;
+    }
+    return display;
+}
+function renderTextLeft(value, type, className = '') {
+    return "<td class='text-left " + className + "'>" + getValueDisplay(value, type) + "</td>";
+}
+function renderTextCenter(value, type) {
+    return "<td class='text-center'>" + getValueDisplay(value, type) + "</td>";
+}
+function renderAction(id) {
+    let thaoTac = "<div class='action-buttons'><a title='Chỉnh sửa' class='green' style='cursor: pointer'  onclick='onEdit(" + id + ")' >";
+    thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
+    thaoTac += "</i>";
+    thaoTac += "</a>";
+    thaoTac += "</a></div>";
+    return "<td class='text-center'>" + thaoTac + "</td>";
+}
+function setTableLimit(controlId = "#ddlLimit") {
+    $(controlId).chosen({ width: '100%', allow_single_deselect: true });
+}
+function preventTxtSearchEnter(controlId = "txtFreeText", btnSearchId = "#btnSearch") {
+    var input = document.getElementById(controlId);
+    input.addEventListener("keydown", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+
+        }
+    });
+    input.addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            $(btnSearchId).click();
+        }
+    });
+}
+function setValueForDateInput(controlId, value) {
+    if (value === null)
+        value = new Date().getDay + 1;
+    $(controlId).datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", value);
+}
+
+function setDateTimeInput(controlId, isSetDefaultDate = true, day = 0, format = 'dd-mm-yy') {
+
+    $(controlId).datepicker({
+        dateFormat: format//'mm-dd-yy'
+    }).next().on(ace.click_event, function () {
+        $(this).prev().focus();
+    });
+    if (isSetDefaultDate === true) {
+        if (isNullOrUndefined(day))
+            day = 0;
+        if (day === 0) {
+            $(controlId).datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date());
+        }
+        else {
+            $(controlId).datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + day);
+        }
+
+    }
+}
+function renderOneItemFile(key, fileId, titleName, isRequire = false, className = '', generateInput = false,
+    _initialPreview = [],
+    _initialPreviewConfig = [],
+    allowUpload = false,
+    isFileExist = false,
+    onUpload = null,
+    onDelete = null,
+    filesUploaded = [],
+    type = 1
+) {
+
+    let content = "<div class='col-sm-3'";
+
+    if (!isNullOrUndefined(titleName)) {
+        if (isRequire) {
+            content += '<h5  class="header green ' + className + '">' + titleName + '<span class="required">(*)</span></h5>';
+        }
+        else {
+            content += '<h5  class="header green ' + className + '">' + titleName + '<span > </span></h5>';
+        }
+    }
+
+    content += "<div class=\"file-loading\">";
+    content += "<input class='attachFile' key=" + key + " id=\"attachFile-" + fileId + "\" type=\"file\">";
+    content += "</div>";
+    content += "</div>";
+    $('#tailieu-' + key).append(content);
+    if (generateInput === true) {
+        let item = $("#attachFile-" + fileId);
+        
+        fileId = (isFileExist === true) ? fileId : getNewGuid();
+        let uploadUrl = isFileExist === true ? '/Hoso/UploadFile?key=' + key + "&fileId=" + fileId + "&type=" + type : '/Hoso/UploadFile?key=' + key + "&fileId=0" + "&type=" + type;
+        $(item).fileinput({
+            uploadUrl: allowUpload === true ? uploadUrl : null,
+            validateInitialCount: true,
+            maxFileSize: 25 * 1024,
+            msgSizeTooLarge: 'File "{name}" (<b>{size} KB</b>)'
+                + 'exceeds maximum allowed upload size of <b>{25} MB</b>. '
+                + 'Please retry your upload!',
+            allowedFileExtensions: ['png', 'jpg', 'pdf'],
+            initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+            initialPreviewFileType: 'image',
+            overwriteInitial: false,
+            showUploadedThumbs: false,
+            uploadAsync: false,
+            showClose: false,
+            showCaption: false,
+            showBrowse: false,
+            showUpload: false, // hide upload button
+            showRemove: false, // hide remove button
+            browseOnZoneClick: true,
+            removeLabel: '',
+            fileId: fileId,
+            btnDeleteId: 'btn-remove-file-' + fileId,
+            dropZoneTitle: 'Kéo và thả tập tin vào đây',
+            dropZoneClickTitle: '<br>(hoặc nhấp để chọn)',
+            removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+            removeTitle: 'Cancel or reset changes',
+            elErrorContainer: '#kv-avatar-errors-2',
+            msgErrorClass: 'alert alert-block alert-danger',
+            //layoutTemplates: { main2: '{preview} ' + btnCust + ' {remove} {browse}' },
+            //layoutTemplates: { footer: '' },
+            initialPreview: _initialPreview,
+            initialPreviewDownloadUrl: _initialPreview,
+            initialPreviewConfig: _initialPreviewConfig,
+            fileActionSettings: {
+                showDownload: true,
+                showRemove: true,
+                showUpload: true,
+                showZoom: true,
+                showDrag: false
+            },
+            append: true
+
+        }).on("filebatchselected", function (event, files) {
+            if (countFilesByKey(filesUploaded, parseInt(key)) >= 50)
+                return;
+            $(item).fileinput("upload");
+        }).on("filebeforedelete", function (event, key2, fileId) {
+
+            if (onDelete !== null) {
+                onDelete(key, fileId, isFileExist);
+            }
+        }).on('filebatchuploadsuccess', function (event, data) {
+            if (onUpload !== null) {
+                onUpload(key, fileId, data.response, isFileExist);
+            }
+        });
+
+    }
+
+}
+function isReach5Files(filesUpload, key) {
+    if (isNullOrWhiteSpace(key))
+        return true;
+    if (isNullOrNoItem(filesUpload))
+        return false;
+    let sameKeyFile = filesUpload.find(p => p.key === key);
+    if (isNullOrUndefined(sameKeyFile))
+        return false;
+    if (isNullOrNoItem(sameKeyFile.files))
+        return 0;
+    if (sameKeyFile.files.length === 50)
+        return true;
+    return false;
+}
+function countFilesByKey(filesUpload, key) {
+    if (isNullOrWhiteSpace(key))
+        return 0;
+    let sameKeyFile = filesUpload.find(p => p.key === key);
+    if (isNullOrUndefined(sameKeyFile))
+        return 0;
+    if (isNullOrNoItem(sameKeyFile.files))
+        return 0;
+    return sameKeyFile.files.length;
+}
+function getNewGuid() {
+    const s4 = () => {
+        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    };
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+}
+function setCheckedValueOfRadioButtonGroup(name, vValue) {
+    var radios = document.getElementsByName(name);
+    for (var j = 0; j < radios.length; j++) {
+        if (radios[j].value === vValue) {
+            radios[j].checked = true;
+            break;
+        }
+    }
+}
+function isNullOrNoItem(arr) {
+    if (arr === null || arr === undefined || arr.length === 0)
+        return true;
+    return false;
+}
+function isNullOrUndefined(value) {
+    if (value === null || value === undefined)
+        return true;
+    return false;
+}
+function isNullOrWhiteSpace(text) {
+    if (text === null || text === undefined || text === '' || text.toString().trim() === '')
+        return true;
+    return false;
+}
 
 function showBlock(div, text) {
     div.block({

@@ -59,6 +59,7 @@
                 </div>
             </div>
         </div>
+        <div class="clearfix"></div>
         <div class="row">
             <div class="col-xs-12">
                 <hr />
@@ -160,9 +161,9 @@
             url: '@Url.Action("LayDSNhanVien", "ToNhom")',
             data: {},
             success: function (data) {
-                if (data != null) {
-                    if (data.DSNhanVien != null && data.DSNhanVien.length > 0) {
-                        $.each(data.DSNhanVien, function (index, item) {
+                if (data.data != null && data.success == true) {
+                    if (data.data != null && data.data.length > 0) {
+                        $.each(data.data, function (index, item) {
                             $('#ddlNguoiQL').append("<option value='" + item.IDUser + "'>" + item.FullName + "</option>");
                         });
                     }
@@ -187,9 +188,9 @@
             url: '@Url.Action("LayDSNhomCha", "ToNhom")',
             data: {},
             success: function (data) {
-                if (data != null) {
-                    if (data.DSNhom != null && data.DSNhom.length > 0) {
-                        $.each(data.DSNhom, function (index, item) {
+                if (data.data != null && data.success == true) {
+                    if (data.data != null && data.data.length > 0) {
+                        $.each(data.data, function (index, item) {
                             $('#ddlNhomCha').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
                         });
                     }
@@ -252,10 +253,10 @@
             contentType: "application/json; charset=utf-8",
             data: objectSend,
             success: function (data) {
-                if (data.Message.Result == true) {
+                if (data.success == true) {
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
-                        text: data.Message.ErrorMessage,
+                        text: "Cập nhật thành công",
                         type: "success",
                         timer: 4000,
                         showConfirmButton: true,
@@ -266,7 +267,7 @@
                 else {
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
-                        text: data.Message.ErrorMessage,
+                        text: data.code,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,

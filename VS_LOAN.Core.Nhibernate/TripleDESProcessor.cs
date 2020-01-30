@@ -51,7 +51,7 @@ namespace VS_LOAN.Core.Nhibernate
                 StreamReader read = new StreamReader(decStream);
                 return (read.ReadToEnd());
             }
-            catch
+            catch (Exception e)
             {
                 return String.Empty;
             }
