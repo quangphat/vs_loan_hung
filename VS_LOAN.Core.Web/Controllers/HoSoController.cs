@@ -18,14 +18,16 @@ using System.Threading.Tasks;
 using F88Service;
 using VS_LOAN.Core.Entity.UploadModel;
 using VS_LOAN.Core.Entity.Infrastructures;
+using VS_LOAN.Core.Business.Interfaces;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class HoSoController : BaseController
     {
-        public HoSoController(CurrentProcess currentProcess) : base(currentProcess)
+        private readonly IHosoBusiness _bizHoso;
+        public HoSoController(CurrentProcess currentProcess, IHosoBusiness hosoBusiness) : base(currentProcess)
         {
-
+            _bizHoso = hosoBusiness;
         }
         public static Dictionary<string, ActionInfo> LstRole
         {
@@ -390,8 +392,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false,null,"Dữ liệu không hợp lệ");
             }
-            var bizHoso = new HosoBusiness();
-            var result = await bizHoso.RemoveTailieu(hosoId, fileId);
+            var result = await _bizHoso.RemoveTailieu(hosoId, fileId);
             return ToJsonResponse(true);
         }
         public async Task<JsonResult> TailieuByHosoForEdit(int hosoId, int typeId = 1)
@@ -400,13 +401,12 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false,null,"Dữ liệu không hợp lệ");
             }
-            var bizHoso = new HosoBusiness();
             var bizTailieu = new TailieuBusiness();
             var lstLoaiTailieu = await bizTailieu.GetLoaiTailieuList();
             if (lstLoaiTailieu == null || !lstLoaiTailieu.Any())
                 return ToJsonResponse(false);
 
-            var filesExist = await bizHoso.GetTailieuByHosoId(hosoId, typeId);
+            var filesExist = await _bizHoso.GetTailieuByHosoId(hosoId, typeId);
 
             var result = new List<HosoTailieu>();
 
@@ -428,8 +428,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> TailieuByHoso(int hosoId, int type=1)
         {
-            var bizHoso = new HosoBusiness();
-            var result = await bizHoso.GetTailieuByHosoId(hosoId, type);
+            var result = await _bizHoso.GetTailieuByHosoId(hosoId, type);
             if (result == null)
                 result = new List<FileUploadModel>();
             return ToJsonResponse(true,null,result);

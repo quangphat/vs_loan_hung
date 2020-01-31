@@ -14,6 +14,10 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class HomeController : LoanController
     {
+        public HomeController() : base(null)
+        {
+
+        }
         public HomeController(CurrentProcess currentProcess) : base(currentProcess)
         {
 

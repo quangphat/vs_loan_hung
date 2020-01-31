@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Entity.Infrastructures
 {
-    public class CurrentProcess
+    public interface ICurrentProcess
+    {
+        void AddError(string message);
+    }
+    public class CurrentProcess : ICurrentProcess
     {
         public List<ErrorMessage> Errors { get; set; }
         public int UserId { get; set; }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
 using VS_LOAN.Core.Business;
+using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.HosoCourrier;
 using VS_LOAN.Core.Entity.Infrastructures;
@@ -20,9 +21,10 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class CourrierController : BaseController
     {
-        public CourrierController(CurrentProcess currentProcess) : base(currentProcess)
+        private readonly IHosoBusiness _bizHoso;
+        public CourrierController(CurrentProcess currentProcess, IHosoBusiness hosoBusiness) : base(currentProcess)
         {
-
+            _bizHoso = hosoBusiness;
         }
         public static Dictionary<string, ActionInfo> LstRole
         {
@@ -175,8 +177,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetStatusList()
         {
-            var bizHoso = new HosoBusiness();
-            var result = await bizHoso.GetStatusListByType((int)HosoType.HosoCourrier);
+            var result = await _bizHoso.GetStatusListByType((int)HosoType.HosoCourrier);
             return ToJsonResponse(true, string.Empty, result);
         }
         public async Task<JsonResult> UploadToHoso(int hosoId, bool isReset, List<FileUploadModelGroupByKey> filesGroup)

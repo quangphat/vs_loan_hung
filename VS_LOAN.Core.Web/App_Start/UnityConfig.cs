@@ -1,8 +1,12 @@
 using System.Web.Http;
+using System.Web.Mvc;
 using Unity;
+using Unity.Lifetime;
 using Unity.WebApi;
 using VS_LOAN.Core.Business;
 using VS_LOAN.Core.Business.Interfaces;
+using VS_LOAN.Core.Entity.Infrastructures;
+using VS_LOAN.Core.Web.Controllers;
 
 namespace VS_LOAN.Core.Web
 {
@@ -16,8 +20,16 @@ namespace VS_LOAN.Core.Web
             // it is NOT necessary to register your controllers
 
             // e.g. container.RegisterType<ITestService, TestService>();
+            //DependencyResolver.SetResolver(new Unity..UnityDependencyResolver(container));
+            RegisterTypes(container);
+           GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
+        }
+        private static void RegisterTypes(IUnityContainer container)
+        {
+            container.RegisterType<IController, QuanLyHoSoController>("QuanLyHoSo");
+            container.RegisterType<IController,HomeController>("Home");
             container.RegisterType<IHosoBusiness, HosoBusiness>();
-            GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
+            container.RegisterType<ICurrentProcess, CurrentProcess>();
         }
     }
 }

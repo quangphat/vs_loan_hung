@@ -13,7 +13,7 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class BaseController : Controller
     {
-        public readonly CurrentProcess _process;
+        public  CurrentProcess _process;
         public BaseController(CurrentProcess currentProcess)
         {
             _process = currentProcess;

@@ -20,6 +20,10 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class QuanLyHoSoController : LoanController
     {
+        public QuanLyHoSoController() : base(null)
+        {
+
+        }
         public QuanLyHoSoController(CurrentProcess currentProcess) : base(currentProcess)
         {
 
@@ -42,6 +46,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (dsNhom == null)
                 dsNhom = new List<NhomDropDownModel>();
             ViewBag.DSNhom = dsNhom;
+            
             return View();
         }
 
@@ -82,6 +87,8 @@ namespace VS_LOAN.Core.Web.Controllers
                 if (lstHoso == null)
                     lstHoso = new List<HoSoQuanLyModel>();
                 var result = DataPaging.Create(lstHoso, totalRecord);
+                _process.AddError("d");
+                return ToResponseV2(result);
                 return ToJsonResponse(true,null, result);
             }
             catch (BusinessException ex)

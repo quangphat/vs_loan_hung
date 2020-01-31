@@ -10,7 +10,7 @@ using VS_LOAN.Core.Entity.UploadModel;
 
 namespace VS_LOAN.Core.Business
 {
-    public class TailieuBusiness:BaseBusiness
+    public class TailieuBusiness : BaseBusiness
     {
         public TailieuBusiness() : base(typeof(TailieuBusiness)) { }
         public async Task<List<LoaiTaiLieuModel>> GetLoaiTailieuList()

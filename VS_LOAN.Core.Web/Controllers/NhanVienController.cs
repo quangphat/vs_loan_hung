@@ -13,8 +13,13 @@ using VS_LOAN.Core.Entity.Infrastructures;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
-    public class NhanVienController : LoanController
+    public class NhanVienController : BaseController
     {
+        public NhanVienController():base(null)
+        {
+
+        }
+        
         public NhanVienController(CurrentProcess currentProcess) : base(currentProcess)
         {
 
