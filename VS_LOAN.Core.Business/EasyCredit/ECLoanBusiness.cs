@@ -11,16 +11,16 @@ namespace VS_LOAN.Core.Business.EasyCredit
 {
     public class ECLoanBusiness : BaseBusiness, IECLoanBusiness
     {
-        protected ILoanRequest _svLoanrequest;
-        public ECLoanBusiness(ILoanRequest loanRequest) : base(typeof(ECLoanBusiness))
+        protected ILoanRequestService _svLoanrequest;
+        public ECLoanBusiness(ILoanRequestService loanRequest) : base(typeof(ECLoanBusiness))
         {
             _svLoanrequest = loanRequest;
         }
-        public async Task CreateLoanToEc(LoanInfoRequestModel model)
+        public async Task<string> CreateLoanToEc(LoanInfoRequestModel model, int type =0)
         {
             if (model == null)
-                return;
-            await _svLoanrequest.CreateLoan(model);
+                return "model is null";
+            return await _svLoanrequest.CreateLoan(model, type);
         }
     }
 }

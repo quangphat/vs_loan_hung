@@ -13,12 +13,12 @@ namespace VS_LOAN.Core.Utility
     public static class CoreApiClient
     {
 
-        public static async Task<HttpResponseMessage> Post(this HttpClient httpClient, string basePath, string path = "/", object param = null, object data = null)
+        public static async Task<HttpResponseMessage> Post(this HttpClient httpClient, string basePath, string path = "/", object param = null, object data = null, int type = 0)
         {
-            return await httpClient.Call( HttpMethod.Post, basePath, path, param, data);
+            return await httpClient.Call(HttpMethod.Post, basePath, path, param, data, type);
         }
         private static async Task<HttpResponseMessage> Call(this HttpClient httpClient,
-            HttpMethod method,string basePath, string path = "/", object param = null, object data = null, string bearer = null)
+            HttpMethod method, string basePath, string path = "/", object param = null, object data = null, int type = 0)
         {
             //if (param != null)
             //    path = path.AddQuery(param);
@@ -52,18 +52,24 @@ namespace VS_LOAN.Core.Utility
 
                     content = new StringContent(json, Encoding.UTF8, "application/json");
                 }
-            
+
             var originalData = string.Empty;
             if (data != null)
                 originalData = json;
 
             if (string.IsNullOrWhiteSpace(originalData))
                 originalData = string.Empty;
-            if(!string.IsNullOrWhiteSpace(bearer))
+            if (type == 0)
             {
-                requestMessage.Headers.Add("Authorization", "Bearer write:loan_request");
+                requestMessage.Headers.Add("Content-Type", "application/json");
+                requestMessage.Headers.Add("Authorization", "Bearer 3c8f7cf4-8228-4c2f-8b09-75d42bad3c8e");
+            }
+            if (type == 1)
+            {
+                httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer write:loan_request");
             }
             requestMessage.Content = content;
+
             var response = await httpClient.SendAsync(requestMessage).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 

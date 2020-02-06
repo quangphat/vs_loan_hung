@@ -15,7 +15,7 @@ namespace VS_LOAN.Core.Business
 {
     public class HosoBusiness : BaseBusiness, IHosoBusiness
     {
-        protected ILoanRequest _svLoanrequest;
+        protected ILoanRequestService _svLoanrequest;
         public HosoBusiness():base(typeof(HosoBusiness))
         {
         }

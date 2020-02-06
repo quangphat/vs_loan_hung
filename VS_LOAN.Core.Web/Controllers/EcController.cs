@@ -21,11 +21,11 @@ namespace VS_LOAN.Core.Web.Controllers
             _httpClient = httpClient;
         }
         [HttpPost]
-        [Route("create")]
-        public async Task<IHttpActionResult> CreateLoan(LoanInfoRequestModel model)
+        [Route("create/{type}")]
+        public async Task<IHttpActionResult> CreateLoan(LoanInfoRequestModel model,int  type = 0)
         {
-            await _bizEcLoan.CreateLoanToEc(model);
-            return Ok();
+            var result = await _bizEcLoan.CreateLoanToEc(model, type);
+            return Ok(result);
         }
     }
 }

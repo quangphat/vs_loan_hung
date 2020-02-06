@@ -9,6 +9,6 @@ namespace VS_LOAN.Core.Business.Interfaces
 {
     public interface IECLoanBusiness
     {
-        Task CreateLoanToEc(LoanInfoRequestModel model);
+        Task<string> CreateLoanToEc(LoanInfoRequestModel model, int type=0);
     }
 }
