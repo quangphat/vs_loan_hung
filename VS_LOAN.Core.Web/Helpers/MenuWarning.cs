@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
+using VS_LOAN.Core.Entity;
 
 namespace VS_LOAN.Core.Web.Helpers
 {
