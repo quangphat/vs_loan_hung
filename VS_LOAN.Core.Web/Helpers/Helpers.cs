@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Utility;
 
 namespace VS_LOAN.Core.Web.Helpers
