@@ -13,9 +13,9 @@ using VS_LOAN.Core.Utility;
 
 namespace EasyCreditService.Classes
 {
-    public class LoanRequest : BaseService, ILoanRequest
+    public class LoanRequestService : BaseService, ILoanRequestService
     {
-        public LoanRequest(HttpClient httpClient) : base(httpClient, typeof(LoanRequest))
+        public LoanRequestService(HttpClient httpClient) : base(httpClient, typeof(LoanRequestService))
         {
 
         }

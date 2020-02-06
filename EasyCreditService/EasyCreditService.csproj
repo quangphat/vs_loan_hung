@@ -47,10 +47,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\LoanRequest.cs" />
+    <Compile Include="Classes\ApiService.cs" />
+    <Compile Include="Classes\LoanRequestService.cs" />
     <Compile Include="Infrastructure\BaseService.cs" />
     <Compile Include="Infrastructure\ECApiPath.cs" />
-    <Compile Include="Interfaces\ILoanRequest.cs" />
+    <Compile Include="Interfaces\IApiService.cs" />
+    <Compile Include="Interfaces\ILoanRequestService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

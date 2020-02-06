@@ -27,5 +27,12 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = await _bizEcLoan.CreateLoanToEc(model, type);
             return Ok(result);
         }
+        [HttpGet]
+        [Route("token")]
+        public async Task<IHttpActionResult> GetTokent()
+        {
+            var result = await _bizEcLoan.GetToken();
+            return Ok(result);
+        }
     }
 }

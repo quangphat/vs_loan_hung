@@ -17,17 +17,29 @@ namespace VS_LOAN.Core.Utility
         {
             return await httpClient.Call(HttpMethod.Post, basePath, path, param, data, type);
         }
+        public static async Task<HttpResponseMessage> GetToken(this HttpClient httpClient, HttpMethod method, string basePath, string path = "/", string clientId = null, string clientSecret = null)
+        {
+            var request = buildHeader(method, basePath, path);
+            var key = Utility.Base64Encode($"{clientId}:{clientSecret}");
+            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", key);
+            //request.Headers.Add("Authorization", $"Basic ${key}");
+            var response = await httpClient.SendAsync(request).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+            return response;
+        }
+        private static HttpRequestMessage buildHeader(
+            HttpMethod method, string basePath, string path = "/", object param = null)
+        {
+            var url = $"{basePath}{path}";
+            var requestMessage = new HttpRequestMessage(method, url);
+            return requestMessage;
+        }
         private static async Task<HttpResponseMessage> Call(this HttpClient httpClient,
             HttpMethod method, string basePath, string path = "/", object param = null, object data = null, int type = 0)
         {
-            //if (param != null)
-            //    path = path.AddQuery(param);
-            var url = $"{basePath}{path}";
-            var requestMessage = new HttpRequestMessage(method, url);
-            string json = null;
-
+            
             HttpContent content = null;
-
+            string json = null;
             if (data != null)
                 if (data is string)
                     content = new StringContent((string)data, Encoding.UTF8, "application/json");
@@ -59,29 +71,12 @@ namespace VS_LOAN.Core.Utility
 
             if (string.IsNullOrWhiteSpace(originalData))
                 originalData = string.Empty;
-            if (type == 0)
-            {
-                requestMessage.Headers.Add("Content-Type", "application/json");
-                requestMessage.Headers.Add("Authorization", "Bearer 3c8f7cf4-8228-4c2f-8b09-75d42bad3c8e");
-            }
-            if (type == 1)
-            {
-                httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer write:loan_request");
-            }
-            requestMessage.Content = content;
+            var requestMessage = buildHeader(method, basePath, path);
 
             var response = await httpClient.SendAsync(requestMessage).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
             return response;
         }
-        //public static string AddQuery(this string path, object obj)
-        //{
-        //    if (path == null || obj == null)
-        //        return path;
-
-        //    return QueryHelpers.AddQueryString(path, obj.ToKeyPairs().ToDictionary(m => m.Key, m => m.Value.ToString()));
-        //}
-
     }
 }

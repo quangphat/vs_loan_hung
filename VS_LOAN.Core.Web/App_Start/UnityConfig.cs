@@ -26,7 +26,7 @@ namespace VS_LOAN.Core.Web
             container.RegisterType<IECLoanBusiness, ECLoanBusiness>();
             container.RegisterType<IHosoBusiness, HosoBusiness>();
             container.RegisterType<ILoanRequestService, LoanRequestService>();
-            
+            container.RegisterType<IApiService, ApiService>();
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
         }
     }
