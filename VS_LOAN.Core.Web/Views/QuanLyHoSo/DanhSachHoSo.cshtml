@@ -409,23 +409,23 @@
     }
    function renderStatus(MaTrangThai, TrangThaiHS) {
         var statusString = "";
-        if (MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.Nhap)')
+        if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.Nhap)')
             statusString = "<span class='label label-sm label-light arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.NhapLieu)')
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.NhapLieu)')
             statusString = "<span class='label label-sm label-purple arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.ThamDinh)')
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.ThamDinh)')
             statusString = "<span class='label label-sm label-danger arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.DaDoiChieu)')
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.DaDoiChieu)')
             statusString = "<span class='label label-sm label-dadoichieu arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.TuChoi)')
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.TuChoi)')
             statusString = "<span class='label label-sm label-inverse arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.Cancel)')
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.Cancel)')
             statusString = "<span class='label label-sm label-cancel arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.PCB)')
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.PCB)')
             statusString = "<span class='label label-sm label-pcb arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.BoSungHoSo)')
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.BoSungHoSo)')
             statusString = "<span class='label label-sm label-info arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.GiaiNgan)')
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.GiaiNgan)')
             statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
         return "<td class='text-left'>" + statusString + "</td>";;
     }
@@ -434,9 +434,9 @@
             + "<a title='@Global.Button_View' class=\"blue\" style='cursor: pointer' id='" + id+ "' onClick='XemHS(" + id +")'>"
             + "<i class=\"ace-icon fa fa-eye bigger-130\">"
             + "</i></a>"
-        if ((MaTrangThai == @((int)VS_LOAN.Core.Utility.TrangThaiHoSo.TuChoi)
-            || MaTrangThai == @((int)VS_LOAN.Core.Utility.TrangThaiHoSo.BoSungHoSo)
-            || MaTrangThai == @((int)VS_LOAN.Core.Utility.TrangThaiHoSo.Nhap))
+        if ((MaTrangThai == @((int)VS_LOAN.Core.Entity.TrangThaiHoSo.TuChoi)
+            || MaTrangThai == @((int)VS_LOAN.Core.Entity.TrangThaiHoSo.BoSungHoSo)
+            || MaTrangThai == @((int)VS_LOAN.Core.Entity.TrangThaiHoSo.Nhap))
             && MaNV == '@VS_LOAN.Core.Web.Helpers.GlobalData.User.Code')
         {
             thaoTac += "<a title='@Global.Button_Edit' class=\"green\" style='cursor: pointer' ID=" + id + " onclick='SuaHS(" + id + ")' >";
@@ -445,18 +445,18 @@
                 thaoTac += "</a>";
                 thaoTac += "</a>";
         }
-        else if ((MaTrangThai == @((int)VS_LOAN.Core.Utility.TrangThaiHoSo.NhapLieu)
-                 || MaTrangThai == @((int)VS_LOAN.Core.Utility.TrangThaiHoSo.BoSungHoSo))
-                 && '@VS_LOAN.Core.Web.Helpers.GlobalData.User.UserType' == '@((int)VS_LOAN.Core.Utility.UserTypeEnum.Teamlead)') {
+        else if ((MaTrangThai == @((int)VS_LOAN.Core.Entity.TrangThaiHoSo.NhapLieu)
+                 || MaTrangThai == @((int)VS_LOAN.Core.Entity.TrangThaiHoSo.BoSungHoSo))
+                 && '@VS_LOAN.Core.Web.Helpers.GlobalData.User.UserType' == '@((int)VS_LOAN.Core.Entity.UserTypeEnum.Teamlead)') {
             thaoTac += "<a title='@Global.Button_Edit' class=\"green\" style='cursor: pointer' ID=" + id + " onclick='SuaHS(" + id +")' >";
             thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
             thaoTac += "</i>";
             thaoTac += "</a>";
             thaoTac += "</span>";
         }
-        else if (MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.BoSungHoSo)'
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.BoSungHoSo)'
 
-            && '@VS_LOAN.Core.Web.Helpers.GlobalData.User.UserType' == '@((int)VS_LOAN.Core.Utility.UserTypeEnum.Sale)') {
+            && '@VS_LOAN.Core.Web.Helpers.GlobalData.User.UserType' == '@((int)VS_LOAN.Core.Entity.UserTypeEnum.Sale)') {
             thaoTac += "<a title='@Global.Button_Edit' >";
             thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
             thaoTac += "</i>";
