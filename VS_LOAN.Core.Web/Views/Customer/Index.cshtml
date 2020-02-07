@@ -276,11 +276,11 @@
     }
      function renderStatus(statusId) {
         var statusString = "";
-         if (statusId == '@((int)VS_LOAN.Core.Utility.CICStatus.NotDebt)')
+         if (statusId == '@((int)VS_LOAN.Core.Entity.CICStatus.NotDebt)')
             statusString = "<span class='label label-sm label-light arrowed arrowed-righ'>Không nợ xấu</span>";
-         else if (statusId == '@((int)VS_LOAN.Core.Utility.CICStatus.Warning)')
+         else if (statusId == '@((int)VS_LOAN.Core.Entity.CICStatus.Warning)')
             statusString = "<span class='label label-sm label-purple arrowed arrowed-righ'>Nợ chú ý</span>";
-         else if (statusId == '@((int)VS_LOAN.Core.Utility.CICStatus.Debt)')
+         else if (statusId == '@((int)VS_LOAN.Core.Entity.CICStatus.Debt)')
             statusString = "<span class='label label-sm label-danger arrowed arrowed-righ'>Nợ xấu</span>";
         return "<td class='text-left'>" + statusString + "</td>";;
     }
