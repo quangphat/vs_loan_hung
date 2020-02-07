@@ -64,4 +64,10 @@ namespace VS_LOAN.Core.Entity
     {
         VietCreadit = 3
     }
+    public enum UserTypeEnum
+    {
+        Admin = 1,
+        Teamlead = 2,
+        Sale = 3
+    }
 }
