@@ -410,12 +410,15 @@
                 showError(jqXHR, exception);
             }
         });
-        var hsCuaAi=@Html.Raw(Json.Encode(ViewBag.SellCode));
-        $('#ddlInternalCode').empty();
-        $('#ddlInternalCode').append("<option  ten='" + hsCuaAi.FullName + "' value='" + hsCuaAi.IDUser + "'>" + hsCuaAi.Code + "</option>");
-        $('#ddlInternalCode').val(hoso.HoSoCuaAi);
-        $('#ddlInternalCode').chosen().trigger("chosen:updated");
-        $('#txtTenNV').val( hsCuaAi.FullName);
+        var hsCuaAi =@Html.Raw(Json.Encode(ViewBag.SellCode));
+        if (hsCuaAi != null) {
+            $('#ddlInternalCode').empty();
+            $('#ddlInternalCode').append("<option  ten='" + hsCuaAi.FullName + "' value='" + hsCuaAi.IDUser + "'>" + hsCuaAi.Code + "</option>");
+            $('#ddlInternalCode').val(hoso.HoSoCuaAi);
+            $('#ddlInternalCode').chosen().trigger("chosen:updated");
+            $('#txtTenNV').val(hsCuaAi.FullName);
+        }
+        
 
 
         $('#ddlDoiTac').on('change', function () {
