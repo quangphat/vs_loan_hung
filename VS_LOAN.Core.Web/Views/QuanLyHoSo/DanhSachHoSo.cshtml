@@ -431,7 +431,7 @@
     }
     function renderAction(id, MaTrangThai, MaNV) {
         var thaoTac = "<div class='action-buttons'>"
-            + "<a title='@Global.Button_View' class=\"blue\" style='cursor: pointer' id='" + id+ "' onClick='XemHS(this)'>"
+            + "<a title='@Global.Button_View' class=\"blue\" style='cursor: pointer' id='" + id+ "' onClick='XemHS(" + id +")'>"
             + "<i class=\"ace-icon fa fa-eye bigger-130\">"
             + "</i></a>"
         if ((MaTrangThai == @((int)VS_LOAN.Core.Utility.TrangThaiHoSo.TuChoi)
@@ -439,7 +439,7 @@
             || MaTrangThai == @((int)VS_LOAN.Core.Utility.TrangThaiHoSo.Nhap))
             && MaNV == '@VS_LOAN.Core.Web.Helpers.GlobalData.User.Code')
         {
-                thaoTac += "<a title='@Global.Button_Edit' class=\"green\" style='cursor: pointer' ID=" + id + " onclick='SuaHS(this)' >";
+            thaoTac += "<a title='@Global.Button_Edit' class=\"green\" style='cursor: pointer' ID=" + id + " onclick='SuaHS(" + id + ")' >";
                 thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
                 thaoTac += "</i>";
                 thaoTac += "</a>";
@@ -448,7 +448,7 @@
         else if ((MaTrangThai == @((int)VS_LOAN.Core.Utility.TrangThaiHoSo.NhapLieu)
                  || MaTrangThai == @((int)VS_LOAN.Core.Utility.TrangThaiHoSo.BoSungHoSo))
                  && '@VS_LOAN.Core.Web.Helpers.GlobalData.User.UserType' == '@((int)VS_LOAN.Core.Utility.UserTypeEnum.Teamlead)') {
-            thaoTac += "<a title='@Global.Button_Edit' class=\"green\" style='cursor: pointer' ID=" + id + " onclick='SuaHS(this)' >";
+            thaoTac += "<a title='@Global.Button_Edit' class=\"green\" style='cursor: pointer' ID=" + id + " onclick='SuaHS(" + id +")' >";
             thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
             thaoTac += "</i>";
             thaoTac += "</a>";
@@ -613,292 +613,7 @@
         })
 
     }
-    function InitTable() {
-        showBlock($('#panel_body'), strLoading);
-        var table = $('#dtSource').DataTable({
-            scrollX: true,
-            //scrollCollapse: true,
-            ajax: {
-                url: '@Url.Action("TimHSQL", "QuanLyHoSo")'
-                    , dataSrc: '',
-                type: "GET",
-                contentType: "application/json",
-                data: function (d) {
-                    d.maNhom = dsNhom.length > 0 ? $('#ddlNhom').val() : '0';
-                    d.maThanhVien = dsNhom.length > 0 ? $('#ddlThanhVienNhom').val() : '@VS_LOAN.Core.Web.Helpers.GlobalData.User.IDUser';
-                    d.fromDate = $('#txtFromDate').val();
-                    d.toDate = $('#txtToDate').val();
-                    d.maHS =  $('#txtMaHS').val();
-                    d.cmnd = $('#txtCMND').val();
-                    d.loaiNgay = $('input[name="radio-ngay"]:checked').val();
-                },
-                error: function (jqXHR, exception) {
-                    showError(jqXHR, exception);
-                },
-                complete: function () {
-                    $('#panel_body').unblock();
-                }
-            },
-            columns: [
-                {
-                    data: null,
-                    bSortable: false,
-                    searchable: false
-                   , orderable: false
-                   , targets: 0
-                   , className: "ColumnCenterClassName",
-                    sClass: 'text-center'
-                }
-                ,
-               {// Company Name
-                   data: null,
-                   bSortable: false,
-                   "render": function (data, type, full, meta) {
-                       return data.MaHoSo;
-                   },
-                   className: 'text-left'
-               }
-                ,
-               {// Customer Name
-                   data: null,
-                   bSortable: false,
-                   "render": function (data, type, full, meta) {
-                       return FormatDateTimeDMY(data.NgayTao);
-                   },
-                   className: 'text-left'
-               }
-                ,
-                {//Bill Date
-                    data: null,
-                    bSortable: false,
-                    type: 'date-eu',
-                    "render": function (data, type, full, meta) {
-                        return data.DoiTac;
-                    },
-                    className: 'text-left'
-                }
-                ,
-                {//Bill Date
-                    data: null,
-                    bSortable: false,
-                    type: 'date-eu',
-                    "render": function (data, type, full, meta) {
-                        return data.CMND;
-                    },
-                    className: 'text-left'
-                }
-                ,
-                {//Bill Date
-                    data: null,
-                    bSortable: false,
-                    type: 'date-eu',
-                    "render": function (data, type, full, meta) {
-                        return data.TenKH;
-                    },
-                    className: 'text-left'
-                }
-                ,
-                {//Bill Date
-                    data: null,
-                    bSortable: false,
-                    type: 'date-eu',
-                    "render": function (data, type, full, meta) {
-                        var statusString = "";
-                        if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.Nhap)')
-                            statusString = "<span class='label label-sm label-light arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
-                        else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.NhapLieu)')
-                            statusString = "<span class='label label-sm label-purple arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
-                        else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.ThamDinh)')
-                            statusString = "<span class='label label-sm label-danger arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
-                            else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.DaDoiChieu)')
-                            statusString = "<span class='label label-sm label-dadoichieu arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
-                        else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.TuChoi)')
-                            statusString = "<span class='label label-sm label-inverse arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
-                            else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.Cancel)')
-                            statusString = "<span class='label label-sm label-cancel arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
-                            else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.PCB)')
-                            statusString = "<span class='label label-sm label-pcb arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
-                        else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.BoSungHoSo)')
-                            statusString = "<span class='label label-sm label-info arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
-                        else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.GiaiNgan)')
-                            statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + data.TrangThaiHS + "</span>";
-                        return statusString;
-                    },
-                    className: 'text-left'
-                }
-                ,
-                {//Bill Date
-                    data: null,
-                    bSortable: false,
-                    type: 'date-eu',
-                    "render": function (data, type, full, meta) {
-                        return data.GhiChu;
-                    },
-                    className: 'text-left'
-                }
-                ,
-                {//Bill Date
-                    data: null,
-                    bSortable: false,
-                    type: 'date-eu',
-                    "render": function (data, type, full, meta) {
-                        return FormatDateTimeDMY(data.NgayCapNhat);
-                    },
-                    className: 'text-left'
-                }
-                ,
-                {//Ten san pham
-                    data: null,
-                    bSortable: false,
-                    type: 'date-eu',
-                    "render": function (data, type, full, meta) {
-                        return data.TenSanPham;
-                    },
-                    className: 'text-left'
-                }
-                ,
-                {//Bill Date
-                    data: null,
-                    bSortable: false,
-                    type: 'date-eu',
-                    "render": function (data, type, full, meta) {
-                        return data.MaNV;
-                    },
-                    className: 'text-left'
-                }
-                ,
-                {//Bill Date
-                    data: null,
-                    bSortable: false,
-                    type: 'date-eu',
-                    "render": function (data, type, full, meta) {
-                        return data.NhanVienBanHang;
-                    },
-                    className: 'text-left'
-                }
-                ,
-                {//Bill Date
-                    data: null,
-                    bSortable: false,
-                    type: 'date-eu',
-                    "render": function (data, type, full, meta) {
-                        return data.DoiNguBanHang;
-                    },
-                    className: 'text-left'
-                }
-                ,
-                {//Bill Date
-                    data: null,
-                    bSortable: false,
-                    type: 'date-eu',
-                    "render": function (data, type, full, meta) {
-                        return data.MaNVLayHS;
-                    },
-                    className: 'text-left'
-                }
-                ,
-                {//Bill Date
-                    data: null,
-                    bSortable: false,
-                    type: 'date-eu',
-                    "render": function (data, type, full, meta) {
-                        if (data.CoBaoHiem == true)
-                            return "<div class='orange bolder' title='Không có bảo hiểm' ><i class=\"ace-icon fa fa-ban bigger-130\"></i></div>";
-                        else
-                            return "<div class='green bolder'title='Có bảo hiểm' ><i class=\"ace-icon glyphicon glyphicon-ok bigger-130\"></div>";
-                    },
-                    className: 'text-left'
-                }
-                ,
-                {//Bill Date
-                    data: null,
-                    bSortable: false,
-                    type: 'date-eu',
-                    "render": function (data, type, full, meta) {
-                        return data.KhuVucText;
-                    },
-                    className: 'text-left'
-                }
-                , {// Thao tác
-                    data: null,
-                    bSortable: false,
-                    "render": function (data, type, full, meta) {
-                        var thaoTac = "";
-                        thaoTac += "<div class='action-buttons'>";
-                        thaoTac += "<a title='@Global.Button_View' class=\"blue\" style='cursor: pointer' id='" + data.ID + "' onClick='XemHS(this)'>";
-                        thaoTac += "<i class=\"ace-icon fa fa-eye bigger-130\">";
-                        thaoTac += "</i>";
-                        thaoTac += "</a>";
-                        if ((data.MaTrangThai == @((int)VS_LOAN.Core.Utility.TrangThaiHoSo.TuChoi)
-                            || data.MaTrangThai == @((int)VS_LOAN.Core.Utility.TrangThaiHoSo.BoSungHoSo)
-                            || data.MaTrangThai == @((int)VS_LOAN.Core.Utility.TrangThaiHoSo.Nhap))
-                            && data.MaNV == '@VS_LOAN.Core.Web.Helpers.GlobalData.User.Code') {
-                            thaoTac += "<a title='@Global.Button_Edit' class=\"green\" style='cursor: pointer' ID=" + data.ID + " onclick='SuaHS(this)' >";
-                            thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
-                            thaoTac += "</i>";
-                            thaoTac += "</a>";
-                            thaoTac += "</a>";
-                        }
-                        else if ((data.MaTrangThai == @((int)VS_LOAN.Core.Utility.TrangThaiHoSo.NhapLieu)
-                            || data.MaTrangThai == @((int)VS_LOAN.Core.Utility.TrangThaiHoSo.BoSungHoSo))
-                            && '@VS_LOAN.Core.Web.Helpers.GlobalData.User.UserType' == '@((int)VS_LOAN.Core.Utility.UserTypeEnum.Teamlead)') {
-                            thaoTac += "<a title='@Global.Button_Edit' class=\"green\" style='cursor: pointer' ID=" + data.ID + " onclick='SuaHS(this)' >";
-                            thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
-                            thaoTac += "</i>";
-                            thaoTac += "</a>";
-                            thaoTac += "</span>";
-                        }
-                        else if (data.MaTrangThai == '@((int)VS_LOAN.Core.Utility.TrangThaiHoSo.BoSungHoSo)'
-
-                            && '@VS_LOAN.Core.Web.Helpers.GlobalData.User.UserType' == '@((int)VS_LOAN.Core.Utility.UserTypeEnum.Sale)') {
-                            thaoTac += "<a title='@Global.Button_Edit' >";
-                            thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
-                            thaoTac += "</i>";
-                            thaoTac += "</a>";
-                            thaoTac += "</span>";
-                        }
-                        thaoTac += "</div>";
-                        return thaoTac;
-                    }
-                    , sClass: 'text-center'
-                }
-
-            ],
-            "aaSorting": []
-            //, order: [0, 'asc']
-                , language: {
-                    lengthMenu: '@Html.Raw(Global.Table_LengthMenu)'
-                    , info: '@Html.Raw(Global.Table_Info)'
-                    , infoEmpty: '@Html.Raw(Global.Table_InfoEmpty)'
-                    , zeroRecords: "@Html.Raw(Global.Table_ZeroRecords)"
-                    , search: '@Html.Raw(Global.Table_Search)'
-                    , decimal: ","
-                    , thousands: "."
-                    , paginate: {
-                        first: "@Html.Raw(Global.Table_Paginate_First)",
-                        last: "@Html.Raw(Global.Table_Paginate_Last)",
-                        next: "@Html.Raw(Global.Table_Paginate_Next)",
-                        previous: '@Html.Raw(Global.Table_Paginate_Previous)'
-                    }
-                },
-            "fnInitComplete": function () {
-                $("#dtSource").css("width", "100%");
-                $('#dtSource').DataTable().columns.adjust().draw();
-            }
-        });
-
-        //Thứ tự bảng dữ liệu
-        table.on('order.dt search.dt', function () {
-            table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
-                cell.innerHTML = i + 1;
-            });
-        }).draw();
-
-        //$('#dtSource tbody').on('click', 'tr', function () {
-        //    var data = table.row(this).data();
-        //    alert('You clicked on ' + data.ID);
-        //});
-    }
+    
 </script>
 <script>
     function LayNhom() {
@@ -952,11 +667,11 @@
 
 </script>
 <script>
-    function XemHS(e) {
-        window.location = "/QuanLyHoSo/XemHSByID?id=" + $(e).attr("ID") + "&fromdate=" + $('#txtFromDate').val() + "&todate=" + $('#txtToDate').val() + "&mahs=" + $('#txtMaHS').val();
+    function XemHS(id) {
+        window.location = "/QuanLyHoSo/XemHSByID?id="  +id;
     }
-    function SuaHS(e) {
-        window.location = "/QuanLyHoSo/SuaHSByID?id=" + $(e).attr("ID") + "&fromdate=" + $('#txtFromDate').val() + "&todate=" + $('#txtToDate').val();
+    function SuaHS(id) {
+        window.location = "/QuanLyHoSo/SuaHSByID?id=" + id;
     }
 </script>
 <script>

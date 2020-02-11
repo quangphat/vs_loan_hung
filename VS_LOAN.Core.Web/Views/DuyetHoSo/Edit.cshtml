@@ -600,7 +600,7 @@
         //$('#ddlTrangThai').empty();
         $.ajax({
             type: "POST",
-            url: '@Url.Action("LayDSGhichu", "DuyetHoSo")',
+            url: '/DuyetHoSo/LayDSGhichu?id=' + hoso.ID,
             data: {},
             success: function (data) {
                 if (data.data != null && data.success == true) {

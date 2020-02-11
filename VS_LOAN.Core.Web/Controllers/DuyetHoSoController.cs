@@ -79,12 +79,7 @@ namespace VS_LOAN.Core.Web.Controllers
             }
         }
 
-        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public ActionResult XemHSByID(int id, string fromDate, string toDate, string makh)
-        {
-            Session["DuyetHoSo_ChiTietHoSo_ID"] = id;
-            return RedirectToAction("ChiTietHoSo", new { fromDate = fromDate, toDate = toDate, makh });
-        }
+        
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult UploadHoSo(string key)
         {
@@ -208,14 +203,20 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             return Json(new { Result = fileUrl });
         }
+        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
+        public ActionResult XemHSByID(int id)
+        {
+            Session["DuyetHoSo_ChiTietHoSo_ID"] = id;
+            return RedirectToAction("Edit", new { id = id });
+        }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.DuyetHoSo })]
-        public ActionResult ChiTietHoSo()
+        public ActionResult Edit(int id)
         {
             ViewBag.formindex = LstRole["Index"]._formindex;
-            if (Session["DuyetHoSo_ChiTietHoSo_ID"] == null)
+            if (id <=0)
                 return RedirectToAction("Index");
-            ViewBag.ID = (int)Session["DuyetHoSo_ChiTietHoSo_ID"];
-            var hoso = new HoSoBLL().LayChiTiet((int)Session["DuyetHoSo_ChiTietHoSo_ID"]);
+            ViewBag.ID = id;
+            var hoso = new HoSoBLL().LayChiTiet(id);
             ViewBag.HoSo = hoso;
             ViewBag.MaDoiTac = new DoiTacBLL().LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
@@ -467,9 +468,9 @@ namespace VS_LOAN.Core.Web.Controllers
                 rs = new List<NhanVienNhomDropDownModel>();
             return ToJsonResponse(true, null, rs);
         }
-        public JsonResult LayDSGhichu()
+        public JsonResult LayDSGhichu(int id)
         {
-            List<GhichuViewModel> rs = new HoSoBLL().LayDanhsachGhichu((int)Session["DuyetHoSo_ChiTietHoSo_ID"]);
+            List<GhichuViewModel> rs = new HoSoBLL().LayDanhsachGhichu(id);
             if (rs == null)
                 rs = new List<GhichuViewModel>();
             return ToJsonResponse(true, null, rs);
