@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
+using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Entity.UploadModel;
 
 namespace VS_LOAN.Core.Business
@@ -71,6 +72,17 @@ namespace VS_LOAN.Core.Business
                 return true;
             }
 
+        }
+        public async Task<HoSoInfoModel> GetDetail(int id)
+        {
+            var p = new DynamicParameters();
+            p.Add("ID", id);
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryFirstOrDefaultAsync<HoSoInfoModel>("sp_HO_SO_LayChiTiet", p,
+                    commandType: CommandType.StoredProcedure);
+                return result;
+            }
         }
     }
 }
