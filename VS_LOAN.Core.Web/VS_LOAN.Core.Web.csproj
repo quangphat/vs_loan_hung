@@ -1729,10 +1729,10 @@
     <Content Include="Views\NotPage\Index.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\HoSo\AddNew.cshtml" />
-    <Content Include="Views\QuanLyHoSo\ChiTietHoSo.cshtml" />
+    <Content Include="Views\QuanLyHoSo\Detail.cshtml" />
     <Content Include="Views\QuanLyHoSo\DanhSachHoSo.cshtml" />
-    <Content Include="Views\QuanLyHoSo\SuaHoSo.cshtml" />
-    <Content Include="Views\DuyetHoSo\ChiTietHoSo.cshtml" />
+    <Content Include="Views\QuanLyHoSo\Edit.cshtml" />
+    <Content Include="Views\DuyetHoSo\Edit.cshtml" />
     <Content Include="Views\DuyetHoSo\Index.cshtml" />
     <Content Include="Views\HoSo\Index.cshtml" />
     <Content Include="Views\HoSo\SuaHoSo.cshtml" />
