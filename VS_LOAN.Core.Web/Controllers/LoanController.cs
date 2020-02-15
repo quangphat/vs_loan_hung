@@ -10,9 +10,9 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class LoanController : BaseController
     {
-        public LoanController(CurrentProcess currentProcess):base(currentProcess)
+        public LoanController(ICurrentProcess currentProcess):base(currentProcess)
         {
-            base._process = currentProcess;
+
         }
         protected override IAsyncResult BeginExecuteCore(AsyncCallback callback, object state)
         {

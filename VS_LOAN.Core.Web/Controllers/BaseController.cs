@@ -13,10 +13,10 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class BaseController : Controller
     {
-        public  CurrentProcess _process;
-        public BaseController(CurrentProcess currentProcess)
+        public BaseController()
         {
-            _process = currentProcess;
+            //if(currentProcess !=null)
+            //_process = currentProcess;
         }
         private JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings
         {

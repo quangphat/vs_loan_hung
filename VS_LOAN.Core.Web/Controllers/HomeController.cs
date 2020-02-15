@@ -12,13 +12,10 @@ using VS_LOAN.Core.Entity.Infrastructures;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
-    public class HomeController : LoanController
+    public class HomeController : BaseController
     {
-        public HomeController() : base(null)
-        {
 
-        }
-        public HomeController(CurrentProcess currentProcess) : base(currentProcess)
+        public HomeController(ICurrentProcess currentProcess) : base(currentProcess)
         {
 
         }

@@ -18,15 +18,12 @@ using VS_LOAN.Core.Web.Helpers;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
-    public class QuanLyHoSoController : LoanController
+    public class QuanLyHoSoController : BaseController
     {
-        public QuanLyHoSoController() : base(null)
+        ICurrentProcess _currentProcess;
+        public QuanLyHoSoController(ICurrentProcess currentProcess) : base(currentProcess)
         {
-
-        }
-        public QuanLyHoSoController(CurrentProcess currentProcess) : base(currentProcess)
-        {
-
+            _currentProcess = currentProcess;
         }
         public static Dictionary<string, ActionInfo> LstRole
         {
@@ -46,7 +43,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (dsNhom == null)
                 dsNhom = new List<NhomDropDownModel>();
             ViewBag.DSNhom = dsNhom;
-            
+            var x = _currentProcess;
             return View();
         }
 

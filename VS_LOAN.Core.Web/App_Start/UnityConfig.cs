@@ -26,8 +26,8 @@ namespace VS_LOAN.Core.Web
         }
         private static void RegisterTypes(IUnityContainer container)
         {
-            container.RegisterType<IController, QuanLyHoSoController>("QuanLyHoSo");
-            container.RegisterType<IController,HomeController>("Home");
+            //container.RegisterType<IController, QuanLyHoSoController>("QuanLyHoSo");
+            container.RegisterType<IController,BaseController>();
             container.RegisterType<IHosoBusiness, HosoBusiness>();
             container.RegisterType<ICurrentProcess, CurrentProcess>();
         }

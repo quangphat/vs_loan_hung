@@ -15,14 +15,10 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class NhanVienController : BaseController
     {
-        public NhanVienController():base(null)
+        ICurrentProcess _currentProcess;
+        public NhanVienController(ICurrentProcess currentProcess) : base(currentProcess)
         {
-
-        }
-        
-        public NhanVienController(CurrentProcess currentProcess) : base(currentProcess)
-        {
-
+            _currentProcess = currentProcess;
         }
         public static Dictionary<string, ActionInfo> LstRole
         {
