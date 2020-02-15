@@ -8,6 +8,9 @@ namespace VS_LOAN.Core.Entity.Infrastructures
 {
     public interface ICurrentProcess
     {
+        List<ErrorMessage> Errors { get; set; }
+        int UserId { get; set; }
+        bool HasError { get; }
         void AddError(string message);
     }
     public class CurrentProcess : ICurrentProcess
