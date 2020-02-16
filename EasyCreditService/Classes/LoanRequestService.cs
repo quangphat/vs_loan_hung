@@ -28,7 +28,7 @@ namespace EasyCreditService.Classes
             return response;
             //return content;
         }
-        public async Task<EcResponseModel<EcDataResponse>> CreateLoan(LoanInfoRequestModel model, int type=0)
+        public async Task<EcResponseModel<EcDataResponse>> CreateLoan(LoanInfoRequestModel model, string token)
         {
             try
             {
@@ -37,11 +37,15 @@ namespace EasyCreditService.Classes
                 _log.InfoFormat("the ip address is: {0}", ip);
 
                 _log.InfoFormat("start send loan request at {0}", DateTime.Now);
-                var response = await _httpClient.Post<EcResponseModel<EcDataResponse>>("","", null, model, type);
+                var json = JsonConvert.SerializeObject(model);
+                var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+                
+                var response = await _httpClient.PostAsync(ECApiPath.BasePath+ ECApiPath.Step2 + "/" + token, stringContent);
+                //var response = await _httpClient.Post<EcResponseModel<EcDataResponse>>(ECApiPath.BasePathTest,ECApiPath.Step2, data:model,includeSignature:true);
                 
                 _log.Info(response);
                 _log.Info("send loan request success");
-                return response;
+                return null;
             }
             catch (Exception e)
             {

@@ -53,6 +53,7 @@ namespace VietBankApi
             }
             loggerFactory.AddFile("ecapi-log.txt");
             app.UseHttpsRedirection();
+            app.UseMiddleware<AuthorizeMiddleware>();
             app.UseMvc();
         }
     }

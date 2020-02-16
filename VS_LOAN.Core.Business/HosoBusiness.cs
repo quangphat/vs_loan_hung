@@ -25,7 +25,7 @@ namespace VS_LOAN.Core.Business
             if (model == null)
                 return;
             await _svLoanrequest.TestVietbankApi();
-            await _svLoanrequest.CreateLoan(model);
+            //await _svLoanrequest.CreateLoan(model);
         }
         public void TestLog(string log)
         {

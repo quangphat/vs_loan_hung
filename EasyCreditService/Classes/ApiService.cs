@@ -23,13 +23,13 @@ namespace EasyCreditService.Classes
             _log.InfoFormat("start get token at {0}", DateTime.Now);
             try
             {
-                var result = await _httpClient.Get<TokenResponseModel>(ECApiPath.BasePath, ECApiPath.TokenPath);
+                var result = await _httpClient.Get<TokenResponseModel>(ECApiPath.BasePath, ECApiPath.TokenPath, includeSignature: true);
                 _log.InfoFormat("get token success, result is {0}", result);
-                
+
                 _log.InfoFormat("token content:{0}", result);
                 return result.access_token;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _log.Info("get token error");
                 _log.ErrorFormat("gettoken error: message ex {0}", e.Message);
