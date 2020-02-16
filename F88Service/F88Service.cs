@@ -19,13 +19,11 @@ namespace F88Service
             model.Select1 = "";
             model.ReferenceType = 10;
             HttpClient _httpClient = new HttpClient();
-            var response = await _httpClient.Post(F88ApiPath.F88BasePath, "/LadipageReturnID", null, model);
-            if (response == null || response.Content == null)
-                return null;
-            var json = response.Content.ReadAsStringAsync().Result;
-            return JsonConvert.DeserializeObject<ResponseModel>(json);
-        }
+            var response = await _httpClient.Post<ResponseModel>(F88ApiPath.F88BasePath, "/LadipageReturnID", null, model);
 
+            return response;
+        }
+        
         public async Task<F88ResponseModel> LadipageReturnID(LadipageModel model)
         {
             if (model == null)

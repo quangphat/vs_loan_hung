@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,10 +13,15 @@ namespace VS_LOAN.Core.Utility
 {
     public static class CoreApiClient
     {
-
-        public static async Task<HttpResponseMessage> Post(this HttpClient httpClient, string basePath, string path = "/", object param = null, object data = null, int type = 0)
+        public static async Task<T> Get<T>(this HttpClient httpClient, string basePath, string path = "/", object param = null)
         {
-            return await httpClient.Call(HttpMethod.Post, basePath, path, param, data, type);
+            var response = await httpClient.Call<T>(HttpMethod.Get, basePath, path, param);
+            return response.Data;
+        }
+        public static async Task<T> Post<T>(this HttpClient httpClient, string basePath, string path = "/", object param = null, object data = null, int type = 0)
+        {
+            var response = await httpClient.Call<T>(HttpMethod.Post, basePath, path, param, data, type);
+            return response.Data;
         }
         public static async Task<HttpResponseMessage> GetToken(this HttpClient httpClient, HttpMethod method, string basePath, string path = "/", string clientId = null, string clientSecret = null)
         {
@@ -34,7 +40,7 @@ namespace VS_LOAN.Core.Utility
             var requestMessage = new HttpRequestMessage(method, url);
             return requestMessage;
         }
-        private static async Task<HttpResponseMessage> Call(this HttpClient httpClient,
+        private static async Task<HttpClientResult<T>> Call<T>(this HttpClient httpClient,
             HttpMethod method, string basePath, string path = "/", object param = null, object data = null, int type = 0)
         {
             
@@ -73,10 +79,37 @@ namespace VS_LOAN.Core.Utility
                 originalData = string.Empty;
             var requestMessage = buildHeader(method, basePath, path);
 
-            var response = await httpClient.SendAsync(requestMessage).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            return response;
+            using (var response = await httpClient.SendAsync(requestMessage))
+            {
+                if (response.Content != null)
+                {
+                    var responseData = response.StatusCode == HttpStatusCode.Moved || response.StatusCode == HttpStatusCode.Found
+                        ? response.Headers.Location.AbsoluteUri
+                        : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    var result = JsonConvert.DeserializeObject<T>(responseData);
+                    return HttpClientResult<T>.Create(response.StatusCode,result,response.Headers?.ETag?.Tag,response.StatusCode == HttpStatusCode.NotModified);
+                }
+                else
+                    throw new Exception($"request to {path} error {response.StatusCode}");
+            }
         }
+    }
+    public class HttpClientResult<T>
+    {
+        public static HttpClientResult<T> Create(HttpStatusCode statusCode, T data, string eTag, bool isCache)
+        {
+            return new HttpClientResult<T>()
+            {
+                StatusCode = statusCode,
+                Data = data,
+                ETag = eTag,
+                IsCache = isCache
+            };
+        }
+
+        public HttpStatusCode StatusCode { get; set; }
+        public T Data { get; set; }
+        public string ETag { get; set; }
+        public bool IsCache { get; set; }
     }
 }

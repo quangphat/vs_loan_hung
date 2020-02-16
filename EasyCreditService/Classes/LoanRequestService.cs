@@ -1,5 +1,6 @@
 ﻿using EasyCreditService.Infrastructure;
 using EasyCreditService.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +20,15 @@ namespace EasyCreditService.Classes
         {
 
         }
-        public async Task<string> CreateLoan(LoanInfoRequestModel model, int type=0)
+        public async Task<List<string>> TestVietbankApi()
+        {
+            //http://test.smartbank.com.vn/
+            var response = await _httpClient.Get<List<string>>("http://112.213.89.5/plesk-site-preview/vietbankfc.api/api/values");
+            //var result = await _httpClient.GetAsync("http://localhost:5000/api/values");
+            return response;
+            //return content;
+        }
+        public async Task<EcResponseModel<EcDataResponse>> CreateLoan(LoanInfoRequestModel model, int type=0)
         {
             try
             {
@@ -28,18 +37,18 @@ namespace EasyCreditService.Classes
                 _log.InfoFormat("the ip address is: {0}", ip);
 
                 _log.InfoFormat("start send loan request at {0}", DateTime.Now);
-                var response = await _httpClient.Post(ECApiPath.ECBasePathTest, ECApiPath.LoanRequest, null, model, type);
+                var response = await _httpClient.Post<EcResponseModel<EcDataResponse>>(ECApiPath.ECBasePathTest, ECApiPath.LoanRequest, null, model, type);
                 
                 _log.Info(response);
                 _log.Info("send loan request success");
-                return response.StatusCode.ToString();
+                return response;
             }
             catch (Exception e)
             {
                 _log.Error("exception while sending loan request");
                 _log.ErrorFormat("Message: {0}", e.Message);
                 _log.ErrorFormat("All exception content :{0}", e);
-                return e.InnerException.ToString();
+                return null;
             }
         }
         public string GetPublicIP()
