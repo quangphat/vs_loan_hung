@@ -104,3 +104,131 @@ System.TypeLoadException: Could not load type managed_web. Possible cause: no as
 2020-02-12 20:47:21,643 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
 2020-02-12 20:47:21,644 [7] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
 2020-02-12 20:47:21,644 [7] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-15 23:14:23,388 [5] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-15 23:14:23,405 [5] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-15 23:14:23,406 [5] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-15 23:14:23,406 [5] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-15 23:14:23,429 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-15 23:14:23,429 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-15 23:14:23,430 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-15 23:14:23,430 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-15 23:14:23,430 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-15 23:14:23,430 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-15 23:14:23,431 [5] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-15 23:14:23,431 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-15 23:14:25,762 [5] INFO  EasyCreditService.Classes.LoanRequestService [(null)] - getting ip addrress
+2020-02-15 23:14:26,713 [5] INFO  EasyCreditService.Classes.LoanRequestService [(null)] - the ip address is: 1.52.107.179
+2020-02-15 23:14:26,715 [5] INFO  EasyCreditService.Classes.LoanRequestService [(null)] - start send loan request at 02/15/2020 23:14:26
+2020-02-15 23:15:46,373 [8] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-15 23:15:46,391 [8] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-15 23:15:46,392 [8] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-15 23:15:46,393 [8] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-15 23:15:46,421 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-15 23:15:46,421 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-15 23:15:46,422 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-15 23:15:46,422 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-15 23:15:46,422 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-15 23:15:46,422 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-15 23:15:46,423 [8] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-15 23:15:46,423 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-15 23:16:12,140 [5] INFO  EasyCreditService.Classes.LoanRequestService [(null)] - getting ip addrress
+2020-02-15 23:16:12,984 [5] INFO  EasyCreditService.Classes.LoanRequestService [(null)] - the ip address is: 1.52.107.179
+2020-02-15 23:16:12,986 [5] INFO  EasyCreditService.Classes.LoanRequestService [(null)] - start send loan request at 02/15/2020 23:16:12
+2020-02-15 23:16:31,827 [5] ERROR EasyCreditService.Classes.LoanRequestService [(null)] - exception while sending loan request
+2020-02-15 23:16:31,828 [5] ERROR EasyCreditService.Classes.LoanRequestService [(null)] - Message: An error occurred while sending the request.
+2020-02-15 23:16:31,831 [5] ERROR EasyCreditService.Classes.LoanRequestService [(null)] - All exception content :System.Net.Http.HttpRequestException: An error occurred while sending the request. ---> System.Net.WebException: Unable to connect to the remote server ---> System.Net.Sockets.SocketException: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond 115.79.241.92:443
+   at System.Net.Sockets.Socket.InternalEndConnect(IAsyncResult asyncResult)
+   at System.Net.Sockets.Socket.EndConnect(IAsyncResult asyncResult)
+   at System.Net.ServicePoint.ConnectSocketInternal(Boolean connectFailure, Socket s4, Socket s6, Socket& socket, IPAddress& address, ConnectSocketState state, IAsyncResult asyncResult, Exception& exception)
+   --- End of inner exception stack trace ---
+   at System.Net.HttpWebRequest.EndGetResponse(IAsyncResult asyncResult)
+   at System.Net.Http.HttpClientHandler.GetResponseCallback(IAsyncResult ar)
+   --- End of inner exception stack trace ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.ConfiguredTaskAwaitable`1.ConfiguredTaskAwaiter.GetResult()
+   at VS_LOAN.Core.Utility.CoreApiClient.<Call>d__3.MoveNext() in D:\Development\outsource\VS_LOAN\VS_LOAN.Core.Utility\CoreApiClient.cs:line 76
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at VS_LOAN.Core.Utility.CoreApiClient.<Post>d__0.MoveNext() in D:\Development\outsource\VS_LOAN\VS_LOAN.Core.Utility\CoreApiClient.cs:line 18
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at EasyCreditService.Classes.LoanRequestService.<CreateLoan>d__2.MoveNext() in D:\Development\outsource\VS_LOAN\EasyCreditService\Classes\LoanRequestService.cs:line 35
+2020-02-15 23:16:32,830 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-15 23:16:32,830 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-15 23:16:32,831 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-15 23:16:32,831 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-15 23:16:32,831 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-15 23:16:32,831 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-15 23:16:32,832 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-15 23:16:32,832 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-15 23:16:40,345 [5] INFO  EasyCreditService.Classes.LoanRequestService [(null)] - getting ip addrress
+2020-02-15 23:16:41,291 [5] INFO  EasyCreditService.Classes.LoanRequestService [(null)] - the ip address is: 1.52.107.179
+2020-02-15 23:16:41,291 [5] INFO  EasyCreditService.Classes.LoanRequestService [(null)] - start send loan request at 02/15/2020 23:16:41
+2020-02-15 23:20:08,450 [6] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-15 23:20:08,468 [6] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-15 23:20:08,469 [6] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-15 23:20:08,470 [6] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-15 23:20:08,494 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-15 23:20:08,494 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-15 23:20:08,495 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-15 23:20:08,495 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-15 23:20:08,496 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-15 23:20:08,497 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-15 23:20:08,498 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-15 23:20:08,498 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-15 23:25:14,322 [7] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-15 23:25:14,344 [7] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-15 23:25:14,345 [7] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-15 23:25:14,345 [7] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-15 23:25:14,372 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-15 23:25:14,372 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-15 23:25:14,372 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-15 23:25:14,372 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-15 23:25:14,373 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-15 23:25:14,373 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-15 23:25:14,373 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-15 23:25:14,374 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-15 23:45:18,776 [7] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-15 23:45:18,796 [7] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-15 23:45:18,797 [7] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-15 23:45:18,797 [7] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-15 23:45:18,828 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-15 23:45:18,829 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-15 23:45:18,829 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-15 23:45:18,830 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-15 23:45:18,830 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-15 23:45:18,830 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-15 23:45:18,830 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-15 23:45:18,831 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 14:56:57,561 [5] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-16 14:56:57,580 [5] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-16 14:56:57,581 [5] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-16 14:56:57,581 [5] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-16 14:56:57,612 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 14:56:57,613 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 14:56:57,613 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 14:56:57,613 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 14:56:57,613 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 14:56:57,613 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 14:56:57,614 [5] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 14:56:57,614 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 15:33:39,169 [6] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-16 15:33:39,191 [6] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-16 15:33:39,192 [6] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-16 15:33:39,194 [6] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-16 15:33:39,230 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 15:33:39,231 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 15:33:39,231 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 15:33:39,231 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 15:33:39,231 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 15:33:39,231 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 15:33:39,232 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 15:33:39,232 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 15:33:47,160 [5] INFO  EasyCreditService.Classes.LoanRequestService [(null)] - getting ip addrress
+2020-02-16 15:33:47,876 [5] INFO  EasyCreditService.Classes.LoanRequestService [(null)] - the ip address is: 1.52.107.179
+2020-02-16 15:33:47,877 [5] INFO  EasyCreditService.Classes.LoanRequestService [(null)] - start send loan request at 02/16/2020 15:33:47
