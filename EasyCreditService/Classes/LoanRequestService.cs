@@ -37,7 +37,7 @@ namespace EasyCreditService.Classes
                 _log.InfoFormat("the ip address is: {0}", ip);
 
                 _log.InfoFormat("start send loan request at {0}", DateTime.Now);
-                var response = await _httpClient.Post<EcResponseModel<EcDataResponse>>(ECApiPath.ECBasePathTest, ECApiPath.LoanRequest, null, model, type);
+                var response = await _httpClient.Post<EcResponseModel<EcDataResponse>>("","", null, model, type);
                 
                 _log.Info(response);
                 _log.Info("send loan request success");

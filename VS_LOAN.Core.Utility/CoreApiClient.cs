@@ -23,15 +23,25 @@ namespace VS_LOAN.Core.Utility
             var response = await httpClient.Call<T>(HttpMethod.Post, basePath, path, param, data, type);
             return response.Data;
         }
-        public static async Task<HttpResponseMessage> GetToken(this HttpClient httpClient, HttpMethod method, string basePath, string path = "/", string clientId = null, string clientSecret = null)
+        public static async Task<T> GetToken<T>(this HttpClient httpClient, HttpMethod method, string basePath, string path = "/", string clientId = null, string clientSecret = null)
         {
             var request = buildHeader(method, basePath, path);
             var key = Utility.Base64Encode($"{clientId}:{clientSecret}");
             httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", key);
-            //request.Headers.Add("Authorization", $"Basic ${key}");
-            var response = await httpClient.SendAsync(request).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-            return response;
+            using (var response = await httpClient.SendAsync(request))
+            {
+                if (response.Content != null)
+                {
+                    var responseData = response.StatusCode == HttpStatusCode.Moved || response.StatusCode == HttpStatusCode.Found
+                        ? response.Headers.Location.AbsoluteUri
+                        : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    var data = JsonConvert.DeserializeObject<T>(responseData);
+                    //var result = HttpClientResult<T>.Create(response.StatusCode, data, response.Headers?.ETag?.Tag, response.StatusCode == HttpStatusCode.NotModified);
+                    return data;
+                }
+                else
+                    throw new Exception($"request to {path} error {response.StatusCode}");
+            }
         }
         private static HttpRequestMessage buildHeader(
             HttpMethod method, string basePath, string path = "/", object param = null)

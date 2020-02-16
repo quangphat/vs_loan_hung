@@ -232,3 +232,594 @@ System.TypeLoadException: Could not load type managed_web. Possible cause: no as
 2020-02-16 15:33:47,160 [5] INFO  EasyCreditService.Classes.LoanRequestService [(null)] - getting ip addrress
 2020-02-16 15:33:47,876 [5] INFO  EasyCreditService.Classes.LoanRequestService [(null)] - the ip address is: 1.52.107.179
 2020-02-16 15:33:47,877 [5] INFO  EasyCreditService.Classes.LoanRequestService [(null)] - start send loan request at 02/16/2020 15:33:47
+2020-02-16 16:21:29,741 [7] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-16 16:21:29,759 [7] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-16 16:21:29,760 [7] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-16 16:21:29,761 [7] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-16 16:21:29,788 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 16:21:29,789 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 16:21:29,789 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 16:21:29,789 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 16:21:29,789 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 16:21:29,789 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 16:21:29,790 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 16:21:29,790 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 16:21:29,830 [7] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 16:21:36,488 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 16:21:36
+2020-02-16 16:21:36,641 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - get token success, result is 
+2020-02-16 16:21:36,641 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - token content:
+2020-02-16 16:21:36,671 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - get token error
+2020-02-16 16:21:36,672 [7] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: message ex Object reference not set to an instance of an object.
+2020-02-16 16:21:36,672 [7] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: ex System.NullReferenceException: Object reference not set to an instance of an object.
+   at EasyCreditService.Classes.ApiService.<GetECToken>d__1.MoveNext() in D:\Development\outsource\VS_LOAN\EasyCreditService\Classes\ApiService.cs:line 29
+2020-02-16 16:21:50,283 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 16:21:50,283 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 16:21:50,284 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 16:21:50,284 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 16:21:50,284 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 16:21:50,284 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 16:21:50,285 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 16:21:50,285 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 16:21:50,285 [7] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 16:25:19,865 [7] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-16 16:25:19,884 [7] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-16 16:25:19,884 [7] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-16 16:25:19,885 [7] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-16 16:25:19,914 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 16:25:19,914 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 16:25:19,914 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 16:25:19,915 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 16:25:19,915 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 16:25:19,915 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 16:25:19,916 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 16:25:19,916 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 16:25:19,959 [7] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 16:25:21,851 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 16:25:21
+2020-02-16 16:25:23,458 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - get token success, result is 
+2020-02-16 16:25:24,126 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - token content:
+2020-02-16 16:25:40,852 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - get token error
+2020-02-16 16:25:40,854 [7] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: message ex Object reference not set to an instance of an object.
+2020-02-16 16:25:40,854 [7] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: ex System.NullReferenceException: Object reference not set to an instance of an object.
+   at EasyCreditService.Classes.ApiService.<GetECToken>d__1.MoveNext() in D:\Development\outsource\VS_LOAN\EasyCreditService\Classes\ApiService.cs:line 29
+2020-02-16 16:26:14,634 [6] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-16 16:26:14,652 [6] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-16 16:26:14,653 [6] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-16 16:26:14,654 [6] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-16 16:26:14,679 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 16:26:14,679 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 16:26:14,680 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 16:26:14,680 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 16:26:14,680 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 16:26:14,680 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 16:26:14,683 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 16:26:14,684 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 16:26:14,727 [6] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 16:26:17,696 [6] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 16:26:17
+2020-02-16 16:26:23,807 [6] INFO  EasyCreditService.Classes.ApiService [(null)] - get token error
+2020-02-16 16:26:24,444 [6] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: message ex Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+2020-02-16 16:26:27,453 [6] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: ex Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at VS_LOAN.Core.Utility.CoreApiClient.<Call>d__4`1.MoveNext() in D:\Development\outsource\VS_LOAN\VS_LOAN.Core.Utility\CoreApiClient.cs:line 99
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at VS_LOAN.Core.Utility.CoreApiClient.<Get>d__0`1.MoveNext() in D:\Development\outsource\VS_LOAN\VS_LOAN.Core.Utility\CoreApiClient.cs:line 18
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at EasyCreditService.Classes.ApiService.<GetECToken>d__1.MoveNext() in D:\Development\outsource\VS_LOAN\EasyCreditService\Classes\ApiService.cs:line 25
+2020-02-16 16:26:44,778 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 16:26:44,778 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 16:26:44,779 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 16:26:44,779 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 16:26:44,779 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 16:26:44,779 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 16:26:44,780 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 16:26:44,780 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 16:26:44,781 [6] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 16:26:48,859 [6] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 16:26:48
+2020-02-16 16:27:00,889 [6] INFO  EasyCreditService.Classes.ApiService [(null)] - get token error
+2020-02-16 16:27:00,889 [6] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: message ex Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+2020-02-16 16:27:00,889 [6] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: ex Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at VS_LOAN.Core.Utility.CoreApiClient.<Call>d__4`1.MoveNext() in D:\Development\outsource\VS_LOAN\VS_LOAN.Core.Utility\CoreApiClient.cs:line 99
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at VS_LOAN.Core.Utility.CoreApiClient.<Get>d__0`1.MoveNext() in D:\Development\outsource\VS_LOAN\VS_LOAN.Core.Utility\CoreApiClient.cs:line 18
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at EasyCreditService.Classes.ApiService.<GetECToken>d__1.MoveNext() in D:\Development\outsource\VS_LOAN\EasyCreditService\Classes\ApiService.cs:line 25
+2020-02-16 16:27:05,024 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 16:27:05,027 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 16:27:05,027 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 16:27:05,027 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 16:27:05,028 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 16:27:05,028 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 16:27:05,028 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 16:27:05,028 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 16:27:05,029 [6] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 16:27:05,029 [6] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 16:27:05
+2020-02-16 16:27:47,549 [6] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-16 16:27:47,565 [6] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-16 16:27:47,566 [6] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-16 16:27:47,567 [6] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-16 16:27:47,591 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 16:27:47,591 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 16:27:47,592 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 16:27:47,592 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 16:27:47,592 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 16:27:47,592 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 16:27:47,593 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 16:27:47,593 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 16:27:47,627 [6] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 16:27:47,673 [6] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 16:27:47
+2020-02-16 16:29:28,022 [5] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-16 16:29:28,040 [5] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-16 16:29:28,040 [5] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-16 16:29:28,041 [5] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-16 16:29:28,069 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 16:29:28,069 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 16:29:28,069 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 16:29:28,070 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 16:29:28,070 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 16:29:28,070 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 16:29:28,071 [5] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 16:29:28,071 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 16:29:28,116 [5] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 16:29:28,159 [5] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 16:29:28
+2020-02-16 16:29:56,235 [5] INFO  EasyCreditService.Classes.ApiService [(null)] - get token error
+2020-02-16 16:29:56,235 [5] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: message ex Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+2020-02-16 16:29:56,236 [5] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: ex Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at VS_LOAN.Core.Utility.CoreApiClient.<Call>d__4`1.MoveNext() in D:\Development\outsource\VS_LOAN\VS_LOAN.Core.Utility\CoreApiClient.cs:line 99
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at VS_LOAN.Core.Utility.CoreApiClient.<Get>d__0`1.MoveNext() in D:\Development\outsource\VS_LOAN\VS_LOAN.Core.Utility\CoreApiClient.cs:line 18
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at EasyCreditService.Classes.ApiService.<GetECToken>d__1.MoveNext() in D:\Development\outsource\VS_LOAN\EasyCreditService\Classes\ApiService.cs:line 25
+2020-02-16 16:42:25,147 [6] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-16 16:42:25,166 [6] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-16 16:42:25,168 [6] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-16 16:42:25,169 [6] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-16 16:42:25,208 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 16:42:25,209 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 16:42:25,209 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 16:42:25,209 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 16:42:25,209 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 16:42:25,209 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 16:42:25,210 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 16:42:25,210 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 16:42:25,255 [6] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 16:42:25,257 [6] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 16:42:25
+2020-02-16 16:42:47,727 [6] INFO  EasyCreditService.Classes.ApiService [(null)] - get token success, result is 
+2020-02-16 16:42:47,728 [6] INFO  EasyCreditService.Classes.ApiService [(null)] - token content:
+2020-02-16 16:42:47,763 [6] INFO  EasyCreditService.Classes.ApiService [(null)] - get token error
+2020-02-16 16:42:47,764 [6] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: message ex Object reference not set to an instance of an object.
+2020-02-16 16:42:47,764 [6] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: ex System.NullReferenceException: Object reference not set to an instance of an object.
+   at EasyCreditService.Classes.ApiService.<GetECToken>d__1.MoveNext() in D:\Development\outsource\VS_LOAN\EasyCreditService\Classes\ApiService.cs:line 29
+2020-02-16 16:44:00,317 [7] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-16 16:44:00,339 [7] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-16 16:44:00,340 [7] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-16 16:44:00,342 [7] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-16 16:44:00,379 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 16:44:00,379 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 16:44:00,379 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 16:44:00,379 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 16:44:00,380 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 16:44:00,380 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 16:44:00,380 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 16:44:00,381 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 16:44:00,421 [7] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 16:44:00,423 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 16:44:00
+2020-02-16 16:49:51,578 [10] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-16 16:49:51,597 [10] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-16 16:49:51,597 [10] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-16 16:49:51,598 [10] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-16 16:49:51,631 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 16:49:51,632 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 16:49:51,632 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 16:49:51,633 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 16:49:51,633 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 16:49:51,633 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 16:49:51,634 [10] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 16:49:51,634 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 16:49:51,685 [10] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 16:49:51,686 [10] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 16:49:51
+2020-02-16 16:50:05,337 [10] INFO  EasyCreditService.Classes.ApiService [(null)] - get token success, result is 
+2020-02-16 16:50:05,338 [10] INFO  EasyCreditService.Classes.ApiService [(null)] - token content:
+2020-02-16 16:56:13,189 [9] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-16 16:56:13,207 [9] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-16 16:56:13,207 [9] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-16 16:56:13,208 [9] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-16 16:56:13,236 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 16:56:13,236 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 16:56:13,236 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 16:56:13,236 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 16:56:13,236 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 16:56:13,237 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 16:56:13,237 [9] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 16:56:13,237 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 16:56:13,282 [9] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 16:56:13,348 [9] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 16:56:13
+2020-02-16 16:56:16,025 [9] INFO  EasyCreditService.Classes.ApiService [(null)] - get token success, result is 
+2020-02-16 17:04:57,562 [7] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-16 17:04:57,584 [7] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-16 17:04:57,584 [7] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-16 17:04:57,585 [7] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-16 17:04:57,619 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 17:04:57,619 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 17:04:57,619 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 17:04:57,620 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 17:04:57,620 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 17:04:57,620 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 17:04:57,621 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 17:04:57,621 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 17:04:57,668 [7] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 17:04:57,670 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 17:04:57
+2020-02-16 17:04:59,636 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - get token success, result is 
+2020-02-16 17:04:59,636 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - token content:
+2020-02-16 17:05:15,439 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 17:05:15,439 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 17:05:15,439 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 17:05:15,439 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 17:05:15,440 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 17:05:15,440 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 17:05:15,440 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 17:05:15,440 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 17:05:15,440 [6] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 17:05:15,441 [6] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 17:05:15
+2020-02-16 17:05:23,620 [8] INFO  EasyCreditService.Classes.ApiService [(null)] - get token success, result is 
+2020-02-16 17:05:23,620 [8] INFO  EasyCreditService.Classes.ApiService [(null)] - token content:
+2020-02-16 17:06:17,400 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 17:06:17,400 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 17:06:17,401 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 17:06:17,401 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 17:06:17,401 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 17:06:17,401 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 17:06:17,402 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 17:06:17,402 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 17:06:17,402 [7] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 17:06:17,402 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 17:06:17
+2020-02-16 17:07:18,539 [7] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-16 17:07:18,570 [7] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-16 17:07:18,571 [7] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-16 17:07:18,572 [7] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-16 17:07:18,602 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 17:07:18,602 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 17:07:18,602 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 17:07:18,602 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 17:07:18,603 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 17:07:18,603 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 17:07:18,604 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 17:07:18,604 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 17:07:18,646 [7] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 17:07:18,650 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 17:07:18
+2020-02-16 17:07:52,909 [6] INFO  EasyCreditService.Classes.ApiService [(null)] - get token error
+2020-02-16 17:07:52,910 [6] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: message ex Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+2020-02-16 17:07:52,910 [6] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: ex Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: <. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at VS_LOAN.Core.Utility.CoreApiClient.<Call>d__4`1.MoveNext() in D:\Development\outsource\VS_LOAN\VS_LOAN.Core.Utility\CoreApiClient.cs:line 99
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at VS_LOAN.Core.Utility.CoreApiClient.<Get>d__0`1.MoveNext() in D:\Development\outsource\VS_LOAN\VS_LOAN.Core.Utility\CoreApiClient.cs:line 18
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at EasyCreditService.Classes.ApiService.<GetECToken>d__1.MoveNext() in D:\Development\outsource\VS_LOAN\EasyCreditService\Classes\ApiService.cs:line 26
+2020-02-16 17:14:20,716 [7] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-16 17:14:20,736 [7] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-16 17:14:20,736 [7] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-16 17:14:20,737 [7] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-16 17:14:20,779 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 17:14:20,779 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 17:14:20,779 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 17:14:20,780 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 17:14:20,780 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 17:14:20,780 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 17:14:20,781 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 17:14:20,781 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 17:14:20,823 [7] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 17:14:20,826 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 17:14:20
+2020-02-16 17:14:32,434 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - get token error
+2020-02-16 17:14:32,435 [7] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: message ex Unexpected character encountered while parsing value: C. Path '', line 0, position 0.
+2020-02-16 17:14:32,435 [7] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: ex Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: C. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at VS_LOAN.Core.Utility.CoreApiClient.<Call>d__4`1.MoveNext() in D:\Development\outsource\VS_LOAN\VS_LOAN.Core.Utility\CoreApiClient.cs:line 99
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at VS_LOAN.Core.Utility.CoreApiClient.<Get>d__0`1.MoveNext() in D:\Development\outsource\VS_LOAN\VS_LOAN.Core.Utility\CoreApiClient.cs:line 18
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at EasyCreditService.Classes.ApiService.<GetECToken>d__1.MoveNext() in D:\Development\outsource\VS_LOAN\EasyCreditService\Classes\ApiService.cs:line 26
+2020-02-16 17:15:54,418 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 17:15:54,419 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 17:15:54,419 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 17:15:54,419 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 17:15:54,419 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 17:15:54,420 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 17:15:54,420 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 17:15:54,421 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 17:15:54,421 [7] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 17:15:54,422 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 17:15:54
+2020-02-16 17:16:02,615 [6] INFO  EasyCreditService.Classes.ApiService [(null)] - get token error
+2020-02-16 17:16:02,615 [6] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: message ex Unexpected character encountered while parsing value: C. Path '', line 0, position 0.
+2020-02-16 17:16:02,615 [6] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: ex Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: C. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at VS_LOAN.Core.Utility.CoreApiClient.<Call>d__4`1.MoveNext() in D:\Development\outsource\VS_LOAN\VS_LOAN.Core.Utility\CoreApiClient.cs:line 99
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at VS_LOAN.Core.Utility.CoreApiClient.<Get>d__0`1.MoveNext() in D:\Development\outsource\VS_LOAN\VS_LOAN.Core.Utility\CoreApiClient.cs:line 18
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at EasyCreditService.Classes.ApiService.<GetECToken>d__1.MoveNext() in D:\Development\outsource\VS_LOAN\EasyCreditService\Classes\ApiService.cs:line 26
+2020-02-16 17:17:46,188 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 17:17:46,198 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 17:17:46,199 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 17:17:46,200 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 17:17:46,200 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 17:17:46,200 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 17:17:46,200 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 17:17:46,200 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 17:17:46,201 [7] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 17:17:46,206 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 17:17:46
+2020-02-16 17:17:51,443 [6] INFO  EasyCreditService.Classes.ApiService [(null)] - get token error
+2020-02-16 17:17:51,444 [6] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: message ex Unexpected character encountered while parsing value: C. Path '', line 0, position 0.
+2020-02-16 17:17:51,444 [6] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: ex Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: C. Path '', line 0, position 0.
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.ReadInternal()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.ReadForType(JsonReader reader, JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at VS_LOAN.Core.Utility.CoreApiClient.<Call>d__4`1.MoveNext() in D:\Development\outsource\VS_LOAN\VS_LOAN.Core.Utility\CoreApiClient.cs:line 99
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at VS_LOAN.Core.Utility.CoreApiClient.<Get>d__0`1.MoveNext() in D:\Development\outsource\VS_LOAN\VS_LOAN.Core.Utility\CoreApiClient.cs:line 18
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at EasyCreditService.Classes.ApiService.<GetECToken>d__1.MoveNext() in D:\Development\outsource\VS_LOAN\EasyCreditService\Classes\ApiService.cs:line 26
+2020-02-16 17:20:37,334 [7] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-16 17:20:37,363 [7] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-16 17:20:37,364 [7] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-16 17:20:37,365 [7] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-16 17:20:37,395 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 17:20:37,395 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 17:20:37,396 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 17:20:37,396 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 17:20:37,396 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 17:20:37,396 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 17:20:37,397 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 17:20:37,397 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 17:20:37,437 [7] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 17:20:37,439 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 17:20:37
+2020-02-16 17:21:01,144 [8] INFO  EasyCreditService.Classes.ApiService [(null)] - get token error
+2020-02-16 17:21:01,144 [8] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: message ex Could not create an instance of type Microsoft.AspNetCore.Mvc.IActionResult. Type is an interface or abstract class and cannot be instantiated. Path 'access_token', line 1, position 16.
+2020-02-16 17:21:01,145 [8] ERROR EasyCreditService.Classes.ApiService [(null)] - gettoken error: ex Newtonsoft.Json.JsonSerializationException: Could not create an instance of type Microsoft.AspNetCore.Mvc.IActionResult. Type is an interface or abstract class and cannot be instantiated. Path 'access_token', line 1, position 16.
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateNewObject(JsonReader reader, JsonObjectContract objectContract, JsonProperty containerMember, JsonProperty containerProperty, String id, Boolean& createdFromNonDefaultCreator)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateObject(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at VS_LOAN.Core.Utility.CoreApiClient.<Call>d__4`1.MoveNext() in D:\Development\outsource\VS_LOAN\VS_LOAN.Core.Utility\CoreApiClient.cs:line 99
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at VS_LOAN.Core.Utility.CoreApiClient.<Get>d__0`1.MoveNext() in D:\Development\outsource\VS_LOAN\VS_LOAN.Core.Utility\CoreApiClient.cs:line 18
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at EasyCreditService.Classes.ApiService.<GetECToken>d__1.MoveNext() in D:\Development\outsource\VS_LOAN\EasyCreditService\Classes\ApiService.cs:line 26
+2020-02-16 17:21:25,033 [6] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-16 17:21:25,053 [6] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-16 17:21:25,054 [6] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-16 17:21:25,055 [6] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-16 17:21:25,083 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 17:21:25,083 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 17:21:25,083 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 17:21:25,084 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 17:21:25,084 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 17:21:25,084 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 17:21:25,085 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 17:21:25,085 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 17:21:25,132 [6] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 17:21:25,133 [6] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 17:21:25
+2020-02-16 17:21:28,824 [6] INFO  EasyCreditService.Classes.ApiService [(null)] - get token success, result is {
+  "access_token": "5886f656-56f2-412a-9a69-1019eb1f9090",
+  "token_type": "bearer",
+  "expires_in": 255,
+  "scope": "sms_send_message creation_create_loan_application creation_send_otp_for_loan_application creation_create_full_loan_application creation_create_offer_selection creation_create_upload_document"
+}
+2020-02-16 17:21:28,830 [6] INFO  EasyCreditService.Classes.ApiService [(null)] - token content:{
+  "access_token": "5886f656-56f2-412a-9a69-1019eb1f9090",
+  "token_type": "bearer",
+  "expires_in": 255,
+  "scope": "sms_send_message creation_create_loan_application creation_send_otp_for_loan_application creation_create_full_loan_application creation_create_offer_selection creation_create_upload_document"
+}
+2020-02-16 17:21:35,688 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 17:21:35,689 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 17:21:35,690 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 17:21:35,690 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 17:21:35,690 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 17:21:35,691 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 17:21:35,691 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 17:21:35,691 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 17:21:35,692 [6] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 17:21:35,692 [6] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 17:21:35
+2020-02-16 17:21:42,339 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - get token success, result is {
+  "access_token": "5886f656-56f2-412a-9a69-1019eb1f9090",
+  "token_type": "bearer",
+  "expires_in": 241,
+  "scope": "sms_send_message creation_create_loan_application creation_send_otp_for_loan_application creation_create_full_loan_application creation_create_offer_selection creation_create_upload_document"
+}
+2020-02-16 17:21:42,340 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - token content:{
+  "access_token": "5886f656-56f2-412a-9a69-1019eb1f9090",
+  "token_type": "bearer",
+  "expires_in": 241,
+  "scope": "sms_send_message creation_create_loan_application creation_send_otp_for_loan_application creation_create_full_loan_application creation_create_offer_selection creation_create_upload_document"
+}
+2020-02-16 17:22:03,223 [7] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-16 17:22:03,251 [7] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-16 17:22:03,253 [7] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-16 17:22:03,254 [7] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-16 17:22:03,282 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 17:22:03,283 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 17:22:03,283 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 17:22:03,283 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 17:22:03,283 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 17:22:03,284 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 17:22:03,285 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 17:22:03,285 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 17:22:03,326 [7] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 17:22:03,328 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 17:22:03
+2020-02-16 17:22:08,884 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - get token success, result is VS_LOAN.Core.Entity.EasyCredit.TokenResponseModel
+2020-02-16 17:22:08,885 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - token content:VS_LOAN.Core.Entity.EasyCredit.TokenResponseModel
+2020-02-16 17:22:29,906 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 17:22:29,907 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 17:22:29,907 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 17:22:29,908 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 17:22:29,908 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 17:22:29,908 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 17:22:29,908 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 17:22:29,909 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 17:22:29,909 [7] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 17:22:29,909 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 17:22:29
+2020-02-16 17:22:37,223 [5] INFO  EasyCreditService.Classes.ApiService [(null)] - get token success, result is VS_LOAN.Core.Entity.EasyCredit.TokenResponseModel
+2020-02-16 17:22:37,223 [5] INFO  EasyCreditService.Classes.ApiService [(null)] - token content:VS_LOAN.Core.Entity.EasyCredit.TokenResponseModel
+2020-02-16 17:25:44,149 [6] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-16 17:25:44,170 [6] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-16 17:25:44,171 [6] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-16 17:25:44,172 [6] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-16 17:25:44,210 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 17:25:44,210 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 17:25:44,211 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 17:25:44,211 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 17:25:44,211 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 17:25:44,211 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 17:25:44,213 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 17:25:44,214 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 17:25:44,264 [6] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 17:25:44,266 [6] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 17:25:44
+2020-02-16 17:25:46,791 [5] INFO  EasyCreditService.Classes.ApiService [(null)] - get token success, result is VS_LOAN.Core.Entity.EasyCredit.TokenResponseModel
+2020-02-16 17:25:46,791 [5] INFO  EasyCreditService.Classes.ApiService [(null)] - token content:VS_LOAN.Core.Entity.EasyCredit.TokenResponseModel
+2020-02-16 17:25:56,301 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 17:25:56,302 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 17:25:56,302 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 17:25:56,302 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 17:25:56,303 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 17:25:56,303 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 17:25:56,303 [5] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 17:25:56,303 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 17:25:56,304 [5] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 17:25:56,304 [5] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 17:25:56
+2020-02-16 17:25:56,385 [8] INFO  EasyCreditService.Classes.ApiService [(null)] - get token success, result is VS_LOAN.Core.Entity.EasyCredit.TokenResponseModel
+2020-02-16 17:25:56,385 [8] INFO  EasyCreditService.Classes.ApiService [(null)] - token content:VS_LOAN.Core.Entity.EasyCredit.TokenResponseModel
+2020-02-16 17:26:28,466 [7] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-16 17:26:28,487 [7] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-16 17:26:28,488 [7] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-16 17:26:28,489 [7] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-16 17:26:28,523 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 17:26:28,523 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 17:26:28,524 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 17:26:28,524 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 17:26:28,524 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 17:26:28,524 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 17:26:28,525 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 17:26:28,525 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 17:26:28,571 [7] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 17:26:28,573 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 17:26:28
+2020-02-16 17:26:28,837 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - get token success, result is VS_LOAN.Core.Entity.EasyCredit.TokenResponseModel
+2020-02-16 17:26:28,838 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - token content:VS_LOAN.Core.Entity.EasyCredit.TokenResponseModel
+2020-02-16 17:26:40,260 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-02-16 17:26:40,261 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-16 17:26:40,261 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-16 17:26:40,261 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-16 17:26:40,261 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-16 17:26:40,262 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-16 17:26:40,262 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-16 17:26:40,262 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-16 17:26:40,263 [6] INFO  VS_LOAN.Core.Business.EasyCredit.ECLoanBusiness [(null)] - token: business
+2020-02-16 17:26:40,263 [6] INFO  EasyCreditService.Classes.ApiService [(null)] - start get token at 02/16/2020 17:26:40
+2020-02-16 17:26:40,322 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - get token success, result is VS_LOAN.Core.Entity.EasyCredit.TokenResponseModel
+2020-02-16 17:26:40,322 [7] INFO  EasyCreditService.Classes.ApiService [(null)] - token content:VS_LOAN.Core.Entity.EasyCredit.TokenResponseModel
