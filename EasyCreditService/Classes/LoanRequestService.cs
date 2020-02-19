@@ -28,7 +28,7 @@ namespace EasyCreditService.Classes
             return response;
             //return content;
         }
-        public async Task<EcResponseModel<EcDataResponse>> CreateLoan(LoanInfoRequestModel model, string token)
+        public async Task<EcResponseModel<EcDataResponse>> CreateLoan(LoanInfoRequestModel model)
         {
             try
             {
@@ -39,10 +39,11 @@ namespace EasyCreditService.Classes
                 _log.InfoFormat("start send loan request at {0}", DateTime.Now);
                 var json = JsonConvert.SerializeObject(model);
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
-                
-                var response = await _httpClient.PostAsync(ECApiPath.BasePath+ ECApiPath.Step2 + "/" + token, stringContent);
+
+                var response = await _httpClient.PostAsync(ECApiPath.BasePath + ECApiPath.Step2, stringContent);
                 //var response = await _httpClient.Post<EcResponseModel<EcDataResponse>>(ECApiPath.BasePathTest,ECApiPath.Step2, data:model,includeSignature:true);
-                
+                var resultContent = response.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<EcResponseModel<EcDataResponse>>(resultContent);
                 _log.Info(response);
                 _log.Info("send loan request success");
                 return null;

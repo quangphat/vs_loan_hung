@@ -22,10 +22,12 @@ namespace VS_LOAN.Core.Business.EasyCredit
         {
             if (model == null)
                 return "model is null";
-            await _svLoanrequest.TestVietbankApi();
-            var token = await _svApi.GetECToken();
-            var result = await _svLoanrequest.CreateLoan(model, token);
-            return result.code;
+            //await _svLoanrequest.TestVietbankApi();
+            //var token = await _svApi.GetECToken();
+            var result = await _svLoanrequest.CreateLoan(model);
+            if(result!=null)
+                return result.code;
+            return "";
         }
         public async Task<string> GetToken()
         {

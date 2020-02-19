@@ -13,7 +13,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VietBankApi.Infrastructures;
-using log4net;
+using VietBankApi.Business.Interfaces;
+using VietBankApi.Business.Classes;
+using Karambolo.Extensions.Logging.File;
+
 namespace VietBankApi
 {
     public class Startup
@@ -37,6 +40,9 @@ namespace VietBankApi
                 AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip
             })
             { Timeout = TimeSpan.FromSeconds(20) });
+            services.AddScoped<IAuthorizeBusiness, AuthorizeBusiness>();
+            services.AddScoped<CurrentProcess>();
+            services.AddScoped<ILogBusiness, LogBusiness>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,7 +57,7 @@ namespace VietBankApi
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            loggerFactory.AddFile("ecapi-log.txt");
+            loggerFactory.AddLog4Net();
             app.UseHttpsRedirection();
             app.UseMiddleware<AuthorizeMiddleware>();
             app.UseMvc();

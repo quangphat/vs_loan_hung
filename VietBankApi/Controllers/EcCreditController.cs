@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using log4net.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using VietBankApi.Business.Interfaces;
 using VietBankApi.Infrastructures;
 using VS_LOAN.Core.Entity.EasyCredit;
-using VS_LOAN.Core.Utility;
 namespace VietBankApi.Controllers
 {
     [Route("api/[controller]")]
@@ -22,39 +24,71 @@ namespace VietBankApi.Controllers
     {
         private readonly HttpClient _httpClient;
         private readonly ApiSetting _appSettings;
-        private readonly ILogger _logger;
         private const string LogKey = "ECApi";
-        public EcCreditController(HttpClient httpClient, IOptions<ApiSetting> appSettings, ILogger<EcCreditController> logger)
+        public readonly CurrentProcess _process;
+        protected readonly ILogBusiness _log;
+        public EcCreditController(HttpClient httpClient, IOptions<ApiSetting> appSettings, ILogBusiness logBusiness, CurrentProcess currentProcess)
         {
             _httpClient = httpClient;
             _appSettings = appSettings.Value;
-            _logger = logger;
+            _log = logBusiness; 
+            _process = currentProcess;
         }
-        [HttpGet("token")]
-        public async Task<IActionResult> GetToken()
+        [HttpPost("step2")]
+        public async Task<IActionResult> Step2([FromBody] LoanInfoRequestModel model)
         {
-            _logger.LogInformation($"{LogKey}: {0}", "reach");
+            await _log.LogInfo("step2 start");
+            await _log.LogInfo("step2 dump model: ", model.ToJson());
+            await _log.LogInfo("step2 token: ", _process.Token);
             try
             {
-                var result = await _httpClient.GetToken<object>( _appSettings.BasePath, _appSettings.TokentPath, _appSettings.ClientId, _appSettings.ClientSecret);
-                return Ok(result);
+                var url = $"{_appSettings.BasePath}/api/loanServices/v1/loanRequest";
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(url);
+                    client.DefaultRequestHeaders.Add("Authorization", "Bearer " + _process.Token);
+                    var data = JsonConvert.SerializeObject(model);
+                    var content = new StringContent(data, Encoding.UTF8, "application/json");
+                    var result1 = client.PostAsync("", content).Result;
+                    string resultContent = result1.Content.ReadAsStringAsync().Result;
+                    await _log.LogInfo("result1rror: ", resultContent);
+                    return Ok();
+                }
+                //var requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
+
+                //_httpClient.DefaultRequestHeaders.Add("Authorization", string.Concat("Bearer ", _process.Token));
+                //var json = JsonConvert.SerializeObject(model, new JsonSerializerSettings
+                //{
+                //    NullValueHandling = NullValueHandling.Ignore
+                //});
+                //var content = new StringContent(json, Encoding.UTF8, "application/json");
+                //requestMessage.Content = content;
+                ////_httpClient.DefaultRequestHeaders
+                ////.Accept
+                ////.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                //using (var response = await _httpClient.SendAsync(requestMessage))
+                //{
+                //    await _log.LogInfo("step2 statuscode:", response.StatusCode.ToJson());
+                //    if (response!=null && response.Content != null)
+                //    {
+                //        var responseData = response.StatusCode == HttpStatusCode.Moved || response.StatusCode == HttpStatusCode.Found
+                //            ? response.Headers.Location.AbsoluteUri
+                //            : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                //        await _log.LogInfo("step2 AbsoluteUri:", responseData);
+                //        await _log.LogInfo("step2 responseData:", responseData);
+                //        return Ok();
+                //    }
+                //    return Ok();
+                //}
+                var result = await _httpClient.Post( HttpContext.Request, _log, _appSettings.BasePath, "/api/loanServices/v1/loanRequest", data: model, process: _process, token:_process.Token);
+                //var result2 = await _httpClient.Step2(_log, _appSettings.BasePath, "/api/loanServices/v1/loanRequest", token: _process.Token);
+                return Ok();   
             }
             catch(Exception e)
             {
-                _logger.LogError($"{LogKey} error: {0}", e);
-                return Ok("Call Ok");
-            }
-            
-        }
-        [HttpPost("step2/{token}")]
-        public async Task<IActionResult> Step2([FromBody] LoanInfoRequestModel model, string token)
-        {
-            //var json = JsonConvert.SerializeObject(model);
-            //var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
-            //_httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Authorization", "Bearer " + token);
-            //var result = await _httpClient.PostAsync<object>(new Uri(_appSettings.BasePath + "/loanServices/v1/loanRequest"),stringContent);
-            var result = await _httpClient.Post<object>(_appSettings.BasePath, "/loanServices/v1/loanRequest", data: model, token: token);
-            return Ok(result);
+                await _log.LogInfo("step2 error: ", e.ToJson());
+                return Ok();
+            }    
         }
     }
 }

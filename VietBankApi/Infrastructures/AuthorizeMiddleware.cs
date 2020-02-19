@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using VS_LOAN.Core.Utility;
+using VietBankApi.Business.Interfaces;
 
 namespace VietBankApi.Infrastructures
 {
@@ -15,26 +15,28 @@ namespace VietBankApi.Infrastructures
         {
             _next = next;
         }
-        public async Task Invoke(HttpContext httpContext)
+        public async Task Invoke(HttpContext httpContext, IAuthorizeBusiness authorizeBusiness, CurrentProcess currentProcess)
         {
             //var path = httpContext.Request.Path;
-            //if(!path.HasValue)
+            //if (!path.HasValue)
             //{
             //    httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
             //    return;
             //}
             //var key = httpContext.Request.Headers["X-VietbankFC-Signature"].FirstOrDefault();
-            //if(string.IsNullOrWhiteSpace(key))
+            //if (string.IsNullOrWhiteSpace(key))
             //{
             //    httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
             //    return;
             //}
-            //var apiKey = Utility.HmacSha256("VietbankFc", "everbodyknowthatthecaptainlied");
-            //if(key != apiKey)
+            //var apiKey = Utils.HmacSha256("VietbankFc", "everbodyknowthatthecaptainlied");
+            //if (key != apiKey)
             //{
             //    httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
             //    return;
             //}
+            var token = await authorizeBusiness.GetToken();
+            currentProcess.Token = token;
             await _next(httpContext);
         }
     }

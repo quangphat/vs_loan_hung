@@ -14,7 +14,7 @@ namespace VS_LOAN.Core.Entity.EasyCredit
         public string phone_number { get; set; }
         public string date_of_birth { get; set; }
         public string identity_card_id { get; set; }
-        public DateTime issue_date { get; set; }
+        public string issue_date { get; set; }
         public string issue_place { get; set; }
         public string tem_province { get; set; }
         public string gender { get; set; }

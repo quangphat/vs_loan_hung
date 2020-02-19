@@ -15,6 +15,6 @@ namespace VietBankApi.Infrastructures
         public string ClientSecret { get; set; }
         public string BasePath { get; set; }
         public string TokentPath { get; set; }
-
+        public string SqlConn { get; set; }
     }
 }
