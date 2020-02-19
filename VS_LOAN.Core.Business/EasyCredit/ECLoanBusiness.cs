@@ -18,11 +18,16 @@ namespace VS_LOAN.Core.Business.EasyCredit
             _svLoanrequest = loanRequest;
             _svApi = apiService;
         }
-        public async Task<string> CreateLoanToEc(LoanInfoRequestModel model, int type =0)
+        public async Task<string> CreateLoanToEc(LoanInfoRequestModel model)
         {
             if (model == null)
                 return "model is null";
-            return await _svLoanrequest.CreateLoan(model, type);
+            //await _svLoanrequest.TestVietbankApi();
+            //var token = await _svApi.GetECToken();
+            var result = await _svLoanrequest.CreateLoan(model);
+            if(result!=null)
+                return result.code;
+            return "";
         }
         public async Task<string> GetToken()
         {

@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
 using VS_LOAN.Core.Business;
@@ -133,13 +134,14 @@ namespace VS_LOAN.Core.Web.Controllers
         //    return Json(new { DSTrangThai = rs });
         //}
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public ActionResult ChiTietHoSo()
+        public async Task<ActionResult> Detail(int id)
         {
             ViewBag.formindex = LstRole["DanhSachHoSo"]._formindex;
-            if (Session["QL_HoSoID"] == null)
+            if (id < 0)
                 return RedirectToAction("Index");
-            var hoso = new HoSoBLL().LayChiTiet((int)Session["QL_HoSoID"]);
-            new HoSoXemBLL().DaXem((int)Session["QL_HoSoID"]);
+            var bizHoso = new HosoBusiness();
+            var hoso =await bizHoso.GetDetail(id);
+            new HoSoXemBLL().DaXem(id);
             ViewBag.HoSo = hoso;
             ViewBag.MaDoiTac = new DoiTacBLL().LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
@@ -147,10 +149,10 @@ namespace VS_LOAN.Core.Web.Controllers
             return View();
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public ActionResult XemHSByID(int id, string fromDate, string toDate, string mahs)
+        public ActionResult XemHSByID(int id)
         {
             Session["QL_HoSoID"] = id;
-            return RedirectToAction("ChiTietHoSo", new { fromDate = fromDate, toDate = toDate, mahs });
+            return RedirectToAction("Detail", new { id = id });
         }
         private bool AddGhichu(int hosoId, string ghiChu)
         {
@@ -545,20 +547,20 @@ namespace VS_LOAN.Core.Web.Controllers
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public ActionResult SuaHSByID(int id, string fromDate, string toDate, string mahs)
+        public ActionResult SuaHSByID(int id)
         {
             Session["QL_HoSoID"] = id;
-            return RedirectToAction("SuaHoSo", new { fromDate = fromDate, toDate = toDate, mahs });
+            return RedirectToAction("Edit", new { id = id});
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public ActionResult SuaHoSo()
+        public ActionResult Edit(int id)
         {
             ViewBag.formindex = LstRole["DanhSachHoSo"]._formindex;
-            if (Session["QL_HoSoID"] == null)
+            if (id <= 0)
                 return RedirectToAction("DanhSachHoSo");
-            var hoso = new HoSoBLL().LayChiTiet((int)Session["QL_HoSoID"]);
-            new HoSoXemBLL().DaXem((int)Session["QL_HoSoID"]);
+            var hoso = new HoSoBLL().LayChiTiet(id);
+            new HoSoXemBLL().DaXem(id);
             ViewBag.HoSo = hoso;
             ViewBag.MaDoiTac = new DoiTacBLL().LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
@@ -566,9 +568,9 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.LstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
             return View();
         }
-        public JsonResult LayDSGhichu()
+        public JsonResult LayDSGhichu(int id)
         {
-            List<GhichuViewModel> rs = new HoSoBLL().LayDanhsachGhichu((int)Session["QL_HoSoID"]);
+            List<GhichuViewModel> rs = new HoSoBLL().LayDanhsachGhichu(id);
             if (rs == null)
                 rs = new List<GhichuViewModel>();
             return ToJsonResponse(true, null, rs);

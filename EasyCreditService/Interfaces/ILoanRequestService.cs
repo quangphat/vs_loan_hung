@@ -9,6 +9,7 @@ namespace EasyCreditService.Interfaces
 {
     public interface ILoanRequestService
     {
-        Task<string> CreateLoan(LoanInfoRequestModel model, int type = 0);
+        Task<EcResponseModel<EcDataResponse>> CreateLoan(LoanInfoRequestModel model);
+        Task<List<string>> TestVietbankApi();
     }
 }

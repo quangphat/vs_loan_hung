@@ -1,0 +1,26 @@
+2020-02-18T21:26:52.7778874+07:00 0HLTKFQCK1OVI:00000001 [INF] Request starting HTTP/1.1 POST http://localhost:5000/api/EcCredit/step2/c7b33888-bc05-4e2a-b4a7-7547551e1b99 application/json; charset=utf-8 552 (ca22a1cb)
+2020-02-18T21:26:52.7944173+07:00 0HLTKFQCK1OVI:00000001 [WRN] Failed to determine the https port for redirect. (ca76cc21)
+2020-02-18T21:26:52.8491137+07:00 0HLTKFQCK1OVI:00000001 [INF] Request finished in 75.874ms 401  (791a596a)
+2020-02-18T21:26:52.8585816+07:00  [INF] Connection id ""0HLTKFQCK1OVI"", Request id ""0HLTKFQCK1OVI:00000001"": the application completed without reading the entire request body. (54ac9468)
+2020-02-18T21:27:25.9569058+07:00 0HLTKFQCK1OVI:00000002 [INF] Request starting HTTP/1.1 POST http://localhost:5000/api/EcCredit/step2/c7b33888-bc05-4e2a-b4a7-7547551e1b99 application/json; charset=utf-8 552 (ca22a1cb)
+2020-02-18T21:28:30.0162832+07:00 0HLTKFR9JU6CA:00000001 [INF] Request starting HTTP/1.1 POST http://localhost:5000/api/EcCredit/step2/c7b33888-bc05-4e2a-b4a7-7547551e1b99 application/json; charset=utf-8 552 (ca22a1cb)
+2020-02-18T21:28:30.0316000+07:00 0HLTKFR9JU6CA:00000001 [WRN] Failed to determine the https port for redirect. (ca76cc21)
+2020-02-18T21:29:07.7707214+07:00 0HLTKFR9JU6CA:00000001 [ERR] An unhandled exception has occurred while executing the request. (48a46595)
+System.Net.Http.HttpRequestException: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond ---> System.Net.Sockets.SocketException: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+   at System.Net.Http.ConnectHelper.ConnectAsync(String host, Int32 port, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.ConnectHelper.ConnectAsync(String host, Int32 port, CancellationToken cancellationToken)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at System.Net.Http.HttpConnectionPool.CreateConnectionAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at System.Net.Http.HttpConnectionPool.WaitForCreatedConnectionAsync(ValueTask`1 creationTask)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at System.Net.Http.HttpConnectionPool.SendWithRetryAsync(HttpRequestMessage request, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.FinishSendAsyncBuffered(Task`1 sendTask, HttpRequestMessage request, CancellationTokenSource cts, Boolean disposeCts)
+   at VietBankApi.Infrastructures.CoreApiClient.GetToken[T](HttpClient httpClient, String basePath, String path, String clientId, String clientSecret) in D:\Development\outsource\VS_LOAN\VietBankApi\Infrastructures\CoreApiClient.cs:line 72
+   at VietBankApi.Business.Classes.AuthorizeBusiness.GetToken() in D:\Development\outsource\VS_LOAN\VietBankApi\Business\Classes\AuthorizeBusiness.cs:line 23
+   at VietBankApi.Infrastructures.AuthorizeMiddleware.Invoke(HttpContext httpContext, IAuthorizeBusiness authorizeBusiness, CurrentProcess currentProcess) in D:\Development\outsource\VS_LOAN\VietBankApi\Infrastructures\AuthorizeMiddleware.cs:line 38
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2020-02-18T21:29:07.8767745+07:00 0HLTKFR9JU6CA:00000001 [INF] Request finished in 37865.4964ms 500 text/html; charset=utf-8 (791a596a)
+2020-02-18T21:29:07.8937785+07:00  [INF] Connection id ""0HLTKFR9JU6CA"", Request id ""0HLTKFR9JU6CA:00000001"": the application completed without reading the entire request body. (54ac9468)

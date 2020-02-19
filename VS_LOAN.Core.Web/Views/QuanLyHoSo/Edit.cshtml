@@ -497,7 +497,7 @@
         //$('#ddlTrangThai').empty();
         $.ajax({
             type: "POST",
-            url: '@Url.Action("LayDSGhichu", "QuanLyHoSo")',
+            url: '/QuanLyHoSo/LayDSGhichu?id=' + hoso.ID,
             data: {},
             success: function (data) {
                 if (data.data != null && data.success == true) {

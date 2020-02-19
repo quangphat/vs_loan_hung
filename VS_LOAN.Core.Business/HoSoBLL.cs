@@ -567,6 +567,14 @@ namespace VS_LOAN.Core.Business
                         }
                         try
                         {
+                            hs.GhiChu = item["GhiChu"].ToString();
+                        }
+                        catch
+                        {
+
+                        }
+                        try
+                        {
                             hs.CourierCode = Convert.ToInt32(item["CourierCode"].ToString());
                         }
                         catch
