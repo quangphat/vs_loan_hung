@@ -40,10 +40,10 @@ namespace VietBankApi.Infrastructures
             return await httpClient.Call(basePath, request, HttpMethod.Put, path, param, data, process);
         }
         public static async Task<HttpClientResult<T>> SendRequestAsync<T>(
-            this HttpClient httpClient, string basePath,
-            HttpRequest request, string path = "/", object param = null, object data = null, CurrentProcess process = null)
+            this HttpClient httpClient, HttpRequest request, HttpMethod httpMethod, string basePath,
+             string path = "/", object param = null, object data = null, CurrentProcess process = null)
         {
-            var response = await httpClient.CallGetResponse(basePath, request, HttpMethod.Post, path, param, data, process);
+            var response = await httpClient.CallGetResponse(basePath, request, httpMethod, path, param, data, process);
 
             if (response != null)
             {
@@ -232,7 +232,7 @@ namespace VietBankApi.Infrastructures
             if (string.IsNullOrWhiteSpace(originalData))
                 originalData = string.Empty;
 
-
+            requestMessage.Headers.Add("Authorization", "Bearer " + process.Token);
             requestMessage.Content = content;
             using (var response = await httpClient.SendAsync(requestMessage))
             {

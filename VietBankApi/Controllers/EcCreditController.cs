@@ -20,19 +20,12 @@ namespace VietBankApi.Controllers
     [Route("api/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    public class EcCreditController : ControllerBase
+    public class EcCreditController : VietbankApiBaseController
     {
-        private readonly HttpClient _httpClient;
-        private readonly ApiSetting _appSettings;
         private const string LogKey = "ECApi";
-        public readonly CurrentProcess _process;
-        protected readonly ILogBusiness _log;
         public EcCreditController(HttpClient httpClient, IOptions<ApiSetting> appSettings, ILogBusiness logBusiness, CurrentProcess currentProcess)
+            :base(httpClient,appSettings,logBusiness,currentProcess)
         {
-            _httpClient = httpClient;
-            _appSettings = appSettings.Value;
-            _log = logBusiness; 
-            _process = currentProcess;
         }
         [HttpPost("test")]
         public async Task<IActionResult> Test([FromBody] LoanInfoRequestModel model)
@@ -53,7 +46,7 @@ namespace VietBankApi.Controllers
             //await _log.LogInfo("step2 token: ", _process.Token);
             try
             {
-                var result = await CoreApiClient.SendRequestAsync<object>(_httpClient, _appSettings.BasePath, HttpContext.Request, "/api/loanServices/v1/loanRequest", data: model);
+                var result = await Post<object>(basePath:"http://localhost:5000",path: "/api/EcCredit/test", data: model);
                 if(result!=null && result.Data!=null)
                 {
                     await _log.LogInfo("result: ", result.Data.ToJson());

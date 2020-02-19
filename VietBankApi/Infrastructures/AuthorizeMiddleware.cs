@@ -36,7 +36,7 @@ namespace VietBankApi.Infrastructures
             //    return;
             //}
             //var token = await authorizeBusiness.GetToken();
-            //currentProcess.Token = token;
+            currentProcess.Token =  "f6df237b-2ca3-429a-a456-51f96e273acf";
             await _next(httpContext);
         }
     }

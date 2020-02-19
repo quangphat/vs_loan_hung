@@ -46,7 +46,7 @@ namespace EasyCreditService.Classes
                 var result = JsonConvert.DeserializeObject<EcResponseModel<EcDataResponse>>(resultContent);
                 _log.Info(response);
                 _log.Info("send loan request success");
-                return null;
+                return result;
             }
             catch (Exception e)
             {
