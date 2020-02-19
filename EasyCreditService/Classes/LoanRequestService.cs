@@ -22,11 +22,12 @@ namespace EasyCreditService.Classes
         }
         public async Task<List<string>> TestVietbankApi()
         {
-            //http://test.smartbank.com.vn/
-            var response = await _httpClient.Get<List<string>>("http://112.213.89.5/plesk-site-preview/vietbankfc.api/api/values");
-            //var result = await _httpClient.GetAsync("http://localhost:5000/api/values");
-            return response;
-            //return content;
+            ////http://test.smartbank.com.vn/
+            //var response = await _httpClient.Get<List<string>>("http://112.213.89.5/plesk-site-preview/vietbankfc.api/api/values");
+            ////var result = await _httpClient.GetAsync("http://localhost:5000/api/values");
+            //return response;
+            ////return content;
+            return null;
         }
         public async Task<EcResponseModel<EcDataResponse>> CreateLoan(LoanInfoRequestModel model)
         {
@@ -39,14 +40,14 @@ namespace EasyCreditService.Classes
                 _log.InfoFormat("start send loan request at {0}", DateTime.Now);
                 var json = JsonConvert.SerializeObject(model);
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
-
-                var response = await _httpClient.PostAsync(ECApiPath.BasePathTest + ECApiPath.Step2, stringContent);
+                
+                var response = await _httpClient.Post<EcResponseModel<EcDataResponse>>(ECApiPath.BasePathTest, ECApiPath.Step2,model);
                 //var response = await _httpClient.Post<EcResponseModel<EcDataResponse>>(ECApiPath.BasePathTest,ECApiPath.Step2, data:model,includeSignature:true);
-                var resultContent = response.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<EcResponseModel<EcDataResponse>>(resultContent);
+                //var resultContent = response.Content.ReadAsStringAsync().Result;
+                //var result = JsonConvert.DeserializeObject<EcResponseModel<EcDataResponse>>(resultContent);
                 _log.Info(response);
                 _log.Info("send loan request success");
-                return result;
+                return response.Data;
             }
             catch (Exception e)
             {

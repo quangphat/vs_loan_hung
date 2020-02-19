@@ -30,8 +30,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "F88Service", "F88Service\F8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyCreditService", "EasyCreditService\EasyCreditService.csproj", "{7BCE1FAF-DC05-49D1-8D0E-E1C9A8F12A6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VietBankApi", "VietBankApi\VietBankApi.csproj", "{052CC529-12B7-4AB2-BE57-C1BA291EC75F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,10 +64,6 @@ Global
 		{7BCE1FAF-DC05-49D1-8D0E-E1C9A8F12A6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7BCE1FAF-DC05-49D1-8D0E-E1C9A8F12A6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7BCE1FAF-DC05-49D1-8D0E-E1C9A8F12A6A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{052CC529-12B7-4AB2-BE57-C1BA291EC75F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{052CC529-12B7-4AB2-BE57-C1BA291EC75F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{052CC529-12B7-4AB2-BE57-C1BA291EC75F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{052CC529-12B7-4AB2-BE57-C1BA291EC75F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

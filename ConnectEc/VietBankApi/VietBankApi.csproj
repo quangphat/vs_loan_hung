@@ -27,7 +27,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\VS_LOAN.Core.Entity\VS_LOAN.Core.Entity.csproj" />
+    <Reference Include="VS_LOAN.Core.Entity">
+      <HintPath>..\..\VS_LOAN.Core.Entity\bin\Debug\VS_LOAN.Core.Entity.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
