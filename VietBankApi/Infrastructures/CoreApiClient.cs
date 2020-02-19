@@ -165,7 +165,7 @@ namespace VietBankApi.Infrastructures
 
 
                 //requestMessage.Headers.Add("Authorization", "Bearer " + token);
-                httpClient.DefaultRequestHeaders.Add("Authorization", string.Concat("Bearer ", token));
+                //httpClient.DefaultRequestHeaders.Add("Authorization", string.Concat("Bearer ", token));
                 var response = await httpClient.SendAsync(requestMessage).ConfigureAwait(false);
                 response.EnsureSuccessStatusCode();
                 if(logBusiness!=null)

@@ -35,8 +35,8 @@ namespace VietBankApi.Infrastructures
             //    httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
             //    return;
             //}
-            var token = await authorizeBusiness.GetToken();
-            currentProcess.Token = token;
+            //var token = await authorizeBusiness.GetToken();
+            //currentProcess.Token = token;
             await _next(httpContext);
         }
     }

@@ -40,7 +40,7 @@ namespace EasyCreditService.Classes
                 var json = JsonConvert.SerializeObject(model);
                 var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
 
-                var response = await _httpClient.PostAsync(ECApiPath.BasePath + ECApiPath.Step2, stringContent);
+                var response = await _httpClient.PostAsync(ECApiPath.BasePathTest + ECApiPath.Step2, stringContent);
                 //var response = await _httpClient.Post<EcResponseModel<EcDataResponse>>(ECApiPath.BasePathTest,ECApiPath.Step2, data:model,includeSignature:true);
                 var resultContent = response.Content.ReadAsStringAsync().Result;
                 var result = JsonConvert.DeserializeObject<EcResponseModel<EcDataResponse>>(resultContent);
