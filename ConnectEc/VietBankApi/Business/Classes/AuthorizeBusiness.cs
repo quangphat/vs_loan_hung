@@ -20,19 +20,19 @@ namespace VietBankApi.Business.Classes
         }
         public async Task<string> GetToken()
         {
-            await _log.LogInfo("Get Token start");
+            await _log.InfoLog("Get Token start");
             var httpClient = new HttpClient();
             try
             {
                 var result = await httpClient.GetToken<TokenResponseModel>(_appSetting.BasePath, _appSetting.TokentPath, _appSetting.ClientId, _appSetting.ClientSecret);
-                await _log.LogInfo("Get Token result: ", result.ToJson());
+                await _log.InfoLog("Get Token result: ", result.ToJson());
                 if (result != null)
                     return result.access_token;
                 return string.Empty;
             }
             catch(Exception e)
             {
-                await _log.LogInfo("Get Token error: ", e.Message);
+                await _log.InfoLog("Get Token error: ", e.Message);
                 return string.Empty;
             }
         }

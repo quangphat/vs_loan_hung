@@ -27,7 +27,7 @@ namespace VietBankApi.Controllers
         {
             if (string.IsNullOrWhiteSpace(basePath))
                 basePath = _appSettings.BasePath;
-            return await _httpClient.SendRequestAsync<T>(HttpContext.Request, HttpMethod.Post, basePath, path, param, data, _process);
+            return await _httpClient.SendRequestAsync<T>(HttpContext.Request, HttpMethod.Post, basePath, path, param, data, _process, _log);
         }
     }
 }

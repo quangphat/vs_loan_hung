@@ -7,6 +7,6 @@ namespace VietBankApi.Business.Interfaces
 {
     public interface ILogBusiness
     {
-        Task<bool> LogInfo(string name, string content = null);
+        Task<bool> InfoLog(string name, string content = null);
     }
 }

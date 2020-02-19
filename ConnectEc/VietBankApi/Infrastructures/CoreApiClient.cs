@@ -15,29 +15,6 @@ namespace VietBankApi.Infrastructures
 {
     public static class CoreApiClient
     {
-        public static async Task<HttpClientResult<T>> SendRequestAsync<T>(
-            this HttpClient httpClient, HttpRequest request, HttpMethod httpMethod, string basePath,
-             string path = "/", object param = null, object data = null, CurrentProcess process = null)
-        {
-            var response = await httpClient.CallGetResponse(basePath, request, httpMethod, path, param, data, process);
-
-            if (response != null)
-            {
-                var result = JsonConvert.DeserializeObject<T>(response.Item2);
-
-                if (result is ResponseJsonModel)
-                {
-                    var obj = result as ResponseJsonModel;
-
-                    if (obj?.error?.code != null)
-                        obj.error.message = "Lỗi";
-                }
-
-                return HttpClientResult<T>.Create(response.Item1, result, response.Item3, response.Item4);
-            }
-            else
-                return HttpClientResult<T>.Create(response.Item1, TypeExtensions.GetDefaultValue<T>(), null, false);
-        }
         public static async Task<T> GetToken<T>(this HttpClient httpClient, string basePath, string path = "/", string clientId = null, string clientSecret = null)
         {
             var url = $"{basePath}{path}";
@@ -60,11 +37,33 @@ namespace VietBankApi.Infrastructures
                     throw new Exception($"request to {path} error {response.StatusCode}");
             }
         }
-        
-        private static string CreateSignature(string input)
+        public static async Task<HttpClientResult<T>> SendRequestAsync<T>(
+            this HttpClient httpClient, HttpRequest request, HttpMethod httpMethod, string basePath,
+             string path = "/", object param = null, object data = null, CurrentProcess process = null,ILogBusiness _log = null)
         {
-            return Utils.HmacSha256(input, "everbodyknowthatthecaptainlied");
+            var response = await httpClient.CallGetResponse(basePath, request, httpMethod, path, param, data, process);
+
+            if (response != null)
+            {
+                await _log.InfoLog("response.Item2", response.Item2);
+                var result = JsonConvert.DeserializeObject<T>(response.Item2);
+
+                if (result is ResponseJsonModel)
+                {
+                    var obj = result as ResponseJsonModel;
+
+                    if (obj?.error?.code != null)
+                        obj.error.message = "Lỗi";
+                }
+
+                return HttpClientResult<T>.Create(response.Item1, result, response.Item3, response.Item4);
+            }
+            else
+                return HttpClientResult<T>.Create(response.Item1, TypeExtensions.GetDefaultValue<T>(), null, false);
         }
+        
+        
+       
         private static async Task<Tuple<HttpStatusCode, string, string, bool>> CallGetResponse(this HttpClient httpClient, string basePath, HttpRequest request,
             HttpMethod method, string path = "/", object param = null, object data = null, CurrentProcess process = null)
         {
@@ -128,7 +127,10 @@ namespace VietBankApi.Infrastructures
                     throw new Exception($"request to {url} error {response.StatusCode}");
             }
         }
-
+        private static string CreateSignature(string input)
+        {
+            return Utils.HmacSha256(input, "everbodyknowthatthecaptainlied");
+        }
     }
     public class HttpContentActionResult : IActionResult
     {

@@ -24,7 +24,7 @@ namespace VietBankApi.Controllers
     {
         private const string LogKey = "ECApi";
         public EcCreditController(HttpClient httpClient, IOptions<ApiSetting> appSettings, ILogBusiness logBusiness, CurrentProcess currentProcess)
-            :base(httpClient,appSettings,logBusiness,currentProcess)
+            : base(httpClient, appSettings, logBusiness, currentProcess)
         {
         }
         [HttpPost("test")]
@@ -39,23 +39,23 @@ namespace VietBankApi.Controllers
             return new OkObjectResult(modelresult);
         }
         [HttpPost("step2")]
-        public async Task<IActionResult> Step2([FromBody] LoanInfoRequestModel model)
+        public async Task<IActionResult> Step2([FromBody] object model)
         {
             try
             {
-                var result = await Post<object>(basePath:"http://localhost:5000",path: "/api/EcCredit/test", data: model);
-                if(result!=null && result.Data!=null)
+                var result = await Post<object>(basePath: _appSettings.BasePath, path: _appSettings.Step2, data: model);
+                if (result != null && result.Data != null)
                 {
-                    await _log.LogInfo("result: ", result.Data.ToJson());
+                    await _log.InfoLog("result: ", result.Data.ToJson());
                 }
-                var result3 = JsonConvert.SerializeObject(result.Data);
+                
                 return Ok(result.Data);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                await _log.LogInfo("step2 error: ", e.ToJson());
+                await _log.InfoLog("step2 error: ", e.ToJson());
                 return Ok();
-            }    
+            }
         }
     }
 }

@@ -16,7 +16,7 @@ namespace VietBankApi.Business.Classes
         public LogBusiness(CurrentProcess currentProcess, IOptions<ApiSetting> appSettings) : base(currentProcess, appSettings)
         {
         }
-        public async Task<bool> LogInfo(string name, string content= null)
+        public async Task<bool> InfoLog(string name, string content= null)
         {
             var p = new DynamicParameters();
             p.Add("name", name);
