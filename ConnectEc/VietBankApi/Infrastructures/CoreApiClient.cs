@@ -15,30 +15,6 @@ namespace VietBankApi.Infrastructures
 {
     public static class CoreApiClient
     {
-
-        public static async Task<IActionResult> Get(this HttpClient httpClient, string basePath,
-            HttpRequest request, string path = "/", object param = null, CurrentProcess process = null)
-        {
-            return await httpClient.Call(basePath, request, HttpMethod.Get, path, param, null, process);
-        }
-
-        public static async Task<IActionResult> Delete(this HttpClient httpClient, string basePath,
-            HttpRequest request, string path = "/", object data = null, CurrentProcess process = null)
-        {
-            return await httpClient.Call(basePath, request, HttpMethod.Delete, path, null, data, process);
-        }
-
-        public static async Task<IActionResult> Post(this HttpClient httpClient, HttpRequest request,ILogBusiness logBusiness, string basePath,
-             string path = "/", object param = null, object data = null, CurrentProcess process = null, string token = null)
-        {
-            return await httpClient.Call(basePath, request, HttpMethod.Post, path, param, data, process, token,logBusiness);
-        }
-
-        public static async Task<IActionResult> Put(this HttpClient httpClient, string basePath,
-            HttpRequest request, string path = "/", object param = null, object data = null, CurrentProcess process = null)
-        {
-            return await httpClient.Call(basePath, request, HttpMethod.Put, path, param, data, process);
-        }
         public static async Task<HttpClientResult<T>> SendRequestAsync<T>(
             this HttpClient httpClient, HttpRequest request, HttpMethod httpMethod, string basePath,
              string path = "/", object param = null, object data = null, CurrentProcess process = null)
@@ -84,107 +60,7 @@ namespace VietBankApi.Infrastructures
                     throw new Exception($"request to {path} error {response.StatusCode}");
             }
         }
-        public static async Task<object> Step2(this HttpClient httpClient, ILogBusiness logBusiness, string basePath, string path = "/", string token = null)
-        {
-            try
-            {
-                var url = $"{basePath}{path}";
-                var requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
-                requestMessage.Headers.Add("Authorization", string.Concat("Bearer ", token));
-                //httpClient.DefaultRequestHeaders.Add("Authorization", string.Concat("Bearer ", token));
-                using (var response = await httpClient.SendAsync(requestMessage))
-                {
-                    if (response.Content != null)
-                    {
-                        var responseData = response.StatusCode == HttpStatusCode.Moved || response.StatusCode == HttpStatusCode.Found
-                            ? response.Headers.Location.AbsoluteUri
-                            : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                        var data = JsonConvert.DeserializeObject<object>(responseData);
-                        await logBusiness.LogInfo("step2 result 2 data", responseData);
-                        return data;
-                    }
-                    else
-                    {
-                        await logBusiness.LogInfo("step2 result 2", "response = null");
-                    }
-                }
-                return null;
-            }
-           catch(Exception e)
-            {
-                await logBusiness.LogInfo("Step2<T> step2 error", e.Message);
-                return null;
-            }
-
-        }
-        private static async Task<IActionResult> Call(this HttpClient httpClient, string basePath, HttpRequest request,
-            HttpMethod method, string path = "/", object param = null, object data = null, CurrentProcess process = null, string token = null, ILogBusiness logBusiness = null)
-        {
-            try
-            {
-                if (param != null)
-                    path = path.AddQuery(param);
-                var url = $"{basePath}{path}";
-                var requestMessage = new HttpRequestMessage(method, url);
-                string json = null;
-
-                HttpContent content = null;
-
-                if (data != null)
-                    if (data is string)
-                        content = new StringContent((string)data, Encoding.UTF8, "application/json");
-                    else if (data is IDictionary<string, object>)
-                    {
-                        var formData = new MultipartFormDataContent();
-
-                        foreach (var pair in data as IDictionary<string, object>)
-                            if (pair.Value is byte[])
-                                formData.Add(new ByteArrayContent(pair.Value as byte[]), pair.Key, pair.Key);
-                            else
-                                formData.Add(new StringContent(pair.Value.ToString()), pair.Key);
-
-                        content = formData;
-                    }
-                    else
-                    {
-                        json = JsonConvert.SerializeObject(data, new JsonSerializerSettings
-                        {
-                            NullValueHandling = NullValueHandling.Ignore
-                        });
-
-                        content = new StringContent(json, Encoding.UTF8, "application/json");
-                    }
-
-                var originalData = string.Empty;
-                if (data != null)
-                    originalData = json;
-
-                if (string.IsNullOrWhiteSpace(originalData))
-                    originalData = string.Empty;
-                requestMessage.Content = content;
-
-
-                //requestMessage.Headers.Add("Authorization", "Bearer " + token);
-                //httpClient.DefaultRequestHeaders.Add("Authorization", string.Concat("Bearer ", token));
-                var response = await httpClient.SendAsync(requestMessage).ConfigureAwait(false);
-                response.EnsureSuccessStatusCode();
-                if(logBusiness!=null)
-                {
-                    await logBusiness.LogInfo("Call api", "error here");
-                }
-                return new HttpContentActionResult(response.Content);
-            }
-            catch(Exception e)
-            {
-                if (logBusiness != null)
-                {
-                    await logBusiness.LogInfo("Call api error", "exception");
-                }
-                var stringContent = new StringContent("Excepption " + e.Message);
-                return new HttpContentActionResult(stringContent);
-            }
-        }
-
+        
         private static string CreateSignature(string input)
         {
             return Utils.HmacSha256(input, "everbodyknowthatthecaptainlied");
