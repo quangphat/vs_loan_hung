@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VS_LOAN.Core.Business.Interfaces;
+using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.EasyCredit;
 
 namespace VS_LOAN.Core.Business.EasyCredit
@@ -17,6 +18,10 @@ namespace VS_LOAN.Core.Business.EasyCredit
         {
             _svLoanrequest = loanRequest;
             _svApi = apiService;
+        }
+        public async Task<EcResponseModel<bool>> UploadFile(StringModel model)
+        {
+            return await _svLoanrequest.UploadFile(model);
         }
         public async Task<EcResponseModel<EcDataResponse>> CreateLoanToEc(LoanInfoRequestModel model)
         {

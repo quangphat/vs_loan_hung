@@ -8,7 +8,8 @@ namespace VietBankApi.Infrastructures
     public class ApiSetting
     {
         public string SFTPPath { get; set; }
-        public string SftpPort { get; set; }
+        public string SftpFolder { get; set; }
+        public int SftpPort { get; set; }
         public string SftpUsername { get; set; }
         public string SftpPassword { get; set; }
         public string ClientId { get; set; }

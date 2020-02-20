@@ -43,6 +43,7 @@ namespace VietBankApi
             services.AddScoped<IAuthorizeBusiness, AuthorizeBusiness>();
             services.AddScoped<CurrentProcess>();
             services.AddScoped<ILogBusiness, LogBusiness>();
+            services.AddScoped<IMediaBusiness, MediaBusiness>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

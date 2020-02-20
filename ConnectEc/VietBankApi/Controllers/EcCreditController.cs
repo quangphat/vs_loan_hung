@@ -14,6 +14,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using VietBankApi.Business.Interfaces;
 using VietBankApi.Infrastructures;
+using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.EasyCredit;
 namespace VietBankApi.Controllers
 {
@@ -23,9 +24,15 @@ namespace VietBankApi.Controllers
     public class EcCreditController : VietbankApiBaseController
     {
         private const string LogKey = "ECApi";
-        public EcCreditController(HttpClient httpClient, IOptions<ApiSetting> appSettings, ILogBusiness logBusiness, CurrentProcess currentProcess)
+        protected readonly IMediaBusiness _bizMedia;
+        public EcCreditController(HttpClient httpClient
+            , IOptions<ApiSetting> appSettings
+            , ILogBusiness logBusiness
+            , CurrentProcess currentProcess
+            ,IMediaBusiness mediaBusiness)
             : base(httpClient, appSettings, logBusiness, currentProcess)
         {
+            _bizMedia = mediaBusiness;
         }
         [HttpPost("test")]
         public async Task<IActionResult> Test([FromBody] LoanInfoRequestModel model)
@@ -37,6 +44,17 @@ namespace VietBankApi.Controllers
             };
             var result3 = JsonConvert.SerializeObject(modelresult);
             return new OkObjectResult(modelresult);
+        }
+        [HttpPost("sftp")]
+        public async Task<IActionResult> UploadFile([FromBody] StringModel model)
+        {
+            if (model == null)
+                return Ok(new EcResponseModel<bool>() {
+                    error = "model null",
+                    data = false
+                });
+            var result = await _bizMedia.UploadSFtp(model.Value);
+            return Ok(result);
         }
         [HttpPost("step2")]
         public async Task<IActionResult> Step2([FromBody] object model)

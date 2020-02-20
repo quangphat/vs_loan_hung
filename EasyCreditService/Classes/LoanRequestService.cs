@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.EasyCredit;
 using VS_LOAN.Core.Utility;
 
@@ -28,6 +29,24 @@ namespace EasyCreditService.Classes
             //return response;
             ////return content;
             return null;
+        }
+        public async Task<EcResponseModel<bool>> UploadFile(StringModel model)
+        {
+            //try
+            //{
+            //    var req = System.Net.WebRequest.Create(model.Value);
+            //    using (Stream stream = req.GetResponse().GetResponseStream())
+            //    {
+            //        var x = stream.Length;
+                    
+            //    }
+            //}
+            //catch(Exception e)
+            //{
+            //    string s = "";
+            //}
+                var response = await _httpClient.Post<EcResponseModel<bool>>(ECApiPath.BasePath, "/api/ECCredit/sftp", model);
+            return response.Data;
         }
         public async Task<EcResponseModel<EcDataResponse>> CreateLoan(LoanInfoRequestModel model)
         {
