@@ -13,8 +13,10 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class BaseController : Controller
     {
-        public BaseController()
+        public ICurrentProcess _process;
+        public BaseController(ICurrentProcess currentProcess)
         {
+            _process = currentProcess;
             //if(currentProcess !=null)
             //_process = currentProcess;
         }

@@ -20,10 +20,8 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class QuanLyHoSoController : BaseController
     {
-        ICurrentProcess _currentProcess;
         public QuanLyHoSoController(ICurrentProcess currentProcess) : base(currentProcess)
         {
-            _currentProcess = currentProcess;
         }
         public static Dictionary<string, ActionInfo> LstRole
         {
@@ -43,7 +41,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (dsNhom == null)
                 dsNhom = new List<NhomDropDownModel>();
             ViewBag.DSNhom = dsNhom;
-            var x = _currentProcess;
+            var x = _process;
             return View();
         }
 
