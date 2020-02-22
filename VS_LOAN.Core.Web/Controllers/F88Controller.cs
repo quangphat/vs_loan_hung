@@ -44,7 +44,6 @@ namespace VS_LOAN.Core.Web.Controllers
         [Route("test")]
         public async Task<IHttpActionResult> Test([FromBody] StringModel model)
         {
-            _bizHoso.TestLog(model.Value);
             return Ok();
         }
 

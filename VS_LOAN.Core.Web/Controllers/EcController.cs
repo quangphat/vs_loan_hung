@@ -38,13 +38,6 @@ namespace VS_LOAN.Core.Web.Controllers
             
             return Ok(result);
         }
-        [HttpGet]
-        [Route("token")]
-        public async Task<IHttpActionResult> GetTokent()
-        {
-            var result = await _bizEcLoan.GetToken();
-           
-            return Ok(result);
-        }
+        
     }
 }

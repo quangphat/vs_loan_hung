@@ -94,33 +94,12 @@ namespace VS_LOAN.Core.Utility
             var response = await httpClient.Call<T>(HttpMethod.Get, basePath, path, param, includeSignature: includeSignature);
             return response.Data;
         }
-        public static async Task<T> Post2<T>(this HttpClient httpClient, string basePath, string path = "/", object param = null, object data = null, bool includeSignature = false, string token = null)
-        {
-            var response = await httpClient.Call<T>(HttpMethod.Post, basePath, path, param, data, includeSignature);
-            return response.Data;
-        }
-        public static async Task<T> GetToken<T>(this HttpClient httpClient, string basePath, string path = "/", string clientId = null, string clientSecret = null)
-        {
-            var request = buildHeader(HttpMethod.Post, basePath, path);
-            var key = Utility.Base64Encode($"{clientId}:{clientSecret}");
-            var signature = CreateSignature("VietbankFc");
-            request.Headers.Add("X-VietbankFC-Signature", signature);
-            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", key);
-            using (var response = await httpClient.SendAsync(request))
-            {
-                if (response.Content != null)
-                {
-                    var responseData = response.StatusCode == HttpStatusCode.Moved || response.StatusCode == HttpStatusCode.Found
-                        ? response.Headers.Location.AbsoluteUri
-                        : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    var data = JsonConvert.DeserializeObject<T>(responseData);
-                    //var result = HttpClientResult<T>.Create(response.StatusCode, data, response.Headers?.ETag?.Tag, response.StatusCode == HttpStatusCode.NotModified);
-                    return data;
-                }
-                else
-                    throw new Exception($"request to {path} error {response.StatusCode}");
-            }
-        }
+        //public static async Task<T> Post2<T>(this HttpClient httpClient, string basePath, string path = "/", object param = null, object data = null, bool includeSignature = false, string token = null)
+        //{
+        //    var response = await httpClient.Call<T>(HttpMethod.Post, basePath, path, param, data, includeSignature);
+        //    return response.Data;
+        //}
+        
         private static HttpRequestMessage buildHeader(
             HttpMethod method, string basePath, string path = "/", object param = null)
         {
@@ -166,13 +145,7 @@ namespace VS_LOAN.Core.Utility
             if (string.IsNullOrWhiteSpace(originalData))
                 originalData = string.Empty;
             var requestMessage = buildHeader(method, basePath, path);
-            //if(method == HttpMethod.Post && data!=null)
-            //{
-            //    requestMessage.Content = new StringContent(string.Empty, Encoding.UTF8, "application/json");
-            //    requestMessage.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-            //}
-            //httpClient.DefaultRequestHeaders.Accept.Clear();
-            //httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            
             if (includeSignature)
             {
                 var signature = CreateSignature("VietbankFc");

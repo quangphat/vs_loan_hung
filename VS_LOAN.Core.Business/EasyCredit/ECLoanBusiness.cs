@@ -2,11 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.EasyCredit;
+using VS_LOAN.Core.Entity.Infrastructures;
+using VS_LOAN.Core.Utility;
 
 namespace VS_LOAN.Core.Business.EasyCredit
 {
@@ -14,7 +17,7 @@ namespace VS_LOAN.Core.Business.EasyCredit
     {
         protected ILoanRequestService _svLoanrequest;
         protected readonly IApiService _svApi;
-        public ECLoanBusiness(ILoanRequestService loanRequest, IApiService apiService) : base(typeof(ECLoanBusiness))
+        public ECLoanBusiness(ILoanRequestService loanRequest, IApiService apiService, HttpClient httpClient) : base(typeof(ECLoanBusiness),httpClient)
         {
             _svLoanrequest = loanRequest;
             _svApi = apiService;
@@ -27,17 +30,11 @@ namespace VS_LOAN.Core.Business.EasyCredit
         {
             if (model == null)
                 return null;
-            //await _svLoanrequest.TestVietbankApi();
-            //var token = await _svApi.GetECToken();
-            var result = await _svLoanrequest.CreateLoan(model);
-            if(result!=null)
-                return result;
+            var result = await _httpClient.Post<EcResponseModel<EcDataResponse>>(EcApiPath.BasePathDev, EcApiPath.Step2, model);
+            if (result!=null)
+                return result.Data;
             return null;
         }
-        public async Task<string> GetToken()
-        {
-            _log.Info("token: business");
-            return await _svApi.GetECToken();
-        }
+       
     }
 }

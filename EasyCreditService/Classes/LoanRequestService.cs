@@ -32,37 +32,18 @@ namespace EasyCreditService.Classes
         }
         public async Task<EcResponseModel<bool>> UploadFile(StringModel model)
         {
-            //try
-            //{
-            //    var req = System.Net.WebRequest.Create(model.Value);
-            //    using (Stream stream = req.GetResponse().GetResponseStream())
-            //    {
-            //        var x = stream.Length;
-                    
-            //    }
-            //}
-            //catch(Exception e)
-            //{
-            //    string s = "";
-            //}
-                var response = await _httpClient.Post<EcResponseModel<bool>>(ECApiPath.BasePath, "/api/ECCredit/sftp", model);
+            var response = await _httpClient.Post<EcResponseModel<bool>>(ECApiPath.BasePath, "/api/ECCredit/sftp", model);
             return response.Data;
         }
         public async Task<EcResponseModel<EcDataResponse>> CreateLoan(LoanInfoRequestModel model)
         {
             try
             {
-                _log.Info("getting ip addrress");
-                var ip = GetPublicIP();
-                _log.InfoFormat("the ip address is: {0}", ip);
-
-                _log.InfoFormat("start send loan request at {0}", DateTime.Now);
-                var json = JsonConvert.SerializeObject(model);
-                var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
                 
-                var response = await _httpClient.Post<EcResponseModel<EcDataResponse>>(ECApiPath.BasePathDev, ECApiPath.Step2,model);
-                _log.Info(response);
-                _log.Info("send loan request success");
+                _log.InfoFormat("start send loan request at {0}", DateTime.Now);
+                
+                var response = await _httpClient.Post<EcResponseModel<EcDataResponse>>(ECApiPath.BasePathDev, ECApiPath.Step2, model);
+                
                 return response.Data;
             }
             catch (Exception e)
@@ -73,22 +54,6 @@ namespace EasyCreditService.Classes
                 return null;
             }
         }
-        public string GetPublicIP()
-        {
-            String direction = "";
-            WebRequest request = WebRequest.Create("http://checkip.dyndns.org/");
-            using (WebResponse response = request.GetResponse())
-            using (StreamReader stream = new StreamReader(response.GetResponseStream()))
-            {
-                direction = stream.ReadToEnd();
-            }
 
-            //Search for the ip in the html
-            int first = direction.IndexOf("Address: ") + 9;
-            int last = direction.LastIndexOf("</body>");
-            direction = direction.Substring(first, last - first);
-
-            return direction;
-        }
     }
 }

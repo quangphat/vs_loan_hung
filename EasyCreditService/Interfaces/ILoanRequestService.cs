@@ -11,7 +11,6 @@ namespace EasyCreditService.Interfaces
     public interface ILoanRequestService
     {
         Task<EcResponseModel<EcDataResponse>> CreateLoan(LoanInfoRequestModel model);
-        Task<List<string>> TestVietbankApi();
         Task<EcResponseModel<bool>> UploadFile(StringModel model);
     }
 }

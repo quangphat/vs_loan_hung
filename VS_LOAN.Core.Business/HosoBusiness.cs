@@ -20,17 +20,6 @@ namespace VS_LOAN.Core.Business
         public HosoBusiness():base(typeof(HosoBusiness))
         {
         }
-        public async Task CreateLoanToEc(LoanInfoRequestModel model)
-        {
-            if (model == null)
-                return;
-            await _svLoanrequest.TestVietbankApi();
-            //await _svLoanrequest.CreateLoan(model);
-        }
-        public void TestLog(string log)
-        {
-            _log.InfoFormat("Log: {0}",log);
-        }
         public async Task<List<OptionSimple>> GetStatusListByType(int typeId)
         {
             using (var con = GetConnection())
