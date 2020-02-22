@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using VS_LOAN.Core.Entity.Infrastructures;
 using VS_LOAN.Core.Nhibernate;
 
 namespace VS_LOAN.Core.Business
@@ -19,7 +20,8 @@ namespace VS_LOAN.Core.Business
         private readonly string _connectionString;
         protected readonly ILog _log;
         protected HttpClient _httpClient;
-        public BaseBusiness(Type inheritBiz, HttpClient httpClient = null)
+        protected readonly CurrentProcess _process;
+        public BaseBusiness(Type inheritBiz,CurrentProcess currentProcess = null, HttpClient httpClient = null)
         {
             var cfg = new Configuration();
             cfg.Configure(System.IO.Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, DBConfig.DB_LOAN));
@@ -27,6 +29,7 @@ namespace VS_LOAN.Core.Business
             _connection = new SqlConnection(_connectionString);
             _log = LogManager.GetLogger(inheritBiz);
             _httpClient = httpClient;
+            _process = currentProcess;
         }
 
         protected DynamicParameters AddOutputParam(string name, DbType type = DbType.Int32)

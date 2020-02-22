@@ -18,7 +18,7 @@ namespace VS_LOAN.Core.Business.EasyCredit
         protected ILoanRequestService _svLoanrequest;
         protected readonly IApiService _svApi;
         public readonly CurrentProcess _process;
-        public ECLoanBusiness(HttpClient httpClient, CurrentProcess currentProcess) : base(typeof(ECLoanBusiness), httpClient)
+        public ECLoanBusiness(HttpClient httpClient, CurrentProcess currentProcess) : base(typeof(ECLoanBusiness),httpClient: httpClient)
         {
             _process = currentProcess;
         }

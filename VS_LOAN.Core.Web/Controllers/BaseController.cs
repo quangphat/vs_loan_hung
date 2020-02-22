@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
+using VS_LOAN.Core.Entity.Infrastructures;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Web.Helpers;
 
@@ -11,6 +12,13 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class BaseController : Controller
     {
+        CurrentProcess _process;
+        public BaseController(CurrentProcess currentProcess)
+        {
+            _process = currentProcess;
+            _process.UserName = GlobalData.User.UserName;
+            _process.UserId = GlobalData.User.IDUser;
+        }
         protected override IAsyncResult BeginExecuteCore(AsyncCallback callback, object state)
         {
             string lang = null;

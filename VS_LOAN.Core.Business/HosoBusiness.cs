@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.EasyCredit;
+using VS_LOAN.Core.Entity.Infrastructures;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Entity.UploadModel;
 
@@ -16,8 +17,7 @@ namespace VS_LOAN.Core.Business
 {
     public class HosoBusiness : BaseBusiness, IHosoBusiness
     {
-        protected ILoanRequestService _svLoanrequest;
-        public HosoBusiness() : base(typeof(HosoBusiness))
+        public HosoBusiness(CurrentProcess currentProcess) : base(typeof(HosoBusiness),currentProcess)
         {
         }
         public async Task<List<OptionSimple>> GetStatusListByType(int typeId)
@@ -73,6 +73,7 @@ namespace VS_LOAN.Core.Business
         }
         public async Task<HoSoInfoModel> GetDetail(int id)
         {
+            var x = _process.UserName;
             var p = new DynamicParameters();
             p.Add("ID", id);
             using (var con = GetConnection())

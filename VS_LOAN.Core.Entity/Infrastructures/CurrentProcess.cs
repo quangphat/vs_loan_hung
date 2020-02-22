@@ -9,5 +9,6 @@ namespace VS_LOAN.Core.Entity.Infrastructures
     public class CurrentProcess
     {
         public string UserName { get; set; }
+        public int UserId { get; set; }
     }
 }

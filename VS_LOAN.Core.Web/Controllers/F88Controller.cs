@@ -37,7 +37,6 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return Ok(ToResponse(false, "Kết quả không hợp lệ"));
             }
-            var bizHoso = new HosoBusiness();
             await _bizHoso.UpdateF88Result(model.HosoId, model.ResultId, model.Reason);
             return Ok(ToResponse(true, "Thành công"));
         }

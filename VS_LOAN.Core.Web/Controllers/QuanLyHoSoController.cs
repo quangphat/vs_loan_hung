@@ -23,13 +23,11 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class QuanLyHoSoController : BaseController
     {
-        CurrentProcess _process;
+        
         IECLoanBusiness _bizEc;
         IHosoBusiness _bizHoso;
-        public QuanLyHoSoController(IECLoanBusiness eCLoanBusiness, CurrentProcess currentProcess, IHosoBusiness hosoBusiness)
+        public QuanLyHoSoController(IECLoanBusiness eCLoanBusiness, CurrentProcess currentProcess, IHosoBusiness hosoBusiness):base(currentProcess)
         {
-            currentProcess.UserName = "quangphat";
-            _process = currentProcess;
             _bizEc = eCLoanBusiness;
             _bizHoso = hosoBusiness;
         }
