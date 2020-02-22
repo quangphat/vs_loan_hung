@@ -9,6 +9,7 @@ using VS_LOAN.Core.Business;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.F88Model;
+using VS_LOAN.Core.Entity.Infrastructures;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
@@ -17,7 +18,7 @@ namespace VS_LOAN.Core.Web.Controllers
     {
         protected readonly IHosoBusiness _bizHoso;
         protected readonly HttpClient _httpClient;
-        public F88Controller(HttpClient httpClient ,IHosoBusiness hosoBusiness)
+        public F88Controller(HttpClient httpClient ,IHosoBusiness hosoBusiness, CurrentProcess currentProcess):base(currentProcess)
         {
             _bizHoso = hosoBusiness;
             _httpClient = httpClient;

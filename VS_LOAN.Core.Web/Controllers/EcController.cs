@@ -9,6 +9,7 @@ using System.Web.Http.Results;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.EasyCredit;
+using VS_LOAN.Core.Entity.Infrastructures;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
@@ -17,11 +18,11 @@ namespace VS_LOAN.Core.Web.Controllers
     {
         protected readonly IECLoanBusiness _bizEcLoan;
         protected readonly HttpClient _httpClient;
-        //protected readonly ICurrentProcess
-        public EcController(HttpClient httpClient, IECLoanBusiness ecLoanBusiness)
+        public EcController(HttpClient httpClient, IECLoanBusiness ecLoanBusiness, CurrentProcess currentProcess):base(currentProcess)
         {
             _bizEcLoan = ecLoanBusiness;
             _httpClient = httpClient;
+           
         }
         [HttpPost]
         [Route("upload")]
