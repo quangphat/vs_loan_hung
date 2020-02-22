@@ -17,7 +17,7 @@ namespace VS_LOAN.Core.Business
     public class HosoBusiness : BaseBusiness, IHosoBusiness
     {
         protected ILoanRequestService _svLoanrequest;
-        public HosoBusiness():base(typeof(HosoBusiness))
+        public HosoBusiness() : base(typeof(HosoBusiness))
         {
         }
         public async Task<List<OptionSimple>> GetStatusListByType(int typeId)

@@ -18,16 +18,15 @@ namespace VS_LOAN.Core.Business.EasyCredit
         protected ILoanRequestService _svLoanrequest;
         protected readonly IApiService _svApi;
         public readonly CurrentProcess _process;
-        public ECLoanBusiness(ILoanRequestService loanRequest, IApiService apiService, HttpClient httpClient, CurrentProcess currentProcess) : base(typeof(ECLoanBusiness), httpClient)
+        public ECLoanBusiness(HttpClient httpClient, CurrentProcess currentProcess) : base(typeof(ECLoanBusiness), httpClient)
         {
-            _svLoanrequest = loanRequest;
-            _svApi = apiService;
             _process = currentProcess;
         }
         public async Task<EcResponseModel<bool>> UploadFile(StringModel model)
         {
             var x = _process.UserName;
-            return await _svLoanrequest.UploadFile(model);
+            var result = await _httpClient.Post<EcResponseModel<bool>>(EcApiPath.BasePathDev, "/api/ECCredit/sftp", model);
+            return result.Data;
         }
         public async Task<EcResponseModel<EcDataResponse>> CreateLoanToEc(LoanInfoRequestModel model)
         {
