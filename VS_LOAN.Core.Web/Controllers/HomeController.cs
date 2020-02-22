@@ -11,7 +11,7 @@ using VS_LOAN.Core.Web.Controllers;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
-    public class HomeController : LoanController
+    public class HomeController : BaseController
     {
         public static Dictionary<string, ActionInfo> LstRole
         {

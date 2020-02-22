@@ -9,6 +9,7 @@ using Unity.WebApi;
 using VS_LOAN.Core.Business;
 using VS_LOAN.Core.Business.EasyCredit;
 using VS_LOAN.Core.Business.Interfaces;
+using VS_LOAN.Core.Entity.Infrastructures;
 
 namespace VS_LOAN.Core.Web
 {
@@ -23,6 +24,7 @@ namespace VS_LOAN.Core.Web
 
             // e.g. container.RegisterType<ITestService, TestService>();
             container.RegisterSingleton<HttpClient>();
+            container.RegisterSingleton<CurrentProcess>();
             container.RegisterType<IECLoanBusiness, ECLoanBusiness>();
             container.RegisterType<IHosoBusiness, HosoBusiness>();
             container.RegisterType<ILoanRequestService, LoanRequestService>();

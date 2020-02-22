@@ -17,13 +17,16 @@ namespace VS_LOAN.Core.Business.EasyCredit
     {
         protected ILoanRequestService _svLoanrequest;
         protected readonly IApiService _svApi;
-        public ECLoanBusiness(ILoanRequestService loanRequest, IApiService apiService, HttpClient httpClient) : base(typeof(ECLoanBusiness),httpClient)
+        public readonly CurrentProcess _process;
+        public ECLoanBusiness(ILoanRequestService loanRequest, IApiService apiService, HttpClient httpClient, CurrentProcess currentProcess) : base(typeof(ECLoanBusiness), httpClient)
         {
             _svLoanrequest = loanRequest;
             _svApi = apiService;
+            _process = currentProcess;
         }
         public async Task<EcResponseModel<bool>> UploadFile(StringModel model)
         {
+            var x = _process.UserName;
             return await _svLoanrequest.UploadFile(model);
         }
         public async Task<EcResponseModel<EcDataResponse>> CreateLoanToEc(LoanInfoRequestModel model)
@@ -31,10 +34,10 @@ namespace VS_LOAN.Core.Business.EasyCredit
             if (model == null)
                 return null;
             var result = await _httpClient.Post<EcResponseModel<EcDataResponse>>(EcApiPath.BasePathDev, EcApiPath.Step2, model);
-            if (result!=null)
+            if (result != null)
                 return result.Data;
             return null;
         }
-       
+
     }
 }

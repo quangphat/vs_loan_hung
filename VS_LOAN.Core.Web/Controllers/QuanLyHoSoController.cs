@@ -18,7 +18,7 @@ using VS_LOAN.Core.Web.Helpers;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
-    public class QuanLyHoSoController : LoanController
+    public class QuanLyHoSoController : BaseController
     {
         public static Dictionary<string, ActionInfo> LstRole
         {

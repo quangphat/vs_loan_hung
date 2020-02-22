@@ -223,6 +223,7 @@
     <Compile Include="Common\CMLink.cs" />
     <Compile Include="Common\GroupPositionAD.cs" />
     <Compile Include="Common\MailCM.cs" />
+    <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\EcController.cs" />
     <Compile Include="Controllers\HosoCourrierController.cs" />
@@ -237,7 +238,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HoSoController.cs" />
     <Compile Include="Controllers\KhuVucController.cs" />
-    <Compile Include="Controllers\LoanController.cs" />
     <Compile Include="Controllers\LanguageController.cs" />
     <Compile Include="Controllers\NoAuthoritiesController.cs" />
     <Compile Include="Controllers\NotPageController.cs" />

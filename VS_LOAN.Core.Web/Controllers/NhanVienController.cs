@@ -13,7 +13,7 @@ using VS_LOAN.Core.Entity;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
-    public class NhanVienController : LoanController
+    public class NhanVienController : BaseController
     {
         public static Dictionary<string, ActionInfo> LstRole
         {

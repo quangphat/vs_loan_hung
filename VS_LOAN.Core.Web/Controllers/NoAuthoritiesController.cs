@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
-    public class NoAuthoritiesController : LoanController
+    public class NoAuthoritiesController : BaseController
     {
         //
         // GET: /NoAuthorities/

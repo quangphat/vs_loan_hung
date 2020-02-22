@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
-    public class NotPageController : LoanController
+    public class NotPageController : BaseController
     {
         //
         // GET: /NotPage/

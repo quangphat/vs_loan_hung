@@ -5,11 +5,36 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using VS_LOAN.Core.Entity.Model;
+using VS_LOAN.Core.Web.Helpers;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class BaseController : Controller
     {
+        protected override IAsyncResult BeginExecuteCore(AsyncCallback callback, object state)
+        {
+            string lang = null;
+            HttpCookie langCookie = Request.Cookies["culture"];
+            if (langCookie != null)
+            {
+                lang = langCookie.Value;
+            }
+            else
+            {
+                var userLanguage = Request.UserLanguages;
+                var userLang = userLanguage != null ? userLanguage[0] : "";
+                if (userLang != "")
+                {
+                    lang = userLang;
+                }
+                else
+                {
+                    lang = LanguageMang.GetDefaultLanguage();
+                }
+            }
+            new LanguageMang().SetLanguage(lang);
+            return base.BeginExecuteCore(callback, state);
+        }
         public ActionResult ToResponse(bool success = true, string message = null, object data = null)
         {
             string code = string.Empty;
@@ -57,13 +82,7 @@ namespace VS_LOAN.Core.Web.Controllers
         //    return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         //}
     }
-    public class BaseApiController : ApiController
-    {
-        protected JsonnResponseModel ToResponse(bool success = true, string message = null)
-        {
-            return new JsonnResponseModel { Success = success, Message = message };
-        }
-    }
+    
     public class JsonnResponseModel
 
     {

@@ -15,7 +15,7 @@ using VS_LOAN.Core.Web.Helpers.DataTables;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
-    public class SanPhamVayController : LoanController
+    public class SanPhamVayController : BaseController
     {
         public static Dictionary<string, ActionInfo> LstRole
         {
