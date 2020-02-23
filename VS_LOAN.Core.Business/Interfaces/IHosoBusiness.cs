@@ -12,6 +12,7 @@ namespace VS_LOAN.Core.Business.Interfaces
 {
     public interface IHosoBusiness
     {
+        
         Task<List<OptionSimple>> GetStatusListByType(int typeId);
         Task<List<FileUploadModel>> GetTailieuByHosoId(int hosoId, int type);
         Task<bool> RemoveTailieu(int hosoId, int tailieuId);

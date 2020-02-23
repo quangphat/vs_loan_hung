@@ -24,10 +24,12 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class HoSoController : BaseController
     {
-        IHosoBusiness _bizHoso;
-        public HoSoController(CurrentProcess currentProcess, IHosoBusiness hosoBusiness):base(currentProcess)
+        protected readonly IHosoBusiness _bizHoso;
+        protected readonly ITailieuBusniness _bizTailieu;
+        public HoSoController(CurrentProcess currentProcess, IHosoBusiness hosoBusiness, ITailieuBusniness tailieuBusniness):base(currentProcess)
         {
             _bizHoso = hosoBusiness;
+            _bizTailieu = tailieuBusniness;
         }
         public static Dictionary<string, ActionInfo> LstRole
         {
@@ -52,8 +54,8 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<JsonResult> LayDSTaiLieu()
         {
-            var bizTailieu = new TailieuBusiness();
-            List<LoaiTaiLieuModel> rs =await bizTailieu.GetLoaiTailieuList();
+            
+            List<LoaiTaiLieuModel> rs =await _bizTailieu.GetLoaiTailieuList();
             return ToJsonResponse(true,null, rs);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
@@ -186,7 +188,7 @@ namespace VS_LOAN.Core.Web.Controllers
 
                 }
                 List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["LstFileHoSo"];
-                var _bizTailieu = new TailieuBusiness();
+                
                 List<LoaiTaiLieuModel> lstLoaiTaiLieu = await _bizTailieu.GetLoaiTailieuList();
                 lstLoaiTaiLieu.RemoveAll(x => x.BatBuoc == 0);
                 if (lstLoaiTaiLieu != null)
@@ -283,10 +285,10 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             if (hosoId <= 0 || filesGroup==null)
                 return ToJsonResponse(false);
-            var bizTailieu = new TailieuBusiness();
+            
             if (isReset)
             {
-                var deleteAll = await bizTailieu.RemoveAllTailieu(hosoId,(int)HosoType.Hoso);
+                var deleteAll = await _bizTailieu.RemoveAllTailieu(hosoId,(int)HosoType.Hoso);
                 if (!deleteAll)
                     return ToJsonResponse(false);
             }
@@ -304,7 +306,7 @@ namespace VS_LOAN.Core.Web.Controllers
                             TypeId = Convert.ToInt32(file.Key),
                             LoaiHoso = (int)HosoType.Hoso
                         };
-                        await bizTailieu.Add(tailieu);
+                        await _bizTailieu.Add(tailieu);
                     }
                 }
             }
@@ -401,8 +403,8 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false,null,"Dữ liệu không hợp lệ");
             }
-            var bizTailieu = new TailieuBusiness();
-            var lstLoaiTailieu = await bizTailieu.GetLoaiTailieuList();
+            
+            var lstLoaiTailieu = await _bizTailieu.GetLoaiTailieuList();
             if (lstLoaiTailieu == null || !lstLoaiTailieu.Any())
                 return ToJsonResponse(false);
 
@@ -571,8 +573,8 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.HoSo = hoso;
             ViewBag.MaDoiTac = new DoiTacBLL().LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
-            var bizTailieu = new TailieuBusiness();
-            ViewBag.LstLoaiTaiLieu = await bizTailieu.GetLoaiTailieuList();
+            
+            ViewBag.LstLoaiTaiLieu = await _bizTailieu.GetLoaiTailieuList();
 
             return View();
         }
@@ -595,8 +597,7 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.MaDoiTac = new DoiTacBLL().LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
             Session["LstFileHoSo"] = hoso.LstTaiLieu;
-            var bizTailieu = new TailieuBusiness();
-            //ViewBag.LstLoaiTaiLieu = bizTailieu.GetLoaiTailieuList();
+            
             return View();
         }
 

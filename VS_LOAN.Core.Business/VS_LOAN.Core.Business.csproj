@@ -113,6 +113,7 @@
     <Compile Include="AutoIDBLL.cs" />
     <Compile Include="BaseBusiness.cs" />
     <Compile Include="BusinessExtension.cs" />
+    <Compile Include="Classes\TailieuBusiness.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="CourierCodeBLL.cs" />
     <Compile Include="CustomerBLL.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="Interfaces\IECLoanBusiness.cs" />
     <Compile Include="Interfaces\IHosoBusiness.cs" />
     <Compile Include="Interfaces\ILogBusiness.cs" />
+    <Compile Include="Interfaces\ITailieuBusniness.cs" />
     <Compile Include="KetQuaHoSoBLL.cs" />
     <Compile Include="KhuVucBLL.cs" />
     <Compile Include="LoaiTaiLieuBLL.cs" />
@@ -141,7 +143,6 @@
     <Compile Include="PartnerBLL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SanPhamBLL.cs" />
-    <Compile Include="TailieuBusiness.cs" />
     <Compile Include="TrangThaiHoSoBLL.cs" />
     <Compile Include="UserPMBLL.cs" />
   </ItemGroup>
@@ -157,6 +158,10 @@
     <ProjectReference Include="..\EasyCreditService\EasyCreditService.csproj">
       <Project>{7BCE1FAF-DC05-49D1-8D0E-E1C9A8F12A6A}</Project>
       <Name>EasyCreditService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LoanRepository\LoanRepository.csproj">
+      <Project>{5f018d88-e071-414a-bf70-e7c68a04de85}</Project>
+      <Name>LoanRepository</Name>
     </ProjectReference>
     <ProjectReference Include="..\VS_LOAN.Core.Entity\VS_LOAN.Core.Entity.csproj">
       <Project>{e86679d0-8e05-471f-8da0-3e33e1f7d6bc}</Project>

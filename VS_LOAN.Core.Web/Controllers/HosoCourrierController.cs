@@ -22,9 +22,11 @@ namespace VS_LOAN.Core.Web.Controllers
     public class CourrierController : BaseController
     {
         protected readonly IHosoBusiness _bizHoso;
-        public CourrierController(CurrentProcess currentProcess, IHosoBusiness hosoBusiness):base(currentProcess)
+        protected readonly ITailieuBusniness _bizTailieu;
+        public CourrierController(CurrentProcess currentProcess, IHosoBusiness hosoBusiness, ITailieuBusniness tailieuBusniness):base(currentProcess)
         {
             _bizHoso = hosoBusiness;
+            _bizTailieu = tailieuBusniness;
         }
         public static Dictionary<string, ActionInfo> LstRole
         {
@@ -184,10 +186,9 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             if (hosoId <= 0 || filesGroup == null)
                 return ToJsonResponse(false);
-            var bizTailieu = new TailieuBusiness();
             if (isReset)
             {
-                var deleteAll = await bizTailieu.RemoveAllTailieu(hosoId, (int)HosoType.HosoCourrier);
+                var deleteAll = await _bizTailieu.RemoveAllTailieu(hosoId, (int)HosoType.HosoCourrier);
                 if (!deleteAll)
                     return ToJsonResponse(false);
             }
@@ -205,7 +206,7 @@ namespace VS_LOAN.Core.Web.Controllers
                             TypeId = Convert.ToInt32(file.Key),
                             LoaiHoso = (int)HosoType.HosoCourrier
                         };
-                        await bizTailieu.Add(tailieu);
+                        await _bizTailieu.Add(tailieu);
                     }
                 }
             }

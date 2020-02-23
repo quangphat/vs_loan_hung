@@ -12,7 +12,7 @@ namespace LoanRepository.Classes
         private readonly string _connectionString;
         public BaseRepository()
         {
-            var _connectionString = System.Configuration.ConfigurationManager.AppSettings["sql_connection_string"];    
+            _connectionString = System.Configuration.ConfigurationManager.AppSettings["sql_connection_string"];    
         }
         protected DynamicParameters AddOutputParam(string name, DbType type = DbType.Int32)
         {
