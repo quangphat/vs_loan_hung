@@ -450,29 +450,27 @@ function addDefaultOption(selectList, objectText) {
 
 function addSelectListWithDefaultValue(selectList, results, defaultValue) {
     //debugger;
-    if (results.length == 0) {
+    if (results.length === 0) {
         selectList.html('<option value="-1">Không có dữ liệu</option>');
         return;
     }
     $.each(results, function (i, value) {
         var transformedResult = value.Text;
         var option = $("<option></option>").attr("value", value.Value).text(transformedResult);
-        if (defaultValue != null && defaultValue == value.Value) {
+        if (defaultValue !== null && defaultValue === value.Value) {
             option.attr('selected', 'selected');
         }
-        if (defaultValue == null) {
-
-        }
+        
         selectList.append(option);
     });
 }
 
 function addSelectListItems(selectList, results) {
-    if (results.length == 0) {
+    if (results.length === 0) {
         selectList.html('<option value="-1">Không có dữ liệu</option>');
         return;
     }
-    if (results.length == 1) {
+    if (results.length === 1) {
         selectList
                 .append($("<option></option>")
                 .attr("value", results[0].Value)
@@ -490,13 +488,13 @@ function addSelectListItems(selectList, results) {
 }
 
 function shortDateFormat(intDate) {
-    if (intDate != null && intDate != '')
+    if (intDate !== null && intDate !== '')
         return kendo.toString(new Date(parseInt(intDate) + (new Date().getTimezoneOffset()) * 60 * 1000), "dd/MM/yyyy");
     return intDate;
 }
 
 function fullDateFormat(intDate) {
-    if (intDate != null && intDate != '')
+    if (intDate !== null && intDate !== '')
         return kendo.toString(new Date(parseInt(intDate) + (new Date().getTimezoneOffset()) * 60 * 1000), "dd/MM/yyyy HH:mm");
     return intDate;
 }
@@ -521,7 +519,7 @@ function FormatString(alias) {
 
 function addAlert(elementId, message, success) {
     $('#' + elementId).empty();
-    if (success == true) {
+    if (success === true) {
         $('#' + elementId).append(
           '<div class="alert alert-block alert-success"><button type="button" class="close" data-dismiss="alert"><i class="ace-icon fa fa-times"></i></button>'
           + '<p><strong><i class="ace-icon fa fa-check"></i></strong> ' + message + '</p>'
@@ -543,7 +541,7 @@ function FormatDateTimeDMYHM(datetime) {
             var dateStr = ('00' + dateObj.getDate()).slice(-2) + "/" + ('00' + (dateObj.getMonth() + 1)).slice(-2) + "/" + dateObj.getFullYear() + " " + ('00' + dateObj.getHours()).slice(-2) + ":" + ('00' + dateObj.getMinutes()).slice(-2);
             return dateStr;
         }
-        return dateStr;
+        
     } catch (e) {
         return "";
     }
@@ -558,7 +556,7 @@ function FormatDateTimeDMY(datetime) {
             var dateStr = ('00' + dateObj.getDate()).slice(-2) + "/" + ('00' + (dateObj.getMonth() + 1)).slice(-2) + "/" + dateObj.getFullYear();
             return dateStr;
         }
-        return dateStr;
+        
     } catch (e) {
         return "";
     }
@@ -573,7 +571,7 @@ function SetFormatDateTime(datetime) {
             var dateStr = ('00' + dateObj.getDate()).slice(-2) + "-" + ('00' + (dateObj.getMonth() + 1)).slice(-2) + "-" + dateObj.getFullYear();
             return dateStr;
         }
-        return dateStr;
+        
     } catch (e) {
         return "";
     }
@@ -588,7 +586,7 @@ function SetFormatDateTimeDMY(datetime) {
             var dateStr = ('00' + dateObj.getDate()).slice(-2) + "-" + ('00' + (dateObj.getMonth() + 1)).slice(-2) + "-" + dateObj.getFullYear();
             return dateStr;
         }
-        return dateStr;
+        
     } catch (e) {
         return "";
     }
