@@ -1,0 +1,23 @@
+using LoanRepository.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using VS_LOAN.Core.Business.Interfaces;
+using VS_LOAN.Core.Entity;
+using VS_LOAN.Core.Entity.Infrastructures;
+
+namespace VS_LOAN.Core.Business.EasyCredit
+{
+    public class {ModelName}Business : BaseBusiness, I{ModelName}Business
+    {
+        public {ModelName}Business(CurrentProcess currentProcess) : base(typeof({ModelName}Business), currentProcess)
+        {
+            
+        }
+        
+
+        
+    }
+}
