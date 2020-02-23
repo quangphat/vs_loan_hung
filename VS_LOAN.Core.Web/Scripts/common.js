@@ -272,7 +272,7 @@ function renderOneItemFile(key, fileId, titleName, isRequire = false, className 
     filesUploaded = [],
     type = 1
 ) {
-
+    //type = hosotype
     let content = "<div class='col-sm-3'";
 
     if (!isNullOrUndefined(titleName)) {

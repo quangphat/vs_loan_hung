@@ -395,7 +395,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = await _bizHoso.RemoveTailieu(hosoId, fileId);
             return ToJsonResponse(true);
         }
-        public async Task<JsonResult> TailieuByHosoForEdit(int hosoId, int typeId = 1)
+        public async Task<JsonResult> TailieuByHosoForEdit(int hosoId, int typeId = (int)HosoType.Hoso)
         {
             if (hosoId <= 0)
             {
