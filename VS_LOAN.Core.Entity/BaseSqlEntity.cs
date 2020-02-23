@@ -8,9 +8,15 @@ namespace VS_LOAN.Core.Entity
 {
     public class BaseSqlEntity
     {
-        public DateTime CreatedTime { get; set; }
+        public DateTime CreatedTime
+        {
+            get { return DateTime.Now; }
+        }
         public int CreatedBy { get; set; }
-        public DateTime UpdatedTime { get; set; }
+        public DateTime UpdatedTime
+        {
+            get { return DateTime.Now; }
+        }
         public int UpdatedBy { get; set; }
     }
 }

@@ -56,7 +56,7 @@
                                 <option value="0"></option>
                             </select>
                         </div>
-                        
+
 
                         <label class="col-sm-2 control-label no-padding-right">Tạm trú<span class="required">(*)</span></label>
                         <div class="col-sm-4">
@@ -65,7 +65,7 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại khách hàng<span class="required">(*)</span> </label>
                         <div class="col-sm-4">
@@ -82,12 +82,12 @@
                         <div class="col-sm-4">
                             <select id="ddlGender" class="chosen-select form-control">
                                 <option value="1">Nam</option>
-                                <option value="2">Nữ</option>
+                                <option value="0">Nữ</option>
                             </select>
                         </div>
                     </div>
-                    
-                    
+
+
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Sale Channel</label>
                         <div class="col-sm-4">
@@ -95,9 +95,9 @@
                                 <option value="0"></option>
                             </select>
                         </div>
-                        
+
                     </div>
-                    
+
                 </form>
             </div>
         </div>
@@ -146,7 +146,7 @@
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Khoản trả hàng tháng</label>
                         <div class="col-sm-8">
                             <div class="slidecontainer">
-                                <p class="mt-8"><span id="amountPerMonth"></span></p>                           
+                                <p class="mt-8"><span id="amountPerMonth"></span></p>
                             </div>
                         </div>
                     </div>
@@ -206,7 +206,7 @@
             $(this).prev().focus();
         });
         $("#txtPhone").ForceNumericOnly();
-       
+
         $("#txtLoanAmount").ForceNumericOnly();
         $("#txtCMND").ForceNumericOnly();
         $("#txtLoanAmount").change(function () {
@@ -219,13 +219,13 @@
         $('#ddlEmployeeType').on('change', function () {
             getEcProduct('ddlProductType', this.value)
         });
-        
+
         LayDSTaiLieu();
         slidebar('slideLoanAmount', 'loanAmountDisplay', true);
         slidebar('slideLoanTenor', 'loanTenorDisplay', false, 'Tháng');
         calculateAmountPerMonth($("#slideLoanAmount").val(), $("#slideLoanTenor").val(), 'amountPerMonth')
         $("#slideLoanAmount").on('change', function () {
-            
+
             calculateAmountPerMonth($("#slideLoanAmount").val(), $("#slideLoanTenor").val(), 'amountPerMonth')
         })
     });
@@ -332,14 +332,24 @@
         });
     }
     $('#btn_Save').click(function (e) {
-        
-        var objectSend = null
+
+        var model = JSON.stringify({
+            'FullName' :$("#txtFullname").val(),
+            'Cmnd': $("#txtCmnd").val(),
+            'Gender': parseInt($('#ddlGioiTinh').val()),
+            'Phone':$("#txtPhone").val(),
+            'Email' :$("#txtEmail").val(),
+            'BirthDay': $("#txtBirthDay").val(),
+            'IssueDate': $("#txtCmndDay").val(),
+            'IssuePlaceCode': $("#ddlIssuePlace").val(),
+            'PermanentProvinceCode': $("#ddlTempProvince").val()
+        })
         $.ajax({
             traditional: true,
             url: '/EasyCredit/SaveInit',
             type: "POST",
             contentType: "application/json; charset=utf-8",
-            data: objectSend,
+            data: model,
             success: function (data) {
                 if (data.success == true) {
                     swal({

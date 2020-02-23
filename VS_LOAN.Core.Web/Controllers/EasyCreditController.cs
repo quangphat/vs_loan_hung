@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.EasyCredit;
+using VS_LOAN.Core.Entity.EasyCredit.PostModel;
 using VS_LOAN.Core.Entity.Infrastructures;
 
 namespace VS_LOAN.Core.Web.Controllers
@@ -43,12 +44,9 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         [HttpPost]
         [Route("SaveInit")]
-        public async Task<JsonResult> SaveInit(EcHoso model)
+        public async Task<JsonResult> SaveInit(EcHosoPostModel model)
         {
-            var result = await _bizEc.SaveEcHosoStep1(new Entity.EasyCredit.PostModel.EcHosoPostModel {
-                FullName = "",
-                BirthDay = DateTime.Now
-            });
+            var result = await _bizEc.SaveEcHosoStep1(model);
             var x = _process;
             return ToJsonResponseV2(result);
         }
