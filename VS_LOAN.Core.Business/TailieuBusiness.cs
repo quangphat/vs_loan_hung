@@ -10,14 +10,17 @@ using VS_LOAN.Core.Entity.UploadModel;
 
 namespace VS_LOAN.Core.Business
 {
-    public class TailieuBusiness:BaseBusiness
+    public class TailieuBusiness : BaseBusiness
     {
         public TailieuBusiness() : base(typeof(TailieuBusiness)) { }
-        public async Task<List<LoaiTaiLieuModel>> GetLoaiTailieuList()
+        public async Task<List<LoaiTaiLieuModel>> GetLoaiTailieuList(int type = 0)
         {
             using (var con = GetConnection())
             {
-                var result = await con.QueryAsync<LoaiTaiLieuModel>("sp_LOAI_TAI_LIEU_LayDS", null, commandType: CommandType.StoredProcedure);
+                var result = await con.QueryAsync<LoaiTaiLieuModel>("sp_LOAI_TAI_LIEU_LayDS", new
+                {
+                    type
+                }, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
 

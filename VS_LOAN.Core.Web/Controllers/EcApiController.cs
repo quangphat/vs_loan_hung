@@ -14,11 +14,11 @@ using VS_LOAN.Core.Entity.Infrastructures;
 namespace VS_LOAN.Core.Web.Controllers
 {
     [RoutePrefix("api/easycredit")]
-    public class EcController : BaseApiController
+    public class EcApiController : BaseApiController
     {
         protected readonly IECLoanBusiness _bizEcLoan;
         protected readonly HttpClient _httpClient;
-        public EcController(HttpClient httpClient, IECLoanBusiness ecLoanBusiness, CurrentProcess currentProcess):base(currentProcess)
+        public EcApiController(HttpClient httpClient, IECLoanBusiness ecLoanBusiness, CurrentProcess currentProcess):base(currentProcess)
         {
             _bizEcLoan = ecLoanBusiness;
             _httpClient = httpClient;

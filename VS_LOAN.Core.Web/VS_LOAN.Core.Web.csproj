@@ -220,7 +220,8 @@
     <Compile Include="Common\MailCM.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\EcController.cs" />
+    <Compile Include="Controllers\EasyCreditController.cs" />
+    <Compile Include="Controllers\EcApiController.cs" />
     <Compile Include="Controllers\HosoCourrierController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
@@ -1750,6 +1751,7 @@
     <Content Include="Views\Courrier\AddNew.cshtml" />
     <Content Include="Views\Courrier\Index.cshtml" />
     <Content Include="Views\Courrier\Edit.cshtml" />
+    <Content Include="Views\EasyCredit\Init.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
