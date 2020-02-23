@@ -426,14 +426,7 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             return ToJsonResponse(true,null,result);
         }
-        public async Task<JsonResult> TailieuByHoso(int hosoId, int type=1)
-        {
-            
-            var result = await _bizHoso.GetTailieuByHosoId(hosoId, type);
-            if (result == null)
-                result = new List<FileUploadModel>();
-            return ToJsonResponse(true,null,result);
-        }
+        
         public JsonResult Delete(int key)
         {
             string fileUrl = "";
