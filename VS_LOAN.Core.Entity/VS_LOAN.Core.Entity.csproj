@@ -85,6 +85,7 @@
     <Compile Include="CustomerModel.cs" />
     <Compile Include="CustomerNoteViewModel.cs" />
     <Compile Include="DatetimeConvertModel.cs" />
+    <Compile Include="EasyCredit\EcBaseModel.cs" />
     <Compile Include="EasyCredit\EcHoso.cs" />
     <Compile Include="EasyCredit\EcResponseModel.cs" />
     <Compile Include="EasyCredit\LoanInfoRequestModel.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="JsonFileResult.cs" />
     <Compile Include="KetQuaHoSoModel.cs" />
     <Compile Include="LoaiTaiLieuModel.cs" />
+    <Compile Include="ModelExtensions.cs" />
     <Compile Include="Model\AutoIDModel.cs" />
     <Compile Include="Model\Customer.cs" />
     <Compile Include="Model\CustomerCheck.cs" />

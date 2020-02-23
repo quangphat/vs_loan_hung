@@ -10,7 +10,7 @@ namespace VS_LOAN.Core.Business.Interfaces
 {
     public interface IECLoanBusiness
     {
-
+        Task<bool> SaveEcHoso(EcHoso model);
         Task<EcResponseModel<bool>> UploadFile(StringModel model);
         Task<EcResponseModel<EcDataResponse>> CreateLoanToEc(LoanInfoRequestModel model);
     }

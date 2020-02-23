@@ -10,5 +10,13 @@ namespace VS_LOAN.Core.Entity.Infrastructures
     {
         public string UserName { get; set; }
         public int UserId { get; set; }
+        public string Error { get; set; }
+        public bool IsSuccess
+        {
+            get
+            {
+                return string.IsNullOrWhiteSpace(Error);
+            }
+        }
     }
 }

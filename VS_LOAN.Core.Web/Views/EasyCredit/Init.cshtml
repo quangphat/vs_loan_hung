@@ -232,7 +232,7 @@
         }).next().on(ace.click_event, function () {
             $(this).prev().focus();
         });
-        
+
         $('#txtCmndDay').datepicker({
             dateFormat: 'dd-mm-yy'
 
@@ -246,6 +246,127 @@
         $("#txtTienDeNghiVay").change(function () {
             $("#txtTienDeNghiVay").val(formatCurrency($("#txtTienDeNghiVay").val().replace(/\./g, '')));
         });
+        LayDSTaiLieu();
+    });
 
+    function LayDSTaiLieu() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetLoaiTailieu", "EasyCredit")',
+            data: {},
+            success: function (data) {
+                if (data.data != null) {
+                    var i = 0;
+                    var htmlContent = "";
+                    let keys = [];
+                    $.each(data.data, function (index, item) {
+                        $("#lstTailieu").append("<div class='form-group'><div id='tailieu-" + item.ID + "'></div></div > ");
+                        let name = '',
+                            className = ''
+                        if (keys.indexOf(item.ID) < 0) {
+                            name = item.Ten;
+                        }
+                        else {
+                            className = 'mt-46'
+                        }
+
+                        renderOneItemFile(item.ID, item.ID, name, item.BatBuoc, className, true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload , 3,1);
+                        keys.push(item.ID);
+                    })
+                }
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+    let filesUpload = [];
+    function onDeleteFile(key, fileId, isExist) {
+        removeFile(key, fileId);
+    }
+    function onUploadFile(key, fileId, data, isExist) {
+
+        if (isReach5Files(filesUpload, key))
+            return;
+        let response = data;
+        if (isNullOrNoItem(filesUpload)) {
+            filesUpload = []
+        }
+        let file = {
+            Key: parseInt(response.initialPreviewConfig[0].key),
+            FileName: response.initialPreviewConfig[0].caption,
+            FileUrl: response.initialPreview,
+            KeyName: "",
+            Id: fileId
+        }
+        let existKeyIndex = filesUpload.findIndex(p => p.key == key)
+        if (existKeyIndex < 0) {
+            filesUpload.push({ key: parseInt(key), files: [file] })
+        }
+        else {
+            if (filesUpload[existKeyIndex].files == null)
+                filesUpload[existKeyIndex].files = []
+            filesUpload[existKeyIndex].files.push(file);
+        }
+        if (isReach5Files(filesUpload, key) === false) {
+            let newAttachhFileId = getNewGuid();
+            renderOneItemFile(key, newAttachhFileId, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload, 3,1);
+        }
+    }
+    function removeFile(key, fileId) {
+        if (isNullOrNoItem(filesUpload))
+            return;
+        let index = filesUpload.findIndex(p => p.key == key);
+        if (index >= 0) {
+            if (!isNullOrNoItem(filesUpload[index].files)) {
+                let indexOfFile = filesUpload[index].files.findIndex(p => p.Id == fileId);
+                if (indexOfFile >= 0)
+                    filesUpload[index].files.splice(indexOfFile, 1);
+            }
+        }
+    }
+    
+    $('#btn_Save').click(function (e) {
+
+
+        var objectSend = null
+        $.ajax({
+            traditional: true,
+            url: '/EasyCredit/SaveInit',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                if (data.success == true) {
+                    swal({
+                        title: "",
+                        text: "Thành công",
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                        uploadHoso2(data.data, true);
+                    });
+                }
+                else {
+                    swal({
+                        title: "",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
     });
 </script>

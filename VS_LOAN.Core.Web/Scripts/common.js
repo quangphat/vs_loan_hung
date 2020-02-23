@@ -270,7 +270,8 @@ function renderOneItemFile(key, fileId, titleName, isRequire = false, className 
     onUpload = null,
     onDelete = null,
     filesUploaded = [],
-    type = 1
+    type = 1,
+    maxFile = 50
 ) {
     //type = hosotype
     let content = "<div class='col-sm-3'";
@@ -337,7 +338,7 @@ function renderOneItemFile(key, fileId, titleName, isRequire = false, className 
             append: true
 
         }).on("filebatchselected", function (event, files) {
-            if (countFilesByKey(filesUploaded, parseInt(key)) >= 50)
+            if (countFilesByKey(filesUploaded, parseInt(key)) >= maxFile)
                 return;
             $(item).fileinput("upload");
         }).on("filebeforedelete", function (event, key2, fileId) {

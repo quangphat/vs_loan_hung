@@ -12,16 +12,16 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class BaseController : Controller
     {
-        CurrentProcess _process;
+        protected CurrentProcess _process;
         public BaseController(CurrentProcess currentProcess)
         {
             _process = currentProcess;
-            if(GlobalData.User!=null)
+            if (GlobalData.User != null)
             {
                 _process.UserName = GlobalData.User.UserName;
                 _process.UserId = GlobalData.User.IDUser;
             }
-            
+
         }
         protected override IAsyncResult BeginExecuteCore(AsyncCallback callback, object state)
         {
@@ -50,7 +50,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public ActionResult ToResponse(bool success = true, string message = null, object data = null)
         {
             string code = string.Empty;
-            if(success)
+            if (success)
             {
 
                 code = string.IsNullOrWhiteSpace(message) ? Resources.Global.Message_Succ : message;
@@ -60,7 +60,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 code = string.IsNullOrWhiteSpace(message) ? Resources.Global.Message_Error : message;
             }
             return Json(new { data, success, code }, JsonRequestBehavior.AllowGet);
-            
+
         }
 
         public JsonResult ToJsonResponse(bool success = true, string message = null, object data = null)
@@ -76,6 +76,15 @@ namespace VS_LOAN.Core.Web.Controllers
                 code = string.IsNullOrWhiteSpace(message) ? Resources.Global.Message_Error : message;
             }
             return Json(new { data, success, code }, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult ToJsonResponseV2(object data = null)
+        {
+            if (_process == null)
+            {
+                return Json(new { data, success = false, code = "" }, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { data, success = _process.IsSuccess, code = _process.Error }, JsonRequestBehavior.AllowGet);
         }
         //public JsonResult ToJsonResponse(bool success, string message = null, object data = null)
         //{
@@ -94,7 +103,7 @@ namespace VS_LOAN.Core.Web.Controllers
         //    return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         //}
     }
-    
+
     public class JsonnResponseModel
 
     {

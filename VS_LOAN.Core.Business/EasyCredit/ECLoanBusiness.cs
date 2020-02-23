@@ -15,12 +15,17 @@ namespace VS_LOAN.Core.Business.EasyCredit
 {
     public class ECLoanBusiness : BaseBusiness, IECLoanBusiness
     {
-        protected ILoanRequestService _svLoanrequest;
-        protected readonly IApiService _svApi;
-        public readonly CurrentProcess _process;
-        public ECLoanBusiness(HttpClient httpClient, CurrentProcess currentProcess) : base(typeof(ECLoanBusiness),httpClient: httpClient)
+        public ECLoanBusiness(HttpClient httpClient, CurrentProcess currentProcess) : base(typeof(ECLoanBusiness),currentProcess, httpClient: httpClient)
         {
-            _process = currentProcess;
+        }
+        public async Task<bool> SaveEcHoso(EcHoso model)
+        {
+            if (model == null)
+            {
+                _process.Error = "Dữ liệu không hợp lệ";
+                return false;
+            }
+            return true;
         }
         public async Task<EcResponseModel<bool>> UploadFile(StringModel model)
         {

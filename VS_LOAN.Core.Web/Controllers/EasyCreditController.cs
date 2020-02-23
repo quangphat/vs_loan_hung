@@ -6,16 +6,20 @@ using System.Web;
 using System.Web.Mvc;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
+using VS_LOAN.Core.Entity.EasyCredit;
 using VS_LOAN.Core.Entity.Infrastructures;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
+    [Route("EasyCredit")]
     public class EasyCreditController : BaseController
     {
         protected readonly ITailieuBusniness _bizTailieu;
-        public EasyCreditController(CurrentProcess currentProcess, ITailieuBusniness tailieuBusniness):base(currentProcess)
+        protected readonly IECLoanBusiness _bizEc;
+        public EasyCreditController(CurrentProcess currentProcess, ITailieuBusniness tailieuBusniness, IECLoanBusiness eCLoanBusiness):base(currentProcess)
         {
             _bizTailieu = tailieuBusniness;
+            _bizEc = eCLoanBusiness;
         }
         // GET: EasyCredit
         public ActionResult Index()
@@ -24,8 +28,20 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<ActionResult> Init()
         {
-            var tailieus = await _bizTailieu.GetLoaiTailieuList((int)HosoType.ECCredit);
             return View();
+        }
+        [HttpPost]
+        [Route("SaveInit")]
+        public async Task<JsonResult> SaveInit(EcHoso model)
+        {
+            var result = await _bizEc.SaveEcHoso(null);
+            var x = _process;
+            return ToJsonResponseV2(result);
+        }
+        public async Task<JsonResult> GetLoaiTailieu()
+        {
+            var result = await _bizTailieu.GetLoaiTailieuList((int)HosoType.ECCredit);
+            return ToJsonResponse(true, null, result);
         }
     }
 }
