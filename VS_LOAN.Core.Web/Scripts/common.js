@@ -5,7 +5,7 @@
         });
 }
 function calculateAmountPerMonth(amount, month, controlDisplay) {
-    debugger
+    
     if (month <= 0)
         return;
     let value = amount / month;

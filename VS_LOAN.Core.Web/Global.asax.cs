@@ -9,7 +9,8 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-
+using AutoMapper;
+using VS_LOAN.Core.Entity.EasyCredit.PostModel;
 
 namespace VS_LOAN.Core.Web
 {
@@ -21,6 +22,13 @@ namespace VS_LOAN.Core.Web
 
         protected void Application_Start()
         {
+            AutoMapper.Mapper.Initialize(cfg => {
+                cfg.CreateMap<EcHosoPostModel, CustomerModel>();
+                
+                });
+            //or
+            //var config = new MapperConfiguration(cfg => cfg.CreateMap<Com.Davidsekar.Order, Com.Davidsekar.OrderDto>());
+
             log4net.Config.XmlConfigurator.Configure();
             AreaRegistration.RegisterAllAreas();
             UnityConfig.RegisterComponents();

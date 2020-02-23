@@ -45,7 +45,10 @@ namespace VS_LOAN.Core.Web.Controllers
         [Route("SaveInit")]
         public async Task<JsonResult> SaveInit(EcHoso model)
         {
-            var result = await _bizEc.SaveEcHoso(null);
+            var result = await _bizEc.SaveEcHosoStep1(new Entity.EasyCredit.PostModel.EcHosoPostModel {
+                FullName = "",
+                BirthDay = DateTime.Now
+            });
             var x = _process;
             return ToJsonResponseV2(result);
         }

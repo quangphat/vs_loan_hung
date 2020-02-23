@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using VS_LOAN.Core.Business.Infrastructures;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.EasyCredit;
@@ -16,7 +17,8 @@ namespace VS_LOAN.Core.Business.EasyCredit
 {
     public class ECLoanBusiness : BaseBusiness, IECLoanBusiness
     {
-        public ECLoanBusiness(HttpClient httpClient, CurrentProcess currentProcess) : base(typeof(ECLoanBusiness),currentProcess, httpClient: httpClient)
+        public ECLoanBusiness(HttpClient httpClient, CurrentProcess currentProcess)
+            : base(typeof(ECLoanBusiness),currentProcess, httpClient: httpClient)
         {
         }
         public async Task<bool> SaveEcHosoStep1(EcHosoPostModel model)
@@ -26,6 +28,8 @@ namespace VS_LOAN.Core.Business.EasyCredit
                 _process.Error = errors.model_null;
                 return false;
             }
+            var customer = AutoMapper.Mapper.Map<CustomerModel>(model);
+            return true;
         }
         public async Task<bool> SaveEcHoso(EcHoso model)
         {
