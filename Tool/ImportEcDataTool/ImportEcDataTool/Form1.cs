@@ -36,7 +36,7 @@ namespace ImportEcDataTool
         private async void btnImport_Click(object sender, EventArgs e)
         {
             string fullPath = baseFolderPath + txtPath.Text;
-            var result = await ReadEcProductInfo(fullPath);
+            var result = await ReadEcLocation(fullPath);
             MessageBox.Show(result.ToString());
         }
         private async Task<bool> ReadEcProductInfo(string fileName)
@@ -212,6 +212,19 @@ namespace ImportEcDataTool
                         ProvinceCode = Convert.ToInt32(csv[5]),
                         ProvinceName = csv[6].ToString()
                     };
+                    if(obj.ProvinceCode == 2)
+                    {
+                        obj.OrderValue = 79;
+                    }
+                    else
+                    if (obj.ProvinceCode == 79)
+                    {
+                        obj.OrderValue = 2;
+                    }
+                    else
+                    {
+                        obj.OrderValue = obj.ProvinceCode;
+                    }
                     await _rpEc.InsertEcLocation(obj);
                 }
             }

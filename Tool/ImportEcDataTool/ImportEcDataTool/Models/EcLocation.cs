@@ -15,5 +15,6 @@ namespace ImportEcDataTool.Models
         public string DistrictName { get; set; }
         public int ProvinceCode { get; set; }
         public string ProvinceName { get; set; }
+        public int OrderValue { get; set; }
     }
 }

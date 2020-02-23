@@ -27,3 +27,7 @@
 /ConnectEc/VietBankApi/obj
 /LoanRepository/obj
 /LoanRepository/bin
+/Tool/ImportEcDataTool/GenerateEcModel/obj
+/Tool/ImportEcDataTool/GenerateEcModel/bin
+/Tool/ImportEcDataTool/ImportEcDataTool/bin
+/Tool/ImportEcDataTool/ImportEcDataTool/obj

@@ -116,7 +116,9 @@ namespace ImportEcDataTool.Repository
                     model.DistrictCode,
                     model.DistrictName,
                     model.ProvinceCode,
-                    model.ProvinceName
+                    model.ProvinceName,
+                    model.OrderValue
+
                 }, commandType: CommandType.StoredProcedure);
                 return true;
             }
