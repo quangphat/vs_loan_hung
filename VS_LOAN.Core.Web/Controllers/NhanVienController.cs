@@ -10,11 +10,16 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using VS_LOAN.Core.Entity;
+using VS_LOAN.Core.Entity.Infrastructures;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class NhanVienController : BaseController
     {
+        public NhanVienController(CurrentProcess currentProcess):base(currentProcess)
+        {
+
+        }
         public static Dictionary<string, ActionInfo> LstRole
         {
             get

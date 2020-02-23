@@ -8,11 +8,16 @@ using System.Web.Mvc;
 using VS_LOAN.Core.Web.Helpers;
 using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Web.Controllers;
+using VS_LOAN.Core.Entity.Infrastructures;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class HomeController : BaseController
     {
+        public HomeController(CurrentProcess currentProcess):base(currentProcess)
+        {
+
+        }
         public static Dictionary<string, ActionInfo> LstRole
         {
             get

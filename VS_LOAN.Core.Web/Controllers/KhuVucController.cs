@@ -7,11 +7,16 @@ using System.Web.Mvc;
 using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Business;
+using VS_LOAN.Core.Entity.Infrastructures;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class KhuVucController : BaseController
     {
+        public KhuVucController(CurrentProcess currentProcess):base(currentProcess)
+        {
+
+        }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult LayDSTinh()
         {

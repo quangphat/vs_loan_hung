@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using VS_LOAN.Core.Business;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.Employee;
+using VS_LOAN.Core.Entity.Infrastructures;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Web.Helpers;
@@ -17,6 +18,10 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class EmployeeController : BaseController
     {
+        public EmployeeController(CurrentProcess currentProcess):base(currentProcess)
+        {
+
+        }
         public static Dictionary<string, ActionInfo> LstRole
         {
             get

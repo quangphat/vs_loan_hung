@@ -16,8 +16,12 @@ namespace VS_LOAN.Core.Web.Controllers
         public BaseController(CurrentProcess currentProcess)
         {
             _process = currentProcess;
-            _process.UserName = GlobalData.User.UserName;
-            _process.UserId = GlobalData.User.IDUser;
+            if(GlobalData.User!=null)
+            {
+                _process.UserName = GlobalData.User.UserName;
+                _process.UserId = GlobalData.User.IDUser;
+            }
+            
         }
         protected override IAsyncResult BeginExecuteCore(AsyncCallback callback, object state)
         {
