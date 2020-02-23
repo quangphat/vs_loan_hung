@@ -35,6 +35,50 @@ function getRoles(controlId, appendDefault = true, defaultText = "Tất cả", v
         }
     });
 }
+function getEcIssuePlace(controlId) {
+    $.ajax({
+        type: "GET",
+        url: '/EasyCredit/GetEcIssuePlace',
+        data: {},
+        success: function (data) {
+            $('#' + controlId).empty();
+            $('#' + controlId).append("<option value='0'></option>");
+            if (data !== null) {
+                $.each(data.data, function (index, item) {
+                    $('#' + controlId).append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                });
+            }
+            $('#' + controlId).chosen().trigger("chosen:updated");
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+function getEcLocation(controlId,type = 0, parentId = 0) {
+    $.ajax({
+        type: "GET",
+        url: '/EasyCredit/GetEcLocation?type=' + type + "&id=" + parentId,
+        data: {},
+        success: function (data) {
+            $('#' + controlId).empty();
+            $('#' + controlId).append("<option value='0'></option>");
+            if (data !== null) {
+                $.each(data.data, function (index, item) {
+                    $('#' + controlId).append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                });
+            }
+            $('#' + controlId).chosen().trigger("chosen:updated");
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
 function getProvinces(controlId, value = null, districtValue = 0) {
     $.ajax({
         type: "GET",

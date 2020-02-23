@@ -32,9 +32,11 @@ namespace VS_LOAN.Core.Web
         private static void RegisterRepository(this UnityContainer container)
         {
             container.RegisterType<ITailieuRepository, TailieuRepository>();
+            container.RegisterType<IEcLocationRepository, EcLocationRepository>();
         }
         private static void RegisterBusiness(this UnityContainer container)
         {
+            container.RegisterType<IEcLocationBusiness, EcLocationBusiness>();
             container.RegisterType<IECLoanBusiness, ECLoanBusiness>();
             container.RegisterType<IHosoBusiness, HosoBusiness>();
             container.RegisterType<ITailieuBusniness, TailieuBusiness>();

@@ -16,10 +16,15 @@ namespace VS_LOAN.Core.Web.Controllers
     {
         protected readonly ITailieuBusniness _bizTailieu;
         protected readonly IECLoanBusiness _bizEc;
-        public EasyCreditController(CurrentProcess currentProcess, ITailieuBusniness tailieuBusniness, IECLoanBusiness eCLoanBusiness):base(currentProcess)
+        protected readonly IEcLocationBusiness _bizEcLocation;
+        public EasyCreditController(CurrentProcess currentProcess, 
+            ITailieuBusniness tailieuBusniness, 
+            IECLoanBusiness eCLoanBusiness,
+            IEcLocationBusiness ecLocationBusiness):base(currentProcess)
         {
             _bizTailieu = tailieuBusniness;
             _bizEc = eCLoanBusiness;
+            _bizEcLocation = ecLocationBusiness;
         }
         // GET: EasyCredit
         public ActionResult Index()
@@ -42,6 +47,20 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             var result = await _bizTailieu.GetLoaiTailieuList((int)HosoType.ECCredit);
             return ToJsonResponse(true, null, result);
+        }
+
+        [HttpGet]
+        [Route("eclocation/{type}")]
+        public async Task<JsonResult> GetEcLocation(int type,int id = 0)
+        {
+            var result = await _bizEcLocation.GetLocation(type, id);
+            return ToJsonResponseV2(result);
+        }
+        [HttpGet]
+        public async Task<JsonResult> GetEcIssuePlace()
+        {
+            var result = await _bizEcLocation.GetIssuePlace();
+            return ToJsonResponseV2(result);
         }
     }
 }

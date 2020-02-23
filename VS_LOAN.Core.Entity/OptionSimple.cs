@@ -12,4 +12,10 @@ namespace VS_LOAN.Core.Entity
         public string Name { get; set; }
         public bool IsSelect { get; set; }
     }
+    public class StringOptionSimple
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public bool IsSelect { get; set; }
+    }
 }

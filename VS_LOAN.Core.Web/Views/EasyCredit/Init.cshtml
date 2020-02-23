@@ -52,7 +52,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Nơi cấp CMND<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlIssueProvince" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
+                            <select id="ddlIssuePlace" class="chosen-select form-control" data-placeholder="<Chọn>">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -195,7 +195,8 @@
             $("#txtLoanAmount").val(formatCurrency($("#txtLoanAmount").val().replace(/\./g, '')));
         });
         inputNumberFormat('txtLoanTenor')
-       
+        getEcLocation('ddlTempProvince', 1);
+        getEcIssuePlace('ddlIssuePlace')
         LayDSTaiLieu();
     });
 
@@ -278,7 +279,28 @@
             }
         }
     }
-    
+    function GetProvinces() {
+        $.ajax({
+            type: "POST",
+            url: '/EasyCredit/EcLocation/1',
+            data: {},
+            success: function (data) {
+                $('#ddlTinh').empty();
+                $('#ddlTinh').append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#ddlTinh').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                    });
+                }
+                $('#ddlTinh').chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
     $('#btn_Save').click(function (e) {
 
 
