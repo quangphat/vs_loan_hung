@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.EasyCredit;
+using VS_LOAN.Core.Entity.EasyCredit.PostModel;
 using VS_LOAN.Core.Entity.Infrastructures;
 using VS_LOAN.Core.Utility;
 
@@ -17,6 +18,14 @@ namespace VS_LOAN.Core.Business.EasyCredit
     {
         public ECLoanBusiness(HttpClient httpClient, CurrentProcess currentProcess) : base(typeof(ECLoanBusiness),currentProcess, httpClient: httpClient)
         {
+        }
+        public async Task<bool> SaveEcHosoStep1(EcHosoPostModel model)
+        {
+            if(model==null)
+            {
+                _process.Error = errors.model_null;
+                return false;
+            }
         }
         public async Task<bool> SaveEcHoso(EcHoso model)
         {

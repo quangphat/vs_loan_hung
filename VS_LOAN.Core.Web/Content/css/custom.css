@@ -6,6 +6,9 @@
 /*.form-group input, .form-group label, .form-group select, .form-group textarea {
   font-size: 11px !important;
 }*/
+.mt-8{
+    margin-top:8px;
+}
 .pt-0 {
     padding-top: 0px;
 }

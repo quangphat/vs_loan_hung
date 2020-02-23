@@ -86,15 +86,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label no-padding-right">Công việc hiện tại<span class="required">(*)</span></label>
-                        <div class="col-sm-4">
-                            <select id="ddlEmployeeType" class="chosen-select form-control" data-placeholder="<Chọn>">
-                                <option value="0"></option>
-                            </select>
-                        </div>
-                        
-                    </div>
+                    
                     
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Sale Channel</label>
@@ -114,7 +106,15 @@
                 <h3 class="header smaller lighter blue">2.Thông tin khoản vay và sản phẩm:</h3>
                 <form class="form-horizontal" role="form">
                     <div class="form-group">
-                       
+                        <label class="col-sm-2 control-label no-padding-right">Công việc hiện tại<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlEmployeeType" class="chosen-select form-control" data-placeholder="<Chọn>">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+
                         <label class="col-sm-2 control-label no-padding-right">Sản phẩm vay<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <select id="ddlProductType" class="chosen-select form-control" data-placeholder="Chọn sản phẩm vay">
@@ -124,12 +124,30 @@
                     </div>
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số tiền đề nghị vay<span class="required">(*)</span></label>
-                        <div class="col-sm-4">
-                            <input type="text" id="txtLoanAmount" placeholder="Nhập số tiền đề nghị vay" class="form-control">
+                        <div class="col-sm-8">
+                            <div class="slidecontainer">
+                                <p class="mt-8"><span id="loanAmountDisplay"></span></p>
+                                <input type="range" min="0" max="10000000" value="0" class="slider" step="500000" id="slideLoanAmount">
+
+                            </div>
                         </div>
-                        <label class="col-sm-2 control-label no-padding-right">Thời hạn vay</label>
-                        <div class="col-sm-4">
-                            <input type="text" id="txtLoanTenor" />
+
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Thời hạn vay<span class="required">(*)</span></label>
+                        <div class="col-sm-8">
+                            <div class="slidecontainer">
+                                <p class="mt-8"><span id="loanTenorDisplay"></span></p>
+                                <input type="range" min="1" max="12" value="2" class="slider" step="1" id="slideLoanTenor">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Khoản trả hàng tháng</label>
+                        <div class="col-sm-8">
+                            <div class="slidecontainer">
+                                <p class="mt-8"><span id="amountPerMonth"></span></p>                           
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -197,8 +215,19 @@
         inputNumberFormat('txtLoanTenor')
         getEcLocation('ddlTempProvince', 1);
         getEcIssuePlace('ddlIssuePlace')
-        getEcEmploymentType('ddlEmployeeType','EMPLOYMENT_TYPE')
+        getEcEmploymentType('ddlEmployeeType', emplyee_employment_type);
+        $('#ddlEmployeeType').on('change', function () {
+            getEcProduct('ddlProductType', this.value)
+        });
+        
         LayDSTaiLieu();
+        slidebar('slideLoanAmount', 'loanAmountDisplay', true);
+        slidebar('slideLoanTenor', 'loanTenorDisplay', false, 'Tháng');
+        calculateAmountPerMonth($("#slideLoanAmount").val(), $("#slideLoanTenor").val(), 'amountPerMonth')
+        $("#slideLoanAmount").on('change', function () {
+            
+            calculateAmountPerMonth($("#slideLoanAmount").val(), $("#slideLoanTenor").val(), 'amountPerMonth')
+        })
     });
 
     function LayDSTaiLieu() {
@@ -303,8 +332,8 @@
         });
     }
     $('#btn_Save').click(function (e) {
-
-
+        setSlidebarValue('slideLoanTenor', false, 20)
+        return;
         var objectSend = null
         $.ajax({
             traditional: true,

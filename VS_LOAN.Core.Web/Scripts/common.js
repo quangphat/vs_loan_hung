@@ -4,7 +4,32 @@
         .on('changed.fu.spinbox', function () {
         });
 }
+function calculateAmountPerMonth(amount, month, controlDisplay) {
+    debugger
+    if (month <= 0)
+        return;
+    let value = amount / month;
 
+    document.getElementById(controlDisplay).innerHTML = formatCurrencyVND(value);
+}
+function setSlidebarValue(controlId, min = true, value = 0) {
+    if (min) {
+        document.getElementById(controlId).min = value;
+    }
+    else {
+        document.getElementById(controlId).max = value;
+    }
+}
+function slidebar(sliderControl, displayControl, isCurrency = false, unit = '') {
+    var slider = document.getElementById(sliderControl);
+    var output = document.getElementById(displayControl);
+    
+    output.innerHTML = isCurrency ? formatCurrencyVND(slider.value) : slider.value + " " + unit;
+
+    slider.oninput = function () {
+        output.innerHTML = isCurrency ? formatCurrencyVND(this.value) : this.value + " " + unit;
+    }
+}
 function getRoles(controlId, appendDefault = true, defaultText = "Tất cả", value = 0, onSuccess = null) {
     $.ajax({
         type: "GET",
@@ -27,6 +52,28 @@ function getRoles(controlId, appendDefault = true, defaultText = "Tất cả", v
             else {
                 onSuccess();
             }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+function getEcProduct(controlId, code) {
+    $.ajax({
+        type: "GET",
+        url: '/EasyCredit/GetEcProduct?code=' + code,
+        data: {},
+        success: function (data) {
+            $('#' + controlId).empty();
+            $('#' + controlId).append("<option value='0'></option>");
+            if (data !== null) {
+                $.each(data.data, function (index, item) {
+                    $('#' + controlId).append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                });
+            }
+            $('#' + controlId).chosen().trigger("chosen:updated");
         },
         complete: function () {
         },
@@ -677,7 +724,7 @@ function formatCurrency(number) {
 function formatCurrencyVND(number) {
     var n = number.toString().split('').reverse().join("");
     var n2 = n.replace(/\d\d\d(?!$)/g, "$&.");
-    return n2.split('').reverse().join('') + 'VND';
+    return n2.split('').reverse().join('') + ' VND';
 }
 function addDays(date, days) {
     var result = new Date(date);

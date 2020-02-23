@@ -12,9 +12,10 @@ namespace VS_LOAN.Core.Business.EasyCredit
 {
     public class {ModelName}Business : BaseBusiness, I{ModelName}Business
     {
-        public {ModelName}Business(CurrentProcess currentProcess) : base(typeof({ModelName}Business), currentProcess)
+	protected readonly I{ModelName}Repository _rp{ModelName};
+        public {ModelName}Business(CurrentProcess currentProcess, I{ModelName}Repository {modelname}Repository) : base(typeof({ModelName}Business), currentProcess)
         {
-            
+            _rp{ModelName} = {modelname}Repository;
         }
         
 

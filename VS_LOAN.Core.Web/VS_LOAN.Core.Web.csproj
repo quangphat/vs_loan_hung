@@ -958,6 +958,7 @@
     <Content Include="Lib\Ionic.Zip.Reduced.dll" />
     <Content Include="logo.png" />
     <Content Include="Scripts\analytics.js" />
+    <Content Include="Scripts\constants.js" />
     <Content Include="Scripts\ei\jquery.PrintArea.js" />
     <Content Include="Scripts\Excel\jszip.js" />
     <Content Include="Scripts\Excel\xlsx.js" />

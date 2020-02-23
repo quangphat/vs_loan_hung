@@ -9,19 +9,20 @@ using VS_LOAN.Core.Entity;
 
 namespace LoanRepository.Classes
 {
-    public class {ModelName}Repository : BaseRepository, I{ModelName}Repository
+    public class EcProductRepository : BaseRepository, IEcProductRepository
     {
         
-        public async Task<T> Get()
+        public async Task<List<StringOptionSimple>> GetSimples(string occupationCode)
         {
             using (var conn = GetConnection())
             {
-                var result = await conn.QueryAsync<T>("", new
+                var result = await conn.QueryAsync<StringOptionSimple>("sp_GetEcProduct", new
                 {
-                    
+                    occupationCode
                 }, commandType: System.Data.CommandType.StoredProcedure);
                 return result.ToList();
             }
         }
     }
 }
+
