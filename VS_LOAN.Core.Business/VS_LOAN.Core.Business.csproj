@@ -135,7 +135,6 @@
     <Compile Include="HosoCourrierBusiness.cs" />
     <Compile Include="HoSoDuyetXemBLL.cs" />
     <Compile Include="HoSoXemBLL.cs" />
-    <Compile Include="Infrastructures\AutoMapperBase.cs" />
     <Compile Include="Interfaces\IEcEmploymentBusiness.cs" />
     <Compile Include="Interfaces\IECLoanBusiness.cs" />
     <Compile Include="Interfaces\IEcLocationBusiness.cs" />
@@ -188,6 +187,9 @@
       <Project>{D439D023-C499-4540-AF5A-7AC3D5C3A9A1}</Project>
       <Name>VS_LOAN.Core.Utility</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Infrastructures\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

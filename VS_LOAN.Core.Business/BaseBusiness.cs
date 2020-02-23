@@ -9,7 +9,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using VS_LOAN.Core.Business.Infrastructures;
 using VS_LOAN.Core.Entity.Infrastructures;
 using VS_LOAN.Core.Nhibernate;
 
