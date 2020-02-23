@@ -23,7 +23,7 @@ namespace VS_LOAN.Core.Utility
 
             return hashed;
         }
-       
+        
     }
     
 }
