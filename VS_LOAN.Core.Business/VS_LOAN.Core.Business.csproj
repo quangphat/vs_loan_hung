@@ -118,6 +118,7 @@
     <Compile Include="CourierCodeBLL.cs" />
     <Compile Include="CustomerBLL.cs" />
     <Compile Include="DoiTacBLL.cs" />
+    <Compile Include="EasyCredit\EcEmploymentBusiness.cs" />
     <Compile Include="EasyCredit\ECLoanBusiness.cs" />
     <Compile Include="EasyCredit\EcLocationBusiness.cs" />
     <Compile Include="EmployeeBusiness.cs" />
@@ -127,6 +128,7 @@
     <Compile Include="HosoCourrierBusiness.cs" />
     <Compile Include="HoSoDuyetXemBLL.cs" />
     <Compile Include="HoSoXemBLL.cs" />
+    <Compile Include="Interfaces\IEcEmploymentBusiness.cs" />
     <Compile Include="Interfaces\IECLoanBusiness.cs" />
     <Compile Include="Interfaces\IEcLocationBusiness.cs" />
     <Compile Include="Interfaces\IHosoBusiness.cs" />

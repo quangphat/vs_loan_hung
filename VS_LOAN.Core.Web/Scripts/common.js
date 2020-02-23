@@ -35,6 +35,28 @@ function getRoles(controlId, appendDefault = true, defaultText = "Tất cả", v
         }
     });
 }
+function getEcEmploymentType(controlId, type) {
+    $.ajax({
+        type: "GET",
+        url: '/EasyCredit/GetEcEmploymentType?type=' + type,
+        data: {},
+        success: function (data) {
+            $('#' + controlId).empty();
+            $('#' + controlId).append("<option value='0'></option>");
+            if (data !== null) {
+                $.each(data.data, function (index, item) {
+                    $('#' + controlId).append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                });
+            }
+            $('#' + controlId).chosen().trigger("chosen:updated");
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
 function getEcIssuePlace(controlId) {
     $.ajax({
         type: "GET",
