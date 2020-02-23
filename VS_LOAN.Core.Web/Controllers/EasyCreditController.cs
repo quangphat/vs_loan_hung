@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using VS_LOAN.Core.Business.Interfaces;
+using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.Infrastructures;
 
 namespace VS_LOAN.Core.Web.Controllers
@@ -23,7 +24,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<ActionResult> Init()
         {
-            var tailieus = await _bizTailieu.GetLoaiTailieuList();
+            var tailieus = await _bizTailieu.GetLoaiTailieuList((int)HosoType.ECCredit);
             return View();
         }
     }

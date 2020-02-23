@@ -61,3 +61,270 @@
 2020-02-23 13:30:27,440 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
 2020-02-23 13:30:27,441 [6] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
 2020-02-23 13:30:27,441 [6] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:35:53,852 [6] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-23 13:35:53,871 [6] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-23 13:35:53,871 [6] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-23 13:35:53,872 [6] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-23 13:35:53,948 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=QUANGPHAT\CLARKKENT;Initial Catalog=Test13;User ID=sa;Password=number8;
+2020-02-23 13:35:53,949 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-23 13:35:53,949 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-23 13:35:53,949 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-23 13:35:53,949 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-23 13:35:53,950 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-23 13:35:53,950 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-23 13:35:53,951 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-23 13:36:22,185 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=QUANGPHAT\CLARKKENT;Initial Catalog=Test13;User ID=sa;Password=number8;
+2020-02-23 13:36:22,186 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-23 13:36:22,186 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-23 13:36:22,186 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-23 13:36:22,186 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-23 13:36:22,186 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-23 13:36:22,187 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-23 13:36:22,187 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-23 13:36:32,133 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=QUANGPHAT\CLARKKENT;Initial Catalog=Test13;User ID=sa;Password=number8;
+2020-02-23 13:36:32,133 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-23 13:36:32,133 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-23 13:36:32,133 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-23 13:36:32,133 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-23 13:36:32,134 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-23 13:36:32,134 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-23 13:36:32,134 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-23 13:36:32,136 [6] INFO  NHibernate.Cfg.Configuration [(null)] - checking mappings queue
+2020-02-23 13:36:32,136 [6] INFO  NHibernate.Cfg.Configuration [(null)] - processing one-to-many association mappings
+2020-02-23 13:36:32,136 [6] INFO  NHibernate.Cfg.Configuration [(null)] - processing one-to-one association property references
+2020-02-23 13:36:32,137 [6] INFO  NHibernate.Cfg.Configuration [(null)] - processing foreign key constraints
+2020-02-23 13:36:32,137 [6] INFO  NHibernate.Cfg.Configuration [(null)] - processing filters (second pass)
+2020-02-23 13:36:32,150 [6] INFO  NHibernate.Dialect.Dialect [(null)] - Using dialect: NHibernate.Dialect.MsSql2012Dialect
+2020-02-23 13:36:32,170 [6] INFO  NHibernate.Dialect.Dialect [(null)] - Using dialect: NHibernate.Dialect.MsSql2012Dialect
+2020-02-23 13:36:32,206 [6] INFO  NHibernate.Exceptions.SQLExceptionConverterFactory [(null)] - Using dialect defined converter
+2020-02-23 13:36:32,207 [6] INFO  NHibernate.Cfg.SettingsFactory [(null)] - Generate SQL with comments: disabled
+2020-02-23 13:36:32,208 [6] INFO  NHibernate.Connection.ConnectionProvider [(null)] - Configuring ConnectionProvider
+2020-02-23 13:36:32,210 [6] INFO  NHibernate.Cfg.SettingsFactory [(null)] - Transaction factory: NHibernate.Transaction.AdoNetWithDistributedTransactionFactory
+2020-02-23 13:36:32,210 [6] INFO  NHibernate.Cfg.SettingsFactory [(null)] - Optimize cache for minimal puts: False
+2020-02-23 13:36:32,211 [6] INFO  NHibernate.Cfg.SettingsFactory [(null)] - Connection release mode: auto
+2020-02-23 13:36:32,211 [6] INFO  NHibernate.Cfg.SettingsFactory [(null)] - Default batch fetch size: 1
+2020-02-23 13:36:32,211 [6] INFO  NHibernate.Cfg.SettingsFactory [(null)] - echoing all SQL to stdout
+2020-02-23 13:36:32,211 [6] INFO  NHibernate.Cfg.SettingsFactory [(null)] - Statistics: disabled
+2020-02-23 13:36:32,211 [6] INFO  NHibernate.Cfg.SettingsFactory [(null)] - Deleted entity synthetic identifier rollback: disabled
+2020-02-23 13:36:32,212 [6] INFO  NHibernate.Cfg.SettingsFactory [(null)] - Query translator: NHibernate.Hql.Ast.ANTLR.ASTQueryTranslatorFactory
+2020-02-23 13:36:32,214 [6] INFO  NHibernate.Cfg.SettingsFactory [(null)] - Query language substitutions: {'true'='1', 'false'='0', 'yes'=''Y'', 'no'=''N''}
+2020-02-23 13:36:32,214 [6] INFO  NHibernate.Cfg.SettingsFactory [(null)] - cache provider: NHibernate.Cache.NoCacheProvider, NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4
+2020-02-23 13:36:32,216 [6] INFO  NHibernate.Cfg.SettingsFactory [(null)] - Order SQL inserts for batching: enabled
+2020-02-23 13:36:32,216 [6] DEBUG NHibernate.Cfg.SettingsFactory [(null)] - Wrap result sets: disabled
+2020-02-23 13:36:32,216 [6] INFO  NHibernate.Cfg.SettingsFactory [(null)] - Batcher factory: NHibernate.AdoNet.SqlClientBatchingBatcherFactory, NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4
+2020-02-23 13:36:32,217 [6] INFO  NHibernate.Cfg.SettingsFactory [(null)] - Default entity-mode: Poco
+2020-02-23 13:36:32,217 [6] INFO  NHibernate.Cfg.SettingsFactory [(null)] - Named query checking : enabled
+2020-02-23 13:36:32,217 [6] INFO  NHibernate.Cfg.SettingsFactory [(null)] - Ignoring exceptions in BeforeTransactionCompletion : disabled
+2020-02-23 13:36:32,227 [6] INFO  NHibernate.Impl.SessionFactoryImpl [(null)] - building session factory
+2020-02-23 13:36:32,227 [6] DEBUG NHibernate.Impl.SessionFactoryImpl [(null)] - Session factory constructed with filter configurations : {}
+2020-02-23 13:36:32,228 [6] DEBUG NHibernate.Impl.SessionFactoryImpl [(null)] - instantiating session factory with properties: {'use_reflection_optimizer'='True', 'session_factory_name'='NHibernate.Test', 'connection.connection_string'='Data Source=QUANGPHAT\CLARKKENT;Initial Catalog=Test13;User ID=sa;Password=number8;', 'show_sql'='true', 'dialect'='NHibernate.Dialect.MsSql2012Dialect', 'connection.driver_class'='NHibernate.Driver.SqlClientDriver', 'query.substitutions'='true 1, false 0, yes 'Y', no 'N'', 'current_session_context_class'='managed_web'}
+2020-02-23 13:36:32,229 [6] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:36:32,241 [6] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:36:32,243 [6] DEBUG NHibernate.Impl.SessionFactoryObjectFactory [(null)] - initializing class SessionFactoryObjectFactory
+2020-02-23 13:36:32,244 [6] DEBUG NHibernate.Impl.SessionFactoryObjectFactory [(null)] - registered: d7de50190096451da5a6d7ecc799300d(NHibernate.Test)
+2020-02-23 13:36:32,245 [6] INFO  NHibernate.Impl.SessionFactoryObjectFactory [(null)] - Factory name:NHibernate.Test
+2020-02-23 13:36:32,245 [6] DEBUG NHibernate.Impl.SessionFactoryImpl [(null)] - Instantiated session factory
+2020-02-23 13:36:32,246 [6] WARN  NHibernate.Util.ReflectHelper [(null)] - Could not load type managed_web. Possible cause: no assembly name specified.
+2020-02-23 13:36:32,247 [6] ERROR NHibernate.Util.ReflectHelper [(null)] - Could not load type managed_web.
+System.TypeLoadException: Could not load type managed_web. Possible cause: no assembly name specified.
+   at NHibernate.Util.ReflectHelper.TypeFromAssembly(AssemblyQualifiedTypeName name, Boolean throwOnError)
+2020-02-23 13:36:32,250 [6] ERROR NHibernate.Impl.SessionFactoryImpl [(null)] - Unable to construct current session context [managed_web]
+System.TypeLoadException: Could not load type managed_web. Possible cause: no assembly name specified.
+   at NHibernate.Util.ReflectHelper.TypeFromAssembly(AssemblyQualifiedTypeName name, Boolean throwOnError)
+   at NHibernate.Impl.SessionFactoryImpl.BuildCurrentSessionContext()
+2020-02-23 13:36:32,252 [6] DEBUG NHibernate.Impl.SessionFactoryImpl [(null)] - Checking 0 named HQL queries
+2020-02-23 13:36:32,253 [6] DEBUG NHibernate.Impl.SessionFactoryImpl [(null)] - Checking 0 named SQL queries
+2020-02-23 13:36:32,264 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=2e96563e-9c7a-4e77-985b-8393e2e4c1c6] opened session at timestamp: 637180617922, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:36:32,266 [6] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:36:32,271 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=2e96563e-9c7a-4e77-985b-8393e2e4c1c6] running ISession.Dispose()
+2020-02-23 13:36:32,272 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=2e96563e-9c7a-4e77-985b-8393e2e4c1c6] executing real Dispose(True)
+2020-02-23 13:36:32,273 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:36:32,274 [6] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:36:32,277 [6] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:36:32,280 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=199c4903-6d95-40e4-8de6-6411cf5979fb] opened session at timestamp: 637180617922, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:36:32,280 [6] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:36:32,283 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=199c4903-6d95-40e4-8de6-6411cf5979fb] running ISession.Dispose()
+2020-02-23 13:36:32,283 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=199c4903-6d95-40e4-8de6-6411cf5979fb] executing real Dispose(True)
+2020-02-23 13:36:32,284 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:36:32,284 [6] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:36:32,284 [6] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:36:32,285 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=328cfa9e-cab9-43da-a0e5-595a336c5fd1] opened session at timestamp: 637180617922, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:36:32,285 [6] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:36:32,287 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=328cfa9e-cab9-43da-a0e5-595a336c5fd1] running ISession.Dispose()
+2020-02-23 13:36:32,287 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=328cfa9e-cab9-43da-a0e5-595a336c5fd1] executing real Dispose(True)
+2020-02-23 13:36:32,287 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:36:32,288 [6] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:36:32,288 [6] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:36:32,292 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=ee58e3e6-df02-4827-b8d2-11a06bdcbd30] opened session at timestamp: 637180617922, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:36:32,292 [6] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:36:32,294 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=ee58e3e6-df02-4827-b8d2-11a06bdcbd30] running ISession.Dispose()
+2020-02-23 13:36:32,295 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=ee58e3e6-df02-4827-b8d2-11a06bdcbd30] executing real Dispose(True)
+2020-02-23 13:36:32,295 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:36:32,295 [6] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:36:32,295 [6] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:36:32,893 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=e84b1e99-777f-40e7-bb73-95e297821abb] opened session at timestamp: 637180617928, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:36:32,893 [8] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:36:32,927 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=e84b1e99-777f-40e7-bb73-95e297821abb] running ISession.Dispose()
+2020-02-23 13:36:32,928 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=e84b1e99-777f-40e7-bb73-95e297821abb] executing real Dispose(True)
+2020-02-23 13:36:32,928 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:36:32,928 [8] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:36:32,928 [8] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:36:32,930 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=ddafab44-8caa-4a0c-b2ab-485d4d2e0e52] opened session at timestamp: 637180617929, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:36:32,931 [8] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:36:32,941 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=ddafab44-8caa-4a0c-b2ab-485d4d2e0e52] running ISession.Dispose()
+2020-02-23 13:36:32,941 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=ddafab44-8caa-4a0c-b2ab-485d4d2e0e52] executing real Dispose(True)
+2020-02-23 13:36:32,942 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:36:32,942 [8] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:36:32,942 [8] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:36:32,944 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=105c39bf-8a3d-486a-a4b8-837456d0ef22] opened session at timestamp: 637180617929, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:36:32,945 [8] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:36:32,945 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=105c39bf-8a3d-486a-a4b8-837456d0ef22] running ISession.Dispose()
+2020-02-23 13:36:32,946 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=105c39bf-8a3d-486a-a4b8-837456d0ef22] executing real Dispose(True)
+2020-02-23 13:36:32,946 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:36:32,946 [8] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:36:32,946 [8] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:36:37,417 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=QUANGPHAT\CLARKKENT;Initial Catalog=Test13;User ID=sa;Password=number8;
+2020-02-23 13:36:37,417 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-23 13:36:37,417 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-23 13:36:37,418 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-23 13:36:37,418 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-23 13:36:37,418 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-23 13:36:37,419 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-23 13:36:37,419 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-23 13:36:39,209 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=708bd120-d7fd-4ac1-b4f9-18cc317a3368] opened session at timestamp: 637180617992, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:36:39,210 [12] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:36:39,212 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=708bd120-d7fd-4ac1-b4f9-18cc317a3368] running ISession.Dispose()
+2020-02-23 13:36:39,213 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=708bd120-d7fd-4ac1-b4f9-18cc317a3368] executing real Dispose(True)
+2020-02-23 13:36:39,213 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:36:39,213 [12] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:36:39,214 [12] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:36:39,214 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=699574df-5368-4f2b-a11c-88bae3004f54] opened session at timestamp: 637180617992, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:36:39,214 [12] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:36:39,215 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=699574df-5368-4f2b-a11c-88bae3004f54] running ISession.Dispose()
+2020-02-23 13:36:39,216 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=699574df-5368-4f2b-a11c-88bae3004f54] executing real Dispose(True)
+2020-02-23 13:36:39,216 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:36:39,216 [12] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:36:39,217 [12] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:36:39,218 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=a7001b7f-c380-4860-8955-0e4abd7999db] opened session at timestamp: 637180617992, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:36:39,218 [12] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:36:39,219 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=a7001b7f-c380-4860-8955-0e4abd7999db] running ISession.Dispose()
+2020-02-23 13:36:39,219 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=a7001b7f-c380-4860-8955-0e4abd7999db] executing real Dispose(True)
+2020-02-23 13:36:39,220 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:36:39,220 [12] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:36:39,220 [12] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:41:05,118 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=QUANGPHAT\CLARKKENT;Initial Catalog=Test13;User ID=sa;Password=number8;
+2020-02-23 13:41:05,119 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-23 13:41:05,119 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-23 13:41:05,119 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-23 13:41:05,119 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-23 13:41:05,120 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-23 13:41:05,120 [8] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-23 13:41:05,120 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-23 13:41:05,126 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=5ae174e7-e5bc-41a7-a8f3-c12664741a34] opened session at timestamp: 637180620651, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:41:05,127 [12] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:41:05,161 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=5ae174e7-e5bc-41a7-a8f3-c12664741a34] running ISession.Dispose()
+2020-02-23 13:41:05,162 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=5ae174e7-e5bc-41a7-a8f3-c12664741a34] executing real Dispose(True)
+2020-02-23 13:41:05,162 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:41:05,162 [12] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:41:05,162 [12] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:41:05,162 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=a5a22e51-7cb1-44d0-9305-2b09cc071c61] opened session at timestamp: 637180620651, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:41:05,163 [12] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:41:05,170 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=a5a22e51-7cb1-44d0-9305-2b09cc071c61] running ISession.Dispose()
+2020-02-23 13:41:05,170 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=a5a22e51-7cb1-44d0-9305-2b09cc071c61] executing real Dispose(True)
+2020-02-23 13:41:05,170 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:41:05,170 [12] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:41:05,171 [12] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:41:05,172 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=fa436b97-1a6f-40bb-9743-762b7c265203] opened session at timestamp: 637180620651, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:41:05,172 [12] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:41:05,173 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=fa436b97-1a6f-40bb-9743-762b7c265203] running ISession.Dispose()
+2020-02-23 13:41:05,173 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=fa436b97-1a6f-40bb-9743-762b7c265203] executing real Dispose(True)
+2020-02-23 13:41:05,174 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:41:05,174 [12] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:41:05,174 [12] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:41:15,504 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=QUANGPHAT\CLARKKENT;Initial Catalog=Test13;User ID=sa;Password=number8;
+2020-02-23 13:41:15,505 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-23 13:41:15,505 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-23 13:41:15,505 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-23 13:41:15,505 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-23 13:41:15,506 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-23 13:41:15,506 [8] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-23 13:41:15,506 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-23 13:41:16,126 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=2adc8880-15ca-4cab-9a77-4920d3867113] opened session at timestamp: 637180620761, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:41:16,126 [8] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:41:16,130 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=2adc8880-15ca-4cab-9a77-4920d3867113] running ISession.Dispose()
+2020-02-23 13:41:16,130 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=2adc8880-15ca-4cab-9a77-4920d3867113] executing real Dispose(True)
+2020-02-23 13:41:16,130 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:41:16,130 [8] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:41:16,131 [8] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:41:16,131 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=1c8db681-0e1b-4271-b8f1-0da9b5873eb0] opened session at timestamp: 637180620761, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:41:16,131 [8] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:41:16,132 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=1c8db681-0e1b-4271-b8f1-0da9b5873eb0] running ISession.Dispose()
+2020-02-23 13:41:16,132 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=1c8db681-0e1b-4271-b8f1-0da9b5873eb0] executing real Dispose(True)
+2020-02-23 13:41:16,132 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:41:16,133 [8] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:41:16,133 [8] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:41:16,134 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=38d2690d-76ab-4bb5-8f2a-598c36aea421] opened session at timestamp: 637180620761, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:41:16,134 [8] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:41:16,134 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=38d2690d-76ab-4bb5-8f2a-598c36aea421] running ISession.Dispose()
+2020-02-23 13:41:16,135 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=38d2690d-76ab-4bb5-8f2a-598c36aea421] executing real Dispose(True)
+2020-02-23 13:41:16,135 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:41:16,135 [8] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:41:16,135 [8] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:41:33,344 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=QUANGPHAT\CLARKKENT;Initial Catalog=Test13;User ID=sa;Password=number8;
+2020-02-23 13:41:33,344 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-23 13:41:33,344 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-23 13:41:33,345 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-23 13:41:33,345 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-23 13:41:33,347 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-23 13:41:33,347 [12] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-23 13:41:33,347 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-23 13:41:33,350 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=0762a82e-c66f-42b3-a4ff-1fb80e4cdbbd] opened session at timestamp: 637180620933, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:41:33,350 [7] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:41:33,381 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=0762a82e-c66f-42b3-a4ff-1fb80e4cdbbd] running ISession.Dispose()
+2020-02-23 13:41:33,382 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=0762a82e-c66f-42b3-a4ff-1fb80e4cdbbd] executing real Dispose(True)
+2020-02-23 13:41:33,382 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:41:33,382 [7] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:41:33,382 [7] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:41:33,383 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=f3f02d93-772f-48da-b2ed-f201f792c762] opened session at timestamp: 637180620933, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:41:33,383 [7] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:41:33,391 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=f3f02d93-772f-48da-b2ed-f201f792c762] running ISession.Dispose()
+2020-02-23 13:41:33,391 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=f3f02d93-772f-48da-b2ed-f201f792c762] executing real Dispose(True)
+2020-02-23 13:41:33,391 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:41:33,391 [7] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:41:33,392 [7] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:41:33,392 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=13c5d357-a66d-435c-b02a-26659b30090a] opened session at timestamp: 637180620933, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:41:33,393 [7] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:41:33,394 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=13c5d357-a66d-435c-b02a-26659b30090a] running ISession.Dispose()
+2020-02-23 13:41:33,394 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=13c5d357-a66d-435c-b02a-26659b30090a] executing real Dispose(True)
+2020-02-23 13:41:33,394 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:41:33,394 [7] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:41:33,395 [7] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:42:10,635 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=QUANGPHAT\CLARKKENT;Initial Catalog=Test13;User ID=sa;Password=number8;
+2020-02-23 13:42:10,636 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-23 13:42:10,636 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-23 13:42:10,636 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-23 13:42:10,636 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-23 13:42:10,636 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-23 13:42:10,637 [9] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-23 13:42:10,637 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-23 13:42:11,199 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=1c7579e1-c159-4bbd-8418-dbfa940ad260] opened session at timestamp: 637180621311, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:42:11,199 [12] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:42:11,228 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=1c7579e1-c159-4bbd-8418-dbfa940ad260] running ISession.Dispose()
+2020-02-23 13:42:11,228 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=1c7579e1-c159-4bbd-8418-dbfa940ad260] executing real Dispose(True)
+2020-02-23 13:42:11,229 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:42:11,229 [12] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:42:11,229 [12] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:42:11,230 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=560a4497-74ac-4f84-81c8-1b20ab8d09bf] opened session at timestamp: 637180621312, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:42:11,230 [12] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:42:11,239 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=560a4497-74ac-4f84-81c8-1b20ab8d09bf] running ISession.Dispose()
+2020-02-23 13:42:11,240 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=560a4497-74ac-4f84-81c8-1b20ab8d09bf] executing real Dispose(True)
+2020-02-23 13:42:11,240 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:42:11,240 [12] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:42:11,241 [12] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-02-23 13:42:11,241 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=4cd0b9ca-4bd2-4ef5-a158-1fae0c718bfa] opened session at timestamp: 637180621312, for session factory: [NHibernate.Test/d7de50190096451da5a6d7ecc799300d]
+2020-02-23 13:42:11,242 [12] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-02-23 13:42:11,243 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=4cd0b9ca-4bd2-4ef5-a158-1fae0c718bfa] running ISession.Dispose()
+2020-02-23 13:42:11,243 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=4cd0b9ca-4bd2-4ef5-a158-1fae0c718bfa] executing real Dispose(True)
+2020-02-23 13:42:11,244 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-02-23 13:42:11,244 [12] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-02-23 13:42:11,244 [12] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection

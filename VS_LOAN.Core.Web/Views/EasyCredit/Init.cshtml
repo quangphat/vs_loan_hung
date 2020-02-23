@@ -4,5 +4,248 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Init</h2>
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-caret-right"></i>
+                <a href="#">Tạo hợp đồng</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">1.Thông tin khách hàng:</h3>
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Họ và tên <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtHoTen" placeholder="Nhập họ tên" class="form-control">
+                        </div>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày nhận đơn đề nghị<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtToDate" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
 
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày tháng năm sinh<span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtBirhDay" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại khách hàng<span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtDienThoai" placeholder="Nhập số điện thoại khách hàng" class="form-control">
+                        </div>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại nhân viên</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtDienThoai2" placeholder="Nhập số điện thoại nhân viên" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CMND/CCCD<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtCMND" placeholder="Nhập số CMND" class="form-control" />
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right">Ngày cấp CMND/CCCD<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtCmndDay" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Giới tính</label>
+                        <div class="col-sm-4">
+                            <select id="ddlGioiTinh" class="chosen-select form-control">
+                                <option value="1">Nam</option>
+                                <option value="2">Nữ</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Tỉnh/TP<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlTinh" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right">Quận/huyện<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlHuyen" class="chosen-select form-control" data-placeholder="Chọn quận huyện">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Địa chỉ<span class="required">(*)</span></label>
+                        <div class="col-sm-10">
+                            <textarea type="text" id="txtDiaChi" placeholder="Nhập địa chỉ" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Sale Code</label>
+                        <div class="col-sm-4">
+                            <select id="ddlInternalCode" class="chosen-select form-control" data-placeholder="Chọn Sale Code">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên nhân viên</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtTenNV" data-toggle-tt="tooltip" placeholder="Tên nhân viên" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Data Entry Code</label>
+                        <div class="col-sm-4">
+                            <select id="ddlCourier" class="chosen-select form-control" data-placeholder="Chọn Data Entry code">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">2.Thông tin khoản vay và sản phẩm:</h3>
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Tên ngân hàng<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlDoiTac" class="chosen-select form-control" data-placeholder="Chọn đối tác">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right">Sản phẩm vay<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlSanPhamVay" class="chosen-select form-control" data-placeholder="Chọn sản phẩm vay">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-4  col-md-offset-2">
+                            <div class="checkbox">
+                                <label>
+                                    <input name="form-field-checkbox" id="cbbaohiem" type="checkbox" class="ace">
+                                    <span class="lbl">Không đề nghị mua bảo hiểm dư TD cá nhân</span>
+                                </label>
+                            </div>
+                        </div>
+                        <label style="display:none" for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên cửa hàng<span class="required">(*)</span></label>
+                        <div class="col-sm-4" style="display:none">
+                            <input type="text" id="txtTenCuaHang" placeholder="Nhập tên của hàng" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số tiền đề nghị vay<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtTienDeNghiVay" placeholder="Nhập số tiền đề nghị vay" class="form-control">
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right">Thời hạn vay</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="spnThoiHanVay" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">3.Hồ sơ đính kèm:</h3>
+                <div class="row">
+                    <div class="col-xs-12" style="overflow-y: scroll;max-height:400px;">
+                        <form class="form-horizontal" role="form" id="lstTailieu"></form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <hr />
+                <form class="form-horizontal">
+                    <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Ghi chú hồ sơ</h4>
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
+                        <div class="col-md-11 col-sm-12 col-xs-12">
+                            <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
+                        </div>
+                    </div>
+                    <div class="pull-right">
+                        <a class="btn btn-sm btn-primary" id="btn_Temp">
+                            Lưu tạm
+                        </a>
+                        <a class="btn btn-sm btn-primary" id="btn_Save">
+                            Nộp hồ sơ
+                        </a>
+                        @*<a class="btn btn-sm btn-primary" href="/HoSo/AddNew" id="btn_addNew">
+                                Tạo mới
+                            </a>*@
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ddlSanPhamVay').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlCourier').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlHuyen').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlTinh').chosen({ width: '100%', allow_single_deselect: true });
+        $('#txtToDate').datepicker({
+            dateFormat: 'dd-mm-yy'
+
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+        $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
+        $('#txtBirhDay').datepicker({
+            dateFormat: 'dd-mm-yy'
+
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+        
+        $('#txtCmndDay').datepicker({
+            dateFormat: 'dd-mm-yy'
+
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+        $("#txtDienThoai").ForceNumericOnly();
+        $("#txtDienThoai2").ForceNumericOnly();
+        $("#txtTienDeNghiVay").ForceNumericOnly();
+        $("#txtCMND").ForceNumericOnly();
+        $("#txtTienDeNghiVay").change(function () {
+            $("#txtTienDeNghiVay").val(formatCurrency($("#txtTienDeNghiVay").val().replace(/\./g, '')));
+        });
+
+    });
+</script>

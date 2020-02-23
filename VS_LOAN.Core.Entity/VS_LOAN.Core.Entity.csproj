@@ -85,6 +85,7 @@
     <Compile Include="CustomerModel.cs" />
     <Compile Include="CustomerNoteViewModel.cs" />
     <Compile Include="DatetimeConvertModel.cs" />
+    <Compile Include="EasyCredit\EcHoso.cs" />
     <Compile Include="EasyCredit\EcResponseModel.cs" />
     <Compile Include="EasyCredit\LoanInfoRequestModel.cs" />
     <Compile Include="EasyCredit\TokenResponseModel.cs" />
