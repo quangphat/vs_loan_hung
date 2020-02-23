@@ -268,12 +268,8 @@
              $('#txtTenNV').val( $('option:selected', this).attr('ten'));
         });
     });
-
-    $('#spnThoiHanVay').ace_spinner({ value: 0, min: 0, max: 36, step: 3, btn_up_class: 'btn-info', btn_down_class: 'btn-info' })
-				.closest('.ace-spinner')
-				.on('changed.fu.spinbox', function () {
-				    //alert($('#spinner1').val())
-				});
+    inputNumberFormat('spnThoiHanVay')
+    
     function LayDSTinh() {
         $.ajax({
             type: "POST",

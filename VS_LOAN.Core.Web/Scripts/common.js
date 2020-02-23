@@ -1,17 +1,10 @@
-﻿//function showBlock(div, text) {
-//    div.block({
-//        css: {
-//            border: 'none',
-//            padding: '15px',
-//            backgroundColor: '#000',
-//            '-webkit-border-radius': '10px',
-//            '-moz-border-radius': '10px',
-//            opacity: 1,
-//            color: '#fff'
-//        },
-//        message: '<h2 style="color:#fff">' + text + ' ...</h2>'
-//    });
-//}
+﻿function inputNumberFormat(controlId) {
+    $('#' + controlId).ace_spinner({ value: 0, min: 0, max: 36, step: 3, btn_up_class: 'btn-info', btn_down_class: 'btn-info' })
+        .closest('.ace-spinner')
+        .on('changed.fu.spinbox', function () {
+        });
+}
+
 function getRoles(controlId, appendDefault = true, defaultText = "Tất cả", value = 0, onSuccess = null) {
     $.ajax({
         type: "GET",
@@ -355,7 +348,7 @@ function renderOneItemFile(key, fileId, titleName, isRequire = false, className 
     }
 
 }
-function isReach5Files(filesUpload, key) {
+function isReach5Files(filesUpload, key, maxFile = 50) {
     if (isNullOrWhiteSpace(key))
         return true;
     if (isNullOrNoItem(filesUpload))
@@ -365,7 +358,7 @@ function isReach5Files(filesUpload, key) {
         return false;
     if (isNullOrNoItem(sameKeyFile.files))
         return 0;
-    if (sameKeyFile.files.length === 50)
+    if (sameKeyFile.files.length === maxFile)
         return true;
     return false;
 }
