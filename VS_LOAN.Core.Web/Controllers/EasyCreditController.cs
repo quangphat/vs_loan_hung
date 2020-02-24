@@ -47,7 +47,6 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<JsonResult> SaveInit(EcHoso model)
         {
             var result = await _bizEc.SaveEcHosoStep1(model);
-            var x = _process;
             return ToJsonResponseV2(result);
         }
         public async Task<JsonResult> GetLoaiTailieu()

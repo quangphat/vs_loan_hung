@@ -349,7 +349,7 @@
                 return;
             $.ajax({
                 traditional: true,
-                url: `/HoSo/UploadToHoso?hosoId=${hosoId}&isReset=true`,
+                url: `/EasyCredit/UploadToHoso?hosoId=${hosoId}&isReset=false`,
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 //dataType: 'json',
@@ -362,7 +362,7 @@
                 }
                 else {
                     swal({
-                        title: "@Html.Raw(Global.Message_Title)",
+                        title: "",
                         text: data.code,
                         type: "error",
                         timer: 4000,
@@ -409,7 +409,7 @@
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-                        //uploadHoso2(data.data, true);
+                        uploadHoso(data.data, true);
                     });
                 }
                 else {

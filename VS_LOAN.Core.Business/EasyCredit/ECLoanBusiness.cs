@@ -19,45 +19,46 @@ namespace VS_LOAN.Core.Business.EasyCredit
             : base(typeof(ECLoanBusiness), currentProcess, httpClient: httpClient)
         {
         }
-        public async Task<bool> SaveEcHosoStep1(EcHoso model)
+        public async Task<int> SaveEcHosoStep1(EcHoso model)
         {
             if (model == null)
             {
                 _process.Error = errors.model_null;
-                return false;
+                return 0;
             }
+            return 10;
             if(string.IsNullOrWhiteSpace(model.FullName))
             {
                 _process.Error = errors.customer_name_must_not_be_emty;
-                return false;
+                return 0;
             }
             if(!Utility.Utility.IsValidPhone(model.Phone))
             {
                 _process.Error = errors.phone_must_not_be_emty;
-                return false;
+                return 0;
             }
             if (!Utility.Utility.IsValidIdentityCard(model.Cmnd))
             {
                 _process.Error = errors.identity_number_must_not_be_emty;
-                return false;
+                return 0;
             }
             if(string.IsNullOrWhiteSpace(model.IssueDate))
             {
                 _process.Error = errors.identity_date_invalid;
-                return false;
+                return 0;
             }
             if (string.IsNullOrWhiteSpace(model.BirthDay))
             {
                 _process.Error = errors.customer_birthday_invalid;
-                return false;
+                return 0;
             }
             if (!string.IsNullOrWhiteSpace(model.Email) && !Utility.Utility.IsValidEmail(model.Email))
             {
                 _process.Error = "Email không hợp lệ";
-                return false;
+                return 0;
             }
            
-            return true;
+            return 0;
         }
         public async Task<bool> SaveEcHoso(EcHoso model)
         {
