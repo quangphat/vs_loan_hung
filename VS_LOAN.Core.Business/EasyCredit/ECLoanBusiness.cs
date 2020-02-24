@@ -26,7 +26,37 @@ namespace VS_LOAN.Core.Business.EasyCredit
                 _process.Error = errors.model_null;
                 return false;
             }
-            var customer = AutoMapper.Mapper.Map<CustomerModel>(model);
+            if(string.IsNullOrWhiteSpace(model.FullName))
+            {
+                _process.Error = errors.customer_name_must_not_be_emty;
+                return false;
+            }
+            if(!Utility.Utility.IsValidPhone(model.Phone))
+            {
+                _process.Error = errors.phone_must_not_be_emty;
+                return false;
+            }
+            if (!Utility.Utility.IsValidIdentityCard(model.Cmnd))
+            {
+                _process.Error = errors.identity_number_must_not_be_emty;
+                return false;
+            }
+            if(string.IsNullOrWhiteSpace(model.IssueDate))
+            {
+                _process.Error = errors.identity_date_invalid;
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(model.BirthDay))
+            {
+                _process.Error = errors.customer_birthday_invalid;
+                return false;
+            }
+            if (!string.IsNullOrWhiteSpace(model.Email) && !Utility.Utility.IsValidEmail(model.Email))
+            {
+                _process.Error = "Email không hợp lệ";
+                return false;
+            }
+           
             return true;
         }
         public async Task<bool> SaveEcHoso(EcHoso model)
