@@ -10,7 +10,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using AutoMapper;
-using VS_LOAN.Core.Entity.EasyCredit.PostModel;
+using VS_LOAN.Core.Entity.EasyCredit;
 
 namespace VS_LOAN.Core.Web
 {
@@ -23,7 +23,7 @@ namespace VS_LOAN.Core.Web
         protected void Application_Start()
         {
             AutoMapper.Mapper.Initialize(cfg => {
-                cfg.CreateMap<EcHosoPostModel, CustomerModel>();
+                cfg.CreateMap<EcHoso, CustomerModel>();
                 
                 });
             //or

@@ -89,7 +89,6 @@
     <Compile Include="EasyCredit\EcHoso.cs" />
     <Compile Include="EasyCredit\EcResponseModel.cs" />
     <Compile Include="EasyCredit\LoanInfoRequestModel.cs" />
-    <Compile Include="EasyCredit\PostModel\EcHosoPostModel.cs" />
     <Compile Include="EasyCredit\TokenResponseModel.cs" />
     <Compile Include="Employee\EmployeeEditModel.cs" />
     <Compile Include="Employee\EmployeeViewModel.cs" />
@@ -151,6 +150,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="EasyCredit\PostModel\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--<Import Project="$(SolutionDir)\.nuget\nuget.targets" />-->

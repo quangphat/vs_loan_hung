@@ -33,7 +33,7 @@
                             </div>
                         </div>
 
-                    </div>
+                    </div> 
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CMND/CCCD<span class="required">(*)</span></label>
                         <div class="col-sm-4">
@@ -118,7 +118,7 @@
                         <label class="col-sm-2 control-label no-padding-right">Sản phẩm vay<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <select id="ddlProductType" class="chosen-select form-control" data-placeholder="Chọn sản phẩm vay">
-                                <option value="0" ></option>
+                                <option value="0"></option>
                             </select>
                         </div>
                     </div>
@@ -193,18 +193,20 @@
         $('#ddlProductType').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlTempProvince').chosen({ width: '100%', allow_single_deselect: true });
         $('#txtBirthDay').datepicker({
-            dateFormat: 'dd/mm/yy'
+            dateFormat: 'dd-mm-yy'
+
         }).next().on(ace.click_event, function () {
             $(this).prev().focus();
         });
-        $("#txtBirthDay").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker("setDate", new Date().getDay + 0);
+        $("#txtBirthDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate",  0);
 
         $('#txtCmndDay').datepicker({
-            dateFormat: 'dd/mm/yy'
+            dateFormat: 'dd-mm-yy'
+
         }).next().on(ace.click_event, function () {
             $(this).prev().focus();
         });
-        $("#txtCmndDay").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker("setDate", new Date().getDay + 0);
+        $("#txtCmndDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate",0);
 
         $("#txtPhone").ForceNumericOnly();
 

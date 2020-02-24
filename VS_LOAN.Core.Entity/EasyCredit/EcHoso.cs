@@ -15,8 +15,8 @@ namespace VS_LOAN.Core.Entity.EasyCredit
         public string TempAddress { get; set; }
         public string OccupationCode { get; set; }
         public string TypeContractCode { get; set; }
-        public DateTime? ContractFromDate { get; set; }
-        public DateTime? ContractToDate { get; set; }
+        public string ContractFromDate { get; set; }
+        public string ContractToDate { get; set; }
         public string MethodIncome { get; set; }
         public string FrequentIncome { get; set; }
         public int DateIncome { get; set; }
@@ -59,8 +59,8 @@ namespace VS_LOAN.Core.Entity.EasyCredit
         public bool Gender { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
-        public DateTime? BirthDay { get; set; }
-        public DateTime? IssueDate { get; set; }
+        public string BirthDay { get; set; }
+        public string IssueDate { get; set; }
         public string IssuePlaceCode { get; set; }
         public int PermanentProvinceCode { get; set; }
         public int PermanentDistrictCode { get; set; }
