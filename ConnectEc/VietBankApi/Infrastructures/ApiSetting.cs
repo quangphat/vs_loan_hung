@@ -18,5 +18,6 @@ namespace VietBankApi.Infrastructures
         public string TokentPath { get; set; }
         public string SqlConn { get; set; }
         public string Step2 { get; set; }
+        public string VietBankBasePath { get; set; }
     }
 }

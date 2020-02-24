@@ -34,6 +34,13 @@ namespace VietBankApi.Controllers
         {
             _bizMedia = mediaBusiness;
         }
+        [HttpPost("step3")]
+        public async Task<IActionResult> Test([FromBody] EcRequestModel model)
+        {
+            
+            var result = await Post<object>(basePath: _appSettings.VietBankBasePath, path: "/api/easycredit/stepthree", data: model);
+            return new OkObjectResult(result);
+        }
         [HttpPost("test")]
         public async Task<IActionResult> Test([FromBody] LoanInfoRequestModel model)
         {

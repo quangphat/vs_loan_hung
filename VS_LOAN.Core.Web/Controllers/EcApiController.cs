@@ -25,6 +25,12 @@ namespace VS_LOAN.Core.Web.Controllers
            
         }
         [HttpPost]
+        [Route("stepthree")]
+        public async Task<IHttpActionResult> Step3([FromBody] EcRequestModel model)
+        {
+            return Ok(new ResponseToEcModel());
+        }
+        [HttpPost]
         [Route("upload")]
         public async Task<IHttpActionResult> CreateLoan([FromBody]StringModel model)
         {

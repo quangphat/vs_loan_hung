@@ -17,24 +17,24 @@ namespace VietBankApi.Infrastructures
         }
         public async Task Invoke(HttpContext httpContext, IAuthorizeBusiness authorizeBusiness, CurrentProcess currentProcess)
         {
-            var path = httpContext.Request.Path;
-            if (!path.HasValue)
-            {
-                httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                return;
-            }
-            var key = httpContext.Request.Headers["X-VietbankFC-Signature"].FirstOrDefault();
-            if (string.IsNullOrWhiteSpace(key))
-            {
-                httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                return;
-            }
-            var apiKey = Utils.HmacSha256("VietbankFc", "everbodyknowthatthecaptainlied");
-            if (key != apiKey)
-            {
-                httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                return;
-            }
+            //var path = httpContext.Request.Path;
+            //if (!path.HasValue)
+            //{
+            //    httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            //    return;
+            //}
+            //var key = httpContext.Request.Headers["X-VietbankFC-Signature"].FirstOrDefault();
+            //if (string.IsNullOrWhiteSpace(key))
+            //{
+            //    httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            //    return;
+            //}
+            //var apiKey = Utils.HmacSha256("VietbankFc", "everbodyknowthatthecaptainlied");
+            //if (key != apiKey)
+            //{
+            //    httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            //    return;
+            //}
             //var token = await authorizeBusiness.GetToken();
             //currentProcess.Token = token;
             ////currentProcess.Token = "token";
