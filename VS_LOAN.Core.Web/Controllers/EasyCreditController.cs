@@ -8,6 +8,7 @@ using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.EasyCredit;
 using VS_LOAN.Core.Entity.Infrastructures;
+using VS_LOAN.Core.Entity.UploadModel;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
@@ -78,6 +79,11 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<JsonResult> GetEcProduct(string code)
         {
             var result = await _bizEcProduct.GetSimples(code);
+            return ToJsonResponseV2(result);
+        }
+        public async Task<JsonResult> UploadToHoso(int hosoId, bool isReset, List<FileUploadModelGroupByKey> filesGroup)
+        {
+            var result = await _bizTailieu.UploadFile(hosoId, (int)HosoType.ECCredit, isReset, filesGroup);
             return ToJsonResponseV2(result);
         }
     }

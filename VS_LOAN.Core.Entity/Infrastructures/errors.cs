@@ -8,6 +8,7 @@ namespace VS_LOAN.Core.Entity.Infrastructures
 {
     public static class errors
     {
+        public const string an_error_has_occur = "Đã có lỗi xảy ra. Vui lòng thử lại";
         public const string model_null = "Dữ liệu không hợp lệ";
         public const string id_equal_0 = "Dữ liệu không hợp lệ";
         public const string customer_name_must_not_be_emty = "Tên khách hàng không được để trống";

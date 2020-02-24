@@ -283,34 +283,8 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> UploadToHoso(int hosoId, bool isReset, List<FileUploadModelGroupByKey> filesGroup)
         {
-            if (hosoId <= 0 || filesGroup == null)
-                return ToJsonResponse(false);
-
-            if (isReset)
-            {
-                var deleteAll = await _bizTailieu.RemoveAllTailieu(hosoId, (int)HosoType.Hoso);
-                if (!deleteAll)
-                    return ToJsonResponse(false);
-            }
-            foreach (var item in filesGroup)
-            {
-                if (item.files.Any())
-                {
-                    foreach (var file in item.files)
-                    {
-                        var tailieu = new TaiLieu
-                        {
-                            FileName = file.FileName,
-                            FilePath = file.FileUrl,
-                            HosoId = hosoId,
-                            TypeId = Convert.ToInt32(file.Key),
-                            LoaiHoso = (int)HosoType.Hoso
-                        };
-                        await _bizTailieu.Add(tailieu);
-                    }
-                }
-            }
-            return ToJsonResponse(true);
+            var result = await _bizTailieu.UploadFile(hosoId, (int)HosoType.Hoso, isReset, filesGroup);
+            return ToJsonResponseV2(result);
         }
         public async Task<JsonResult> UploadFile(int key, int fileId, int type)
         {

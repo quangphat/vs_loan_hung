@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.Infrastructures;
+using VS_LOAN.Core.Entity.UploadModel;
 
 namespace VS_LOAN.Core.Business.Classes
 {
@@ -17,7 +18,42 @@ namespace VS_LOAN.Core.Business.Classes
         {
             _rpTailieu = tailieuRepository;
         }
-
+        public async Task<bool> UploadFile(int hosoId, int hosoType, bool isReset, List<FileUploadModelGroupByKey> filesGroup)
+        {
+            if (hosoId <= 0 || filesGroup == null)
+            {
+                _process.Error = errors.model_null;
+                return false;
+            }
+            if (isReset)
+            {
+                var deleteAll = await _rpTailieu.RemoveAllTailieu(hosoId, hosoType);
+                if (!deleteAll)
+                {
+                    _process.Error = errors.an_error_has_occur;
+                    return false;
+                }  
+            }
+            foreach (var item in filesGroup)
+            {
+                if (item.files.Any())
+                {
+                    foreach (var file in item.files)
+                    {
+                        var tailieu = new TaiLieu
+                        {
+                            FileName = file.FileName,
+                            FilePath = file.FileUrl,
+                            HosoId = hosoId,
+                            TypeId = Convert.ToInt32(file.Key),
+                            LoaiHoso = hosoType
+                        };
+                        await _rpTailieu.Add(tailieu);
+                    }
+                }
+            }
+            return true;
+        }
         public async Task<bool> Add(TaiLieu model)
         {
             return await _rpTailieu.Add(model);
