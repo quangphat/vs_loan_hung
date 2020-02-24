@@ -18,14 +18,14 @@ namespace VS_LOAN.Core.Business.EasyCredit
             _rpEcProduct = ecproductRepository;
         }
 
-        public async Task<List<OptionEcProductType>> GetSimples(string occupationCode)
+        public async Task<List<OptionEcProductType>> GetSimples(string employmentType)
         {
-            if(string.IsNullOrWhiteSpace(occupationCode))
+            if(string.IsNullOrWhiteSpace(employmentType))
             {
                 _process.Error = errors.model_null;
                 return null;
             }
-            return await _rpEcProduct.GetSimples(occupationCode);
+            return await _rpEcProduct.GetSimples(employmentType);
         }
     }
 }

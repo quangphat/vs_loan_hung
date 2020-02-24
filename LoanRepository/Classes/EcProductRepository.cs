@@ -12,13 +12,13 @@ namespace LoanRepository.Classes
     public class EcProductRepository : BaseRepository, IEcProductRepository
     {
         
-        public async Task<List<OptionEcProductType>> GetSimples(string occupationCode)
+        public async Task<List<OptionEcProductType>> GetSimples(string employmentType)
         {
             using (var conn = GetConnection())
             {
                 var result = await conn.QueryAsync<OptionEcProductType>("sp_GetEcProduct", new
                 {
-                    occupationCode
+                    occupationCode = employmentType
                 }, commandType: System.Data.CommandType.StoredProcedure);
                 return result.ToList();
             }
