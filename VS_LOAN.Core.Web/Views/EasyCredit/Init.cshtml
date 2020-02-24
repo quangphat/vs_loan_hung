@@ -37,7 +37,7 @@
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CMND/CCCD<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtCMND" placeholder="Nhập số CMND" class="form-control" />
+                            <input type="text" id="txtCmnd" placeholder="Nhập số CMND" class="form-control" />
                         </div>
                         <label class="col-sm-2 control-label no-padding-right">Ngày cấp CMND/CCCD<span class="required">(*)</span></label>
                         <div class="col-sm-4">
@@ -193,18 +193,19 @@
         $('#ddlProductType').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlTempProvince').chosen({ width: '100%', allow_single_deselect: true });
         $('#txtBirthDay').datepicker({
-            dateFormat: 'dd-mm-yy'
-
+            dateFormat: 'dd/mm/yy'
         }).next().on(ace.click_event, function () {
             $(this).prev().focus();
         });
+        $("#txtBirthDay").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker("setDate", new Date().getDay + 0);
 
         $('#txtCmndDay').datepicker({
-            dateFormat: 'dd-mm-yy'
-
+            dateFormat: 'dd/mm/yy'
         }).next().on(ace.click_event, function () {
             $(this).prev().focus();
         });
+        $("#txtCmndDay").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker("setDate", new Date().getDay + 0);
+
         $("#txtPhone").ForceNumericOnly();
 
         $("#txtLoanAmount").ForceNumericOnly();
@@ -346,13 +347,16 @@
         var model = JSON.stringify({
             'FullName' :$("#txtFullname").val(),
             'Cmnd': $("#txtCmnd").val(),
-            'Gender': parseInt($('#ddlGioiTinh').val()),
+            'Gender': parseInt($('#ddlGender').val()),
             'Phone':$("#txtPhone").val(),
             'Email' :$("#txtEmail").val(),
             'BirthDay': $("#txtBirthDay").val(),
             'IssueDate': $("#txtCmndDay").val(),
             'IssuePlaceCode': $("#ddlIssuePlace").val(),
-            'PermanentProvinceCode': $("#ddlTempProvince").val()
+            'TempProvinceCode': $("#ddlTempProvince").val(),
+            'EmploymentType': $('#ddlEmployeeType').val(),
+            'LoanAmount': getSliderValue('slideLoanAmount'),
+            'LoanTenor': getSliderValue('slideLoanTenor')
         })
         $.ajax({
             traditional: true,
@@ -369,7 +373,7 @@
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-                        uploadHoso2(data.data, true);
+                        //uploadHoso2(data.data, true);
                     });
                 }
                 else {

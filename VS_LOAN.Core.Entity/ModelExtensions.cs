@@ -10,13 +10,13 @@ namespace VS_LOAN.Core.Entity
     {
         public static string GenEcRequestId(string prefix)
         {
-            return $"{prefix}{DateTime.Now.ToUnixTime()}";
+            return $"{prefix}{DateTime.UtcNow.ToUnixTime()}";
         }
         public static long ToUnixTime(this DateTime datetime)
         {
             DateTime sTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-            return (long)(datetime - sTime).TotalSeconds;
+            return (long)(datetime - sTime).TotalMilliseconds;
         }
     }
 

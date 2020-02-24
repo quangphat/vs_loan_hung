@@ -23,6 +23,8 @@ namespace VS_LOAN.Core.Entity.EasyCredit
         public decimal MonthLyIncome { get; set; }
         public decimal OtherIncome { get; set; }
         public decimal MonthLyExpense { get; set; }
+        public decimal LoanAmount { get; set; }
+        public int LoanTenor { get; set; }
         public string JobTitle { get; set; }
         public string CompanyName { get; set; }
         public int WorkProvinceCode { get; set; }
@@ -51,6 +53,18 @@ namespace VS_LOAN.Core.Entity.EasyCredit
         public string Relation2Code { get; set; }
         public string Relation2Name { get; set; }
         public string Relation2Phone { get; set; }
-        
+        public string EmploymentType { get; set; }
+        public string FullName { get; set; }
+        public string Cmnd { get; set; }
+        public bool Gender { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
+        public DateTime? BirthDay { get; set; }
+        public DateTime? IssueDate { get; set; }
+        public string IssuePlaceCode { get; set; }
+        public int PermanentProvinceCode { get; set; }
+        public int PermanentDistrictCode { get; set; }
+        public int PermanentWardCode { get; set; }
+        public string PermanentAddress { get; set; }
     }
 }

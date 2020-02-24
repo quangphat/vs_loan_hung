@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Utility
@@ -23,7 +24,34 @@ namespace VS_LOAN.Core.Utility
 
             return hashed;
         }
-        
+        public static bool IsValidEmail(string email, int maxLength = 255)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+            if (email.Length > maxLength)
+            {
+                return false;
+            }
+
+            var patternEmail =
+            "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$";
+
+            return Regex.IsMatch(email, patternEmail);
+        }
+        public static bool IsValidIdentityCard(string identityNumber)
+        {
+            if (string.IsNullOrWhiteSpace(identityNumber))
+                return false;
+            var pattern = "^(\\d{9}|\\d{12})$";
+            return Regex.IsMatch(identityNumber, pattern);
+        }
+        public static bool IsValidPhone(string phone)
+        {
+            if (string.IsNullOrWhiteSpace(phone))
+                return false;
+            var pattern = "^0(\\d{9,10})$";
+            return Regex.IsMatch(phone, pattern);
+        }
     }
     
 }

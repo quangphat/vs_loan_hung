@@ -44,7 +44,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         [HttpPost]
         [Route("SaveInit")]
-        public async Task<JsonResult> SaveInit(EcHosoPostModel model)
+        public async Task<JsonResult> SaveInit(EcHoso model)
         {
             var result = await _bizEc.SaveEcHosoStep1(model);
             var x = _process;

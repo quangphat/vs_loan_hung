@@ -10,7 +10,11 @@ function getLoanConditionByProductType(controlId) {
         maxTenor: $(controlId).find('option:selected').data('maxtenor'),
         minAmount: $(controlId).find('option:selected').data('minamount'),
         maxAmount: $(controlId).find('option:selected').data('maxamount')
-    }
+    };
+}
+function getSliderValue(controlId) {
+    return Number(document.getElementById(controlId).value);
+    
 }
 function calculateAmountPerMonth(amount, month, controlDisplay) {
     
@@ -21,8 +25,6 @@ function calculateAmountPerMonth(amount, month, controlDisplay) {
     document.getElementById(controlDisplay).innerHTML = formatCurrencyVND(value);
 }
 function setSlidebarValue(controlId, minValue = 0, maxValue = 0, step = 0, defaultValue = 0) {
-
-    
     document.getElementById(controlId).min = minValue;
     document.getElementById(controlId).max = maxValue;
     document.getElementById(controlId).step = step;
