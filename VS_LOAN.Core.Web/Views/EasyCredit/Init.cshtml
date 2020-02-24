@@ -118,7 +118,7 @@
                         <label class="col-sm-2 control-label no-padding-right">Sản phẩm vay<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <select id="ddlProductType" class="chosen-select form-control" data-placeholder="Chọn sản phẩm vay">
-                                <option value="0"></option>
+                                <option value="0" ></option>
                             </select>
                         </div>
                     </div>
@@ -127,7 +127,7 @@
                         <div class="col-sm-8">
                             <div class="slidecontainer">
                                 <p class="mt-8"><span id="loanAmountDisplay"></span></p>
-                                <input type="range" min="0" max="10000000" value="0" class="slider" step="500000" id="slideLoanAmount">
+                                <input type="range" min="0" max="0" value="0" class="slider" step="500000" id="slideLoanAmount">
 
                             </div>
                         </div>
@@ -138,7 +138,7 @@
                         <div class="col-sm-8">
                             <div class="slidecontainer">
                                 <p class="mt-8"><span id="loanTenorDisplay"></span></p>
-                                <input type="range" min="1" max="12" value="2" class="slider" step="1" id="slideLoanTenor">
+                                <input type="range" min="0" max="0" value="0" class="slider" step="1" id="slideLoanTenor">
                             </div>
                         </div>
                     </div>
@@ -225,9 +225,19 @@
         slidebar('slideLoanTenor', 'loanTenorDisplay', false, 'Tháng');
         calculateAmountPerMonth($("#slideLoanAmount").val(), $("#slideLoanTenor").val(), 'amountPerMonth')
         $("#slideLoanAmount").on('change', function () {
-
             calculateAmountPerMonth($("#slideLoanAmount").val(), $("#slideLoanTenor").val(), 'amountPerMonth')
         })
+        $("#slideLoanTenor").on('change', function () {
+            calculateAmountPerMonth($("#slideLoanAmount").val(), $("#slideLoanTenor").val(), 'amountPerMonth')
+        })
+        $('#ddlProductType').on('change', function () {
+            let loanCondition = getLoanConditionByProductType('#ddlProductType');
+            setSlidebarValue('slideLoanTenor', loanCondition.minTenor, loanCondition.maxTenor, 1, 1);
+            setSlidebarValue('slideLoanAmount', loanCondition.minAmount, loanCondition.maxAmount, 500000, loanCondition.minAmount);
+            slidebar('slideLoanAmount', 'loanAmountDisplay', true);
+            slidebar('slideLoanTenor', 'loanTenorDisplay', false, 'Tháng');
+            calculateAmountPerMonth($("#slideLoanAmount").val(), $("#slideLoanTenor").val(), 'amountPerMonth')
+        });
     });
 
     function LayDSTaiLieu() {

@@ -18,7 +18,7 @@ namespace VS_LOAN.Core.Business.EasyCredit
             _rpEcProduct = ecproductRepository;
         }
 
-        public async Task<List<StringOptionSimple>> GetSimples(string occupationCode)
+        public async Task<List<OptionEcProductType>> GetSimples(string occupationCode)
         {
             if(string.IsNullOrWhiteSpace(occupationCode))
             {

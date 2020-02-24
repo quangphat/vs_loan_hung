@@ -9,6 +9,6 @@ namespace VS_LOAN.Core.Business.Interfaces
 {
     public interface IEcProductBusiness
     {
-        Task<List<StringOptionSimple>> GetSimples(string occupationCode);
+        Task<List<OptionEcProductType>> GetSimples(string occupationCode);
     }
 }

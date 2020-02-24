@@ -8,7 +8,7 @@ namespace LoanRepository.Interfaces
 {
     public interface IEcProductRepository
     {
-        Task<List<StringOptionSimple>> GetSimples(string occupationCode);
+        Task<List<OptionEcProductType>> GetSimples(string occupationCode);
     }
 }
 

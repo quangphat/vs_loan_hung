@@ -4,6 +4,14 @@
         .on('changed.fu.spinbox', function () {
         });
 }
+function getLoanConditionByProductType(controlId) {
+    return {
+        minTenor: $(controlId).find('option:selected').data('mintenor'),
+        maxTenor: $(controlId).find('option:selected').data('maxtenor'),
+        minAmount: $(controlId).find('option:selected').data('minamount'),
+        maxAmount: $(controlId).find('option:selected').data('maxamount')
+    }
+}
 function calculateAmountPerMonth(amount, month, controlDisplay) {
     
     if (month <= 0)
@@ -12,13 +20,13 @@ function calculateAmountPerMonth(amount, month, controlDisplay) {
 
     document.getElementById(controlDisplay).innerHTML = formatCurrencyVND(value);
 }
-function setSlidebarValue(controlId, min = true, value = 0) {
-    if (min) {
-        document.getElementById(controlId).min = value;
-    }
-    else {
-        document.getElementById(controlId).max = value;
-    }
+function setSlidebarValue(controlId, minValue = 0, maxValue = 0, step = 0, defaultValue = 0) {
+
+    
+    document.getElementById(controlId).min = minValue;
+    document.getElementById(controlId).max = maxValue;
+    document.getElementById(controlId).step = step;
+    document.getElementById(controlId).value = defaultValue;
 }
 function slidebar(sliderControl, displayControl, isCurrency = false, unit = '') {
     var slider = document.getElementById(sliderControl);
@@ -70,7 +78,9 @@ function getEcProduct(controlId, code) {
             $('#' + controlId).append("<option value='0'></option>");
             if (data !== null) {
                 $.each(data.data, function (index, item) {
-                    $('#' + controlId).append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                    $('#' + controlId).append("<option value='" + item.Id + "' data-minTenor='" + item.MinTenor
+                        + "' data-maxTenor='" + item.MaxTenor + "' data-minAmount='" + item.MinAmount
+                        + "' data-maxAmount='" + item.MaxAmount + "'>" + item.Name + "</option>");
                 });
             }
             $('#' + controlId).chosen().trigger("chosen:updated");
@@ -721,10 +731,29 @@ function formatCurrency(number) {
     var n2 = n.replace(/\d\d\d(?!$)/g, "$&.");
     return n2.split('').reverse().join('') + '';
 }
+Number.prototype.toMoney = function (decimals, decimal_sep, thousands_sep) {
+    var n = this,
+        c = isNaN(decimals) ? 2 : Math.abs(decimals), //if decimal is zero we must take it, it means user does not want to show any decimal
+        d = decimal_sep || '.', //if no decimal separator is passed we use the dot as default decimal separator (we MUST use a decimal separator)
+
+        /*
+        according to [https://stackoverflow.com/questions/411352/how-best-to-determine-if-an-argument-is-not-sent-to-the-javascript-function]
+        the fastest way to check for not defined parameter is to use typeof value === 'undefined' 
+        rather than doing value === undefined.
+        */
+        t = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep, //if you don't want to use a thousands separator you can pass empty string as thousands_sep value
+
+        sign = (n < 0) ? '-' : '',
+
+        //extracting the absolute value of the integer part of the number and converting to string
+        i = parseInt(n = Math.abs(n).toFixed(c)) + '',
+
+        j = ((j = i.length) > 3) ? j % 3 : 0;
+    return sign + (j ? i.substr(0, j) + t : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : '');
+}
 function formatCurrencyVND(number) {
-    var n = number.toString().split('').reverse().join("");
-    var n2 = n.replace(/\d\d\d(?!$)/g, "$&.");
-    return n2.split('').reverse().join('') + ' VND';
+
+    return (Number(number)).toMoney();
 }
 function addDays(date, days) {
     var result = new Date(date);

@@ -18,4 +18,16 @@ namespace VS_LOAN.Core.Entity
         public string Name { get; set; }
         public bool IsSelect { get; set; }
     }
+    //public class OptionForEcProductType:StringOptionSimple
+    //{
+    //    public StringOptionEcProductType LoanCondition { get; set; }
+    //}
+    public class OptionEcProductType : StringOptionSimple
+    {
+        public int MinTenor { get; set; }
+        public int MaxTenor { get; set; }
+        public decimal MinAmount { get; set; }
+        public decimal MaxAmount { get; set; }
+    }
+
 }
