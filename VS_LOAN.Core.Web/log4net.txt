@@ -737,3 +737,15 @@ System.TypeLoadException: Could not load type managed_web. Possible cause: no as
 2020-02-24 23:24:05,101 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
 2020-02-24 23:24:05,101 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
 2020-02-24 23:24:05,101 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-02-24 23:42:06,835 [6] INFO  NHibernate.Cfg.Environment [(null)] - NHibernate 4.0.3.GA (assembly 4.0.0.4000)
+2020-02-24 23:42:06,853 [6] INFO  NHibernate.Cfg.Environment [(null)] - hibernate-configuration section not found in application configuration file
+2020-02-24 23:42:06,853 [6] INFO  NHibernate.Cfg.Environment [(null)] - Bytecode provider name : lcg
+2020-02-24 23:42:06,854 [6] INFO  NHibernate.Cfg.Environment [(null)] - Using reflection optimizer
+2020-02-24 23:42:06,898 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=QUANGPHAT\CLARKKENT;Initial Catalog=Test13;User ID=sa;Password=number8;
+2020-02-24 23:42:06,899 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-02-24 23:42:06,899 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-02-24 23:42:06,899 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-02-24 23:42:06,899 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-02-24 23:42:06,899 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-02-24 23:42:06,900 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-02-24 23:42:06,900 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]

@@ -6,6 +6,20 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Entity
 {
+    public enum EcHosoResult
+    {
+        Rejected = 1,
+        Accepted = 2
+    }
+    public enum EcHosoStatus
+    {
+        WatingOtp = 1,
+        OTPReceived = 2,
+        Full = 3,
+        SelectOffer = 4,
+        FilesUploaded = 5,
+        Finish = 6
+    }
     public enum F88Result
     {
         Approve = 1,
