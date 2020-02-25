@@ -31,6 +31,7 @@ namespace VS_LOAN.Core.Web
         }
         private static void RegisterRepository(this UnityContainer container)
         {
+            container.RegisterType<IEcHosoRepository, EcHosoRepository>();
             container.RegisterType<IEcProductRepository, EcProductRepository>();
             container.RegisterType<ITailieuRepository, TailieuRepository>();
             container.RegisterType<IEcEmploymentRepository, EcEmploymentRepository>();

@@ -8,6 +8,7 @@ namespace VS_LOAN.Core.Entity
 {
     public enum EcHosoResult
     {
+        Waiting = 0,
         Rejected = 1,
         Accepted = 2
     }

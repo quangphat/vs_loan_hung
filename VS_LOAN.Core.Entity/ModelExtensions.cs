@@ -8,11 +8,11 @@ namespace VS_LOAN.Core.Entity
 {
     public static class ModelExtensions
     {
-        public static string GenEcRequestId(string prefix)
+        public static string GenEcRequestId(string prefix = "VB0")
         {
             return $"{prefix}{DateTime.UtcNow.ToUnixTime()}";
         }
-        public static long ToUnixTime(this DateTime datetime)
+        private static long ToUnixTime(this DateTime datetime)
         {
             DateTime sTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 

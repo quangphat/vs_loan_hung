@@ -12,6 +12,11 @@ namespace VS_LOAN.Core.Entity.EasyCredit
         public int TempProvinceCode { get; set; }
         public int TempDistrictCode { get; set; }
         public int TempWardCode { get; set; }
+        public int EcResult { get; set; }
+        public string ProposalId { get; set; }
+        public int Status { get; set; }
+        public string OTPCode { get; set; }
+        public string SMSId { get; set; }
         public string TempAddress { get; set; }
         public string OccupationCode { get; set; }
         public string TypeContractCode { get; set; }
@@ -66,5 +71,6 @@ namespace VS_LOAN.Core.Entity.EasyCredit
         public int PermanentDistrictCode { get; set; }
         public int PermanentWardCode { get; set; }
         public string PermanentAddress { get; set; }
+        public int FileCount { get; set; }
     }
 }

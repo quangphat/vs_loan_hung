@@ -392,7 +392,8 @@
             'TempProvinceCode': $("#ddlTempProvince").val(),
             'EmploymentType': $('#ddlEmployeeType').val(),
             'LoanAmount': getSliderValue('slideLoanAmount'),
-            'LoanTenor': getSliderValue('slideLoanTenor')
+            'LoanTenor': getSliderValue('slideLoanTenor'),
+            'FileCount': filesUpload.length
         })
         $.ajax({
             traditional: true,

@@ -8,13 +8,7 @@ namespace VS_LOAN.Core.Entity.EasyCredit
 {
     public class EcBaseModel : BaseSqlEntity
     {
-        public string RequestId
-        {
-            get
-            {
-                return ModelExtensions.GenEcRequestId("VB0");
-            }
-        }
+        public string RequestId { get; set; }
         public string PartnerCode
         {
             get

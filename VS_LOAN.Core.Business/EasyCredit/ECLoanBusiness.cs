@@ -1,4 +1,5 @@
 ﻿using EasyCreditService.Interfaces;
+using LoanRepository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,13 @@ namespace VS_LOAN.Core.Business.EasyCredit
 {
     public class ECLoanBusiness : BaseBusiness, IECLoanBusiness
     {
-        public ECLoanBusiness(HttpClient httpClient, CurrentProcess currentProcess)
+        protected readonly IEcHosoRepository _rpEcHoso;
+        public ECLoanBusiness(HttpClient httpClient,
+            CurrentProcess currentProcess,
+            IEcHosoRepository ecHosoRepository)
             : base(typeof(ECLoanBusiness), currentProcess, httpClient: httpClient)
         {
+            _rpEcHoso = ecHosoRepository;
         }
         public async Task<int> SaveEcHosoStep1(EcHoso model)
         {
@@ -26,13 +31,17 @@ namespace VS_LOAN.Core.Business.EasyCredit
                 _process.Error = errors.model_null;
                 return 0;
             }
-            return 10;
-            if(string.IsNullOrWhiteSpace(model.FullName))
+            if(model.FileCount <2)
+            {
+                _process.Error = errors.image_selfie_missing;
+                return 0;
+            }
+            if (string.IsNullOrWhiteSpace(model.FullName))
             {
                 _process.Error = errors.customer_name_must_not_be_emty;
                 return 0;
             }
-            if(!Utility.Utility.IsValidPhone(model.Phone))
+            if (!Utility.Utility.IsValidPhone(model.Phone))
             {
                 _process.Error = errors.phone_must_not_be_emty;
                 return 0;
@@ -42,7 +51,7 @@ namespace VS_LOAN.Core.Business.EasyCredit
                 _process.Error = errors.identity_number_must_not_be_emty;
                 return 0;
             }
-            if(string.IsNullOrWhiteSpace(model.IssueDate))
+            if (string.IsNullOrWhiteSpace(model.IssueDate))
             {
                 _process.Error = errors.identity_date_invalid;
                 return 0;
@@ -57,8 +66,16 @@ namespace VS_LOAN.Core.Business.EasyCredit
                 _process.Error = "Email không hợp lệ";
                 return 0;
             }
-           
-            return 0;
+            model.Status = (int)EcHosoStatus.WatingOtp;
+            model.EcResult = (int)EcHosoResult.Waiting;
+            model.RequestId = ModelExtensions.GenEcRequestId();
+            var id = await _rpEcHoso.Insert(model);
+            if (id > 0)
+            {
+                await _rpEcHoso.InsertHosoRequest(id, model.RequestId);
+            }
+            _process.Clear();
+            return id;
         }
         public async Task<bool> SaveEcHoso(EcHoso model)
         {
