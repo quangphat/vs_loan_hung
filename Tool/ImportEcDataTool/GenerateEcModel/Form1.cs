@@ -42,12 +42,19 @@ namespace GenerateEcModel
                 string line = "";
                 while ((line = sr.ReadLine()) != null)
                 {
-                    GenerateInputStore(line, ref clause1);
+                    GenerateAddParamDapper(line, ref clause1);
                 }
             }
             //string fullclasuse = $"insert into {_tableName} ({clause1}) values ({clause2})";
             Console.WriteLine(clause1);
             return string.Empty;
+        }
+        private void GenerateAddParamDapper(string input, ref string clause1)
+        {
+            input = input.Replace("\t", "");
+            var arrStr = input.Split(',');
+            clause1 += $"p.Add(\"{arrStr[0]}\", model.{arrStr[0]});" + Environment.NewLine;
+
         }
         private void GenerateInputStore(string input, ref string clause1)
         {
