@@ -57,7 +57,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 CheckDate = model.CheckDate,
                 Cmnd = model.Cmnd,
                 CICStatus = 0,
-                LastNote = model.LastNote,
+                LastNote = model.Note,
                 CreatedBy = GlobalData.User.IDUser,
                 Gender = model.Gender
             };
@@ -65,11 +65,11 @@ namespace VS_LOAN.Core.Web.Controllers
             var id = _bizCustomer.Create(customer);
             if (id > 0)
             {
-                if(!string.IsNullOrWhiteSpace(model.LastNote))
+                if(!string.IsNullOrWhiteSpace(model.Note))
                 {
                     var note = new CustomerNote
                     {
-                        Note = model.LastNote,
+                        Note = model.Note,
                         CustomerId = id,
                         CreatedBy = customer.CreatedBy
                     };
@@ -110,7 +110,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 CheckDate = model.Customer.CheckDate,
                 Cmnd = model.Customer.Cmnd,
                 CICStatus = model.Customer.CICStatus,
-                LastNote = model.Customer.LastNote,
+                LastNote = model.Customer.Note,
                 UpdatedBy = GlobalData.User.IDUser,
                 Gender = model.Customer.Gender,
                 MatchCondition = match,
@@ -120,11 +120,11 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = bizCustomer.Update(customer);
             if (!result)
                 return ToResponse(false);
-            if(!string.IsNullOrWhiteSpace(model.Customer.LastNote))
+            if(!string.IsNullOrWhiteSpace(model.Customer.Note))
             {
                 var note = new CustomerNote
                 {
-                    Note = model.Customer.LastNote,
+                    Note = model.Customer.Note,
                     CustomerId = customer.Id,
                     CreatedBy = customer.UpdatedBy
                 };

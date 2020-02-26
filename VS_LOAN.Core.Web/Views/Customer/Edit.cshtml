@@ -1,6 +1,6 @@
 ﻿@using VS_LOAN.Core.Web.Resources;
 @{
-    ViewBag.Title = "Tạo khách hàng";
+    ViewBag.Title = "Cập nhật khách hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="main-content-inner">
@@ -179,7 +179,7 @@
     $("#txtDienThoai").ForceNumericOnly();
     $("#txtCMND").ForceNumericOnly();
     $('#btnSave').click(function (e) {
-        debugger
+        
         if (isNullOrWhiteSpace($('#txtCheckDate').val())) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
