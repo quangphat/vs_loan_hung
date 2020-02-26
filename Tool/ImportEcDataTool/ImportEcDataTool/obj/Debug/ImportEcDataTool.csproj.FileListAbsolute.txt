@@ -1,0 +1,15 @@
+D:\Development\outsource\VS_LOAN\Tool\ImportEcDataTool\ImportEcDataTool\bin\Debug\ImportEcDataTool.exe.config
+D:\Development\outsource\VS_LOAN\Tool\ImportEcDataTool\ImportEcDataTool\bin\Debug\ImportEcDataTool.exe
+D:\Development\outsource\VS_LOAN\Tool\ImportEcDataTool\ImportEcDataTool\bin\Debug\ImportEcDataTool.pdb
+D:\Development\outsource\VS_LOAN\Tool\ImportEcDataTool\ImportEcDataTool\bin\Debug\Dapper.dll
+D:\Development\outsource\VS_LOAN\Tool\ImportEcDataTool\ImportEcDataTool\bin\Debug\LumenWorks.Framework.IO.dll
+D:\Development\outsource\VS_LOAN\Tool\ImportEcDataTool\ImportEcDataTool\bin\Debug\Dapper.xml
+D:\Development\outsource\VS_LOAN\Tool\ImportEcDataTool\ImportEcDataTool\bin\Debug\LumenWorks.Framework.IO.xml
+D:\Development\outsource\VS_LOAN\Tool\ImportEcDataTool\ImportEcDataTool\obj\Debug\ImportEcDataTool.csprojAssemblyReference.cache
+D:\Development\outsource\VS_LOAN\Tool\ImportEcDataTool\ImportEcDataTool\obj\Debug\ImportEcDataTool.Form1.resources
+D:\Development\outsource\VS_LOAN\Tool\ImportEcDataTool\ImportEcDataTool\obj\Debug\ImportEcDataTool.Properties.Resources.resources
+D:\Development\outsource\VS_LOAN\Tool\ImportEcDataTool\ImportEcDataTool\obj\Debug\ImportEcDataTool.csproj.GenerateResource.cache
+D:\Development\outsource\VS_LOAN\Tool\ImportEcDataTool\ImportEcDataTool\obj\Debug\ImportEcDataTool.csproj.CoreCompileInputs.cache
+D:\Development\outsource\VS_LOAN\Tool\ImportEcDataTool\ImportEcDataTool\obj\Debug\ImportEcDataTool.csproj.CopyComplete
+D:\Development\outsource\VS_LOAN\Tool\ImportEcDataTool\ImportEcDataTool\obj\Debug\ImportEcDataTool.exe
+D:\Development\outsource\VS_LOAN\Tool\ImportEcDataTool\ImportEcDataTool\obj\Debug\ImportEcDataTool.pdb
