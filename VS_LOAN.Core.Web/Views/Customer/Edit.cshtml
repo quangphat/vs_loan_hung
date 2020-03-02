@@ -40,7 +40,7 @@
                         <div class="col-sm-4">
                             <input type="text" id="txtCMND" placeholder="Nhập số CMND" class="form-control" />
                         </div>
-                        
+
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">CIC<span class="required">(*)</span></label>
@@ -54,8 +54,25 @@
 
                     </div>
                     <div class="form-group">
-                        <div id="lstPartner">
+                        <label class="col-sm-2 control-label no-padding-right">Tên ngân hàng<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlDoiTac" class="chosen-select form-control" data-placeholder="Chọn đối tác">
+                                <option value="0"></option>
+                            </select>
+                        </div>
 
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-4">
+                            <label class="control-label no-padding-right">
+                                <input name="radio-check" id="rdChecked" type="radio" checked="checked" value="1" class="ace">
+                                <span class="lbl">Đủ điều kiện</span>
+                            </label>
+                            <label class="control-label no-padding-right">
+                                <input name="radio-check" id="rdUnChecked" type="radio" value="0" class="ace">
+                                <span class="lbl">Không đủ điều kiện</span>
+                            </label>
                         </div>
 
                     </div>
@@ -125,20 +142,19 @@
              url: '/Customer/GetPartner?customerId=' + customer.Id,
              success: function (data) {
                  partners = data.data
-                $('#lstPartner').empty();
+                 $('#ddlDoiTac').empty();
                  if (data != null) {
-                     debugger
-                    let content = ''
-                    $.each(data.data, function (index, item) {
-                        var checked = item.IsSelect ? "checked" : ""
-                        content += '<label class="col-sm-2 control-label no-padding-right">' + item.Name + ': </label><div  class="col-sm-10"><div class="checkbox"> <label>'
-                            + '<input name="form-field-checkbox" id="partner_' + item.Id + '" type="checkbox" ' + checked
-                            + ' onchange ="onPartnerCheck(' + item.Id + ')" class="ace">'
-                            + '<span class="lbl"> Đủ điều kiện</span>'
-                            + '</label></div></div>';
+                     var checked = data.data.find(p=>p.IsSelect==true);
+                     $.each(data.data, function (index, item) {
+                        
+                        $('#ddlDoiTac').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
 
-                    });
-                    $('#lstPartner').append(content)
+                     });
+                     debugger
+                     if (checked != null) {
+                         $("#ddlDoiTac").val(checked.Id);
+                         $('#ddlDoiTac').chosen().trigger("chosen:updated");
+                     }
                 }
 
             },
@@ -208,7 +224,7 @@
             customer.Gender = 0
             customer.CICStatus = $("#ddlCIC").val()
             model.Customer = customer;
-            model.Partners = partners;
+        model.Partners = [{ Id: $("#ddlDoiTac").val(), Name: $("#ddlDoiTac option:selected").text(), IsSelect: $('input[name="radio-check"]:checked').val() == "1" ? true : false }];
             var objectSend = JSON.stringify(model);
         $.ajax({
             traditional: true,

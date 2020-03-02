@@ -15,5 +15,6 @@ namespace VS_LOAN.Core.Entity
         public int CICStatus { get; set; }
         public bool Gender { get; set; }
         public string Note { get; set; }
+        public List<OptionSimple> Partners { get; set; }
     }
 }

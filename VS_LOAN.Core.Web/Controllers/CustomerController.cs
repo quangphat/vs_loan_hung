@@ -46,6 +46,16 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public ActionResult Create(CustomerModel model)
         {
+            var match = string.Empty;
+            var notmatch = string.Empty;
+            if (model.Partners != null)
+            {
+                var partner = model.Partners[0];
+                if(partner.IsSelect)
+                    match = string.Join(",", model.Partners.Where(p => p.IsSelect == true).Select(p => p.Name).ToArray());
+                else
+                    notmatch = string.Join(",", model.Partners.Where(p => !p.IsSelect).Select(p => p.Name).ToArray());
+            }
             var customer = new Customer
             {
                 FullName = model.FullName,
@@ -54,7 +64,9 @@ namespace VS_LOAN.Core.Web.Controllers
                 CICStatus = 0,
                 LastNote = model.Note,
                 CreatedBy = GlobalData.User.IDUser,
-                Gender = model.Gender
+                Gender = model.Gender,
+                MatchCondition = match,
+                NotMatch = notmatch
             };
             var _bizCustomer = new CustomerBLL();
             var id = _bizCustomer.Create(customer);
@@ -70,7 +82,21 @@ namespace VS_LOAN.Core.Web.Controllers
                     };
                     _bizCustomer.AddNote(note);
                 }
-                
+                foreach (var item in model.Partners)
+                {
+                    if(item.IsSelect)
+                    {
+                        var partner = new CustomerCheck
+                        {
+                            CustomerId = customer.Id,
+                            PartnerId = item.Id,
+                            Status = 1,
+                            CreatedBy = customer.UpdatedBy
+                        };
+                        _bizCustomer.InserCustomerCheck(partner);
+                    }
+                    
+                }
                 return ToResponse(true);
             }        
             return ToResponse(false);
@@ -165,6 +191,13 @@ namespace VS_LOAN.Core.Web.Controllers
             }
 
             return ToJsonResponse(true,null,partners);
+        }
+        public JsonResult GetAllPartner()
+        {
+            var bizPartner = new PartnerBLL();
+            var partners = bizPartner.GetListForCheckCustomerDuplicate();
+            
+            return ToJsonResponse(true, null, partners);
         }
         public  JsonResult GetNotes(int customerId)
         {
