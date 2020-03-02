@@ -307,11 +307,38 @@
     });
     function renderStatusList() {
         $("#ddlStatus").empty();
-        $.each(lstStatus, function (index, item) {
-            $("#ddlStatus").append("<option value='" + item.value + "'>" + item.display + "</option>")
-        })
-        $('#ddlStatus').chosen().trigger("chosen:updated");
-        $('#ddlStatus').trigger("change");
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSTrangThai", "QuanLyHoSo")',
+            data: {},
+            success: function (data) {
+                $('#ddlStatus').append("<option value='0'></option>");
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, item) {
+                        $('#ddlStatus').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
+                    });
+                    debugger
+                    var status = decodeURI(queries.get("status"))
+                    if (!isNullOrWhiteSpace(status)) {
+                        let arrStatus = status.split(',')
+                        $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
+                    }
+                    $('#ddlStatus').chosen().trigger("chosen:updated");
+                }
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+
+
+        //$.each(lstStatus, function (index, item) {
+        //    $("#ddlStatus").append("<option value='" + item.value + "'>" + item.display + "</option>")
+        //})
+        //$('#ddlStatus').chosen().trigger("chosen:updated");
+        //$('#ddlStatus').trigger("change");
         
     }
     function getTotalPage(totalRecord, limit) {
@@ -556,7 +583,7 @@
                 'limit': limit,
                 'maNhom': dsNhom.length > 0 ? $('#ddlNhom').val() : 0,
                 'maThanhVien': memberId,
-                  'fromDate':$('#txtFromDate').val(),
+                 'fromDate':$('#txtFromDate').val(),
                 'toDate': $('#txtToDate').val(),
                 'maHS': $('#txtMaHS').val(),
                 'cmnd': $('#txtCMND').val(),
