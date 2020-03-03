@@ -146,15 +146,14 @@
                  if (data != null) {
                      var checked = data.data.find(p=>p.IsSelect==true);
                      $.each(data.data, function (index, item) {
-                        
                         $('#ddlDoiTac').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
-
                      });
-                     debugger
-                     if (checked != null) {
-                         $("#ddlDoiTac").val(checked.Id);
-                         $('#ddlDoiTac').chosen().trigger("chosen:updated");
-                     }
+                     
+                     $("#ddlDoiTac").val(customer.PartnerId);
+                     //$('#ddlDoiTac').chosen().trigger("chosen:updated");
+                     
+                     $("#rdChecked").prop("checked", customer.IsMatch);
+                     $("#rdUnChecked").prop("checked", !customer.IsMatch); 
                 }
 
             },

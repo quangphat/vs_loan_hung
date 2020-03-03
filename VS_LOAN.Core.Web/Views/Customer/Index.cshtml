@@ -289,6 +289,14 @@
         getData(page,limit)
         //alert(limit)
     }
+    function renderMatchCondition(item) {
+        debugger
+        if (item == null)
+            return renderTextLeft('', '', "m-w-150")
+        if (item.IsMatch == true)
+            return renderTextLeft(item.MatchCondition, '', "m-w-150")
+        return renderTextLeft(item.NotMatch, '', "m-w-150")
+    }
     function renderRow(index, rowData) {
         page = queries.get("page");
         if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))

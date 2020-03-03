@@ -30,6 +30,10 @@ namespace VS_LOAN.Core.Business
                 p.Add("note", customer.LastNote);
                 p.Add("createdby", customer.CreatedBy);
                 p.Add("gender", customer.Gender);
+                p.Add("IsMatch", customer.IsMatch);
+                p.Add("PartnerId", customer.PartnerId);
+                p.Add("match", customer.MatchCondition);
+                p.Add("notMatch", customer.NotMatch);
                 con.Execute("sp_InsertCustomer", p, commandType: CommandType.StoredProcedure);
                 return p.Get<int>("id");
             }

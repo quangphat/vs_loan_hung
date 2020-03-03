@@ -30,13 +30,13 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             return View();
         }
-        public JsonResult Search(string freeText = null, int page = 1,int  limit = 10)
+        public JsonResult Search(string freeText = null, int page = 1, int limit = 10)
         {
             var bzCustomer = new CustomerBLL();
             var totalRecord = bzCustomer.Count(freeText);
             var datas = bzCustomer.Gets(freeText, page, limit);
             var result = DataPaging.Create(datas, totalRecord);
-            return ToJsonResponse(true,null,result);
+            return ToJsonResponse(true, null, result);
         }
         public ActionResult AddNew()
         {
@@ -46,16 +46,10 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public ActionResult Create(CustomerModel model)
         {
-            var match = string.Empty;
-            var notmatch = string.Empty;
-            if (model.Partners != null)
-            {
-                var partner = model.Partners[0];
-                if(partner.IsSelect)
-                    match = string.Join(",", model.Partners.Where(p => p.IsSelect == true).Select(p => p.Name).ToArray());
-                else
-                    notmatch = string.Join(",", model.Partners.Where(p => !p.IsSelect).Select(p => p.Name).ToArray());
-            }
+            if (model.Partners == null || !model.Partners.Any())
+                return ToResponse(false, "Vui lòng chọn đối tác", 0);
+            var partner = model.Partners[0];
+            bool isMatch = partner.IsSelect;
             var customer = new Customer
             {
                 FullName = model.FullName,
@@ -65,14 +59,16 @@ namespace VS_LOAN.Core.Web.Controllers
                 LastNote = model.Note,
                 CreatedBy = GlobalData.User.IDUser,
                 Gender = model.Gender,
-                MatchCondition = match,
-                NotMatch = notmatch
+                PartnerId = model.Partners != null ? partner.Id : 0,
+                IsMatch = model.Partners != null ? partner.IsSelect : false,
+                MatchCondition = isMatch == true ? partner.Name : string.Empty,
+                NotMatch = isMatch == false ? partner.Name : string.Empty
             };
             var _bizCustomer = new CustomerBLL();
             var id = _bizCustomer.Create(customer);
             if (id > 0)
             {
-                if(!string.IsNullOrWhiteSpace(model.Note))
+                if (!string.IsNullOrWhiteSpace(model.Note))
                 {
                     var note = new CustomerNote
                     {
@@ -82,25 +78,10 @@ namespace VS_LOAN.Core.Web.Controllers
                     };
                     _bizCustomer.AddNote(note);
                 }
-                foreach (var item in model.Partners)
-                {
-                    if(item.IsSelect)
-                    {
-                        var partner = new CustomerCheck
-                        {
-                            CustomerId = customer.Id,
-                            PartnerId = item.Id,
-                            Status = 1,
-                            CreatedBy = customer.UpdatedBy
-                        };
-                        _bizCustomer.InserCustomerCheck(partner);
-                    }
-                    
-                }
                 return ToResponse(true);
-            }        
+            }
             return ToResponse(false);
-            
+
         }
         public ActionResult Edit(int id)
         {
@@ -110,20 +91,17 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public ActionResult Update(CustomerEditModel model)
         {
-            
-            if(model == null || model.Customer == null)
+
+            if (model == null || model.Customer == null)
             {
                 return ToResponse(false, "Dữ liệu không hợp lệ");
             }
+            if (model.Partners == null || !model.Partners.Any())
+                return ToResponse(false, "Vui lòng chọn đối tác", 0);
+            var partner = model.Partners[0];
+            bool isMatch = partner.IsSelect;
             var bizCustomer = new CustomerBLL();
-            var match = string.Empty;
-            var notmatch = string.Empty;
-            if(model.Partners !=null)
-            {
-                match = string.Join(",", model.Partners.Where(p => p.IsSelect == true).Select(p => p.Name).ToArray());
-                notmatch = string.Join(",", model.Partners.Where(p => !p.IsSelect ).Select(p => p.Name).ToArray());
-            }
-            
+           
             var customer = new Customer
             {
                 Id = model.Customer.Id,
@@ -134,14 +112,16 @@ namespace VS_LOAN.Core.Web.Controllers
                 LastNote = model.Customer.Note,
                 UpdatedBy = GlobalData.User.IDUser,
                 Gender = model.Customer.Gender,
-                MatchCondition = match,
-                NotMatch = notmatch
+                PartnerId = model.Partners != null ? partner.Id : 0,
+                IsMatch = model.Partners != null ? partner.IsSelect : false,
+                MatchCondition = isMatch == true ? partner.Name : string.Empty,
+                NotMatch = isMatch == false ? partner.Name : string.Empty
             };
 
             var result = bizCustomer.Update(customer);
             if (!result)
                 return ToResponse(false);
-            if(!string.IsNullOrWhiteSpace(model.Customer.Note))
+            if (!string.IsNullOrWhiteSpace(model.Customer.Note))
             {
                 var note = new CustomerNote
                 {
@@ -151,59 +131,29 @@ namespace VS_LOAN.Core.Web.Controllers
                 };
                 bizCustomer.AddNote(note);
             }
-            if(model.Partners ==null || !model.Partners.Any())
-            {
-                return ToResponse(true);
-            }
-            var bizPartner = new PartnerBLL();
-            var deleteCustomerCheck = bizCustomer.DeleteCustomerCheck(customer.Id);
-            if(deleteCustomerCheck)
-            {
-                var selectedPartner = model.Partners.Where(p => p.IsSelect == true).ToList();
-                if(selectedPartner.Any())
-                {
-                    foreach(var item in selectedPartner)
-                    {
-                        var partner = new CustomerCheck
-                        {
-                            CustomerId = customer.Id,
-                            PartnerId = item.Id,
-                            Status = 1,
-                            CreatedBy = customer.UpdatedBy
-                        };
-                        bizCustomer.InserCustomerCheck(partner);
-                    }
-                }
-            }
+            
             return ToResponse(true);
         }
-        public JsonResult GetPartner(int customerId)
+        public JsonResult GetPartner(int customerId = 0)
         {
-            var bizCustomer = new CustomerBLL();
             var bizPartner = new PartnerBLL();
-            var customerCheck = bizCustomer.GetCustomerCheckByCustomerId(customerId);
             var partners = bizPartner.GetListForCheckCustomerDuplicate();
             if (partners == null)
-                return ToJsonResponse(true,null,new List<OptionSimple>());
-            foreach(var item in partners)
-            {
-                item.IsSelect = customerCheck.Contains(item.Id);
-            }
-
-            return ToJsonResponse(true,null,partners);
+                return ToJsonResponse(true, null, new List<OptionSimple>());
+            return ToJsonResponse(true, null, partners);
         }
         public JsonResult GetAllPartner()
         {
             var bizPartner = new PartnerBLL();
             var partners = bizPartner.GetListForCheckCustomerDuplicate();
-            
+
             return ToJsonResponse(true, null, partners);
         }
-        public  JsonResult GetNotes(int customerId)
+        public JsonResult GetNotes(int customerId)
         {
             var bizCustomer = new CustomerBLL();
             var datas = bizCustomer.GetNoteByCustomerId(customerId);
-            return ToJsonResponse(true,null,datas);
+            return ToJsonResponse(true, null, datas);
         }
     }
 }
