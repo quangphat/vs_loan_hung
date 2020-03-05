@@ -267,6 +267,8 @@
         return "<td class='text-center'>" + getValueDisplay(value, type) + "</td>";
     }
     function renderAction(id) {
+        if (@VS_LOAN.Core.Web.Helpers.GlobalData.User.UserType == 3)
+            return "<td class='text-center'></td>"
         let thaoTac = "<div class='action-buttons'><a title='@Global.Button_Edit' class='green' style='cursor: pointer'  onclick='onEdit("+ id +")' >";
                 thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
                 thaoTac += "</i>";
