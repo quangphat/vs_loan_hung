@@ -16,6 +16,8 @@
 /VS_LOAN.Core.Nhibernate/XMLConnect
 /F88Service/obj
 /F88Service/bin
+/EasyCreditService/bin
+/EasyCreditService/obj
 /VS_LOAN.Core.Nhibernate/XMLConnect/LOAN_hibernate.cfg.xml
 /EasyCreditService/obj
 /EasyCreditService/bin
