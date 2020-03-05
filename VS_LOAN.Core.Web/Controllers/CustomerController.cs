@@ -126,7 +126,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 };
                 bizCustomer.AddNote(note);
             }
-            if(!model.Partners.Any())
+            if(model.Partners ==null || !model.Partners.Any())
             {
                 return ToResponse(true);
             }
