@@ -77,6 +77,7 @@
                                     <th class="w-105">CMND</th>
                                     <th class="w-105">Ngày check</th>
                                     <th style="width: 150px">CIC</th>
+                                    <th class="m-w-150">Chưa check</th>
                                     <th class="m-w-150">Đủ điều kiện</th>
                                     <th class="m-w-150">Không đủ điều kiện</th>
                                     <th class="m-w-300">Ghi chú</th>
@@ -289,15 +290,17 @@
         getData(page,limit)
         //alert(limit)
     }
-    function renderMatchCondition(item) {
+    function renderMatchCondition(item, isMatchColumn = true) {
         debugger
-        if (item == null)
+        if (item == null || item.Status == 0)
             return renderTextLeft('', '', "m-w-150")
-        if (item.IsMatch == true)
+
+        if (isMatchColumn) {
             return renderTextLeft(item.MatchCondition, '', "m-w-150")
+        }
         return renderTextLeft(item.NotMatch, '', "m-w-150")
     }
-    function renderRow(index, rowData) {
+    function renderRow(index, item) {
         page = queries.get("page");
         if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
             page = 1;
@@ -311,14 +314,15 @@
         var stt = (page - 1) * limit + index + 1;
         return "<tr role='row' class = 'odd'>"
             + renderTextCenter(stt)
-            + renderTextLeft(rowData.FullName, '', "m-w-150")
-            + renderTextLeft(rowData.Cmnd, '', "w-105")
-            + renderTextLeft(rowData.CheckDate, 'datetime')
-            + renderStatus(rowData.CICStatus)
-            + renderTextLeft(rowData.MatchCondition, '', "m-w-150")
-            + renderTextLeft(rowData.NotMatch, '', "m-w-150")
-            + renderTextLeft(rowData.LastNote, '', 'tb-row-breakword')
-            + renderAction(rowData.Id)
+            + renderTextLeft(item.FullName, '', "m-w-150")
+            + renderTextLeft(item.Cmnd, '', "w-105")
+            + renderTextLeft(item.CheckDate, 'datetime')
+            + renderStatus(item.CICStatus)
+            + renderTextLeft(item.NotMatch, '', "m-w-150")
+            + renderMatchCondition(item)
+            + renderMatchCondition(item, false)
+            + renderTextLeft(item.LastNote, '', 'tb-row-breakword')
+            + renderAction(item.Id)
             + "</tr>";
     }
     function renderTableBody(datas) {

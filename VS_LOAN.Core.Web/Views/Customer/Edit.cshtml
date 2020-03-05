@@ -148,12 +148,16 @@
                      $.each(data.data, function (index, item) {
                         $('#ddlDoiTac').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                      });
+                     if (customer.Status == 0) {
+                         $("#rdChecked").prop("checked", true);
+                         $("#rdUnChecked").prop("checked", false);
+                     }
+                     else {
+                         $("#ddlDoiTac").val(customer.PartnerId);
+                         $("#rdChecked").prop("checked", customer.IsMatch);
+                         $("#rdUnChecked").prop("checked", !customer.IsMatch); 
+                     }
                      
-                     $("#ddlDoiTac").val(customer.PartnerId);
-                     //$('#ddlDoiTac').chosen().trigger("chosen:updated");
-                     
-                     $("#rdChecked").prop("checked", customer.IsMatch);
-                     $("#rdUnChecked").prop("checked", !customer.IsMatch); 
                 }
 
             },

@@ -54,7 +54,7 @@
                         </div>
 
                     </div>
-                    <div class="form-group">
+                    @*<div class="form-group">
                         <div class="col-sm-2"></div>
                         <div class="col-sm-4">
                             <label class="control-label no-padding-right">
@@ -67,7 +67,7 @@
                             </label>
                         </div>
                        
-                    </div>
+                    </div>*@
                 </form>
             </div>
         </div>
@@ -154,7 +154,7 @@
             'Note': $('#txtGhiChu').val(),
             'Cmnd': $('#txtCMND').val(),
             'Gender': 0,
-            'Partners': [{ Id: $("#ddlDoiTac").val(), Name: $("#ddlDoiTac option:selected").text(), IsSelect: $('input[name="radio-check"]:checked').val() == "1" ? true : false }]
+            'Partners': [{ Id: $("#ddlDoiTac").val(), Name: $("#ddlDoiTac option:selected").text(), IsSelect: false }]
 
         });
         $.ajax({

@@ -18,6 +18,7 @@ namespace VS_LOAN.Core.Entity.Model
         public string MatchCondition { get; set; }
         public string NotMatch { get; set; }
         public int PartnerId { get; set; }
+        public int Status { get; set; }
         public bool IsMatch { get; set; }
     }
 }
