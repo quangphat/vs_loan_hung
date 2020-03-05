@@ -67,49 +67,51 @@
     }
 
 
-    .menu-icon.home {
-        display: inline-block;
-        /*width: auto; /* Generic width */
-        height: 22px;
-        width: 28px;
-        background: url('/Content/images/iconmenu/House-icon.png') no-repeat;
-        background-size: auto 100%;
-    }
+.menu-icon.home {
+    display: inline-block;
+    /*width: auto; /* Generic width */
+    height: 22px;
+    width: 28px;
+    background: url('/Content/images/iconmenu/House-icon.png') no-repeat;
+    background-size: auto 100%;
+}
 
-    .menu-icon.hs {
-        display:  inline-block;
-        /*width: auto; /* Generic width */
-        height: 24px;
-        width: 24px;
-        background: url('/Content/images/iconmenu/Internet-Explorer-icon.png') no-repeat;
-        background-size: auto 100%;
-    }
-     .menu-icon.qlhs {
-        display:  inline-block;
-        /*width: auto; /* Generic width */
-        height: 22px;
-        width: 28px;
-        background: url('/Content/images/iconmenu/info.png') no-repeat;
-        background-size: auto 100%;
-    }
+.menu-icon.hs {
+    display: inline-block;
+    /*width: auto; /* Generic width */
+    height: 24px;
+    width: 24px;
+    background: url('/Content/images/iconmenu/Internet-Explorer-icon.png') no-repeat;
+    background-size: auto 100%;
+}
 
-     .menu-icon.group {
-        display:  inline-block;
-        /*width: auto; /* Generic width */
-        height: 24px;
-        width: 24px;
-        background: url('/Content/images/iconmenu/Group.png') no-repeat;
-        background-size: auto 100%;
-    }
+.menu-icon.qlhs {
+    display: inline-block;
+    /*width: auto; /* Generic width */
+    height: 22px;
+    width: 28px;
+    background: url('/Content/images/iconmenu/info.png') no-repeat;
+    background-size: auto 100%;
+}
 
-     .menu-icon.sanpham {
-        display:  inline-block;
-        /*width: auto; /* Generic width */
-        height: 24px;
-        width: 24px;
-        background: url('/Content/images/iconmenu/sanpham.png') no-repeat;
-        background-size: auto 100%;
-    }
+.menu-icon.group {
+    display: inline-block;
+    /*width: auto; /* Generic width */
+    height: 24px;
+    width: 24px;
+    background: url('/Content/images/iconmenu/Group.png') no-repeat;
+    background-size: auto 100%;
+}
+
+.menu-icon.sanpham {
+    display: inline-block;
+    /*width: auto; /* Generic width */
+    height: 24px;
+    width: 24px;
+    background: url('/Content/images/iconmenu/sanpham.png') no-repeat;
+    background-size: auto 100%;
+}
+
 .menu-icon.employee {
     display: inline-block;
     /*width: auto; /* Generic width */
@@ -118,6 +120,7 @@
     background: url('/Content/images/iconmenu/employee.png') no-repeat;
     background-size: auto 100%;
 }
+
 .menu-icon.duplicate {
     display: inline-block;
     /*width: auto; /* Generic width */
@@ -126,6 +129,7 @@
     background: url('/Content/images/iconmenu/duplicate.png') no-repeat;
     background-size: auto 100%;
 }
+
 .menu-icon.courier {
     display: inline-block;
     /*width: auto; /* Generic width */
@@ -134,6 +138,7 @@
     background: url('/Content/images/iconmenu/courier.png') no-repeat;
     background-size: auto 100%;
 }
+
 .trippurpose {
     position: relative;
     /*top: auto;
