@@ -133,7 +133,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<ActionResult> Save(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
            , int maKhuVuc, string diaChi,int courier, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay, 
-            string soTienVay, string ghiChu, string link = null, int provinceId = 0, int doitacF88Value = 0)
+            string soTienVay, string ghiChu, string link = null, int provinceId = 0)
         {
             var message = new RMessage { ErrorMessage = Resources.Global.Message_Error, Result = false };
             bool isCheck = true;
@@ -229,17 +229,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     hs.MaTrangThai = (int)TrangThaiHoSo.NhapLieu;
                     hs.MaKetQua = (int)KetQuaHoSo.Trong;
                     int result = 0;
-                    var f88Service = new F88Service.F88Service();
-                    var f88Model = new Entity.F88Model.LadipageModel
-                    {
-                        Name = hoten,
-                        Phone = phone,
-                        Link = link,
-                        Select1 = null,
-                        Select2 = provinceId.ToString(),
-                        TransactionId = hs.ID,
-                        ReferenceType = doitacF88Value
-                    };
+                    
                     if (hs.ID > 0)
                     {
                         bool isCheckMaSanPham = false;
@@ -247,7 +237,7 @@ namespace VS_LOAN.Core.Web.Controllers
                         if (new HoSoBLL().Luu(hs, lstTaiLieu, ref isCheckMaSanPham))
                         {
                             result = 1;
-                            var f88Result = await f88Service.LadipageReturnID(f88Model);
+                            
                             new HoSoDuyetXemBLL().Them(hs.ID);
                             MailCM.SendMailToAdmin(hs.ID, Request.Url.Authority);
                         }
@@ -268,8 +258,7 @@ namespace VS_LOAN.Core.Web.Controllers
                             Session["AddNewHoSoID"] = result;
                             new HoSoDuyetXemBLL().Them(result);
                             MailCM.SendMailToAdmin(result, Request.Url.Authority);
-                            f88Model.TransactionId = result;
-                            var f88Result = await f88Service.LadipageReturnID(f88Model);
+                            
                         }
                        else
                         {
