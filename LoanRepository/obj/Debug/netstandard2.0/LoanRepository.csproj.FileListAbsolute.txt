@@ -1,0 +1,12 @@
+D:\Development\outsource\VS_LOAN\LoanRepository\bin\Debug\netstandard2.0\LoanRepository.deps.json
+D:\Development\outsource\VS_LOAN\LoanRepository\bin\Debug\netstandard2.0\LoanRepository.dll
+D:\Development\outsource\VS_LOAN\LoanRepository\bin\Debug\netstandard2.0\LoanRepository.pdb
+D:\Development\outsource\VS_LOAN\LoanRepository\bin\Debug\netstandard2.0\VS_LOAN.Core.Entity.dll
+D:\Development\outsource\VS_LOAN\LoanRepository\bin\Debug\netstandard2.0\VS_LOAN.Core.Entity.pdb
+D:\Development\outsource\VS_LOAN\LoanRepository\obj\Debug\netstandard2.0\LoanRepository.csprojAssemblyReference.cache
+D:\Development\outsource\VS_LOAN\LoanRepository\obj\Debug\netstandard2.0\LoanRepository.csproj.CoreCompileInputs.cache
+D:\Development\outsource\VS_LOAN\LoanRepository\obj\Debug\netstandard2.0\LoanRepository.AssemblyInfoInputs.cache
+D:\Development\outsource\VS_LOAN\LoanRepository\obj\Debug\netstandard2.0\LoanRepository.AssemblyInfo.cs
+D:\Development\outsource\VS_LOAN\LoanRepository\obj\Debug\netstandard2.0\LoanRepository.csproj.CopyComplete
+D:\Development\outsource\VS_LOAN\LoanRepository\obj\Debug\netstandard2.0\LoanRepository.dll
+D:\Development\outsource\VS_LOAN\LoanRepository\obj\Debug\netstandard2.0\LoanRepository.pdb
