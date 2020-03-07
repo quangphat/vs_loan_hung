@@ -620,12 +620,11 @@
             return;
         }
         let doitacF88Value = 0;
+        
         if (!isNullOrNoItem(lstDoitac)) {
             let doitacId = !isNullOrUndefined($('#ddlDoiTac').val()) ? parseInt($('#ddlDoiTac').val()) : 0;
             let doitac = lstDoitac.find(p => p.ID == doitacId);
-            if (!isNullOrUndefined(doitac)) {
-                doitacF88Value = doitac.F88Value;
-            }
+            
         }
         if ($('#txtCMND').val().length != 9 && $('#txtCMND').val().length != 12) {
             swal({
@@ -648,11 +647,7 @@
             'ghiChu': $('#txtGhiChu').val(),
             'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, ''),
             'link': window.location.href,
-            'provinceId': parseInt($('#ddlTinh').val()),
-            'doitacF88Value': doitacF88Value,
-            'birthDayStr': $('#txtBirhDay').val(),
-            'cmndDayStr': $('#txtCmndDay').val(),
-            'FileRequireIds': filesUpload.map(p => FileRequireIds.push(p.key))
+            'provinceId': parseInt($('#ddlTinh').val())
         });
         $.ajax({
             traditional: true,

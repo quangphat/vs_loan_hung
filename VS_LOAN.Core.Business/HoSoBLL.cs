@@ -994,7 +994,7 @@ namespace VS_LOAN.Core.Business
 
                                 }
                                 hs.NhanVienBanHang = item["NhanVienBanHang"].ToString();
-                                hs.F88Result = item["F88Result"] != null ? Convert.ToInt32(item["F88Result"]):0;
+                                //hs.F88Result = item["F88Result"] != null ? Convert.ToInt32(item["F88Result"]):0;
                                 hs.MaNVLayHS = item["MaNVLayHS"].ToString();
                                 hs.DoiNguBanHang = item["DoiNguBanHang"].ToString();
                                 hs.MaNV = item["MaNV"].ToString();
