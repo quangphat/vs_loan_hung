@@ -112,24 +112,7 @@ namespace VS_LOAN.Core.Web.Controllers
             new HoSoBLL().AddGhichu(ghichu);
             return true;
         }
-        [System.Web.Http.HttpPost]
-        [Route("PostToF88")]
-        public async Task<ActionResult> PostToF88([FromBody] Entity.F88Model.LadipageModel model)
-        {
-            //var f88Model = new Entity.F88Model.LadipageModel
-            //{
-            //    Name = "test",
-            //    Phone = phone,
-            //    Link = link,
-            //    Select1 = null,
-            //    Select2 = provinceId.ToString(),
-            //    TransactionId = hs.ID,
-            //    ReferenceType = 0
-            //};
-            var f88Service = new F88Service.F88Service();
-            var result = await f88Service.LadipageReturnID(model);
-            return Json(new { Message = result }, JsonRequestBehavior.AllowGet);
-        }
+        
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<ActionResult> Save(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
            , int maKhuVuc, string diaChi,int courier, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay, 
