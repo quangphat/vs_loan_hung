@@ -591,8 +591,22 @@ namespace VS_LOAN.Core.Web.Controllers
                 
                 string trangthai = "";
                 trangthai += ((int)TrangThaiHoSo.TuChoi).ToString() + "," + ((int)TrangThaiHoSo.NhapLieu).ToString() + "," + ((int)TrangThaiHoSo.ThamDinh).ToString() + "," + ((int)TrangThaiHoSo.BoSungHoSo).ToString() + "," + ((int)TrangThaiHoSo.GiaiNgan).ToString() + "," + ((int)TrangThaiHoSo.Nhap).ToString();
-                int totalRecord = new HoSoBLL().CountHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay);
-                rs = new HoSoBLL().TimHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, string.Empty, 1, totalRecord, true);
+                int totalRecord = new HoSoBLL().CountHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freeText:null);
+                if(totalRecord <=0)
+                    return ToResponse(false, "Không có dữ liệu");
+                rs = new HoSoBLL().TimHoSoQuanLy(maNVDangNhap: GlobalData.User.IDUser,
+                   maNhom: maNhom,
+                   maThanhVien: maThanhVien,
+                   tuNgay: dtFromDate, 
+                   denNgay: dtToDate,
+                   maHS: maHS,
+                   cmnd: cmnd,
+                   trangthai: trangthai,
+                   loaiNgay: loaiNgay,
+                   freeText: string.Empty,
+                   page: 1,
+                   limit: totalRecord,
+                   isDownload: true);
                 if (rs == null)
                     rs = new List<HoSoQuanLyModel>();
                 string destDirectory = VS_LOAN.Core.Utility.Path.DownloadBill + "/" + DateTime.Now.Year.ToString() + "/" + DateTime.Now.Month.ToString() + "/";

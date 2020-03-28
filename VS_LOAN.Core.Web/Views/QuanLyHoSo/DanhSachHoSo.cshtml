@@ -317,7 +317,7 @@
                     $.each(data.data, function (index, item) {
                         $('#ddlStatus').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
                     });
-                    debugger
+                    
                     var status = decodeURI(queries.get("status"))
                     if (!isNullOrWhiteSpace(status)) {
                         let arrStatus = status.split(',')
@@ -572,7 +572,6 @@
             memberId =  dsNhom.length > 0 ? $('#ddlThanhVienNhom').val() : @VS_LOAN.Core.Web.Helpers.GlobalData.User.IDUser
         }
 
-        (isNaN(memberId) || memberId == 0) ? $('#ddlThanhVienNhom').val() : memberId
         showBlock($('#panel_body'), strLoading);
         $.ajax( {
                 url: '@Url.Action("TimHSQL", "QuanLyHoSo")',
@@ -705,12 +704,15 @@
     function DownloadReport(e) {
         var maNhom = 0;
         var maThanhVien = 0;
+        
         if ($('#ddlNhom').val() != undefined) {
             maNhom = $('#ddlNhom').val();
         }
         if ($('#ddlThanhVienNhom').val() != undefined) {
             maThanhVien = $('#ddlThanhVienNhom').val();
         }
+        else
+            maThanhVien = @VS_LOAN.Core.Web.Helpers.GlobalData.User.IDUser
         var objectSend = JSON.stringify({ 'maNhom': maNhom, 'maThanhVien': maThanhVien, 'fromDate': $('#txtFromDate').val(), 'toDate': $('#txtToDate').val(), 'maHS': $('#txtMaHS').val(), 'cmnd': $('#txtCMND').val(), 'loaiNgay': $('input[name="radio-ngay"]:checked').val() });
         $.ajax({
             traditional: true,
@@ -719,9 +721,9 @@
             contentType: "application/json; charset=utf-8",
             data: objectSend,
             success: function (data) {
-                if (data.Message.Result == true) {
+                if (data.success == true) {
                     var link = document.createElement("a");
-                    link.href = data.newurl;
+                    link.href = data.code;
                     link.click();
                 }
                 else {
