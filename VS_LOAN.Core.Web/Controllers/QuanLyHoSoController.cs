@@ -293,7 +293,9 @@ namespace VS_LOAN.Core.Web.Controllers
                     var hoso = new HoSoBLL().LayChiTiet(hs.ID);
                     if (hoso == null)
                         return ToJsonResponse(false, "Hồ sơ không tồn tại", hs.ID);
-                    hs.DisbursementDate = hoso.DisbursementDate != null ? hoso.DisbursementDate : DateTime.Now;
+                    hs.DisbursementDate = hoso.DisbursementDate;
+                    if(hs.MaTrangThai == (int)TrangThaiHoSo.GiaiNgan)
+                        hs.DisbursementDate =  DateTime.Now;
 
                     bool isCheckMaSanPham = false;
                     //// chỉnh sửa

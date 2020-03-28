@@ -344,8 +344,9 @@ namespace VS_LOAN.Core.Web.Controllers
                         new HoSoXemBLL().Them(hosoOld.ID);
                     }
 
-                    hs.DisbursementDate = hosoOld.DisbursementDate != null ? hosoOld.DisbursementDate : DateTime.Now;
-
+                    hs.DisbursementDate = hosoOld.DisbursementDate;
+                    if (hs.MaTrangThai == (int)TrangThaiHoSo.GiaiNgan)
+                        hs.DisbursementDate = DateTime.Now;
                     bool isCheckMaSanPham = false;
                     //// chỉnh sửa
                     if (new HoSoBLL().CapNhatHoSo(hs, null, ref isCheckMaSanPham))
