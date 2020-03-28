@@ -136,6 +136,7 @@
                                     <th style="width: 150px">Trạng thái</th>
                                     <th style="width: 150px">F88</th>
                                     <th class="m-w-300">Ghi chú</th>
+                                    <th class="w-94">Ngày giải ngân</th>
                                     <th class="w-94">Ngày cập nhật cuối</th>
                                     <th class="w-150">Tên sản phẩm</th>
                                     <th class="w-84">Mã nhân viên</th>
@@ -494,7 +495,8 @@
             + renderTextLeft(rowData.TenKH)
             + renderStatus(rowData.MaTrangThai, rowData.TrangThaiHS)
             + renderF88Status(rowData.F88Result)
-            + renderTextLeft(rowData.GhiChu, '','tb-row-breakword')
+            + renderTextLeft(rowData.GhiChu, '', 'tb-row-breakword')
+            + renderTextLeft(rowData.DisbursementDate, 'datetime')
             + renderTextLeft(rowData.NgayCapNhat, 'datetime')
             + renderTextLeft(rowData.TenSanPham)
             + renderTextLeft(rowData.MaNV)

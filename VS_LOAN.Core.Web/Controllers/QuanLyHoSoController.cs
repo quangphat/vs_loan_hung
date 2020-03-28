@@ -54,13 +54,13 @@ namespace VS_LOAN.Core.Web.Controllers
             int page = 1, int limit = 10
             )
         {
-           
+
             List<HoSoQuanLyModel> lstHoso = new List<HoSoQuanLyModel>();
             int totalRecord = 0;
             if (!string.IsNullOrWhiteSpace(freetext) && freetext.Length > 50)
             {
                 return ToJsonResponse(false, "Từ khóa tìm kiếm không được nhiều hơn 50 ký tự");
-               
+
             }
 
             try
@@ -70,7 +70,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     dtFromDate = DateTimeFormat.ConvertddMMyyyyToDateTime(fromDate);
                 if (toDate != "")
                     dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTime(toDate);
-                
+
                 string trangthai = string.IsNullOrWhiteSpace(status) ? Helpers.Helpers.GetLimitStatusString() : status;
                 //trangthai += 
                 totalRecord = new HoSoBLL().CountHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freetext);
@@ -78,14 +78,14 @@ namespace VS_LOAN.Core.Web.Controllers
                 if (lstHoso == null)
                     lstHoso = new List<HoSoQuanLyModel>();
                 var result = DataPaging.Create(lstHoso, totalRecord);
-                return ToJsonResponse(true,null, result);
+                return ToJsonResponse(true, null, result);
             }
             catch (BusinessException ex)
             {
                 return ToJsonResponse(false, ex.Message);
             }
-            
-            
+
+
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult LayDSNhom()
@@ -140,7 +140,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (id < 0)
                 return RedirectToAction("Index");
             var bizHoso = new HosoBusiness();
-            var hoso =await bizHoso.GetDetail(id);
+            var hoso = await bizHoso.GetDetail(id);
             new HoSoXemBLL().DaXem(id);
             ViewBag.HoSo = hoso;
             ViewBag.MaDoiTac = new DoiTacBLL().LayMaDoiTac(hoso.SanPhamVay);
@@ -288,22 +288,26 @@ namespace VS_LOAN.Core.Web.Controllers
                 }
                 //hs.MaTrangThai = (int)TrangThaiHoSo.NhapLieu;
                 hs.MaKetQua = (int)KetQuaHoSo.Trong;
-                int result = 0;
                 if (hs.ID > 0)
                 {
+                    var hoso = new HoSoBLL().LayChiTiet(hs.ID);
+                    if (hoso == null)
+                        return ToJsonResponse(false, "Hồ sơ không tồn tại", hs.ID);
+                    hs.DisbursementDate = hoso.DisbursementDate != null ? hoso.DisbursementDate : DateTime.Now;
+
                     bool isCheckMaSanPham = false;
                     //// chỉnh sửa
                     if (new HoSoBLL().CapNhatHoSo(hs, null, ref isCheckMaSanPham))
                     {
                         new HoSoDuyetXemBLL().Them(hs.ID);
-                        
+
                     }
                     else
                     {
                         if (isCheckMaSanPham)
                             return ToJsonResponse(false, "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác");
                     }
-                   
+
                 }
                 AddGhichu(hs.ID, ghiChu);
                 return ToJsonResponse(true, Resources.Global.Message_Succ, hs.ID);
@@ -423,7 +427,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, ex.Message);
             }
-            
+
         }
         public JsonResult UploadHoSo(string key)
         {
@@ -550,7 +554,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public ActionResult SuaHSByID(int id)
         {
             Session["QL_HoSoID"] = id;
-            return RedirectToAction("Edit", new { id = id});
+            return RedirectToAction("Edit", new { id = id });
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
@@ -578,7 +582,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult DownloadReport(int maNhom, int maThanhVien, string fromDate, string toDate, string maHS, string cmnd, int loaiNgay)
         {
-            
+
             string newUrl = string.Empty;
             try
             {
@@ -588,16 +592,16 @@ namespace VS_LOAN.Core.Web.Controllers
                     dtFromDate = DateTimeFormat.ConvertddMMyyyyToDateTime(fromDate);
                 if (toDate != "")
                     dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTime(toDate);
-                
+
                 string trangthai = "";
                 trangthai += ((int)TrangThaiHoSo.TuChoi).ToString() + "," + ((int)TrangThaiHoSo.NhapLieu).ToString() + "," + ((int)TrangThaiHoSo.ThamDinh).ToString() + "," + ((int)TrangThaiHoSo.BoSungHoSo).ToString() + "," + ((int)TrangThaiHoSo.GiaiNgan).ToString() + "," + ((int)TrangThaiHoSo.Nhap).ToString();
-                int totalRecord = new HoSoBLL().CountHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freeText:null);
-                if(totalRecord <=0)
+                int totalRecord = new HoSoBLL().CountHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freeText: null);
+                if (totalRecord <= 0)
                     return ToResponse(false, "Không có dữ liệu");
                 rs = new HoSoBLL().TimHoSoQuanLy(maNVDangNhap: GlobalData.User.IDUser,
                    maNhom: maNhom,
                    maThanhVien: maThanhVien,
-                   tuNgay: dtFromDate, 
+                   tuNgay: dtFromDate,
                    denNgay: dtToDate,
                    maHS: maHS,
                    cmnd: cmnd,
@@ -664,7 +668,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToResponse(false, ex.Message);
             }
-            
+
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult LayDSTrangThai()

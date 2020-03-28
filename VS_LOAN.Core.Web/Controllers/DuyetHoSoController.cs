@@ -71,7 +71,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 if (lstHoso == null)
                     lstHoso = new List<HoSoDuyetModel>();
                 var result = DataPaging.Create(lstHoso, totalRecord);
-                return ToJsonResponse(true,null, result);
+                return ToJsonResponse(true, null, result);
             }
             catch (BusinessException ex)
             {
@@ -79,7 +79,7 @@ namespace VS_LOAN.Core.Web.Controllers
             }
         }
 
-        
+
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult UploadHoSo(string key)
         {
@@ -213,7 +213,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public ActionResult Edit(int id)
         {
             ViewBag.formindex = LstRole["Index"]._formindex;
-            if (id <=0)
+            if (id <= 0)
                 return RedirectToAction("Index");
             ViewBag.ID = id;
             var hoso = new HoSoBLL().LayChiTiet(id);
@@ -231,7 +231,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public JsonResult CapNhat(int id, string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
                    , int maKhuVuc, string diaChi, int sanPhamVay, string tenCuaHang,
             int baoHiem, int thoiHanVay, string soTienVay, int trangThai,
-            int ketQua, string ghiChu, string birthDayStr, string cmndDayStr, int courier =0, List<int> FileRequireIds = null)
+            int ketQua, string ghiChu, string birthDayStr, string cmndDayStr, int courier = 0, List<int> FileRequireIds = null)
         {
             try
             {
@@ -285,7 +285,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     var missingNames = BusinessExtension.GetFilesMissingV2(lstLoaiTaiLieu, FileRequireIds);
                     if (!string.IsNullOrWhiteSpace(missingNames))
                     {
-                        return ToJsonResponse(false,$"Vui lòng nhập: {missingNames}");
+                        return ToJsonResponse(false, $"Vui lòng nhập: {missingNames}");
                     }
                 }
 
@@ -343,6 +343,9 @@ namespace VS_LOAN.Core.Web.Controllers
                     {
                         new HoSoXemBLL().Them(hosoOld.ID);
                     }
+
+                    hs.DisbursementDate = hosoOld.DisbursementDate != null ? hosoOld.DisbursementDate : DateTime.Now;
+
                     bool isCheckMaSanPham = false;
                     //// chỉnh sửa
                     if (new HoSoBLL().CapNhatHoSo(hs, null, ref isCheckMaSanPham))
@@ -436,7 +439,7 @@ namespace VS_LOAN.Core.Web.Controllers
             List<NhomDropDownModel> rs = new NhomBLL().LayDSDuyetCuaNhanVien(GlobalData.User.IDUser);
             if (rs == null)
                 rs = new List<NhomDropDownModel>();
-            return ToJsonResponse(true,null,rs);
+            return ToJsonResponse(true, null, rs);
         }
 
         public JsonResult LayDSThanhVienNhom(int maNhom)
@@ -578,7 +581,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 if (result)
                 {
                     newUrl = "/File/GetFile?path=" + destDirectory + fileName;
-                    return ToJsonResponse(true,null, newUrl);
+                    return ToJsonResponse(true, null, newUrl);
                 }
                 return ToJsonResponse(false);
             }

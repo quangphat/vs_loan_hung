@@ -359,5 +359,6 @@ namespace VS_LOAN.Core.Entity.Model
         }
         public DateTime BirthDay { get; set; }
         public DateTime CmndDay { get; set; }
+        public DateTime? DisbursementDate { get; set; }
     }
 }

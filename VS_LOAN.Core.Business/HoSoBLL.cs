@@ -15,7 +15,7 @@ namespace VS_LOAN.Core.Business
 {
     public class HoSoBLL
     {
-        
+
         public int Them(HoSoModel hoSoModel, List<TaiLieuModel> lstTaiLieu, ref bool isCheckMaSanPham)
         {
             try
@@ -105,6 +105,8 @@ namespace VS_LOAN.Core.Business
                                 commandAdd.Parameters.Add(new SqlParameter("@HoSoCuaAi", hoSoModel.HoSoCuaAi));
                                 commandAdd.Parameters.Add(new SqlParameter("@birthDay", hoSoModel.BirthDay));
                                 commandAdd.Parameters.Add(new SqlParameter("@cmndDay", hoSoModel.CmndDay));
+                                commandAdd.Parameters.Add(new SqlParameter("@cmndDay", hoSoModel.CmndDay));
+                                commandAdd.Parameters.Add(new SqlParameter("@DisbursementDate", hoSoModel.DisbursementDate));
                                 if (hoSoModel.MaKetQua == 0)
                                 {
                                     commandAdd.Parameters.Add(new SqlParameter("@KetQuaHS", DBNull.Value));
@@ -242,7 +244,7 @@ namespace VS_LOAN.Core.Business
                         command.Parameters.Add(new SqlParameter("@SDT", hoSoModel.SDT));
                         command.Parameters.Add(new SqlParameter("@SDT2", hoSoModel.SDT2));
                         command.Parameters.Add(new SqlParameter("@GioiTinh", hoSoModel.GioiTinh));
-                        if(hoSoModel.ID <=0)
+                        if (hoSoModel.ID <= 0)
                         {
                             command.Parameters.Add(new SqlParameter("@NgayTao", hoSoModel.NgayTao));
                             command.Parameters.Add(new SqlParameter("@MaNguoiTao", hoSoModel.MaNguoiTao));
@@ -381,6 +383,7 @@ namespace VS_LOAN.Core.Business
                         command.Parameters.Add(new SqlParameter("@HoSoCuaAi", hoSoModel.HoSoCuaAi));
                         command.Parameters.Add(new SqlParameter("@birthDay", hoSoModel.BirthDay));
                         command.Parameters.Add(new SqlParameter("@cmndDay", hoSoModel.CmndDay));
+                        command.Parameters.Add(new SqlParameter("@DisbursementDate", hoSoModel.DisbursementDate));
                         //command.Parameters.Add(new SqlParameter("@MaTrangThai", hoSoModel.MaTrangThai));
                         if (hoSoModel.MaKetQua == 0)
                         {
@@ -942,7 +945,7 @@ namespace VS_LOAN.Core.Business
         {
 
             page = page <= 0 ? 1 : page;
-            if(!isDowload)
+            if (!isDowload)
                 limit = (limit <= 0 || limit >= Constant.Limit_Max_Page) ? Constant.Limit_Max_Page : limit;
             int offset = (page - 1) * limit;
             string query = string.IsNullOrWhiteSpace(freeText) ? string.Empty : freeText;
@@ -993,8 +996,12 @@ namespace VS_LOAN.Core.Business
                                 {
 
                                 }
+                                if (!(item["DisbursementDate"] is DBNull))
+                                {
+                                    hs.DisbursementDate = Convert.ToDateTime(item["DisbursementDate"]);
+                                }
                                 hs.NhanVienBanHang = item["NhanVienBanHang"].ToString();
-                                hs.F88Result = item["F88Result"] != null ? Convert.ToInt32(item["F88Result"]):0;
+                                hs.F88Result = item["F88Result"] != null ? Convert.ToInt32(item["F88Result"]) : 0;
                                 hs.MaNVLayHS = item["MaNVLayHS"].ToString();
                                 hs.DoiNguBanHang = item["DoiNguBanHang"].ToString();
                                 hs.MaNV = item["MaNV"].ToString();
@@ -1078,7 +1085,7 @@ namespace VS_LOAN.Core.Business
                 )
         {
             page = page <= 0 ? 1 : page;
-            if(!isDownload)
+            if (!isDownload)
                 limit = (limit <= 0 || limit >= Constant.Limit_Max_Page) ? Constant.Limit_Max_Page : limit;
             int offset = (page - 1) * limit;
             string query = string.IsNullOrWhiteSpace(freeText) ? string.Empty : freeText;
@@ -1116,6 +1123,11 @@ namespace VS_LOAN.Core.Business
                                 hs.ID = Convert.ToInt32(item["ID"].ToString());
                                 hs.MaHoSo = item["MaHoSo"].ToString();
                                 hs.NgayTao = Convert.ToDateTime(item["NgayTao"]);
+                                if (!(item["DisbursementDate"] is DBNull))
+                                {
+                                    hs.DisbursementDate = Convert.ToDateTime(item["DisbursementDate"]);
+                                }
+                                
                                 hs.DoiTac = item["DoiTac"].ToString();
                                 hs.CMND = item["CMND"].ToString();
                                 hs.TenKH = item["TenKH"].ToString();
@@ -1155,12 +1167,12 @@ namespace VS_LOAN.Core.Business
         }
 
         public List<HoSoDuyetModel> DSHoSoDuyetChuaXem(int maNVDangNhap
-            , int maNhom, 
-            int maThanhVien, 
-            DateTime tuNgay, 
-            DateTime denNgay, 
-            string maHS, 
-            string cmnd, 
+            , int maNhom,
+            int maThanhVien,
+            DateTime tuNgay,
+            DateTime denNgay,
+            string maHS,
+            string cmnd,
             int loaiNgay,
             string trangThai)
         {

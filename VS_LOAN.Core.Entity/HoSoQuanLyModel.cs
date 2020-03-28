@@ -31,5 +31,6 @@ namespace VS_LOAN.Core.Entity
         public string KhuVucText { get; set; }
         public string GhiChu { get; set; }
         public string TenSanPham { get; set; }
+        public DateTime? DisbursementDate { get; set; }
     }
 }
