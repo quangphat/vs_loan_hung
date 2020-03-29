@@ -105,7 +105,7 @@ namespace VS_LOAN.Core.Business
                                 commandAdd.Parameters.Add(new SqlParameter("@HoSoCuaAi", hoSoModel.HoSoCuaAi));
                                 commandAdd.Parameters.Add(new SqlParameter("@birthDay", hoSoModel.BirthDay));
                                 commandAdd.Parameters.Add(new SqlParameter("@cmndDay", hoSoModel.CmndDay));
-                                commandAdd.Parameters.Add(new SqlParameter("@cmndDay", hoSoModel.CmndDay));
+                                
                                 commandAdd.Parameters.Add(new SqlParameter("@DisbursementDate", hoSoModel.DisbursementDate));
                                 if (hoSoModel.MaKetQua == 0)
                                 {
