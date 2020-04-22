@@ -45,7 +45,8 @@ namespace VS_LOAN.Core.Entity
         GiaiNgan = 5,
         DaDoiChieu = 6,
         Cancel = 7,
-        PCB = 8
+        PCB = 8,
+        Finish = 14
     }
     public enum KetQuaHoSo
     {

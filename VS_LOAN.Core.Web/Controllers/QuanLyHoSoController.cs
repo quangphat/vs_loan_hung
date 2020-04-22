@@ -675,7 +675,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult LayDSTrangThai()
         {
-            var isLimit = GlobalData.User.UserType == (int)UserTypeEnum.Teamlead;
+            var isLimit = false;// GlobalData.User.UserType == (int)UserTypeEnum.Teamlead;
             List<TrangThaiHoSoModel> rs = new TrangThaiHoSoBLL().LayDSTrangThai(isLimit);
             if (rs == null)
                 rs = new List<TrangThaiHoSoModel>();

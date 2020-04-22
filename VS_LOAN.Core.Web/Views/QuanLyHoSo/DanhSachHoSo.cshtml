@@ -454,6 +454,8 @@
         else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.BoSungHoSo)')
             statusString = "<span class='label label-sm label-info arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
         else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.GiaiNgan)')
+           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.Finish)')
             statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
         return "<td class='text-left'>" + statusString + "</td>";;
     }
