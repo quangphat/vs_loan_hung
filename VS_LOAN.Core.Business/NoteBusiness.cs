@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.Model;
 
 namespace VS_LOAN.Core.Business
@@ -27,16 +28,16 @@ namespace VS_LOAN.Core.Business
                     }, commandType: CommandType.Text);
             }
         }
-        public async Task<List<GhichuModel>> GetNoteByTypeAsync(int id,int typeId)
+        public async Task<List<GhichuViewModel>> GetNoteByTypeAsync(int id,int typeId)
         {
             using (var con = GetConnection())
             {
-                var result = await con.QueryAsync<GhichuModel>("select * from Ghichu where TypeId = @typeId and HosoId = @id",
+                var result = await con.QueryAsync<GhichuViewModel>("sp_GetGhichuByHosoId",
                     new
                     {
-                        id,
+                        hosoId = id,
                         typeId
-                    }, commandType: CommandType.Text);
+                    }, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
         }

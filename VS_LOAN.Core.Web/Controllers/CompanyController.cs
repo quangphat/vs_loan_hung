@@ -21,8 +21,8 @@ namespace VS_LOAN.Core.Web.Controllers
             get
             {
                 Dictionary<string, ActionInfo> _lstRole = new Dictionary<string, ActionInfo>();
-                _lstRole.Add("AddNew", new ActionInfo() { _formindex = IndexMenu.M_6_1, _href = "Compnay/AddNew", _mangChucNang = new int[] { (int)QuyenIndex.Public } });
-                _lstRole.Add("Index", new ActionInfo() { _formindex = IndexMenu.M_6_2, _href = "Compnay/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } });
+                _lstRole.Add("AddNew", new ActionInfo() { _formindex = IndexMenu.M_8_1, _href = "Company/AddNew", _mangChucNang = new int[] { (int)QuyenIndex.Public } });
+                _lstRole.Add("Index", new ActionInfo() { _formindex = IndexMenu.M_8_2, _href = "Company/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } });
                 return _lstRole;
             }
 
@@ -57,7 +57,8 @@ namespace VS_LOAN.Core.Web.Controllers
                     {
                         Noidung = model.LastNote,
                         HosoId = id,
-                        TypeId = NoteType.Company
+                        TypeId = NoteType.Company,
+                        UserId = GlobalData.User.IDUser
                     };
                     var bizNote = new NoteBusiness();
                     await bizNote.AddNoteAsync(note);
@@ -92,7 +93,8 @@ namespace VS_LOAN.Core.Web.Controllers
                 {
                     Noidung = model.LastNote,
                     HosoId = model.Id,
-                    TypeId = NoteType.Company
+                    TypeId = NoteType.Company,
+                    UserId = GlobalData.User.IDUser
                 };
                 var bizNote = new NoteBusiness();
                 await bizNote.AddNoteAsync(note);
@@ -100,7 +102,7 @@ namespace VS_LOAN.Core.Web.Controllers
             
             return ToResponse(true);
         }
-        public async Task<JsonResult> GetPartner(int customerId = 0)
+        public async Task<JsonResult> GetPartner()
         {
             var bizPartner = new PartnerBLL();
             var partners = await bizPartner.GetListForCheckCustomerDuplicateAsync();
@@ -115,10 +117,10 @@ namespace VS_LOAN.Core.Web.Controllers
 
             return ToJsonResponse(true, null, partners);
         }
-        public JsonResult GetNotes(int customerId)
+        public async Task<JsonResult> GetNotes(int companyId)
         {
-            var bizCustomer = new CustomerBLL();
-            var datas = bizCustomer.GetNoteByCustomerId(customerId);
+            var bizNote = new NoteBusiness();
+            var datas = await bizNote.GetNoteByTypeAsync(companyId, typeId: (int)NoteType.Company);
             return ToJsonResponse(true, null, datas);
         }
     }

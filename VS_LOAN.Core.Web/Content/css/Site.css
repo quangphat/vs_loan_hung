@@ -129,6 +129,14 @@
     background: url('/Content/images/iconmenu/duplicate.png') no-repeat;
     background-size: auto 100%;
 }
+.menu-icon.company {
+    display: inline-block;
+    /*width: auto; /* Generic width */
+    height: 24px;
+    width: 24px;
+    background: url('/Content/images/iconmenu/company.png') no-repeat;
+    background-size: auto 100%;
+}
 
 .menu-icon.courier {
     display: inline-block;
