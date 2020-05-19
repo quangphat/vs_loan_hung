@@ -17,7 +17,7 @@ namespace VS_LOAN.Core.Business
         {
 
         }
-        public int Create(Company model)
+        public async Task<int> CreateAsync(Company model)
         {
             using (var con = GetConnection())
             {
@@ -30,12 +30,12 @@ namespace VS_LOAN.Core.Business
                 p.Add("TaxNumber", model.TaxNumber);
                 p.Add("PartnerId", model.PartnerId);
                 p.Add("CatType", model.CatType);
-                con.Execute("sp_InsertCompany", p, commandType: CommandType.StoredProcedure);
+                await con.ExecuteAsync("sp_InsertCompany", p, commandType: CommandType.StoredProcedure);
                 return p.Get<int>("id");
             }
                
         }
-        public bool Update(Company model)
+        public async Task<bool> UpdateAsync(Company model)
         {
             var p = new DynamicParameters();
             p.Add("id", model.Id);
@@ -47,30 +47,42 @@ namespace VS_LOAN.Core.Business
             p.Add("CatType", model.CatType);
             p.Add("updatedtime", DateTime.Now);
             p.Add("updatedby", model.UpdatedBy);
-            _connection.Execute("sp_UpdateCompany", p, commandType: CommandType.StoredProcedure);
-            return true;
+            using (var con = GetConnection())
+            {
+                await _connection.ExecuteAsync("sp_UpdateCompany", p, commandType: CommandType.StoredProcedure);
+                return true;
+            }
+            
         }
-        public Company GetById(int id)
+        public async Task<Company> GetByIdAsync(int id)
         {
             string sql = $"select * from Company where Id = @id";
-            var customer = _connection.QueryFirstOrDefault<Company>(sql, new
+            using (var con = GetConnection())
             {
-                id = id
-            }, commandType: CommandType.Text);
-            return customer;
+                var customer = await _connection.QueryFirstOrDefaultAsync<Company>(sql, new
+                {
+                    id = id
+                }, commandType: CommandType.Text);
+                return customer;
+            }
+            
         }
         
         
-        public int Count(string freeText)
+        public async Task<int> CountAsync(string freeText)
         {
             var p = new DynamicParameters();
             if (string.IsNullOrWhiteSpace(freeText))
                 freeText = "";
             p.Add("freeText", freeText);
-            var total = _connection.ExecuteScalar<int>("sp_CountCompany", p, commandType: CommandType.StoredProcedure);
-            return total;
+            using (var con = GetConnection())
+            {
+                var total = await _connection.ExecuteScalarAsync<int>("sp_CountCompany", p, commandType: CommandType.StoredProcedure);
+                return total;
+            }
+            
         }
-        public List<Company> Gets(
+        public async Task<List<Company>> GetsAsync(
             string freeText,
             int page,
             int limit)
@@ -84,8 +96,12 @@ namespace VS_LOAN.Core.Business
             p.Add("freeText", freeText);
             p.Add("offset", offset);
             p.Add("limit", limit);
-            var results = _connection.Query<Company>("sp_GetCompnay", p, commandType: CommandType.StoredProcedure);
-            return results.ToList();
+            using (var con = GetConnection())
+            {
+                var results = await _connection.QueryAsync<Company>("sp_GetCompnay", p, commandType: CommandType.StoredProcedure);
+                return results.ToList();
+            }
+            
         }
     }
 }

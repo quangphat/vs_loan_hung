@@ -224,6 +224,7 @@
     <Compile Include="Common\GroupPositionAD.cs" />
     <Compile Include="Common\MailCM.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\HosoCourrierController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
@@ -1754,6 +1755,9 @@
     <Content Include="Views\Courrier\AddNew.cshtml" />
     <Content Include="Views\Courrier\Index.cshtml" />
     <Content Include="Views\Courrier\Edit.cshtml" />
+    <Content Include="Views\Company\AddNew.cshtml" />
+    <Content Include="Views\Company\Edit.cshtml" />
+    <Content Include="Views\Company\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
