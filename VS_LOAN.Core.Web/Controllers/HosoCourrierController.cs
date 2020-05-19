@@ -82,7 +82,7 @@ namespace VS_LOAN.Core.Web.Controllers
                         UserId = hoso.CreatedBy,
                         TypeId = NoteType.HosoCourrier
                     };
-                    await bizNote.AddNote(note);
+                    await bizNote.AddNoteAsync(note);
                 }
 
                 return ToResponse(true,"",id);
@@ -143,16 +143,16 @@ namespace VS_LOAN.Core.Web.Controllers
                     UserId = hoso.UpdatedBy,
                     TypeId = NoteType.HosoCourrier
                 };
-                await bizNote.AddNote(note);
+                await bizNote.AddNoteAsync(note);
             }
             return ToResponse(true);
         }
-        public JsonResult GetPartner(int customerId)
+        public async Task<JsonResult> GetPartner(int customerId)
         {
             var bizCustomer = new CustomerBLL();
             var bizPartner = new PartnerBLL();
-            var customerCheck = bizCustomer.GetCustomerCheckByCustomerId(customerId);
-            var partners = bizPartner.GetListForCheckCustomerDuplicate();
+            var customerCheck =  bizCustomer.GetCustomerCheckByCustomerId(customerId);
+            var partners = await bizPartner.GetListForCheckCustomerDuplicateAsync();
             if (partners == null)
                 return ToJsonResponse(true, null, new List<OptionSimple>());
             foreach (var item in partners)

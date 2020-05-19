@@ -183,12 +183,12 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = await bzEmployee.Update(model);
             return ToJsonResponse(result);
         }
-        public JsonResult GetPartner(int customerId)
+        public async Task<JsonResult> GetPartner(int customerId)
         {
             var bizCustomer = new CustomerBLL();
             var bizPartner = new PartnerBLL();
             var customerCheck = bizCustomer.GetCustomerCheckByCustomerId(customerId);
-            var partners = bizPartner.GetListForCheckCustomerDuplicate();
+            var partners = await bizPartner.GetListForCheckCustomerDuplicateAsync();
             if (partners == null)
                 return ToJsonResponse(true, null, new List<OptionSimple>());
             foreach (var item in partners)

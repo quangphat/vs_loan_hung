@@ -113,7 +113,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 TypeId = NoteType.Hoso
             };
             var bizNote = new NoteBusiness();
-            await bizNote.AddNote(ghichu);
+            await bizNote.AddNoteAsync(ghichu);
             return true;
         }
         [System.Web.Http.HttpPost]

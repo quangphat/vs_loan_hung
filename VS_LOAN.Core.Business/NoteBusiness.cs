@@ -12,7 +12,7 @@ namespace VS_LOAN.Core.Business
     public class NoteBusiness : BaseBusiness
     {
         public NoteBusiness() : base(typeof(NoteBusiness)) { }
-        public async Task AddNote(GhichuModel model)
+        public async Task AddNoteAsync(GhichuModel model)
         {
             using (var con = GetConnection())
             {
@@ -27,7 +27,7 @@ namespace VS_LOAN.Core.Business
                     }, commandType: CommandType.Text);
             }
         }
-        public async Task<List<GhichuModel>> GetNoteByType(int id,int typeId)
+        public async Task<List<GhichuModel>> GetNoteByTypeAsync(int id,int typeId)
         {
             using (var con = GetConnection())
             {

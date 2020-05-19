@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
 using VS_LOAN.Core.Business;
@@ -134,18 +135,18 @@ namespace VS_LOAN.Core.Web.Controllers
             
             return ToResponse(true);
         }
-        public JsonResult GetPartner(int customerId = 0)
+        public async Task<JsonResult> GetPartner(int customerId = 0)
         {
             var bizPartner = new PartnerBLL();
-            var partners = bizPartner.GetListForCheckCustomerDuplicate();
+            var partners = await bizPartner.GetListForCheckCustomerDuplicateAsync();
             if (partners == null)
                 return ToJsonResponse(true, null, new List<OptionSimple>());
             return ToJsonResponse(true, null, partners);
         }
-        public JsonResult GetAllPartner()
+        public async Task<JsonResult> GetAllPartner()
         {
             var bizPartner = new PartnerBLL();
-            var partners = bizPartner.GetListForCheckCustomerDuplicate();
+            var partners = await bizPartner.GetListForCheckCustomerDuplicateAsync();
 
             return ToJsonResponse(true, null, partners);
         }

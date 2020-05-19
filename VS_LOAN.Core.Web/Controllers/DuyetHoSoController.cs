@@ -375,7 +375,7 @@ namespace VS_LOAN.Core.Web.Controllers
                             TypeId = NoteType.Hoso
                         };
                         var bizNote = new NoteBusiness();
-                        await bizNote.AddNote(ghichu);
+                        await bizNote.AddNoteAsync(ghichu);
                         return ToJsonResponse(true, Resources.Global.Message_Succ, hs.ID);
                     }
                     return ToJsonResponse(false, "Không thành công, xin thử lại sau");

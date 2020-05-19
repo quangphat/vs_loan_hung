@@ -15,10 +15,14 @@ namespace VS_LOAN.Core.Business
         {
 
         }
-        public List<OptionSimple> GetListForCheckCustomerDuplicate()
+        public async Task<List<OptionSimple>> GetListForCheckCustomerDuplicateAsync()
         {
-            var result = _connection.Query<OptionSimple>("sp_getListPartnerForCustomerCheck", commandType: CommandType.StoredProcedure);
-            return result.ToList();
+            using (var con = GetConnection())
+            {
+                var result = await _connection.QueryAsync<OptionSimple>("sp_getListPartnerForCustomerCheck", commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+               
         }
     }
 }
