@@ -88,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseSqlEntity.cs" />
+    <Compile Include="Company.cs" />
     <Compile Include="CustomerEditModel.cs" />
     <Compile Include="CustomerModel.cs" />
     <Compile Include="CustomerNoteViewModel.cs" />

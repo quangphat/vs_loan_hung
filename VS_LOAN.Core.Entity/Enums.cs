@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Entity
 {
+    public enum CatType
+    {
+        CatA = 1,
+        CatB =2,
+        CatC = 3
+    }
     public enum F88Result
     {
         Approve = 1,
