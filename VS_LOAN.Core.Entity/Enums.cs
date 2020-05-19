@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Entity
 {
+    public enum NoteType
+    {
+        Hoso = 1,
+        HosoCourrier = 2,
+        Company = 3
+
+    }
     public enum CatType
     {
         CatA = 1,

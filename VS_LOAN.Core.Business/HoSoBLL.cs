@@ -450,43 +450,6 @@ namespace VS_LOAN.Core.Business
                 throw ex;
             }
         }
-        public bool AddGhichu(GhichuModel model)
-        {
-            if (model == null)
-                return false;
-            if (model.UserId <= 0 || model.HosoId <= 0)
-                return false;
-            if (string.IsNullOrWhiteSpace(model.Noidung) || model.Noidung.Length > 200)
-                return false;
-            try
-            {
-                using (var session = LOANSessionManager.OpenSession())
-                {
-                    using (var transaction = session.BeginTransaction(IsolationLevel.ReadCommitted))
-                    {
-                        IDbCommand command = new SqlCommand();
-                        command.Connection = session.Connection;
-                        command.CommandType = CommandType.Text;
-                        command.CommandText = "insert into Ghichu (UserId,Noidung,HosoId, CommentTime,TypeId) values(@UserId,@Noidung,@HosoId,@CommentTime,@typeId)";
-                        session.Transaction.Enlist(command);
-                        command.Parameters.Clear();
-                        command.Parameters.Add(new SqlParameter("@UserId", model.UserId));
-                        command.Parameters.Add(new SqlParameter("@HosoId", model.HosoId));
-                        command.Parameters.Add(new SqlParameter("@Noidung", model.Noidung));
-                        command.Parameters.Add(new SqlParameter("@CommentTime", model.CommentTime));
-                        command.Parameters.Add(new SqlParameter("@typeId", (int)HosoType.Hoso));
-                        command.ExecuteNonQuery();
-                        transaction.Commit();
-                        return true;
-                    }
-
-                }
-            }
-            catch
-            {
-                return false;
-            }
-        }
         public List<GhichuViewModel> LayDanhsachGhichu(int hosoId, int typeId = 1)
         {
             if (hosoId <= 0)

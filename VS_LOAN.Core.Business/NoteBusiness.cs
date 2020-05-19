@@ -9,7 +9,7 @@ using VS_LOAN.Core.Entity.Model;
 
 namespace VS_LOAN.Core.Business
 {
-    public class NoteBusiness:BaseBusiness
+    public class NoteBusiness : BaseBusiness
     {
         public NoteBusiness() : base(typeof(NoteBusiness)) { }
         public async Task AddNote(GhichuModel model)
@@ -25,6 +25,19 @@ namespace VS_LOAN.Core.Business
                         commentTime = DateTime.Now,
                         typeId = model.TypeId
                     }, commandType: CommandType.Text);
+            }
+        }
+        public async Task<List<GhichuModel>> GetNoteByType(int id,int typeId)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryAsync<GhichuModel>("select * from Ghichu where TypeId = @typeId and HosoId = @id",
+                    new
+                    {
+                        id,
+                        typeId
+                    }, commandType: CommandType.Text);
+                return result.ToList();
             }
         }
     }

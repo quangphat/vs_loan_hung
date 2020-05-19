@@ -154,20 +154,22 @@ namespace VS_LOAN.Core.Web.Controllers
             Session["QL_HoSoID"] = id;
             return RedirectToAction("Detail", new { id = id });
         }
-        private bool AddGhichu(int hosoId, string ghiChu)
+        private async Task<bool> AddGhichu(int hosoId, string ghiChu)
         {
             GhichuModel ghichu = new GhichuModel
             {
                 UserId = GlobalData.User.IDUser,
                 HosoId = hosoId,
                 Noidung = ghiChu,
-                CommentTime = DateTime.Now
+                CommentTime = DateTime.Now,
+                TypeId = NoteType.Hoso
             };
-            new HoSoBLL().AddGhichu(ghichu);
+            var bizNote = new NoteBusiness();
+            await bizNote.AddNote(ghichu);
             return true;
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public ActionResult Save(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
+        public async Task<ActionResult> Save(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
            , int maKhuVuc, string diaChi, int sanPhamVay, string tenCuaHang,
             bool baoHiem, int thoiHanVay, string soTienVay, int trangthai, string ghiChu,
              string birthDayStr, string cmndDayStr, int courier = 0, List<int> FileRequireIds = null)
@@ -311,7 +313,8 @@ namespace VS_LOAN.Core.Web.Controllers
                     }
 
                 }
-                AddGhichu(hs.ID, ghiChu);
+
+                await AddGhichu(hs.ID, ghiChu);
                 return ToJsonResponse(true, Resources.Global.Message_Succ, hs.ID);
             }
             catch (BusinessException ex)
@@ -320,7 +323,7 @@ namespace VS_LOAN.Core.Web.Controllers
             }
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public ActionResult SaveDaft(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
+        public async Task<ActionResult> SaveDaft(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
            , int maKhuVuc, string diaChi, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay, string soTienVay, int trangthai,
             string ghiChu, string birthDayStr, string cmndDayStr, int courier = 0)
         {
@@ -417,7 +420,7 @@ namespace VS_LOAN.Core.Web.Controllers
                             return ToJsonResponse(false, "Mã sản phẩm đã được sử dụng bởi 1 hồ sơ khác, vui lòng chọn mã sản phẩm khác");
                     }
                 }
-                AddGhichu(hs.ID, ghiChu);
+                await AddGhichu(hs.ID, ghiChu);
                 if (result > 0)
                 {
 

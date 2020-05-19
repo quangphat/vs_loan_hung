@@ -80,7 +80,7 @@ namespace VS_LOAN.Core.Web.Controllers
                         Noidung = model.LastNote,
                         HosoId = id,
                         UserId = hoso.CreatedBy,
-                        TypeId = (int)HosoType.HosoCourrier
+                        TypeId = NoteType.HosoCourrier
                     };
                     await bizNote.AddNote(note);
                 }
@@ -141,7 +141,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     Noidung = model.LastNote,
                     HosoId = model.Id,
                     UserId = hoso.UpdatedBy,
-                    TypeId = (int)HosoType.HosoCourrier
+                    TypeId = NoteType.HosoCourrier
                 };
                 await bizNote.AddNote(note);
             }
