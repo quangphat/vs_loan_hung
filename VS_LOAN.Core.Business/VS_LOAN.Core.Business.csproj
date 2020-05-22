@@ -115,7 +115,7 @@
     <Compile Include="Constant.cs" />
     <Compile Include="CourierCodeBLL.cs" />
     <Compile Include="CompanyBusiness.cs" />
-    <Compile Include="CustomerBLL.cs" />
+    <Compile Include="CustomerBusiness.cs" />
     <Compile Include="DoiTacBLL.cs" />
     <Compile Include="EmployeeBusiness.cs" />
     <Compile Include="GrantRightBLL.cs" />

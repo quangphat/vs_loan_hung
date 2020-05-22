@@ -11,9 +11,9 @@ using VS_LOAN.Core.Entity.Model;
 
 namespace VS_LOAN.Core.Business
 {
-    public class CustomerBLL : BaseBusiness
+    public class CustomerBusiness : BaseBusiness
     {
-        public CustomerBLL() : base(typeof(CustomerBLL))
+        public CustomerBusiness() : base(typeof(CustomerBusiness))
         {
 
         }
@@ -34,6 +34,11 @@ namespace VS_LOAN.Core.Business
                 p.Add("PartnerId", customer.PartnerId);
                 p.Add("match", customer.MatchCondition);
                 p.Add("notMatch", customer.NotMatch);
+                p.Add("ProvinceId", customer.ProvinceId);
+                p.Add("Address", customer.Address);
+                p.Add("BirthDay", customer.BirthDay);
+                p.Add("Phone", customer.Phone);
+                p.Add("Salary", customer.Salary);
                 con.Execute("sp_InsertCustomer", p, commandType: CommandType.StoredProcedure);
                 return p.Get<int>("id");
             }
@@ -65,6 +70,11 @@ namespace VS_LOAN.Core.Business
             p.Add("notmatch", customer.NotMatch);
             p.Add("updatedtime", DateTime.Now);
             p.Add("updatedby", customer.CreatedBy);
+            p.Add("ProvinceId", customer.ProvinceId);
+            p.Add("Address", customer.Address);
+            p.Add("BirthDay", customer.BirthDay);
+            p.Add("Phone", customer.Phone);
+            p.Add("Salary", customer.Salary);
             _connection.Execute("sp_UpdateCustomer", p, commandType: CommandType.StoredProcedure);
             return true;
         }

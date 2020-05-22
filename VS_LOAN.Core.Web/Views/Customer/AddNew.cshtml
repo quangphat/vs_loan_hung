@@ -46,6 +46,45 @@
 
                     </div>
                     <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày sinh</label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtBirthDay" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtPhone" placeholder="Điện thoại khách hàng " class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tính thành<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlProvince" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Địa chỉ<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <textarea type="text" id="txtAddress" placeholder="Nhập địa chỉ" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Thu nhập hàng tháng</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtSalary" placeholder="Thu nhập hàng tháng" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Tên ngân hàng<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <select id="ddlDoiTac" class="chosen-select form-control" data-placeholder="Chọn đối tác">
@@ -55,19 +94,19 @@
 
                     </div>
                     @*<div class="form-group">
-                        <div class="col-sm-2"></div>
-                        <div class="col-sm-4">
-                            <label class="control-label no-padding-right">
-                                <input name="radio-check" id="rdChecked" type="radio" checked="checked" value="1" class="ace">
-                                <span class="lbl">Đủ điều kiện</span>
-                            </label>
-                            <label class="control-label no-padding-right">
-                                <input name="radio-check" id="rdUnChecked" type="radio" value="0" class="ace">
-                                <span class="lbl">Không đủ điều kiện</span>
-                            </label>
-                        </div>
-                       
-                    </div>*@
+            <div class="col-sm-2"></div>
+            <div class="col-sm-4">
+                <label class="control-label no-padding-right">
+                    <input name="radio-check" id="rdChecked" type="radio" checked="checked" value="1" class="ace">
+                    <span class="lbl">Đủ điều kiện</span>
+                </label>
+                <label class="control-label no-padding-right">
+                    <input name="radio-check" id="rdUnChecked" type="radio" value="0" class="ace">
+                    <span class="lbl">Không đủ điều kiện</span>
+                </label>
+            </div>
+
+        </div>*@
                 </form>
             </div>
         </div>
@@ -103,7 +142,15 @@
             $(this).prev().focus();
         });
         $("#txtCheckDate").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker("setDate", new Date().getDay + 0);
+        $('#txtBirthDay').datepicker({
+            dateFormat: 'dd/mm/yy'
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+        $("#txtBirthDay").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker("setDate", new Date().getDay + 0);
+        $('#ddlProvince').chosen({ width: '100%', allow_single_deselect: true });
         getPartner();
+        getProvinces("#ddlProvince");
     });
     jQuery.fn.ForceNumericOnly = function () {
     return this.each(function () {
@@ -126,6 +173,8 @@
 };
    
     $("#txtCMND").ForceNumericOnly();
+    $("#txtPhone").ForceNumericOnly();
+    $("#txtSalary").ForceNumericOnly();
         $('#btnSave').click(function (e) {
          if (isNullOrWhiteSpace($('#txtCheckDate').val())) {
             swal({
@@ -137,7 +186,16 @@
             });
             return;
         }
-
+             if (isNullOrWhiteSpace($('#txtPhone').val())) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng nhập số điện thoại",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
         if ($('#txtCMND').val().length != 9 && $('#txtCMND').val().length != 12) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
@@ -148,13 +206,18 @@
             });
             return;
         }
-        var objectSend = JSON.stringify({
-            'FullName': $('#txtHoTen').val(),
-            'CheckDate': $('#txtCheckDate').val(),
-            'Note': $('#txtGhiChu').val(),
-            'Cmnd': $('#txtCMND').val(),
-            'Gender': 0,
-            'Partners': [{ Id: $("#ddlDoiTac").val(), Name: $("#ddlDoiTac option:selected").text(), IsSelect: false }]
+            var objectSend = JSON.stringify({
+                'FullName': $('#txtHoTen').val(),
+                'CheckDate': $('#txtCheckDate').val(),
+                'Note': $('#txtGhiChu').val(),
+                'Cmnd': $('#txtCMND').val(),
+                'Gender': 0,
+                'Partners': [{ Id: $("#ddlDoiTac").val(), Name: $("#ddlDoiTac option:selected").text(), IsSelect: false }],
+                'ProvinceId': $("#ddlProvince").val(),
+                'Address': $('#txtAddress').val(),
+                'BirthDay': $('#txtBirthDay').val(),
+                'Phone': $('#txtPhone').val(),
+                'Salary': $('#txtSalary').val()
 
         });
         $.ajax({

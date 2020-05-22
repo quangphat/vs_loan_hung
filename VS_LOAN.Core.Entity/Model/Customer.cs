@@ -20,5 +20,10 @@ namespace VS_LOAN.Core.Entity.Model
         public int PartnerId { get; set; }
         public int Status { get; set; }
         public bool IsMatch { get; set; }
+        public int ProvinceId { get; set; }
+        public string Address { get; set; }
+        public DateTime? BirthDay { get; set; }
+        public string Phone { get; set; }
+        public decimal Salary { get; set; }
     }
 }

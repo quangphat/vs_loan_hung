@@ -33,7 +33,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public JsonResult Search(string freeText = null, int page = 1, int limit = 10)
         {
-            var bzCustomer = new CustomerBLL();
+            var bzCustomer = new CustomerBusiness();
             var totalRecord = bzCustomer.Count(freeText);
             var datas = bzCustomer.Gets(freeText, page, limit);
             var result = DataPaging.Create(datas, totalRecord);
@@ -63,9 +63,14 @@ namespace VS_LOAN.Core.Web.Controllers
                 PartnerId = model.Partners != null ? partner.Id : 0,
                 IsMatch = model.Partners != null ? partner.IsSelect : false,
                 MatchCondition = isMatch == true ? partner.Name : string.Empty,
-                NotMatch = isMatch == false ? partner.Name : string.Empty
+                NotMatch = isMatch == false ? partner.Name : string.Empty,
+                ProvinceId = model.ProvinceId,
+                BirthDay = model.BirthDay,
+                Address = model.Address,
+                Phone = model.Phone,
+                Salary = model.Salary
             };
-            var _bizCustomer = new CustomerBLL();
+            var _bizCustomer = new CustomerBusiness();
             var id = _bizCustomer.Create(customer);
             if (id > 0)
             {
@@ -86,7 +91,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public ActionResult Edit(int id)
         {
-            var customer = new CustomerBLL().GetById(id);
+            var customer = new CustomerBusiness().GetById(id);
             ViewBag.customer = customer;
             return View();
         }
@@ -101,7 +106,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToResponse(false, "Vui lòng chọn đối tác", 0);
             var partner = model.Partners[0];
             bool isMatch = partner.IsSelect;
-            var bizCustomer = new CustomerBLL();
+            var bizCustomer = new CustomerBusiness();
            
             var customer = new Customer
             {
@@ -116,7 +121,12 @@ namespace VS_LOAN.Core.Web.Controllers
                 PartnerId = model.Partners != null ? partner.Id : 0,
                 IsMatch = model.Partners != null ? partner.IsSelect : false,
                 MatchCondition = isMatch == true ? partner.Name : string.Empty,
-                NotMatch = isMatch == false ? partner.Name : string.Empty
+                NotMatch = isMatch == false ? partner.Name : string.Empty,
+                ProvinceId = model.Customer.ProvinceId,
+                BirthDay = model.Customer.BirthDay,
+                Address = model.Customer.Address,
+                Phone = model.Customer.Phone,
+                Salary = model.Customer.Salary
             };
 
             var result = bizCustomer.Update(customer);
@@ -152,7 +162,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public JsonResult GetNotes(int customerId)
         {
-            var bizCustomer = new CustomerBLL();
+            var bizCustomer = new CustomerBusiness();
             var datas = bizCustomer.GetNoteByCustomerId(customerId);
             return ToJsonResponse(true, null, datas);
         }

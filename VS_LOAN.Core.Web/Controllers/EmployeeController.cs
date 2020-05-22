@@ -185,7 +185,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetPartner(int customerId)
         {
-            var bizCustomer = new CustomerBLL();
+            var bizCustomer = new CustomerBusiness();
             var bizPartner = new PartnerBLL();
             var customerCheck = bizCustomer.GetCustomerCheckByCustomerId(customerId);
             var partners = await bizPartner.GetListForCheckCustomerDuplicateAsync();
@@ -200,7 +200,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public JsonResult GetNotes(int customerId)
         {
-            var bizCustomer = new CustomerBLL();
+            var bizCustomer = new CustomerBusiness();
             var datas = bizCustomer.GetNoteByCustomerId(customerId);
             return ToJsonResponse(true, null, datas);
         }

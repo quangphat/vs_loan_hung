@@ -16,5 +16,10 @@ namespace VS_LOAN.Core.Entity
         public bool Gender { get; set; }
         public string Note { get; set; }
         public List<OptionSimple> Partners { get; set; }
+        public int ProvinceId { get; set; }
+        public string Address { get; set; }
+        public DateTime? BirthDay { get; set; }
+        public string Phone { get; set; }
+        public decimal Salary { get; set; }
     }
 }
