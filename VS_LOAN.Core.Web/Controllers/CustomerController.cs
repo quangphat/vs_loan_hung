@@ -34,8 +34,8 @@ namespace VS_LOAN.Core.Web.Controllers
         public JsonResult Search(string freeText = null, int page = 1, int limit = 10)
         {
             var bzCustomer = new CustomerBusiness();
-            var totalRecord = bzCustomer.Count(freeText);
-            var datas = bzCustomer.Gets(freeText, page, limit);
+            var totalRecord = bzCustomer.Count(freeText, GlobalData.User.IDUser);
+            var datas = bzCustomer.Gets(freeText, page, limit, GlobalData.User.IDUser);
             var result = DataPaging.Create(datas, totalRecord);
             return ToJsonResponse(true, null, result);
         }

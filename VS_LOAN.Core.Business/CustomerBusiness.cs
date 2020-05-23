@@ -69,7 +69,7 @@ namespace VS_LOAN.Core.Business
             p.Add("match", customer.MatchCondition);
             p.Add("notmatch", customer.NotMatch);
             p.Add("updatedtime", DateTime.Now);
-            p.Add("updatedby", customer.CreatedBy);
+            p.Add("updatedby", customer.UpdatedBy);
             p.Add("ProvinceId", customer.ProvinceId);
             p.Add("Address", customer.Address);
             p.Add("BirthDay", customer.BirthDay);
@@ -117,19 +117,21 @@ namespace VS_LOAN.Core.Business
             _connection.Execute("sp_InserCustomerCheck", p, commandType: CommandType.StoredProcedure);
             return true;
         }
-        public int Count(string freeText)
+        public int Count(string freeText, int userId)
         {
             var p = new DynamicParameters();
             if (string.IsNullOrWhiteSpace(freeText))
                 freeText = "";
             p.Add("freeText", freeText);
+            p.Add("userId", userId);
             var total = _connection.ExecuteScalar<int>("sp_CountCustomer", p, commandType: CommandType.StoredProcedure);
             return total;
         }
         public List<Customer> Gets(
             string freeText,
             int page,
-            int limit)
+            int limit
+            ,int userId)
         {
             page = page <= 0 ? 1 : page;
             limit = (limit <= 0 || limit >= Constant.Limit_Max_Page) ? Constant.Limit_Max_Page : limit;
@@ -140,6 +142,7 @@ namespace VS_LOAN.Core.Business
             p.Add("freeText", freeText);
             p.Add("offset", offset);
             p.Add("limit", limit);
+            p.Add("userId", userId);
             var results = _connection.Query<Customer>("sp_GetCustomer", p, commandType: CommandType.StoredProcedure);
             return results.ToList();
         }
