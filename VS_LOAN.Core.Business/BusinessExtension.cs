@@ -8,8 +8,18 @@ using VS_LOAN.Core.Entity;
 
 namespace VS_LOAN.Core.Business
 {
-    public  class BusinessExtension
+    public static  class BusinessExtension
     {
+        public static long ToUnixTime(this DateTime date)
+        {
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return Convert.ToInt64((date - epoch).TotalSeconds);
+        }
+        private static readonly DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        public static DateTime FromUnixTime(long unixTime)
+        {
+            return epoch.AddSeconds(unixTime);
+        }
         public static string GetFilesMissingV2(List<LoaiTaiLieuModel> loaiTailieus, List<int> uploadedKeyIds)
         {
             if (loaiTailieus == null || !loaiTailieus.Any())

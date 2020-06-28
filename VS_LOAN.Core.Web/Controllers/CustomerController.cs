@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -92,8 +93,15 @@ namespace VS_LOAN.Core.Web.Controllers
         public ActionResult Edit(int id)
         {
             var customer = new CustomerBusiness().GetById(id);
+            customer.BirthDay = BusinessExtension.FromUnixTime(customer.BirthDay.Value.ToUnixTime());
             ViewBag.customer = customer;
+
             return View();
+        }
+        public JsonResult GetCustomerById(int id)
+        {
+            var customer = new CustomerBusiness().GetById(id);
+            return ToJsonResponse(true, null, customer);
         }
         public ActionResult Update(CustomerEditModel model)
         {

@@ -580,7 +580,8 @@ function SetFormatDateTime(datetime) {
 }
 function SetFormatDateTimeDMY(datetime) {
     try {
-        var valueDate = parseInt(datetime.substr(6));
+        var valueDate = parseInt(datetime.replace("/Date(", "").replace(")/", ""));
+        debugger
         if (valueDate < 0)
             return "";
         else {

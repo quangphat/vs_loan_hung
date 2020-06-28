@@ -166,28 +166,60 @@
         GetNotes(customer.Id)
         let gender = customer.Gender == false ? "0" :"1"
         $("#txtHoTen").val(customer.FullName)
-        setDateTimeInput('#txtCheckDate')
+        setDateTimeInput('#txtCheckDate', 'dd/mm/yyyy')
+        
         setValueForDateInput("#txtCheckDate", customer.CheckDate)
+        //setDateTimeInput('#txtBirthDay')
+        //setValueForDateInput("#txtBirthDay", customer.BirthDay)
+        $('#txtBirthDay').datepicker({
+            dateFormat: 'dd-mm-yy'
+
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+        console.log(SetFormatDateTimeDMY(customer.BirthDay))
+        $('#txtBirthDay').val(SetFormatDateTimeDMY(customer.BirthDay));
         //$("#txtCheckDate").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker("setDate", new Date().getDay + 0);
         //let checkDate = isNullOrUndefined(customer.CheckDate) ? new Date().getDay + 0 : customer.CheckDate
         //$('#txtToDate').val(SetFormatDateTimeDMY(checkDate));
         $("#txtCMND").val(customer.Cmnd)
 
         $("#ddlCIC").val(customer.CICStatus)
-        $('#txtBirthDay').datepicker({
-            dateFormat: 'dd/mm/yy'
-        }).next().on(ace.click_event, function () {
-            $(this).prev().focus();
-        });
-        $("#txtBirthDay").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker("setDate", new Date().getDay + 0);
+        //$('#txtBirthDay').datepicker({
+        //    dateFormat: 'dd/mm/yy'
+        //}).next().on(ace.click_event, function () {
+        //    $(this).prev().focus();
+        //});
+        //$("#txtBirthDay").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker("setDate", new Date().getDay + 0);
         $('#ddlProvince').chosen({ width: '100%', allow_single_deselect: true });
         getPartner();
         getProvinces("#ddlProvince", customer.ProvinceId);
-        $('#txtBirthDay').val(SetFormatDateTimeDMY(customer.BirthDay));
+        //$('#txtBirthDay').val(SetFormatDateTimeDMY(customer.BirthDay));
         $('#txtSalary').val(customer.Salary);
         $('#txtPhone').val(customer.Phone);
         $('#txtAddress').val(customer.Address);
+        //getCustomer();
     })
+    function getCustomer() {
+        $.ajax({
+            type: "GET",
+            url: '/Customer/GetCustomerById?id=' + customer.Id,
+            success: function (data) {
+                customer = data.data
+                $('#ddlDoiTac').empty();
+                if (data != null) {
+                   
+
+                }
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
     function getPartner() {
          $.ajax({
              type: "GET",
