@@ -12,6 +12,63 @@
 //        message: '<h2 style="color:#fff">' + text + ' ...</h2>'
 //    });
 //}
+
+function LayNhom(controlId, defaultValue = 0, subcontrolId = null, subControlValue = 0) {
+    $(controlId).empty();
+    $.ajax({
+        type: "GET",
+        url: '/ToNhom/LayDSNhomCha',
+        data: {},
+        success: function (data) {
+            $(controlId).append("<option value='0'></option>");
+            if (data.data != null && data.success == true) {
+                $.each(data.data, function (index, item) {
+                    
+                    $(controlId).append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
+                });
+                if (defaultValue > 0) {
+                    $(controlId).val(defaultValue);
+                }
+                $(controlId).chosen().trigger("chosen:updated");
+            }
+        },
+        complete: function () {
+            if (subControlValue > 0) {
+                GetEmployeesByGroupId(subcontrolId, defaultValue, false, subControlValue)
+            }
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+function GetEmployeesByGroupId(controlId, groupId, isLeader = false, defaultValue = 0) {
+    debugger
+    $(controlId).empty();
+    $.ajax({
+        type: "GET",
+        url: '/ToNhom/GetEmployeesByGroupId?groupId=' + groupId + '&isLeader=' + isLeader,
+        data: {},
+        success: function (data) {
+            $(controlId).append("<option value='0'></option>");
+            if (data.data != null && data.success == true) {
+                $.each(data.data, function (index, item) {
+                    $(controlId).append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                });
+                if (defaultValue > 0) {
+                    $(controlId).val(defaultValue);
+                }
+                
+                $(controlId).chosen().trigger("chosen:updated");
+            }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
 function getRoles(controlId, appendDefault = true, defaultText = "Tất cả", value = 0, onSuccess = null) {
     $.ajax({
         type: "GET",
@@ -581,7 +638,7 @@ function SetFormatDateTime(datetime) {
 function SetFormatDateTimeDMY(datetime) {
     try {
         var valueDate = parseInt(datetime.replace("/Date(", "").replace(")/", ""));
-        debugger
+        
         if (valueDate < 0)
             return "";
         else {

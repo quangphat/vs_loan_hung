@@ -34,11 +34,11 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             return View();
         }
-        public async Task<JsonResult> Search(string freeText = null,int provinceId =0, int courierId = 0,string status = null, int groupId = 0, int page = 1, int limit = 10)
+        public async Task<JsonResult> Search(string freeText = null, int provinceId = 0, int courierId = 0, string status = null, int groupId = 0, int page = 1, int limit = 10)
         {
             var bzCourier = new HosoCourrierBusiness();
             var totalRecord = await bzCourier.CountHosoCourrier(freeText, courierId, status, groupId);
-            var datas = await bzCourier.GetHosoCourrier(freeText, courierId, status, page, limit,groupId);
+            var datas = await bzCourier.GetHosoCourrier(freeText, courierId, status, page, limit, groupId);
             var result = DataPaging.Create(datas, totalRecord);
             return ToJsonResponse(true, null, result);
         }
@@ -54,6 +54,10 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToResponse(false, "Dữ liệu không hợp lệ", 0);
             }
+            if (model.AssignId <= 0)
+            {
+                return ToResponse(false, "Vui lòng chọn Courier", 0);
+            }
             var hoso = new HosoCourier
             {
                 CustomerName = model.CustomerName,
@@ -66,12 +70,13 @@ namespace VS_LOAN.Core.Web.Controllers
                 PartnerId = model.PartnerId,
                 Phone = model.Phone,
                 AssignId = model.AssignId,
-
+                GroupId = model.GroupId
             };
             var _bizCourrier = new HosoCourrierBusiness();
             var id = await _bizCourrier.Create(hoso);
             if (id > 0)
             {
+                _bizCourrier.InsertCourierAssignee(id, model.AssignId);
                 if (!string.IsNullOrWhiteSpace(model.LastNote))
                 {
                     var bizNote = new NoteBusiness();
@@ -82,17 +87,18 @@ namespace VS_LOAN.Core.Web.Controllers
                         UserId = hoso.CreatedBy,
                         TypeId = NoteType.HosoCourrier
                     };
-                    await bizNote.AddNoteAsync(note);
+                    bizNote.AddNoteAsync(note);
+
                 }
 
-                return ToResponse(true,"",id);
+                return ToResponse(true, "", id);
             }
             return ToResponse(false);
 
         }
         public async Task<ActionResult> Edit(int id)
         {
-            var hoso =await new HosoCourrierBusiness().GetById(id);
+            var hoso = await new HosoCourrierBusiness().GetById(id);
             ViewBag.hoso = hoso;
             return View();
         }
@@ -106,15 +112,15 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<ActionResult> Update(HosoCorrierRequestModel model)
         {
 
-            if (model == null || model.Id <=0)
+            if (model == null || model.Id <= 0)
             {
                 return ToResponse(false, "Dữ liệu không hợp lệ");
             }
-            if(string.IsNullOrWhiteSpace(model.CustomerName))
+            if (string.IsNullOrWhiteSpace(model.CustomerName))
             {
                 return ToResponse(false, "Tên khách hàng không được để trống");
             }
-            if (model.AssignId <=0)
+            if (model.AssignId <= 0)
             {
                 return ToResponse(false, "Vui lòng chọn courier");
             }
@@ -122,28 +128,34 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 CustomerName = model.CustomerName,
                 Cmnd = model.Cmnd,
-                Status = model.Status ,
+                Status = model.Status,
                 LastNote = model.LastNote,
                 UpdatedBy = GlobalData.User.IDUser,
                 ProductId = model.ProductId,
                 PartnerId = model.PartnerId,
                 Phone = model.Phone,
                 AssignId = model.AssignId,
-                Id = model.Id
+                Id = model.Id,
+                GroupId = model.GroupId
             };
             var _bizCourrier = new HosoCourrierBusiness();
             var result = await _bizCourrier.Update(model.Id, hoso);
-            if(result && !string.IsNullOrWhiteSpace(model.LastNote))
+            if (result)
             {
-                var bizNote = new NoteBusiness();
-                var note = new GhichuModel
+                _bizCourrier.InsertCourierAssignee(model.Id, model.AssignId);
+                if(!string.IsNullOrWhiteSpace(model.LastNote))
                 {
-                    Noidung = model.LastNote,
-                    HosoId = model.Id,
-                    UserId = hoso.UpdatedBy,
-                    TypeId = NoteType.HosoCourrier
-                };
-                await bizNote.AddNoteAsync(note);
+                    var bizNote = new NoteBusiness();
+                    var note = new GhichuModel
+                    {
+                        Noidung = model.LastNote,
+                        HosoId = model.Id,
+                        UserId = hoso.UpdatedBy,
+                        TypeId = NoteType.HosoCourrier
+                    };
+                    bizNote.AddNoteAsync(note);
+                }
+                
             }
             return ToResponse(true);
         }
@@ -151,7 +163,7 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             var bizCustomer = new CustomerBusiness();
             var bizPartner = new PartnerBLL();
-            var customerCheck =  bizCustomer.GetCustomerCheckByCustomerId(customerId);
+            var customerCheck = bizCustomer.GetCustomerCheckByCustomerId(customerId);
             var partners = await bizPartner.GetListForCheckCustomerDuplicateAsync();
             if (partners == null)
                 return ToJsonResponse(true, null, new List<OptionSimple>());
@@ -216,10 +228,10 @@ namespace VS_LOAN.Core.Web.Controllers
             using (var fileStream = new MemoryStream())
             {
                 await stream.CopyToAsync(fileStream);
-                var result = await bizMedia.ReadXlsxFile(fileStream, GlobalData.User.IDUser,groupId);
+                var result = await bizMedia.ReadXlsxFile(fileStream, GlobalData.User.IDUser, groupId);
                 return ToJsonResponse(result.success, result.message);
             }
-            
+
         }
         public FileResult DownloadTemplateFile(string fileName)
         {

@@ -44,7 +44,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Tỉnh/TP<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlTinh" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
+                            <select id="ddlGroup" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -122,7 +122,7 @@
     $(document).ready(function () {
         $('#ddlSanPhamVay').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlCourier').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddlTinh').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlGroup').chosen({ width: '100%', allow_single_deselect: true });
         
     });
 
@@ -151,36 +151,15 @@
     $(document).ready(function () {
         LayDSTaiLieu();
         LayDSNganHang();
-        LayDSTinh();
+        LayNhom('#ddlGroup');
         $('#ddlDoiTac').on('change', function () {
             LayDSSanPham(this.value);
         });
-        $('#ddlTinh').on('change', function () {
-            getCourrier(this.value);
+        $('#ddlGroup').on('change', function () {
+            GetEmployeesByGroupId('#ddlCourier', this.value, true);
         });
     });
-    function LayDSTinh() {
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSTinh", "KhuVuc")',
-            data: {},
-            success: function (data) {
-                $('#ddlTinh').empty();
-                $('#ddlTinh').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.data, function (index, optionData) {
-                        $('#ddlTinh').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
-                    });
-                }
-                $('#ddlTinh').chosen().trigger("chosen:updated");
-            },
-            complete: function () {
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    }
+    
     function getCourrier(maTinh) {
         $.ajax({
             type: "POST",
@@ -361,6 +340,7 @@
             'partnerId': $('#ddlDoiTac').val(), 
             'productId': $('#ddlSanPhamVay').val(), 
             'LastNote': $('#txtGhiChu').val(),
+            'GroupId': $('#ddlGroup').val(),
         });
         $.ajax({
             traditional: true,

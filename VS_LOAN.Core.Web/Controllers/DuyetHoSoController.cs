@@ -439,7 +439,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public JsonResult LayDSNhom()
         {
-            List<NhomDropDownModel> rs = new NhomBLL().LayDSDuyetCuaNhanVien(GlobalData.User.IDUser);
+            List<NhomDropDownModel> rs = new GroupBusiness().LayDSDuyetCuaNhanVien(GlobalData.User.IDUser);
             if (rs == null)
                 rs = new List<NhomDropDownModel>();
             return ToJsonResponse(true, null, rs);
@@ -453,7 +453,7 @@ namespace VS_LOAN.Core.Web.Controllers
             else
             {
                 // Lấy ds nhóm của nv quản lý
-                List<NhomDropDownModel> lstNhom = new NhomBLL().LayDSDuyetCuaNhanVien(GlobalData.User.IDUser);
+                List<NhomDropDownModel> lstNhom = new GroupBusiness().LayDSDuyetCuaNhanVien(GlobalData.User.IDUser);
                 if (lstNhom != null)
                 {
                     for (int i = 0; i < lstNhom.Count; i++)
@@ -483,8 +483,8 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public JsonResult LayDSTrangThai()
         {
-            var isTeamlead = new NhomBLL().CheckIsTeamlead(GlobalData.User.IDUser);
-            var isAdmin = new NhomBLL().CheckIsAdmin(GlobalData.User.IDUser);
+            var isTeamlead = new GroupBusiness().CheckIsTeamlead(GlobalData.User.IDUser);
+            var isAdmin = new GroupBusiness().CheckIsAdmin(GlobalData.User.IDUser);
             bool isLimit = false;
             if (isTeamlead && !isAdmin)
                 isLimit = true;

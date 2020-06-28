@@ -132,7 +132,7 @@
     <Compile Include="NhanVienBLL.cs" />
     <Compile Include="NhanVienConfigBLL.cs" />
     <Compile Include="NhanVienNhomBLL.cs" />
-    <Compile Include="NhomBLL.cs" />
+    <Compile Include="GroupBusiness.cs" />
     <Compile Include="NoteBusiness.cs" />
     <Compile Include="PartnerBLL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

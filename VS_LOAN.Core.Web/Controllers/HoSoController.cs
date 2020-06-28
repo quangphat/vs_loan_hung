@@ -79,7 +79,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public JsonResult LayDSSale()
         {
             List<UserPMModel> rs = new List<UserPMModel>();
-            var lstNhom = new NhomBLL().LayDSCuaNhanVien(GlobalData.User.IDUser);
+            var lstNhom = new GroupBusiness().LayDSCuaNhanVien(GlobalData.User.IDUser);
             if (lstNhom != null)
             {
                 foreach (var item in lstNhom)

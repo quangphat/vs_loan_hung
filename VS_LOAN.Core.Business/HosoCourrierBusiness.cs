@@ -9,9 +9,9 @@ using VS_LOAN.Core.Entity.HosoCourrier;
 
 namespace VS_LOAN.Core.Business
 {
-    public class HosoCourrierBusiness:BaseBusiness
+    public class HosoCourrierBusiness : BaseBusiness
     {
-        public HosoCourrierBusiness():base(typeof(HosoCourrierBusiness))
+        public HosoCourrierBusiness() : base(typeof(HosoCourrierBusiness))
         {
 
         }
@@ -19,12 +19,12 @@ namespace VS_LOAN.Core.Business
         {
             using (var con = GetConnection())
             {
-                var result = await con.QueryFirstOrDefaultAsync<HosoCourierViewModel>("sp_GetHosoCourierById", new { id = id}, 
+                var result = await con.QueryFirstOrDefaultAsync<HosoCourierViewModel>("sp_GetHosoCourierById", new { id = id },
                     commandType: CommandType.StoredProcedure);
                 return result;
             }
         }
-        public async Task<bool> Update(int id,HosoCourier hoso)
+        public async Task<bool> Update(int id, HosoCourier hoso)
         {
             using (var con = GetConnection())
             {
@@ -40,12 +40,13 @@ namespace VS_LOAN.Core.Business
                 p.Add("assignId", hoso.AssignId);
                 p.Add("partnerId", hoso.PartnerId);
                 p.Add("productId", hoso.ProductId);
+                p.Add("groupId", hoso.GroupId);
                 await con.ExecuteAsync("sp_UpdateHosoCourier", p, commandType: CommandType.StoredProcedure);
                 return true;
             }
 
         }
-        public async Task<int> Create(HosoCourier hoso, int groupId =0)
+        public async Task<int> Create(HosoCourier hoso, int groupId = 0)
         {
             using (var con = GetConnection())
             {
@@ -60,28 +61,41 @@ namespace VS_LOAN.Core.Business
                 p.Add("phone", hoso.Phone);
                 p.Add("assignId", hoso.AssignId);
                 p.Add("partnerId", hoso.PartnerId);
-                p.Add("groupId",groupId);
+                p.Add("productId", hoso.ProductId);
+                p.Add("groupId", hoso.GroupId);
                 await con.ExecuteAsync("sp_InsertHosoCourrier", p, commandType: CommandType.StoredProcedure);
                 return p.Get<int>("id");
             }
 
         }
-        public async Task<int> CountHosoCourrier(string freeText, int courierId,string status, int groupId = 0)
+        public async Task<bool> InsertCourierAssignee(int courierId, int assigneeId)
+        {
+            using (var con = GetConnection())
+            {
+                var p = new DynamicParameters();
+                p.Add("CourierId", courierId);
+                p.Add("AssigneeId", assigneeId);
+                await con.ExecuteAsync("sp_CourierAssignee_Insert", p, commandType: CommandType.StoredProcedure);
+                return true;
+            }
+
+        }
+        public async Task<int> CountHosoCourrier(string freeText, int courierId, string status, int groupId = 0)
         {
             status = string.IsNullOrWhiteSpace(status) ? string.Empty : status;
             using (var con = GetConnection())
             {
-               return  await con.ExecuteScalarAsync<int>("sp_CountHosoCourier", new {freeText, courierId, status,groupId }, commandType: CommandType.StoredProcedure);
-                
+                return await con.ExecuteScalarAsync<int>("sp_CountHosoCourier", new { freeText, courierId, status, groupId }, commandType: CommandType.StoredProcedure);
+
             }
         }
-        public async Task<List<HosoCourierViewModel>> GetHosoCourrier(string freeText, int courierId,string status, int page, int limit, int groupId = 0)
+        public async Task<List<HosoCourierViewModel>> GetHosoCourrier(string freeText, int courierId, string status, int page, int limit, int groupId = 0)
         {
             status = string.IsNullOrWhiteSpace(status) ? string.Empty : status;
             using (var con = GetConnection())
             {
                 var result = await con.QueryAsync<HosoCourierViewModel>("sp_GetHosoCourier",
-                    new { freeText, courierId, page, limit_tmp = limit,status, groupId },
+                    new { freeText, courierId, page, limit_tmp = limit, status, groupId },
                     commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
