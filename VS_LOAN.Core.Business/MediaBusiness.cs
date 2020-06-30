@@ -143,6 +143,7 @@ namespace VS_LOAN.Core.Business
                             Phone = row.Cells[1] != null ? row.Cells[1].ToString() : "",
                             Cmnd = row.Cells[2] != null ? row.Cells[2].ToString() : "",
                             LastNote = row.Cells[4] != null ? row.Cells[4].ToString() : "",
+                            ProvinceId = row.Cells[5] != null ? Convert.ToInt32(row.Cells[4].ToString()) : 0,
                             Status = (int)HosoCourierStatus.New,
                             CreatedBy = createBy
                         };

@@ -81,7 +81,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 var tasks = new List<Task>();
                 var ids = new List<int>() { model.AssignId, GlobalData.User.IDUser };
-                foreach(var assigneeId in ids)
+                foreach (var assigneeId in ids)
                 {
                     tasks.Add(_bizCourrier.InsertCourierAssignee(id, assigneeId));
                 }
@@ -153,7 +153,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (result)
             {
                 _bizCourrier.InsertCourierAssignee(model.Id, model.AssignId);
-                if(!string.IsNullOrWhiteSpace(model.LastNote))
+                if (!string.IsNullOrWhiteSpace(model.LastNote))
                 {
                     var bizNote = new NoteBusiness();
                     var note = new GhichuModel
@@ -165,7 +165,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     };
                     bizNote.AddNoteAsync(note);
                 }
-                
+
             }
             return ToResponse(true);
         }
@@ -249,22 +249,13 @@ namespace VS_LOAN.Core.Web.Controllers
                 }
 
                 await Task.WhenAll(tasks);
-                return ToJsonResponse(true,"Thành công");
+                return ToJsonResponse(true, "Thành công");
             }
 
         }
         private async Task<bool> InsertHosoFromFile(HosoCourier hoso, HosoCourrierBusiness _bizCourrier)
         {
             var id = await _bizCourrier.Create(hoso);
-            if(hoso.AssigneeIds==null || hoso.AssigneeIds.Any())
-            {
-            }
-            var tasks = new List<Task>();
-            foreach (var assingeeId in hoso.AssigneeIds)
-            {
-                tasks.Add(_bizCourrier.InsertCourierAssignee(id, assingeeId));
-            }
-            await Task.WhenAll(tasks);
             if (!string.IsNullOrWhiteSpace(hoso.LastNote))
             {
                 var bizNote = new NoteBusiness();
@@ -278,6 +269,18 @@ namespace VS_LOAN.Core.Web.Controllers
                 bizNote.AddNoteAsync(note);
 
             }
+            if (hoso.AssigneeIds == null || hoso.AssigneeIds.Any())
+            {
+                hoso.AssigneeIds = new List<int>();
+            }
+            hoso.AssigneeIds.Add(GlobalData.User.IDUser);
+            var tasks = new List<Task>();
+            foreach (var assingeeId in hoso.AssigneeIds)
+            {
+                tasks.Add(_bizCourrier.InsertCourierAssignee(id, assingeeId));
+            }
+            await Task.WhenAll(tasks);
+
             return true;
         }
         public FileResult DownloadTemplateFile(string fileName)
