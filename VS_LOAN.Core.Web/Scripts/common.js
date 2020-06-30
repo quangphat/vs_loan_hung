@@ -17,7 +17,7 @@ function LayNhom(controlId, defaultValue = 0, subcontrolId = null, subControlVal
     $(controlId).empty();
     $.ajax({
         type: "GET",
-        url: '/ToNhom/LayDSNhomCha',
+        url: '/DuyetHoSo/LayDSNhom',
         data: {},
         success: function (data) {
             $(controlId).append("<option value='0'></option>");
@@ -47,13 +47,13 @@ function GetEmployeesByGroupId(controlId, groupId, isLeader = false, defaultValu
     $(controlId).empty();
     $.ajax({
         type: "GET",
-        url: '/ToNhom/GetEmployeesByGroupId?groupId=' + groupId + '&isLeader=' + isLeader,
+        url: '/DuyetHoSo/LayDSThanhVienNhom?maNhom=' + groupId ,
         data: {},
         success: function (data) {
             $(controlId).append("<option value='0'></option>");
             if (data.data != null && data.success == true) {
                 $.each(data.data, function (index, item) {
-                    $(controlId).append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                    $(controlId).append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
                 });
                 if (defaultValue > 0) {
                     $(controlId).val(defaultValue);

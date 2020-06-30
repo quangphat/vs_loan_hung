@@ -44,16 +44,11 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Tỉnh/TP<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlGroup" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
+                            <select id="ddlTinh" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
                                 <option value="0"></option>
                             </select>
                         </div>
-                        <label class="col-sm-2 control-label no-padding-right">Courrier<span class="required">(*)</span></label>
-                        <div class="col-sm-4">
-                            <select id="ddlCourier" class="chosen-select form-control" data-placeholder="Chọn Courrier">
-                                <option value="0"></option>
-                            </select>
-                        </div>
+                        
                     </div>
                     
                 </form>
@@ -73,6 +68,20 @@
                         <label class="col-sm-2 control-label no-padding-right">Sản phẩm vay<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <select id="ddlSanPhamVay" class="chosen-select form-control" data-placeholder="Chọn sản phẩm vay">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Nhóm<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlGroup" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right">Chỉ định<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlCourier" class="chosen-select form-control" data-placeholder="Chọn người chỉ định">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -151,6 +160,7 @@
     $(document).ready(function () {
         LayDSTaiLieu();
         LayDSNganHang();
+        LayDSTinh();
         LayNhom('#ddlGroup');
         $('#ddlDoiTac').on('change', function () {
             LayDSSanPham(this.value);
@@ -159,7 +169,28 @@
             GetEmployeesByGroupId('#ddlCourier', this.value, true);
         });
     });
-    
+    function LayDSTinh() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSTinh", "KhuVuc")',
+            data: {},
+            success: function (data) {
+                $('#ddlTinh').empty();
+                $('#ddlTinh').append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#ddlTinh').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                    });
+                }
+                $('#ddlTinh').chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
     function getCourrier(maTinh) {
         $.ajax({
             type: "POST",
@@ -341,6 +372,8 @@
             'productId': $('#ddlSanPhamVay').val(), 
             'LastNote': $('#txtGhiChu').val(),
             'GroupId': $('#ddlGroup').val(),
+            'ProvinceId': $('#ddlTinh').val(),
+            
         });
         $.ajax({
             traditional: true,

@@ -6,9 +6,14 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Entity
 {
+    //public class TupleModel
+    //{
+    //    public bool success { get; set; }
+    //    public string message { get; set; }
+    //}
     public class TupleModel
     {
-        public bool success { get; set; }
-        public string message { get; set; }
+        public List<HosoCourrier.HosoCourier> Hosos { get; set; }
+        public List<int> AssigneeIds { get; set; }
     }
 }

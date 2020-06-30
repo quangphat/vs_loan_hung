@@ -1,10 +1,416 @@
-2020-06-28 22:49:21,718 [53] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
-2020-06-28 22:49:21,738 [53] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
-2020-06-28 22:49:21,739 [53] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
-2020-06-28 22:49:35,931 [53] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=229fcda6-9146-464f-83c9-62c456d5a935] opened session at timestamp: 637289813759, for session factory: [NHibernate.Test/e143735ac6364aa893ad3ade179357fd]
-2020-06-28 22:49:35,931 [53] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
-2020-06-28 22:49:35,941 [53] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=229fcda6-9146-464f-83c9-62c456d5a935] running ISession.Dispose()
-2020-06-28 22:49:35,941 [53] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=229fcda6-9146-464f-83c9-62c456d5a935] executing real Dispose(True)
-2020-06-28 22:49:35,941 [53] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
-2020-06-28 22:49:35,941 [53] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
-2020-06-28 22:49:35,942 [53] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:36:54,513 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:36:54,530 [10] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:36:54,531 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:36:55,043 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:36:55,044 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:36:55,044 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:36:55,045 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:36:55,045 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:36:55,045 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:36:55,045 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:36:55,045 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:37:01,831 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:37:01,831 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:37:01,831 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:37:01,832 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:37:01,832 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:37:01,832 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:37:01,832 [5] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:37:01,833 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:37:04,208 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:37:04,209 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:37:04,209 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:37:04,209 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:37:04,209 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:37:04,209 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:37:04,210 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:37:04,210 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:37:18,172 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:37:18,173 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:37:18,173 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:37:18,174 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:37:18,174 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:37:18,174 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:37:18,175 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:37:18,175 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:37:18,248 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:37:18,249 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:37:18,249 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:37:18,249 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:37:18,250 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:37:18,250 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:37:18,250 [18] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:37:18,250 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:37:20,696 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=876432a5-0fc1-49c0-81dc-858fd6679a4d] opened session at timestamp: 637291498406, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:37:20,697 [7] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:37:20,712 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=876432a5-0fc1-49c0-81dc-858fd6679a4d] running ISession.Dispose()
+2020-06-30 21:37:20,712 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=876432a5-0fc1-49c0-81dc-858fd6679a4d] executing real Dispose(True)
+2020-06-30 21:37:20,713 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:37:20,713 [7] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:37:20,713 [7] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:37:20,714 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:37:20,714 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:37:20,714 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:37:20,715 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:37:20,715 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:37:20,715 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:37:20,715 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:37:20,715 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:37:20,716 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=58a34086-dce3-4da5-acac-25638fd566a0] opened session at timestamp: 637291498407, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:37:20,717 [7] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:37:20,727 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=58a34086-dce3-4da5-acac-25638fd566a0] running ISession.Dispose()
+2020-06-30 21:37:20,727 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=58a34086-dce3-4da5-acac-25638fd566a0] executing real Dispose(True)
+2020-06-30 21:37:20,727 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:37:20,727 [7] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:37:20,728 [7] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:37:20,885 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=a9c654df-5a6b-45d1-9a05-b7f2cd412bed] opened session at timestamp: 637291498408, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:37:20,886 [12] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:37:20,894 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=a9c654df-5a6b-45d1-9a05-b7f2cd412bed] running ISession.Dispose()
+2020-06-30 21:37:20,894 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=a9c654df-5a6b-45d1-9a05-b7f2cd412bed] executing real Dispose(True)
+2020-06-30 21:37:20,895 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:37:20,895 [12] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:37:20,895 [12] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:37:20,907 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:37:20,907 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:37:20,907 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:37:20,908 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:37:20,908 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:37:20,908 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:37:20,908 [7] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:37:20,908 [7] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:37:21,390 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:37:21,391 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:37:21,391 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:37:21,392 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:37:21,392 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:37:21,392 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:37:21,392 [5] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:37:21,392 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:37:24,656 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=e2fbc7cd-bd9e-4a31-b7f3-6d94a841244e] opened session at timestamp: 637291498446, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:37:24,657 [5] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:37:24,673 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=e2fbc7cd-bd9e-4a31-b7f3-6d94a841244e] running ISession.Dispose()
+2020-06-30 21:37:24,673 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=e2fbc7cd-bd9e-4a31-b7f3-6d94a841244e] executing real Dispose(True)
+2020-06-30 21:37:24,673 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:37:24,674 [5] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:37:24,674 [5] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:37:24,675 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:37:24,676 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:37:24,676 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:37:24,677 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:37:24,677 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:37:24,677 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:37:24,678 [5] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:37:24,678 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:37:24,678 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=b985a835-60dc-47d5-9e63-02bf8aa5a211] opened session at timestamp: 637291498446, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:37:24,679 [5] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:37:24,687 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=b985a835-60dc-47d5-9e63-02bf8aa5a211] running ISession.Dispose()
+2020-06-30 21:37:24,687 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=b985a835-60dc-47d5-9e63-02bf8aa5a211] executing real Dispose(True)
+2020-06-30 21:37:24,688 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:37:24,688 [5] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:37:24,688 [5] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:37:25,174 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=02a6b988-0ec3-4f03-8011-d247af7fe565] opened session at timestamp: 637291498451, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:37:25,175 [7] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:37:25,183 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=02a6b988-0ec3-4f03-8011-d247af7fe565] running ISession.Dispose()
+2020-06-30 21:37:25,184 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=02a6b988-0ec3-4f03-8011-d247af7fe565] executing real Dispose(True)
+2020-06-30 21:37:25,184 [7] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:37:25,184 [7] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:37:25,184 [7] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:37:25,204 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:37:25,205 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:37:25,205 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:37:25,205 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:37:25,205 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:37:25,206 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:37:25,206 [10] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:37:25,206 [10] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:37:25,679 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:37:25,679 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:37:25,679 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:37:25,679 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:37:25,679 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:37:25,680 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:37:25,680 [18] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:37:25,680 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:38:10,778 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=8f1da579-8664-4e0d-9325-d9eddbb3b22b] opened session at timestamp: 637291498907, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:10,779 [5] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:10,793 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=8f1da579-8664-4e0d-9325-d9eddbb3b22b] running ISession.Dispose()
+2020-06-30 21:38:10,795 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=8f1da579-8664-4e0d-9325-d9eddbb3b22b] executing real Dispose(True)
+2020-06-30 21:38:10,795 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:10,796 [5] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:10,796 [5] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:38:10,797 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:38:10,798 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:38:10,798 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:38:10,799 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:38:10,799 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:38:10,799 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:38:10,799 [5] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:38:10,800 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:38:10,800 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=68cf98f8-cf55-456a-890f-a4a80a81cfa7] opened session at timestamp: 637291498908, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:10,800 [5] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:10,806 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=68cf98f8-cf55-456a-890f-a4a80a81cfa7] running ISession.Dispose()
+2020-06-30 21:38:10,806 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=68cf98f8-cf55-456a-890f-a4a80a81cfa7] executing real Dispose(True)
+2020-06-30 21:38:10,806 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:10,807 [5] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:10,807 [5] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:38:11,173 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:38:11,174 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:38:11,174 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:38:11,174 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:38:11,174 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:38:11,175 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:38:11,175 [8] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:38:11,175 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:38:11,674 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=2de036d2-7880-4d94-9f98-2f8f4f95c96a] opened session at timestamp: 637291498916, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:11,675 [6] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:11,686 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=2de036d2-7880-4d94-9f98-2f8f4f95c96a] running ISession.Dispose()
+2020-06-30 21:38:11,687 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=2de036d2-7880-4d94-9f98-2f8f4f95c96a] executing real Dispose(True)
+2020-06-30 21:38:11,687 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:11,687 [6] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:11,687 [6] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:38:12,184 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=155e400c-195e-4d9a-8849-e80856deb319] opened session at timestamp: 637291498921, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:12,185 [5] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:12,201 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=155e400c-195e-4d9a-8849-e80856deb319] running ISession.Dispose()
+2020-06-30 21:38:12,201 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=155e400c-195e-4d9a-8849-e80856deb319] executing real Dispose(True)
+2020-06-30 21:38:12,201 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:12,201 [5] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:12,201 [5] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:38:12,686 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:38:12,687 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:38:12,687 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:38:12,688 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:38:12,688 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:38:12,688 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:38:12,688 [9] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:38:12,688 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:38:12,691 [9] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=42adc3b4-0307-4237-bad3-467a73de1f96] opened session at timestamp: 637291498926, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:12,691 [9] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:12,709 [9] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=42adc3b4-0307-4237-bad3-467a73de1f96] running ISession.Dispose()
+2020-06-30 21:38:12,710 [9] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=42adc3b4-0307-4237-bad3-467a73de1f96] executing real Dispose(True)
+2020-06-30 21:38:12,710 [9] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:12,710 [9] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:12,710 [9] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:38:30,089 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=583ccca0-82d4-46a9-9f05-b0f636b7959d] opened session at timestamp: 637291499100, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:30,089 [8] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:30,106 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=583ccca0-82d4-46a9-9f05-b0f636b7959d] running ISession.Dispose()
+2020-06-30 21:38:30,107 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=583ccca0-82d4-46a9-9f05-b0f636b7959d] executing real Dispose(True)
+2020-06-30 21:38:30,107 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:30,107 [8] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:30,107 [8] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:38:30,109 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:38:30,109 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:38:30,109 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:38:30,110 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:38:30,110 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:38:30,110 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:38:30,111 [8] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:38:30,111 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:38:30,112 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=33fba01e-8445-48c5-be2d-84b744b2c1f1] opened session at timestamp: 637291499101, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:30,112 [8] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:30,118 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=33fba01e-8445-48c5-be2d-84b744b2c1f1] running ISession.Dispose()
+2020-06-30 21:38:30,119 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=33fba01e-8445-48c5-be2d-84b744b2c1f1] executing real Dispose(True)
+2020-06-30 21:38:30,119 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:30,119 [8] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:30,119 [8] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:38:30,312 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:38:30,313 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:38:30,313 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:38:30,313 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:38:30,314 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:38:30,314 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:38:30,314 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:38:30,314 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:38:35,545 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=7193f835-1173-4349-b541-7a657da8ba1f] opened session at timestamp: 637291499155, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:35,546 [5] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:35,556 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=7193f835-1173-4349-b541-7a657da8ba1f] running ISession.Dispose()
+2020-06-30 21:38:35,556 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=7193f835-1173-4349-b541-7a657da8ba1f] executing real Dispose(True)
+2020-06-30 21:38:35,556 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:35,556 [5] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:35,557 [5] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:38:35,558 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:38:35,558 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:38:35,558 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:38:35,559 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:38:35,559 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:38:35,559 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:38:35,559 [5] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:38:35,559 [5] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:38:35,560 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=f69855b9-3602-4c90-a4b1-ca6e2fa8b2e8] opened session at timestamp: 637291499155, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:35,560 [5] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:35,564 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=f69855b9-3602-4c90-a4b1-ca6e2fa8b2e8] running ISession.Dispose()
+2020-06-30 21:38:35,565 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=f69855b9-3602-4c90-a4b1-ca6e2fa8b2e8] executing real Dispose(True)
+2020-06-30 21:38:35,565 [5] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:35,565 [5] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:35,565 [5] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:38:35,721 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=e846d9a6-3334-4505-a6ff-d6a8edb1c949] opened session at timestamp: 637291499157, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:35,721 [8] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:35,728 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=e846d9a6-3334-4505-a6ff-d6a8edb1c949] running ISession.Dispose()
+2020-06-30 21:38:35,728 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=e846d9a6-3334-4505-a6ff-d6a8edb1c949] executing real Dispose(True)
+2020-06-30 21:38:35,728 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:35,728 [8] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:35,729 [8] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:38:35,749 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:38:35,749 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:38:35,749 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:38:35,750 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:38:35,750 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:38:35,750 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:38:35,750 [12] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:38:35,750 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:38:36,230 [14] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:38:36,231 [14] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:38:36,231 [14] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:38:36,232 [14] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:38:36,232 [14] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:38:36,232 [14] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:38:36,232 [14] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:38:36,232 [14] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:38:43,198 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=8b2fdbb1-299d-4600-87cb-174e63cc0895] opened session at timestamp: 637291499231, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:43,199 [12] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:43,214 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=8b2fdbb1-299d-4600-87cb-174e63cc0895] running ISession.Dispose()
+2020-06-30 21:38:43,214 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=8b2fdbb1-299d-4600-87cb-174e63cc0895] executing real Dispose(True)
+2020-06-30 21:38:43,215 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:43,215 [12] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:43,215 [12] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:38:43,217 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:38:43,218 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:38:43,218 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:38:43,218 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:38:43,218 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:38:43,218 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:38:43,218 [12] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:38:43,219 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:38:43,219 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=6b77004c-7f29-43ed-bc52-243fac6d0420] opened session at timestamp: 637291499232, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:43,219 [12] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:43,225 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=6b77004c-7f29-43ed-bc52-243fac6d0420] running ISession.Dispose()
+2020-06-30 21:38:43,225 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=6b77004c-7f29-43ed-bc52-243fac6d0420] executing real Dispose(True)
+2020-06-30 21:38:43,225 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:43,225 [12] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:43,225 [12] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:38:43,617 [14] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=abb8b801-05de-417c-87d4-5802d7a32351] opened session at timestamp: 637291499236, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:43,618 [14] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:43,624 [14] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=abb8b801-05de-417c-87d4-5802d7a32351] running ISession.Dispose()
+2020-06-30 21:38:43,625 [14] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=abb8b801-05de-417c-87d4-5802d7a32351] executing real Dispose(True)
+2020-06-30 21:38:43,625 [14] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:43,625 [14] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:43,625 [14] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:38:43,648 [11] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:38:43,649 [11] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:38:43,650 [11] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:38:43,650 [11] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:38:43,651 [11] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:38:43,651 [11] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:38:43,651 [11] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:38:43,652 [11] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:38:44,122 [14] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:38:44,123 [14] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:38:44,123 [14] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:38:44,123 [14] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:38:44,123 [14] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:38:44,123 [14] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:38:44,124 [14] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:38:44,124 [14] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:38:46,185 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=730344bb-0683-4be6-9d68-5a6f2acbd88d] opened session at timestamp: 637291499261, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:46,186 [6] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:46,200 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=730344bb-0683-4be6-9d68-5a6f2acbd88d] running ISession.Dispose()
+2020-06-30 21:38:46,200 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=730344bb-0683-4be6-9d68-5a6f2acbd88d] executing real Dispose(True)
+2020-06-30 21:38:46,200 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:46,201 [6] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:46,201 [6] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:38:46,202 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:38:46,202 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:38:46,202 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:38:46,203 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:38:46,203 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:38:46,203 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:38:46,203 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:38:46,203 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:38:46,204 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=ea4e03e9-bd8a-4c84-9617-75357a74e372] opened session at timestamp: 637291499262, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:46,204 [6] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:46,208 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=ea4e03e9-bd8a-4c84-9617-75357a74e372] running ISession.Dispose()
+2020-06-30 21:38:46,208 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=ea4e03e9-bd8a-4c84-9617-75357a74e372] executing real Dispose(True)
+2020-06-30 21:38:46,210 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:46,210 [6] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:46,210 [6] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:38:46,535 [10] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=f0959d0d-a473-455d-bf41-19c219ac43ed] opened session at timestamp: 637291499265, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:46,536 [10] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:46,542 [10] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=f0959d0d-a473-455d-bf41-19c219ac43ed] running ISession.Dispose()
+2020-06-30 21:38:46,543 [10] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=f0959d0d-a473-455d-bf41-19c219ac43ed] executing real Dispose(True)
+2020-06-30 21:38:46,544 [10] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:46,544 [10] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:46,544 [10] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:38:46,556 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:38:46,557 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:38:46,557 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:38:46,557 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:38:46,558 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:38:46,558 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:38:46,558 [18] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:38:46,558 [18] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:38:47,037 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:38:47,038 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:38:47,038 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:38:47,038 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:38:47,038 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:38:47,038 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:38:47,038 [12] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:38:47,039 [12] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:38:50,821 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=7e5ee430-bc60-4f5f-bffc-113885e1f283] opened session at timestamp: 637291499308, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:50,822 [6] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:50,831 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=7e5ee430-bc60-4f5f-bffc-113885e1f283] running ISession.Dispose()
+2020-06-30 21:38:50,832 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=7e5ee430-bc60-4f5f-bffc-113885e1f283] executing real Dispose(True)
+2020-06-30 21:38:50,832 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:50,832 [6] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:50,832 [6] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:38:50,834 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:38:50,834 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:38:50,834 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:38:50,834 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:38:50,835 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:38:50,835 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:38:50,835 [6] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:38:50,835 [6] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:38:50,835 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=20f1a317-78ff-4576-a776-baddbfd772fb] opened session at timestamp: 637291499308, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:50,836 [6] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:50,859 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=20f1a317-78ff-4576-a776-baddbfd772fb] running ISession.Dispose()
+2020-06-30 21:38:50,860 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=20f1a317-78ff-4576-a776-baddbfd772fb] executing real Dispose(True)
+2020-06-30 21:38:50,860 [6] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:50,860 [6] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:50,860 [6] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:38:50,993 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:38:50,993 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:38:50,994 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:38:50,994 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:38:50,994 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:38:50,994 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:38:50,994 [9] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:38:50,995 [9] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:38:51,494 [14] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=49a37b64-57d2-4f35-8b48-ef90f76e4b18] opened session at timestamp: 637291499314, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:51,495 [14] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:51,500 [14] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=49a37b64-57d2-4f35-8b48-ef90f76e4b18] running ISession.Dispose()
+2020-06-30 21:38:51,500 [14] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=49a37b64-57d2-4f35-8b48-ef90f76e4b18] executing real Dispose(True)
+2020-06-30 21:38:51,500 [14] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:51,500 [14] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:51,501 [14] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:38:51,505 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.connection_string=Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
+2020-06-30 21:38:51,506 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - show_sql=true
+2020-06-30 21:38:51,506 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - dialect=NHibernate.Dialect.MsSql2012Dialect
+2020-06-30 21:38:51,506 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - connection.driver_class=NHibernate.Driver.SqlClientDriver
+2020-06-30 21:38:51,506 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - query.substitutions=true 1, false 0, yes 'Y', no 'N'
+2020-06-30 21:38:51,507 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - current_session_context_class=managed_web
+2020-06-30 21:38:51,507 [8] INFO  NHibernate.Cfg.Configuration [(null)] - Configured SessionFactory: NHibernate.Test
+2020-06-30 21:38:51,507 [8] DEBUG NHibernate.Cfg.Configuration [(null)] - properties: System.Collections.Generic.Dictionary`2[System.String,System.String]
+2020-06-30 21:38:51,507 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=43f6f21c-d080-4a33-92ea-47a44b2bf211] opened session at timestamp: 637291499315, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:51,508 [8] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:51,516 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=43f6f21c-d080-4a33-92ea-47a44b2bf211] running ISession.Dispose()
+2020-06-30 21:38:51,517 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=43f6f21c-d080-4a33-92ea-47a44b2bf211] executing real Dispose(True)
+2020-06-30 21:38:51,517 [8] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:51,517 [8] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:51,518 [8] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection
+2020-06-30 21:38:52,009 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=c1e6fb7f-5e1e-4130-bfd0-3ab865bb1e85] opened session at timestamp: 637291499320, for session factory: [NHibernate.Test/d5af4b8f18374ce0ae086372b2b06878]
+2020-06-30 21:38:52,009 [12] DEBUG NHibernate.Connection.DriverConnectionProvider [(null)] - Obtaining IDbConnection from Driver
+2020-06-30 21:38:52,016 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=c1e6fb7f-5e1e-4130-bfd0-3ab865bb1e85] running ISession.Dispose()
+2020-06-30 21:38:52,016 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - [session-id=c1e6fb7f-5e1e-4130-bfd0-3ab865bb1e85] executing real Dispose(True)
+2020-06-30 21:38:52,016 [12] DEBUG NHibernate.Impl.SessionImpl [(null)] - closing session
+2020-06-30 21:38:52,016 [12] DEBUG NHibernate.AdoNet.AbstractBatcher [(null)] - running BatcherImpl.Dispose(true)
+2020-06-30 21:38:52,016 [12] DEBUG NHibernate.Connection.ConnectionProvider [(null)] - Closing connection

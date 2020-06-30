@@ -44,17 +44,12 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Tỉnh/TP<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlGroup" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
-                                <option value="0"></option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 control-label no-padding-right">Courrier<span class="required">(*)</span></label>
-                        <div class="col-sm-4">
-                            <select id="ddlCourier" class="chosen-select form-control" data-placeholder="Chọn Courrier">
+                            <select id="ddlTinh" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
                                 <option value="0"></option>
                             </select>
                         </div>
                     </div>
+
 
                 </form>
             </div>
@@ -78,6 +73,20 @@
                         </div>
                     </div>
                 </form>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right">Nhóm<span class="required">(*)</span></label>
+                    <div class="col-sm-4">
+                        <select id="ddlGroup" class="chosen-select form-control" data-placeholder="Chọn nhóm">
+                            <option value="0"></option>
+                        </select>
+                    </div>
+                    <label class="col-sm-2 control-label no-padding-right">Courrier<span class="required">(*)</span></label>
+                    <div class="col-sm-4">
+                        <select id="ddlCourier" class="chosen-select form-control" data-placeholder="Chọn Courrier">
+                            <option value="0"></option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -164,6 +173,7 @@
         $('#ddlGroup').chosen({ width: '100%', allow_single_deselect: true });
         LayDSTaiLieu();
         LayDSNganHang();
+        LayDSTinh(hoso.ProvinceId)
         LayNhom('#ddlGroup', hoso.GroupId, '#ddlCourier', hoso.AssignId);
         getStatusList(hoso.Status);
         $('#ddlDoiTac').on('change', function () {
@@ -177,6 +187,31 @@
         $("#txtCMND").val(hoso.Cmnd);
         LayDanhsachGhichu();
     });
+    function LayDSTinh(defaultValue = 0) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSTinh", "KhuVuc")',
+            data: {},
+            success: function (data) {
+                $('#ddlTinh').empty();
+                $('#ddlTinh').append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#ddlTinh').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                    });
+                }
+                if (defaultValue > 0) {
+                    $('#ddlTinh').val(defaultValue)
+                }
+                $('#ddlTinh').chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
     function getCourrier(maTinh) {
         if (isNullOrWhiteSpace(maTinh))
             return;
@@ -438,6 +473,7 @@
             'LastNote': $('#txtGhiChu').val(),
             'Id': hoso.Id,
             'GroupId': $('#ddlGroup').val(),
+            'ProvinceId': $('#ddlTinh').val()
         });
         $.ajax({
             traditional: true,

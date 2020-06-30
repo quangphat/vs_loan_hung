@@ -19,6 +19,8 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class CourrierController : BaseController
     {
+        private bool result;
+
         public static Dictionary<string, ActionInfo> LstRole
         {
             get
@@ -38,7 +40,7 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             var bzCourier = new HosoCourrierBusiness();
             var totalRecord = await bzCourier.CountHosoCourrier(freeText, courierId, status, groupId);
-            var datas = await bzCourier.GetHosoCourrier(freeText, courierId, status, page, limit, groupId);
+            var datas = await bzCourier.GetHosoCourrier(freeText, GlobalData.User.IDUser, status, page, limit, groupId);
             var result = DataPaging.Create(datas, totalRecord);
             return ToJsonResponse(true, null, result);
         }
@@ -70,13 +72,20 @@ namespace VS_LOAN.Core.Web.Controllers
                 PartnerId = model.PartnerId,
                 Phone = model.Phone,
                 AssignId = model.AssignId,
-                GroupId = model.GroupId
+                GroupId = model.GroupId,
+                ProvinceId = model.ProvinceId
             };
             var _bizCourrier = new HosoCourrierBusiness();
             var id = await _bizCourrier.Create(hoso);
             if (id > 0)
             {
-                _bizCourrier.InsertCourierAssignee(id, model.AssignId);
+                var tasks = new List<Task>();
+                var ids = new List<int>() { model.AssignId, GlobalData.User.IDUser };
+                foreach(var assigneeId in ids)
+                {
+                    tasks.Add(_bizCourrier.InsertCourierAssignee(id, assigneeId));
+                }
+                await Task.WhenAll(tasks);
                 if (!string.IsNullOrWhiteSpace(model.LastNote))
                 {
                     var bizNote = new NoteBusiness();
@@ -136,7 +145,8 @@ namespace VS_LOAN.Core.Web.Controllers
                 Phone = model.Phone,
                 AssignId = model.AssignId,
                 Id = model.Id,
-                GroupId = model.GroupId
+                GroupId = model.GroupId,
+                ProvinceId = model.ProvinceId
             };
             var _bizCourrier = new HosoCourrierBusiness();
             var result = await _bizCourrier.Update(model.Id, hoso);
@@ -217,7 +227,7 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             return ToJsonResponse(true);
         }
-        public async Task<JsonResult> Import(int groupId = 0)
+        public async Task<JsonResult> Import()
         {
             var file = Request.Files[0];
             if (file == null)
@@ -228,10 +238,47 @@ namespace VS_LOAN.Core.Web.Controllers
             using (var fileStream = new MemoryStream())
             {
                 await stream.CopyToAsync(fileStream);
-                var result = await bizMedia.ReadXlsxFile(fileStream, GlobalData.User.IDUser, groupId);
-                return ToJsonResponse(result.success, result.message);
+                var results = await bizMedia.ReadXlsxFile(fileStream, GlobalData.User.IDUser);
+                if (results == null || !results.Any())
+                    return ToJsonResponse(false, "Không thành công", null);
+                var _bizCourrier = new HosoCourrierBusiness();
+                var tasks = new List<Task>();
+                foreach (var item in results)
+                {
+                    tasks.Add(InsertHosoFromFile(item, _bizCourrier));
+                }
+
+                await Task.WhenAll(tasks);
+                return ToJsonResponse(true,"Thành công");
             }
 
+        }
+        private async Task<bool> InsertHosoFromFile(HosoCourier hoso, HosoCourrierBusiness _bizCourrier)
+        {
+            var id = await _bizCourrier.Create(hoso);
+            if(hoso.AssigneeIds==null || hoso.AssigneeIds.Any())
+            {
+            }
+            var tasks = new List<Task>();
+            foreach (var assingeeId in hoso.AssigneeIds)
+            {
+                tasks.Add(_bizCourrier.InsertCourierAssignee(id, assingeeId));
+            }
+            await Task.WhenAll(tasks);
+            if (!string.IsNullOrWhiteSpace(hoso.LastNote))
+            {
+                var bizNote = new NoteBusiness();
+                var note = new GhichuModel
+                {
+                    Noidung = hoso.LastNote,
+                    HosoId = id,
+                    UserId = GlobalData.User.IDUser,
+                    TypeId = NoteType.HosoCourrier
+                };
+                bizNote.AddNoteAsync(note);
+
+            }
+            return true;
         }
         public FileResult DownloadTemplateFile(string fileName)
         {

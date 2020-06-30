@@ -41,6 +41,7 @@ namespace VS_LOAN.Core.Business
                 p.Add("partnerId", hoso.PartnerId);
                 p.Add("productId", hoso.ProductId);
                 p.Add("groupId", hoso.GroupId);
+                p.Add("ProvinceId", hoso.ProductId);
                 await con.ExecuteAsync("sp_UpdateHosoCourier", p, commandType: CommandType.StoredProcedure);
                 return true;
             }
@@ -63,6 +64,7 @@ namespace VS_LOAN.Core.Business
                 p.Add("partnerId", hoso.PartnerId);
                 p.Add("productId", hoso.ProductId);
                 p.Add("groupId", hoso.GroupId);
+                p.Add("ProvinceId", hoso.ProductId);
                 await con.ExecuteAsync("sp_InsertHosoCourrier", p, commandType: CommandType.StoredProcedure);
                 return p.Get<int>("id");
             }
