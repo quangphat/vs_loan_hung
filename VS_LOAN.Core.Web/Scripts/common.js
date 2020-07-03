@@ -42,8 +42,34 @@ function LayNhom(controlId, defaultValue = 0, subcontrolId = null, subControlVal
         }
     });
 }
+
+function GetEmployees(controlId, defaultValue = 0) {
+    $(controlId).empty();
+    $.ajax({
+        type: "GET",
+        url: '/Courrier/GetEmployeesFromOne?id=' + defaultValue,
+        data: {},
+        success: function (data) {
+            $(controlId).append("<option value='0'></option>");
+            if (data.data != null && data.success == true) {
+                $.each(data.data, function (index, item) {
+                    $(controlId).append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                });
+                if (defaultValue > 0) {
+                    $(controlId).val(defaultValue);
+                }
+
+                $(controlId).chosen().trigger("chosen:updated");
+            }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
 function GetEmployeesByGroupId(controlId, groupId, isLeader = false, defaultValue = 0) {
-    debugger
     $(controlId).empty();
     $.ajax({
         type: "GET",

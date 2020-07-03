@@ -5,7 +5,9 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.HosoCourrier;
+using VS_LOAN.Core.Entity.Model;
 
 namespace VS_LOAN.Core.Business
 {
@@ -14,6 +16,15 @@ namespace VS_LOAN.Core.Business
         public HosoCourrierBusiness() : base(typeof(HosoCourrierBusiness))
         {
 
+        }
+        public async Task<UserPMModel> GetEmployeeById(int id)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryFirstOrDefaultAsync<UserPMModel>("sp_NHAN_VIEN_LayDSByMaQL", new { MaQL = id },
+                    commandType: CommandType.StoredProcedure);
+                return result;
+            }
         }
         public async Task<HosoCourierViewModel> GetById(int id)
         {
@@ -41,7 +52,7 @@ namespace VS_LOAN.Core.Business
                 p.Add("partnerId", hoso.PartnerId);
                 p.Add("productId", hoso.ProductId);
                 p.Add("groupId", hoso.GroupId);
-                p.Add("ProvinceId", hoso.ProductId);
+                p.Add("ProvinceId", hoso.ProvinceId);
                 await con.ExecuteAsync("sp_UpdateHosoCourier", p, commandType: CommandType.StoredProcedure);
                 return true;
             }
@@ -64,7 +75,7 @@ namespace VS_LOAN.Core.Business
                 p.Add("partnerId", hoso.PartnerId);
                 p.Add("productId", hoso.ProductId);
                 p.Add("groupId", hoso.GroupId);
-                p.Add("ProvinceId", hoso.ProductId);
+                p.Add("ProvinceId", hoso.ProvinceId);
                 await con.ExecuteAsync("sp_InsertHosoCourrier", p, commandType: CommandType.StoredProcedure);
                 return p.Get<int>("id");
             }

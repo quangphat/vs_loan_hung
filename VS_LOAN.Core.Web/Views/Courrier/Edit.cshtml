@@ -182,6 +182,9 @@
         $('#ddlGroup').on('change', function () {
             GetEmployeesByGroupId('#ddlCourier', this.value, false, hoso.AssignId);
         });
+        if (hoso.GroupId <= 0) {
+            GetEmployees('#ddlCourier', hoso.AssignId);
+        }
         $("#txtHoTen").val(hoso.CustomerName)
         $("#txtDienThoai").val(hoso.Phone)
         $("#txtCMND").val(hoso.Cmnd);

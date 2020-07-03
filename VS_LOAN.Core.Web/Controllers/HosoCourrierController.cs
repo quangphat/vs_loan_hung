@@ -39,7 +39,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<JsonResult> Search(string freeText = null, int provinceId = 0, int courierId = 0, string status = null, int groupId = 0, int page = 1, int limit = 10)
         {
             var bzCourier = new HosoCourrierBusiness();
-            var totalRecord = await bzCourier.CountHosoCourrier(freeText, courierId, status, groupId);
+            var totalRecord = await bzCourier.CountHosoCourrier(freeText, GlobalData.User.IDUser, status, groupId);
             var datas = await bzCourier.GetHosoCourrier(freeText, GlobalData.User.IDUser, status, page, limit, groupId);
             var result = DataPaging.Create(datas, totalRecord);
             return ToJsonResponse(true, null, result);
@@ -269,7 +269,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 bizNote.AddNoteAsync(note);
 
             }
-            if (hoso.AssigneeIds == null || hoso.AssigneeIds.Any())
+            if (hoso.AssigneeIds == null || !hoso.AssigneeIds.Any())
             {
                 hoso.AssigneeIds = new List<int>();
             }
@@ -289,6 +289,17 @@ namespace VS_LOAN.Core.Web.Controllers
             var response = new FileContentResult(fileBytes, "application/octet-stream");
             response.FileDownloadName = fileName;
             return response;
+        }
+        public async Task<JsonResult> GetEmployeesFromOne(int id)
+        {
+            var _bizCourrier = new HosoCourrierBusiness();
+            var employee = await _bizCourrier.GetEmployeeById(id);
+            if (employee == null)
+                return ToJsonResponse(false, null, null);
+            return ToJsonResponse(true, "", new List<OptionSimple> { new OptionSimple {
+                Id = employee.IDUser,
+                Name = employee.FullName
+            } });
         }
     }
 }
