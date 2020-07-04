@@ -385,7 +385,17 @@
         else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.Finish)')
             statusString = "<span class='label label-sm label-pcb arrowed arrowed-righ'>Hoàn thành</span>";
         else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.Cancel)')
-            statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Hủy</span>";
+           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Hủy</span>";
+       else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.Nhaplieu)')
+           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Nhập liệu</span>";
+        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.Thamdinh)')
+           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Thẩm định</span>";
+        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.BosungHoso)')
+           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Bổ sung hồ sơ</span>";
+        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.DaDoichieu)')
+           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Đã đối chiếu</span>";
+        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.PCB)')
+            statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>PCB</span>";
         return "<td class='text-left'>" + statusString + "</td>";
     }
     function renderRow(index, rowData) {
