@@ -75,6 +75,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 Phone = model.Phone,
                 AssignId = model.AssignId,
                 GroupId = model.GroupId,
+                DistrictId = model.DistrictId,
                 ProvinceId = model.ProvinceId
             };
             var _bizCourrier = new HosoCourrierBusiness();
@@ -148,6 +149,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 AssignId = model.AssignId,
                 Id = model.Id,
                 GroupId = model.GroupId,
+                DistrictId = model.DistrictId,
                 ProvinceId = model.ProvinceId
             };
             var _bizCourrier = new HosoCourrierBusiness();

@@ -125,7 +125,7 @@ function getRoles(controlId, appendDefault = true, defaultText = "Tất cả", v
         }
     });
 }
-function getProvinces(controlId, value = null, districtValue = 0) {
+function getProvinces(controlId, value = null, districtValue = 0, districtControlId = "#ddlDistrict") {
     $.ajax({
         type: "GET",
         url: '/khuvuc/LayDSTinh',
@@ -143,9 +143,8 @@ function getProvinces(controlId, value = null, districtValue = 0) {
 
         },
         complete: function () {
-            setTimeout(function () {
-                getDistricts(value, "#ddlDistrict", districtValue);
-            }, 1000);
+            debugger
+            getDistricts(districtControlId, value, districtValue);
 
         },
         error: function (jqXHR, exception) {
@@ -153,7 +152,7 @@ function getProvinces(controlId, value = null, districtValue = 0) {
         }
     });
 }
-function getDistricts(provinceId, controlId, value = null) {
+function getDistricts(controlId, provinceId, value = null) {
 
     if (isNullOrUndefined(provinceId))
         return;

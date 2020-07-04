@@ -48,7 +48,12 @@
                                 <option value="0"></option>
                             </select>
                         </div>
-                        
+                        <label class="col-sm-2 control-label no-padding-right">Quận/huyện<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlHuyen" class="chosen-select form-control" data-placeholder="Chọn quận huyện">
+                                <option value="0"></option>
+                            </select>
+                        </div>
                     </div>
                     
                 </form>
@@ -161,6 +166,9 @@
         LayDSTaiLieu();
         LayDSNganHang();
         LayDSTinh();
+        $('#ddlTinh').on('change', function () {
+            getDistricts('#ddlHuyen', this.value);
+        });
         LayNhom('#ddlGroup');
         $('#ddlDoiTac').on('change', function () {
             LayDSSanPham(this.value);
@@ -373,7 +381,7 @@
             'LastNote': $('#txtGhiChu').val(),
             'GroupId': $('#ddlGroup').val(),
             'ProvinceId': $('#ddlTinh').val(),
-            
+            'DistrictId': $('#ddlHuyen').val()
         });
         $.ajax({
             traditional: true,
