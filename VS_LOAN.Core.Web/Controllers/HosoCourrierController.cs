@@ -34,6 +34,8 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public ActionResult Index()
         {
+            var isAdmin = new GroupBusiness().CheckIsAdmin(GlobalData.User.IDUser);
+            ViewBag.isAdmin = isAdmin ? 1 : 0;
             return View();
         }
         public async Task<JsonResult> Search(string freeText = null, int provinceId = 0, int courierId = 0, string status = null, int groupId = 0, int page = 1, int limit = 10)

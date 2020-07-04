@@ -294,7 +294,11 @@ function renderTextLeft(value, type, className = '') {
 function renderTextCenter(value, type) {
     return "<td class='text-center'>" + getValueDisplay(value, type) + "</td>";
 }
-function renderAction(id) {
+function renderAction(id, displayNone = false) {
+    debugger
+    if (displayNone == true) {
+        return "<td class='text-center'></td>";
+    }
     let thaoTac = "<div class='action-buttons'><a title='Chỉnh sửa' class='green' style='cursor: pointer'  onclick='onEdit(" + id + ")' >";
     thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
     thaoTac += "</i>";

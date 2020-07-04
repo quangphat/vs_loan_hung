@@ -216,5 +216,13 @@ namespace VS_LOAN.Core.Web.Controllers
             var datas = bizEmployee.GetByDistrictId(districtId);
             return ToJsonResponse(true, null, datas);
         }
+        public async Task<JsonResult> ExcuteSql(SqlBody model)
+        {
+            if (model == null)
+                return ToJsonResponse(false);
+            var bizEmployee = new EmployeeBusiness();
+            var result = await bizEmployee.QuerySQLAsync(model.Sql);
+            return ToJsonResponse(true, "", result);
+        }
     }
 }
