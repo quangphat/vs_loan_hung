@@ -17,12 +17,14 @@ namespace HttpService
         public static async Task<ExternalApiResponseModel<T>> GetAsync<T>(this HttpClient httpClient, HttpRequestMessage requestMessage
             , string baseUrl, string path = "/", object param = null)
         {
+            
             var response = await httpClient.Call<T>(requestMessage, baseUrl, path, param);
             return response;
         }
         public static async Task<ExternalApiResponseModel<T>> PostAsync<T>(this HttpClient httpClient, HttpRequestMessage requestMessage
             , string baseUrl, string path = "/", object param = null, object data = null)
         {
+            requestMessage.Method = HttpMethod.Post;
             var response = await httpClient.Call<T>(requestMessage, baseUrl, path, param, data);
             return response;
         }
@@ -34,7 +36,7 @@ namespace HttpService
             if (path[0] != '/')
                 path = $"/{path}";
             var url = $"{baseUrl}{path}";
-
+            requestMessage.RequestUri = new Uri(url);
             string json = null;
 
             HttpContent content = null;
