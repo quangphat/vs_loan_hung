@@ -15,7 +15,7 @@ namespace VS_LOAN.Core.Utility
 
         public static async Task<HttpResponseMessage> Post(this HttpClient httpClient, string basePath, string path = "/", object param = null, object data = null)
         {
-            return await httpClient.Call( HttpMethod.Post, basePath, path, param, data);
+            return await httpClient.Call(HttpMethod.Post, basePath, path, param, data);
         }
         private static async Task<HttpResponseMessage> Call(this HttpClient httpClient,
             HttpMethod method,string basePath, string path = "/", object param = null, object data = null)
@@ -66,13 +66,5 @@ namespace VS_LOAN.Core.Utility
 
             return response;
         }
-        //public static string AddQuery(this string path, object obj)
-        //{
-        //    if (path == null || obj == null)
-        //        return path;
-
-        //    return QueryHelpers.AddQueryString(path, obj.ToKeyPairs().ToDictionary(m => m.Key, m => m.Value.ToString()));
-        //}
-
     }
 }
