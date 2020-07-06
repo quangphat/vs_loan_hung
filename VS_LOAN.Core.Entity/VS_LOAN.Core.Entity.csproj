@@ -111,6 +111,9 @@
     <Compile Include="JsonFileResult.cs" />
     <Compile Include="KetQuaHoSoModel.cs" />
     <Compile Include="LoaiTaiLieuModel.cs" />
+    <Compile Include="MCreditModels\AuthenRequestModel.cs" />
+    <Compile Include="MCreditModels\AuthenResponse.cs" />
+    <Compile Include="MCreditModels\AuthenResponseObj.cs" />
     <Compile Include="Model\AutoIDModel.cs" />
     <Compile Include="Model\Customer.cs" />
     <Compile Include="Model\CustomerCheck.cs" />
