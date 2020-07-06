@@ -55,7 +55,7 @@
                             <a class="btn btn-primary" id="btnSearch">
                                 Tìm kiếm
                             </a>
-                            <a class="btn btn-primary" href="/Employee/AddNew">
+                            <a class="btn btn-primary" href="/Courrier/AddNew">
                                 Tạo mới
                             </a>
                         </div>
@@ -384,9 +384,19 @@
             statusString = "<span class='label label-sm label-cancel arrowed arrowed-righ'>Chấp nhận</span>";
         else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.Finish)')
             statusString = "<span class='label label-sm label-pcb arrowed arrowed-righ'>Hoàn thành</span>";
-        else if (statusId == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.GiaiNgan)')
-            statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        return "<td class='text-left'>" + statusString + "</td>";;
+        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.Cancel)')
+           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Hủy</span>";
+       else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.Nhaplieu)')
+           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Nhập liệu</span>";
+        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.Thamdinh)')
+           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Thẩm định</span>";
+        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.BosungHoso)')
+           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Bổ sung hồ sơ</span>";
+        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.DaDoichieu)')
+           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Đã đối chiếu</span>";
+        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.PCB)')
+            statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>PCB</span>";
+        return "<td class='text-left'>" + statusString + "</td>";
     }
     function renderRow(index, rowData) {
         
@@ -401,7 +411,8 @@
         else
             limit = parseInt(limit)
         var stt = (page - 1) * limit + index + 1;
-        return "<tr role='row' class = 'odd'>"
+        
+        let result = "<tr role='row' class = 'odd'>"
             + renderTextCenter(stt, '','center w-45')
             + renderTextLeft(rowData.CustomerName, '', "m-w-120")
             + renderTextLeft(rowData.Phone, '','w-84')
@@ -410,8 +421,9 @@
             + renderTextLeft(rowData.CreatedTime, 'datetime', 'w-150')
             + renderTextLeft(rowData.CreatedUser, '', "m-w-120")
             + renderTextLeft(rowData.UpdatedTime, 'datetime', 'w-150')
-            + renderAction(rowData.Id)
+            + renderAction(rowData.Id,(@ViewBag.isAdmin == 0 && rowData.Status == 7))
             + "</tr>";
+        return result
     }
     function renderTableBody(datas) {
         var tableBody = $("#dtSource").find("tbody");

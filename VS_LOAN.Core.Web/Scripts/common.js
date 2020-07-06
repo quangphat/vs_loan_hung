@@ -12,6 +12,89 @@
 //        message: '<h2 style="color:#fff">' + text + ' ...</h2>'
 //    });
 //}
+
+function LayNhom(controlId, defaultValue = 0, subcontrolId = null, subControlValue = 0) {
+    $(controlId).empty();
+    $.ajax({
+        type: "GET",
+        url: '/DuyetHoSo/LayDSNhom',
+        data: {},
+        success: function (data) {
+            $(controlId).append("<option value='0'></option>");
+            if (data.data != null && data.success == true) {
+                $.each(data.data, function (index, item) {
+                    
+                    $(controlId).append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
+                });
+                if (defaultValue > 0) {
+                    $(controlId).val(defaultValue);
+                }
+                $(controlId).chosen().trigger("chosen:updated");
+            }
+        },
+        complete: function () {
+            if (subControlValue > 0) {
+                GetEmployeesByGroupId(subcontrolId, defaultValue, false, subControlValue)
+            }
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+
+function GetEmployees(controlId, defaultValue = 0) {
+    $(controlId).empty();
+    $.ajax({
+        type: "GET",
+        url: '/Courrier/GetEmployeesFromOne?id=' + defaultValue,
+        data: {},
+        success: function (data) {
+            $(controlId).append("<option value='0'></option>");
+            if (data.data != null && data.success == true) {
+                $.each(data.data, function (index, item) {
+                    $(controlId).append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                });
+                if (defaultValue > 0) {
+                    $(controlId).val(defaultValue);
+                }
+
+                $(controlId).chosen().trigger("chosen:updated");
+            }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+function GetEmployeesByGroupId(controlId, groupId, isLeader = false, defaultValue = 0) {
+    $(controlId).empty();
+    $.ajax({
+        type: "GET",
+        url: '/DuyetHoSo/LayDSThanhVienNhom?maNhom=' + groupId ,
+        data: {},
+        success: function (data) {
+            $(controlId).append("<option value='0'></option>");
+            if (data.data != null && data.success == true) {
+                $.each(data.data, function (index, item) {
+                    $(controlId).append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
+                });
+                if (defaultValue > 0) {
+                    $(controlId).val(defaultValue);
+                }
+                
+                $(controlId).chosen().trigger("chosen:updated");
+            }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
 function getRoles(controlId, appendDefault = true, defaultText = "Tất cả", value = 0, onSuccess = null) {
     $.ajax({
         type: "GET",
@@ -42,7 +125,7 @@ function getRoles(controlId, appendDefault = true, defaultText = "Tất cả", v
         }
     });
 }
-function getProvinces(controlId, value = null, districtValue = 0) {
+function getProvinces(controlId, value = null, districtValue = 0, districtControlId = "#ddlDistrict") {
     $.ajax({
         type: "GET",
         url: '/khuvuc/LayDSTinh',
@@ -60,9 +143,8 @@ function getProvinces(controlId, value = null, districtValue = 0) {
 
         },
         complete: function () {
-            setTimeout(function () {
-                getDistricts(value, "#ddlDistrict", districtValue);
-            }, 1000);
+            debugger
+            getDistricts(districtControlId, value, districtValue);
 
         },
         error: function (jqXHR, exception) {
@@ -70,7 +152,7 @@ function getProvinces(controlId, value = null, districtValue = 0) {
         }
     });
 }
-function getDistricts(provinceId, controlId, value = null) {
+function getDistricts(controlId, provinceId, value = null) {
 
     if (isNullOrUndefined(provinceId))
         return;
@@ -211,7 +293,11 @@ function renderTextLeft(value, type, className = '') {
 function renderTextCenter(value, type) {
     return "<td class='text-center'>" + getValueDisplay(value, type) + "</td>";
 }
-function renderAction(id) {
+function renderAction(id, displayNone = false) {
+    debugger
+    if (displayNone == true) {
+        return "<td class='text-center'></td>";
+    }
     let thaoTac = "<div class='action-buttons'><a title='Chỉnh sửa' class='green' style='cursor: pointer'  onclick='onEdit(" + id + ")' >";
     thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
     thaoTac += "</i>";
@@ -581,7 +667,7 @@ function SetFormatDateTime(datetime) {
 function SetFormatDateTimeDMY(datetime) {
     try {
         var valueDate = parseInt(datetime.replace("/Date(", "").replace(")/", ""));
-        debugger
+        
         if (valueDate < 0)
             return "";
         else {

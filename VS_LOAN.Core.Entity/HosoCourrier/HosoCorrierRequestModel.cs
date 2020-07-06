@@ -21,5 +21,8 @@ namespace VS_LOAN.Core.Entity.HosoCourrier
         public int Status { get; set; }
         public string LastNote { get; set; }
         public int AssignId { get; set; }
+        public int GroupId { get; set; }
+        public int DistrictId { get; set; }
+        public int ProvinceId { get; set; }
     }
 }

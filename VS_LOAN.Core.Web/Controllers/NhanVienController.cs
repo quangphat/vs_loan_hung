@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using VS_LOAN.Core.Entity;
+using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
@@ -108,13 +109,17 @@ namespace VS_LOAN.Core.Web.Controllers
             try
             {
                 UserPMModel user = new UserPMBLL().DangNhap(userName, MD5.getMD5(password));
+                //user = new UserPMModel {
+                //    IDUser = 1,
+                //    UserName = "t"
+                //};
                 if (user != null)
                 {
                    
                     GlobalData.User = user;
                     GlobalData.User.UserType = (int)UserTypeEnum.Sale;
-                    var isTeamLead = new NhomBLL().checkIsTeamLeadByUserId(user.IDUser);
-                    var isAdmin = new NhomBLL().CheckIsAdmin(user.IDUser);
+                    var isTeamLead = new GroupBusiness().checkIsTeamLeadByUserId(user.IDUser);
+                    var isAdmin = new GroupBusiness().CheckIsAdmin(user.IDUser);
                     if(isAdmin)
                         GlobalData.User.UserType = (int)UserTypeEnum.Admin;
                     else if(isTeamLead)
@@ -195,7 +200,7 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.ThongTin = new UserPMBLL().GetUserByID(GlobalData.User.IDUser.ToString());
             return View();
         }
-        public JsonResult LayDSNhanVien()
+        public async Task<JsonResult> LayDSNhanVien()
         {
             List<UserPMModel> rs = new NhanVienBLL().LayDSNhanVien();
             if (rs == null)

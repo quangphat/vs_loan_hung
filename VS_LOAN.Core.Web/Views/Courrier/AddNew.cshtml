@@ -48,9 +48,9 @@
                                 <option value="0"></option>
                             </select>
                         </div>
-                        <label class="col-sm-2 control-label no-padding-right">Courrier<span class="required">(*)</span></label>
+                        <label class="col-sm-2 control-label no-padding-right">Quận/huyện<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlCourier" class="chosen-select form-control" data-placeholder="Chọn Courrier">
+                            <select id="ddlHuyen" class="chosen-select form-control" data-placeholder="Chọn quận huyện">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -73,6 +73,20 @@
                         <label class="col-sm-2 control-label no-padding-right">Sản phẩm vay<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <select id="ddlSanPhamVay" class="chosen-select form-control" data-placeholder="Chọn sản phẩm vay">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Nhóm<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlGroup" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right">Chỉ định<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlCourier" class="chosen-select form-control" data-placeholder="Chọn người chỉ định">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -122,7 +136,7 @@
     $(document).ready(function () {
         $('#ddlSanPhamVay').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlCourier').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddlTinh').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlGroup').chosen({ width: '100%', allow_single_deselect: true });
         
     });
 
@@ -152,11 +166,15 @@
         LayDSTaiLieu();
         LayDSNganHang();
         LayDSTinh();
+        $('#ddlTinh').on('change', function () {
+            getDistricts('#ddlHuyen', this.value);
+        });
+        LayNhom('#ddlGroup');
         $('#ddlDoiTac').on('change', function () {
             LayDSSanPham(this.value);
         });
-        $('#ddlTinh').on('change', function () {
-            getCourrier(this.value);
+        $('#ddlGroup').on('change', function () {
+            GetEmployeesByGroupId('#ddlCourier', this.value, true);
         });
     });
     function LayDSTinh() {
@@ -361,6 +379,9 @@
             'partnerId': $('#ddlDoiTac').val(), 
             'productId': $('#ddlSanPhamVay').val(), 
             'LastNote': $('#txtGhiChu').val(),
+            'GroupId': $('#ddlGroup').val(),
+            'ProvinceId': $('#ddlTinh').val(),
+            'DistrictId': $('#ddlHuyen').val()
         });
         $.ajax({
             traditional: true,

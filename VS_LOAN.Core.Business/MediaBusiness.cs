@@ -112,7 +112,7 @@ namespace VS_LOAN.Core.Business
             };
 
         }
-        public async Task<TupleModel> ReadXlsxFile(MemoryStream stream, int createBy, int groupId =0)
+        public async Task<List<HosoCourier>> ReadXlsxFile(MemoryStream stream, int createBy)
         {
             var result = new TupleModel();
             var workBook = WorkbookFactory.Create(stream);
@@ -125,38 +125,58 @@ namespace VS_LOAN.Core.Business
             //}
             var bizCourier = new HosoCourrierBusiness();
             int count = 0;
-            for(int i =1;i<sheet.LastRowNum;i++)
+            var hosos = new List<HosoCourier>();
+            for (int i = 1; i < sheet.PhysicalNumberOfRows; i++)
             {
-                var row = sheet.GetRow(i);
-                if(row!=null)
+                try
                 {
-                    if (row.Cells.Count > 1)
+                    var row = sheet.GetRow(i);
+                    if (row != null)
                     {
-                        bool isNullRow = row.Cells.Count < 3 ? true : false;
-                    }
-                    var hoso = new HosoCourier()
-                    {
-                        CustomerName = row.Cells[0] != null ? row.Cells[0].ToString() : "",
-                        Phone = row.Cells[1] != null ? row.Cells[1].ToString() : "",
-                        Cmnd = row.Cells[2] != null ? row.Cells[2].ToString() : "",
-                        Status= (int)HosoCourierStatus.New,
-                        CreatedBy = createBy
-                    };
-                    if (!string.IsNullOrWhiteSpace(hoso.CustomerName) && !string.IsNullOrWhiteSpace(hoso.Phone))
-                    {
-                        await bizCourier.Create(hoso, groupId);
+                        if (row.Cells.Count > 1)
+                        {
+                            bool isNullRow = row.Cells.Count < 3 ? true : false;
+                        }
+                        var hoso = new HosoCourier()
+                        {
+                            CustomerName = row.Cells[0] != null ? row.Cells[0].ToString() : "",
+                            Phone = row.Cells[1] != null ? row.Cells[1].ToString() : "",
+                            Cmnd = row.Cells[2] != null ? row.Cells[2].ToString() : "",
+                            LastNote = row.Cells[4] != null ? row.Cells[4].ToString() : "",
+                            ProvinceId = row.Cells[5] != null ? Convert.ToInt32(row.Cells[5].ToString()) : 0,
+                            DistrictId = row.Cells[6] != null ? Convert.ToInt32(row.Cells[6].ToString()) : 0,
+                            Status = (int)HosoCourierStatus.New,
+                            CreatedBy = createBy
+                        };
+                        var strAssignee = row.Cells[3] != null ? row.Cells[3].ToString() : "";
+                        var assigneeIdsStr = string.IsNullOrWhiteSpace(strAssignee) ? new List<string>() : strAssignee.Split(',').ToList();
+                        var assigneeIds = (assigneeIdsStr != null && assigneeIdsStr.Any()) ? assigneeIdsStr.Select(s => Convert.ToInt32(s)).ToList() : new List<int>();
+                        hoso.AssigneeIds = assigneeIds;
+                        hoso.AssignId = assigneeIds.FirstOrDefault();
+                        
+                        hoso.GroupId = await bizCourier.GetGroupIdByNguoiQuanLyId(hoso.AssignId);
+                        hosos.Add(hoso);
+                        //if (!string.IsNullOrWhiteSpace(hoso.CustomerName) && !string.IsNullOrWhiteSpace(hoso.Phone))
+                        //{
+                        //    await bizCourier.Create(hoso, groupId);
+
+                        //}
                         count++;
                     }
                 }
-                
+                catch
+                {
+                    return hosos;
+                }
+
             }
-            
-            result = new TupleModel
-            {
-                success = true,
-                message = $"Import thành công {count} dòng."
-            };
-            return result;
+            return hosos;
+            //result = new TupleModel
+            //{
+            //    success = true,
+            //    message = $"Import thành công {count} dòng."
+            //};
+            //return result;
         }
     }
 }

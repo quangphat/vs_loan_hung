@@ -34,7 +34,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public ActionResult DanhSachHoSo()
         {
             ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;
-            List<NhomDropDownModel> dsNhom = new NhomBLL().LayDSCuaNhanVien(GlobalData.User.IDUser);
+            List<NhomDropDownModel> dsNhom = new GroupBusiness().LayDSCuaNhanVien(GlobalData.User.IDUser);
             if (dsNhom == null)
                 dsNhom = new List<NhomDropDownModel>();
             ViewBag.DSNhom = dsNhom;
@@ -90,7 +90,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult LayDSNhom()
         {
-            List<NhomDropDownModel> rs = new NhomBLL().LayDSCuaNhanVien(GlobalData.User.IDUser);
+            List<NhomDropDownModel> rs = new GroupBusiness().LayDSCuaNhanVien(GlobalData.User.IDUser);
             if (rs == null)
                 rs = new List<NhomDropDownModel>();
             return ToJsonResponse(true, null, rs);
@@ -104,7 +104,7 @@ namespace VS_LOAN.Core.Web.Controllers
             else
             {
                 // Lấy ds nhóm của nv quản lý
-                List<NhomDropDownModel> lstNhom = new NhomBLL().LayDSCuaNhanVien(GlobalData.User.IDUser);
+                List<NhomDropDownModel> lstNhom = new GroupBusiness().LayDSCuaNhanVien(GlobalData.User.IDUser);
                 if (lstNhom != null)
                 {
                     for (int i = 0; i < lstNhom.Count; i++)

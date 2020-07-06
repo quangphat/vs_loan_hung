@@ -47,6 +47,13 @@ namespace VS_LOAN.Core.Entity
         Accept = 4,
         Giaingan = 5,
         Finish = 6,
+        Cancel = 7,
+
+        Nhaplieu = 8,
+        Thamdinh = 9,
+        BosungHoso = 10,
+        DaDoichieu = 11,
+        PCB = 12
     }
     public enum TrangThaiHoSo
     {

@@ -17,6 +17,6 @@ namespace VS_LOAN.Core.Entity.HosoCourrier
         public string AssignUser { get; set; }
         public string ProductName { get; set; }
         public string CreatedUser { get; set; }
-        public string ProvinceId { get; set; }
+        
     }
 }

@@ -1,4 +1,5 @@
-﻿using NHibernate;
+﻿using Dapper;
+using NHibernate;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,9 +13,12 @@ using VS_LOAN.Core.Utility.Exceptions;
 
 namespace VS_LOAN.Core.Business
 {
-    public class NhomBLL
+    public class GroupBusiness:BaseBusiness
     {
+        public GroupBusiness() : base(typeof(GroupBusiness))
+        {
 
+        }
         public bool CheckIsTeamlead(int nhanvienId)
         {
             return checkIsTeamLeadByUserId(nhanvienId);
@@ -125,41 +129,47 @@ namespace VS_LOAN.Core.Business
             }
         }
 
-        public List<NhomDropDownModel> LayTatCa()
+        public async Task<List<NhomDropDownModel>> GetAll()
         {
-            try
+            using (var con = GetConnection())
             {
-                using (ISession session = LOANSessionManager.OpenSession())
-                {
-                    IDbCommand command = new SqlCommand();
-                    command.Connection = session.Connection;
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_NHOM_LayDSNhom";
-                    DataTable dt = new DataTable();
-                    dt.Load(command.ExecuteReader());
-                    if (dt != null)
-                    {
-                        if (dt.Rows.Count > 0)
-                        {
-                            List<NhomDropDownModel> lstTemp = new List<NhomDropDownModel>();
-                            foreach (DataRow item in dt.Rows)
-                            {
-                                NhomDropDownModel nhom = new NhomDropDownModel();
-                                nhom.ID = Convert.ToInt32(item["ID"].ToString());
-                                nhom.Ten = item["Ten"].ToString();
-                                nhom.ChuoiMaCha = item["ChuoiMaCha"].ToString();
-                                lstTemp.Add(nhom);
-                            }
-                            return TaoCayDSNhom(lstTemp, "0");
-                        }
-                    }
-                    return null;
-                }
+                var result = await con.QueryAsync<NhomDropDownModel>("sp_NHOM_LayDSNhom",
+                    commandType: CommandType.StoredProcedure);
+                return TaoCayDSNhom(result.ToList(), "0");
             }
-            catch (BusinessException ex)
-            {
-                throw ex;
-            }
+            //try
+            //{
+            //    using (ISession session = LOANSessionManager.OpenSession())
+            //    {
+            //        IDbCommand command = new SqlCommand();
+            //        command.Connection = session.Connection;
+            //        command.CommandType = CommandType.StoredProcedure;
+            //        command.CommandText = "sp_NHOM_LayDSNhom";
+            //        DataTable dt = new DataTable();
+            //        dt.Load(command.ExecuteReader());
+            //        if (dt != null)
+            //        {
+            //            if (dt.Rows.Count > 0)
+            //            {
+            //                List<NhomDropDownModel> lstTemp = new List<NhomDropDownModel>();
+            //                foreach (DataRow item in dt.Rows)
+            //                {
+            //                    NhomDropDownModel nhom = new NhomDropDownModel();
+            //                    nhom.ID = Convert.ToInt32(item["ID"].ToString());
+            //                    nhom.Ten = item["Ten"].ToString();
+            //                    nhom.ChuoiMaCha = item["ChuoiMaCha"].ToString();
+            //                    lstTemp.Add(nhom);
+            //                }
+            //                return TaoCayDSNhom(lstTemp, "0");
+            //            }
+            //        }
+            //        return null;
+            //    }
+            //}
+            //catch (BusinessException ex)
+            //{
+            //    throw ex;
+            //}
         }
 
         public int Them(NhomModel nhom, List<int> lstThanhVien)
@@ -243,7 +253,16 @@ namespace VS_LOAN.Core.Business
                 throw ex;
             }
         }
-
+        public async Task<List<OptionSimple>> GetEmployeesByGroupId(int groupId, bool isLeader = false)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryAsync<OptionSimple>("sp_NHOM_GetEmployeesByGroupId",
+                    new { groupId, isGetLeader = isLeader},
+                    commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
         public List<ThongTinToNhomModel> LayDSNhomCon(int maNhomCha)
         {
             try

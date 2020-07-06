@@ -116,7 +116,7 @@ namespace VS_LOAN.Core.Web.Helpers
                         new SiteMenuItem("Thêm mới","", IndexMenu.M_6_1,EmployeeController.LstRole["AddNew"]._href, EmployeeController.LstRole["AddNew"]._mangChucNang) // 1.3  
             };
             //var isTeamLead = new NhomBLL().CheckIsTeamlead(GlobalData.User.IDUser);
-            var isAdmin = new NhomBLL().CheckIsAdmin(GlobalData.User.IDUser);
+            var isAdmin = new GroupBusiness().CheckIsAdmin(GlobalData.User.IDUser);
             if (isAdmin)
             {
                 _siteMenu = _siteMenu.Concat(siteMenuAdmin).ToList();

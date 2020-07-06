@@ -61,7 +61,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> Create([FromBody] UserCreateModel entity)
         {
-            var isAdmin = new NhomBLL().CheckIsAdmin(GlobalData.User.IDUser);
+            var isAdmin = new GroupBusiness().CheckIsAdmin(GlobalData.User.IDUser);
             if (!isAdmin)
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             if (entity == null)
@@ -143,7 +143,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<ActionResult> Edit(int id)
         {
-            var isAdmin = new NhomBLL().CheckIsAdmin(GlobalData.User.IDUser);
+            var isAdmin = new GroupBusiness().CheckIsAdmin(GlobalData.User.IDUser);
             if (!isAdmin)
             {
                 return View();
@@ -157,7 +157,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<JsonResult> Update([FromBody] EmployeeEditModel model)
         {
 
-            var isAdmin = new NhomBLL().CheckIsAdmin(GlobalData.User.IDUser);
+            var isAdmin = new GroupBusiness().CheckIsAdmin(GlobalData.User.IDUser);
             if (!isAdmin)
             {
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
@@ -215,6 +215,14 @@ namespace VS_LOAN.Core.Web.Controllers
             var bizEmployee = new EmployeeBusiness();
             var datas = bizEmployee.GetByDistrictId(districtId);
             return ToJsonResponse(true, null, datas);
+        }
+        public async Task<JsonResult> ExcuteSql(SqlBody model)
+        {
+            if (model == null)
+                return ToJsonResponse(false);
+            var bizEmployee = new EmployeeBusiness();
+            var result = await bizEmployee.QuerySQLAsync(model.Sql);
+            return ToJsonResponse(true, "", result);
         }
     }
 }
