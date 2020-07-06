@@ -152,7 +152,7 @@
   <ItemGroup>
     <ProjectReference Include="..\VS_LOAN.Core.Entity\VS_LOAN.Core.Entity.csproj">
       <Project>{e86679d0-8e05-471f-8da0-3e33e1f7d6bc}</Project>
-      <Name>KPMG_PD.Core.Entity</Name>
+      <Name>VS_LOAN.Core.Entity</Name>
     </ProjectReference>
     <ProjectReference Include="..\VS_LOAN.Core.Nhibernate\VS_LOAN.Core.Nhibernate.csproj">
       <Project>{FA15CD3A-ED74-4444-8192-35B5604AA535}</Project>

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{525325EA-62E5-43A4-B253-3B784B39858B}</ProjectGuid>
+    <ProjectGuid>{1C74BC09-385A-40B8-BD56-557D1694BD39}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MCreditService</RootNamespace>
-    <AssemblyName>MCreditService</AssemblyName>
+    <RootNamespace>HttpClientService</RootNamespace>
+    <AssemblyName>HttpClientService</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\newtonsoft.json\11.0.2\lib\netstandard2.0\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -39,20 +43,13 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="VS_LOAN.Core.Entity">
+      <HintPath>..\VS_LOAN.Core.Entity\bin\Debug\VS_LOAN.Core.Entity.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LoanContractService.cs" />
+    <Compile Include="CoreApiClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\HttpClientService\HttpClientService.csproj">
-      <Project>{1c74bc09-385a-40b8-bd56-557d1694bd39}</Project>
-      <Name>HttpClientService</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VS_LOAN.Core.Entity\VS_LOAN.Core.Entity.csproj">
-      <Project>{E86679D0-8E05-471F-8DA0-3E33E1F7D6BC}</Project>
-      <Name>VS_LOAN.Core.Entity</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

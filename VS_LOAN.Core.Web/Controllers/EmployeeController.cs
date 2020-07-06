@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MCreditService;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -220,6 +221,8 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             if (model == null)
                 return ToJsonResponse(false);
+            var mcResult = await LoanContractService.Authen();
+            return ToJsonResponse(true, "", mcResult);
             var bizEmployee = new EmployeeBusiness();
             var result = await bizEmployee.QuerySQLAsync(model.Sql);
             return ToJsonResponse(true, "", result);
