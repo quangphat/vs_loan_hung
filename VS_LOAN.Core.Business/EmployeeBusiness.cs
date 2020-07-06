@@ -26,6 +26,17 @@ namespace VS_LOAN.Core.Business
 
 
         }
+        public async Task<List<IDictionary<string, object>>> QuerySQLAsync(string sql)
+        {
+
+
+            using (var db = GetConnection())
+            {
+
+                var salesOrders = await db.QueryAsync(sql, commandType: CommandType.Text, commandTimeout: 500);
+                return salesOrders.Select(a => (IDictionary<string, object>)a).ToList();
+            }
+        }
         public async Task<List<OptionSimple>> GetByDistrictId(int districtId)
         {
             using (var con = GetConnection())
