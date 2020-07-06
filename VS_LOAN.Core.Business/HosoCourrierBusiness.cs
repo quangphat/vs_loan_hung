@@ -35,6 +35,15 @@ namespace VS_LOAN.Core.Business
                 return result;
             }
         }
+        public async Task<int> GetGroupIdByNguoiQuanLyId(int leaderId)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryFirstOrDefaultAsync<int>("sp_GetMaNhomChaByMaNguoiQuanLy", new { leaderId },
+                    commandType: CommandType.StoredProcedure);
+                return result;
+            }
+        }
         public async Task<bool> Update(int id, HosoCourier hoso)
         {
             using (var con = GetConnection())
@@ -53,6 +62,7 @@ namespace VS_LOAN.Core.Business
                 p.Add("productId", hoso.ProductId);
                 p.Add("groupId", hoso.GroupId);
                 p.Add("ProvinceId", hoso.ProvinceId);
+                p.Add("DistrictId", hoso.DistrictId);
                 await con.ExecuteAsync("sp_UpdateHosoCourier", p, commandType: CommandType.StoredProcedure);
                 return true;
             }
@@ -76,6 +86,7 @@ namespace VS_LOAN.Core.Business
                 p.Add("productId", hoso.ProductId);
                 p.Add("groupId", hoso.GroupId);
                 p.Add("ProvinceId", hoso.ProvinceId);
+                p.Add("DistrictId", hoso.DistrictId);
                 await con.ExecuteAsync("sp_InsertHosoCourrier", p, commandType: CommandType.StoredProcedure);
                 return p.Get<int>("id");
             }

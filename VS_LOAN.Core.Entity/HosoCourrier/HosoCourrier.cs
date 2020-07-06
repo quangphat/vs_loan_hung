@@ -23,6 +23,7 @@ namespace VS_LOAN.Core.Entity.HosoCourrier
         public string LastNote { get; set; }
         public int AssignId { get; set; }
         public int ProvinceId { get; set; }
+        public int DistrictId { get; set; }
         public List<int> AssigneeIds { get; set; }
     }
 }
