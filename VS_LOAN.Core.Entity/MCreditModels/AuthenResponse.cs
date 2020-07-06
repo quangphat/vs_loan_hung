@@ -9,7 +9,7 @@ namespace VS_LOAN.Core.Entity.MCreditModels
     public class AuthenResponse
     {
         public AuthenResponseObj Obj { get; set; }
-        public OptionSimple Cities { get; set; }
-        public OptionSimple LoanPeriods { get; set; }
+        public List<OptionSimple> Cities { get; set; }
+        public List<OptionSimple> LoanPeriods { get; set; }
     }
 }

@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using VS_LOAN.Core.Entity.MCreditModels;
 using HttpClientService;
+using System.Net.Http.Headers;
+
 namespace MCreditService
 {
     public class LoanContractService
@@ -20,16 +22,25 @@ namespace MCreditService
         public static HttpClient _httpClient = new HttpClient();
         public static async Task<AuthenResponse> Authen()
         {
-            var requestMessage = new HttpRequestMessage();
-            requestMessage.Headers.Add("Content-Type", _contentType);
-            requestMessage.Headers.Add("xdncode", _xdnCode);
-            var result = await _httpClient.PostAsync<AuthenResponse>(requestMessage, _baseUrl, _authenApi, null, new AuthenRequestModel
+            try
             {
-                UserName = _userName,
-                UserPass = _password,
-                Token = _authenToken
-            });
-            return result.Data;
+                var requestMessage = new HttpRequestMessage(HttpMethod.Post,$"{_baseUrl}/{_authenApi}");
+                //requestMessage.
+                requestMessage.Headers.Add("xdncode", "TWpBeU1HUjFibWR1Wlc4eU1ESXc=");
+                //requestMessage.Content.Headers.ContentType  = new MediaTypeHeaderValue(_contentType);
+                // requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var result = await _httpClient.PostAsync<AuthenResponse>(requestMessage, _baseUrl, _authenApi, null, new AuthenRequestModel
+                {
+                    UserName = _userName,
+                    UserPass = _password,
+                    Token = _authenToken
+                });
+                return result.Data;
+            }
+            catch(Exception e)
+            {
+                return null;
+            }
         }
     }
 }

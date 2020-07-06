@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using VS_LOAN.Core.Entity;
@@ -35,6 +37,8 @@ namespace HttpClientService
                 path = $"/{path}";
             var url = $"{baseUrl}{path}";
             requestMessage.RequestUri = new Uri(url);
+            //httpClient.DefaultRequestHeaders.Add("xdncode", "TWpBeU1HUjFibWR1Wlc4eU1ESXc=");
+           //httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             string json = null;
 
             HttpContent content = null;
@@ -58,7 +62,8 @@ namespace HttpClientService
                 {
                     json = JsonConvert.SerializeObject(data, new JsonSerializerSettings
                     {
-                        NullValueHandling = NullValueHandling.Ignore
+                        NullValueHandling = NullValueHandling.Ignore,
+                        ContractResolver = new CamelCasePropertyNamesContractResolver()
                     });
 
                     content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -84,6 +89,7 @@ namespace HttpClientService
 
 
             requestMessage.Content = content;
+            requestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             try
             {
                 using (var response = await httpClient.SendAsync(requestMessage).ConfigureAwait(false))
