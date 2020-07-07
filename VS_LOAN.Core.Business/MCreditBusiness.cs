@@ -5,11 +5,12 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity.MCreditModels;
 
 namespace VS_LOAN.Core.Business
 {
-    public class MCreditBusiness : BaseBusiness
+    public class MCreditBusiness : BaseBusiness, IMCeditBusiness
     {
         public MCreditBusiness() : base(typeof(MCreditBusiness))
         {
@@ -25,6 +26,20 @@ namespace VS_LOAN.Core.Business
                     userId
                 }, commandType: CommandType.Text);
                 return result;
+            }
+
+        }
+
+        public async Task<bool> InsertUserToken(MCreditUserToken model)
+        {
+            using (var con = GetConnection())
+            {
+                
+                await con.ExecuteAsync("sp_MCUserToken_Insert", new {
+                    model.UserId,
+                    model.Token
+                }, commandType: CommandType.StoredProcedure);
+                return true;
             }
 
         }

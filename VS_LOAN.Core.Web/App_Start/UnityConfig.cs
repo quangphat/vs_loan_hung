@@ -2,6 +2,8 @@ using MCreditService;
 using System;
 
 using Unity;
+using VS_LOAN.Core.Business;
+using VS_LOAN.Core.Business.Interfaces;
 
 namespace VS_LOAN.Core.Web
 {
@@ -42,6 +44,7 @@ namespace VS_LOAN.Core.Web
             // container.LoadConfiguration();
 
             // TODO: Register your type's mappings here.
+            container.RegisterSingleton<IMCeditBusiness, MCreditBusiness>();
             container.RegisterSingleton<MCreditService.Interfaces.ILoanContractService, LoanContractService>();
             // container.RegisterType<IProductRepository, ProductRepository>();
         }

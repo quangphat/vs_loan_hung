@@ -3,6 +3,7 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -22,7 +23,7 @@ namespace HttpClientService
             return response;
         }
         public static async Task<ExternalApiResponseModel<T>> PostAsync<T>(this HttpClient httpClient, HttpRequestMessage requestMessage
-            , string baseUrl, string path = "/", string headerContentType = null, object param = null, object data = null)
+            , string baseUrl, string path = "/", string headerContentType = null, object param = null, object data = null,Expression<Func<int,Task<string>>> beforeSendRequest = null)
         {
             requestMessage.Method = HttpMethod.Post;
             var response = await httpClient.Call<T>(requestMessage, baseUrl, path,headerContentType, param, data);

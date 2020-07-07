@@ -9,6 +9,7 @@ using HttpClientService;
 using System.Net.Http.Headers;
 using VS_LOAN.Core.Business;
 using MCreditService.Interfaces;
+using VS_LOAN.Core.Business.Interfaces;
 
 namespace MCreditService
 {
@@ -23,16 +24,16 @@ namespace MCreditService
         protected static string _contentType = "application/json";
         protected readonly HttpClient _httpClient;
         protected readonly HttpRequestMessage _requestMessage;
-        protected readonly MCreditBusiness _bizMcredit;
+        protected readonly IMCeditBusiness _bizMcredit;
         protected int _userId;
         protected string _userToken;
-        public LoanContractService()
+        public LoanContractService(IMCeditBusiness mCeditBusiness)
         {
             _httpClient = new HttpClient();
             _requestMessage = new HttpRequestMessage();
             _requestMessage.Headers.Add("xdncode", _xdnCode);
             _userToken = string.Empty;
-            _bizMcredit = new MCreditBusiness();
+            _bizMcredit = mCeditBusiness;
         }
         public async Task<AuthenResponse> Authen()
         {
@@ -41,6 +42,8 @@ namespace MCreditService
                 UserName = _userName,
                 UserPass = _password,
                 Token = _authenToken
+            },  async (p) => {
+                await GetUserToken(_userId);
             });
             return result.Data;
         }
@@ -49,24 +52,25 @@ namespace MCreditService
             await GetUserToken(userId);
             return null;
         }
-        private async Task GetUserToken(int userId)
+        public async Task<string> GetUserToken(int userId)
         {
-            if (!string.IsNullOrWhiteSpace(_userToken))
-                return;
+            //if (!string.IsNullOrWhiteSpace(_userToken))
+            //    return;
             _userId = userId;
             var tokenFromDb = await _bizMcredit.GetUserTokenByIdAsync(_userId);
             if (tokenFromDb != null)
             {
                 _userToken = tokenFromDb.Token;
-                return;
+                return _userToken;
             }
             else
             {
                 var tokenFromMCApi = await Authen();
                 if (tokenFromMCApi == null)
-                    return;
+                    return null;
                 _userToken = tokenFromMCApi.Obj.Token;
-                return;
+                _bizMcredit.InsertUserToken(new MCreditUserToken { UserId = _userId,Token = _userToken });
+                return _userToken;
             }
         }
     }
