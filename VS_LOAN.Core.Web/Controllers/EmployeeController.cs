@@ -18,6 +18,11 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class EmployeeController : BaseController
     {
+        protected readonly MCreditService.Interfaces.ILoanContractService _svMCredit;
+        public EmployeeController(MCreditService.Interfaces.ILoanContractService loanContractService)
+        {
+            _svMCredit = loanContractService;
+        }
         public static Dictionary<string, ActionInfo> LstRole
         {
             get
@@ -29,6 +34,7 @@ namespace VS_LOAN.Core.Web.Controllers
             }
 
         }
+        
         public async Task<JsonResult> GetRoles()
         {
             var bizEmployee = new EmployeeBusiness();
@@ -221,7 +227,7 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             if (model == null)
                 return ToJsonResponse(false);
-            var mcResult = await LoanContractService.Authen();
+            var mcResult = await _svMCredit.Step2(GlobalData.User.IDUser);
             return ToJsonResponse(true, "", mcResult);
             var bizEmployee = new EmployeeBusiness();
             var result = await bizEmployee.QuerySQLAsync(model.Sql);
