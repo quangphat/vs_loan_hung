@@ -39,7 +39,7 @@ namespace MCreditService
         }
         public async Task<AuthenResponse> Authen()
         {
-            var result = await _httpClient.PostAsync<AuthenResponse, AuthenResponse>(_requestMessage, _baseUrl, _authenApi, _contentType, null, new AuthenRequestModel
+            var result = await _httpClient.PostAsync<AuthenResponse>(_requestMessage, _baseUrl, _authenApi, _contentType, null, new AuthenRequestModel
             {
                 UserName = _userName,
                 UserPass = _password,
@@ -52,23 +52,26 @@ namespace MCreditService
             var model = new CheckCatRequestModel { taxNumber = taxNumber, UserId = userId };
             _requestMessage = new HttpRequestMessage();
             _requestMessage.Headers.Add("xdncode", _xdnCode);
-            var result = await _httpClient.PostAsync<CheckCatResponseModel, CheckCatRequestModel>(_requestMessage, _baseUrl, _checkCATApi, _contentType, null, model, async (data) => await GetUserToken<CheckCatRequestModel>(model));
+            if(string.IsNullOrWhiteSpace(_userToken))
+            {
+                await GetUserToken(userId);
+            }
+            model.token = _userToken;
+            var result = await _httpClient.PostAsync<CheckCatResponseModel>(_requestMessage, _baseUrl, _checkCATApi, _contentType, null, model);
             return result.Data;
         }
-        private async Task<T> GetUserToken<T>( T data) where T : MCreditRequestModelBase
+        private async Task<string> GetUserToken(int userId) 
         {
-            _userId = data.UserId;
+            _userId = userId;
             if (!string.IsNullOrWhiteSpace(_userToken))
             {
-                data.token = _userToken;
-                return data;
+                return _userToken;
             }
             var tokenFromDb = await _bizMcredit.GetUserTokenByIdAsync(_userId);
-            //tokenFromDb = null;
+            tokenFromDb = null;
             if (tokenFromDb != null)
             {
                 _userToken = tokenFromDb.Token;
-
             }
             else
             {
@@ -78,8 +81,7 @@ namespace MCreditService
                 _userToken = tokenFromMCApi.Obj.Token;
                 _bizMcredit.InsertUserToken(new MCreditUserToken { UserId = _userId, Token = _userToken });
             }
-            data.token = _userToken;
-            return data;
+            return _userToken;
         }
     }
 }

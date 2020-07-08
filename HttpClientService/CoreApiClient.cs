@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
@@ -22,17 +23,13 @@ namespace HttpClientService
             var response = await httpClient.Call<T>(requestMessage, baseUrl, path, headerContentType, param);
             return response;
         }
-        public static async Task<ExternalApiResponseModel<T>> PostAsync<T, TRequest>(this HttpClient httpClient, HttpRequestMessage requestMessage
-            , string baseUrl, string path = "/", string headerContentType = null, object param = null, object data = null, Func<object, Task<TRequest>> beforeSendRequest = null)
+        public static async Task<ExternalApiResponseModel<T>> PostAsync<T>(this HttpClient httpClient, HttpRequestMessage requestMessage
+            , string baseUrl, string path = "/", string headerContentType = null, object param = null, object data = null)
         {
             requestMessage.Method = HttpMethod.Post;
-            var x = (CheckCatRequestModel)null;
-            if (beforeSendRequest != null)
-            {
-                x = (await beforeSendRequest(data)) as CheckCatRequestModel;
-            }
-
-            var response = await httpClient.Call<T>(requestMessage, baseUrl, path, headerContentType, param, new { taxNumber = x.taxNumber, token = x.token });
+            
+           // var newRequest = await requestMessage.CloneAsync();
+            var response = await httpClient.Call<T>(requestMessage, baseUrl, path, headerContentType, param, data);
             return response;
         }
         private static async Task<ExternalApiResponseModel<T>> Call<T>(this HttpClient httpClient,
@@ -98,10 +95,10 @@ namespace HttpClientService
             {
                 requestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             }
-
+            var newRequest = await requestMessage.CloneAsync();
             try
             {
-                using (var response = await httpClient.SendAsync(requestMessage).ConfigureAwait(false))
+                using (var response = await httpClient.SendAsync(newRequest).ConfigureAwait(false))
                 {
                     if (response == null)
                     {
@@ -118,6 +115,40 @@ namespace HttpClientService
             {
                 return new ExternalApiResponseModel<T>(default(T), HttpStatusCode.NoContent, string.IsNullOrWhiteSpace(e.Message) ? e.InnerException.Message : e.Message);
             }
+        }
+        public static async Task<HttpRequestMessage> CloneAsync(this HttpRequestMessage request)
+        {
+            var clone = new HttpRequestMessage(request.Method, request.RequestUri)
+            {
+                Content = await request.Content.CloneAsync().ConfigureAwait(false),
+                Version = request.Version
+            };
+            foreach (KeyValuePair<string, object> prop in request.Properties)
+            {
+                clone.Properties.Add(prop);
+            }
+            foreach (KeyValuePair<string, IEnumerable<string>> header in request.Headers)
+            {
+                clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            }
+
+            return clone;
+        }
+
+        public static async Task<HttpContent> CloneAsync(this HttpContent content)
+        {
+            if (content == null) return null;
+
+            var ms = new MemoryStream();
+            await content.CopyToAsync(ms).ConfigureAwait(false);
+            ms.Position = 0;
+
+            var clone = new StreamContent(ms);
+            foreach (KeyValuePair<string, IEnumerable<string>> header in content.Headers)
+            {
+                clone.Headers.Add(header.Key, header.Value);
+            }
+            return clone;
         }
         //public static string AddQuery(this string path, object obj)
         //{
