@@ -18,13 +18,13 @@ namespace VS_LOAN.Core.Business
         }
         public async Task<MCreditUserToken> GetUserTokenByIdAsync(int userId)
         {
-            string sql = $"select * from MCreditUserToken where UserId = @userId";
+            string sql = $"sp_MCreditUserToken_GetTokenByUserId";
             using (var con = GetConnection())
             {
                 var result = await _connection.QueryFirstOrDefaultAsync<MCreditUserToken>(sql, new
                 {
                     userId
-                }, commandType: CommandType.Text);
+                }, commandType: CommandType.StoredProcedure);
                 return result;
             }
 

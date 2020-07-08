@@ -50,17 +50,19 @@ namespace MCreditService
         public async Task<CheckCatResponseModel> CheckCat(int userId, string taxNumber)
         {
             var model = new CheckCatRequestModel { taxNumber = taxNumber, UserId = userId };
+           
+            var result = await BeforeSendRequest<CheckCatResponseModel, CheckCatRequestModel>(model, userId);
+            return result;
+        }
+        private async Task<T> BeforeSendRequest<T, TInput>(TInput model, int userId) where TInput : MCreditRequestModelBase
+        {
             _requestMessage = new HttpRequestMessage();
             _requestMessage.Headers.Add("xdncode", _xdnCode);
-            if(string.IsNullOrWhiteSpace(_userToken))
-            {
-                await GetUserToken(userId);
-            }
-            model.token = _userToken;
-            var result = await _httpClient.PostAsync<CheckCatResponseModel>(_requestMessage, _baseUrl, _checkCATApi, _contentType, null, model);
+            model.token = await GetUserToken(userId);
+            var result = await _httpClient.PostAsync<T>(_requestMessage, _baseUrl, _checkCATApi, _contentType, null, model);
             return result.Data;
         }
-        private async Task<string> GetUserToken(int userId) 
+        private async Task<string> GetUserToken(int userId)
         {
             _userId = userId;
             if (!string.IsNullOrWhiteSpace(_userToken))
@@ -68,7 +70,7 @@ namespace MCreditService
                 return _userToken;
             }
             var tokenFromDb = await _bizMcredit.GetUserTokenByIdAsync(_userId);
-            tokenFromDb = null;
+            //tokenFromDb = null;
             if (tokenFromDb != null)
             {
                 _userToken = tokenFromDb.Token;
