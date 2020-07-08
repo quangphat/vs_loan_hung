@@ -10,6 +10,6 @@ namespace MCreditService.Interfaces
     public interface ILoanContractService
     {
         Task<AuthenResponse> Authen();
-        Task<AuthenResponse> Step2(int userId); 
+        Task<CheckCatResponseModel> CheckCat(int userId, string taxNumber); 
     }
 }

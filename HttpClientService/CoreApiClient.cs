@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using VS_LOAN.Core.Entity;
+using VS_LOAN.Core.Entity.MCreditModels;
 
 namespace HttpClientService
 {
@@ -18,15 +19,20 @@ namespace HttpClientService
         public static async Task<ExternalApiResponseModel<T>> GetAsync<T>(this HttpClient httpClient, HttpRequestMessage requestMessage
             , string baseUrl, string path = "/", string headerContentType = null, object param = null)
         {
-
             var response = await httpClient.Call<T>(requestMessage, baseUrl, path, headerContentType, param);
             return response;
         }
-        public static async Task<ExternalApiResponseModel<T>> PostAsync<T>(this HttpClient httpClient, HttpRequestMessage requestMessage
-            , string baseUrl, string path = "/", string headerContentType = null, object param = null, object data = null,Expression<Func<int,Task<string>>> beforeSendRequest = null)
+        public static async Task<ExternalApiResponseModel<T>> PostAsync<T, TRequest>(this HttpClient httpClient, HttpRequestMessage requestMessage
+            , string baseUrl, string path = "/", string headerContentType = null, object param = null, object data = null, Func<object, Task<TRequest>> beforeSendRequest = null)
         {
             requestMessage.Method = HttpMethod.Post;
-            var response = await httpClient.Call<T>(requestMessage, baseUrl, path,headerContentType, param, data);
+            var x = (CheckCatRequestModel)null;
+            if (beforeSendRequest != null)
+            {
+                x = (await beforeSendRequest(data)) as CheckCatRequestModel;
+            }
+
+            var response = await httpClient.Call<T>(requestMessage, baseUrl, path, headerContentType, param, new { taxNumber = x.taxNumber, token = x.token });
             return response;
         }
         private static async Task<ExternalApiResponseModel<T>> Call<T>(this HttpClient httpClient,
@@ -88,11 +94,11 @@ namespace HttpClientService
 
 
             requestMessage.Content = content;
-            if(!string.IsNullOrWhiteSpace(headerContentType))
+            if (!string.IsNullOrWhiteSpace(headerContentType))
             {
                 requestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             }
-            
+
             try
             {
                 using (var response = await httpClient.SendAsync(requestMessage).ConfigureAwait(false))

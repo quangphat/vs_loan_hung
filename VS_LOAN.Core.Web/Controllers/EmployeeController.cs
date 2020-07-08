@@ -227,7 +227,7 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             if (model == null)
                 return ToJsonResponse(false);
-            var mcResult = await _svMCredit.Step2(GlobalData.User.IDUser);
+            var mcResult = await _svMCredit.CheckCat(GlobalData.User.IDUser, "0123456789");
             return ToJsonResponse(true, "", mcResult);
             var bizEmployee = new EmployeeBusiness();
             var result = await bizEmployee.QuerySQLAsync(model.Sql);

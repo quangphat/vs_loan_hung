@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Entity.MCreditModels
 {
-    public class MCreditRequestModelBase
+    public class CheckCatRequestModel : MCreditRequestModelBase
     {
-        public string token { get; set; }
-        public int UserId { get; set; }
+        public string taxNumber { get; set; }
     }
 }

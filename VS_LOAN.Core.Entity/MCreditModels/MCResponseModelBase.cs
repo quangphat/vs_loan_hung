@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Entity.MCreditModels
 {
-    public class MCreditRequestModelBase
+    public class MCResponseModelBase
     {
-        public string token { get; set; }
-        public int UserId { get; set; }
+        public string status { get; set; }
+        public int code { get; set; }
+        public string msg { get; set; }
     }
 }
