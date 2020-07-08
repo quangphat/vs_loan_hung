@@ -125,9 +125,11 @@
     <Compile Include="HoSoDuyetXemBLL.cs" />
     <Compile Include="HoSoXemBLL.cs" />
     <Compile Include="Interfaces\IHosoBusiness.cs" />
+    <Compile Include="Interfaces\IMCeditBusiness.cs" />
     <Compile Include="KetQuaHoSoBLL.cs" />
     <Compile Include="KhuVucBLL.cs" />
     <Compile Include="LoaiTaiLieuBLL.cs" />
+    <Compile Include="MCreditBusiness.cs" />
     <Compile Include="MediaBusiness.cs" />
     <Compile Include="NhanVienBLL.cs" />
     <Compile Include="NhanVienConfigBLL.cs" />

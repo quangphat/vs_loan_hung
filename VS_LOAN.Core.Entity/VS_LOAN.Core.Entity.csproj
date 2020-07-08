@@ -102,9 +102,12 @@
     <Compile Include="F88Model\LadipageModel.cs" />
     <Compile Include="F88ResponseModel.cs" />
     <Compile Include="GhichuViewModel.cs" />
+    <Compile Include="MCreditModels\CheckCatRequestModel.cs" />
+    <Compile Include="MCreditModels\CheckCatResponseModel.cs" />
     <Compile Include="HosoCourrier\HosoCorrierRequestModel.cs" />
     <Compile Include="HosoCourrier\HosoCourierListModel.cs" />
     <Compile Include="HosoCourrier\HosoCourrier.cs" />
+    <Compile Include="MCreditModels\MCResponseModelBase.cs" />
     <Compile Include="HoSoCuaToiModel.cs" />
     <Compile Include="HoSoDuyetModel.cs" />
     <Compile Include="HoSoQuanLyModel.cs" />
@@ -114,6 +117,8 @@
     <Compile Include="MCreditModels\AuthenRequestModel.cs" />
     <Compile Include="MCreditModels\AuthenResponse.cs" />
     <Compile Include="MCreditModels\AuthenResponseObj.cs" />
+    <Compile Include="MCreditModels\MCreditRequestModelBase.cs" />
+    <Compile Include="MCreditModels\MCreditUserToken.cs" />
     <Compile Include="Model\AutoIDModel.cs" />
     <Compile Include="Model\Customer.cs" />
     <Compile Include="Model\CustomerCheck.cs" />

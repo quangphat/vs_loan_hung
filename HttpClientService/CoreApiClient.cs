@@ -3,33 +3,40 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using VS_LOAN.Core.Entity;
+using VS_LOAN.Core.Entity.MCreditModels;
 
 namespace HttpClientService
 {
     public static class CoreApiClient
     {
         public static async Task<ExternalApiResponseModel<T>> GetAsync<T>(this HttpClient httpClient, HttpRequestMessage requestMessage
-            , string baseUrl, string path = "/", object param = null)
+            , string baseUrl, string path = "/", string headerContentType = null, object param = null)
         {
-
-            var response = await httpClient.Call<T>(requestMessage, baseUrl, path, param);
+            var response = await httpClient.Call<T>(requestMessage, baseUrl, path, headerContentType, param);
             return response;
         }
-        public static async Task<ExternalApiResponseModel<T>> PostAsync<T>(this HttpClient httpClient, HttpRequestMessage requestMessage
-            , string baseUrl, string path = "/", object param = null, object data = null)
+        public static async Task<ExternalApiResponseModel<T>> PostAsync<T, TRequest>(this HttpClient httpClient, HttpRequestMessage requestMessage
+            , string baseUrl, string path = "/", string headerContentType = null, object param = null, object data = null, Func<object, Task<TRequest>> beforeSendRequest = null)
         {
             requestMessage.Method = HttpMethod.Post;
-            var response = await httpClient.Call<T>(requestMessage, baseUrl, path, param, data);
+            var x = (CheckCatRequestModel)null;
+            if (beforeSendRequest != null)
+            {
+                x = (await beforeSendRequest(data)) as CheckCatRequestModel;
+            }
+
+            var response = await httpClient.Call<T>(requestMessage, baseUrl, path, headerContentType, param, new { taxNumber = x.taxNumber, token = x.token });
             return response;
         }
         private static async Task<ExternalApiResponseModel<T>> Call<T>(this HttpClient httpClient,
-             HttpRequestMessage requestMessage, string baseUrl, string path = "/", object param = null, object data = null)
+             HttpRequestMessage requestMessage, string baseUrl, string path = "/", string headerContentType = null, object param = null, object data = null)
         {
             //if (param != null)
             //    path = path.AddQuery(param);
@@ -37,8 +44,6 @@ namespace HttpClientService
                 path = $"/{path}";
             var url = $"{baseUrl}{path}";
             requestMessage.RequestUri = new Uri(url);
-            //httpClient.DefaultRequestHeaders.Add("xdncode", "TWpBeU1HUjFibWR1Wlc4eU1ESXc=");
-           //httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             string json = null;
 
             HttpContent content = null;
@@ -89,7 +94,11 @@ namespace HttpClientService
 
 
             requestMessage.Content = content;
-            requestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            if (!string.IsNullOrWhiteSpace(headerContentType))
+            {
+                requestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            }
+
             try
             {
                 using (var response = await httpClient.SendAsync(requestMessage).ConfigureAwait(false))
