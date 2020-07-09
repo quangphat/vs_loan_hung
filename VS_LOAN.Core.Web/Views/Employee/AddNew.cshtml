@@ -198,7 +198,7 @@
         $("#txtPhone").ForceNumericOnly();
         getProvinces("#ddlProvince");
         $('#ddlProvince').on('change', function () {
-            getDistricts(this.value,"#ddlDistrict");
+            getDistricts("#ddlDistrict", this.value);
         });
         $('#btnSave').click(function (e) {
             createUser();
