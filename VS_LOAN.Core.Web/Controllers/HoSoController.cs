@@ -117,7 +117,7 @@ namespace VS_LOAN.Core.Web.Controllers
             return true;
         }
         [System.Web.Http.HttpPost]
-        [Route("PostToF88")]
+        [System.Web.Http.Route("PostToF88")]
         public async Task<ActionResult> PostToF88([FromBody] Entity.F88Model.LadipageModel model)
         {
             var f88Service = new F88Service.F88Service();
