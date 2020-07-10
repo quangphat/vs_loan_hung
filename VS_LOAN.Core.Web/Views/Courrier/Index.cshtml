@@ -111,7 +111,9 @@
                                     <th class="m-w-120">Khách hàng</th>
                                     <th class="w-84">Số điện thoại</th>
                                     <th style="width: 150px">Trạng thái</th>
+                                    <th style="width: 150px">Địa chỉ</th>
                                     <th class="m-w-120">Nhân viên</th>
+                                    <th class="m-w-120">Ghi chú</th>
                                     <th class="w-150">Ngày tạo</th>
                                     <th class="m-w-120">Người tạo</th>
                                     <th class="w-150">Ngày cập nhật</th>
@@ -398,6 +400,16 @@
             statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>PCB</span>";
         return "<td class='text-left'>" + statusString + "</td>";
     }
+    function renderAddress(item) {
+        if (item == null || item == undefined)
+            return ''
+        let result = ''
+        if (!isNullOrUndefined(item.ProvinceName))
+            result += item.ProvinceName
+        if (!isNullOrUndefined(item.DistrictName))
+            result += ' -' + item.DistrictName
+        return result;
+    }
     function renderRow(index, rowData) {
         
         page = queries.get("page");
@@ -417,7 +429,9 @@
             + renderTextLeft(rowData.CustomerName, '', "m-w-120")
             + renderTextLeft(rowData.Phone, '','w-84')
             + renderStatus(rowData.Status)
+            + renderTextLeft(renderAddress(rowData), '', 'w-150' )
             + renderTextLeft(rowData.AssignUser, '', "m-w-120")
+            + renderTextLeft(rowData.LastNote, '', "m-w-120")
             + renderTextLeft(rowData.CreatedTime, 'datetime', 'w-150')
             + renderTextLeft(rowData.CreatedUser, '', "m-w-120")
             + renderTextLeft(rowData.UpdatedTime, 'datetime', 'w-150')
