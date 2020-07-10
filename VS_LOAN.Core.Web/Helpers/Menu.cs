@@ -95,13 +95,13 @@ namespace VS_LOAN.Core.Web.Helpers
                         new SiteMenuItem("Duyệt hồ sơ","", IndexMenu.M_2_3,ControllerRoles.Roles["profile_approve"]._href, ControllerRoles.Roles["profile_approve"]._mangChucNang) ,// 1.2  
                     new SiteMenuItem("Check Duplicate","menu-icon duplicate",IndexMenu.M_5,"#",new int[] { }),
                         new SiteMenuItem("Tạo mới","", IndexMenu.M_5_1,ControllerRoles.Roles["checkdup_addnew"]._href, ControllerRoles.Roles["checkdup_addnew"]._mangChucNang), // 1.3     
-                        new SiteMenuItem("Danh sách","", IndexMenu.M_5_2,ControllerRoles.Roles["checkdup_index"]._href, ControllerRoles.Roles["checkdup_index"]._mangChucNang), // 1.2  
+                        new SiteMenuItem("Danh sách","", IndexMenu.M_5_2,ControllerRoles.Roles["checkdup_list"]._href, ControllerRoles.Roles["checkdup_list"]._mangChucNang), // 1.2  
                     new SiteMenuItem("Công ty","menu-icon company",IndexMenu.M_8,"#",new int[] { }),
                         new SiteMenuItem("Tạo mới","", IndexMenu.M_8_1,ControllerRoles.Roles["company_addnew"]._href, ControllerRoles.Roles["company_addnew"]._mangChucNang), // 1.3     
-                        new SiteMenuItem("Danh sách","", IndexMenu.M_8_2,ControllerRoles.Roles["company_index"]._href, ControllerRoles.Roles["company_index"]._mangChucNang), // 1.2  
+                        new SiteMenuItem("Danh sách","", IndexMenu.M_8_2,ControllerRoles.Roles["company_list"]._href, ControllerRoles.Roles["company_list"]._mangChucNang), // 1.2  
                    new SiteMenuItem("Courrier","menu-icon courier",IndexMenu.M_7,"#",new int[] { }),
                         new SiteMenuItem("Tạo mới","", IndexMenu.M_7_1,ControllerRoles.Roles["courier_addnew"]._href, ControllerRoles.Roles["courier_addnew"]._mangChucNang), // 1.3     
-                        new SiteMenuItem("Danh sách","", IndexMenu.M_7_2,ControllerRoles.Roles["courier_index"]._href, ControllerRoles.Roles["courier_index"]._mangChucNang), // 1.2  
+                        new SiteMenuItem("Danh sách","", IndexMenu.M_7_2,ControllerRoles.Roles["courier_list"]._href, ControllerRoles.Roles["courier_list"]._mangChucNang), // 1.2  
                     new SiteMenuItem("MCredit","menu-icon courier",IndexMenu.M_8,"#",new int[] { }),
                         new SiteMenuItem("Check CAT","", IndexMenu.M_9_1,ControllerRoles.Roles["mcedit_checkcat"]._href, ControllerRoles.Roles["mcedit_checkcat"]._mangChucNang),
                         new SiteMenuItem("Check CIC","", IndexMenu.M_9_2,ControllerRoles.Roles["mcedit_checkcic"]._href, ControllerRoles.Roles["mcedit_checkcic"]._mangChucNang),
@@ -115,7 +115,7 @@ namespace VS_LOAN.Core.Web.Helpers
             {
                   new SiteMenuItem("Tổ nhóm","menu-icon group",IndexMenu.M_3,"#",new int[] { }),
                         new SiteMenuItem("Tạo mới","", IndexMenu.M_3_1,ControllerRoles.Roles["team_addnew"]._href, ControllerRoles.Roles["team_addnew"]._mangChucNang), // 1.3     
-                        new SiteMenuItem("Quản lý tổ nhóm","", IndexMenu.M_3_2,ControllerRoles.Roles["team_index"]._href,ControllerRoles.Roles["team_index"]._mangChucNang), // 1.3     
+                        new SiteMenuItem("Quản lý tổ nhóm","", IndexMenu.M_3_2,ControllerRoles.Roles["team_list"]._href,ControllerRoles.Roles["team_list"]._mangChucNang), // 1.3     
                         new SiteMenuItem("Cấu hình duyệt","", IndexMenu.M_3_3,ControllerRoles.Roles["team_config"]._href, ControllerRoles.Roles["team_config"]._mangChucNang), // 1.3     
                     new SiteMenuItem("Nhập mã APP","menu-icon sanpham",IndexMenu.M_4,"#",new int[] { }),
                         new SiteMenuItem("Quản lý mã APP","", IndexMenu.M_4_1,ControllerRoles.Roles["product_list"]._href, ControllerRoles.Roles["product_list"]._mangChucNang), // 1.3     

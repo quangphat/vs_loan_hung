@@ -45,6 +45,7 @@ namespace VS_LOAN.Core.Web
 
             // TODO: Register your type's mappings here.
             container.RegisterSingleton<IMCeditRepository, MCreditRepository>();
+            container.RegisterSingleton<IPartnerRepository, PartnerRepository>();
             container.RegisterSingleton<ITailieuRepository, TailieuRepository>();
             container.RegisterType<MCreditService.Interfaces.IMCreditService, MCreditLoanService>();
             // container.RegisterType<IProductRepository, ProductRepository>();

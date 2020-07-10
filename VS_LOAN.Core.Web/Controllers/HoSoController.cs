@@ -23,10 +23,12 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class HoSoController : BaseController
     {
-        protected readonly ITailieuRepository _bizTailieu;
-        public HoSoController(ITailieuRepository tailieuBusiness) : base()
+        protected readonly ITailieuRepository _rpTailieu;
+        protected readonly IPartnerRepository _rpPartner;
+        public HoSoController(ITailieuRepository tailieuBusiness, IPartnerRepository partnerRepository) : base()
         {
-            _bizTailieu = tailieuBusiness;
+            _rpTailieu = tailieuBusiness;
+            _rpPartner = partnerRepository;
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
@@ -41,13 +43,13 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<JsonResult> LayDSTaiLieu()
         {
-            List<LoaiTaiLieuModel> rs = await _bizTailieu.GetLoaiTailieuList();
+            List<LoaiTaiLieuModel> rs = await _rpTailieu.GetLoaiTailieuList();
             return ToJsonResponse(true, null, rs);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public JsonResult LayDSDoiTac()
+        public async Task<JsonResult> LayDSDoiTac()
         {
-            List<DoiTacModel> rs = new PartnerRepository().LayDS();
+            var rs = await _rpPartner.LayDS();
             return ToJsonResponse(true, null, rs);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
