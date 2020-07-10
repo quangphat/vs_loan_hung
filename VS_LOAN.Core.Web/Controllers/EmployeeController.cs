@@ -18,8 +18,8 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class EmployeeController : BaseController
     {
-        protected readonly MCreditService.Interfaces.ILoanContractService _svMCredit;
-        public EmployeeController(MCreditService.Interfaces.ILoanContractService loanContractService)
+        protected readonly MCreditService.Interfaces.IMCreditService _svMCredit;
+        public EmployeeController(MCreditService.Interfaces.IMCreditService loanContractService)
         {
             _svMCredit = loanContractService;
         }

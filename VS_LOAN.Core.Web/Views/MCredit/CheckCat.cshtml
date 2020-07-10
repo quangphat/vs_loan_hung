@@ -1,0 +1,113 @@
+﻿@using VS_LOAN.Core.Web.Resources;
+@{
+    ViewBag.Title = "Check CAT";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model String
+<script type="text/javascript">
+    SetActiveMenu('@ViewBag.formindex', 2);
+</script>
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-caret-right"></i>
+                <a href="#">Check CAT</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+                
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Mã số thuế <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtTaxNumber" placeholder="Mã số thuế" class="form-control">
+                        </div>
+                        <div class="">
+                            <a class="btn btn-sm btn-primary" id="btn_Save">
+                                Kiểm tra
+                            </a>
+                        </div>
+                    </div>    
+                </form>
+            </div>
+        </div>
+
+       
+       
+    </div>
+</div>
+
+<script>
+   
+    jQuery.fn.ForceNumericOnly =function () {
+    return this.each(function () {
+        $(this).keydown(function (e) {
+            var key = e.charCode || e.keyCode || 0;
+            // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers ONLY
+            // home, end, period, and numpad decimal
+            return (
+                key == 8 ||
+                key == 9 ||
+                key == 13 ||
+                key == 46 ||
+                key == 110 ||
+                key == 190 ||
+                (key >= 35 && key <= 40) ||
+                (key >= 48 && key <= 57) ||
+                (key >= 96 && key <= 105));
+        });
+    });
+};
+    
+
+    $(document).ready(function () {
+        $("#txtTaxNumber").ForceNumericOnly();
+    });
+   
+    $('#btn_Save').click(function (e) {
+        
+        var objectSend = JSON.stringify({
+            'Value': $('#txtTaxNumber').val()
+        });
+        $.ajax({
+            traditional: true,
+            url: '@Url.Action("CheckCatApi", "MCredit")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                if (data.success == true) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                        
+                    });
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+    });
+
+</script>

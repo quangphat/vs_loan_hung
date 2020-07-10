@@ -41,8 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interfaces\ILoanContractService.cs" />
-    <Compile Include="LoanContractService.cs" />
+    <Compile Include="Interfaces\IMCreditService.cs" />
+    <Compile Include="MCreditLoanService.cs" />
+    <Compile Include="MCreditServiceBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

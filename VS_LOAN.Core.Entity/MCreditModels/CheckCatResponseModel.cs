@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Entity.MCreditModels
 {
-    public class CheckCatResponseModel:MCResponseModelBase
+    public class CheckCatResponseModel : MCResponseModelBase
     {
         public string name { get; set; }
         public string cat { get; set; }

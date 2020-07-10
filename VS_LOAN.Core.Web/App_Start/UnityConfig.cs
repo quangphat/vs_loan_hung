@@ -44,8 +44,8 @@ namespace VS_LOAN.Core.Web
             // container.LoadConfiguration();
 
             // TODO: Register your type's mappings here.
-            container.RegisterSingleton<IMCeditBusiness, MCreditBusiness>();
-            container.RegisterSingleton<MCreditService.Interfaces.ILoanContractService, LoanContractService>();
+            container.RegisterType<IMCeditBusiness, MCreditBusiness>();
+            container.RegisterType<MCreditService.Interfaces.IMCreditService, MCreditLoanService>();
             // container.RegisterType<IProductRepository, ProductRepository>();
         }
     }

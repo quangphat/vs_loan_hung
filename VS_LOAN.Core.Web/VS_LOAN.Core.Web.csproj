@@ -227,6 +227,7 @@
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\DuyetHoSoController.cs" />
     <Compile Include="Controllers\F88Controller.cs" />
+    <Compile Include="Controllers\MCreditController.cs" />
     <Compile Include="Controllers\QuanLyHoSoController.cs" />
     <Compile Include="Controllers\SanPhamVayController.cs" />
     <Compile Include="Controllers\TestController.cs" />
@@ -275,6 +276,7 @@
     <Compile Include="Helpers\Menu.cs" />
     <Compile Include="Helpers\FormatLinkPath.cs" />
     <Compile Include="Helpers\MenuWarning.cs" />
+    <Compile Include="Infrastructures\ControllerRoles.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -1755,6 +1757,11 @@
     <Content Include="Views\Company\AddNew.cshtml" />
     <Content Include="Views\Company\Edit.cshtml" />
     <Content Include="Views\Company\Index.cshtml" />
+    <Content Include="Views\MCredit\Index.cshtml" />
+    <Content Include="Views\MCredit\CheckCat.cshtml" />
+    <Content Include="Views\MCredit\CheckCIC.cshtml" />
+    <Content Include="Views\MCredit\CheckDuplicate.cshtml" />
+    <Content Include="Views\MCredit\CheckStatus.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

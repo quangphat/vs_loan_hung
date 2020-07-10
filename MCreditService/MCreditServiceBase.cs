@@ -6,19 +6,18 @@ using System.Text;
 using System.Threading.Tasks;
 using VS_LOAN.Core.Entity.MCreditModels;
 using HttpClientService;
-using System.Net.Http.Headers;
-using VS_LOAN.Core.Business;
-using MCreditService.Interfaces;
 using VS_LOAN.Core.Business.Interfaces;
-using VS_LOAN.Core.Entity.HosoCourrier;
 
 namespace MCreditService
 {
-    public class LoanContractService : ILoanContractService
+    public abstract class MCreditServiceBase
     {
         protected static string _baseUrl = "http://api.taichinhtoancau.vn";
         protected static string _authenApi = "api/act/authen.html";
         protected static string _checkCATApi = "api/act/checkcat.html";
+        protected static string _checkDupApi = "api/act/checkdup.html";
+        protected static string _checkCICApi = "api/act/checkcic.html";
+        protected static string _checkStatusApi = "api/act/checkstatus.html";
         protected static string _userName = "vietbankapi";
         protected static string _password = "api@123";
         protected static string _authenToken = "$2y$10$ne/8QwsCG10c.5cVSUW6NO7L3..lUEFItM4ccV0usJ3cAbqEjLywG";
@@ -29,7 +28,7 @@ namespace MCreditService
         protected readonly IMCeditBusiness _bizMcredit;
         protected int _userId;
         protected string _userToken;
-        public LoanContractService(IMCeditBusiness mCeditBusiness)
+        protected MCreditServiceBase(IMCeditBusiness mCeditBusiness)
         {
             _httpClient = new HttpClient();
             _requestMessage = new HttpRequestMessage();
@@ -47,22 +46,15 @@ namespace MCreditService
             });
             return result.Data;
         }
-        public async Task<CheckCatResponseModel> CheckCat(int userId, string taxNumber)
-        {
-            var model = new CheckCatRequestModel { taxNumber = taxNumber, UserId = userId };
-           
-            var result = await BeforeSendRequest<CheckCatResponseModel, CheckCatRequestModel>(model, userId);
-            return result;
-        }
-        private async Task<T> BeforeSendRequest<T, TInput>(TInput model, int userId) where TInput : MCreditRequestModelBase
+        protected async Task<T> BeforeSendRequest<T, TInput>(string apiPath, TInput model, int userId = 0) where TInput : MCreditRequestModelBase
         {
             _requestMessage = new HttpRequestMessage();
             _requestMessage.Headers.Add("xdncode", _xdnCode);
             model.token = await GetUserToken(userId);
-            var result = await _httpClient.PostAsync<T>(_requestMessage, _baseUrl, _checkCATApi, _contentType, null, model);
+            var result = await _httpClient.PostAsync<T>(_requestMessage, _baseUrl, apiPath, _contentType, null, model);
             return result.Data;
         }
-        private async Task<string> GetUserToken(int userId)
+        protected async Task<string> GetUserToken(int userId)
         {
             _userId = userId;
             if (!string.IsNullOrWhiteSpace(_userToken))

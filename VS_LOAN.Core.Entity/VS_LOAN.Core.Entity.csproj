@@ -107,6 +107,12 @@
     <Compile Include="HosoCourrier\HosoCorrierRequestModel.cs" />
     <Compile Include="HosoCourrier\HosoCourierListModel.cs" />
     <Compile Include="HosoCourrier\HosoCourrier.cs" />
+    <Compile Include="MCreditModels\CheckCICRequestModel.cs" />
+    <Compile Include="MCreditModels\CheckStatusResponseModel.cs" />
+    <Compile Include="MCreditModels\CheckDupRequestModel.cs" />
+    <Compile Include="MCreditModels\CheckDupResponseModel.cs" />
+    <Compile Include="MCreditModels\CheckStatusRequestModel.cs" />
+    <Compile Include="MCreditModels\CheckCICResponseModel.cs" />
     <Compile Include="MCreditModels\MCResponseModelBase.cs" />
     <Compile Include="HoSoCuaToiModel.cs" />
     <Compile Include="HoSoDuyetModel.cs" />
