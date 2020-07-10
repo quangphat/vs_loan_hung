@@ -93,6 +93,19 @@ namespace VS_LOAN.Core.Business
             }
 
         }
+        public async Task<bool> ResetPassord(string userName, string password)
+        {
+            using (var con = GetConnection())
+            {
+                await con.ExecuteAsync("update Nhan_vien set Mat_Khau = @password where Ten_dang_nhap = @username",
+                    new {
+                        username = userName,
+                        password = password
+                    }, commandType: CommandType.StoredProcedure);
+                return true;
+            }
+
+        }
         public async Task<List<EmployeeViewModel>> Gets(
             DateTime workFromDate,
             DateTime workToDate,
