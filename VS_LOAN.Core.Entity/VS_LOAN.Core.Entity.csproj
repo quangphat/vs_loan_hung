@@ -90,6 +90,7 @@
     <Compile Include="Employee\EmployeeEditModel.cs" />
     <Compile Include="Employee\EmployeeViewModel.cs" />
     <Compile Include="Employee\Nhanvien.cs" />
+    <Compile Include="Employee\ResetPasswordModel.cs" />
     <Compile Include="Employee\UserCreateModel.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="F88Model\F88ResultModel.cs" />
