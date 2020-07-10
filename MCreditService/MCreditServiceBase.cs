@@ -27,10 +27,10 @@ namespace MCreditService
         protected static string _contentType = "application/json";
         protected readonly HttpClient _httpClient;
         protected HttpRequestMessage _requestMessage;
-        protected readonly IMCeditBusiness _bizMcredit;
+        protected readonly IMCeditRepository _bizMcredit;
         protected int _userId;
         protected string _userToken;
-        protected MCreditServiceBase(IMCeditBusiness mCeditBusiness)
+        protected MCreditServiceBase(IMCeditRepository mCeditBusiness)
         {
             _httpClient = new HttpClient();
             _requestMessage = new HttpRequestMessage();

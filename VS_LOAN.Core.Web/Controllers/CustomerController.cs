@@ -34,7 +34,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public JsonResult Search(string freeText = null, int page = 1, int limit = 10)
         {
-            var bzCustomer = new CustomerBusiness();
+            var bzCustomer = new CustomerRepository();
             var totalRecord = bzCustomer.Count(freeText, GlobalData.User.IDUser);
             var datas = bzCustomer.Gets(freeText, page, limit, GlobalData.User.IDUser);
             var result = DataPaging.Create(datas, totalRecord);
@@ -71,7 +71,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 Phone = model.Phone,
                 Salary = model.Salary
             };
-            var _bizCustomer = new CustomerBusiness();
+            var _bizCustomer = new CustomerRepository();
             var id = _bizCustomer.Create(customer);
             if (id > 0)
             {
@@ -92,7 +92,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public ActionResult Edit(int id)
         {
-            var customer = new CustomerBusiness().GetById(id);
+            var customer = new CustomerRepository().GetById(id);
             customer.BirthDay = BusinessExtension.FromUnixTime(customer.BirthDay.Value.ToUnixTime());
             ViewBag.customer = customer;
 
@@ -100,7 +100,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public JsonResult GetCustomerById(int id)
         {
-            var customer = new CustomerBusiness().GetById(id);
+            var customer = new CustomerRepository().GetById(id);
             return ToJsonResponse(true, null, customer);
         }
         public ActionResult Update(CustomerEditModel model)
@@ -114,7 +114,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToResponse(false, "Vui lòng chọn đối tác", 0);
             var partner = model.Partners[0];
             bool isMatch = partner.IsSelect;
-            var bizCustomer = new CustomerBusiness();
+            var bizCustomer = new CustomerRepository();
            
             var customer = new Customer
             {
@@ -170,7 +170,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public JsonResult GetNotes(int customerId)
         {
-            var bizCustomer = new CustomerBusiness();
+            var bizCustomer = new CustomerRepository();
             var datas = bizCustomer.GetNoteByCustomerId(customerId);
             return ToJsonResponse(true, null, datas);
         }

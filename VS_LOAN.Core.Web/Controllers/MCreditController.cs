@@ -15,9 +15,9 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class MCreditController : BaseController
     {
-        protected readonly IMCeditBusiness _bizMCredit;
+        protected readonly IMCeditRepository _bizMCredit;
         protected readonly IMCreditService _svMCredit;
-        public MCreditController(IMCeditBusiness mCeditBusiness, IMCreditService loanContractService) : base()
+        public MCreditController(IMCeditRepository mCeditBusiness, IMCreditService loanContractService) : base()
         {
             _bizMCredit = mCeditBusiness;
             _svMCredit = loanContractService;
