@@ -1,0 +1,11 @@
+D:\Development\outsource\VS_LOAN\HttpClientService\bin\Debug\HttpClientService.dll
+D:\Development\outsource\VS_LOAN\HttpClientService\bin\Debug\HttpClientService.pdb
+D:\Development\outsource\VS_LOAN\HttpClientService\bin\Debug\Newtonsoft.Json.dll
+D:\Development\outsource\VS_LOAN\HttpClientService\bin\Debug\VS_LOAN.Core.Entity.dll
+D:\Development\outsource\VS_LOAN\HttpClientService\bin\Debug\Newtonsoft.Json.xml
+D:\Development\outsource\VS_LOAN\HttpClientService\bin\Debug\VS_LOAN.Core.Entity.pdb
+D:\Development\outsource\VS_LOAN\HttpClientService\obj\Debug\HttpClientService.csproj.CoreCompileInputs.cache
+D:\Development\outsource\VS_LOAN\HttpClientService\obj\Debug\HttpClientService.csproj.CopyComplete
+D:\Development\outsource\VS_LOAN\HttpClientService\obj\Debug\HttpClientService.dll
+D:\Development\outsource\VS_LOAN\HttpClientService\obj\Debug\HttpClientService.pdb
+D:\Development\outsource\VS_LOAN\HttpClientService\obj\Debug\HttpClientService.csprojAssemblyReference.cache
