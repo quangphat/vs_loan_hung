@@ -527,7 +527,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult Index()
         {
-            ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;
+            ViewBag.formindex = Infrastructures.ControllerRoles.Roles[RouteData.Values["action"].ToString()]._formindex;
             return View();
         }
 
@@ -565,7 +565,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<ActionResult> ChiTietHoSo()
         {
-            ViewBag.formindex = LstRole["Index"]._formindex;
+            ViewBag.formindex = Infrastructures.ControllerRoles.Roles["profile_list"]._formindex;
             if (Session["HoSo_ChiTietHoSo_ID"] == null)
                 return RedirectToAction("Index");
             var hoso = new HoSoBLL().LayChiTiet((int)Session["HoSo_ChiTietHoSo_ID"]);
@@ -588,7 +588,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult SuaHoSo()
         {
-            ViewBag.formindex = LstRole["Index"]._formindex;
+            ViewBag.formindex = Infrastructures.ControllerRoles.Roles["profile_list"]._formindex;
             if (Session["AddNewHoSoID"] == null)
                 return RedirectToAction("Index");
             var hoso = new HoSoBLL().LayChiTiet((int)Session["AddNewHoSoID"]);
