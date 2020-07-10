@@ -103,11 +103,11 @@ namespace VS_LOAN.Core.Web.Helpers
                         new SiteMenuItem("Tạo mới","", IndexMenu.M_7_1,ControllerRoles.Roles["courier_addnew"]._href, ControllerRoles.Roles["courier_addnew"]._mangChucNang), // 1.3     
                         new SiteMenuItem("Danh sách","", IndexMenu.M_7_2,ControllerRoles.Roles["courier_index"]._href, ControllerRoles.Roles["courier_index"]._mangChucNang), // 1.2  
                     new SiteMenuItem("MCredit","menu-icon courier",IndexMenu.M_8,"#",new int[] { }),
-                        new SiteMenuItem("Check CAT","", IndexMenu.M_8_1,ControllerRoles.Roles["mcedit_checkcat"]._href, ControllerRoles.Roles["mcedit_checkcat"]._mangChucNang),
-                        new SiteMenuItem("Check CIC","", IndexMenu.M_8_2,ControllerRoles.Roles["mcedit_checkcic"]._href, ControllerRoles.Roles["mcedit_checkcic"]._mangChucNang),
-                        new SiteMenuItem("Check Duplicate","", IndexMenu.M_8_3,ControllerRoles.Roles["mcedit_checkdup"]._href, ControllerRoles.Roles["mcedit_checkdup"]._mangChucNang),
-                        new SiteMenuItem("Check Status","", IndexMenu.M_8_4,ControllerRoles.Roles["mcedit_checkstatus"]._href, ControllerRoles.Roles["mcedit_checkstatus"]._mangChucNang),// 1.3     
-                        new SiteMenuItem("Danh sách","", IndexMenu.M_7_2,CourrierController.LstRole["Index"]._href, CourrierController.LstRole["Index"]._mangChucNang) // 1.2  
+                        new SiteMenuItem("Check CAT","", IndexMenu.M_9_1,ControllerRoles.Roles["mcedit_checkcat"]._href, ControllerRoles.Roles["mcedit_checkcat"]._mangChucNang),
+                        new SiteMenuItem("Check CIC","", IndexMenu.M_9_2,ControllerRoles.Roles["mcedit_checkcic"]._href, ControllerRoles.Roles["mcedit_checkcic"]._mangChucNang),
+                        new SiteMenuItem("Check Duplicate","", IndexMenu.M_9_3,ControllerRoles.Roles["mcedit_checkdup"]._href, ControllerRoles.Roles["mcedit_checkdup"]._mangChucNang),
+                        new SiteMenuItem("Check Status","", IndexMenu.M_9_4,ControllerRoles.Roles["mcedit_checkstatus"]._href, ControllerRoles.Roles["mcedit_checkstatus"]._mangChucNang),// 1.3     
+                        new SiteMenuItem("Danh sách","", IndexMenu.M_9_5,ControllerRoles.Roles["mcedit_list"]._href, ControllerRoles.Roles["mcedit_list"]._mangChucNang) // 1.2  
                  
                     
             };

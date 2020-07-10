@@ -125,6 +125,8 @@
     <Compile Include="MCreditModels\AuthenResponseObj.cs" />
     <Compile Include="MCreditModels\MCreditRequestModelBase.cs" />
     <Compile Include="MCreditModels\MCreditUserToken.cs" />
+    <Compile Include="MCreditModels\ProfileSearchRequestModel.cs" />
+    <Compile Include="MCreditModels\ProfileSearchResponse.cs" />
     <Compile Include="Model\AutoIDModel.cs" />
     <Compile Include="Model\Customer.cs" />
     <Compile Include="Model\CustomerCheck.cs" />

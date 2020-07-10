@@ -67,7 +67,7 @@ namespace HttpClientService
                         NullValueHandling = NullValueHandling.Ignore,
                         ContractResolver = new CamelCasePropertyNamesContractResolver()
                     });
-
+                    //json = "{\"str\":\"ddddddddddd\",\"status\":\"0\",\"page\":1,\"type\":\"draft\",\"token\":\"7ac1e4d882b98a0086080706e354cf4c\"} ";
                     content = new StringContent(json, Encoding.UTF8, "application/json");
                 }
             var signature = string.Empty;

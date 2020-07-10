@@ -108,7 +108,9 @@ namespace VS_LOAN.Core.Web.Helpers
         public const string M_9_2 = "9_2";
         public const string M_9_3 = "9_3";
         public const string M_9_4 = "9_4";
-        
+        public const string M_9_5 = "9_5";
+        public const string M_9_6 = "9_6";
+
         public const string M_10 = "10";
         public const string M_10_1 = "10_1";
         public const string M_10_2 = "10_2";

@@ -27,22 +27,33 @@ namespace MCreditService
             var result = await BeforeSendRequest<CheckCatResponseModel, CheckCatRequestModel>(_checkCATApi, model, userId);
             return result;
         }
-        public async Task<CheckDupResponseModel> CheckDup(string value)
+        public async Task<CheckDupResponseModel> CheckDup(string value, int userId)
         {
             var model = new CheckDupRequestModel { IdNumber = value };
-            var result = await BeforeSendRequest<CheckDupResponseModel, CheckDupRequestModel>(_checkDupApi, model);
+            var result = await BeforeSendRequest<CheckDupResponseModel, CheckDupRequestModel>(_checkDupApi, model,userId);
             return result;
         }
-        public async Task<CheckCICResponseModel> CheckCIC(string value)
+        public async Task<CheckCICResponseModel> CheckCIC(string value, int userId)
         {
             var model = new CheckCICRequestModel { IdNumber = value };
-            var result = await BeforeSendRequest<CheckCICResponseModel, CheckCICRequestModel>(_checkCICApi, model);
+            var result = await BeforeSendRequest<CheckCICResponseModel, CheckCICRequestModel>(_checkCICApi, model, userId);
             return result;
         }
-        public async Task<CheckStatusResponseModel> CheckStatus(string value)
+        public async Task<CheckStatusResponseModel> CheckStatus(string value, int userId)
         {
             var model = new CheckStatusRequestModel { IdNumber = value };
-            var result = await BeforeSendRequest<CheckStatusResponseModel, CheckStatusRequestModel>(_checkStatusApi, model);
+            var result = await BeforeSendRequest<CheckStatusResponseModel, CheckStatusRequestModel>(_checkStatusApi, model, userId);
+            return result;
+        }
+        public async Task<ProfileSearchResponse> SearchProfiles(string freetext, string status, string type, int page, int userId)
+        {
+            var model = new ProfileSearchRequestModel {
+                str = freetext,
+                page = page,
+                status= status,
+                type = type
+            };
+            var result = await BeforeSendRequest<ProfileSearchResponse, ProfileSearchRequestModel>(_searchProfilesApi, model, userId);
             return result;
         }
     }

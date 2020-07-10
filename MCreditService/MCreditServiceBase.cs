@@ -18,6 +18,7 @@ namespace MCreditService
         protected static string _checkDupApi = "api/act/checkdup.html";
         protected static string _checkCICApi = "api/act/checkcic.html";
         protected static string _checkStatusApi = "api/act/checkstatus.html";
+        protected static string _searchProfilesApi = "api/act/profiles.html";
         protected static string _userName = "vietbankapi";
         protected static string _password = "api@123";
         protected static string _authenToken = "$2y$10$ne/8QwsCG10c.5cVSUW6NO7L3..lUEFItM4ccV0usJ3cAbqEjLywG";
@@ -52,6 +53,7 @@ namespace MCreditService
             _requestMessage.Headers.Add("xdncode", _xdnCode);
             model.token = await GetUserToken(userId);
             var result = await _httpClient.PostAsync<T>(_requestMessage, _baseUrl, apiPath, _contentType, null, model);
+           
             return result.Data;
         }
         protected async Task<string> GetUserToken(int userId)

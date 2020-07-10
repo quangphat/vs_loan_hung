@@ -11,8 +11,9 @@ namespace MCreditService.Interfaces
     {
         Task<AuthenResponse> Authen();
         Task<CheckCatResponseModel> CheckCat(int userId, string taxNumber);
-        Task<CheckDupResponseModel> CheckDup(string value);
-        Task<CheckCICResponseModel> CheckCIC(string value);
-        Task<CheckStatusResponseModel> CheckStatus(string value);
+        Task<CheckDupResponseModel> CheckDup(string value, int userId);
+        Task<CheckCICResponseModel> CheckCIC(string value, int userId);
+        Task<CheckStatusResponseModel> CheckStatus(string value, int userId);
+        Task<ProfileSearchResponse> SearchProfiles(string freetext, string status, string type, int page, int userId);
     }
 }
