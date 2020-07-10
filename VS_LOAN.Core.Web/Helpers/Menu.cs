@@ -18,7 +18,7 @@ namespace VS_LOAN.Core.Web.Helpers
         public string Icon = "";
         public int[] functionList = null;
 
-        public SiteMenuItem(string text,string icon, string index, string href, int[] funcs)
+        public SiteMenuItem(string text, string icon, string index, string href, int[] funcs)
         {
             this.Icon = icon;
             this.Text = text;
@@ -30,7 +30,7 @@ namespace VS_LOAN.Core.Web.Helpers
 
     public class Menu
     {
- 
+
         protected static bool checkMenuItem(int[] _mangChucNang)
         {
             List<string> lstQuyen = new List<string>();
@@ -84,24 +84,24 @@ namespace VS_LOAN.Core.Web.Helpers
         {
             List<SiteMenuItem> _siteMenu = new List<SiteMenuItem>{
                     new SiteMenuItem(Resources.Global.Menu_TC,"menu-icon home",IndexMenu.M_0,"#",new int[] { (int)QuyenIndex.Public }),
-                        new SiteMenuItem("Giới thiệu","",IndexMenu.M_0_1,HomeController.LstRole["Index"]._href,new int[] { (int)QuyenIndex.Public }),
+                        new SiteMenuItem("Giới thiệu","",IndexMenu.M_0_1,ControllerRoles.Roles["home_about"]._href,new int[] { (int)QuyenIndex.Public }),
                         //new SiteMenuItem("Hướng dẫn sử dụng","",IndexMenu.M_0_2,"#",new int[] { (int)QuyenIndex.Public }),
-                        new SiteMenuItem("Phiên bản","",IndexMenu.M_0_2,HomeController.LstRole["PhienBan"]._href,new int[] { (int)QuyenIndex.Public }),
-                    new SiteMenuItem("Tạo hồ sơ","menu-icon hs",IndexMenu.M_1,HoSoController.LstRole["AddNew"]._href,new int[] { }),
-                        new SiteMenuItem("Tạo mới","", IndexMenu.M_1_1,HoSoController.LstRole["AddNew"]._href,HoSoController.LstRole["AddNew"]._mangChucNang), // 1.1   
+                        new SiteMenuItem("Phiên bản","",IndexMenu.M_0_2,ControllerRoles.Roles["home_version"]._href,new int[] { (int)QuyenIndex.Public }),
+                    new SiteMenuItem("Tạo hồ sơ","menu-icon hs",IndexMenu.M_1,ControllerRoles.Roles["profile_addnew"]._href,new int[] { }),
+                        new SiteMenuItem("Tạo mới","", IndexMenu.M_1_1,ControllerRoles.Roles["profile_addnew"]._href,ControllerRoles.Roles["profile_addnew"]._mangChucNang), // 1.1   
                         //new SiteMenuItem("Hồ sơ của tôi","", IndexMenu.M_1_2,HoSoController.LstRole["Index"]._href,HoSoController.LstRole["Index"]._mangChucNang), // 1.1 
                     new SiteMenuItem("Quản lý hồ sơ","menu-icon qlhs",IndexMenu.M_2,"#",new int[] { }),
-                        new SiteMenuItem("Danh sách hồ sơ","", IndexMenu.M_2_2,QuanLyHoSoController.LstRole["DanhSachHoSo"]._href, QuanLyHoSoController.LstRole["DanhSachHoSo"]._mangChucNang), // 1.3     
-                        new SiteMenuItem("Duyệt hồ sơ","", IndexMenu.M_2_3,DuyetHoSoController.LstRole["Index"]._href, DuyetHoSoController.LstRole["Index"]._mangChucNang) ,// 1.2  
+                        new SiteMenuItem("Danh sách hồ sơ","", IndexMenu.M_2_2,ControllerRoles.Roles["profile_list"]._href, ControllerRoles.Roles["profile_list"]._mangChucNang), // 1.3     
+                        new SiteMenuItem("Duyệt hồ sơ","", IndexMenu.M_2_3,ControllerRoles.Roles["profile_approve"]._href, ControllerRoles.Roles["profile_approve"]._mangChucNang) ,// 1.2  
                     new SiteMenuItem("Check Duplicate","menu-icon duplicate",IndexMenu.M_5,"#",new int[] { }),
-                        new SiteMenuItem("Tạo mới","", IndexMenu.M_5_1,CustomerController.LstRole["AddNew"]._href, CustomerController.LstRole["AddNew"]._mangChucNang), // 1.3     
-                        new SiteMenuItem("Danh sách","", IndexMenu.M_5_2,CustomerController.LstRole["Index"]._href, CustomerController.LstRole["Index"]._mangChucNang), // 1.2  
+                        new SiteMenuItem("Tạo mới","", IndexMenu.M_5_1,ControllerRoles.Roles["checkdup_addnew"]._href, ControllerRoles.Roles["checkdup_addnew"]._mangChucNang), // 1.3     
+                        new SiteMenuItem("Danh sách","", IndexMenu.M_5_2,ControllerRoles.Roles["checkdup_index"]._href, ControllerRoles.Roles["checkdup_index"]._mangChucNang), // 1.2  
                     new SiteMenuItem("Công ty","menu-icon company",IndexMenu.M_8,"#",new int[] { }),
-                        new SiteMenuItem("Tạo mới","", IndexMenu.M_8_1,CompanyController.LstRole["AddNew"]._href, CompanyController.LstRole["AddNew"]._mangChucNang), // 1.3     
-                        new SiteMenuItem("Danh sách","", IndexMenu.M_8_2,CompanyController.LstRole["Index"]._href, CompanyController.LstRole["Index"]._mangChucNang), // 1.2  
+                        new SiteMenuItem("Tạo mới","", IndexMenu.M_8_1,ControllerRoles.Roles["company_addnew"]._href, ControllerRoles.Roles["company_addnew"]._mangChucNang), // 1.3     
+                        new SiteMenuItem("Danh sách","", IndexMenu.M_8_2,ControllerRoles.Roles["company_index"]._href, ControllerRoles.Roles["company_index"]._mangChucNang), // 1.2  
                    new SiteMenuItem("Courrier","menu-icon courier",IndexMenu.M_7,"#",new int[] { }),
-                        new SiteMenuItem("Tạo mới","", IndexMenu.M_7_1,CourrierController.LstRole["AddNew"]._href, CourrierController.LstRole["AddNew"]._mangChucNang), // 1.3     
-                        new SiteMenuItem("Danh sách","", IndexMenu.M_7_2,CourrierController.LstRole["Index"]._href, CourrierController.LstRole["Index"]._mangChucNang), // 1.2  
+                        new SiteMenuItem("Tạo mới","", IndexMenu.M_7_1,ControllerRoles.Roles["courier_addnew"]._href, ControllerRoles.Roles["courier_addnew"]._mangChucNang), // 1.3     
+                        new SiteMenuItem("Danh sách","", IndexMenu.M_7_2,ControllerRoles.Roles["courier_index"]._href, ControllerRoles.Roles["courier_index"]._mangChucNang), // 1.2  
                     new SiteMenuItem("MCredit","menu-icon courier",IndexMenu.M_8,"#",new int[] { }),
                         new SiteMenuItem("Check CAT","", IndexMenu.M_8_1,ControllerRoles.Roles["mcedit_checkcat"]._href, ControllerRoles.Roles["mcedit_checkcat"]._mangChucNang),
                         new SiteMenuItem("Check CIC","", IndexMenu.M_8_2,ControllerRoles.Roles["mcedit_checkcic"]._href, ControllerRoles.Roles["mcedit_checkcic"]._mangChucNang),
@@ -114,14 +114,14 @@ namespace VS_LOAN.Core.Web.Helpers
             List<SiteMenuItem> siteMenuAdmin = new List<SiteMenuItem>
             {
                   new SiteMenuItem("Tổ nhóm","menu-icon group",IndexMenu.M_3,"#",new int[] { }),
-                        new SiteMenuItem("Tạo mới","", IndexMenu.M_3_1,ToNhomController.LstRole["TaoMoi"]._href, ToNhomController.LstRole["TaoMoi"]._mangChucNang), // 1.3     
-                        new SiteMenuItem("Quản lý tổ nhóm","", IndexMenu.M_3_2,ToNhomController.LstRole["QLToNhom"]._href, ToNhomController.LstRole["QLToNhom"]._mangChucNang), // 1.3     
-                        new SiteMenuItem("Cấu hình duyệt","", IndexMenu.M_3_3,ToNhomController.LstRole["CauHinhDuyet"]._href, ToNhomController.LstRole["CauHinhDuyet"]._mangChucNang), // 1.3     
+                        new SiteMenuItem("Tạo mới","", IndexMenu.M_3_1,ControllerRoles.Roles["team_addnew"]._href, ControllerRoles.Roles["team_addnew"]._mangChucNang), // 1.3     
+                        new SiteMenuItem("Quản lý tổ nhóm","", IndexMenu.M_3_2,ControllerRoles.Roles["team_index"]._href,ControllerRoles.Roles["team_index"]._mangChucNang), // 1.3     
+                        new SiteMenuItem("Cấu hình duyệt","", IndexMenu.M_3_3,ControllerRoles.Roles["team_config"]._href, ControllerRoles.Roles["team_config"]._mangChucNang), // 1.3     
                     new SiteMenuItem("Nhập mã APP","menu-icon sanpham",IndexMenu.M_4,"#",new int[] { }),
-                        new SiteMenuItem("Quản lý mã APP","", IndexMenu.M_4_1,SanPhamVayController.LstRole["QuanLySanPham"]._href, SanPhamVayController.LstRole["QuanLySanPham"]._mangChucNang), // 1.3     
-                        new SiteMenuItem("Import","", IndexMenu.M_4_2,SanPhamVayController.LstRole["Import"]._href, SanPhamVayController.LstRole["Import"]._mangChucNang) ,// 1.3  
-                    new SiteMenuItem("Nhân sự","menu-icon employee",IndexMenu.M_6,EmployeeController.LstRole["Index"]._href,new int[] { }), 
-                        new SiteMenuItem("Thêm mới","", IndexMenu.M_6_1,EmployeeController.LstRole["AddNew"]._href, EmployeeController.LstRole["AddNew"]._mangChucNang) // 1.3  
+                        new SiteMenuItem("Quản lý mã APP","", IndexMenu.M_4_1,ControllerRoles.Roles["product_list"]._href, ControllerRoles.Roles["product_list"]._mangChucNang), // 1.3     
+                        new SiteMenuItem("Import","", IndexMenu.M_4_2,ControllerRoles.Roles["product_import"]._href, ControllerRoles.Roles["product_import"]._mangChucNang) ,// 1.3  
+                    new SiteMenuItem("Nhân sự","menu-icon employee",IndexMenu.M_6,ControllerRoles.Roles["employee_list"]._href,new int[] { }),
+                        new SiteMenuItem("Thêm mới","", IndexMenu.M_6_1,ControllerRoles.Roles["employee_add"]._href,ControllerRoles.Roles["employee_add"]._mangChucNang) // 1.3  
             };
             //var isTeamLead = new NhomBLL().CheckIsTeamlead(GlobalData.User.IDUser);
             var isAdmin = new GroupBusiness().CheckIsAdmin(GlobalData.User.IDUser);
@@ -131,7 +131,7 @@ namespace VS_LOAN.Core.Web.Helpers
             }
             StringBuilder menuHtml = new StringBuilder();
 
-            menuHtml.Append("<ul class='nav nav-list'>");            
+            menuHtml.Append("<ul class='nav nav-list'>");
 
             bool openMenuLv1 = false;
             bool openMenuLv2 = false;
@@ -155,7 +155,7 @@ namespace VS_LOAN.Core.Web.Helpers
                         openMenuLv3 = false;
                         addMenuTreev2 = false;
                     }
-                    
+
                     if (openMenuLv2 == true)
                     {
                         menuTree.Append(menuTreeLv2.ToString());
@@ -175,10 +175,10 @@ namespace VS_LOAN.Core.Web.Helpers
                         menuTree.Remove(0, menuTree.Length);
                     }
                     menuTree.Append("<li class=\"hover\">");
-                    if(_siteMenu[i].Href=="#")
+                    if (_siteMenu[i].Href == "#")
                         menuTree.Append("<a href='" + _siteMenu[i].Href + "' class='dropdown-toggle'>");// 
                     else
-                        menuTree.Append("<a href='/"+ _siteMenu[i].Href+ "' >");// 
+                        menuTree.Append("<a href='/" + _siteMenu[i].Href + "' >");// 
                     //menuTree.Append("<i style='margin: 1px 0 1px; display: inline-block;' class='"+ _siteMenu[i].Icon+"'></i>");//menu-icon fa fa fa-list-alt
                     menuTree.Append("<i  class='" + _siteMenu[i].Icon + "'></i>");
                     menuTree.Append("<span  class='menu-text'>");
@@ -186,7 +186,7 @@ namespace VS_LOAN.Core.Web.Helpers
                     menuTree.Append(_siteMenu[i].Text);
                     menuTree.Append("</span>");
                     menuTree.Append("<b class='arrow  fa fa-angle-down'></b>");
-                    menuTree.Append("</a>");                                        
+                    menuTree.Append("</a>");
                     openMenuLv1 = true;
                 }
                 else if (indexes.Length == 2)
@@ -200,7 +200,7 @@ namespace VS_LOAN.Core.Web.Helpers
                         openMenuLv3 = false;
                     }
                     else menuTreeLv3.Remove(0, menuTreeLv3.Length);
-                    if(addMenuTree==false)
+                    if (addMenuTree == false)
                         openMenuLv2 = false;
                     if (Menu.checkMenuItem(_siteMenu[i].functionList) == true)
                     {
@@ -215,27 +215,27 @@ namespace VS_LOAN.Core.Web.Helpers
                         menuTreeLv2.Append("</li>");
                         openMenuLv2 = true;
                         addMenuTree = true;
-                        
+
                     }
-                    else if(_siteMenu[i].Href=="#")
-                     {
-                         if (addMenuTreev2 == false)
-                         {
-                             //openMenuLv2 = false;
-                             menuTreeLv3.Remove(0, menuTreeLv3.Length);
-                         }
-                         if (openMenuLv2 == false)
-                             menuTreeLv3.Append("<ul class='submenu'>");
-                         menuTreeLv3.Append("<li id='" + _siteMenu[i].Index + "'>");
-                         menuTreeLv3.Append("<a  href='" + _siteMenu[i].Href + "' class='dropdown-toggle'>");
-                         menuTreeLv3.Append("<i class='menu-icon fa fa-caret-right'></i>");
-                         menuTreeLv3.Append(_siteMenu[i].Text);
-                         menuTreeLv3.Append("<b class='arrow fa fa-angle-down'></b>");
-                         menuTreeLv3.Append("</a>");
-                         menuTreeLv3.Append("<b class='arrow '></b>");
-                         openMenuLv2 = true;
-                        
-                     }
+                    else if (_siteMenu[i].Href == "#")
+                    {
+                        if (addMenuTreev2 == false)
+                        {
+                            //openMenuLv2 = false;
+                            menuTreeLv3.Remove(0, menuTreeLv3.Length);
+                        }
+                        if (openMenuLv2 == false)
+                            menuTreeLv3.Append("<ul class='submenu'>");
+                        menuTreeLv3.Append("<li id='" + _siteMenu[i].Index + "'>");
+                        menuTreeLv3.Append("<a  href='" + _siteMenu[i].Href + "' class='dropdown-toggle'>");
+                        menuTreeLv3.Append("<i class='menu-icon fa fa-caret-right'></i>");
+                        menuTreeLv3.Append(_siteMenu[i].Text);
+                        menuTreeLv3.Append("<b class='arrow fa fa-angle-down'></b>");
+                        menuTreeLv3.Append("</a>");
+                        menuTreeLv3.Append("<b class='arrow '></b>");
+                        openMenuLv2 = true;
+
+                    }
                 }
                 else if (indexes.Length == 3)
                 {
@@ -255,9 +255,9 @@ namespace VS_LOAN.Core.Web.Helpers
                         addMenuTreev2 = true;
                     }
                 }
-                
+
             }
-            
+
             if (openMenuLv3 == true)
             {
                 menuTreeLv3.Append("</ul>");
@@ -266,7 +266,7 @@ namespace VS_LOAN.Core.Web.Helpers
                 menuTreeLv3.Remove(0, menuTreeLv3.Length);
                 openMenuLv3 = false;
             }
-            
+
             if (openMenuLv2 == true)
             {
                 menuTree.Append(menuTreeLv2.ToString());
@@ -283,8 +283,8 @@ namespace VS_LOAN.Core.Web.Helpers
                     menuHtml.Append(menuTree.ToString());
                     addMenuTree = false;
                 }
-            }            
-            menuHtml.Append("</ul>");            
+            }
+            menuHtml.Append("</ul>");
 
             return menuHtml.ToString();
         }

@@ -10,10 +10,29 @@ namespace VS_LOAN.Core.Web.Infrastructures
     public static class ControllerRoles
     {
         public static Dictionary<string, ActionInfo> Roles = new Dictionary<string, ActionInfo> {
-            { "mcedit_checkcat", new ActionInfo{ _formindex = IndexMenu.M_8_1, _href = "MCredit/CheckCat", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
-            { "mcedit_checkcic", new ActionInfo{ _formindex = IndexMenu.M_8_2, _href = "MCredit/CheckCIC", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
-            { "mcedit_checkdup", new ActionInfo{ _formindex = IndexMenu.M_8_3, _href = "MCredit/CheckDuplicate", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
-            { "mcedit_checkstatus", new ActionInfo{ _formindex = IndexMenu.M_8_4, _href = "MCredit/CheckStatus", _mangChucNang = new int[] { (int)QuyenIndex.Public } } }
+             { "home_about", new ActionInfo{ _formindex = IndexMenu.M_0_1, _href = "Home/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "home_guide", new ActionInfo{ _formindex = IndexMenu.M_0_2, _href = "Home/HuongDanSuDung", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "home_version", new ActionInfo{ _formindex = IndexMenu.M_0_3, _href = "Home/PhienBan", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "profile_addnew", new ActionInfo{ _formindex = IndexMenu.M_1_1, _href = "HoSo/AddNew", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "profile_list", new ActionInfo{ _formindex = IndexMenu.M_2_2, _href = "QuanLyHoSo/DanhSachHoSo", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "profile_approve", new ActionInfo{ _formindex = IndexMenu.M_2_2, _href = "DuyetHoSo/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "checkdup_index", new ActionInfo{ _formindex = IndexMenu.M_5_2, _href = "Customer/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "checkdup_addnew", new ActionInfo{ _formindex = IndexMenu.M_5_1, _href = "Customer/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "company_index", new ActionInfo{ _formindex = IndexMenu.M_8_2, _href = "Company/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "company_addnew", new ActionInfo{ _formindex = IndexMenu.M_8_1, _href = "Company/AddNew", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "courier_index", new ActionInfo{ _formindex = IndexMenu.M_7_2, _href = "Courrier/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "courier_addnew", new ActionInfo{ _formindex = IndexMenu.M_7_1, _href = "Courrier/AddNew", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "team_addnew", new ActionInfo{ _formindex = IndexMenu.M_3_1, _href = "ToNhom/TaoMoi", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "team_index", new ActionInfo{ _formindex = IndexMenu.M_3_2, _href = "ToNhom/QLToNhom", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "team_config", new ActionInfo{ _formindex = IndexMenu.M_3_3, _href = "ToNhom/CauHinhDuyet", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "product_list", new ActionInfo{ _formindex = IndexMenu.M_4_1, _href = "SanPhamVay/QuanLySanPham", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "product_import", new ActionInfo{ _formindex = IndexMenu.M_4_2, _href = "SanPhamVay/Import", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "employee_add", new ActionInfo{ _formindex = IndexMenu.M_4_1, _href = "Employee/AddNew", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "employee_list", new ActionInfo{ _formindex = IndexMenu.M_4_2, _href = "Employee/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "mcedit_checkcat", new ActionInfo{ _formindex = IndexMenu.M_9_1, _href = "MCredit/CheckCat", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "mcedit_checkcic", new ActionInfo{ _formindex = IndexMenu.M_9_2, _href = "MCredit/CheckCIC", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "mcedit_checkdup", new ActionInfo{ _formindex = IndexMenu.M_9_3, _href = "MCredit/CheckDuplicate", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "mcedit_checkstatus", new ActionInfo{ _formindex = IndexMenu.M_9_4, _href = "MCredit/CheckStatus", _mangChucNang = new int[] { (int)QuyenIndex.Public } } }
         };
     }
 }
