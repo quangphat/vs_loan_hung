@@ -19,3 +19,9 @@
 /VS_LOAN.Core.Nhibernate/XMLConnect/LOAN_hibernate.cfg.xml
 /EasyCreditService/obj
 /EasyCreditService/bin
+/HttpClientService/obj
+/HttpClientService/bin
+/HttpService/bin
+/HttpService/obj
+/MCreditService/obj
+/MCreditService/bin
