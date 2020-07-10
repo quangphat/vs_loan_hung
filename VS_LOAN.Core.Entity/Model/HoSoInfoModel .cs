@@ -8,6 +8,7 @@ namespace VS_LOAN.Core.Entity.Model
 {
    public class HoSoInfoModel
     {
+        public string  ProductCode { get; set; }
         private int _id;
         private string _maHoSo;
         private string _maKhachHang;

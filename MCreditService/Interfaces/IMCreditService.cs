@@ -15,5 +15,6 @@ namespace MCreditService.Interfaces
         Task<CheckCICResponseModel> CheckCIC(string value, int userId);
         Task<CheckStatusResponseModel> CheckStatus(string value, int userId);
         Task<ProfileSearchResponse> SearchProfiles(string freetext, string status, string type, int page, int userId);
+        Task<ProfileAddResponse> CreateProfile(ProfileAddObj obj, int userId);
     }
 }

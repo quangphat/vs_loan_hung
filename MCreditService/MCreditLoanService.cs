@@ -56,5 +56,14 @@ namespace MCreditService
             var result = await BeforeSendRequest<ProfileSearchResponse, ProfileSearchRequestModel>(_searchProfilesApi, model, userId);
             return result;
         }
+        public async Task<ProfileAddResponse> CreateProfile(ProfileAddObj obj, int userId)
+        {
+            var model = new ProfileAddRequest
+            {
+                obj = obj
+            };
+            var result = await BeforeSendRequest<ProfileAddResponse, ProfileAddRequest>(_create_profile_Api, model, userId);
+            return result;
+        }
     }
 }
