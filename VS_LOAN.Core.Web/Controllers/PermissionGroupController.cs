@@ -47,12 +47,12 @@ namespace VS_LOAN.Core.Web.Controllers
                 nhom.MaNguoiQL = maNguoiQuanLy;
                 nhom.MaNhomCha = maNhomCha;
                 if (maNhomCha != 0)
-                    nhom.ChuoiMaCha = new GroupBusiness().LayChuoiMaCha(maNhomCha) + "." + maNhomCha;
+                    nhom.ChuoiMaCha = new GroupRepository().LayChuoiMaCha(maNhomCha) + "." + maNhomCha;
                 else
                     nhom.ChuoiMaCha = "0";
                 nhom.Ten = ten;
                 nhom.TenNgan = tenNgan;
-                result = new GroupBusiness().Them(nhom, lstThanhVien);
+                result = new GroupRepository().Them(nhom, lstThanhVien);
                 if (result > 0)
                 {
                     return ToResponse(true, Resources.Global.Message_Succ, result);
@@ -69,7 +69,7 @@ namespace VS_LOAN.Core.Web.Controllers
         
         public async Task<JsonResult> LayDSNhomCha()
         {
-            var bizGroup = new GroupBusiness();
+            var bizGroup = new GroupRepository();
             List<NhomDropDownModel> rs = await bizGroup.GetAll();
             if (rs == null)
                 rs = new List<NhomDropDownModel>();
@@ -92,7 +92,7 @@ namespace VS_LOAN.Core.Web.Controllers
             List<ThongTinToNhomModel> rs = new List<ThongTinToNhomModel>();
             try
             {
-                rs = new GroupBusiness().LayDSNhomCon(maNhomCha);
+                rs = new GroupRepository().LayDSNhomCon(maNhomCha);
                 if (rs == null)
                     rs = new List<ThongTinToNhomModel>();
                 return ToJsonResponse(true,null, rs);
@@ -111,7 +111,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if(Session["ToNhom_Sua_ID"] == null)
                 return RedirectToAction("QLToNhom");
             int idNhom = (int)Session["ToNhom_Sua_ID"];
-            ViewBag.ThongTinNhom = new GroupBusiness().LayTheoMa(idNhom);
+            ViewBag.ThongTinNhom = new GroupRepository().LayTheoMa(idNhom);
             return View();
         }
 
@@ -135,7 +135,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if(Session["ToNhom_ChiTiet_ID"] == null)
                 return RedirectToAction("QLToNhom");
             int idNhom = (int)Session["ToNhom_ChiTiet_ID"];
-            ViewBag.ThongTinNhom = new GroupBusiness().LayChiTietTheoMa(idNhom);
+            ViewBag.ThongTinNhom = new GroupRepository().LayChiTietTheoMa(idNhom);
             return View();
         }
 
@@ -157,12 +157,12 @@ namespace VS_LOAN.Core.Web.Controllers
                 nhom.MaNguoiQL = maNguoiQuanLy;
                 nhom.MaNhomCha = maNhomCha;
                 if (maNhomCha != 0)
-                    nhom.ChuoiMaCha = new GroupBusiness().LayChuoiMaCha(maNhomCha) + "." + maNhomCha;
+                    nhom.ChuoiMaCha = new GroupRepository().LayChuoiMaCha(maNhomCha) + "." + maNhomCha;
                 else
                     nhom.ChuoiMaCha = "0";
                 nhom.Ten = ten;
                 nhom.TenNgan = tenNgan;
-                result = new GroupBusiness().Sua(nhom, lstThanhVien);
+                result = new GroupRepository().Sua(nhom, lstThanhVien);
                 if (result)
                 {
                     return ToResponse(true,null, result);

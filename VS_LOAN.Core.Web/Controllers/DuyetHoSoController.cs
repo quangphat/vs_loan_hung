@@ -218,7 +218,7 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.ID = id;
             var hoso = new HoSoBLL().LayChiTiet(id);
             ViewBag.HoSo = hoso;
-            ViewBag.MaDoiTac = new DoiTacBLL().LayMaDoiTac(hoso.SanPhamVay);
+            ViewBag.MaDoiTac = new PartnerRepository().LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
             ViewBag.LstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
             ViewBag.SellCode = new UserPMBLL().GetUserByID(hoso.HoSoCuaAi.ToString());
@@ -374,7 +374,7 @@ namespace VS_LOAN.Core.Web.Controllers
                             CommentTime = DateTime.Now,
                             TypeId = NoteType.Hoso
                         };
-                        var bizNote = new NoteBusiness();
+                        var bizNote = new NoteRepository();
                         await bizNote.AddNoteAsync(ghichu);
                         return ToJsonResponse(true, Resources.Global.Message_Succ, hs.ID);
                     }
@@ -439,7 +439,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public JsonResult LayDSNhom()
         {
-            List<NhomDropDownModel> rs = new GroupBusiness().LayDSDuyetCuaNhanVien(GlobalData.User.IDUser);
+            List<NhomDropDownModel> rs = new GroupRepository().LayDSDuyetCuaNhanVien(GlobalData.User.IDUser);
             if (rs == null)
                 rs = new List<NhomDropDownModel>();
             return ToJsonResponse(true, null, rs);
@@ -453,7 +453,7 @@ namespace VS_LOAN.Core.Web.Controllers
             else
             {
                 // Lấy ds nhóm của nv quản lý
-                List<NhomDropDownModel> lstNhom = new GroupBusiness().LayDSDuyetCuaNhanVien(GlobalData.User.IDUser);
+                List<NhomDropDownModel> lstNhom = new GroupRepository().LayDSDuyetCuaNhanVien(GlobalData.User.IDUser);
                 if (lstNhom != null)
                 {
                     for (int i = 0; i < lstNhom.Count; i++)
@@ -483,8 +483,8 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public JsonResult LayDSTrangThai()
         {
-            var isTeamlead = new GroupBusiness().CheckIsTeamlead(GlobalData.User.IDUser);
-            var isAdmin = new GroupBusiness().CheckIsAdmin(GlobalData.User.IDUser);
+            var isTeamlead = new GroupRepository().CheckIsTeamlead(GlobalData.User.IDUser);
+            var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
             bool isLimit = false;
             if (isTeamlead && !isAdmin)
                 isLimit = true;

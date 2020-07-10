@@ -12,12 +12,12 @@ using VS_LOAN.Core.Nhibernate;
 
 namespace VS_LOAN.Core.Business
 {
-    public abstract class BaseBusiness
+    public abstract class BaseRepository
     {
         protected IDbConnection _connection;
         private readonly string _connectionString;
         protected readonly ILog _log;
-        public BaseBusiness(Type inheritBiz)
+        public BaseRepository(Type inheritBiz)
         {
             var cfg = new Configuration();
             cfg.Configure(System.IO.Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, DBConfig.DB_LOAN));

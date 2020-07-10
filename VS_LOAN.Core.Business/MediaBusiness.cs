@@ -15,7 +15,7 @@ using VS_LOAN.Core.Utility;
 
 namespace VS_LOAN.Core.Business
 {
-    public class MediaBusiness : BaseBusiness
+    public class MediaBusiness : BaseRepository
     {
         public MediaBusiness() : base(typeof(MediaBusiness)) { }
 
@@ -123,7 +123,7 @@ namespace VS_LOAN.Core.Business
             //{
             //    return new TupleModel { success = false, message = "Dữ liệu không hợp lệ" };
             //}
-            var bizCourier = new HosoCourrierBusiness();
+            var bizCourier = new HosoCourrierRepository();
             int count = 0;
             var hosos = new List<HosoCourier>();
             for (int i = 1; i < sheet.PhysicalNumberOfRows; i++)

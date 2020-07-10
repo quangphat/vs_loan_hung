@@ -11,9 +11,9 @@ using VS_LOAN.Core.Entity.Model;
 
 namespace VS_LOAN.Core.Business
 {
-    public class CompanyBusiness : BaseBusiness
+    public class CompanyRepository : BaseRepository
     {
-        public CompanyBusiness() : base(typeof(CompanyBusiness))
+        public CompanyRepository() : base(typeof(CompanyRepository))
         {
 
         }

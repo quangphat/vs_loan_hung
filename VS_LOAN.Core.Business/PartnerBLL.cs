@@ -9,7 +9,7 @@ using VS_LOAN.Core.Entity;
 
 namespace VS_LOAN.Core.Business
 {
-    public class PartnerBLL:BaseBusiness
+    public class PartnerBLL:BaseRepository
     {
         public PartnerBLL():base(typeof(PartnerBLL))
         {

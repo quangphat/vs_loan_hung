@@ -10,9 +10,9 @@ using VS_LOAN.Core.Entity.Employee;
 
 namespace VS_LOAN.Core.Business
 {
-    public class EmployeeBusiness :BaseBusiness
+    public class EmployeeRepository :BaseRepository
     {
-        public EmployeeBusiness():base(typeof(EmployeeBusiness))
+        public EmployeeRepository():base(typeof(EmployeeRepository))
         {
 
         }

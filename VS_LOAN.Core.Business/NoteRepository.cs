@@ -10,7 +10,7 @@ using VS_LOAN.Core.Entity.Model;
 
 namespace VS_LOAN.Core.Business
 {
-    public class NoteBusiness : BaseBusiness
+    public class NoteBusiness : BaseRepository
     {
         public NoteBusiness() : base(typeof(NoteBusiness)) { }
         public async Task AddNoteAsync(GhichuModel model)

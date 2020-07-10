@@ -34,13 +34,13 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public ActionResult Index()
         {
-            var isAdmin = new GroupBusiness().CheckIsAdmin(GlobalData.User.IDUser);
+            var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
             ViewBag.isAdmin = isAdmin ? 1 : 0;
             return View();
         }
         public async Task<JsonResult> Search(string freeText = null, int provinceId = 0, int courierId = 0, string status = null, int groupId = 0, int page = 1, int limit = 10)
         {
-            var bzCourier = new HosoCourrierBusiness();
+            var bzCourier = new HosoCourrierRepository();
             var totalRecord = await bzCourier.CountHosoCourrier(freeText, GlobalData.User.IDUser, status, groupId);
             var datas = await bzCourier.GetHosoCourrier(freeText, GlobalData.User.IDUser, status, page, limit, groupId);
             var result = DataPaging.Create(datas, totalRecord);
@@ -78,7 +78,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 DistrictId = model.DistrictId,
                 ProvinceId = model.ProvinceId
             };
-            var _bizCourrier = new HosoCourrierBusiness();
+            var _bizCourrier = new HosoCourrierRepository();
             var id = await _bizCourrier.Create(hoso);
             if (id > 0)
             {
@@ -91,7 +91,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 await Task.WhenAll(tasks);
                 if (!string.IsNullOrWhiteSpace(model.LastNote))
                 {
-                    var bizNote = new NoteBusiness();
+                    var bizNote = new NoteRepository();
                     var note = new GhichuModel
                     {
                         Noidung = model.LastNote,
@@ -110,7 +110,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<ActionResult> Edit(int id)
         {
-            var hoso = await new HosoCourrierBusiness().GetById(id);
+            var hoso = await new HosoCourrierRepository().GetById(id);
             ViewBag.hoso = hoso;
             return View();
         }
@@ -152,14 +152,14 @@ namespace VS_LOAN.Core.Web.Controllers
                 DistrictId = model.DistrictId,
                 ProvinceId = model.ProvinceId
             };
-            var _bizCourrier = new HosoCourrierBusiness();
+            var _bizCourrier = new HosoCourrierRepository();
             var result = await _bizCourrier.Update(model.Id, hoso);
             if (result)
             {
                 _bizCourrier.InsertCourierAssignee(model.Id, model.AssignId);
                 if (!string.IsNullOrWhiteSpace(model.LastNote))
                 {
-                    var bizNote = new NoteBusiness();
+                    var bizNote = new NoteRepository();
                     var note = new GhichuModel
                     {
                         Noidung = model.LastNote,
@@ -175,7 +175,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetPartner(int customerId)
         {
-            var bizCustomer = new CustomerBusiness();
+            var bizCustomer = new CustomerRepository();
             var bizPartner = new PartnerBLL();
             var customerCheck = bizCustomer.GetCustomerCheckByCustomerId(customerId);
             var partners = await bizPartner.GetListForCheckCustomerDuplicateAsync();
@@ -190,13 +190,13 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public JsonResult GetNotes(int customerId)
         {
-            var bizCustomer = new CustomerBusiness();
+            var bizCustomer = new CustomerRepository();
             var datas = bizCustomer.GetNoteByCustomerId(customerId);
             return ToJsonResponse(true, null, datas);
         }
         public async Task<JsonResult> GetStatusList()
         {
-            var bizHoso = new HosoBusiness();
+            var bizHoso = new HosoRepository();
             var result = await bizHoso.GetStatusListByType((int)HosoType.HosoCourrier);
             return ToJsonResponse(true, string.Empty, result);
         }
@@ -204,7 +204,7 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             if (hosoId <= 0 || filesGroup == null)
                 return ToJsonResponse(false);
-            var bizTailieu = new TailieuBusiness();
+            var bizTailieu = new TailieuRepository();
             if (isReset)
             {
                 var deleteAll = await bizTailieu.RemoveAllTailieu(hosoId, (int)HosoType.HosoCourrier);
@@ -245,7 +245,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 var results = await bizMedia.ReadXlsxFile(fileStream, GlobalData.User.IDUser);
                 if (results == null || !results.Any())
                     return ToJsonResponse(false, "Không thành công", null);
-                var _bizCourrier = new HosoCourrierBusiness();
+                var _bizCourrier = new HosoCourrierRepository();
                 var tasks = new List<Task>();
                 foreach (var item in results)
                 {
@@ -257,12 +257,12 @@ namespace VS_LOAN.Core.Web.Controllers
             }
 
         }
-        private async Task<bool> InsertHosoFromFile(HosoCourier hoso, HosoCourrierBusiness _bizCourrier)
+        private async Task<bool> InsertHosoFromFile(HosoCourier hoso, HosoCourrierRepository _bizCourrier)
         {
             var id = await _bizCourrier.Create(hoso);
             if (!string.IsNullOrWhiteSpace(hoso.LastNote))
             {
-                var bizNote = new NoteBusiness();
+                var bizNote = new NoteRepository();
                 var note = new GhichuModel
                 {
                     Noidung = hoso.LastNote,
@@ -296,7 +296,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetEmployeesFromOne(int id)
         {
-            var _bizCourrier = new HosoCourrierBusiness();
+            var _bizCourrier = new HosoCourrierRepository();
             var employee = await _bizCourrier.GetEmployeeById(id);
             if (employee == null)
                 return ToJsonResponse(false, null, null);

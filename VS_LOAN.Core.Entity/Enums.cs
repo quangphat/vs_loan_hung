@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Entity
 {
+    public enum PartnerType
+    {
+        MCredit = 7
+    }
     public enum NoteType
     {
         Hoso = 1,

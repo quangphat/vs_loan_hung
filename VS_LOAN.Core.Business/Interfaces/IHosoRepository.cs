@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Business.Interfaces
 {
-    public interface IHosoBusiness
+    public interface IHosoRepository
     {
         void TestLog(string log);
         Task<bool> UpdateF88Result(int hosoId, int f88Result, string reason);

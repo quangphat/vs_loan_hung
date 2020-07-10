@@ -10,9 +10,9 @@ using VS_LOAN.Core.Entity.MCreditModels;
 
 namespace VS_LOAN.Core.Business
 {
-    public class MCreditBusiness : BaseBusiness, IMCeditBusiness
+    public class MCreditRepository : BaseRepository, IMCeditRepository
     {
-        public MCreditBusiness() : base(typeof(MCreditBusiness))
+        public MCreditRepository() : base(typeof(MCreditRepository))
         {
 
         }

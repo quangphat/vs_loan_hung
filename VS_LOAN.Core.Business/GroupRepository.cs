@@ -13,9 +13,9 @@ using VS_LOAN.Core.Utility.Exceptions;
 
 namespace VS_LOAN.Core.Business
 {
-    public class GroupBusiness:BaseBusiness
+    public class GroupRepository:BaseRepository
     {
-        public GroupBusiness() : base(typeof(GroupBusiness))
+        public GroupRepository() : base(typeof(GroupRepository))
         {
 
         }

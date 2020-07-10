@@ -118,8 +118,8 @@ namespace VS_LOAN.Core.Web.Controllers
                    
                     GlobalData.User = user;
                     GlobalData.User.UserType = (int)UserTypeEnum.Sale;
-                    var isTeamLead = new GroupBusiness().checkIsTeamLeadByUserId(user.IDUser);
-                    var isAdmin = new GroupBusiness().CheckIsAdmin(user.IDUser);
+                    var isTeamLead = new GroupRepository().checkIsTeamLeadByUserId(user.IDUser);
+                    var isAdmin = new GroupRepository().CheckIsAdmin(user.IDUser);
                     if(isAdmin)
                         GlobalData.User.UserType = (int)UserTypeEnum.Admin;
                     else if(isTeamLead)

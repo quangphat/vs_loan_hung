@@ -12,9 +12,9 @@ using VS_LOAN.Core.Entity.UploadModel;
 
 namespace VS_LOAN.Core.Business
 {
-    public class HosoBusiness : BaseBusiness, IHosoBusiness
+    public class HosoRepository : BaseRepository, IHosoRepository
     {
-        public HosoBusiness():base(typeof(HosoBusiness))
+        public HosoRepository():base(typeof(HosoRepository))
         {
 
         }
