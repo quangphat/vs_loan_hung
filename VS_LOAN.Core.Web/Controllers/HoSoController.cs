@@ -23,8 +23,8 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class HoSoController : BaseController
     {
-        protected readonly ITailieuBusiness _bizTailieu;
-        public HoSoController(ITailieuBusiness tailieuBusiness) : base()
+        protected readonly ITailieuRepository _bizTailieu;
+        public HoSoController(ITailieuRepository tailieuBusiness) : base()
         {
             _bizTailieu = tailieuBusiness;
         }
@@ -47,7 +47,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult LayDSDoiTac()
         {
-            List<DoiTacModel> rs = new DoiTacBLL().LayDS();
+            List<DoiTacModel> rs = new PartnerRepository().LayDS();
             return ToJsonResponse(true, null, rs);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
@@ -74,7 +74,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public JsonResult LayDSSale()
         {
             List<UserPMModel> rs = new List<UserPMModel>();
-            var lstNhom = new GroupBusiness().LayDSCuaNhanVien(GlobalData.User.IDUser);
+            var lstNhom = new GroupRepository().LayDSCuaNhanVien(GlobalData.User.IDUser);
             if (lstNhom != null)
             {
                 foreach (var item in lstNhom)
@@ -107,7 +107,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 CommentTime = DateTime.Now,
                 TypeId = NoteType.Hoso
             };
-            var bizNote = new NoteBusiness();
+            var bizNote = new NoteRepository();
             await bizNote.AddNoteAsync(ghichu);
             return true;
         }
@@ -176,7 +176,7 @@ namespace VS_LOAN.Core.Web.Controllers
 
                 }
                 List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["LstFileHoSo"];
-                var _bizTailieu = new TailieuBusiness();
+                var _bizTailieu = new TailieuRepository();
                 List<LoaiTaiLieuModel> lstLoaiTaiLieu = await _bizTailieu.GetLoaiTailieuList();
                 lstLoaiTaiLieu.RemoveAll(x => x.BatBuoc == 0);
                 if (lstLoaiTaiLieu != null)
@@ -273,7 +273,7 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             if (hosoId <= 0 || filesGroup == null)
                 return ToJsonResponse(false);
-            var bizTailieu = new TailieuBusiness();
+            var bizTailieu = new TailieuRepository();
             if (isReset)
             {
                 var deleteAll = await bizTailieu.RemoveAllTailieu(hosoId, (int)HosoType.Hoso);
@@ -382,7 +382,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, null, "Dữ liệu không hợp lệ");
             }
-            var bizHoso = new HosoBusiness();
+            var bizHoso = new HosoRepository();
             var result = await bizHoso.RemoveTailieu(hosoId, fileId);
             return ToJsonResponse(true);
         }
@@ -392,8 +392,8 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, null, "Dữ liệu không hợp lệ");
             }
-            var bizHoso = new HosoBusiness();
-            var bizTailieu = new TailieuBusiness();
+            var bizHoso = new HosoRepository();
+            var bizTailieu = new TailieuRepository();
             var lstLoaiTailieu = await bizTailieu.GetLoaiTailieuList();
             if (lstLoaiTailieu == null || !lstLoaiTailieu.Any())
                 return ToJsonResponse(false);
@@ -420,7 +420,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> TailieuByHoso(int hosoId, int type = 1)
         {
-            var bizHoso = new HosoBusiness();
+            var bizHoso = new HosoRepository();
             var result = await bizHoso.GetTailieuByHosoId(hosoId, type);
             if (result == null)
                 result = new List<FileUploadModel>();
@@ -568,9 +568,9 @@ namespace VS_LOAN.Core.Web.Controllers
                 return RedirectToAction("Index");
             var hoso = new HoSoBLL().LayChiTiet((int)Session["HoSo_ChiTietHoSo_ID"]);
             ViewBag.HoSo = hoso;
-            ViewBag.MaDoiTac = new DoiTacBLL().LayMaDoiTac(hoso.SanPhamVay);
+            ViewBag.MaDoiTac = new PartnerRepository().LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
-            var bizTailieu = new TailieuBusiness();
+            var bizTailieu = new TailieuRepository();
             ViewBag.LstLoaiTaiLieu = await bizTailieu.GetLoaiTailieuList();
 
             return View();
@@ -591,10 +591,10 @@ namespace VS_LOAN.Core.Web.Controllers
                 return RedirectToAction("Index");
             var hoso = new HoSoBLL().LayChiTiet((int)Session["AddNewHoSoID"]);
             ViewBag.HoSo = hoso;
-            ViewBag.MaDoiTac = new DoiTacBLL().LayMaDoiTac(hoso.SanPhamVay);
+            ViewBag.MaDoiTac = new PartnerRepository().LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
             Session["LstFileHoSo"] = hoso.LstTaiLieu;
-            var bizTailieu = new TailieuBusiness();
+            var bizTailieu = new TailieuRepository();
             //ViewBag.LstLoaiTaiLieu = bizTailieu.GetLoaiTailieuList();
             return View();
         }

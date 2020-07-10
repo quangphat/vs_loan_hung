@@ -11,9 +11,9 @@ using VS_LOAN.Core.Entity.UploadModel;
 
 namespace VS_LOAN.Core.Business
 {
-    public class TailieuBusiness : BaseBusiness, ITailieuBusiness
+    public class TailieuRepository : BaseRepository, ITailieuRepository
     {
-        public TailieuBusiness() : base(typeof(TailieuBusiness)) { }
+        public TailieuRepository() : base(typeof(TailieuRepository)) { }
         public async Task<List<LoaiTaiLieuModel>> GetLoaiTailieuList()
         {
             using (var con = GetConnection())

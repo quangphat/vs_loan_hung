@@ -7,7 +7,7 @@ using VS_LOAN.Core.Entity;
 
 namespace VS_LOAN.Core.Business.Interfaces
 {
-    public interface ITailieuBusiness
+    public interface ITailieuRepository
     {
         Task<List<LoaiTaiLieuModel>> GetLoaiTailieuList();
         Task<bool> RemoveAllTailieu(int hosoId, int typeId);

@@ -6,13 +6,14 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Nhibernate;
 using VS_LOAN.Core.Utility.Exceptions;
 
 namespace VS_LOAN.Core.Business
 {
-    public class PartnerRepository : BaseBusiness
+    public class PartnerRepository : BaseRepository, IPartnerRepository
     {
         public PartnerRepository() : base(typeof(PartnerRepository))
         {
@@ -46,7 +47,7 @@ namespace VS_LOAN.Core.Business
             }
             catch (BusinessException ex)
             {
-                throw 0;
+                return 0;
             }
         }
     }
