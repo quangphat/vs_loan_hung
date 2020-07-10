@@ -229,7 +229,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (model == null || string.IsNullOrWhiteSpace(model.UserName) || string.IsNullOrWhiteSpace(model.Password))
                 return ToJsonResponse(false);
             var bizEmployee = new EmployeeBusiness();
-            var result = await bizEmployee.ResetPassord(model.UserName, model.Password);
+            var result = await bizEmployee.ResetPassord(model.UserName.Trim(), MD5.getMD5(model.Password.Trim()));
             return ToJsonResponse(true, "Thành công", result);
         }
     }
