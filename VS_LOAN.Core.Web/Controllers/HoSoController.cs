@@ -25,10 +25,14 @@ namespace VS_LOAN.Core.Web.Controllers
     {
         protected readonly ITailieuRepository _rpTailieu;
         protected readonly IPartnerRepository _rpPartner;
-        public HoSoController(ITailieuRepository tailieuBusiness, IPartnerRepository partnerRepository) : base()
+        protected readonly IEmployeeRepository _rpEmployee;
+        public HoSoController(ITailieuRepository tailieuBusiness, 
+            IEmployeeRepository employeeRepository,
+            IPartnerRepository partnerRepository) : base()
         {
             _rpTailieu = tailieuBusiness;
             _rpPartner = partnerRepository;
+            _rpEmployee = employeeRepository;
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
@@ -53,9 +57,9 @@ namespace VS_LOAN.Core.Web.Controllers
             return ToJsonResponse(true, null, rs);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public JsonResult LayDSCourier()
+        public async Task<JsonResult> LayDSCourier()
         {
-            List<NhanVienInfoModel> rs = new CourierCodeBLL().LayDS();
+            var rs = await _rpEmployee.GetCourierList();
             return ToJsonResponse(true, null, rs);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
@@ -178,8 +182,8 @@ namespace VS_LOAN.Core.Web.Controllers
 
                 }
                 List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["LstFileHoSo"];
-                var _bizTailieu = new TailieuRepository();
-                List<LoaiTaiLieuModel> lstLoaiTaiLieu = await _bizTailieu.GetLoaiTailieuList();
+                
+                var lstLoaiTaiLieu = await _rpTailieu.GetLoaiTailieuList();
                 lstLoaiTaiLieu.RemoveAll(x => x.BatBuoc == 0);
                 if (lstLoaiTaiLieu != null)
                 {
@@ -275,10 +279,10 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             if (hosoId <= 0 || filesGroup == null)
                 return ToJsonResponse(false);
-            var bizTailieu = new TailieuRepository();
+            
             if (isReset)
             {
-                var deleteAll = await bizTailieu.RemoveAllTailieu(hosoId, (int)HosoType.Hoso);
+                var deleteAll = await _rpTailieu.RemoveAllTailieu(hosoId, (int)HosoType.Hoso);
                 if (!deleteAll)
                     return ToJsonResponse(false);
             }
@@ -296,7 +300,7 @@ namespace VS_LOAN.Core.Web.Controllers
                             TypeId = Convert.ToInt32(file.Key),
                             LoaiHoso = (int)HosoType.Hoso
                         };
-                        await bizTailieu.Add(tailieu);
+                        await _rpTailieu.Add(tailieu);
                     }
                 }
             }

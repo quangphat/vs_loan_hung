@@ -5,16 +5,34 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.Employee;
+using VS_LOAN.Core.Entity.Model;
 
 namespace VS_LOAN.Core.Business
 {
-    public class EmployeeRepository :BaseRepository
+    public class EmployeeRepository :BaseRepository,IEmployeeRepository
     {
         public EmployeeRepository():base(typeof(EmployeeRepository))
         {
 
+        }
+        public async Task<List<NhanVienInfoModel>> GetCourierList()
+        {
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    var result = await con.QueryAsync<NhanVienInfoModel>("sp_NHAN_VIEN_LayDSCourierCode", null, commandType: CommandType.StoredProcedure);
+                    
+                    return result.ToList();
+                }
+            }
+            catch 
+            {
+                return null;
+            }
         }
         public async Task<List<OptionSimple>> GetByProvinceId(int provinceId)
         {

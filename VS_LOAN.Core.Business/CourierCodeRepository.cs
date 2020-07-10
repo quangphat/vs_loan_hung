@@ -11,7 +11,7 @@ using VS_LOAN.Core.Utility.Exceptions;
 
 namespace VS_LOAN.Core.Business
 {
-    public class CourierCodeBLL
+    public class CourierCodeRepository
     {
 
         public List<NhanVienInfoModel> LayDS()
