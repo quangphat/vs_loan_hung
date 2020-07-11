@@ -12,7 +12,34 @@
 //        message: '<h2 style="color:#fff">' + text + ' ...</h2>'
 //    });
 //}
+function getSliderValue(controlId) {
+    return Number(document.getElementById(controlId).value);
 
+}
+function calculateAmountPerMonth(amount, month, controlDisplay) {
+
+    if (month <= 0)
+        return;
+    let value = amount / month;
+
+    document.getElementById(controlDisplay).innerHTML = formatCurrencyVND(value);
+}
+function setSlidebarValue(controlId, minValue = 0, maxValue = 0, step = 0, defaultValue = 0) {
+    document.getElementById(controlId).min = minValue;
+    document.getElementById(controlId).max = maxValue;
+    document.getElementById(controlId).step = step;
+    document.getElementById(controlId).value = defaultValue;
+}
+function slidebar(sliderControl, displayControl, isCurrency = false, unit = '') {
+    var slider = document.getElementById(sliderControl);
+    var output = document.getElementById(displayControl);
+
+    output.innerHTML = isCurrency ? formatCurrencyVND(slider.value) : slider.value + " " + unit;
+
+    slider.oninput = function () {
+        output.innerHTML = isCurrency ? formatCurrencyVND(this.value) : this.value + " " + unit;
+    }
+}
 function LayNhom(controlId, defaultValue = 0, subcontrolId = null, subControlValue = 0) {
     $(controlId).empty();
     $.ajax({

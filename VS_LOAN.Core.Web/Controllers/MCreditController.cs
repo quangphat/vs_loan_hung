@@ -75,6 +75,11 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = await _svMCredit.SearchProfiles(freeText, status, type, page, GlobalData.User.IDUser);
             return ToJsonResponse(true, "", result);
         }
+        public ActionResult AddNew()
+        {
+            ViewBag.User = GlobalData.User;
+            return View();
+        }
         public async Task<JsonResult> Create(StringModel model)
         {
             var hoso = new HoSoBLL().LayChiTiet(Convert.ToInt32(model.Value));

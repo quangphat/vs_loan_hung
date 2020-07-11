@@ -1769,6 +1769,7 @@
     <Content Include="Views\MCredit\CheckCIC.cshtml" />
     <Content Include="Views\MCredit\CheckDuplicate.cshtml" />
     <Content Include="Views\MCredit\CheckStatus.cshtml" />
+    <Content Include="Views\MCredit\AddNew.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
