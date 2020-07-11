@@ -238,9 +238,9 @@
 
 <script>
     $(document).ready(function () {
+        setTextForPTag('checkSaleResult');
+        setTextForPTag('checkdupResult');
         $('#ddlProduct').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddlCourier').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddlHuyen').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlProvince').chosen({ width: '100%', allow_single_deselect: true });
         $('#txtToDate').datepicker({
             dateFormat: 'dd-mm-yy'
@@ -262,6 +262,11 @@
         }).next().on(ace.click_event, function () {
             $(this).prev().focus();
         });
+        GetLocSigns("#ddlLocSign");
+        GetLoanPeriods("#ddlLoanPeriod");
+        GetLoanCities("#ddlProvince");
+        GetLoanProducts("#ddlProduct");
+        LayDSTaiLieu();
         //$("#txtIdDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
     });
 
@@ -292,13 +297,6 @@
         $("#txtTienDeNghiVay").val(formatCurrency($("#txtTienDeNghiVay").val().replace(/\./g, '')));
     });
 
-    $(document).ready(function () {
-        GetLocSigns("#ddlLocSign");
-        GetLoanPeriods("#ddlLoanPeriod");
-        GetLoanCities("#ddlProvince");
-        GetLoanProducts("#ddlProduct");
-        LayDSTaiLieu();
-    });
     $('#btn_CheckSale').click(function (e) {
         let value = $("#txtSaleCode").val()
         checkSale('checkSaleResult', value);

@@ -265,8 +265,7 @@ function checkSale(controlId, value) {
         data: objectSend,
         success: function (data) {
             if (data.success == true) {
-                if (data.data.status == "succes") {
-                    
+                if (data.data.status == "success") {
                     swal({
                         title: "Thành công",
                         text: data.code,
@@ -280,7 +279,7 @@ function checkSale(controlId, value) {
                 else {
                     swal({
                         title: "Không thành công",
-                        text: data.msg,
+                        text: data.code,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,
@@ -288,6 +287,7 @@ function checkSale(controlId, value) {
 
                     });
                 }
+                document.getElementById(controlId).innerHTML = data.code;
             }
             else {
                 swal({

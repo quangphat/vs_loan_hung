@@ -12,6 +12,9 @@
 //        message: '<h2 style="color:#fff">' + text + ' ...</h2>'
 //    });
 //}
+function setTextForPTag(controlId, value = '') {
+    document.getElementById(controlId).innerHTML = value;
+}
 function getSliderValue(controlId) {
     return Number(document.getElementById(controlId).value);
 
