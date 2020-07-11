@@ -9,6 +9,7 @@ using HttpClientService;
 using VS_LOAN.Core.Business.Interfaces;
 using AutoMapper;
 using VS_LOAN.Core.Entity;
+using Newtonsoft.Json;
 
 namespace MCreditService
 {
@@ -110,13 +111,22 @@ namespace MCreditService
             });
             return result.Data;
         }
-        protected async Task<T> BeforeSendRequest<T, TInput>(string apiPath, TInput model, int userId = 0) where TInput : MCreditRequestModelBase
+        protected async Task<T> BeforeSendRequest<T, TInput>(string apiPath, TInput model, int userId = 0) 
+            where T : MCResponseModelBase
+            where TInput : MCreditRequestModelBase
         {
             _requestMessage = new HttpRequestMessage();
             _requestMessage.Headers.Add("xdncode", _xdnCode);
             model.token = await GetUserToken(userId);
             var result = await _httpClient.PostAsync<T>(_requestMessage, _baseUrl, apiPath, _contentType, null, model);
-           
+            if (result == null || result.Data == null)
+                return null;
+           if(result.Data is T)
+            {
+                var data = (T)result.Data;
+                data.message = JsonConvert.SerializeObject(data.msg);
+                return data;
+            }
             return result.Data;
         }
         protected async Task<string> GetUserToken(int userId)

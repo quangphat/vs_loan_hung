@@ -78,7 +78,7 @@ namespace VS_LOAN.Core.Business
                     }, commandType: CommandType.StoredProcedure);
                 }
             }
-           // await Task.WhenAll(tasks);
+            // await Task.WhenAll(tasks);
             return true;
         }
         public async Task<bool> InsertLoanPeriods(List<MCreditLoanPeriod> loanPeriods)
@@ -121,7 +121,7 @@ namespace VS_LOAN.Core.Business
                     }, commandType: CommandType.StoredProcedure);
                 }
             }
-           // await Task.WhenAll(tasks);
+            // await Task.WhenAll(tasks);
             return true;
         }
 
@@ -143,7 +143,7 @@ namespace VS_LOAN.Core.Business
         {
             using (var con = GetConnection())
             {
-                var result = await _connection.QueryAsync<OptionSimple>("sp_MCLocation_GetSimpleList",null, commandType: CommandType.StoredProcedure);
+                var result = await _connection.QueryAsync<OptionSimple>("sp_MCLocation_GetSimpleList", null, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
         }
@@ -169,6 +169,17 @@ namespace VS_LOAN.Core.Business
             {
                 var result = await _connection.QueryAsync<OptionSimple>("sp_MCCities_GetSimpleList", null, commandType: CommandType.StoredProcedure);
                 return result.ToList();
+            }
+        }
+        public async Task<int> CreateProfile(MCredit_TempProfile model)
+        {
+            model.CreatedTime = model.UpdatedTime = DateTime.Now;
+            var p = GetParams(model, "Id", ignoreKey: new string[] { nameof(model.CreatedTime), nameof(model.UpdatedTime) });
+
+            using (var con = GetConnection())
+            {
+                await _connection.QueryAsync<OptionSimple>("sp_insert_MCredit_TempProfile", p, commandType: CommandType.StoredProcedure);
+                return p.Get<int>("Id");
             }
         }
     }

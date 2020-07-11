@@ -11,7 +11,13 @@
 //        },
 //        message: '<h2 style="color:#fff">' + text + ' ...</h2>'
 //    });
-//}
+//}\
+function getRadioButtonValue(controlId) {
+    return $('input[name="' + controlId + '"]:checked').val();
+}
+function getCheckboxValue(controlId) {
+    return $('#' + controlId).is(":checked");
+}
 function setTextForPTag(controlId, value = '') {
     document.getElementById(controlId).innerHTML = value;
 }

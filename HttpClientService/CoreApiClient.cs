@@ -27,8 +27,6 @@ namespace HttpClientService
             , string baseUrl, string path = "/", string headerContentType = null, object param = null, object data = null)
         {
             requestMessage.Method = HttpMethod.Post;
-            
-           // var newRequest = await requestMessage.CloneAsync();
             var response = await httpClient.Call<T>(requestMessage, baseUrl, path, headerContentType, param, data);
             return response;
         }
@@ -108,6 +106,7 @@ namespace HttpClientService
                         ? response.Headers.Location.AbsoluteUri
                         : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                     var result = JsonConvert.DeserializeObject<T>(responseData);
+                    
                     return new ExternalApiResponseModel<T>(result, response.StatusCode, null);
                 }
             }

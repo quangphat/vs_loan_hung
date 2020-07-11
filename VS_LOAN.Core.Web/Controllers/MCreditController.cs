@@ -9,6 +9,7 @@ using VS_LOAN.Core.Business;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.MCreditModels;
+using VS_LOAN.Core.Entity.MCreditModels.SqlModel;
 using VS_LOAN.Core.Web.Helpers;
 
 namespace VS_LOAN.Core.Web.Controllers
@@ -34,7 +35,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (model == null || string.IsNullOrWhiteSpace(model.Value))
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var result = await _svMCredit.CheckSale(GlobalData.User.IDUser, model.Value);
-            return ToJsonResponse(true, result.msg, result);
+            return ToJsonResponse(true, result.msg.ToString(), result);
         }
         public ActionResult CheckCat()
         {
@@ -45,7 +46,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (model == null || string.IsNullOrWhiteSpace(model.Value))
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var result = await _svMCredit.CheckCat(GlobalData.User.IDUser, model.Value);
-            return ToJsonResponse(true, result.msg, result);
+            return ToJsonResponse(true, result.msg.ToString(), result);
         }
         public ActionResult CheckCIC()
         {
@@ -56,7 +57,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (model == null || string.IsNullOrWhiteSpace(model.Value))
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var result = await _svMCredit.CheckCIC(model.Value, GlobalData.User.IDUser);
-            return ToJsonResponse(true, result.msg, result);
+            return ToJsonResponse(true, result.msg.ToString(), result);
         }
         public ActionResult CheckDuplicate()
         {
@@ -67,7 +68,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (model == null || string.IsNullOrWhiteSpace(model.Value))
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var result = await _svMCredit.CheckDup(model.Value, GlobalData.User.IDUser);
-            return ToJsonResponse(true, result.msg, result);
+            return ToJsonResponse(true, result.msg.ToString(), result);
         }
         public ActionResult CheckStatus()
         {
@@ -78,7 +79,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (model == null || string.IsNullOrWhiteSpace(model.Value))
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var result = await _svMCredit.CheckStatus(model.Value, GlobalData.User.IDUser);
-            return ToJsonResponse(true, result.msg, result);
+            return ToJsonResponse(true, result.msg.ToString(), result);
         }
         public ActionResult Index()
         {
@@ -94,25 +95,39 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.User = GlobalData.User;
             return View();
         }
-        public async Task<JsonResult> Create(StringModel model)
+        public async Task<JsonResult> SaveDraft(MCredit_TempProfileAddModel model)
         {
-            var hoso = new HoSoBLL().LayChiTiet(Convert.ToInt32(model.Value));
-            var obj = _mapper.Map<ProfileAddObj>(hoso);
-            obj.cityId = "58";
-            obj.homeTown = "Bình Phước";
-            obj.isAddr = true;
-            obj.loanPeriodCode = "3";
-            obj.isInsurance = false;
-            obj.logSignCode = "28";
-            obj.productCode = "C0000011";
-            obj.saleID = "VBF0265";
-            var result = await _svMCredit.CreateProfile(obj, 3514);
-            return ToJsonResponse(true, "", result);
+            var profile = _mapper.Map<MCredit_TempProfile>(model);
+            profile.CreatedBy = GlobalData.User.IDUser;
+            var id = await _bizMCredit.CreateProfile(profile);
+            if(id>0)
+            {
+                var obj = _mapper.Map<MCProfilePostModel>(profile);
+                var result = await _svMCredit.CreateProfile(obj, GlobalData.User.IDUser);
+                return ToJsonResponse(true, result.message, result);
+            }
+            return ToJsonResponse(true, "", id);
+        }
+        public async Task<JsonResult> Create(MCredit_TempProfileAddModel model)
+        {
+
+            //var hoso = new HoSoBLL().LayChiTiet(Convert.ToInt32(model.Value));
+            //var obj = _mapper.Map<ProfileAddObj>(hoso);
+            //obj.cityId = "58";
+            //obj.homeTown = "Bình Phước";
+            //obj.isAddr = true;
+            //obj.loanPeriodCode = "3";
+            //obj.isInsurance = false;
+            //obj.logSignCode = "28";
+            //obj.productCode = "C0000011";
+            //obj.saleID = "VBF0265";
+            //var result = await _svMCredit.CreateProfile(model, 3514);
+            return ToJsonResponse(true, "");
         }
         public async Task<JsonResult> GetMCSimpleList(int type)
         {
             var result = new List<OptionSimple>();
-            if(type== (int)MCTableType.MCreditCity)
+            if (type == (int)MCTableType.MCreditCity)
             {
                 result = await _bizMCredit.GetMCCitiesSimpleList();
             }

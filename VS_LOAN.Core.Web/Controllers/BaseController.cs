@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using VS_LOAN.Core.Entity.MCreditModels;
+using VS_LOAN.Core.Entity.MCreditModels.SqlModel;
 using VS_LOAN.Core.Entity.Model;
 namespace VS_LOAN.Core.Web.Controllers
 {
@@ -16,8 +17,8 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             var config = new MapperConfiguration(x =>
             {
-                x.CreateMap<HoSoInfoModel,ProfileAddObj>()
-                .ForMember(a => a.name, b => b.MapFrom(c=>c.TenKhachHang))
+                x.CreateMap<HoSoInfoModel, ProfileAddObj>()
+                .ForMember(a => a.name, b => b.MapFrom(c => c.TenKhachHang))
                 .ForMember(a => a.cityId, b => b.MapFrom(c => c.MaKhuVuc))
                 .ForMember(a => a.bod, b => b.MapFrom(c => c.BirthDay.ToShortDateString()))
                 .ForMember(a => a.phone, b => b.MapFrom(c => c.SDT))
@@ -28,7 +29,25 @@ namespace VS_LOAN.Core.Web.Controllers
                 .ForMember(a => a.loanMoney, b => b.MapFrom(c => c.SoTienVay.ToString()))
                 //.ForMember(a => a.saleID, b => b.MapFrom(c => c.CMND))
                 ;
-                
+                x.CreateMap<MCredit_TempProfileAddModel, MCredit_TempProfile>();
+                x.CreateMap<MCredit_TempProfile, MCProfilePostModel>()
+                .ForMember(a=>a.Name,b=>b.MapFrom(c=>c.CustomerName))
+                .ForMember(a => a.HomeTown, b => b.MapFrom(c => c.Hometown))
+                .ForMember(a => a.Bod, b => b.MapFrom(c => c.BirthDay.ToShortDateString()))
+                .ForMember(a => a.Phone, b => b.MapFrom(c => c.Phone))
+                .ForMember(a => a.IdNumber, b => b.MapFrom(c => c.IdNumber))
+                .ForMember(a => a.CCCDNumber, b => b.MapFrom(c => c.CCCDNumber))
+                .ForMember(a => a.IdNumberDate, b => b.MapFrom(c => c.IssueDate.ToShortDateString()))
+                .ForMember(a => a.IsAddr, b => b.MapFrom(c => c.IsAddr))
+                .ForMember(a => a.CityId, b => b.MapFrom(c => c.ProvinceId))
+                .ForMember(a => a.ProductCode, b => b.MapFrom(c => c.ProductCode))
+                .ForMember(a => a.LoanPeriodCode, b => b.MapFrom(c => c.LoanPeriodCode))
+                .ForMember(a => a.LoanMoney, b => b.MapFrom(c => c.LoanMoney.ToString()))
+                .ForMember(a => a.LocSignCode, b => b.MapFrom(c => c.LocSignCode))
+                .ForMember(a => a.IsInsurrance, b => b.MapFrom(c => c.IsInsurrance))
+                .ForMember(a => a.Status, b => b.MapFrom(c => c.Status))
+                ;
+
             });
 
             _mapper = config.CreateMapper();
@@ -36,7 +55,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public ActionResult ToResponse(bool success = true, string message = null, object data = null)
         {
             string code = string.Empty;
-            if(success)
+            if (success)
             {
 
                 code = string.IsNullOrWhiteSpace(message) ? Resources.Global.Message_Succ : message;
@@ -46,7 +65,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 code = string.IsNullOrWhiteSpace(message) ? Resources.Global.Message_Error : message;
             }
             return Json(new { data, success, code }, JsonRequestBehavior.AllowGet);
-            
+
         }
 
         public JsonResult ToJsonResponse(bool success = true, string message = null, object data = null)

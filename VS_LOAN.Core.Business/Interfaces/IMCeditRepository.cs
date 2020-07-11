@@ -11,6 +11,7 @@ namespace VS_LOAN.Core.Business.Interfaces
 {
     public interface IMCeditRepository
     {
+        Task<int> CreateProfile(MCredit_TempProfile model);
         Task<bool> DeleteMCTableDatas(int type);
         Task<MCreditUserToken> GetUserTokenByIdAsync(int userId);
         Task<bool> InsertUserToken(MCreditUserToken model);

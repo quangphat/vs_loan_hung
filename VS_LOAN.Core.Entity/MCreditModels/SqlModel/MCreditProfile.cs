@@ -35,11 +35,12 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
 
         public string SaleNumber { get; set; }
 
-        public int ProductId { get; set; }
+        public string ProductCode { get; set; }
 
         public string LoanPeriodCode { get; set; }
+        public string LocSignCode { get; set; }
 
-        public Decimal LoanMoney { get; set; }
+        public decimal LoanMoney { get; set; }
 
         public bool IsInsurrance { get; set; }
 

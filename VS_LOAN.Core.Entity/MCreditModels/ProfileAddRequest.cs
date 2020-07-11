@@ -8,7 +8,7 @@ namespace VS_LOAN.Core.Entity.MCreditModels
 {
     public class ProfileAddRequest : MCreditRequestModelBase
     {
-        public ProfileAddObj obj { get; set; }
+        public MCProfilePostModel Obj { get; set; }
     }
     public class ProfileAddObj
     {
