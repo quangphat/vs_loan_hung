@@ -20,6 +20,7 @@ namespace MCreditService
         protected static string _checkDupApi = "api/act/checkdup.html";
         protected static string _checkCICApi = "api/act/checkcic.html";
         protected static string _checkStatusApi = "api/act/checkstatus.html";
+        protected static string _checkSaleApi = "api/act/checksale.html";
         protected static string _searchProfilesApi = "api/act/profiles.html";
         protected static string _create_profile_Api = "api/act/profileadd.html";
         protected static string _userName = "vietbankapi";

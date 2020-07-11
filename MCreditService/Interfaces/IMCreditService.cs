@@ -9,6 +9,7 @@ namespace MCreditService.Interfaces
 {
     public interface IMCreditService
     {
+        Task<CheckSaleResponseModel> CheckSale(int userId, string salecode);
         Task<CheckCatResponseModel> CheckCat(int userId, string taxNumber);
         Task<CheckDupResponseModel> CheckDup(string value, int userId);
         Task<CheckCICResponseModel> CheckCIC(string value, int userId);

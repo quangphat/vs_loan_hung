@@ -27,6 +27,12 @@ namespace MCreditService
             var result = await BeforeSendRequest<CheckCatResponseModel, CheckCatRequestModel>(_checkCATApi, model, userId);
             return result;
         }
+        public async Task<CheckSaleResponseModel> CheckSale(int userId, string salecode)
+        {
+            var model = new CheckSaleRequestModel { idCode = salecode, UserId = userId };
+            var result = await BeforeSendRequest<CheckSaleResponseModel, CheckSaleRequestModel>(_checkSaleApi, model, userId);
+            return result;
+        }
         public async Task<CheckDupResponseModel> CheckDup(string value, int userId)
         {
             var model = new CheckDupRequestModel { IdNumber = value };

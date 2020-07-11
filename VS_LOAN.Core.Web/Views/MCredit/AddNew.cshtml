@@ -75,8 +75,8 @@
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <div class="input-group" id="checkdupResult">
-                                <span style="color:green">ddddddddddd</span>
+                            <div class="input-group">
+                                <p  id="checkdupResult" style="color:green"></p>
                             </div>
 
                         </div>
@@ -111,11 +111,11 @@
                             </select>
                         </div>
                         @*<label class="col-sm-2 control-label no-padding-right">Quận/huyện<span class="required">(*)</span></label>
-                        <div class="col-sm-4">
-                            <select id="ddlHuyen" class="chosen-select form-control" data-placeholder="Chọn quận huyện">
-                                <option value="0"></option>
-                            </select>
-                        </div>*@
+                            <div class="col-sm-4">
+                                <select id="ddlHuyen" class="chosen-select form-control" data-placeholder="Chọn quận huyện">
+                                    <option value="0"></option>
+                                </select>
+                            </div>*@
                     </div>
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Địa chỉ</label>
@@ -126,19 +126,19 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Sale (Số CMND | CCCD | Mã sale) </label>
                         <div class="col-sm-4">
-                            
-                                <input type="text" id="txtPhone"  class="form-control">
-                            
+
+                            <input type="text" id="txtSaleCode" class="form-control">
+
                             <div style="margin-top:10px">
-                                <a class="btn btn-primary" id="btn_CheckCIC">
+                                <a class="btn btn-primary" id="btn_CheckSale">
                                     Check Sale
                                 </a>
 
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <div class="input-group" id="checkSaleResult">
-                                <span style="color:green">sale result</span>
+                            <div class="input-group" >
+                                <p id="checkSaleResult" style="color:green"></p>
                             </div>
                         </div>
 
@@ -170,7 +170,7 @@
                                 </label>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số tiền đề nghị vay<span class="required">(*)</span></label>
@@ -297,18 +297,20 @@
         GetLoanPeriods("#ddlLoanPeriod");
         GetLoanCities("#ddlProvince");
         GetLoanProducts("#ddlProduct");
-        $('#ddlDoiTac').on('change', function () {
-            LayDSSanPham(this.value);
-        });
-        $('#ddlProvince').on('change', function () {
-            LayDSHuyen(this.value);
-        });
-        $('#ddlInternalCode').on('change', function () {
-             $('#txtTenNV').val( $('option:selected', this).attr('ten'));
-        });
+        LayDSTaiLieu();
     });
-
-
+    $('#btn_CheckSale').click(function (e) {
+        let value = $("#txtSaleCode").val()
+        checkSale('checkSaleResult', value);
+    });
+    $('#btn_CheckCIC').click(function (e) {
+        let value = !isNullOrWhiteSpace($("#txtIdNumber").val()) ? $("#txtIdNumber").val() : $("#txtCCCDNumber").val();
+        checkCIC('', value);
+    });
+    $('#btn_CheckDup').click(function (e) {
+        let value = !isNullOrWhiteSpace($("#txtIdNumber").val()) ? $("#txtIdNumber").val() : $("#txtCCCDNumber").val();
+        checkDup('checkdupResult', value);
+    });
     function LayDSTaiLieu() {
         $.ajax({
             type: "POST",

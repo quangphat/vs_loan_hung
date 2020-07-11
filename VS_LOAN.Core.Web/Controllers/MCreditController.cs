@@ -29,6 +29,13 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = await _svMCredit.AuthenByUserId(model.UserId, model.IsUpdateToken, model.IsUpdateProduct, model.IsUpdateLoanPeriod, model.IsUpdateLocation, model.IsUpdateCity);
             return ToJsonResponse(true, result, result);
         }
+        public async Task<JsonResult> CheckSaleApi(StringModel model)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(model.Value))
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            var result = await _svMCredit.CheckSale(GlobalData.User.IDUser, model.Value);
+            return ToJsonResponse(true, result.msg, result);
+        }
         public ActionResult CheckCat()
         {
             return View();

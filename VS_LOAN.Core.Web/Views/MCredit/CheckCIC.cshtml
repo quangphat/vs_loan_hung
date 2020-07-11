@@ -67,13 +67,7 @@
     $(document).ready(function () {
         $("#txtValue").ForceNumericOnly();
     });
-    function getMessage(data) {
-        if (data == null || data == undefined)
-            return ''
-        if (data.status == "error")
-            return data.msg
-        return data.Result
-    }
+   
     $('#btn_Save').click(function (e) {
 
         var objectSend = JSON.stringify({
