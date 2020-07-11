@@ -22,6 +22,13 @@ namespace VS_LOAN.Core.Web.Controllers
             _bizMCredit = mCeditBusiness;
             _svMCredit = loanContractService;
         }
+        public async Task<JsonResult> AuthenMC(AuthenMCModel model)
+        {
+            if (model == null)
+                return ToJsonResponse(false);
+            var result = await _svMCredit.AuthenByUserId(model.UserId, model.IsUpdateToken, model.IsUpdateProduct, model.IsUpdateLoanPeriod, model.IsUpdateLocation, model.IsUpdateCity);
+            return ToJsonResponse(true, result, result);
+        }
         public ActionResult CheckCat()
         {
             return View();
@@ -92,7 +99,7 @@ namespace VS_LOAN.Core.Web.Controllers
             obj.logSignCode = "28";
             obj.productCode = "C0000011";
             obj.saleID = "VBF0265";
-            var result = await _svMCredit.CreateProfile(obj,3514);
+            var result = await _svMCredit.CreateProfile(obj, 3514);
             return ToJsonResponse(true, "", result);
         }
     }

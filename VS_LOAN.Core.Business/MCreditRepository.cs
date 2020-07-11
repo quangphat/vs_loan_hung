@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity.MCreditModels;
+using VS_LOAN.Core.Entity.MCreditModels.SqlModel;
 
 namespace VS_LOAN.Core.Business
 {
@@ -16,6 +17,16 @@ namespace VS_LOAN.Core.Business
         {
 
         }
+        public async Task<bool> DeleteMCTableDatas(int type)
+        {
+            using (var con = GetConnection())
+            {
+                await _connection.ExecuteAsync("sp_deleteMCTable", new { type }, commandType: CommandType.StoredProcedure);
+                return true;
+            }
+
+        }
+
         public async Task<MCreditUserToken> GetUserTokenByIdAsync(int userId)
         {
             string sql = $"sp_MCreditUserToken_GetTokenByUserId";
@@ -30,12 +41,96 @@ namespace VS_LOAN.Core.Business
 
         }
 
+        public async Task<bool> InsertLocations(List<MCreditlocations> locations)
+        {
+            List<Task> tasks = new List<Task>();
+            foreach (var p in locations)
+            {
+                using (var con = GetConnection())
+                {
+                    await con.ExecuteAsync("sp_insert_MCreditlocations", new
+                    {
+                        McId = p.Id,
+                        p.Code,
+                        p.Addr,
+                        p.Name
+
+                    }, commandType: CommandType.StoredProcedure);
+                }
+            }
+            //await Task.WhenAll(tasks);
+            return true;
+        }
+        public async Task<bool> InsertCities(List<MCreditCity> cities)
+        {
+            List<Task> tasks = new List<Task>();
+            foreach (var p in cities)
+            {
+                using (var con = GetConnection())
+                {
+
+                    await con.ExecuteAsync("sp_insert_MCreditCity", new
+                    {
+                        McId = p.Id,
+                        p.Code,
+                        p.Name
+                    }, commandType: CommandType.StoredProcedure);
+                }
+            }
+           // await Task.WhenAll(tasks);
+            return true;
+        }
+        public async Task<bool> InsertLoanPeriods(List<MCreditLoanPeriod> loanPeriods)
+        {
+            List<Task> tasks = new List<Task>();
+            foreach (var p in loanPeriods)
+            {
+                using (var con = GetConnection())
+                {
+
+                    await con.ExecuteAsync("sp_insert_MCreditLoanPeriod", new
+                    {
+                        McId = p.Id,
+                        p.Code,
+                        p.Name
+                    }, commandType: CommandType.StoredProcedure);
+                }
+            }
+            //await Task.WhenAll(tasks);
+            return true;
+        }
+        public async Task<bool> InsertProducts(List<MCreditProduct> products)
+        {
+            List<Task> tasks = new List<Task>();
+            foreach (var p in products)
+            {
+                using (var con = GetConnection())
+                {
+
+                    await con.ExecuteAsync("sp_insert_MCreditProduct", new
+                    {
+                        McId = p.Id,
+                        p.Code,
+                        p.Name,
+                        p.IsCheckCat,
+                        p.MaxLoanAmount,
+                        p.MinLoanAmount,
+                        p.MinTenor,
+                        p.MaxTenor
+                    }, commandType: CommandType.StoredProcedure);
+                }
+            }
+           // await Task.WhenAll(tasks);
+            return true;
+        }
+
         public async Task<bool> InsertUserToken(MCreditUserToken model)
         {
             using (var con = GetConnection())
             {
-                
-                await con.ExecuteAsync("sp_MCUserToken_Insert", new {
+
+                await con.ExecuteAsync("sp_MCUserToken_Insert", new
+                {
                     model.UserId,
                     model.Token
                 }, commandType: CommandType.StoredProcedure);

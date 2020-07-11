@@ -106,6 +106,7 @@
     <Compile Include="F88Model\LadipageModel.cs" />
     <Compile Include="F88ResponseModel.cs" />
     <Compile Include="GhichuViewModel.cs" />
+    <Compile Include="MCreditModels\AuthenMCModel.cs" />
     <Compile Include="MCreditModels\CheckCatRequestModel.cs" />
     <Compile Include="MCreditModels\CheckCatResponseModel.cs" />
     <Compile Include="HosoCourrier\HosoCorrierRequestModel.cs" />
@@ -133,6 +134,12 @@
     <Compile Include="MCreditModels\ProfileAddResponse.cs" />
     <Compile Include="MCreditModels\ProfileSearchRequestModel.cs" />
     <Compile Include="MCreditModels\ProfileSearchResponse.cs" />
+    <Compile Include="MCreditModels\SqlModel\MCreditCity.cs" />
+    <Compile Include="MCreditModels\SqlModel\MCreditLoanPeriod.cs" />
+    <Compile Include="MCreditModels\SqlModel\MCreditlocations.cs" />
+    <Compile Include="MCreditModels\SqlModel\MCreditProduct.cs" />
+    <Compile Include="MCreditModels\SqlModel\MCreditProfile.cs" />
+    <Compile Include="MCreditModels\SqlModel\MCredit_TempProfileAddModel.cs" />
     <Compile Include="Model\AutoIDModel.cs" />
     <Compile Include="Model\Customer.cs" />
     <Compile Include="Model\CustomerCheck.cs" />

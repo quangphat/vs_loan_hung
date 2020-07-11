@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Entity
 {
+    public enum MCTableType
+    {
+        MCreditCity = 1,
+        MCreditLoanPeriod = 2,
+        MCreditlocations = 3,
+        MCreditProduct = 4
+    }
     public enum PartnerType
     {
         MCredit = 7
