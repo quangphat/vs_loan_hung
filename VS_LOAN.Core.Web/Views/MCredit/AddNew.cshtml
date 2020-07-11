@@ -106,19 +106,19 @@
 
                         <label class="col-sm-2 control-label no-padding-right">Tỉnh/TP<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlTinh" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
+                            <select id="ddlProvince" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
                                 <option value="0"></option>
                             </select>
                         </div>
-                        <label class="col-sm-2 control-label no-padding-right">Quận/huyện<span class="required">(*)</span></label>
+                        @*<label class="col-sm-2 control-label no-padding-right">Quận/huyện<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <select id="ddlHuyen" class="chosen-select form-control" data-placeholder="Chọn quận huyện">
                                 <option value="0"></option>
                             </select>
-                        </div>
+                        </div>*@
                     </div>
                     <div class="form-group">
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Địa chỉ<span class="required">(*)</span></label>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Địa chỉ</label>
                         <div class="col-sm-10">
                             <textarea type="text" id="txtDiaChi" placeholder="Nhập địa chỉ" class="form-control"></textarea>
                         </div>
@@ -155,7 +155,7 @@
 
                         <label class="col-sm-2 control-label no-padding-right">Sản phẩm vay<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlSanPhamVay" class="chosen-select form-control" data-placeholder="Chọn sản phẩm vay">
+                            <select id="ddlProduct" class="chosen-select form-control" data-placeholder="Chọn sản phẩm vay">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -170,10 +170,7 @@
                                 </label>
                             </div>
                         </div>
-                        <label style="display:none" for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên cửa hàng<span class="required">(*)</span></label>
-                        <div class="col-sm-4" style="display:none">
-                            <input type="text" id="txtTenCuaHang" placeholder="Nhập tên của hàng" class="form-control" />
-                        </div>
+                        
                     </div>
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số tiền đề nghị vay<span class="required">(*)</span></label>
@@ -187,7 +184,14 @@
                             </select>
                         </div>
                     </div>
-                    
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Địa điểm ký văn kiện tín dụng *<span class="required">(*)</span></label>
+                        <div class="col-sm-10">
+                            <select id="ddlLocSign" class="chosen-select form-control">
+                                <option value="0">Chọn một địa điểm</option>
+                            </select>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -234,10 +238,10 @@
 
 <script>
     $(document).ready(function () {
-        $('#ddlSanPhamVay').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlProduct').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlCourier').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlHuyen').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddlTinh').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlProvince').chosen({ width: '100%', allow_single_deselect: true });
         $('#txtToDate').datepicker({
             dateFormat: 'dd-mm-yy'
 
@@ -289,15 +293,14 @@
     });
 
     $(document).ready(function () {
-        LayDSTaiLieu();
-        LayDSNganHang();
-        LayDSTinh();
-        LayDSCourier();
-        LayDSale('@ViewBag.MaNV');
+        GetLocSigns("#ddlLocSign");
+        GetLoanPeriods("#ddlLoanPeriod");
+        GetLoanCities("#ddlProvince");
+        GetLoanProducts("#ddlProduct");
         $('#ddlDoiTac').on('change', function () {
             LayDSSanPham(this.value);
         });
-        $('#ddlTinh').on('change', function () {
+        $('#ddlProvince').on('change', function () {
             LayDSHuyen(this.value);
         });
         $('#ddlInternalCode').on('change', function () {
@@ -305,104 +308,6 @@
         });
     });
 
-    $('#spnThoiHanVay').ace_spinner({ value: 0, min: 0, max: 36, step: 3, btn_up_class: 'btn-info', btn_down_class: 'btn-info' })
-				.closest('.ace-spinner')
-				.on('changed.fu.spinbox', function () {
-				    //alert($('#spinner1').val())
-				});
-    function LayDSTinh() {
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSTinh", "KhuVuc")',
-            data: {},
-            success: function (data) {
-                $('#ddlTinh').empty();
-                $('#ddlTinh').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.data, function (index, optionData) {
-                        $('#ddlTinh').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
-                    });
-                }
-                $('#ddlTinh').chosen().trigger("chosen:updated");
-            },
-            complete: function () {
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    }
-
-    function LayDSCourier() {
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSCourier", "HoSo")',
-            data: {},
-            success: function (data) {
-                $('#ddlCourier').empty();
-                $('#ddlCourier').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.data, function (index, optionData) {
-                        $('#ddlCourier').append("<option value='" + optionData.ID + "'>" + optionData.FullText + "</option>");
-                    });
-                }
-                $('#ddlCourier').chosen().trigger("chosen:updated");
-            },
-            complete: function () {
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    }
-
-    function LayDSHuyen(maTinh) {
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSHuyen", "KhuVuc")',
-            data: {'maTinh':maTinh},
-            success: function (data) {
-                $('#ddlHuyen').empty();
-                $('#ddlHuyen').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.data, function (index, optionData) {
-                        $('#ddlHuyen').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
-                    });
-                }
-                $('#ddlHuyen').chosen().trigger("chosen:updated");
-            },
-            complete: function () {
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    }
-    var lstDoitac =[]
-    function LayDSNganHang() {
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSDoiTac", "HoSo")',
-            data: {},
-            success: function (data) {
-                $('#ddlDoiTac').empty();
-                $('#ddlDoiTac').append("<option value='0'></option>");
-                if (data != null) {
-
-                    lstDoitac = data.data
-                    $.each(data.data, function (index, optionData) {
-                        $('#ddlDoiTac').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
-                    });
-                }
-                $('#ddlDoiTac').chosen().trigger("chosen:updated");
-            },
-            complete: function () {
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    }
 
     function LayDSTaiLieu() {
         $.ajax({
@@ -483,56 +388,8 @@
             }
         }
     }
-    function LayDSSanPham(maDoiTac) {
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSSanPham", "HoSo")',
-            data: { 'maDoiTac': maDoiTac },
-            success: function (data) {
-                $('#ddlSanPhamVay').empty();
-                $('#ddlSanPhamVay').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.data, function (index, optionData) {
-                        $('#ddlSanPhamVay').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
-                    });
-                }
-                $('#ddlSanPhamVay').chosen().trigger("chosen:updated");
 
-            },
-            complete: function () {
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    }
 
-    function LayDSale(maNV) {
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSSale", "HoSo")',
-            data: { },
-            success: function (data) {
-                $('#ddlInternalCode').empty();
-                $('#ddlInternalCode').append("<option value='0'></option>");
-                var ten = '';
-                if (data != null) {
-                    $.each(data.data, function (index, optionData) {
-                        $('#ddlInternalCode').append("<option  ten='" + optionData.FullName + "' value='" + optionData.IDUser + "'>" + optionData.Code + "</option>");
-                    });
-                }
-                $('#ddlInternalCode').val(maNV);
-                $('#ddlInternalCode').trigger("change");
-                $('#ddlInternalCode').chosen().trigger("chosen:updated");
-
-            },
-            complete: function () {
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    }
 
     $('#btn_Temp').click(function (e) {
         if ($('#txtHoTen').val() == "" || $('#txtHoTen').val() == undefined) {
@@ -555,7 +412,7 @@
             });
             return;
         }
-        if ($('#ddlSanPhamVay').val() == "0" || $('#ddlSanPhamVay').val() == undefined) {
+        if ($('#ddlProduct').val() == "0" || $('#ddlProduct').val() == undefined) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
                 text: "Vui lòng chọn sản phẩm vay",
@@ -570,7 +427,7 @@
             'phone2': $('#txtPhone2').val(), 'ngayNhanDon': $('#txtToDate').val(),
             'hoSoCuaAi': $('#ddlInternalCode').val(), 'cmnd': $('#txtIdNumber').val(), 'gioiTinh': $('#ddlGioiTinh').val(),
             'maKhuVuc': $('#ddlHuyen').val(), 'diaChi': $('#txtDiaChi').val(),'courier':$('#ddlCourier').val(),
-            'sanPhamVay': $('#ddlSanPhamVay').val(), 'tenCuaHang': $('#txtTenCuaHang').val(),
+            'sanPhamVay': $('#ddlProduct').val(), 'tenCuaHang': $('#txtTenCuaHang').val(),
             'baoHiem': $('#cbbaohiem').is(":checked"), 'thoiHanVay': $('#spnThoiHanVay').val(),
             'ghiChu': $('#txtGhiChu').val(),
             'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, ''),
@@ -628,7 +485,7 @@
             });
             return;
         }
-        if ($('#ddlSanPhamVay').val() == "0" || $('#ddlSanPhamVay').val() == undefined) {
+        if ($('#ddlProduct').val() == "0" || $('#ddlProduct').val() == undefined) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
                 text: "Vui lòng chọn sản phẩm vay",
@@ -683,12 +540,12 @@
             'phone2': $('#txtPhone2').val(), 'ngayNhanDon': $('#txtToDate').val(),
             'hoSoCuaAi': $('#ddlInternalCode').val(), 'cmnd': $('#txtIdNumber').val(), 'gioiTinh': $('#ddlGioiTinh').val(),
             'maKhuVuc': $('#ddlHuyen').val(), 'diaChi': $('#txtDiaChi').val(),'courier':$('#ddlCourier').val(),
-            'sanPhamVay': $('#ddlSanPhamVay').val(), 'tenCuaHang': $('#txtTenCuaHang').val(),
+            'sanPhamVay': $('#ddlProduct').val(), 'tenCuaHang': $('#txtTenCuaHang').val(),
             'baoHiem': $('#cbbaohiem').is(":checked"), 'thoiHanVay': $('#spnThoiHanVay').val(),
             'ghiChu': $('#txtGhiChu').val(),
             'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, ''),
             'link': window.location.href,
-            'provinceId': parseInt($('#ddlTinh').val()),
+            'provinceId': parseInt($('#ddlProvince').val()),
             'doitacF88Value': doitacF88Value,
             'birthDayStr': $('#txtBirthDay').val(),
             'cmndDayStr': $('#txtIdDay').val(),

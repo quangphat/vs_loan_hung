@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.MCreditModels;
 using VS_LOAN.Core.Entity.MCreditModels.SqlModel;
 
@@ -17,5 +18,9 @@ namespace VS_LOAN.Core.Business.Interfaces
         Task<bool> InsertProducts(List<MCreditProduct> products);
         Task<bool> InsertLoanPeriods(List<MCreditLoanPeriod> loanPeriods);
         Task<bool> InsertCities(List<MCreditCity> cities);
+        Task<List<OptionSimple>> GetMCProductSimpleList();
+        Task<List<OptionSimple>> GetMCLocationSimpleList();
+        Task<List<OptionSimple>> GetMCLoanPerodSimpleList();
+        Task<List<OptionSimple>> GetMCCitiesSimpleList();
     }
 }

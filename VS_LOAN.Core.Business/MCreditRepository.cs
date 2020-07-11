@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VS_LOAN.Core.Business.Interfaces;
+using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.MCreditModels;
 using VS_LOAN.Core.Entity.MCreditModels.SqlModel;
 
@@ -137,6 +138,38 @@ namespace VS_LOAN.Core.Business
                 return true;
             }
 
+        }
+        public async Task<List<OptionSimple>> GetMCLocationSimpleList()
+        {
+            using (var con = GetConnection())
+            {
+                var result = await _connection.QueryAsync<OptionSimple>("sp_MCLocation_GetSimpleList",null, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+        public async Task<List<OptionSimple>> GetMCProductSimpleList()
+        {
+            using (var con = GetConnection())
+            {
+                var result = await _connection.QueryAsync<OptionSimple>("sp_MCProduct_GetSimpleList", null, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+        public async Task<List<OptionSimple>> GetMCLoanPerodSimpleList()
+        {
+            using (var con = GetConnection())
+            {
+                var result = await _connection.QueryAsync<OptionSimple>("sp_MCLoanPeriod_GetSimpleList", null, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+        public async Task<List<OptionSimple>> GetMCCitiesSimpleList()
+        {
+            using (var con = GetConnection())
+            {
+                var result = await _connection.QueryAsync<OptionSimple>("sp_MCCities_GetSimpleList", null, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
         }
     }
 }

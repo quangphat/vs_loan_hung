@@ -102,5 +102,26 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = await _svMCredit.CreateProfile(obj, 3514);
             return ToJsonResponse(true, "", result);
         }
+        public async Task<JsonResult> GetMCSimpleList(int type)
+        {
+            var result = new List<OptionSimple>();
+            if(type== (int)MCTableType.MCreditCity)
+            {
+                result = await _bizMCredit.GetMCCitiesSimpleList();
+            }
+            if (type == (int)MCTableType.MCreditLoanPeriod)
+            {
+                result = await _bizMCredit.GetMCLoanPerodSimpleList();
+            }
+            if (type == (int)MCTableType.MCreditlocations)
+            {
+                result = await _bizMCredit.GetMCLocationSimpleList();
+            }
+            if (type == (int)MCTableType.MCreditProduct)
+            {
+                result = await _bizMCredit.GetMCProductSimpleList();
+            }
+            return ToJsonResponse(true, "", result);
+        }
     }
 }
