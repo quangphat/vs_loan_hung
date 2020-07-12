@@ -53,7 +53,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (model == null || string.IsNullOrWhiteSpace(model.Value))
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var result = await _svMCredit.CheckSale(GlobalData.User.IDUser, model.Value);
-            return ToJsonResponse(true, result.msg!=null ? result.msg.ToString():string.Empty, result);
+            return ToJsonResponse(true, result.msg != null ? result.msg.ToString() : string.Empty, result);
         }
         public ActionResult CheckCat()
         {
@@ -184,15 +184,18 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetFileUpload(int profileId, int profileType = 3)
         {
-            var data = await _rpMcTest.GetFilesNeedToUpload(new GetFileUploadRequest
+            var profile = await _rpMCredit.GetTemProfileById(profileId);
+            if (profile == null)
+                return ToJsonResponse(false, "Hồ sơ không tồn tại", new List<LoaiTaiLieuModel>());
+
+            var data = await _svMCredit.GetFileUpload(new GetFileUploadRequest
             {
-                Code = "C0000027",
-                Id = "99999999",
-                Loccode = "KIK220001",
-                Issl = "0",
-                Money = "20000000",
-                token = ""
-            });
+                Code = profile.ProductCode.Trim(),
+                Id = "0",
+                Loccode = profile.LocSignCode.Trim(),
+                Issl = profile.IsAddr ? "1" : "0",
+                Money = profile.LoanMoney.ToString().Replace(",0000", "")
+            }, GlobalData.User.IDUser);
             if (data == null || data.Groups == null)
                 return ToJsonResponse(false, "Không thể lấy file", new List<LoaiTaiLieuModel>());
             var result = new List<LoaiTaiLieuModel>();
