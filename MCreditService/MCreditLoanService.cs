@@ -71,5 +71,10 @@ namespace MCreditService
             var result = await BeforeSendRequest<ProfileAddResponse, ProfileAddRequest>(_create_profile_Api, model, userId);
             return result;
         }
+        public async Task<GetFileUploadResponse> GetFileUpload(GetFileUploadRequest model, int userId)
+        {
+            var result = await BeforeSendRequest<GetFileUploadResponse, GetFileUploadRequest>(_get_file_upload_Api, model, userId);
+            return result;
+        }
     }
 }

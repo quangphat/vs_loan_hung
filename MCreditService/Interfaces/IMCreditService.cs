@@ -22,5 +22,6 @@ namespace MCreditService.Interfaces
             bool isUpdateLoanPeriod = false,
             bool isUpdateLocation = false,
             bool isUpdateCity = false);
+        Task<GetFileUploadResponse> GetFileUpload(GetFileUploadRequest model, int userId);
     }
 }
