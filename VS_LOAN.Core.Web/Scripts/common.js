@@ -12,6 +12,35 @@
 //        message: '<h2 style="color:#fff">' + text + ' ...</h2>'
 //    });
 //}\
+function getCommentList(profileId, type) {
+    //$('#ddlTrangThai').empty();
+    $.ajax({
+        type: "POST",
+        url: '/Common/Comments?profileId=' + profileId + "&type=" + type,
+        data: {},
+        success: function (data) {
+            if (data.data != null && data.success == true) {
+                $.each(data.data, function (index, item) {
+                    $('#dsGhichu').append(
+                        '<div class="timeline-event-content  active">' +
+                        '<div class="timeline-item">' +
+                        '<div class="timeline-body">' +
+                        '<div class="timeline__message-container">' +
+                        '<strong>' + item.Commentator + ' (' + SetFormatDateTimeDMY(item.CommentTime) + '): </strong><span>' + item.Noidung + '</span>' +
+                        '</div></div></div></div>'
+
+                    )
+                });
+            }
+
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
 function getRadioButtonValue(controlId) {
     return $('input[name="' + controlId + '"]:checked').val();
 }
