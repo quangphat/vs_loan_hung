@@ -47,7 +47,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<JsonResult> LayDSTaiLieu()
         {
-            List<LoaiTaiLieuModel> rs = await _rpTailieu.GetLoaiTailieuList();
+            var rs = await _rpTailieu.GetLoaiTailieuList();
             return ToJsonResponse(true, null, rs);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
@@ -296,9 +296,9 @@ namespace VS_LOAN.Core.Web.Controllers
                         {
                             FileName = file.FileName,
                             FilePath = file.FileUrl,
-                            HosoId = hosoId,
-                            TypeId = Convert.ToInt32(file.Key),
-                            LoaiHoso = (int)HosoType.Hoso
+                            ProfileId = hosoId,
+                            FileKey = Convert.ToInt32(file.Key),
+                            ProfileTypeId = (int)HosoType.Hoso
                         };
                         await _rpTailieu.Add(tailieu);
                     }

@@ -9,7 +9,7 @@ namespace VS_LOAN.Core.Business.Interfaces
 {
     public interface ITailieuRepository
     {
-        Task<List<LoaiTaiLieuModel>> GetLoaiTailieuList();
+        Task<List<LoaiTaiLieuModel>> GetLoaiTailieuList(int profileType = 0);
         Task<bool> RemoveAllTailieu(int hosoId, int typeId);
         Task<bool> Add(TaiLieu model);
     }

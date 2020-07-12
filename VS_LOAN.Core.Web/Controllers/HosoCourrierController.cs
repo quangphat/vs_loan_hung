@@ -221,9 +221,9 @@ namespace VS_LOAN.Core.Web.Controllers
                         {
                             FileName = file.FileName,
                             FilePath = file.FileUrl,
-                            HosoId = hosoId,
-                            TypeId = Convert.ToInt32(file.Key),
-                            LoaiHoso = (int)HosoType.HosoCourrier
+                            ProfileId = hosoId,
+                            FileKey = Convert.ToInt32(file.Key),
+                            ProfileTypeId = (int)HosoType.HosoCourrier
                         };
                         await bizTailieu.Add(tailieu);
                     }

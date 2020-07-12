@@ -14,11 +14,11 @@ namespace VS_LOAN.Core.Business
     public class TailieuRepository : BaseRepository, ITailieuRepository
     {
         public TailieuRepository() : base(typeof(TailieuRepository)) { }
-        public async Task<List<LoaiTaiLieuModel>> GetLoaiTailieuList()
+        public async Task<List<LoaiTaiLieuModel>> GetLoaiTailieuList(int profileType = 0)
         {
             using (var con = GetConnection())
             {
-                var result = await con.QueryAsync<LoaiTaiLieuModel>("sp_LOAI_TAI_LIEU_LayDS", null, commandType: CommandType.StoredProcedure);
+                var result = await con.QueryAsync<LoaiTaiLieuModel>("sp_LOAI_TAI_LIEU_LayDS", new { type = profileType }, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
 
@@ -28,8 +28,8 @@ namespace VS_LOAN.Core.Business
             using (var con = GetConnection())
             {
                 var p = new DynamicParameters();
-                p.Add("MaHS", hosoId);
-                p.Add("typeId", typeId);
+                p.Add("ProfileId", hosoId);
+                p.Add("ProfileTypeId", typeId);
                 await con.ExecuteAsync("sp_TAI_LIEU_HS_XoaTatCa", p,
                     commandType: CommandType.StoredProcedure);
                 return true;
@@ -41,11 +41,11 @@ namespace VS_LOAN.Core.Business
             using (var con = GetConnection())
             {
                 var p = new DynamicParameters();
-                p.Add("Maloai", model.TypeId);
-                p.Add("DuongDan", model.FilePath);
-                p.Add("Ten", model.FileName);
-                p.Add("MaHS", model.HosoId);
-                p.Add("typeId", model.LoaiHoso);
+                p.Add("FileKey", model.FileKey);
+                p.Add("FilePath", model.FilePath);
+                p.Add("FileName", model.FileName);
+                p.Add("ProfileId", model.ProfileId);
+                p.Add("ProfileTypeId", model.ProfileTypeId);
                 await con.ExecuteAsync("sp_TAI_LIEU_HS_Them", p,
                     commandType: CommandType.StoredProcedure);
                 return true;

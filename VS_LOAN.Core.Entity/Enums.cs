@@ -38,7 +38,8 @@ namespace VS_LOAN.Core.Entity
     public enum HosoType
     {
         Hoso = 1,
-        HosoCourrier = 2
+        HosoCourrier = 2,
+        MCredit = 3
     }
     public enum AutoID
     {
