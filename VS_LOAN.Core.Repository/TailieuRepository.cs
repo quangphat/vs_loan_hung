@@ -13,7 +13,22 @@ namespace VS_LOAN.Core.Repository
 {
     public class TailieuRepository : BaseRepository, ITailieuRepository
     {
+
         public TailieuRepository() : base(typeof(TailieuRepository)) { }
+        public async Task<bool> UpdateExistingFile(int fileId, string name, string url, int typeId = 1)
+        {
+            var p = new DynamicParameters();
+            p.Add("fileId", fileId);
+            p.Add("name", name);
+            p.Add("url", url);
+            p.Add("typeId", typeId);
+            using (var con = GetConnection())
+            {
+                var result = await con.ExecuteAsync("updateExistingFile", p,
+                    commandType: CommandType.StoredProcedure);
+                return true;
+            }
+        }
         public async Task<List<LoaiTaiLieuModel>> GetLoaiTailieuList(int profileType = 0)
         {
             using (var con = GetConnection())

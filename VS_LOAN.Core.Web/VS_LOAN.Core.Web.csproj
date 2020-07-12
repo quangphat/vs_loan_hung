@@ -1807,6 +1807,10 @@
       <Project>{525325ea-62e5-43a4-b253-3b784b39858b}</Project>
       <Name>MCreditService</Name>
     </ProjectReference>
+    <ProjectReference Include="..\VS_LOAN.Core.Business\VS_LOAN.Core.Business.csproj">
+      <Project>{7b00ed3e-f9b8-4f24-ab45-7e37f3a6f450}</Project>
+      <Name>VS_LOAN.Core.Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VS_LOAN.Core.Entity\VS_LOAN.Core.Entity.csproj">
       <Project>{e86679d0-8e05-471f-8da0-3e33e1f7d6bc}</Project>
       <Name>VS_LOAN.Core.Entity</Name>

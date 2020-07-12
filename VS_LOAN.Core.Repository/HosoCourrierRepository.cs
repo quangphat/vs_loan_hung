@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.HosoCourrier;
 using VS_LOAN.Core.Entity.Model;
+using VS_LOAN.Core.Repository.Interfaces;
 
 namespace VS_LOAN.Core.Repository
 {
-    public class HosoCourrierRepository : BaseRepository
+    public class HosoCourrierRepository : BaseRepository, IHosoCourrierRepository
     {
         public HosoCourrierRepository() : base(typeof(HosoCourrierRepository))
         {

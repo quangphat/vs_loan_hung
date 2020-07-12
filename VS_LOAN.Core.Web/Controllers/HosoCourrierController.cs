@@ -14,11 +14,20 @@ using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Entity.UploadModel;
 using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Web.Helpers;
+using VS_LOAN.Core.Repository.Interfaces;
+using VS_LOAN.Core.Business.Interfaces;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class CourrierController : BaseController
     {
+        protected readonly IHosoCourrierRepository _rpCourierProfile;
+        protected readonly IMediaBusiness _bizMedia;
+        public CourrierController(IHosoCourrierRepository hosoCourrierRepository, IMediaBusiness mediaBusiness):base()
+        {
+            _rpCourierProfile = hosoCourrierRepository;
+            _bizMedia = mediaBusiness;
+        }
         private bool result;
 
         public static Dictionary<string, ActionInfo> LstRole
@@ -238,18 +247,17 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             Stream stream = file.InputStream;
             stream.Position = 0;
-            var bizMedia = new MediaBusiness();
             using (var fileStream = new MemoryStream())
             {
                 await stream.CopyToAsync(fileStream);
-                var results = await bizMedia.ReadXlsxFile(fileStream, GlobalData.User.IDUser);
+                var results = await _bizMedia.ReadXlsxFile(fileStream, GlobalData.User.IDUser);
                 if (results == null || !results.Any())
                     return ToJsonResponse(false, "Không thành công", null);
-                var _bizCourrier = new HosoCourrierRepository();
+                
                 var tasks = new List<Task>();
                 foreach (var item in results)
                 {
-                    tasks.Add(InsertHosoFromFile(item, _bizCourrier));
+                    tasks.Add(InsertHosoFromFile(item, _rpCourierProfile));
                 }
 
                 await Task.WhenAll(tasks);
@@ -257,9 +265,9 @@ namespace VS_LOAN.Core.Web.Controllers
             }
 
         }
-        private async Task<bool> InsertHosoFromFile(HosoCourier hoso, HosoCourrierRepository _bizCourrier)
+        private async Task<bool> InsertHosoFromFile(HosoCourier hoso, IHosoCourrierRepository _rpCourrier)
         {
-            var id = await _bizCourrier.Create(hoso);
+            var id = await _rpCourrier.Create(hoso);
             if (!string.IsNullOrWhiteSpace(hoso.LastNote))
             {
                 var bizNote = new NoteRepository();
@@ -281,7 +289,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var tasks = new List<Task>();
             foreach (var assingeeId in hoso.AssigneeIds)
             {
-                tasks.Add(_bizCourrier.InsertCourierAssignee(id, assingeeId));
+                tasks.Add(_rpCourrier.InsertCourierAssignee(id, assingeeId));
             }
             await Task.WhenAll(tasks);
 

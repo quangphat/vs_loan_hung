@@ -14,6 +14,7 @@ using VS_LOAN.Core.Entity.MCreditModels.SqlModel;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Entity.UploadModel;
 using VS_LOAN.Core.Web.Helpers;
+using VS_LOAN.Core.Business.Interfaces;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
@@ -23,16 +24,23 @@ namespace VS_LOAN.Core.Web.Controllers
         protected readonly IMCreditService _svMCredit;
         protected readonly INoteRepository _rpNote;
         protected readonly IMCreditRepositoryTest _rpMcTest;
+        protected readonly IMediaBusiness _bizMedia;
+        protected readonly ITailieuRepository _rpTailieu;
         public MCreditController(IMCeditRepository rpMCredit,
             INoteRepository noteRepository,
             IMCreditRepositoryTest mCreditRepositoryTest,
+            IMediaBusiness mediaBusiness,
+            ITailieuRepository tailieuRepository,
             IMCreditService loanContractService) : base()
         {
             _rpMCredit = rpMCredit;
             _svMCredit = loanContractService;
             _rpNote = noteRepository;
+            _bizMedia = mediaBusiness;
             _rpMcTest = mCreditRepositoryTest;
+            _rpTailieu = tailieuRepository;
         }
+
         public async Task<JsonResult> AuthenMC(AuthenMCModel model)
         {
             if (model == null)
@@ -225,7 +233,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     {
                         Stream stream = fileContent.InputStream;
                         string root = Server.MapPath("~/Upload");
-                        var _bizMedia = new MediaBusiness();
+                        
                         stream.Position = 0;
                         file = _bizMedia.GetFileUploadUrl(fileContent.FileName, root);
                         using (var fileStream = System.IO.File.Create(file.FullPath))
@@ -237,7 +245,7 @@ namespace VS_LOAN.Core.Web.Controllers
                         deleteURL = fileId <= 0 ? $"/hoso/delete?key={key}" : $"/hoso/delete/0/{fileId}";
                         if (fileId > 0)
                         {
-                            await _bizMedia.UpdateExistingFile(fileId, file.Name, file.FileUrl, type);
+                            await _rpTailieu.UpdateExistingFile(fileId, file.Name, file.FileUrl, type);
                         }
                         _type = System.IO.Path.GetExtension(fileContent.FileName);
                     }

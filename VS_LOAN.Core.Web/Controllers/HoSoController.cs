@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using F88Service;
 using VS_LOAN.Core.Entity.UploadModel;
 using VS_LOAN.Core.Repository.Interfaces;
+using VS_LOAN.Core.Business.Interfaces;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
@@ -26,12 +27,15 @@ namespace VS_LOAN.Core.Web.Controllers
         protected readonly ITailieuRepository _rpTailieu;
         protected readonly IPartnerRepository _rpPartner;
         protected readonly IEmployeeRepository _rpEmployee;
-        public HoSoController(ITailieuRepository tailieuBusiness, 
+        protected readonly IMediaBusiness _bizMedia;
+        public HoSoController(ITailieuRepository tailieuBusiness,
             IEmployeeRepository employeeRepository,
+            IMediaBusiness mediaBusiness,
             IPartnerRepository partnerRepository) : base()
         {
             _rpTailieu = tailieuBusiness;
             _rpPartner = partnerRepository;
+            _bizMedia = mediaBusiness;
             _rpEmployee = employeeRepository;
         }
 
@@ -321,7 +325,6 @@ namespace VS_LOAN.Core.Web.Controllers
                     {
                         Stream stream = fileContent.InputStream;
                         string root = Server.MapPath("~/Upload");
-                        var _bizMedia = new MediaBusiness();
                         stream.Position = 0;
                         file = _bizMedia.GetFileUploadUrl(fileContent.FileName, root);
                         using (var fileStream = System.IO.File.Create(file.FullPath))
@@ -333,7 +336,7 @@ namespace VS_LOAN.Core.Web.Controllers
                         deleteURL = fileId <= 0 ? $"/hoso/delete?key={key}" : $"/hoso/delete/0/{fileId}";
                         if (fileId > 0)
                         {
-                            await _bizMedia.UpdateExistingFile(fileId, file.Name, file.FileUrl, type);
+                            await _rpTailieu.UpdateExistingFile(fileId, file.Name, file.FileUrl, type);
                         }
                         _type = System.IO.Path.GetExtension(fileContent.FileName);
                     }

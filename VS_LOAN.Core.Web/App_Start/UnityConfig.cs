@@ -1,7 +1,8 @@
 using MCreditService;
 using System;
-
 using Unity;
+using VS_LOAN.Core.Business;
+using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Repository;
 using VS_LOAN.Core.Repository.Interfaces;
 
@@ -43,7 +44,13 @@ namespace VS_LOAN.Core.Web
             // Make sure to add a Unity.Configuration to the using statements.
             // container.LoadConfiguration();
 
+
+
             // TODO: Register your type's mappings here.
+            //business
+            container.RegisterType<IMediaBusiness,MediaBusiness>();
+            //repository
+            container.RegisterSingleton<IHosoCourrierRepository, HosoCourrierRepository>();
             container.RegisterSingleton<IMCreditRepositoryTest, MCreditRepositoryTest>();
             container.RegisterSingleton<IEmployeeRepository, EmployeeRepository>();
             container.RegisterSingleton<INoteRepository, NoteRepository>();

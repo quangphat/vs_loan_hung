@@ -99,3 +99,15 @@ order by ltl.Bat_Buoc desc
 
 end
 ----------------
+ALTER procedure [dbo].[updateExistingFile] 
+(@fileId int, @name nvarchar(200),@url nvarchar(max), @typeId int =1)
+as
+begin
+
+update TAI_LIEU_HS set FileName = @name,
+	FilePath = @url,
+	Deleted = 0
+	where Id = @fileId and ProfileTypeId = @typeId
+
+end
+-----------------
