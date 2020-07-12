@@ -15,6 +15,13 @@ namespace VS_LOAN.Core.Entity.UploadModel
         public int FileId { get; set; }
         public string Id { get; set; }
         public bool? IsRequire { get; set; }
+        public int ProfileId { get; set; }
+        public int ProfileTypeId { get; set; }
+        public string DocumentName { get; set; }
+        public string DocumentCode { get; set; }
+        public int MC_DocumentId { get; set; }
+        public string MC_MapBpmVar { get; set; }
+        public int MC_GroupId { get; set; }
     }
     public class FileUploadModelGroupByKey
     {

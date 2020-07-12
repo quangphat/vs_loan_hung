@@ -52,8 +52,8 @@ namespace VS_LOAN.Core.Business
             using (var con = GetConnection())
             {
                 var p = new DynamicParameters();
-                p.Add("hosoId", hosoId);
-                p.Add("typeId", type);
+                p.Add("profileId", hosoId);
+                p.Add("profileTypeId", type);
                 var result = await con.QueryAsync<FileUploadModel>("getTailieuByHosoId", p,
                     commandType: CommandType.StoredProcedure);
                 return result.ToList();

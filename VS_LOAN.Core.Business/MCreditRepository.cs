@@ -27,7 +27,14 @@ namespace VS_LOAN.Core.Business
             }
 
         }
-
+        public async Task<MCredit_TempProfile> GetTemProfileById(int id)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await _connection.QueryFirstOrDefaultAsync<MCredit_TempProfile>("sp_MCredit_TempProfile_GetById", new { id }, commandType: CommandType.StoredProcedure);
+                return result;
+            }
+        }
         public async Task<MCreditUserToken> GetUserTokenByIdAsync(int userId)
         {
             string sql = $"sp_MCreditUserToken_GetTokenByUserId";

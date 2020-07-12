@@ -120,6 +120,8 @@
     <Compile Include="MCreditModels\CheckDupResponseModel.cs" />
     <Compile Include="MCreditModels\CheckStatusRequestModel.cs" />
     <Compile Include="MCreditModels\CheckCICResponseModel.cs" />
+    <Compile Include="MCreditModels\GetFileUploadRequest.cs" />
+    <Compile Include="MCreditModels\GetFileUploadResponse.cs" />
     <Compile Include="MCreditModels\MCProfilePostModel.cs" />
     <Compile Include="MCreditModels\MCResponseModelBase.cs" />
     <Compile Include="HoSoCuaToiModel.cs" />

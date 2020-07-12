@@ -5,12 +5,13 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.Model;
 
 namespace VS_LOAN.Core.Business
 {
-    public class NoteRepository : BaseRepository
+    public class NoteRepository : BaseRepository, INoteRepository
     {
         public NoteRepository() : base(typeof(NoteRepository)) { }
         public async Task AddNoteAsync(GhichuModel model)

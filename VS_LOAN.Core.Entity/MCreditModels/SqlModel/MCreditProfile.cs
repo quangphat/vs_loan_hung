@@ -48,7 +48,7 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
 
 
         public bool IsDeleted { get; set; }
-
+        public string LastNote { get; set; }
     }
 
 }

@@ -21,7 +21,8 @@ namespace VS_LOAN.Core.Entity
     {
         Hoso = 1,
         HosoCourrier = 2,
-        Company = 3
+        Company = 3,
+        MCreditTemp = 4
 
     }
     public enum CatType

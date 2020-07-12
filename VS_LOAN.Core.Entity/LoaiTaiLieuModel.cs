@@ -25,4 +25,14 @@ namespace VS_LOAN.Core.Entity
     {
         public List<FileUploadModel> Tailieus { get; set; }
     }
+    public class MCFileUpload:LoaiTaiLieuModel
+    {
+        public int ProfileId { get; set; }
+        public int ProfileTypeId { get; set; }
+        public string DocumentName { get; set; }
+        public string DocumentCode { get; set; }
+        public int DocumentId { get; set; }
+        public string MapBpmVar { get; set; }
+        public int GroupId { get; set; }
+    }
 }

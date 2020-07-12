@@ -1,17 +1,17 @@
 ﻿@using VS_LOAN.Core.Web.Resources;
 @{
-    ViewBag.Title = "Tạo hồ sơ MCredit";
+    ViewBag.Title = "Cập nhật hồ sơ tạm";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <script type="text/javascript">
-    SetActiveMenu('@ViewBag.formindex', 2);
+
 </script>
 <div class="main-content-inner">
     <div class="breadcrumbs" id="breadcrumbs">
         <ul class="breadcrumb">
             <li>
                 <i class="fa fa-caret-right"></i>
-                <a href="#">Tạo hồ sơ</a>
+                <a href="#">Cập nhật hồ sơ tạm</a>
             </li>
         </ul>
     </div>
@@ -23,18 +23,18 @@
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Họ và tên <span class="required">(*)</span> </label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtCustomerName" placeholder="Nhập họ tên" class="form-control">
+                            <input type="text" id="txtCustomerName" placeholder="Nhập họ tên" value="@ViewBag.model.CustomerName" class="form-control">
                         </div>
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Quê quán(trên CMND) <span class="required">(*)</span> </label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtHometown" class="form-control">
+                            <input type="text" id="txtHometown" value="@ViewBag.model.Hometown" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày sinh<span class="required">(*)</span> </label>
                         <div class="col-sm-4">
                             <div class="input-group">
-                                <input class="form-control date-picker" id="txtBirthDay" />
+                                <input class="form-control date-picker" value="@ViewBag.model.BirthDay.ToShortDateString()" id="txtBirthDay" />
                                 <span class="input-group-addon">
                                     <i class="fa fa-calendar bigger-110"></i>
                                 </span>
@@ -42,25 +42,25 @@
                         </div>
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số điện thoại<span class="required">(*)</span> </label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtPhone" placeholder="Nhập số điện thoại khách hàng" class="form-control">
+                            <input type="text" id="txtPhone"  value="@ViewBag.model.Phone"  placeholder="Nhập số điện thoại khách hàng" class="form-control">
                         </div>
 
                     </div>
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CMND<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtIdNumber" placeholder="Nhập số CMND" class="form-control" />
+                            <input type="text" id="txtIdNumber"  value="@ViewBag.model.IdNumber" placeholder="Nhập số CMND" class="form-control" />
                         </div>
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CCCD<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtCCCDNumber" placeholder="Nhập số CCCD" class="form-control" />
+                            <input type="text" id="txtCCCDNumber" value="@ViewBag.model.CCCDNumber" placeholder="Nhập số CCCD" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Ngày cấp CMND/CCCD<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <div class="input-group">
-                                <input class="form-control date-picker" id="txtIdDay" />
+                                <input class="form-control date-picker"  value="@ViewBag.model.IssueDate.ToShortDateString()" id="txtIdDay" />
                                 <span class="input-group-addon">
                                     <i class="fa fa-calendar bigger-110"></i>
                                 </span>
@@ -120,14 +120,14 @@
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Địa chỉ</label>
                         <div class="col-sm-10">
-                            <textarea type="text" id="txtAddress" placeholder="Nhập địa chỉ" class="form-control"></textarea>
+                            <textarea type="text" id="txtAddress" placeholder="Nhập địa chỉ" class="form-control">@ViewBag.model.Address</textarea>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Sale (Số CMND | CCCD | Mã sale) </label>
                         <div class="col-sm-4">
 
-                            <input type="text" id="txtSaleCode" class="form-control">
+                            <input type="text" id="txtSaleCode" value="@ViewBag.model.SaleNumber" class="form-control">
 
                             <div style="margin-top:10px">
                                 <a class="btn btn-primary" id="btn_CheckSale">
@@ -175,7 +175,7 @@
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số tiền đề nghị vay<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtLoanMoney" placeholder="Nhập số tiền đề nghị vay" class="form-control">
+                            <input type="text" id="txtLoanMoney" value="@ViewBag.model.LoanMoney.ToString("#,##0")" placeholder="Nhập số tiền đề nghị vay" class="form-control">
                         </div>
                         <label class="col-sm-2 control-label no-padding-right">Thời hạn vay</label>
                         <div class="col-sm-4">
@@ -215,12 +215,12 @@
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
                         <div class="col-md-11 col-sm-12 col-xs-12">
-                            <textarea class="form-control" id="txtNote" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
+                            <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
                         </div>
                     </div>
                     <div class="pull-right">
                         <a class="btn btn-sm btn-primary" id="btn_Temp">
-                            Lưu tạm
+                            Cập nhật
                         </a>
                         <a class="btn btn-sm btn-primary" id="btn_Save">
                             Nộp hồ sơ
@@ -266,7 +266,8 @@
         GetLoanPeriods("#ddlLoanPeriod");
         GetLoanCities("#ddlProvince");
         GetLoanProducts("#ddlProduct");
-        LayDSTaiLieu();
+        getFilesUpload();
+        getCommentList(@ViewBag.model.Id, 3)
         //$("#txtIdDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
     });
 
@@ -294,7 +295,7 @@
     $("#txtLoanMoney").ForceNumericOnly();
     $("#txtIdNumber").ForceNumericOnly();
     $("#txtLoanMoney").change(function () {
-        $("#txtLoanMoney").val(formatCurrency($("#txtLoanMoney").val().replace(/\./g, '')));
+        $("#txtLoanMoney").val(formatCurrency($("#txtLoanMoney").val().replace(/\,/g, '')));
     });
 
     $('#btn_CheckSale').click(function (e) {
@@ -309,10 +310,10 @@
         let value = !isNullOrWhiteSpace($("#txtIdNumber").val()) ? $("#txtIdNumber").val() : $("#txtCCCDNumber").val();
         checkDup('checkdupResult', value);
     });
-    function LayDSTaiLieu() {
+    function getFilesUpload() {
         $.ajax({
             type: "POST",
-            url: '@Url.Action("LayDSTaiLieu", "HoSo")',
+            url: '/MCredit/GetFileUpload?profileId=' + @ViewBag.model.Id + '&profileTypeId=3',
             data: {},
             success: function (data) {
                 if (data.data != null) {
@@ -330,7 +331,7 @@
                             className = 'mt-46'
                         }
 
-                        renderOneItemFile(item.ID, item.ID, name, item.BatBuoc, className, true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
+                        renderOneItemFile(item.ID, 0, name, item.BatBuoc, className, true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
                         keys.push(item.ID);
                     })
                 }
@@ -481,7 +482,6 @@
             "ProductCode": $("#ddlProduct").val(),
             "LoanPeriodCode": $("#ddlLoanPeriod").val(),
             "LocSignCode": $("#ddlLocSign").val(),
-            "LastNote": $("#txtNote").val(),
             "LoanMoney": $('#txtLoanMoney').val().replace(/\./g, ''),
             "IsInsurrance": getCheckboxValue('cbbaohiem'),
             "Status": 0
@@ -635,7 +635,6 @@
             "ProductCode": $("#ddlProduct").val(),
             "LoanPeriodCode": $("#ddlLoanPeriod").val(),
             "LocSignCode": $("#ddlLocSign").val(),
-            "LastNote": $("#txtNote").val(),
             "LoanMoney": $('#txtLoanMoney').val().replace(/\./g, ''),
             "IsInsurrance": getCheckboxValue('cbbaohiem'),
             "Status": 0,

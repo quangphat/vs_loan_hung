@@ -10,18 +10,26 @@ using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.MCreditModels;
 using VS_LOAN.Core.Entity.MCreditModels.SqlModel;
+using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Web.Helpers;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class MCreditController : BaseController
     {
-        protected readonly IMCeditRepository _bizMCredit;
+        protected readonly IMCeditRepository _rpMCredit;
         protected readonly IMCreditService _svMCredit;
-        public MCreditController(IMCeditRepository mCeditBusiness, IMCreditService loanContractService) : base()
+        protected readonly INoteRepository _rpNote;
+        protected readonly IMCreditRepositoryTest _rpMcTest;
+        public MCreditController(IMCeditRepository rpMCredit,
+            INoteRepository noteRepository,
+            IMCreditRepositoryTest mCreditRepositoryTest,
+            IMCreditService loanContractService) : base()
         {
-            _bizMCredit = mCeditBusiness;
+            _rpMCredit = rpMCredit;
             _svMCredit = loanContractService;
+            _rpNote = noteRepository;
+            _rpMcTest = mCreditRepositoryTest;
         }
         public async Task<JsonResult> AuthenMC(AuthenMCModel model)
         {
@@ -99,14 +107,33 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             var profile = _mapper.Map<MCredit_TempProfile>(model);
             profile.CreatedBy = GlobalData.User.IDUser;
-            var id = await _bizMCredit.CreateProfile(profile);
-            if(id>0)
+            var id = await _rpMCredit.CreateProfile(profile);
+            if (id > 0)
             {
+                if(!string.IsNullOrWhiteSpace(model.LastNote))
+                {
+                    GhichuModel note = new GhichuModel
+                    {
+                        UserId = GlobalData.User.IDUser,
+                        HosoId = id,
+                        Noidung = model.LastNote,
+                        CommentTime = DateTime.Now,
+                        TypeId = NoteType.MCreditTemp
+                    };
+                    _rpNote.AddNoteAsync(note);
+                }
+               
                 var obj = _mapper.Map<MCProfilePostModel>(profile);
                 var result = await _svMCredit.CreateProfile(obj, GlobalData.User.IDUser);
                 return ToJsonResponse(true, result.message, result);
             }
             return ToJsonResponse(true, "", id);
+        }
+        public async Task<ActionResult> TempProfile(int id)
+        {
+            var result = await _rpMCredit.GetTemProfileById(id);
+            ViewBag.model = result;
+            return View();
         }
         public async Task<JsonResult> Create(MCredit_TempProfileAddModel model)
         {
@@ -129,19 +156,55 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = new List<OptionSimple>();
             if (type == (int)MCTableType.MCreditCity)
             {
-                result = await _bizMCredit.GetMCCitiesSimpleList();
+                result = await _rpMCredit.GetMCCitiesSimpleList();
             }
             if (type == (int)MCTableType.MCreditLoanPeriod)
             {
-                result = await _bizMCredit.GetMCLoanPerodSimpleList();
+                result = await _rpMCredit.GetMCLoanPerodSimpleList();
             }
             if (type == (int)MCTableType.MCreditlocations)
             {
-                result = await _bizMCredit.GetMCLocationSimpleList();
+                result = await _rpMCredit.GetMCLocationSimpleList();
             }
             if (type == (int)MCTableType.MCreditProduct)
             {
-                result = await _bizMCredit.GetMCProductSimpleList();
+                result = await _rpMCredit.GetMCProductSimpleList();
+            }
+            return ToJsonResponse(true, "", result);
+        }
+        public async Task<JsonResult> GetFileUpload(int profileId, int profileType = 3)
+        {
+            var data = await _rpMcTest.GetFilesNeedToUpload(new GetFileUploadRequest {
+                Code= "C0000027",
+                Id = "99999999",
+                Loccode = "KIK220001",
+                Issl ="0",
+                Money="20000000",
+                token =""
+            });
+            if (data == null || data.Groups==null)
+                return ToJsonResponse(false, "Không thể lấy file", new List<LoaiTaiLieuModel>());
+            var result = new List<LoaiTaiLieuModel>();
+            foreach(var group in data.Groups)
+            {
+                if (group.Documents == null)
+                    continue;
+                foreach(var doc in group.Documents)
+                {
+                    result.Add(new MCFileUpload {
+                    ID = doc.Id,
+                    BatBuoc = group.Mandatory ? 1 :0,
+                    Ten = doc.DocumentName,
+                    DocumentId = doc.Id,
+                    GroupId = group.GroupId,
+                    DocumentCode = doc.DocumentCode,
+                    MapBpmVar = doc.MapBpmVar,
+                    ProfileId = profileId,
+                    ProfileTypeId = profileType,
+                    DocumentName = doc.DocumentName
+                });
+                }
+                
             }
             return ToJsonResponse(true, "", result);
         }

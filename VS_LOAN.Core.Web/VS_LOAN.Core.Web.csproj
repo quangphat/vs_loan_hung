@@ -228,6 +228,7 @@
     <Compile Include="Common\GroupPositionAD.cs" />
     <Compile Include="Common\MailCM.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\HosoCourrierController.cs" />
     <Compile Include="Controllers\EmployeeController.cs" />
@@ -1771,6 +1772,7 @@
     <Content Include="Views\MCredit\CheckDuplicate.cshtml" />
     <Content Include="Views\MCredit\CheckStatus.cshtml" />
     <Content Include="Views\MCredit\AddNew.cshtml" />
+    <Content Include="Views\MCredit\TempProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -1794,6 +1796,7 @@
   <ItemGroup>
     <Folder Include="App_Data\Download\" />
     <Folder Include="App_Data\ImportSanPham\" />
+    <Folder Include="Views\Common\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\F88Service\F88Service.csproj">

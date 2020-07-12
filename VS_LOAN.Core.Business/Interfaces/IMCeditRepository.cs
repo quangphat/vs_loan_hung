@@ -23,5 +23,6 @@ namespace VS_LOAN.Core.Business.Interfaces
         Task<List<OptionSimple>> GetMCLocationSimpleList();
         Task<List<OptionSimple>> GetMCLoanPerodSimpleList();
         Task<List<OptionSimple>> GetMCCitiesSimpleList();
+        Task<MCredit_TempProfile> GetTemProfileById(int id);
     }
 }

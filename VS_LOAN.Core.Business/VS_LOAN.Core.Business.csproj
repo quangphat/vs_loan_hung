@@ -117,7 +117,10 @@
     <Compile Include="CompanyRepository.cs" />
     <Compile Include="CustomerRepository.cs" />
     <Compile Include="Interfaces\IEmployeeRepository.cs" />
+    <Compile Include="Interfaces\IMCreditRepositoryTest.cs" />
+    <Compile Include="Interfaces\INoteRepository.cs" />
     <Compile Include="Interfaces\IPartnerRepository.cs" />
+    <Compile Include="MCreditRepositoryTest.cs" />
     <Compile Include="PartnerRepository.cs" />
     <Compile Include="EmployeeRepository.cs" />
     <Compile Include="GrantRightBLL.cs" />
