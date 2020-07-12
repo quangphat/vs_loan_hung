@@ -11,6 +11,7 @@ using VS_LOAN.Core.Repository;
 using MCreditService.Interfaces;
 using VS_LOAN.Core.Repository.Interfaces;
 using VS_LOAN.Core.Entity.HosoCourrier;
+using System.IO;
 
 namespace MCreditService
 {
@@ -75,6 +76,34 @@ namespace MCreditService
         {
             var result = await BeforeSendRequest<GetFileUploadResponse, GetFileUploadRequest>(_get_file_upload_Api, model, userId);
             return result;
+        }
+        public async Task<bool> SendFiles(int userId)
+        {
+            byte[] file = File.ReadAllBytes(System.IO.Path.Combine("D:\\Development", "ziiiiiiiiiip.zip"));
+            MemoryStream ms = new MemoryStream();
+            using (FileStream fs = new FileStream(System.IO.Path.Combine("D:\\Development", "ziiiiiiiiiip.zip"), FileMode.Open, FileAccess.Read))
+            {
+                fs.CopyTo(ms);
+            }
+               
+            HttpContent stringContent = new StringContent("99999");
+            //HttpContent fileStreamContent = new StreamContent(ms);
+            HttpContent bytesContent = new ByteArrayContent(file);
+            //var url = $"{_baseUrl}/{_upload_file_Api}";
+            using (var client = new HttpClient())
+            {
+                //client.DefaultRequestHeaders.Add("xdncode", _xdnCode);
+                //client.ContentType = new MediaTypeHeaderValue("application/json");
+                using (var formData = new MultipartFormDataContent())
+                {
+                    formData.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+                    formData.Add(stringContent, "id");
+                    formData.Add(bytesContent, "file");
+                    await BeforeSendRequestFormData<MCResponseModelBase, MCreditRequestModelBase>(_upload_file_Api, formData, userId);
+                    return true;
+                }
+            }
+           
         }
     }
 }

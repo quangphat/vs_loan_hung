@@ -10,6 +10,7 @@ using VS_LOAN.Core.Repository.Interfaces;
 using AutoMapper;
 using VS_LOAN.Core.Entity;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
 
 namespace MCreditService
 {
@@ -25,6 +26,7 @@ namespace MCreditService
         protected static string _searchProfilesApi = "api/act/profiles.html";
         protected static string _create_profile_Api = "api/act/profileadd.html";
         protected static string _get_file_upload_Api = "api/act/getformupload.html";
+        protected static string _upload_file_Api = "api/act/profiledoc.html";
         protected static string _userName = "vietbankapi";
         protected static string _password = "api@123";
         protected static string _authenToken = "$2y$10$ne/8QwsCG10c.5cVSUW6NO7L3..lUEFItM4ccV0usJ3cAbqEjLywG";
@@ -129,6 +131,36 @@ namespace MCreditService
                 return data;
             }
             return result.Data;
+        }
+        protected async Task<T> BeforeSendRequestFormData<T, TInput>(string apiPath, MultipartFormDataContent formData, int userId)
+           where T : MCResponseModelBase
+           where TInput : MCreditRequestModelBase
+        {
+            _requestMessage = new HttpRequestMessage();
+            _requestMessage.RequestUri = new Uri($"{_baseUrl}/{_upload_file_Api}");
+            _requestMessage.Headers.Add("xdncode", _xdnCode);
+            var token = await GetUserToken(userId);
+            HttpContent stringContent = new StringContent(token);
+            formData.Add(stringContent, "token");
+            _requestMessage.Content = formData;
+            _requestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            _requestMessage.Method = HttpMethod.Post;
+           
+            var newRequest = await _requestMessage.CloneAsync();
+            //newRequest.Content = formData;
+            try
+            {
+                
+                using (var response = await _httpClient.SendAsync(newRequest).ConfigureAwait(false))
+                {
+                    var result = await response.Content.ReadAsStringAsync();
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+                return null;
         }
         protected async Task<string> GetUserToken(int userId)
         {

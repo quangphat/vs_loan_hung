@@ -15,13 +15,10 @@ namespace VS_LOAN.Core.Repository
     {
 
         public TailieuRepository() : base(typeof(TailieuRepository)) { }
-        public async Task<bool> UpdateExistingFile(int fileId, string name, string url, int typeId = 1)
+        public async Task<bool> UpdateExistingFile(TaiLieu model, int fileId)
         {
-            var p = new DynamicParameters();
+            var p =GetParams(model,ignoreKey: new string[] {nameof(model.FileKey),nameof(model.ProfileId) });
             p.Add("fileId", fileId);
-            p.Add("name", name);
-            p.Add("url", url);
-            p.Add("typeId", typeId);
             using (var con = GetConnection())
             {
                 var result = await con.ExecuteAsync("updateExistingFile", p,
@@ -58,6 +55,7 @@ namespace VS_LOAN.Core.Repository
                 var p = new DynamicParameters();
                 p.Add("FileKey", model.FileKey);
                 p.Add("FilePath", model.FilePath);
+                p.Add("Folder", model.Folder);
                 p.Add("FileName", model.FileName);
                 p.Add("ProfileId", model.ProfileId);
                 p.Add("ProfileTypeId", model.ProfileTypeId);
@@ -76,6 +74,19 @@ namespace VS_LOAN.Core.Repository
                     commandType: CommandType.StoredProcedure);
                 return true;
             }
+        }
+        public async Task<List<FileUploadModel>> GetTailieuByHosoId(int hosoId, int type)
+        {
+            using (var con = GetConnection())
+            {
+                var p = new DynamicParameters();
+                p.Add("profileId", hosoId);
+                p.Add("profileTypeId", type);
+                var result = await con.QueryAsync<FileUploadModel>("getTailieuByHosoId", p,
+                    commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+
         }
     }
 }

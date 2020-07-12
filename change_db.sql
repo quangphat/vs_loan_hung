@@ -7,6 +7,7 @@ EXEC sp_rename 'TAI_LIEU_HS.typeId', 'ProfileTypeId', 'COLUMN'
 
 -------
 EXEC sp_rename 'LOAI_TAI_LIEU.HosoType', 'ProfileTypeId', 'COLUMN'
+
 -------------------------
 alter table Tai_lieu_HS
 add DocumentName nvarchar(500),
@@ -123,13 +124,57 @@ ALTER PROCEDURE [dbo].[sp_TAI_LIEU_HS_Them]
 @MC_DocumentId int = 0,
 @MC_MapBpmVar varchar(400) = null,
 @MC_GroupId int  = 0,
-@OrderId int= 0
+@OrderId int= 0,
+@Folder nvarchar(max) = null
 ) 
 AS
 BEGIN
-	Insert into TAI_LIEU_HS (FileKey,FileName,FilePath,ProfileId,Deleted,ProfileTypeId,DocumentName,DocumentCode,MC_DocumentId,MC_MapBpmVar,MC_GroupId, OrderId)
-	values(@FileKey,@FileName,@FilePath,@ProfileId,@Deleted,@ProfileTypeId,@DocumentName,@DocumentCode,@MC_DocumentId,@MC_MapBpmVar,@MC_GroupId,@OrderId)
+	Insert into TAI_LIEU_HS (FileKey,FileName,FilePath,ProfileId,Deleted,ProfileTypeId,DocumentName,DocumentCode,MC_DocumentId,MC_MapBpmVar,MC_GroupId, OrderId,Folder)
+	values(@FileKey,@FileName,@FilePath,@ProfileId,@Deleted,@ProfileTypeId,@DocumentName,@DocumentCode,@MC_DocumentId,@MC_MapBpmVar,@MC_GroupId,@OrderId,@Folder)
 END
 
 
 -----------
+ALTER procedure [dbo].[updateExistingFile] 
+(@fileId int, @FileName nvarchar(200),@FilePath nvarchar(max), @ProfileTypeId int =1, @Folder nvarchar(max) = null)
+as
+begin
+
+update TAI_LIEU_HS set FileName = @FileName,
+	FilePath = @FilePath,
+	Deleted = 0,
+	Folder = @Folder
+	where Id = @fileId and ProfileTypeId = @ProfileTypeId
+
+end
+----------
+ALTER procedure [dbo].[getTailieuByHosoId](@profileId int, @profileTypeId int =1)
+
+as
+
+begin
+
+select tl.Id as FileId
+, tl.FileKey as [Key], tl.FileName 
+, tl.FilePath as FileUrl
+,ltl.Ten as KeyName
+, ltl.Bat_Buoc as IsRequire
+,tl.ProfileId
+,tl.ProfileTypeId
+,tl.Folder,
+tl.DocumentName ,
+tl.DocumentCode ,
+tl.MC_DocumentId,
+tl.MC_MapBpmVar,
+tl.MC_GroupId
+from TAI_LIEU_HS tl
+left join LOAI_TAI_LIEU ltl on tl.FileKey = ltl.ID
+where tl.ProfileId = @profileId and ISNULL(tl.Deleted,0) = 0
+and tl.ProfileTypeId = @profileTypeId
+
+order by ltl.Bat_Buoc desc
+
+end
+
+
+------------

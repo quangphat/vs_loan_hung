@@ -1,4 +1,5 @@
-﻿using NPOI.SS.UserModel;
+﻿using Ionic.Zip;
+using NPOI.SS.UserModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,7 +38,14 @@ namespace VS_LOAN.Core.Business
             string deleteURL = fileId <= 0 ? $"/hoso/delete?key={key}" : $"/hoso/delete/0/{fileId}";
             if (fileId > 0)
             {
-                await _rpTailieu.UpdateExistingFile(fileId, file.Name, file.FileUrl);
+                
+                await _rpTailieu.UpdateExistingFile(new TaiLieu {
+                    FileName = file.Name,
+                    Folder = file.Folder,
+                    FilePath = file.FileUrl,
+                    ProfileId = 0,
+                    ProfileTypeId = 0
+                },fileId);
             }
 
             var _type = System.IO.Path.GetExtension(name);
@@ -93,12 +101,14 @@ namespace VS_LOAN.Core.Business
             if (!Directory.Exists(pathDay))
                 Directory.CreateDirectory(pathDay);
             string path = System.IO.Path.Combine(pathDay, fileName);
+            string folder = System.IO.Path.Combine(pathDay, string.Empty);
             string url = "/Upload/HoSo/" + pathTemp + "/" + fileName;
             return new FileModel
             {
                 FileUrl = url,
                 Name = fileName,
-                FullPath = path
+                FullPath = path,
+                Folder = folder
             };
 
         }
@@ -153,5 +163,38 @@ namespace VS_LOAN.Core.Business
             }
             return hosos;
         }
+        public async Task<bool> ProcessFilesToSendToMC(int profileId)
+        {
+            var files = await _rpTailieu.GetTailieuByHosoId(profileId, (int)HosoType.MCredit);
+            var filePaths = files.Select(p => System.IO.Path.Combine(p.Folder, p.FileName));
+            await CreateZipFile(filePaths, files[0].Folder);
+            return true;
+        }
+        protected async Task<string> RenameFile(string folder, string oldFileName, string newFileName)
+        {
+            if (string.IsNullOrWhiteSpace(folder) || string.IsNullOrWhiteSpace(oldFileName) || string.IsNullOrWhiteSpace(newFileName))
+                return string.Empty;
+            string newfile = System.IO.Path.Combine(folder, newFileName);
+            string oldFile = System.IO.Path.Combine(folder, oldFileName);
+            if (File.Exists(newfile))
+            {
+                File.Delete(newfile);
+            }
+            File.Move(oldFile, newfile);
+            return newfile;
+        }
+        protected async Task<bool> CreateZipFile(IEnumerable<string> filePaths, string folder)
+        {
+            if (filePaths == null || !filePaths.Any())
+                return false;
+            using (ZipFile zip = new ZipFile())
+            {
+                zip.AddFiles(filePaths,"");
+                zip.Save(System.IO.Path.Combine("D:\\Development","ziiiiiiiiiip.zip"));
+            }
+
+            return true;
+        }
+
     }
 }

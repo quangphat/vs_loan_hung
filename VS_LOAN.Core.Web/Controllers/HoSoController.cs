@@ -186,7 +186,7 @@ namespace VS_LOAN.Core.Web.Controllers
 
                 }
                 List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["LstFileHoSo"];
-                
+
                 var lstLoaiTaiLieu = await _rpTailieu.GetLoaiTailieuList();
                 lstLoaiTaiLieu.RemoveAll(x => x.BatBuoc == 0);
                 if (lstLoaiTaiLieu != null)
@@ -283,7 +283,7 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             if (hosoId <= 0 || filesGroup == null)
                 return ToJsonResponse(false);
-            
+
             if (isReset)
             {
                 var deleteAll = await _rpTailieu.RemoveAllTailieu(hosoId, (int)HosoType.Hoso);
@@ -302,7 +302,8 @@ namespace VS_LOAN.Core.Web.Controllers
                             FilePath = file.FileUrl,
                             ProfileId = hosoId,
                             FileKey = Convert.ToInt32(file.Key),
-                            ProfileTypeId = (int)HosoType.Hoso
+                            ProfileTypeId = (int)HosoType.Hoso,
+                            Folder = file.FileUrl
                         };
                         await _rpTailieu.Add(tailieu);
                     }
@@ -336,7 +337,15 @@ namespace VS_LOAN.Core.Web.Controllers
                         deleteURL = fileId <= 0 ? $"/hoso/delete?key={key}" : $"/hoso/delete/0/{fileId}";
                         if (fileId > 0)
                         {
-                            await _rpTailieu.UpdateExistingFile(fileId, file.Name, file.FileUrl, type);
+                           
+                            await _rpTailieu.UpdateExistingFile(new TaiLieu
+                            {
+                                FileName = file.Name,
+                                Folder = file.Folder,
+                                FilePath = file.FileUrl,
+                                ProfileId = 0,
+                                ProfileTypeId = type
+                            }, fileId);
                         }
                         _type = System.IO.Path.GetExtension(fileContent.FileName);
                     }

@@ -250,7 +250,14 @@ namespace VS_LOAN.Core.Web.Controllers
                         deleteURL = fileId <= 0 ? $"/hoso/delete?key={key}" : $"/hoso/delete/0/{fileId}";
                         if (fileId > 0)
                         {
-                            await _rpTailieu.UpdateExistingFile(fileId, file.Name, file.FileUrl, (int)HosoType.MCredit);
+                            await _rpTailieu.UpdateExistingFile(new TaiLieu {
+                                FileKey = key,
+                                FileName = file.Name,
+                                Folder = file.Folder,
+                                FilePath = file.FileUrl,
+                                ProfileId = profileId,
+                                ProfileTypeId = (int)HosoType.MCredit
+                            }, profileId);
                         }
                         else
                         {
@@ -266,6 +273,7 @@ namespace VS_LOAN.Core.Web.Controllers
                                 MC_DocumentId = documentId,
                                 MC_GroupId = groupId,
                                 OrderId = orderId,
+                                Folder = file.Folder,
                                 MC_MapBpmVar = string.Empty
                             });
                         }
@@ -315,6 +323,13 @@ namespace VS_LOAN.Core.Web.Controllers
                 Session["LstFileHoSo"] = null;
             }
             return Json(new { Result = fileUrl });
+        }
+        public async Task<JsonResult> ProcessFile(StringModel model)
+        {
+            //int id = GlobalData.User.IDUser;
+            //await _bizMedia.ProcessFilesToSendToMC(Convert.ToInt32(model.Value));
+            await _svMCredit.SendFiles(Convert.ToInt32(model.Value));
+            return ToJsonResponse(true);
         }
     }
 }

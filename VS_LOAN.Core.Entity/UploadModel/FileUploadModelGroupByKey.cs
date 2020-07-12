@@ -22,6 +22,8 @@ namespace VS_LOAN.Core.Entity.UploadModel
         public int MC_DocumentId { get; set; }
         public string MC_MapBpmVar { get; set; }
         public int MC_GroupId { get; set; }
+        public string FullPath { get; set; }
+        public string Folder { get; set; }
     }
     public class FileUploadModelGroupByKey
     {
@@ -48,5 +50,6 @@ namespace VS_LOAN.Core.Entity.UploadModel
         public string FileUrl { get; set; }
         public string Name { get; set; }
         public string FullPath { get; set; }
+        public string Folder { get; set; }
     }
 }

@@ -23,5 +23,6 @@ namespace MCreditService.Interfaces
             bool isUpdateLocation = false,
             bool isUpdateCity = false);
         Task<GetFileUploadResponse> GetFileUpload(GetFileUploadRequest model, int userId);
+        Task<bool> SendFiles(int userId);
     }
 }
