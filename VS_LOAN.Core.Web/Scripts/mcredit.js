@@ -308,38 +308,43 @@ function checkSale(controlId, value) {
     });
 }
 
-function renderOneItemFile_MCredit(key, fileId, titleName, isRequire = false, className = '', generateInput = false,
+
+function renderOneItemFile_MCredit(model, className = '', generateInput = false,
     _initialPreview = [],
     _initialPreviewConfig = [],
     allowUpload = false,
     isFileExist = false,
     onUpload = null,
     onDelete = null,
-    filesUploaded = [],
-    type = 3
+    filesUploaded = []
 ) {
-
+    if (model == null || model == undefined)
+        return;
     let content = "<div class='col-sm-3'";
 
-    if (!isNullOrUndefined(titleName)) {
-        if (isRequire) {
-            content += '<h5  class="header green ' + className + '">' + titleName + '<span class="required">(*)</span></h5>';
+    if (!isNullOrUndefined(model.titleName)) {
+        if (model.isRequire) {
+            content += '<h5  class="header green ' + className + '">' + model.titleName + '<span class="required">(*)</span></h5>';
         }
         else {
-            content += '<h5  class="header green ' + className + '">' + titleName + '<span > </span></h5>';
+            content += '<h5  class="header green ' + className + '">' + model.titleName + '<span > </span></h5>';
         }
     }
-
+    let existDocumentIds = filesUploaded.filter(p => p.documentId == model.documentId);
+    let orderId = existDocumentIds == null || existDocumentIds.length <= 0 ? 1 : existDocumentIds.length + 1;
     content += "<div class=\"file-loading\">";
-    content += "<input class='attachFile' key=" + key + " id=\"attachFile-" + fileId + "\" type=\"file\">";
+    content += "<input class='attachFile' key=" + model.key + " id=\"attachFile-" + model.fileId + "\" type=\"file\">";
     content += "</div>";
     content += "</div>";
-    $('#tailieu-' + key).append(content);
+    $('#tailieu-' + model.key).append(content);
     if (generateInput === true) {
-        let item = $("#attachFile-" + fileId);
+        let item = $("#attachFile-" + model.fileId);
 
-        fileId = (isFileExist === true) ? fileId : getNewGuid();
-        let uploadUrl = isFileExist === true ? '/Hoso/UploadFile?key=' + key + "&fileId=" + fileId + "&type=" + type : '/Hoso/UploadFile?key=' + key + "&fileId=0" + "&type=" + type;
+        model.fileId = (isFileExist === true) ? model.fileId : getNewGuid();
+        let uploadUrl = isFileExist === true ? `/MCredit/UploadFile?key=${model.key}&fileId=${model.fileId}
+    &orderId=${orderId}&profileId=${model.profileId}&documentName=${model.documentName}&documentCode=${model.documentCode}&documentId=${model.documentId}&groupId=${model.groupId}`
+            : `/MCredit/UploadFile?key=${model.key}&fileId=0&orderId=${orderId}&profileId=${model.profileId}
+                &documentName=${model.documentName}&documentCode=${model.documentCode}&documentId=${model.documentId}&groupId=${model.groupId}`;
         $(item).fileinput({
             uploadUrl: allowUpload === true ? uploadUrl : null,
             validateInitialCount: true,
@@ -360,8 +365,8 @@ function renderOneItemFile_MCredit(key, fileId, titleName, isRequire = false, cl
             showRemove: false, // hide remove button
             browseOnZoneClick: true,
             removeLabel: '',
-            fileId: fileId,
-            btnDeleteId: 'btn-remove-file-' + fileId,
+            fileId: model.fileId,
+            btnDeleteId: 'btn-remove-file-' + model.fileId,
             dropZoneTitle: 'Kéo và thả tập tin vào đây',
             dropZoneClickTitle: '<br>(hoặc nhấp để chọn)',
             removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
@@ -383,17 +388,17 @@ function renderOneItemFile_MCredit(key, fileId, titleName, isRequire = false, cl
             append: true
 
         }).on("filebatchselected", function (event, files) {
-            if (countFilesByKey(filesUploaded, parseInt(key)) >= 50)
+            if (countFilesByKey(filesUploaded, parseInt(model.key)) >= 50)
                 return;
             $(item).fileinput("upload");
-        }).on("filebeforedelete", function (event, key2, fileId) {
+        }).on("filebeforedelete", function (event, key2) {
 
             if (onDelete !== null) {
-                onDelete(key, fileId, isFileExist);
+                onDelete(model.key, model.fileId, isFileExist);
             }
         }).on('filebatchuploadsuccess', function (event, data) {
             if (onUpload !== null) {
-                onUpload(key, fileId, data.response, isFileExist);
+                onUpload(model, data.response, isFileExist);
             }
         });
 

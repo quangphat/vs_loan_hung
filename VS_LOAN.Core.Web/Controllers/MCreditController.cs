@@ -53,7 +53,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (model == null || string.IsNullOrWhiteSpace(model.Value))
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var result = await _svMCredit.CheckSale(GlobalData.User.IDUser, model.Value);
-            return ToJsonResponse(true, result.msg.ToString(), result);
+            return ToJsonResponse(true, result.msg!=null ? result.msg.ToString():string.Empty, result);
         }
         public ActionResult CheckCat()
         {
@@ -120,7 +120,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var id = await _rpMCredit.CreateProfile(profile);
             if (id > 0)
             {
-                if(!string.IsNullOrWhiteSpace(model.LastNote))
+                if (!string.IsNullOrWhiteSpace(model.LastNote))
                 {
                     GhichuModel note = new GhichuModel
                     {
@@ -132,7 +132,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     };
                     _rpNote.AddNoteAsync(note);
                 }
-               
+
                 var obj = _mapper.Map<MCProfilePostModel>(profile);
                 var result = await _svMCredit.CreateProfile(obj, GlobalData.User.IDUser);
                 return ToJsonResponse(true, result.message, result);
@@ -184,41 +184,43 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetFileUpload(int profileId, int profileType = 3)
         {
-            var data = await _rpMcTest.GetFilesNeedToUpload(new GetFileUploadRequest {
-                Code= "C0000027",
+            var data = await _rpMcTest.GetFilesNeedToUpload(new GetFileUploadRequest
+            {
+                Code = "C0000027",
                 Id = "99999999",
                 Loccode = "KIK220001",
-                Issl ="0",
-                Money="20000000",
-                token =""
+                Issl = "0",
+                Money = "20000000",
+                token = ""
             });
-            if (data == null || data.Groups==null)
+            if (data == null || data.Groups == null)
                 return ToJsonResponse(false, "Không thể lấy file", new List<LoaiTaiLieuModel>());
             var result = new List<LoaiTaiLieuModel>();
-            foreach(var group in data.Groups)
+            foreach (var group in data.Groups)
             {
                 if (group.Documents == null)
                     continue;
-                foreach(var doc in group.Documents)
+                foreach (var doc in group.Documents)
                 {
-                    result.Add(new MCFileUpload {
-                    ID = doc.Id,
-                    BatBuoc = group.Mandatory ? 1 :0,
-                    Ten = doc.DocumentName,
-                    DocumentId = doc.Id,
-                    GroupId = group.GroupId,
-                    DocumentCode = doc.DocumentCode,
-                    MapBpmVar = doc.MapBpmVar,
-                    ProfileId = profileId,
-                    ProfileTypeId = profileType,
-                    DocumentName = doc.DocumentName
-                });
+                    result.Add(new MCFileUpload
+                    {
+                        ID = doc.Id,
+                        BatBuoc = group.Mandatory ? 1 : 0,
+                        Ten = doc.DocumentName,
+                        DocumentId = doc.Id,
+                        GroupId = group.GroupId,
+                        DocumentCode = doc.DocumentCode,
+                        MapBpmVar = doc.MapBpmVar,
+                        ProfileId = profileId,
+                        ProfileTypeId = profileType,
+                        DocumentName = doc.DocumentName
+                    });
                 }
-                
+
             }
             return ToJsonResponse(true, "", result);
         }
-        public async Task<JsonResult> UploadFile(int key, int fileId, int type)
+        public async Task<JsonResult> UploadFile(int key, int fileId, int orderId, int profileId, string documentName, string documentCode, int documentId, int groupId)
         {
             string fileUrl = "";
             var _type = string.Empty;
@@ -233,7 +235,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     {
                         Stream stream = fileContent.InputStream;
                         string root = Server.MapPath("~/Upload");
-                        
+
                         stream.Position = 0;
                         file = _bizMedia.GetFileUploadUrl(fileContent.FileName, root);
                         using (var fileStream = System.IO.File.Create(file.FullPath))
@@ -245,7 +247,24 @@ namespace VS_LOAN.Core.Web.Controllers
                         deleteURL = fileId <= 0 ? $"/hoso/delete?key={key}" : $"/hoso/delete/0/{fileId}";
                         if (fileId > 0)
                         {
-                            await _rpTailieu.UpdateExistingFile(fileId, file.Name, file.FileUrl, type);
+                            await _rpTailieu.UpdateExistingFile(fileId, file.Name, file.FileUrl, (int)HosoType.MCredit);
+                        }
+                        else
+                        {
+                            _rpTailieu.AddMCredit(new MCTailieuSqlModel
+                            {
+                                FileName = file.Name,
+                                FileKey = key,
+                                FilePath = file.FileUrl,
+                                ProfileId = profileId,
+                                ProfileTypeId = (int)HosoType.MCredit,
+                                DocumentCode = documentCode,
+                                DocumentName = documentName,
+                                MC_DocumentId = documentId,
+                                MC_GroupId = groupId,
+                                OrderId = orderId,
+                                MC_MapBpmVar = string.Empty
+                            });
                         }
                         _type = System.IO.Path.GetExtension(fileContent.FileName);
                     }

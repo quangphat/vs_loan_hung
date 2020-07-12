@@ -111,3 +111,25 @@ update TAI_LIEU_HS set FileName = @name,
 
 end
 -----------------
+ALTER PROCEDURE [dbo].[sp_TAI_LIEU_HS_Them]
+	(@FileKey int,
+@FileName nvarchar(200),
+@FilePath nvarchar(max),
+@ProfileId int,
+@Deleted bit = 0,
+@ProfileTypeId int,
+@DocumentName nvarchar(500) = null,
+@DocumentCode varchar(400) =null,
+@MC_DocumentId int = 0,
+@MC_MapBpmVar varchar(400) = null,
+@MC_GroupId int  = 0,
+@OrderId int= 0
+) 
+AS
+BEGIN
+	Insert into TAI_LIEU_HS (FileKey,FileName,FilePath,ProfileId,Deleted,ProfileTypeId,DocumentName,DocumentCode,MC_DocumentId,MC_MapBpmVar,MC_GroupId, OrderId)
+	values(@FileKey,@FileName,@FilePath,@ProfileId,@Deleted,@ProfileTypeId,@DocumentName,@DocumentCode,@MC_DocumentId,@MC_MapBpmVar,@MC_GroupId,@OrderId)
+END
+
+
+-----------

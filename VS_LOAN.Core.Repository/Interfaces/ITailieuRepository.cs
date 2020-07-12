@@ -13,5 +13,6 @@ namespace VS_LOAN.Core.Repository.Interfaces
         Task<List<LoaiTaiLieuModel>> GetLoaiTailieuList(int profileType = 0);
         Task<bool> RemoveAllTailieu(int hosoId, int typeId);
         Task<bool> Add(TaiLieu model);
+        Task<bool> AddMCredit(MCTailieuSqlModel model);
     }
 }

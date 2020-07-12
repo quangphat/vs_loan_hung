@@ -42,10 +42,13 @@ namespace VS_LOAN.Core.Repository
                 var value = prop.GetValue(model);
                 if (ignoreKey != null && ignoreKey.Contains(key))
                     continue;
-                if (key.ToLower() == outputParam.ToLower())
+                if(!string.IsNullOrWhiteSpace(outputParam))
                 {
-                    p.Add(key, value, dbType: type, direction: ParameterDirection.Output);
-                    continue;
+                    if (key.ToLower() == outputParam.ToLower())
+                    {
+                        p.Add(key, value, dbType: type, direction: ParameterDirection.Output);
+                        continue;
+                    }
                 }
                 p.Add(key, value);
             }

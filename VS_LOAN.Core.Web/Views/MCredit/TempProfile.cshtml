@@ -331,7 +331,19 @@
                             className = 'mt-46'
                         }
 
-                        renderOneItemFile(item.ID, 0, name, item.BatBuoc, className, true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
+                        renderOneItemFile_MCredit(
+                            {
+                                key: item.ID,
+                                fileId: 0,
+                                titleName: name,
+                                isRequire: item.BatBuoc,
+                                profileId: item.ProfileId,
+                                documentName: item.DocumentName,
+                                documentCode: item.DocumentCode,
+                                documentId: item.DocumentId,
+                                groupId: item.GroupId
+                            }
+                            , className, true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
                         keys.push(item.ID);
                     })
                 }
@@ -348,33 +360,33 @@
     function onDeleteFile(key, fileId, isExist) {
         removeFile(key, fileId);
     }
-    function onUploadFile(key, fileId, data, isExist) {
+    function onUploadFile(model, data, isExist) {
 
-        if (isReach5Files(filesUpload, key))
+        if (isReach5Files(filesUpload, model.key))
             return;
-        let response = data;
         if (isNullOrNoItem(filesUpload)) {
             filesUpload = []
         }
         let file = {
-            Key: parseInt(response.initialPreviewConfig[0].key),
-            FileName: response.initialPreviewConfig[0].caption,
-            FileUrl: response.initialPreview,
+            Key: parseInt(data.initialPreviewConfig[0].key),
+            FileName: data.initialPreviewConfig[0].caption,
+            FileUrl: data.initialPreview,
             KeyName: "",
-            Id: fileId
+            Id: model.fileId,
+            documentId: model.documentId
         }
-        let existKeyIndex = filesUpload.findIndex(p => p.key == key)
+        let existKeyIndex = filesUpload.findIndex(p => p.key == model.key)
         if (existKeyIndex < 0) {
-            filesUpload.push({ key: parseInt(key), files: [file] })
+            filesUpload.push({ key: parseInt(model.key), files: [file], documentId: model.documentId })
         }
         else {
             if (filesUpload[existKeyIndex].files == null)
                 filesUpload[existKeyIndex].files = []
             filesUpload[existKeyIndex].files.push(file);
         }
-        if (isReach5Files(filesUpload, key) === false) {
-            let newAttachhFileId = getNewGuid();
-            renderOneItemFile(key, newAttachhFileId, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
+        if (isReach5Files(filesUpload, model.key) === false) {
+                model.fileId = getNewGuid();
+            renderOneItemFile_MCredit(model, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
         }
     }
     function removeFile(key, fileId) {

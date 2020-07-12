@@ -67,5 +67,15 @@ namespace VS_LOAN.Core.Repository
             }
 
         }
+        public async Task<bool> AddMCredit(MCTailieuSqlModel model)
+        {
+            using (var con = GetConnection())
+            {
+                var p = GetParams(model);
+                await con.ExecuteAsync("sp_TAI_LIEU_HS_Them", p,
+                    commandType: CommandType.StoredProcedure);
+                return true;
+            }
+        }
     }
 }
