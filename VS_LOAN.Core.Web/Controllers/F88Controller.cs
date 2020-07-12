@@ -5,8 +5,8 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using VS_LOAN.Core.Business;
-using VS_LOAN.Core.Business.Interfaces;
+using VS_LOAN.Core.Repository;
+using VS_LOAN.Core.Repository.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.F88Model;
 

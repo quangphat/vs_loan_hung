@@ -1807,10 +1807,6 @@
       <Project>{525325ea-62e5-43a4-b253-3b784b39858b}</Project>
       <Name>MCreditService</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VS_LOAN.Core.Business\VS_LOAN.Core.Business.csproj">
-      <Project>{eeed2e30-177b-48fe-9b5e-879e0ffcb0e3}</Project>
-      <Name>VS_LOAN.Core.Business</Name>
-    </ProjectReference>
     <ProjectReference Include="..\VS_LOAN.Core.Entity\VS_LOAN.Core.Entity.csproj">
       <Project>{e86679d0-8e05-471f-8da0-3e33e1f7d6bc}</Project>
       <Name>VS_LOAN.Core.Entity</Name>
@@ -1818,6 +1814,10 @@
     <ProjectReference Include="..\VS_LOAN.Core.Nhibernate\VS_LOAN.Core.Nhibernate.csproj">
       <Project>{fa15cd3a-ed74-4444-8192-35b5604aa535}</Project>
       <Name>VS_LOAN.Core.Nhibernate</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VS_LOAN.Core.Repository\VS_LOAN.Core.Repository.csproj">
+      <Project>{EEED2E30-177B-48FE-9B5E-879E0FFCB0E3}</Project>
+      <Name>VS_LOAN.Core.Repository</Name>
     </ProjectReference>
     <ProjectReference Include="..\VS_LOAN.Core.Utility\VS_LOAN.Core.Utility.csproj">
       <Project>{D439D023-C499-4540-AF5A-7AC3D5C3A9A1}</Project>

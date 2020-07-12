@@ -2,8 +2,8 @@ using MCreditService;
 using System;
 
 using Unity;
-using VS_LOAN.Core.Business;
-using VS_LOAN.Core.Business.Interfaces;
+using VS_LOAN.Core.Repository;
+using VS_LOAN.Core.Repository.Interfaces;
 
 namespace VS_LOAN.Core.Web
 {

@@ -1,16 +1,18 @@
 ﻿using MCreditService.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using VS_LOAN.Core.Business;
-using VS_LOAN.Core.Business.Interfaces;
+using VS_LOAN.Core.Repository;
+using VS_LOAN.Core.Repository.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.MCreditModels;
 using VS_LOAN.Core.Entity.MCreditModels.SqlModel;
 using VS_LOAN.Core.Entity.Model;
+using VS_LOAN.Core.Entity.UploadModel;
 using VS_LOAN.Core.Web.Helpers;
 
 namespace VS_LOAN.Core.Web.Controllers
@@ -207,6 +209,82 @@ namespace VS_LOAN.Core.Web.Controllers
                 
             }
             return ToJsonResponse(true, "", result);
+        }
+        public async Task<JsonResult> UploadFile(int key, int fileId, int type)
+        {
+            string fileUrl = "";
+            var _type = string.Empty;
+            string deleteURL = string.Empty;
+            var file = new FileModel();
+            try
+            {
+                foreach (string f in Request.Files)
+                {
+                    var fileContent = Request.Files[f];
+                    if (fileContent != null && fileContent.ContentLength > 0)
+                    {
+                        Stream stream = fileContent.InputStream;
+                        string root = Server.MapPath("~/Upload");
+                        var _bizMedia = new MediaBusiness();
+                        stream.Position = 0;
+                        file = _bizMedia.GetFileUploadUrl(fileContent.FileName, root);
+                        using (var fileStream = System.IO.File.Create(file.FullPath))
+                        {
+                            await stream.CopyToAsync(fileStream);
+                            fileStream.Close();
+                            fileUrl = file.FileUrl;
+                        }
+                        deleteURL = fileId <= 0 ? $"/hoso/delete?key={key}" : $"/hoso/delete/0/{fileId}";
+                        if (fileId > 0)
+                        {
+                            await _bizMedia.UpdateExistingFile(fileId, file.Name, file.FileUrl, type);
+                        }
+                        _type = System.IO.Path.GetExtension(fileContent.FileName);
+                    }
+
+                }
+                if (_type.IndexOf("pdf") > 0)
+                {
+                    var config = new
+                    {
+                        initialPreview = fileUrl,
+                        initialPreviewConfig = new[] {
+                                            new {
+                                                caption = file.Name,
+                                                url = deleteURL,
+                                                key =key,
+                                                type="pdf",
+                                                width ="120px"
+                                                }
+                                        },
+                        append = false
+                    };
+                    return Json(config);
+                }
+                else
+                {
+                    var config = new
+                    {
+                        initialPreview = fileUrl,
+                        initialPreviewConfig = new[] {
+                                            new {
+                                                caption = file.Name,
+                                                url = deleteURL,
+                                                key =key,
+                                                width ="120px"
+                                            }
+                                        },
+                        append = false
+                    };
+                    return Json(config);
+                }
+                //return Json(result);
+            }
+            catch (Exception)
+            {
+                Session["LstFileHoSo"] = null;
+            }
+            return Json(new { Result = fileUrl });
         }
     }
 }

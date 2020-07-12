@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Net.Mail;
 using System.Web.Http;
 using System.Web.Mvc;
-using VS_LOAN.Core.Business;
+using VS_LOAN.Core.Repository;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Utility;
@@ -17,7 +17,7 @@ using VS_LOAN.Core.Web.Helpers;
 using System.Threading.Tasks;
 using F88Service;
 using VS_LOAN.Core.Entity.UploadModel;
-using VS_LOAN.Core.Business.Interfaces;
+using VS_LOAN.Core.Repository.Interfaces;
 
 namespace VS_LOAN.Core.Web.Controllers
 {

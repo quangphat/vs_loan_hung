@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VS_LOAN.Core.Entity.MCreditModels;
 using HttpClientService;
-using VS_LOAN.Core.Business.Interfaces;
+using VS_LOAN.Core.Repository.Interfaces;
 using AutoMapper;
 using VS_LOAN.Core.Entity;
 using Newtonsoft.Json;

@@ -61,13 +61,13 @@
       <Project>{1c74bc09-385a-40b8-bd56-557d1694bd39}</Project>
       <Name>HttpClientService</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VS_LOAN.Core.Business\VS_LOAN.Core.Business.csproj">
-      <Project>{eeed2e30-177b-48fe-9b5e-879e0ffcb0e3}</Project>
-      <Name>VS_LOAN.Core.Business</Name>
-    </ProjectReference>
     <ProjectReference Include="..\VS_LOAN.Core.Entity\VS_LOAN.Core.Entity.csproj">
       <Project>{E86679D0-8E05-471F-8DA0-3E33E1F7D6BC}</Project>
       <Name>VS_LOAN.Core.Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VS_LOAN.Core.Repository\VS_LOAN.Core.Repository.csproj">
+      <Project>{EEED2E30-177B-48FE-9B5E-879E0FFCB0E3}</Project>
+      <Name>VS_LOAN.Core.Repository</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

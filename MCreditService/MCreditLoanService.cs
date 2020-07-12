@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using VS_LOAN.Core.Entity.MCreditModels;
 using HttpClientService;
 using System.Net.Http.Headers;
-using VS_LOAN.Core.Business;
+using VS_LOAN.Core.Repository;
 using MCreditService.Interfaces;
-using VS_LOAN.Core.Business.Interfaces;
+using VS_LOAN.Core.Repository.Interfaces;
 using VS_LOAN.Core.Entity.HosoCourrier;
 
 namespace MCreditService
