@@ -45,7 +45,20 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
         public bool IsInsurrance { get; set; }
 
         public int Status { get; set; }
-
+        public string isInsur
+        {
+            get
+            {
+                return IsInsurrance == true ?"true" : "false";
+            }
+        }
+        public string isAddr
+        {
+            get
+            {
+                return IsAddr == true ? "true" : "false";
+            }
+        }
 
         public bool IsDeleted { get; set; }
         public string LastNote { get; set; }

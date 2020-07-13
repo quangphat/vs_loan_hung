@@ -44,8 +44,8 @@ function getCommentList(profileId, type) {
 function getRadioButtonValue(controlId) {
     return $('input[name="' + controlId + '"]:checked').val();
 }
-function getCheckboxValue(controlId) {
-    return $('#' + controlId).is(":checked");
+function getCheckboxValue(controlId, boolValue = false) {
+    return $('#' + controlId).prop('checked', boolValue);
 }
 function setTextForPTag(controlId, value = '') {
     document.getElementById(controlId).innerHTML = value;
@@ -535,10 +535,11 @@ function getNewGuid() {
     };
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
-function setCheckedValueOfRadioButtonGroup(name, vValue) {
+function setCheckedValueOfRadioButtonGroup(name, boolValue) {
     var radios = document.getElementsByName(name);
+    
     for (var j = 0; j < radios.length; j++) {
-        if (radios[j].value === vValue) {
+        if (radios[j].value === boolValue) {
             radios[j].checked = true;
             break;
         }

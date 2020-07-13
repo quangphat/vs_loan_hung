@@ -45,7 +45,7 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             if (model == null)
                 return ToJsonResponse(false);
-            var result = await _svMCredit.AuthenByUserId(model.UserId,  model.TableToUpdateIds);
+            var result = await _svMCredit.AuthenByUserId(model.UserId, model.TableToUpdateIds);
             return ToJsonResponse(true, result, result);
         }
         public async Task<JsonResult> CheckSaleApi(StringModel model)
@@ -113,11 +113,13 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.User = GlobalData.User;
             return View();
         }
-        public async Task<JsonResult> SaveDraft(MCredit_TempProfileAddModel model)
+        public async Task<JsonResult> CreateDraft(MCredit_TempProfileAddModel model)
         {
+            if (model == null)
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var profile = _mapper.Map<MCredit_TempProfile>(model);
             profile.CreatedBy = GlobalData.User.IDUser;
-            var id = await _rpMCredit.CreateProfile(profile);
+            var id = await _rpMCredit.CreateDraftProfile(profile);
             if (id > 0)
             {
                 if (!string.IsNullOrWhiteSpace(model.LastNote))
@@ -132,12 +134,37 @@ namespace VS_LOAN.Core.Web.Controllers
                     };
                     _rpNote.AddNoteAsync(note);
                 }
-
-                var obj = _mapper.Map<MCProfilePostModel>(profile);
-                var result = await _svMCredit.CreateProfile(obj, GlobalData.User.IDUser);
-                return ToJsonResponse(true, result.message, result);
             }
             return ToJsonResponse(true, "", id);
+        }
+        public async Task<JsonResult> UpdateDraft(MCredit_TempProfileAddModel model)
+        {
+            if (model == null || model.Id <= 0)
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            var profile = _mapper.Map<MCredit_TempProfile>(model);
+            profile.UpdatedBy = GlobalData.User.IDUser;
+            var result = await _rpMCredit.UpdateDraftProfile(profile);
+            if (!result)
+            {
+                return ToJsonResponse(result, "Lỗi cập nhật");
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.LastNote))
+            {
+                GhichuModel note = new GhichuModel
+                {
+                    UserId = GlobalData.User.IDUser,
+                    HosoId = model.Id,
+                    Noidung = model.LastNote,
+                    CommentTime = DateTime.Now,
+                    TypeId = NoteType.MCreditTemp
+                };
+                _rpNote.AddNoteAsync(note);
+            }
+
+            //var obj = _mapper.Map<MCProfilePostModel>(profile);
+            //var result = await _svMCredit.CreateProfile(obj, GlobalData.User.IDUser);
+            return ToJsonResponse(true, "");
         }
         public async Task<ActionResult> TempProfile(int id)
         {
@@ -198,6 +225,13 @@ namespace VS_LOAN.Core.Web.Controllers
             }, GlobalData.User.IDUser);
             if (data == null || data.Groups == null)
                 return ToJsonResponse(false, "Không thể lấy file", new List<LoaiTaiLieuModel>());
+            var uploadedFiles = new List<FileUploadModel>();
+            if (profileId > 0)
+            {
+                uploadedFiles = await _rpTailieu.GetTailieuByHosoId(profileId, (int)HosoType.MCredit);
+                if (uploadedFiles == null)
+                    uploadedFiles = new List<FileUploadModel>();
+            }
             var result = new List<LoaiTaiLieuModel>();
             foreach (var group in data.Groups)
             {
@@ -205,6 +239,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     continue;
                 foreach (var doc in group.Documents)
                 {
+                    var files = uploadedFiles.Where(p => p.Key == doc.Id);
                     result.Add(new MCFileUpload
                     {
                         ID = doc.Id,
@@ -216,7 +251,8 @@ namespace VS_LOAN.Core.Web.Controllers
                         MapBpmVar = doc.MapBpmVar,
                         ProfileId = profileId,
                         ProfileTypeId = profileType,
-                        DocumentName = doc.DocumentName
+                        DocumentName = doc.DocumentName,
+                        Tailieus = files.ToList()
                     });
                 }
 
@@ -250,7 +286,8 @@ namespace VS_LOAN.Core.Web.Controllers
                         deleteURL = fileId <= 0 ? $"/hoso/delete?key={key}" : $"/hoso/delete/0/{fileId}";
                         if (fileId > 0)
                         {
-                            await _rpTailieu.UpdateExistingFile(new TaiLieu {
+                            await _rpTailieu.UpdateExistingFile(new TaiLieu
+                            {
                                 FileKey = key,
                                 FileName = file.Name,
                                 Folder = file.Folder,
@@ -329,7 +366,7 @@ namespace VS_LOAN.Core.Web.Controllers
             //int id = GlobalData.User.IDUser;
             //await _bizMedia.ProcessFilesToSendToMC(Convert.ToInt32(model.Value));
             var result = await _svMCredit.SendFiles(Convert.ToInt32(model.Value), System.IO.Path.Combine("D:\\Dev\\my8", "99999999.zip"), "99999999");
-            return ToJsonResponse(true,"", result);
+            return ToJsonResponse(true, "", result);
         }
     }
 }

@@ -194,15 +194,31 @@ namespace VS_LOAN.Core.Repository
                 return result.ToList();
             }
         }
-        public async Task<int> CreateProfile(MCredit_TempProfile model)
+        public async Task<int> CreateDraftProfile(MCredit_TempProfile model)
         {
-            model.CreatedTime = model.UpdatedTime = DateTime.Now;
             var p = GetParams(model, "Id", ignoreKey: new string[] { nameof(model.CreatedTime), nameof(model.UpdatedTime) });
 
             using (var con = GetConnection())
             {
-                await _connection.QueryAsync<OptionSimple>("sp_insert_MCredit_TempProfile", p, commandType: CommandType.StoredProcedure);
+                await _connection.ExecuteAsync("sp_insert_MCredit_TempProfile", p, commandType: CommandType.StoredProcedure);
                 return p.Get<int>("Id");
+            }
+        }
+        public async Task<bool> UpdateDraftProfile(MCredit_TempProfile model)
+        {
+            var param = GetParams(model, ignoreKey: new string[] 
+            {
+                nameof(model.CreatedTime),
+                nameof(model.UpdatedTime),
+                nameof(model.CreatedBy),
+                nameof(model.isAddr),
+                nameof(model.isInsur)
+            });
+
+            using (var con = GetConnection())
+            {
+                await _connection.ExecuteAsync("sp_update_MCredit_TempProfile", param, commandType: CommandType.StoredProcedure);
+                return true;
             }
         }
     }

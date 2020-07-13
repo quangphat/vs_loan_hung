@@ -36,7 +36,7 @@ namespace VS_LOAN.Core.Entity
     {
         public List<FileUploadModel> Tailieus { get; set; }
     }
-    public class MCFileUpload : LoaiTaiLieuModel
+    public class MCFileUpload : HosoTailieu
     {
         public int ProfileId { get; set; }
         public int ProfileTypeId { get; set; }

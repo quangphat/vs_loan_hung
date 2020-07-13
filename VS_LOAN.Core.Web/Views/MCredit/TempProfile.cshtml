@@ -95,7 +95,7 @@
                         </div>
                         <label class="col-sm-2 control-label no-padding-right">Giới tính</label>
                         <div class="col-sm-4">
-                            <select id="ddlGioiTinh" class="chosen-select form-control">
+                            <select id="ddlGender" class="chosen-select form-control">
                                 <option value="1">Nam</option>
                                 <option value="0">Nữ</option>
                             </select>
@@ -165,7 +165,7 @@
                         <div class="col-sm-4  col-md-offset-2">
                             <div class="checkbox">
                                 <label>
-                                    <input name="form-field-checkbox" id="cbbaohiem" type="checkbox" class="ace">
+                                    <input name="form-field-checkbox" id="cbbIsInsurrance" type="checkbox" class="ace">
                                     <span class="lbl">Tham gia bảo hiểm dư nợ tín dụng</span>
                                 </label>
                             </div>
@@ -262,12 +262,15 @@
         }).next().on(ace.click_event, function () {
             $(this).prev().focus();
         });
-        GetLocSigns("#ddlLocSign");
-        GetLoanPeriods("#ddlLoanPeriod");
-        GetLoanCities("#ddlProvince");
-        GetLoanProducts("#ddlProduct");
+        GetLocSigns("#ddlLocSign",'@ViewBag.model.LocSignCode');
+        GetLoanPeriods("#ddlLoanPeriod", '@ViewBag.model.LoanPeriodCode');
+        GetLoanCities("#ddlProvince",'@ViewBag.model.ProvinceId');
+        GetLoanProducts("#ddlProduct",'@ViewBag.model.ProductCode');
         getFilesUpload();
+        $("#ddlGender").val(('@ViewBag.model' != null && '@ViewBag.model.Gender' =='True') ?  "1" : "0")
         getCommentList(@ViewBag.model.Id, 3)
+        getCheckboxValue('cbbIsInsurrance', '@ViewBag.model' != null ? @ViewBag.model.isInsur: false)
+        setCheckedValueOfRadioButtonGroup('radio-isAddr', ('@ViewBag.model' != null && '@ViewBag.model.isAddr' =='true') ?  "1" : "0");
         //$("#txtIdDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
     });
 
@@ -322,29 +325,90 @@
                     let keys = [];
                     $.each(data.data, function (index, item) {
                         $("#lstTailieu").append("<div class='form-group'><div id='tailieu-" + item.ID + "'></div></div > ");
-                        let name = '',
-                            className = ''
-                        if (keys.indexOf(item.ID) < 0) {
-                            name = item.Ten;
+                        if (!isNullOrNoItem(item.Tailieus)) {
+
+                            let _initialPreview = [];
+                            let _initialPreviewConfig = [];
+                            $.each(item.Tailieus, function (i, tailieu) {
+                                //fileRequireIds.push(item.ID);
+                                _initialPreview = [];
+                                _initialPreviewConfig = [];
+                                var _imgExts = ["jpg", "jpeg", "png", "pdf"];
+                                var extn = tailieu.FileUrl.split('.').pop();
+                                var isImg = isExtension(extn, _imgExts);
+                                if (isImg) {
+                                    _initialPreview.push(tailieu.FileUrl);
+                                    _initialPreviewConfig.push({
+                                        caption: tailieu.FileName,
+                                        url: "/hoso/RemoveTailieuByHoso?hosoId=" + item.ProfileId + "&fileId=" + tailieu.FileId,
+                                        type: extn.indexOf('pdf') > -1 ? "pdf" : "jpg",
+                                        width: "120px"
+                                    });
+                                }
+                                let keyName = '',
+                                    isrequire = false,
+                                    className = ''
+                                debugger
+                                if (keys.indexOf(tailieu.Key) < 0) {
+                                    keyName = tailieu.KeyName;
+                                    isrequire = true
+                                }
+                                else {
+                                    className = 'mt-46'
+                                }
+                                // renderOneItemFile(tailieu.Key, tailieu.FileId, name, isrequire, className, true, _initialPreview, _initialPreviewConfig, true, true, onUploadFile, onDeleteFile)
+                                renderOneItemFile_MCredit(
+                                    {
+                                        key: tailieu.Key,
+                                        fileId: tailieu.FileId,
+                                        titleName: keyName,
+                                        isRequire: isrequire,
+                                        profileId: item.ProfileId,
+                                        documentName: item.DocumentName,
+                                        documentCode: item.DocumentCode,
+                                        documentId: item.DocumentId,
+                                        groupId: item.GroupId
+                                    }
+                                    , className, true, _initialPreview, _initialPreviewConfig, true, true, onUploadFile, onDeleteFile, filesUpload);
+                                keys.push(item.ID)
+                            })
+                            if (item.Tailieus.length < 50) {
+                                //renderOneItemFile(item.ID, item.ID, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile)
+                                renderOneItemFile_MCredit(
+                                    {
+                                        key: item.ID,
+                                        fileId: 0,
+                                        titleName: '',
+                                        isRequire: false,
+                                        profileId: item.ProfileId,
+                                        documentName: item.DocumentName,
+                                        documentCode: item.DocumentCode,
+                                        documentId: item.DocumentId,
+                                        groupId: item.GroupId
+                                    }
+                                    , 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
+                            }
+
                         }
                         else {
-                            className = 'mt-46'
+                            renderOneItemFile_MCredit(
+                                {
+                                    key: item.ID,
+                                    fileId: 0,
+                                    titleName: item.Ten,
+                                    isRequire: item.BatBuoc,
+                                    profileId: item.ProfileId,
+                                    documentName: item.DocumentName,
+                                    documentCode: item.DocumentCode,
+                                    documentId: item.DocumentId,
+                                    groupId: item.GroupId
+                                }
+                                , 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
+                            //keys.push(item.ID);
                         }
-
-                        renderOneItemFile_MCredit(
-                            {
-                                key: item.ID,
-                                fileId: 0,
-                                titleName: name,
-                                isRequire: item.BatBuoc,
-                                profileId: item.ProfileId,
-                                documentName: item.DocumentName,
-                                documentCode: item.DocumentCode,
-                                documentId: item.DocumentId,
-                                groupId: item.GroupId
-                            }
-                            , className, true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
-                        keys.push(item.ID);
+                        //------------
+                       
+                       
                     })
                 }
 
@@ -385,7 +449,9 @@
             filesUpload[existKeyIndex].files.push(file);
         }
         if (isReach5Files(filesUpload, model.key) === false) {
-                model.fileId = getNewGuid();
+            model.fileId = getNewGuid();
+            model.isRequire = false
+            //model.titleName = ''
             renderOneItemFile_MCredit(model, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
         }
     }
@@ -477,7 +543,7 @@
             return;
         }
         var objectSend = JSON.stringify({
-            "Id": 0,
+            "Id": @ViewBag.model.Id,
             "CustomerName": $("#txtCustomerName").val(),
             "Hometown": $("#txtHometown").val(),
             "BirthDay": $('#txtBirthDay').val(),
@@ -486,7 +552,7 @@
             "CCCDNumber": $('#txtCCCDNumber').val(),
             "IssueDate": $('#txtIdDay').val(),
             "IsAddr": getRadioButtonValue('radio-isAddr'),
-            "Gender": $("#ddlGioiTinh").val() == "1" ? true : false,
+            "Gender": $("#ddlGender").val() == "1" ? true : false,
             "ProvinceId": $("#ddlProvince").val(),
             "DistrictId": 0,
             "Address": $("#txtAddress").val(),
@@ -495,20 +561,19 @@
             "LoanPeriodCode": $("#ddlLoanPeriod").val(),
             "LocSignCode": $("#ddlLocSign").val(),
             "LoanMoney": $('#txtLoanMoney').val().replace(/\./g, ''),
-            "IsInsurrance": getCheckboxValue('cbbaohiem'),
-            "Status": 0
+            "IsInsurrance": getCheckboxValue('cbbIsInsurrance'),
+            "Status":  @ViewBag.model.Status
         });
-
+        debugger
         $.ajax({
             traditional: true,
-            url: '@Url.Action("SaveDraft", "MCredit")',
+            url: '@Url.Action("UpdateDraft", "MCredit")',
             type: "POST",
             contentType: "application/json; charset=utf-8",
             data: objectSend,
             success: function (data) {
                 if (data.success == true) {
-                    if (data.data.status == "success") {
-                        swal({
+                     swal({
                             title: "@Html.Raw(Global.Message_Title)",
                             text: "Thành công",
                             type: "success",
@@ -519,21 +584,6 @@
 
                             //uploadFiles(data.data, false);
                         });
-                    }
-                    else {
-                        swal({
-                            title: "@Html.Raw(Global.Message_Title)",
-                            text: data.code,
-                            type: "error",
-                            timer: 4000,
-                            showConfirmButton: true,
-                        }, function () {
-                            //window.location = window.location;
-
-                            //uploadFiles(data.data, false);
-                        });
-                    }
-
                 }
                 else {
                     swal({
@@ -639,7 +689,7 @@
             "CCCDNumber": $('#txtCCCDNumber').val(),
             "IssueDate": $('#txtIdDay').val(),
             "IsAddr": getRadioButtonValue('radio-isAddr'),
-            "Gender": $("#ddlGioiTinh").val() == "1" ? true : false,
+            "Gender": $("#ddlGender").val() == "1" ? true : false,
             "ProvinceId": $("#ddlProvince").val(),
             "DistrictId": 0,
             "Address": $("#txtAddress").val(),
@@ -648,7 +698,7 @@
             "LoanPeriodCode": $("#ddlLoanPeriod").val(),
             "LocSignCode": $("#ddlLocSign").val(),
             "LoanMoney": $('#txtLoanMoney').val().replace(/\./g, ''),
-            "IsInsurrance": getCheckboxValue('cbbaohiem'),
+            "IsInsurrance": getCheckboxValue('cbbIsInsurrance'),
             "Status": 0,
             'FileRequireIds': filesUpload.map(p => FileRequireIds.push(p.key))
         });

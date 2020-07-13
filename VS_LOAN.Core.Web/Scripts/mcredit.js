@@ -37,6 +37,7 @@ function GetLoanPeriods(controlId, defaultValue = 0) {
                 $.each(data.data, function (index, item) {
                     $(controlId).append("<option value='" + item.Code + "'>" + item.Name + "</option>");
                 });
+                
                 if (defaultValue > 0) {
                     $(controlId).val(defaultValue);
                 }
@@ -63,7 +64,7 @@ function GetLocSigns(controlId, defaultValue = 0) {
                 $.each(data.data, function (index, item) {
                     $(controlId).append("<option value='" + item.Code + "'>" + item.Name + "</option>");
                 });
-                if (defaultValue > 0) {
+                if (!isNullOrWhiteSpace(defaultValue)) {
                     $(controlId).val(defaultValue);
                 }
 
@@ -89,7 +90,8 @@ function GetLoanProducts(controlId, defaultValue = 0) {
                 $.each(data.data, function (index, item) {
                     $(controlId).append("<option value='" + item.Code + "'>" + item.Name + "</option>");
                 });
-                if (defaultValue > 0) {
+                
+                if (!isNullOrWhiteSpace(defaultValue)) {
                     $(controlId).val(defaultValue);
                 }
 
