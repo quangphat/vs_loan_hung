@@ -328,8 +328,8 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             //int id = GlobalData.User.IDUser;
             //await _bizMedia.ProcessFilesToSendToMC(Convert.ToInt32(model.Value));
-            await _svMCredit.SendFiles(Convert.ToInt32(model.Value));
-            return ToJsonResponse(true);
+            var result = await _svMCredit.SendFiles(Convert.ToInt32(model.Value), System.IO.Path.Combine("D:\\Dev\\my8", "99999999.zip"), "99999999");
+            return ToJsonResponse(true,"", result);
         }
     }
 }

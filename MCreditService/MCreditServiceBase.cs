@@ -11,6 +11,8 @@ using AutoMapper;
 using VS_LOAN.Core.Entity;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using System.Net;
+using System.IO;
 
 namespace MCreditService
 {
@@ -64,11 +66,11 @@ namespace MCreditService
 
             //_mapper = config.CreateMapper();
         }
-        public async Task<string> AuthenByUserId(int userId, 
+        public async Task<string> AuthenByUserId(int userId,
             bool isUpdateToken = true,
-            bool isUpdateProduct = false, 
+            bool isUpdateProduct = false,
             bool isUpdateLoanPeriod = false,
-            bool isUpdateLocation =false, 
+            bool isUpdateLocation = false,
             bool isUpdateCity = false)
         {
             if (userId <= 0)
@@ -77,11 +79,11 @@ namespace MCreditService
             if (authen == null || authen.Obj == null || string.IsNullOrWhiteSpace(authen.Obj.Token))
                 return "Không thể authen";
             string token = authen.Obj.Token;
-            if(isUpdateToken)
+            if (isUpdateToken)
             {
                 _bizMcredit.InsertUserToken(new MCreditUserToken { Token = token, UserId = userId });
             }
-            if(isUpdateProduct && authen.Products!=null &&authen.Products.Any())
+            if (isUpdateProduct && authen.Products != null && authen.Products.Any())
             {
                 await _bizMcredit.DeleteMCTableDatas((int)MCTableType.MCreditProduct);
                 await _bizMcredit.InsertProducts(authen.Products);
@@ -101,7 +103,7 @@ namespace MCreditService
                 await _bizMcredit.DeleteMCTableDatas((int)MCTableType.MCreditlocations);
                 await _bizMcredit.InsertLocations(authen.Locations);
             }
-            
+
             return token;
         }
         protected async Task<AuthenResponse> Authen()
@@ -114,7 +116,7 @@ namespace MCreditService
             });
             return result.Data;
         }
-        protected async Task<T> BeforeSendRequest<T, TInput>(string apiPath, TInput model, int userId = 0) 
+        protected async Task<T> BeforeSendRequest<T, TInput>(string apiPath, TInput model, int userId = 0)
             where T : MCResponseModelBase
             where TInput : MCreditRequestModelBase
         {
@@ -124,7 +126,7 @@ namespace MCreditService
             var result = await _httpClient.PostAsync<T>(_requestMessage, _baseUrl, apiPath, _contentType, null, model);
             if (result == null || result.Data == null)
                 return null;
-           if(result.Data is T)
+            if (result.Data is T)
             {
                 var data = (T)result.Data;
                 data.message = JsonConvert.SerializeObject(data.msg);
@@ -132,35 +134,25 @@ namespace MCreditService
             }
             return result.Data;
         }
-        protected async Task<T> BeforeSendRequestFormData<T, TInput>(string apiPath, MultipartFormDataContent formData, int userId)
+        protected async Task<T> BeforeSendRequestUploadFile<T, TInput>(string apiPath, Dictionary<string, object> postParameters, int userId)
            where T : MCResponseModelBase
-           where TInput : MCreditRequestModelBase
         {
             _requestMessage = new HttpRequestMessage();
-            _requestMessage.RequestUri = new Uri($"{_baseUrl}/{_upload_file_Api}");
             _requestMessage.Headers.Add("xdncode", _xdnCode);
             var token = await GetUserToken(userId);
-            HttpContent stringContent = new StringContent(token);
-            formData.Add(stringContent, "token");
-            _requestMessage.Content = formData;
-            _requestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            _requestMessage.Method = HttpMethod.Post;
-           
-            var newRequest = await _requestMessage.CloneAsync();
-            //newRequest.Content = formData;
             try
             {
-                
-                using (var response = await _httpClient.SendAsync(newRequest).ConfigureAwait(false))
-                {
-                    var result = await response.Content.ReadAsStringAsync();
-                }
-            }
-            catch (Exception e)
-            {
+                string requestURL = $"{_baseUrl}/{apiPath}";
 
+                string userAgent = "Someone";
+                postParameters.Add("token", token);
+                var response = await FormUpload.MultipartFormPost<T>(requestURL, userAgent, postParameters, "xdncode", _xdnCode, token);
+                return response.Data;
             }
+            catch (Exception exp) {
                 return null;
+            }
+            return null;
         }
         protected async Task<string> GetUserToken(int userId)
         {
@@ -184,6 +176,18 @@ namespace MCreditService
                 _bizMcredit.InsertUserToken(new MCreditUserToken { UserId = _userId, Token = _userToken });
             }
             return _userToken;
+        }
+        public  byte[] FileToByteArray(string fileName)
+        {
+            byte[] fileData = null;
+            if (!File.Exists(fileName))
+                return fileData;
+            using (FileStream fs = File.OpenRead(fileName))
+            {
+                var binaryReader = new BinaryReader(fs);
+                fileData = binaryReader.ReadBytes((int)fs.Length);
+            }
+            return fileData;
         }
     }
 }

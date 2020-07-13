@@ -14,5 +14,7 @@ namespace VS_LOAN.Core.Entity.MCreditModels
         public List<MCreditLoanPeriod> LoanPeriods { get; set; }
         public List<MCreditProduct> Products { get; set; }
         public List<MCreditlocations> Locations { get; set; }
+        public Dictionary<string, string> ProfileStatus { get; set; }
     }
+    
 }

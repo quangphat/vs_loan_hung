@@ -12,6 +12,7 @@ using MCreditService.Interfaces;
 using VS_LOAN.Core.Repository.Interfaces;
 using VS_LOAN.Core.Entity.HosoCourrier;
 using System.IO;
+using System.Net;
 
 namespace MCreditService
 {
@@ -77,33 +78,16 @@ namespace MCreditService
             var result = await BeforeSendRequest<GetFileUploadResponse, GetFileUploadRequest>(_get_file_upload_Api, model, userId);
             return result;
         }
-        public async Task<bool> SendFiles(int userId)
+        public async Task<MCResponseModelBase> SendFiles(int userId, string fileName, string profileId)
         {
-            byte[] file = File.ReadAllBytes(System.IO.Path.Combine("D:\\Development", "ziiiiiiiiiip.zip"));
-            MemoryStream ms = new MemoryStream();
-            using (FileStream fs = new FileStream(System.IO.Path.Combine("D:\\Development", "ziiiiiiiiiip.zip"), FileMode.Open, FileAccess.Read))
-            {
-                fs.CopyTo(ms);
-            }
-               
-            HttpContent stringContent = new StringContent("99999");
-            //HttpContent fileStreamContent = new StreamContent(ms);
-            HttpContent bytesContent = new ByteArrayContent(file);
-            //var url = $"{_baseUrl}/{_upload_file_Api}";
-            using (var client = new HttpClient())
-            {
-                //client.DefaultRequestHeaders.Add("xdncode", _xdnCode);
-                //client.ContentType = new MediaTypeHeaderValue("application/json");
-                using (var formData = new MultipartFormDataContent())
-                {
-                    formData.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
-                    formData.Add(stringContent, "id");
-                    formData.Add(bytesContent, "file");
-                    await BeforeSendRequestFormData<MCResponseModelBase, MCreditRequestModelBase>(_upload_file_Api, formData, userId);
-                    return true;
-                }
-            }
-           
+            // You need to do this download if your file is on any other server otherwise you can convert that file directly to bytes  
+            //WebClient wc = new WebClient();
+            //byte[] bytes = wc.DownloadData(fileName); 
+            byte[] bytes = base.FileToByteArray(fileName);
+            Dictionary<string, object> postParameters = new Dictionary<string, object>();
+            postParameters.Add("file", new FileParameter(bytes, Path.GetFileName(fileName), "zip"));
+            postParameters.Add("id", profileId);
+            return await BeforeSendRequestUploadFile<MCResponseModelBase, MCreditRequestModelBase>(_upload_file_Api, postParameters, userId);
         }
     }
 }
