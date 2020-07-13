@@ -178,3 +178,37 @@ end
 
 
 ------------
+ALTER procedure [dbo].[getTailieuByHosoId](@profileId int, @profileTypeId int =1)
+
+as
+
+begin
+--3 is mcredit
+if(@profileTypeId =3)
+begin
+	select * from TAI_LIEU_HS where ProfileId = @profileId and ProfileTypeId = 3
+end
+else
+begin
+	select tl.Id as FileId
+		, tl.FileKey as [Key]
+		, tl.FileName 
+		, tl.FilePath as FileUrl
+		,isnull(ltl.Ten,tl.DocumentName) as KeyName
+		, ltl.Bat_Buoc as IsRequire
+		,tl.ProfileId
+		,tl.ProfileTypeId
+		,tl.Folder,
+		tl.DocumentName ,
+		tl.DocumentCode ,
+		tl.MC_DocumentId,
+		tl.MC_MapBpmVar,
+		tl.MC_GroupId
+		from TAI_LIEU_HS tl
+		left join LOAI_TAI_LIEU ltl on tl.FileKey = ltl.ID
+		where tl.ProfileId = @profileId and ISNULL(tl.Deleted,0) = 0
+		and tl.ProfileTypeId = @profileTypeId
+		order by ltl.Bat_Buoc desc
+end;
+end
+---------------

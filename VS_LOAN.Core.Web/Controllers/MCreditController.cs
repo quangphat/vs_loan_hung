@@ -294,7 +294,7 @@ namespace VS_LOAN.Core.Web.Controllers
                                 FilePath = file.FileUrl,
                                 ProfileId = profileId,
                                 ProfileTypeId = (int)HosoType.MCredit
-                            }, profileId);
+                            }, fileId);
                         }
                         else
                         {
