@@ -135,6 +135,8 @@
     <Compile Include="MCreditModels\AuthenResponseObj.cs" />
     <Compile Include="MCreditModels\MCreditRequestModelBase.cs" />
     <Compile Include="MCreditModels\MCreditUserToken.cs" />
+    <Compile Include="MCreditModels\NoteRequestModel.cs" />
+    <Compile Include="MCreditModels\NoteResponseModel.cs" />
     <Compile Include="MCreditModels\ProfileAddRequest.cs" />
     <Compile Include="MCreditModels\ProfileAddResponse.cs" />
     <Compile Include="MCreditModels\ProfileSearchRequestModel.cs" />
