@@ -66,12 +66,7 @@ namespace MCreditService
 
             //_mapper = config.CreateMapper();
         }
-        public async Task<string> AuthenByUserId(int userId,
-            bool isUpdateToken = true,
-            bool isUpdateProduct = false,
-            bool isUpdateLoanPeriod = false,
-            bool isUpdateLocation = false,
-            bool isUpdateCity = false)
+        public async Task<string> AuthenByUserId(int userId, int[] tableToUpdateIds = null)
         {
             if (userId <= 0)
                 return "Vui lòng nhập userId";
@@ -79,31 +74,41 @@ namespace MCreditService
             if (authen == null || authen.Obj == null || string.IsNullOrWhiteSpace(authen.Obj.Token))
                 return "Không thể authen";
             string token = authen.Obj.Token;
-            if (isUpdateToken)
-            {
-                _bizMcredit.InsertUserToken(new MCreditUserToken { Token = token, UserId = userId });
-            }
-            if (isUpdateProduct && authen.Products != null && authen.Products.Any())
+
+            _bizMcredit.InsertUserToken(new MCreditUserToken { Token = token, UserId = userId });
+
+            if (tableToUpdateIds == null || !tableToUpdateIds.Any())
+                return token;
+            if (tableToUpdateIds.Contains((int)MCTableType.MCreditProduct) && authen.Products != null && authen.Products.Any())
             {
                 await _bizMcredit.DeleteMCTableDatas((int)MCTableType.MCreditProduct);
                 await _bizMcredit.InsertProducts(authen.Products);
             }
-            if (isUpdateCity && authen.Cities != null && authen.Cities.Any())
+            if (tableToUpdateIds.Contains((int)MCTableType.MCreditCity) && authen.Cities != null && authen.Cities.Any())
             {
                 await _bizMcredit.DeleteMCTableDatas((int)MCTableType.MCreditCity);
                 await _bizMcredit.InsertCities(authen.Cities);
             }
-            if (isUpdateLoanPeriod && authen.LoanPeriods != null && authen.LoanPeriods.Any())
+            if (tableToUpdateIds.Contains((int)MCTableType.MCreditLoanPeriod) && authen.LoanPeriods != null && authen.LoanPeriods.Any())
             {
                 await _bizMcredit.DeleteMCTableDatas((int)MCTableType.MCreditLoanPeriod);
                 await _bizMcredit.InsertLoanPeriods(authen.LoanPeriods);
             }
-            if (isUpdateLocation && authen.Locations != null && authen.Locations.Any())
+            if (tableToUpdateIds.Contains((int)MCTableType.MCreditlocations) && authen.Locations != null && authen.Locations.Any())
             {
                 await _bizMcredit.DeleteMCTableDatas((int)MCTableType.MCreditlocations);
                 await _bizMcredit.InsertLocations(authen.Locations);
             }
-
+            if (tableToUpdateIds.Contains((int)MCTableType.MCreditProfileStatus) && authen.ProfileStatus != null && authen.ProfileStatus.Any())
+            {
+                var list = new List<OptionSimple>();
+                foreach (var item in authen.ProfileStatus)
+                {
+                    list.Add(new OptionSimple { Code = item.Key, Name = item.Value });
+                }
+                await _bizMcredit.DeleteMCTableDatas((int)MCTableType.MCreditProfileStatus);
+                await _bizMcredit.InsertProfileStatus(list);
+            }
             return token;
         }
         protected async Task<AuthenResponse> Authen()
@@ -149,10 +154,10 @@ namespace MCreditService
                 var response = await FormUpload.MultipartFormPost<T>(requestURL, userAgent, postParameters, "xdncode", _xdnCode, token);
                 return response.Data;
             }
-            catch (Exception exp) {
+            catch (Exception exp)
+            {
                 return null;
             }
-            return null;
         }
         protected async Task<string> GetUserToken(int userId)
         {
@@ -177,7 +182,7 @@ namespace MCreditService
             }
             return _userToken;
         }
-        public  byte[] FileToByteArray(string fileName)
+        public byte[] FileToByteArray(string fileName)
         {
             byte[] fileData = null;
             if (!File.Exists(fileName))

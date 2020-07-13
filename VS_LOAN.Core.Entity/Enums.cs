@@ -11,7 +11,8 @@ namespace VS_LOAN.Core.Entity
         MCreditCity = 1,
         MCreditLoanPeriod = 2,
         MCreditlocations = 3,
-        MCreditProduct = 4
+        MCreditProduct = 4,
+        MCreditProfileStatus = 5
     }
     public enum PartnerType
     {

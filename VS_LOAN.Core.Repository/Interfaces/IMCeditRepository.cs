@@ -11,6 +11,7 @@ namespace VS_LOAN.Core.Repository.Interfaces
 {
     public interface IMCeditRepository
     {
+
         Task<int> CreateProfile(MCredit_TempProfile model);
         Task<bool> DeleteMCTableDatas(int type);
         Task<MCreditUserToken> GetUserTokenByIdAsync(int userId);
@@ -18,6 +19,7 @@ namespace VS_LOAN.Core.Repository.Interfaces
         Task<bool> InsertLocations(List<MCreditlocations> locations);
         Task<bool> InsertProducts(List<MCreditProduct> products);
         Task<bool> InsertLoanPeriods(List<MCreditLoanPeriod> loanPeriods);
+        Task<bool> InsertProfileStatus(List<OptionSimple> status);
         Task<bool> InsertCities(List<MCreditCity> cities);
         Task<List<OptionSimple>> GetMCProductSimpleList();
         Task<List<OptionSimple>> GetMCLocationSimpleList();

@@ -45,7 +45,7 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             if (model == null)
                 return ToJsonResponse(false);
-            var result = await _svMCredit.AuthenByUserId(model.UserId, model.IsUpdateToken, model.IsUpdateProduct, model.IsUpdateLoanPeriod, model.IsUpdateLocation, model.IsUpdateCity);
+            var result = await _svMCredit.AuthenByUserId(model.UserId,  model.TableToUpdateIds);
             return ToJsonResponse(true, result, result);
         }
         public async Task<JsonResult> CheckSaleApi(StringModel model)

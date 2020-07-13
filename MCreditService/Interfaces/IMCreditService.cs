@@ -17,11 +17,7 @@ namespace MCreditService.Interfaces
         Task<ProfileSearchResponse> SearchProfiles(string freetext, string status, string type, int page, int userId);
         Task<ProfileAddResponse> CreateProfile(MCProfilePostModel obj, int userId);
         Task<string> AuthenByUserId(int userId,
-            bool isUpdateToken = true,
-            bool isUpdateProduct = false,
-            bool isUpdateLoanPeriod = false,
-            bool isUpdateLocation = false,
-            bool isUpdateCity = false);
+           int[] tableToUpdateIds = null);
         Task<GetFileUploadResponse> GetFileUpload(GetFileUploadRequest model, int userId);
         Task<MCResponseModelBase> SendFiles(int userId, string fileName, string profileId);
     }

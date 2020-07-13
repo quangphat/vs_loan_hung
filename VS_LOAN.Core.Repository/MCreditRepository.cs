@@ -69,6 +69,22 @@ namespace VS_LOAN.Core.Repository
             //await Task.WhenAll(tasks);
             return true;
         }
+        public async Task<bool> InsertProfileStatus(List<OptionSimple> status)
+        {
+            foreach (var p in status)
+            {
+                using (var con = GetConnection())
+                {
+                    await con.ExecuteAsync("sp_MCreditProfileStatus_Insert", new
+                    {
+                        p.Code,
+                        p.Name
+
+                    }, commandType: CommandType.StoredProcedure);
+                }
+            }
+            return true;
+        }
         public async Task<bool> InsertCities(List<MCreditCity> cities)
         {
             List<Task> tasks = new List<Task>();
