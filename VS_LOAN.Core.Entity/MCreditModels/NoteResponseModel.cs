@@ -17,5 +17,6 @@ namespace VS_LOAN.Core.Entity.MCreditModels
         public string Name { get; set; }
         public string CreateUserName { get; set; }
         public string CreateUserAvatar { get; set; }
+        public DateTime CreateDated { get; set; }
     }
 }
