@@ -20,5 +20,7 @@ namespace MCreditService.Interfaces
            int[] tableToUpdateIds = null);
         Task<GetFileUploadResponse> GetFileUpload(GetFileUploadRequest model, int userId);
         Task<MCResponseModelBase> SendFiles(int userId, string fileName, string profileId);
+        Task<NoteResponseModel> GetNotes(string profileId, int userId);
+        Task<NoteAddResponseModel> AddNote(NoteAddRequestModel model, int userId);
     }
 }

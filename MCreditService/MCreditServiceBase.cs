@@ -29,6 +29,8 @@ namespace MCreditService
         protected static string _create_profile_Api = "api/act/profileadd.html";
         protected static string _get_file_upload_Api = "api/act/getformupload.html";
         protected static string _upload_file_Api = "api/act/profiledoc.html";
+        protected static string _get_notes_Api = "api/act/notes.html";
+        protected static string _add_notes_Api = "api/act/noteadd.html";
         protected static string _userName = "vietbankapi";
         protected static string _password = "api@123";
         protected static string _authenToken = "$2y$10$ne/8QwsCG10c.5cVSUW6NO7L3..lUEFItM4ccV0usJ3cAbqEjLywG";

@@ -78,6 +78,21 @@ namespace MCreditService
             var result = await BeforeSendRequest<GetFileUploadResponse, GetFileUploadRequest>(_get_file_upload_Api, model, userId);
             return result;
         }
+        public async Task<NoteResponseModel> GetNotes(string profileId, int userId)
+        {
+            var model = new NoteRequestModel
+            {
+                Id = profileId
+            };
+            var result = await BeforeSendRequest<NoteResponseModel, NoteRequestModel>(_get_notes_Api, model, userId);
+            return result;
+        }
+        public async Task<NoteAddResponseModel> AddNote(NoteAddRequestModel model, int userId)
+        {
+            
+            var result = await BeforeSendRequest<NoteAddResponseModel, NoteAddRequestModel>(_add_notes_Api, model, userId);
+            return result;
+        }
         public async Task<MCResponseModelBase> SendFiles(int userId, string fileName, string profileId)
         {
             // You need to do this download if your file is on any other server otherwise you can convert that file directly to bytes  
