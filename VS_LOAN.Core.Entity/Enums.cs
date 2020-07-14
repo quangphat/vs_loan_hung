@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Entity
 {
+    public enum MCreditTempProfileStatus
+    {
+        Draft = 0,
+        SubmitedTOMCredit = 2
+    }
     public enum MCTableType
     {
         MCreditCity = 1,

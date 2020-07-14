@@ -14,7 +14,7 @@ namespace VS_LOAN.Core.Business.Interfaces
         Task<bool> ProcessFilesToSendToMC(int profileId);
         Task<MediaUploadConfig> UploadSingle(Stream stream, string key, int fileId, string name, string webRootPath);
         Task<List<HosoCourier>> ReadXlsxFile(MemoryStream stream, int createBy);
-        FileModel GetFileUploadUrl(string fileInputName, string webRootPath);
+        FileModel GetFileUploadUrl(string fileInputName, string webRootPath, string folder);
         //FileModel GetFileUploadUrl(string fileInputName, string webRootPath, string documentCode, );
     }
 }

@@ -273,10 +273,10 @@ namespace VS_LOAN.Core.Web.Controllers
                     if (fileContent != null && fileContent.ContentLength > 0)
                     {
                         Stream stream = fileContent.InputStream;
-                        string root = Server.MapPath("~/Upload");
+                        string root = Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}");
 
                         stream.Position = 0;
-                        file = _bizMedia.GetFileUploadUrl(fileContent.FileName, root);
+                        file = _bizMedia.GetFileUploadUrl(fileContent.FileName, root, Utility.FileUtils.GenerateProfileFolderForMc());
                         using (var fileStream = System.IO.File.Create(file.FullPath))
                         {
                             await stream.CopyToAsync(fileStream);
@@ -363,10 +363,20 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> ProcessFile(StringModel model)
         {
+            string folderByDate = DateTime.Now.ToString("yyyy/MM/dd").Replace('/', '_');
             //int id = GlobalData.User.IDUser;
             //await _bizMedia.ProcessFilesToSendToMC(Convert.ToInt32(model.Value));
             var result = await _svMCredit.SendFiles(Convert.ToInt32(model.Value), System.IO.Path.Combine("D:\\Dev\\my8", "99999999.zip"), "99999999");
             return ToJsonResponse(true, "", result);
+        }
+        public async Task<JsonResult> SubmitToMCredit(MCredit_TempProfileAddModel model)
+        {
+            if (model == null || model.Id <= 0)
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            var profile = _mapper.Map<MCredit_TempProfile>(model);
+            profile.UpdatedBy = GlobalData.User.IDUser;
+            var createJsonFile = await _bizMedia.ProcessFilesToSendToMC(model.Id);
+            return ToJsonResponse(true);
         }
     }
 }

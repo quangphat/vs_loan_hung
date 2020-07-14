@@ -28,7 +28,7 @@ namespace VS_LOAN.Core.Business
         {
             stream.Position = 0;
             string fileUrl = string.Empty;
-            var file = GetFileUploadUrl(name, webRootPath);
+            var file = GetFileUploadUrl(name, webRootPath,Utility.FileUtils.GenerateProfileFolder());
             using (var fileStream = System.IO.File.Create(file.FullPath))
             {
                 await stream.CopyToAsync(fileStream);
@@ -67,48 +67,23 @@ namespace VS_LOAN.Core.Business
 
             //return new MediaUploadConfig();
         }
-        public FileModel GetFileUploadUrl(string fileInputName, string webRootPath)
+        public FileModel GetFileUploadUrl(string fileInputName, string webRootPath, string folder)
         {
+            if(string.IsNullOrWhiteSpace(folder))
+            {
+                folder = Utility.FileUtils.GenerateProfileFolder();
+            }
             string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + fileInputName.Trim().Replace(" ", "_");
-            string root = System.IO.Path.Combine(webRootPath, "HoSo");
-            try
-            {
-                if (!Directory.Exists(root))
-                    Directory.CreateDirectory(root);
-            }
-            catch (Exception e)
-            {
-                return new FileModel
-                {
-                    FileUrl = "error",
-                    Name = e.Message,
-                    FullPath = ""
-                };
-            }
-            string pathTemp = "";
-            if (!Directory.Exists(root))
-                Directory.CreateDirectory(root);
-            pathTemp = DateTime.Now.Year.ToString();
-            string pathYear = System.IO.Path.Combine(root, pathTemp);
-            if (!Directory.Exists(pathYear))
-                Directory.CreateDirectory(pathYear);
-            pathTemp += "/" + DateTime.Now.Month.ToString();
-            string pathMonth = System.IO.Path.Combine(root, pathTemp);
-            if (!Directory.Exists(pathMonth))
-                Directory.CreateDirectory(pathMonth);
-            pathTemp += "/" + DateTime.Now.Day.ToString();
-            string pathDay = System.IO.Path.Combine(root, pathTemp);
-            if (!Directory.Exists(pathDay))
-                Directory.CreateDirectory(pathDay);
-            string path = System.IO.Path.Combine(pathDay, fileName);
-            string folder = System.IO.Path.Combine(pathDay, string.Empty);
-            string url = "/Upload/HoSo/" + pathTemp + "/" + fileName;
+            string fullFolder =$"{webRootPath}/{folder}";
+            if (!Directory.Exists(fullFolder))
+                Directory.CreateDirectory(fullFolder);
+            string fullPath = System.IO.Path.Combine(webRootPath, $"{folder}/{fileName}");
             return new FileModel
             {
-                FileUrl = url,
+                FileUrl = $"{Utility.FileUtils._profile_parent_folder}{folder}/{fileName}",
                 Name = fileName,
-                FullPath = path,
-                Folder = folder
+                FullPath = $"{webRootPath}/{folder}/{fileName}",
+                Folder = fullFolder
             };
 
         }

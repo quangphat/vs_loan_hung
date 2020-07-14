@@ -327,7 +327,7 @@ namespace VS_LOAN.Core.Web.Controllers
                         Stream stream = fileContent.InputStream;
                         string root = Server.MapPath("~/Upload");
                         stream.Position = 0;
-                        file = _bizMedia.GetFileUploadUrl(fileContent.FileName, root);
+                        file = _bizMedia.GetFileUploadUrl(fileContent.FileName, root, Utility.FileUtils.GenerateProfileFolder());
                         using (var fileStream = System.IO.File.Create(file.FullPath))
                         {
                             await stream.CopyToAsync(fileStream);
