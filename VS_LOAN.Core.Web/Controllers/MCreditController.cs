@@ -363,11 +363,9 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> ProcessFile(StringModel model)
         {
-            string folderByDate = DateTime.Now.ToString("yyyy/MM/dd").Replace('/', '_');
-            //int id = GlobalData.User.IDUser;
-            //await _bizMedia.ProcessFilesToSendToMC(Convert.ToInt32(model.Value));
-            var result = await _svMCredit.SendFiles(Convert.ToInt32(model.Value), System.IO.Path.Combine("D:\\Dev\\my8", "99999999.zip"), "99999999");
-            return ToJsonResponse(true, "", result);
+            await _bizMedia.ProcessFilesToSendToMC(Convert.ToInt32(model.Value));
+            //var result = await _svMCredit.SendFiles(Convert.ToInt32(model.Value), System.IO.Path.Combine("D:\\Dev\\my8", "99999999.zip"), "99999999");
+            return ToJsonResponse(true, "");
         }
         public async Task<JsonResult> SubmitToMCredit(MCredit_TempProfileAddModel model)
         {

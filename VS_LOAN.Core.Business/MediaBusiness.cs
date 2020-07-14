@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.HosoCourrier;
+using VS_LOAN.Core.Entity.MCreditModels;
 using VS_LOAN.Core.Entity.UploadModel;
 using VS_LOAN.Core.Repository;
 using VS_LOAN.Core.Repository.Interfaces;
@@ -140,12 +141,25 @@ namespace VS_LOAN.Core.Business
         }
         public async Task<bool> ProcessFilesToSendToMC(int profileId)
         {
+            string mcProfileId = "99999";
             var files = await _rpTailieu.GetTailieuByHosoId(profileId, (int)HosoType.MCredit);
+            if (files == null || !files.Any())
+                return false;
+            var jsonFile = new McJsonFile();
+            IDictionary<string, string> dictFilesInDocs = new Dictionary<string, string>();
+            string values = "";
+            foreach (var file in files)
+            {
+                dictFilesInDocs.TryGetValue(file.DocumentCode, out values);
+                var count = values!=null ? values.Count():0;
+                dictFilesInDocs.Add(file.DocumentCode, $"{mcProfileId}-{file.DocumentCode}-{count + 1}");
+               
+            }
             var filePaths = files.Select(p => System.IO.Path.Combine(p.Folder, p.FileName));
             await CreateZipFile(filePaths, files[0].Folder);
             return true;
         }
-        protected async Task<string> RenameFile(string folder, string oldFileName, string newFileName)
+        protected string RenameFile(string folder, string oldFileName, string newFileName)
         {
             if (string.IsNullOrWhiteSpace(folder) || string.IsNullOrWhiteSpace(oldFileName) || string.IsNullOrWhiteSpace(newFileName))
                 return string.Empty;
