@@ -107,9 +107,13 @@ namespace MCreditService
             // You need to do this download if your file is on any other server otherwise you can convert that file directly to bytes  
             //WebClient wc = new WebClient();
             //byte[] bytes = wc.DownloadData(fileName); 
-            byte[] bytes = base.FileToByteArray(fileName);
+            
+            FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+            byte[] data = new byte[fs.Length];
+            fs.Read(data,0 , data.Length);
+            fs.Close();
             Dictionary<string, object> postParameters = new Dictionary<string, object>();
-            postParameters.Add("file", new FileParameter(bytes, Path.GetFileName(fileName), "zip"));
+            postParameters.Add("file", new FileParameter(data,"18.zip", "application/zip"));
             postParameters.Add("id", profileId);
             return await BeforeSendRequestUploadFile<MCResponseModelBase, MCreditRequestModelBase>(_upload_file_Api, postParameters, userId);
         }
