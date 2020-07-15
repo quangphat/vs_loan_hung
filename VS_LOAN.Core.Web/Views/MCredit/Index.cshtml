@@ -26,15 +26,21 @@
                         <div class="col-sm-2 col-xs-12">
                             <input type="text" class="form-control" id="txtFreeText" placeholder="Tìm kiếm" />
                         </div>
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Loại</label>
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
                         <div class="col-sm-5 col-xs-12 ">
-                            <select id="ddlStatus" class="chosen-select form-control" multiple data-placeholder="Chọn trạng thái"></select>
+                            <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
+                                <option value="0">Tất cả</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Loại</label>
                         <div class="col-sm-5 col-xs-12 ">
-                            <select id="ddlType" class="chosen-select form-control" multiple data-placeholder="Chọn loại"></select>
+                            <select id="ddlType" class="chosen-select form-control" data-placeholder="Chọn loại">
+                                <option value="draft">Draft</option>
+                                <option value="inbox">Inbox</option>
+                                <option value="participated">Participated</option>
+                            </select>
                         </div>
 
                     </div>
@@ -86,14 +92,10 @@
                                 <tr>
                                     <th class="center w-45">STT</th>
                                     <th class="w-98">ID</th>
-                                    <th class="w-94">Case Number</th>
                                     <th class="m-w-150">Tên khách hàng</th>
                                     <th class="w-94">CMND</th>
                                     <th style="width: 150px">Trạng thái</th>
-                                    <th class="m-w-300">Ghi chú</th>
                                     <th class="w-94">Ngày giải ngân</th>
-                                    <th class="w-94">Ngày cập nhật cuối</th>
-                                    <th class="w-84">Người tạo</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -139,20 +141,9 @@
     var pageMargin = 2;
     var totalPage = 1;
     var totalRecord = 0;
-    var lstStatus = [
-        { value: "0", display: "Lưu tạm" },
-        { value: "1", display: "Nhập liệu" },
-        { value: "2", display: "Thẩm định" },
-        { value: "3", display: "Từ chối" },
-        { value: "4", display: "Bổ sung hồ sơ" },
-        { value: "5", display: "Giải ngân" },
-        { value: "6", display: "Đã đối chiếu" },
-        { value: "7", display: "Hủy" },
-        { value: "8", display: "PCB" },
-    ]
     $(document).ready(function e() {
-        renderStatusList();
-
+        setddl('ddlType');
+        GetLoanProfileStatuses("#ddlStatus")
         window.addEventListener('popstate', function (e) {
 
             queries = new URLSearchParams(window.location.search)
@@ -177,31 +168,38 @@
                 $("#btn_search").click();
             }
         });
-        function bindQueries() {
-            $('#txtFreeText').val(queries.get("freetext"))
-            var cmnd = queries.get("cmnd");
-            page = queries.get("page");
-            if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
-                page = 1;
-            else
-                page = parseInt(page)
-            limit = queries.get("limit")
-            if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
-                limit = 10;
-            else
-                limit = parseInt(limit)
-            $("#ddlLimit").val(limit)
-        }
+       
         
         $('#ddllimit').chosen({ width: '100%', allow_single_deselect: true });
         var status = decodeURI(queries.get("status"))
         if (!isNullOrWhiteSpace(status)) {
-            let arrStatus = status.split(',')
-            $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
+            $('#ddlStatus').val(status).chosen().trigger("chosen:updated")
+        }
+        var type = decodeURI(queries.get("type"))
+        if (!isNullOrWhiteSpace(type)) {
+            $('#ddlType').val(type).chosen().trigger("chosen:updated")
         }
 
         bindQueries()
+       //getData(page, limit)
     });
+    function bindQueries() {
+        $('#txtFreeText').val(queries.get("freetext"))
+        var cmnd = queries.get("cmnd");
+        page = queries.get("page");
+        if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+            page = 1;
+        else
+            page = parseInt(page)
+        limit = queries.get("limit")
+        if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+            limit = 10;
+        else
+            limit = parseInt(limit)
+        $("#ddlLimit").val(limit)
+        
+        
+    }
     var strLoading = '@Global.Message_Loading';
     $('#btn_search').click(function (e) {
         showBlock($('#panel_body'), strLoading);
@@ -333,6 +331,10 @@
         getData(page, limit)
         //alert(limit)
     }
+    function renderTextLink(textValue, href, type, className = '') {
+        let display = getValueDisplay(textValue, type);
+        return "<td class='text-left " + className + "'><a href='" + href + "' >" + display + "</a></td>";
+    }
     function renderTextLeft(value, type, className = '') {
         return "<td class='text-left " + className + "'>" + getValueDisplay(value, type) + "</td>";
     }
@@ -423,15 +425,11 @@
         var stt = (page - 1) * limit + index + 1;
         return "<tr role='row' class = 'odd'>"
             + renderTextCenter(stt)
-            + renderTextLeft(rowData.Id)
-            + renderTextLeft(rowData.CaseNumber)
-            + renderTextLeft(rowData.Name)
-            + renderTextLeft(rowData.IdNumber)
-            + renderStatus(rowData.Status, rowData.StatusName)
-            + renderTextLeft(rowData.GhiChu, '', 'tb-row-breakword')
-            + renderTextLeft(rowData.MoneyRecieveDate, 'datetime')
-            + renderTextLeft(rowData.CreatedDate, 'datetime')
-            + renderTextLeft(rowData.CreateUserFullName)
+            + renderTextLeft(rowData.id)
+            + renderTextLink(rowData.name, '/MCredit/MCreditProfile/' + rowData.id)
+            + renderTextLeft(rowData.idNumber)
+            + renderStatus(rowData.status, rowData.statusName)
+            + renderTextLeft(rowData.moneyReceiveDate, '')
            
             + "</tr>";
     }
@@ -441,7 +439,7 @@
         tableBody.empty();
         if (isNullOrNoItem(datas))
             return;
-        debugger
+        
         $.each(datas, function (index, item) {
             
             tableBody.append(renderRow(index, item));
@@ -477,11 +475,11 @@
                 'page': page,
                 'limit': limit,
                 'freeText': $("#txtFreeText").val(),
-                'status': "0",
-                'type':"draft"
+                'status': isNullOrWhiteSpace($("#ddlStatus").val()) ? "0" : $("#ddlStatus").val(),
+                'type': isNullOrWhiteSpace($("#ddlType").val()) ? "draft" : $("#ddlType").val()
             },
             success: function (response) {
-                debugger
+                
                 if (response.success == true) {
                     totalRecord = response.data.total;
                     var search = this.url.replace("/MCredit/Index", "");

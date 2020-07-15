@@ -26,6 +26,7 @@ namespace MCreditService
         protected static string _checkStatusApi = "api/act/checkstatus.html";
         protected static string _checkSaleApi = "api/act/checksale.html";
         protected static string _searchProfilesApi = "api/act/profiles.html";
+        protected static string _getProfileByIdApi = "api/act/profile.html";
         protected static string _create_profile_Api = "api/act/profileadd.html";
         protected static string _get_file_upload_Api = "api/act/getformupload.html";
         protected static string _upload_file_Api = "api/act/profiledoc.html";

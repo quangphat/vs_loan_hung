@@ -142,6 +142,8 @@
     <Compile Include="MCreditModels\NoteResponseModel.cs" />
     <Compile Include="MCreditModels\ProfileAddRequest.cs" />
     <Compile Include="MCreditModels\ProfileAddResponse.cs" />
+    <Compile Include="MCreditModels\ProfileGetByIdRequest.cs" />
+    <Compile Include="MCreditModels\ProfileGetByIdResponse.cs" />
     <Compile Include="MCreditModels\ProfileSearchRequestModel.cs" />
     <Compile Include="MCreditModels\ProfileSearchResponse.cs" />
     <Compile Include="MCreditModels\ProfileSearchSql.cs" />

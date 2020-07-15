@@ -180,6 +180,14 @@ namespace VS_LOAN.Core.Repository
             }
 
         }
+        public async Task<List<OptionSimple>> GetMCProfileStatusList()
+        {
+            using (var con = GetConnection())
+            {
+                var result = await _connection.QueryAsync<OptionSimple>("sp_MCStatus_GetSimpleList", null, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
         public async Task<List<OptionSimple>> GetMCLocationSimpleList()
         {
             using (var con = GetConnection())

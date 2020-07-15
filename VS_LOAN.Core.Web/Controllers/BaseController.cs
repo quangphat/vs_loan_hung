@@ -64,8 +64,7 @@ namespace VS_LOAN.Core.Web.Controllers
                .ForMember(a => a.LocSignCode, b => b.MapFrom(c => c.LocSignCode))
                .ForMember(a => a.IsInsurrance, b => b.MapFrom(c => c.IsInsurrance))
                .ForMember(a => a.SaleId, b => b.MapFrom(c => c.SaleId))
-               .ForMember(a => a.Status, b => b.MapFrom(c => c.Status))
-               ;
+               .ForMember(a => a.Status, b => b.MapFrom(c => c.Status));
                 x.CreateMap<CheckSaleObj, UpdateSaleModel>()
                .ForMember(a => a.SaleName, b => b.MapFrom(c => c.name))
                .ForMember(a => a.SaleNumber, b => b.MapFrom(c => c.idNumber))

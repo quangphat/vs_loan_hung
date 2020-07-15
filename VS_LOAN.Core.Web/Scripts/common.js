@@ -12,6 +12,9 @@
 //        message: '<h2 style="color:#fff">' + text + ' ...</h2>'
 //    });
 //}\
+function setddl(controlId) {
+    $('#' + controlId).chosen({ width: '100%', allow_single_deselect: true });
+}
 function getCommentList(profileId, type) {
     //$('#ddlTrangThai').empty();
     $.ajax({

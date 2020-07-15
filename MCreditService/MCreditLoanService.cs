@@ -64,6 +64,15 @@ namespace MCreditService
             var result = await BeforeSendRequest<ProfileSearchResponse, ProfileSearchRequestModel>(_searchProfilesApi, model, userId);
             return result;
         }
+        public async Task<ProfileGetByIdResponse> GetProfileById(string profileId ,int userId)
+        {
+            var model = new ProfileGetByIdRequest
+            {
+                Id = profileId
+            };
+            var result = await BeforeSendRequest<ProfileGetByIdResponse, ProfileGetByIdRequest>(_getProfileByIdApi, model, userId);
+            return result;
+        }
         public async Task<ProfileAddResponse> CreateProfile(MCProfilePostModel obj, int userId)
         {
             var model = new ProfileAddRequest

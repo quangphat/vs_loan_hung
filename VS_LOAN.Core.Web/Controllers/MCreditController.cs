@@ -55,11 +55,16 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = await _svMCredit.CheckSale(GlobalData.User.IDUser, model.Value);
             if(!string.IsNullOrWhiteSpace(model.Value2))
             {
-                if (result.status == "success" && result.obj != null)
+                int profileId = Convert.ToInt32(model.Value2);
+                if (profileId > 0)
                 {
-                    var sale = _mapper.Map<UpdateSaleModel>(result.obj);
-                    _rpMCredit.UpdateSale(sale, Convert.ToInt32(model.Value2));
+                    if (result.status == "success" && result.obj != null)
+                    {
+                        var sale = _mapper.Map<UpdateSaleModel>(result.obj);
+                        _rpMCredit.UpdateSale(sale, Convert.ToInt32(model.Value2));
+                    }
                 }
+               
             }
             
             return ToJsonResponse(result.status == "success" ? true : false, result.msg != null ? result.msg.ToString() : string.Empty, result);
@@ -194,6 +199,12 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.model = result;
             return View();
         }
+        public async Task<ActionResult> MCreditProfile(int id)
+        {
+            var result = await _svMCredit.GetProfileById(id.ToString(), GlobalData.User.IDUser);
+            ViewBag.model = result;
+            return View();
+        }
         public async Task<JsonResult> Create(MCredit_TempProfileAddModel model)
         {
 
@@ -228,6 +239,10 @@ namespace VS_LOAN.Core.Web.Controllers
             if (type == (int)MCTableType.MCreditProduct)
             {
                 result = await _rpMCredit.GetMCProductSimpleList();
+            }
+            if (type == (int)MCTableType.MCreditProfileStatus)
+            {
+                result = await _rpMCredit.GetMCProfileStatusList();
             }
             return ToJsonResponse(true, "", result);
         }

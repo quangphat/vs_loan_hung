@@ -1774,6 +1774,7 @@
     <Content Include="Views\MCredit\AddNew.cshtml" />
     <Content Include="Views\MCredit\TempProfile.cshtml" />
     <Content Include="Views\MCredit\Temp.cshtml" />
+    <Content Include="Views\MCredit\MCreditProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
