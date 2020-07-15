@@ -363,7 +363,8 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> ProcessFile(StringModel model)
         {
-            await _bizMedia.ProcessFilesToSendToMC(Convert.ToInt32(model.Value));
+            string root = Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}");
+            await _bizMedia.ProcessFilesToSendToMC(Convert.ToInt32(model.Value), root);
             //var result = await _svMCredit.SendFiles(Convert.ToInt32(model.Value), System.IO.Path.Combine("D:\\Dev\\my8", "99999999.zip"), "99999999");
             return ToJsonResponse(true, "");
         }
@@ -373,7 +374,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var profile = _mapper.Map<MCredit_TempProfile>(model);
             profile.UpdatedBy = GlobalData.User.IDUser;
-            var createJsonFile = await _bizMedia.ProcessFilesToSendToMC(model.Id);
+            var createJsonFile = await _bizMedia.ProcessFilesToSendToMC(model.Id, Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}"));
             return ToJsonResponse(true);
         }
     }

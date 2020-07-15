@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,15 @@ namespace VS_LOAN.Core.Utility
         {
             string folderByDate = DateTime.Now.ToString("yyyy/MM/dd").Replace('/', '_');
             return $"{_mc_profile_folder}/{folderByDate}";
+        }
+        public static bool WriteToFile(string fileName, string value)
+        {
+            using (StreamWriter sw = new StreamWriter(fileName, false))
+            {
+                sw.Write(value);
+                sw.Close();
+            }
+            return true;
         }
     }
 }

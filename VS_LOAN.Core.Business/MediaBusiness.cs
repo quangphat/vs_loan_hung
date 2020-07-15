@@ -1,4 +1,5 @@
 ﻿using Ionic.Zip;
+using Newtonsoft.Json;
 using NPOI.SS.UserModel;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace VS_LOAN.Core.Business
         {
             stream.Position = 0;
             string fileUrl = string.Empty;
-            var file = GetFileUploadUrl(name, webRootPath,Utility.FileUtils.GenerateProfileFolder());
+            var file = GetFileUploadUrl(name, webRootPath, Utility.FileUtils.GenerateProfileFolder());
             using (var fileStream = System.IO.File.Create(file.FullPath))
             {
                 await stream.CopyToAsync(fileStream);
@@ -39,14 +40,15 @@ namespace VS_LOAN.Core.Business
             string deleteURL = fileId <= 0 ? $"/hoso/delete?key={key}" : $"/hoso/delete/0/{fileId}";
             if (fileId > 0)
             {
-                
-                await _rpTailieu.UpdateExistingFile(new TaiLieu {
+
+                await _rpTailieu.UpdateExistingFile(new TaiLieu
+                {
                     FileName = file.Name,
                     Folder = file.Folder,
                     FilePath = file.FileUrl,
                     ProfileId = 0,
                     ProfileTypeId = 0
-                },fileId);
+                }, fileId);
             }
 
             var _type = System.IO.Path.GetExtension(name);
@@ -70,12 +72,12 @@ namespace VS_LOAN.Core.Business
         }
         public FileModel GetFileUploadUrl(string fileInputName, string webRootPath, string folder)
         {
-            if(string.IsNullOrWhiteSpace(folder))
+            if (string.IsNullOrWhiteSpace(folder))
             {
                 folder = Utility.FileUtils.GenerateProfileFolder();
             }
             string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + fileInputName.Trim().Replace(" ", "_");
-            string fullFolder =$"{webRootPath}/{folder}";
+            string fullFolder = $"{webRootPath}/{folder}";
             if (!Directory.Exists(fullFolder))
                 Directory.CreateDirectory(fullFolder);
             string fullPath = System.IO.Path.Combine(webRootPath, $"{folder}/{fileName}");
@@ -95,7 +97,7 @@ namespace VS_LOAN.Core.Business
             var sheet = workBook.GetSheetAt(0);
             var rows = sheet.GetRowEnumerator();
             var hasData = rows.MoveNext();
-            
+
             int count = 0;
             var hosos = new List<HosoCourier>();
             for (int i = 1; i < sheet.PhysicalNumberOfRows; i++)
@@ -139,25 +141,49 @@ namespace VS_LOAN.Core.Business
             }
             return hosos;
         }
-        public async Task<bool> ProcessFilesToSendToMC(int profileId)
+        public async Task<bool> ProcessFilesToSendToMC(int profileId, string rootPath)
         {
             string mcProfileId = "99999";
             var files = await _rpTailieu.GetTailieuByHosoId(profileId, (int)HosoType.MCredit);
             if (files == null || !files.Any())
                 return false;
             var jsonFile = new McJsonFile();
-            IDictionary<string, string> dictFilesInDocs = new Dictionary<string, string>();
-            string values = "";
-            foreach (var file in files)
+            var x = files.Select(p => p.MC_GroupId);
+            //string values = "";
+            var filePaths = new List<string>();
+            foreach (var f in files)
             {
-                dictFilesInDocs.TryGetValue(file.DocumentCode, out values);
-                var count = values!=null ? values.Count():0;
-                dictFilesInDocs.Add(file.DocumentCode, $"{mcProfileId}-{file.DocumentCode}-{count + 1}");
-               
+                var group = jsonFile.groups.FirstOrDefault(p => p.id == f.MC_GroupId);
+                if (group == null)
+                {
+                    group = new McJsonFileGroup { id = f.MC_GroupId, docs = new List<MCJsonFileGroupDoc>() };
+                    jsonFile.groups.Add(group);
+                }
+                var doc = group.docs.FirstOrDefault(p => p.code == f.DocumentCode);
+                if(doc == null)
+                {
+                    doc = new MCJsonFileGroupDoc { code = f.DocumentCode, files = new List<MCJsonFileGroupDocFile>() };
+                    group.docs.Add(doc);
+                }   
+                doc.files.Add(new MCJsonFileGroupDocFile { name = f.FileName });
+                filePaths.Add(System.IO.Path.Combine(f.Folder, f.FileName));
             }
-            var filePaths = files.Select(p => System.IO.Path.Combine(p.Folder, p.FileName));
-            await CreateZipFile(filePaths, files[0].Folder);
+            string jsonFilePath = CreateJsonFile(jsonFile, mcProfileId, rootPath);
+            filePaths.Add(jsonFilePath);
+            await CreateZipFile(filePaths, files[0].Folder,mcProfileId);
             return true;
+        }
+        protected string CreateJsonFile(McJsonFile model, string profileId, string rootPath)
+        {
+            if (model == null)
+                return string.Empty;
+            var fileInfo = GetFileUploadUrl(profileId, rootPath, Utility.FileUtils.GenerateProfileFolderForMc());
+            if (fileInfo == null)
+                return string.Empty;
+            var content = JsonConvert.SerializeObject(model, Formatting.None);
+            string fullPath = $"{fileInfo.Folder}/{fileInfo.Name}";
+            Utility.FileUtils.WriteToFile(fullPath, content);
+            return fullPath;
         }
         protected string RenameFile(string folder, string oldFileName, string newFileName)
         {
@@ -172,14 +198,14 @@ namespace VS_LOAN.Core.Business
             File.Move(oldFile, newfile);
             return newfile;
         }
-        protected async Task<bool> CreateZipFile(IEnumerable<string> filePaths, string folder)
+        protected async Task<bool> CreateZipFile(IEnumerable<string> filePaths, string folder, string fileName)
         {
             if (filePaths == null || !filePaths.Any())
                 return false;
             using (ZipFile zip = new ZipFile())
             {
-                zip.AddFiles(filePaths,"");
-                zip.Save(System.IO.Path.Combine("D:\\Development","ziiiiiiiiiip.zip"));
+                zip.AddFiles(filePaths, "");
+                zip.Save(System.IO.Path.Combine(folder, $"{fileName}.zip"));
             }
 
             return true;
