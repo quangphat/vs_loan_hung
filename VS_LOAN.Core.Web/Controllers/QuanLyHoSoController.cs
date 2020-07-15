@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
-using VS_LOAN.Core.Business;
+using VS_LOAN.Core.Repository;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Utility;
@@ -34,7 +34,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public ActionResult DanhSachHoSo()
         {
             ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;
-            List<NhomDropDownModel> dsNhom = new GroupBusiness().LayDSCuaNhanVien(GlobalData.User.IDUser);
+            List<NhomDropDownModel> dsNhom = new GroupRepository().LayDSCuaNhanVien(GlobalData.User.IDUser);
             if (dsNhom == null)
                 dsNhom = new List<NhomDropDownModel>();
             ViewBag.DSNhom = dsNhom;
@@ -90,7 +90,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult LayDSNhom()
         {
-            List<NhomDropDownModel> rs = new GroupBusiness().LayDSCuaNhanVien(GlobalData.User.IDUser);
+            List<NhomDropDownModel> rs = new GroupRepository().LayDSCuaNhanVien(GlobalData.User.IDUser);
             if (rs == null)
                 rs = new List<NhomDropDownModel>();
             return ToJsonResponse(true, null, rs);
@@ -104,7 +104,7 @@ namespace VS_LOAN.Core.Web.Controllers
             else
             {
                 // Lấy ds nhóm của nv quản lý
-                List<NhomDropDownModel> lstNhom = new GroupBusiness().LayDSCuaNhanVien(GlobalData.User.IDUser);
+                List<NhomDropDownModel> lstNhom = new GroupRepository().LayDSCuaNhanVien(GlobalData.User.IDUser);
                 if (lstNhom != null)
                 {
                     for (int i = 0; i < lstNhom.Count; i++)
@@ -139,11 +139,11 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.formindex = LstRole["DanhSachHoSo"]._formindex;
             if (id < 0)
                 return RedirectToAction("Index");
-            var bizHoso = new HosoBusiness();
+            var bizHoso = new HosoRepository();
             var hoso = await bizHoso.GetDetail(id);
             new HoSoXemBLL().DaXem(id);
             ViewBag.HoSo = hoso;
-            ViewBag.MaDoiTac = new DoiTacBLL().LayMaDoiTac(hoso.SanPhamVay);
+            ViewBag.MaDoiTac = new PartnerRepository().LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
             //ViewBag.LstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
             return View();
@@ -164,7 +164,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 CommentTime = DateTime.Now,
                 TypeId = NoteType.Hoso
             };
-            var bizNote = new NoteBusiness();
+            var bizNote = new NoteRepository();
             await bizNote.AddNoteAsync(ghichu);
             return true;
         }
@@ -571,7 +571,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var hoso = new HoSoBLL().LayChiTiet(id);
             new HoSoXemBLL().DaXem(id);
             ViewBag.HoSo = hoso;
-            ViewBag.MaDoiTac = new DoiTacBLL().LayMaDoiTac(hoso.SanPhamVay);
+            ViewBag.MaDoiTac = new PartnerRepository().LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
             //Session["QL_LstFileHoSo"] = hoso.LstTaiLieu;
             ViewBag.LstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();

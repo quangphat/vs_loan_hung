@@ -246,7 +246,30 @@
                 $("#btn_search").click();
             }
         });
-        function bindQueries() {
+
+        $('#ddlThanhVienNhom').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlNhom').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddllimit').chosen({ width: '100%', allow_single_deselect: true });
+        $('#txtFromDate').datepicker({
+            dateFormat: 'dd-mm-yy'
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+        $('#txtToDate').datepicker({
+            dateFormat: 'dd-mm-yy'
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+        
+        var status = decodeURI(queries.get("status"))
+        if (!isNullOrWhiteSpace(status)) {
+            let arrStatus = status.split(',')
+            $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
+        }
+        
+        bindQueries()
+    });
+            function bindQueries() {
             
             var fromDate = queries.get("fromDate");
             if (isNullOrWhiteSpace(fromDate)) {
@@ -277,28 +300,6 @@
                 limit = parseInt(limit)
             $("#ddlLimit").val(limit)
         }
-        $('#ddlThanhVienNhom').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddlNhom').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddllimit').chosen({ width: '100%', allow_single_deselect: true });
-        $('#txtFromDate').datepicker({
-            dateFormat: 'dd-mm-yy'
-        }).next().on(ace.click_event, function () {
-            $(this).prev().focus();
-        });
-        $('#txtToDate').datepicker({
-            dateFormat: 'dd-mm-yy'
-        }).next().on(ace.click_event, function () {
-            $(this).prev().focus();
-        });
-        
-        var status = decodeURI(queries.get("status"))
-        if (!isNullOrWhiteSpace(status)) {
-            let arrStatus = status.split(',')
-            $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
-        }
-        
-        bindQueries()
-    });
     var strLoading = '@Global.Message_Loading';
     $('#btn_search').click(function (e) {
         showBlock($('#panel_body'), strLoading);

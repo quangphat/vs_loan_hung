@@ -1,0 +1,789 @@
+﻿@using VS_LOAN.Core.Web.Resources;
+@{
+    ViewBag.Title = "Hồ sơ MCredit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+
+</script>
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-caret-right"></i>
+                <a href="#">Hồ sơ MCredit</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">Thông tin hồ sơ:</h3>
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Case number <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtCustomerName" value="@ViewBag.model.CaseNumber" readonly class="form-control">
+                        </div>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Lý do <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtCustomerName" value="@ViewBag.model.Reason" readonly class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày giải ngân <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtCustomerName"  value="@ViewBag.model.MoneyReceiveDate" readonly class="form-control">
+                        </div>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Giải ngân<span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtHometown" value="@ViewBag.model.MoneyReceive" readonly class="form-control">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">1.Thông tin khách hàng:</h3>
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Họ và tên <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtCustomerName" placeholder="Nhập họ tên" value="@ViewBag.model.Name" readonly class="form-control">
+                        </div>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Quê quán(trên CMND) <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtHometown" value="@ViewBag.model.HomeTown" readonly class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày sinh<span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input class="form-control date-picker" readonly value="@ViewBag.model.Bod" id="txtBirthDay" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số điện thoại<span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtPhone" value="@ViewBag.model.Phone" readonly placeholder="Nhập số điện thoại khách hàng" class="form-control">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CMND<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtIdNumber" value="@ViewBag.model.IdNumber" readonly placeholder="Nhập số CMND" class="form-control" />
+                        </div>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CCCD<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtCCCDNumber" value="@ViewBag.model.CccdNumber" readonly placeholder="Nhập số CCCD" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Ngày cấp CMND/CCCD<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input class="form-control date-picker" value="@ViewBag.model.IdDate" readonly id="txtIdDay" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                            @*<div style="margin-top:10px">
+                    <a class="btn btn-primary" id="btn_CheckCIC">
+                        Check CIC
+                    </a>
+                    <a class="btn btn-primary" id="btn_CheckDup">
+                        Check Duplicate
+                    </a>
+                </div>*@
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <p id="checkdupResult" style="color:green"></p>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Địa chỉ sinh sống trùng hộ khẩu *</label>
+                        <div class="col-sm-4">
+                            <label class="control-label no-padding-right">
+                                <input name="radio-isAddr" type="radio" readonly checked="checked" value="1" class="ace">
+                                <span class="lbl"> Có</span>
+                            </label>
+                            <label class="control-label no-padding-right" style="margin-left:20px">
+                                <input name="radio-isAddr" type="radio" readonly value="0" class="ace">
+                                <span class="lbl"> Không</span>
+                            </label>
+                        </div>
+                        @*<label class="col-sm-2 control-label no-padding-right">Giới tính</label>
+            <div class="col-sm-4">
+                <select id="ddlGender" class="chosen-select form-control">
+                    <option value="1">Nam</option>
+                    <option value="0">Nữ</option>
+                </select>
+            </div>*@
+                    </div>
+
+                    <div class="form-group">
+
+                        <label class="col-sm-2 control-label no-padding-right">Tỉnh/TP<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtCityName" value="@ViewBag.model.CityName" readonly class="form-control" />
+                            @*<select id="ddlProvince" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
+                    <option value="0"></option>
+                </select>*@
+                        </div>
+                        @*<label class="col-sm-2 control-label no-padding-right">Quận/huyện<span class="required">(*)</span></label>
+            <div class="col-sm-4">
+                <select id="ddlHuyen" class="chosen-select form-control" data-placeholder="Chọn quận huyện">
+                    <option value="0"></option>
+                </select>
+            </div>*@
+                    </div>
+                    @*<div class="form-group">
+            <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Địa chỉ</label>
+            <div class="col-sm-10">
+                <textarea type="text" id="txtAddress" placeholder="Nhập địa chỉ" class="form-control">@ViewBag.model.Address</textarea>
+            </div>
+        </div>*@
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Sale (Số CMND | CCCD | Mã sale) </label>
+                        <div class="col-sm-4">
+
+                            <input type="text" id="txtSaleCode" value="@ViewBag.model.SaleIdNumber" readonly class="form-control">
+
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right">Mã sale</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtSaleName" value="@(ViewBag.model.SaleCode)" readonly class="form-control">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        
+                        <label class="col-sm-2 control-label no-padding-right">Tên sale</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtSaleName" value="@(ViewBag.model.SaleName)" readonly class="form-control">
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">2.Thông tin khoản vay và sản phẩm:</h3>
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+
+                        <label class="col-sm-2 control-label no-padding-right">Sản phẩm vay<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtProductName" value="@ViewBag.model.ProductName" readonly class="form-control" />
+                            @*<select id="ddlProduct" class="chosen-select form-control" data-placeholder="Chọn sản phẩm vay">
+                                <option value="0"></option>
+                            </select>*@
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-4  col-md-offset-2">
+                            <div class="checkbox">
+                                <label>
+                                    <input name="form-field-checkbox" id="cbbIsInsurrance" readonly type="checkbox" class="ace">
+                                    <span class="lbl">Tham gia bảo hiểm dư nợ tín dụng</span>
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số tiền đề nghị vay<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtLoanMoney" value="@ViewBag.model.LoanMoney" readonly class="form-control">
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right">Thời hạn vay</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtLoanMoney" value="@ViewBag.model.LoanPeriod" readonly class="form-control">
+                            @*<select id="ddlLoanPeriod" class="chosen-select form-control" data-placeholder="Kỳ hạn vay">
+                                <option value="0">Chọn kỳ hạn vay</option>
+                            </select>*@
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Địa điểm ký văn kiện tín dụng<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtLoanMoney" value="@ViewBag.model.LocSignName" readonly class="form-control">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+
+                        <label class="col-sm-2 control-label no-padding-right">Địa chỉ<span class="required">(*)</span></label>
+                        <div class="col-sm-10">
+                            <input type="text" id="txtLoanMoney" value="@ViewBag.model.LocSignAddr" readonly class="form-control">
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">3.Hồ sơ đính kèm:</h3>
+                <div class="row">
+                    <div class="col-xs-12" style="overflow-y: scroll;max-height:400px;">
+                        <form class="form-horizontal" role="form" id="lstTailieu"></form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <hr />
+                <form class="form-horizontal">
+                    <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Ghi chú hồ sơ</h4>
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
+                        <div class="col-md-11 col-sm-12 col-xs-12">
+                            <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
+                        </div>
+                    </div>
+                    <div class="pull-right">
+                        <a class="btn btn-sm btn-primary" href="/MCredit/AddNew" >
+                            Tạo mới hồ sơ
+                        </a>
+                        <a class="btn btn-sm btn-primary" href="/MCredit/Index">
+                            Quay lại
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        setTextForPTag('checkSaleResult');
+        setTextForPTag('checkdupResult');
+        setCheckedValueOfRadioButtonGroup('radio-isAddr', '@ViewBag.model.IsAddrSame');
+        setCheckboxValue('cbbIsInsurrance', '@ViewBag.model.IsInsurrance' =='0' ? false : true)
+        @*GetLocSigns("#ddlLocSign",'@ViewBag.model.LocSignCode');
+        GetLoanPeriods("#ddlLoanPeriod", '@ViewBag.model.LoanPeriodCode');
+        GetLoanCities("#ddlProvince",'@ViewBag.model.ProvinceId');
+        GetLoanProducts("#ddlProduct",'@ViewBag.model.ProductCode');*@
+        getFilesUpload();
+        //getCommentList(@ViewBag.model.Id, 3)
+        
+        //$("#txtIdDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
+    });
+
+    jQuery.fn.ForceNumericOnly =function () {
+    return this.each(function () {
+        $(this).keydown(function (e) {
+            var key = e.charCode || e.keyCode || 0;
+            // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers ONLY
+            // home, end, period, and numpad decimal
+            return (
+                key == 8 ||
+                key == 9 ||
+                key == 13 ||
+                key == 46 ||
+                key == 110 ||
+                key == 190 ||
+                (key >= 35 && key <= 40) ||
+                (key >= 48 && key <= 57) ||
+                (key >= 96 && key <= 105));
+        });
+    });
+};
+    $("#txtPhone").ForceNumericOnly();
+    $("#txtPhone2").ForceNumericOnly();
+    $("#txtLoanMoney").ForceNumericOnly();
+    $("#txtIdNumber").ForceNumericOnly();
+    $("#txtLoanMoney").change(function () {
+        $("#txtLoanMoney").val(formatCurrency($("#txtLoanMoney").val().replace(/\,/g, '')));
+    });
+
+    $('#btn_CheckSale').click(function (e) {
+        let value = $("#txtSaleCode").val()
+        checkSale('checkSaleResult', value,"#txtSaleId", @ViewBag.model.Id);
+    });
+    $('#btn_CheckCIC').click(function (e) {
+        let value = !isNullOrWhiteSpace($("#txtIdNumber").val()) ? $("#txtIdNumber").val() : $("#txtCCCDNumber").val();
+        checkCIC('', value);
+    });
+    $('#btn_CheckDup').click(function (e) {
+        let value = !isNullOrWhiteSpace($("#txtIdNumber").val()) ? $("#txtIdNumber").val() : $("#txtCCCDNumber").val();
+        checkDup('checkdupResult', value);
+    });
+    function getFilesUpload() {
+        $.ajax({
+            type: "POST",
+            url: '/MCredit/GetFileUpload?profileId=' + @ViewBag.model.Id + '&profileTypeId=3&isMcId=true',
+            data: {},
+            success: function (data) {
+                if (data.data != null) {
+                    var i = 0;
+                    var htmlContent = "";
+                    let keys = [];
+                    $.each(data.data, function (index, item) {
+                        $("#lstTailieu").append("<div class='form-group'><div id='tailieu-" + item.ID + "'></div></div > ");
+                        if (!isNullOrNoItem(item.Tailieus)) {
+
+                            let _initialPreview = [];
+                            let _initialPreviewConfig = [];
+                            $.each(item.Tailieus, function (i, tailieu) {
+                                //fileRequireIds.push(item.ID);
+                                _initialPreview = [];
+                                _initialPreviewConfig = [];
+                                var _imgExts = ["jpg", "jpeg", "png", "pdf"];
+                                var extn = tailieu.FileUrl.split('.').pop();
+                                var isImg = isExtension(extn, _imgExts);
+                                if (isImg) {
+                                    _initialPreview.push(tailieu.FileUrl);
+                                    _initialPreviewConfig.push({
+                                        caption: tailieu.FileName,
+                                        url: "/hoso/RemoveTailieuByHoso?hosoId=" + item.ProfileId + "&fileId=" + tailieu.FileId,
+                                        type: extn.indexOf('pdf') > -1 ? "pdf" : "jpg",
+                                        width: "120px"
+                                    });
+                                }
+                                let keyName = '',
+                                    isrequire = false,
+                                    className = ''
+
+                                if (keys.indexOf(tailieu.Key) < 0) {
+                                    keyName = tailieu.KeyName;
+                                    isrequire = true
+                                }
+                                else {
+                                    className = 'mt-46'
+                                }
+                                // renderOneItemFile(tailieu.Key, tailieu.FileId, name, isrequire, className, true, _initialPreview, _initialPreviewConfig, true, true, onUploadFile, onDeleteFile)
+                                renderOneItemFile_MCredit(
+                                    {
+                                        key: tailieu.Key,
+                                        fileId: tailieu.FileId,
+                                        titleName: keyName,
+                                        isRequire: isrequire,
+                                        profileId: item.ProfileId,
+                                        documentName: item.DocumentName,
+                                        documentCode: item.DocumentCode,
+                                        documentId: item.DocumentId,
+                                        groupId: item.GroupId
+                                    }
+                                    , className, true, _initialPreview, _initialPreviewConfig, false, true, null, onDeleteFile, filesUpload);
+                                keys.push(item.ID)
+                            })
+                            if (item.Tailieus.length < 50) {
+                                //renderOneItemFile(item.ID, item.ID, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile)
+                                renderOneItemFile_MCredit(
+                                    {
+                                        key: item.ID,
+                                        fileId: 0,
+                                        titleName: '',
+                                        isRequire: false,
+                                        profileId: item.ProfileId,
+                                        documentName: item.DocumentName,
+                                        documentCode: item.DocumentCode,
+                                        documentId: item.DocumentId,
+                                        groupId: item.GroupId
+                                    }
+                                    , 'mt-46', true, [], [], false, false, null, onDeleteFile, filesUpload);
+                            }
+
+                        }
+                        else {
+                            renderOneItemFile_MCredit(
+                                {
+                                    key: item.ID,
+                                    fileId: 0,
+                                    titleName: item.Ten,
+                                    isRequire: item.BatBuoc,
+                                    profileId: item.ProfileId,
+                                    documentName: item.DocumentName,
+                                    documentCode: item.DocumentCode,
+                                    documentId: item.DocumentId,
+                                    groupId: item.GroupId
+                                }
+                                , 'mt-46', true, [], [], false, false, onUploadFile, onDeleteFile, filesUpload);
+                            //keys.push(item.ID);
+                        }
+                        //------------
+
+
+                    })
+                }
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+    let filesUpload = [];
+    function onDeleteFile(key, fileId, isExist) {
+        removeFile(key, fileId);
+    }
+    function onUploadFile(model, data, isExist) {
+
+        if (isReach5Files(filesUpload, model.key))
+            return;
+        if (isNullOrNoItem(filesUpload)) {
+            filesUpload = []
+        }
+        let file = {
+            Key: parseInt(data.initialPreviewConfig[0].key),
+            FileName: data.initialPreviewConfig[0].caption,
+            FileUrl: data.initialPreview,
+            KeyName: "",
+            Id: model.fileId,
+            documentId: model.documentId
+        }
+        let existKeyIndex = filesUpload.findIndex(p => p.key == model.key)
+        if (existKeyIndex < 0) {
+            filesUpload.push({ key: parseInt(model.key), files: [file], documentId: model.documentId })
+        }
+        else {
+            if (filesUpload[existKeyIndex].files == null)
+                filesUpload[existKeyIndex].files = []
+            filesUpload[existKeyIndex].files.push(file);
+        }
+        if (isReach5Files(filesUpload, model.key) === false) {
+            model.fileId = getNewGuid();
+            model.isRequire = false
+            //model.titleName = ''
+            renderOneItemFile_MCredit(model, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
+        }
+    }
+    function removeFile(key, fileId) {
+        if (isNullOrNoItem(filesUpload))
+            return;
+        let index = filesUpload.findIndex(p => p.key == key);
+        if (index >= 0) {
+            if (!isNullOrNoItem(filesUpload[index].files)) {
+                let indexOfFile = filesUpload[index].files.findIndex(p => p.Id == fileId);
+                if (indexOfFile >= 0)
+                    filesUpload[index].files.splice(indexOfFile, 1);
+            }
+        }
+    }
+
+
+
+    $('#btn_Temp').click(function (e) {
+        if ($('#txtCustomerName').val() == "" || $('#txtCustomerName').val() == undefined) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng nhập họ tên",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if (isNullOrWhiteSpace($('#txtBirthDay').val())) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn ngày sinh",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if (isNullOrWhiteSpace($('#ddlProvince').val()) || $('#ddlProvince').val() =="0") {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn tỉnh/thành",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if (isNullOrWhiteSpace($('#txtIdDay').val())) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn ngày cấp cmnd/cccd",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+
+        if ($('#ddlProduct').val() == "0" || $('#ddlProduct').val() == undefined) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn sản phẩm vay",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if (isNullOrWhiteSpace($('#ddlLocSign').val()) || $('#ddlLocSign').val() =="0") {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn địa điểm ký văn kiện",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if (isNullOrWhiteSpace($('#ddlLoanPeriod').val()) || $('#ddlLoanPeriod').val() =="0") {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn kỳ hạn vay",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        var objectSend = JSON.stringify({
+            "Id": @ViewBag.model.Id,
+            "CustomerName": $("#txtCustomerName").val(),
+            "Hometown": $("#txtHometown").val(),
+            "BirthDay": $('#txtBirthDay').val(),
+            "Phone": $('#txtPhone').val(),
+            "IdNumber": $('#txtIdNumber').val(),
+            "CCCDNumber": $('#txtCCCDNumber').val(),
+            "IssueDate": $('#txtIdDay').val(),
+            "IsAddr": getRadioButtonValue('radio-isAddr'),
+            "Gender": $("#ddlGender").val() == "1" ? true : false,
+            "ProvinceId": $("#ddlProvince").val(),
+            "DistrictId": 0,
+            "Address": $("#txtAddress").val(),
+            "SaleNumber": $("#txtSaleCode").val(),
+            "ProductCode": $("#ddlProduct").val(),
+            "LoanPeriodCode": $("#ddlLoanPeriod").val(),
+            "LocSignCode": $("#ddlLocSign").val(),
+            "LoanMoney": $('#txtLoanMoney').val().replace(/\./g, ''),
+            "IsInsurrance": getCheckboxValue('cbbIsInsurrance'),
+            "Status":  @ViewBag.model.Status,
+            "SaleId": $("#txtSaleId").val(),
+        });
+
+        $.ajax({
+            traditional: true,
+            url: '@Url.Action("UpdateDraft", "MCredit")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                if (data.success == true) {
+                     swal({
+                            title: "@Html.Raw(Global.Message_Title)",
+                            text: "Thành công",
+                            type: "success",
+                            timer: 4000,
+                            showConfirmButton: true,
+                        }, function () {
+                            //window.location = window.location;
+
+                            //uploadFiles(data.data, false);
+                        });
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+    });
+
+    $('#btn_Save').click(function (e) {
+
+                if ($('#txtCustomerName').val() == "" || $('#txtCustomerName').val() == undefined) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng nhập họ tên",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if (isNullOrWhiteSpace($('#txtBirthDay').val())) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn ngày sinh",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if (isNullOrWhiteSpace($('#ddlProvince').val()) || $('#ddlProvince').val() =="0") {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn tỉnh/thành",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if (isNullOrWhiteSpace($('#txtIdDay').val())) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn ngày cấp cmnd/cccd",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+
+        if ($('#ddlProduct').val() == "0" || $('#ddlProduct').val() == undefined) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn sản phẩm vay",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if (isNullOrWhiteSpace($('#ddlLocSign').val()) || $('#ddlLocSign').val() =="0") {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn địa điểm ký văn kiện",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if (isNullOrWhiteSpace($('#ddlLoanPeriod').val()) || $('#ddlLoanPeriod').val() =="0") {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn kỳ hạn vay",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+
+        let FileRequireIds = [];
+        var objectSend = JSON.stringify({
+            "Id": @ViewBag.model.Id,
+            "CustomerName": $("#txtCustomerName").val(),
+            "Hometown": $("#txtHometown").val(),
+            "BirthDay": $('#txtBirthDay').val(),
+            "Phone": $('#txtPhone').val(),
+            "IdNumber": $('#txtIdNumber').val(),
+            "CCCDNumber": $('#txtCCCDNumber').val(),
+            "IssueDate": $('#txtIdDay').val(),
+            "IsAddr": getRadioButtonValue('radio-isAddr'),
+            "Gender": $("#ddlGender").val() == "1" ? true : false,
+            "ProvinceId": $("#ddlProvince").val(),
+            "DistrictId": 0,
+            "Address": $("#txtAddress").val(),
+            "SaleNumber": $("#txtSaleCode").val(),
+            "ProductCode": $("#ddlProduct").val(),
+            "LoanPeriodCode": $("#ddlLoanPeriod").val(),
+            "LocSignCode": $("#ddlLocSign").val(),
+            "LoanMoney": $('#txtLoanMoney').val().replace(/\./g, ''),
+            "IsInsurrance": getCheckboxValue('cbbIsInsurrance'),
+            "Status": 0,
+            "SaleId": $("#txtSaleId").val()
+        });
+        $.ajax({
+            traditional: true,
+            url: '@Url.Action("SubmitToMCredit", "MCredit")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                if (data.success == true) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: "Thành công",
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                        uploadFiles(data.data, true);
+                    });
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.data.message,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+    });
+         function uploadFiles(hosoId, reloadOnSuccess = false) {
+            if (isNullOrNoItem(filesUpload))
+                return;
+            $.ajax({
+                traditional: true,
+                url: `/HoSo/UploadToHoso?hosoId=${hosoId}&isReset=true`,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                //dataType: 'json',
+                data: JSON.stringify(filesUpload),
+                success: function (data) {
+                    if (data.success == true) {
+                        if (reloadOnSuccess == true) {
+                            window.location = window.location;
+                        }
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+        }
+</script>

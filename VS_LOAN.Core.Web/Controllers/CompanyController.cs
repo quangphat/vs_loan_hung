@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
-using VS_LOAN.Core.Business;
+using VS_LOAN.Core.Repository;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Utility;
@@ -33,7 +33,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> Search(string freeText = null, int page = 1, int limit = 10)
         {
-            var bizCompany = new CompanyBusiness();
+            var bizCompany = new CompanyRepository();
             var totalRecord = await bizCompany.CountAsync(freeText);
             var datas = await bizCompany.GetsAsync(freeText, page, limit);
             var result = DataPaging.Create(datas, totalRecord);
@@ -47,7 +47,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<ActionResult> Create(Company model)
         {
-            var _bizCompany = new CompanyBusiness();
+            var _bizCompany = new CompanyRepository();
             var id = await _bizCompany.CreateAsync(model);
             if (id > 0)
             {
@@ -60,7 +60,7 @@ namespace VS_LOAN.Core.Web.Controllers
                         TypeId = NoteType.Company,
                         UserId = GlobalData.User.IDUser
                     };
-                    var bizNote = new NoteBusiness();
+                    var bizNote = new NoteRepository();
                     await bizNote.AddNoteAsync(note);
                 }
                 return ToResponse(true);
@@ -70,7 +70,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<ActionResult> Edit(int id)
         {
-            var bizCompany = new CompanyBusiness();
+            var bizCompany = new CompanyRepository();
             var company = await bizCompany.GetByIdAsync(id);
             ViewBag.company = company;
             return View();
@@ -82,7 +82,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToResponse(false, "Dữ liệu không hợp lệ");
             }
-            var bizCompany = new CompanyBusiness();
+            var bizCompany = new CompanyRepository();
 
             var result = await bizCompany.UpdateAsync(model);
             if (!result)
@@ -96,7 +96,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     TypeId = NoteType.Company,
                     UserId = GlobalData.User.IDUser
                 };
-                var bizNote = new NoteBusiness();
+                var bizNote = new NoteRepository();
                 await bizNote.AddNoteAsync(note);
             }
             
@@ -119,7 +119,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetNotes(int companyId)
         {
-            var bizNote = new NoteBusiness();
+            var bizNote = new NoteRepository();
             var datas = await bizNote.GetNoteByTypeAsync(companyId, typeId: (int)NoteType.Company);
             return ToJsonResponse(true, null, datas);
         }

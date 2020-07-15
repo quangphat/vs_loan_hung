@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Net.Mail;
 using System.Web.Http;
 using System.Web.Mvc;
-using VS_LOAN.Core.Business;
+using VS_LOAN.Core.Repository;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Utility;
@@ -17,26 +17,32 @@ using VS_LOAN.Core.Web.Helpers;
 using System.Threading.Tasks;
 using F88Service;
 using VS_LOAN.Core.Entity.UploadModel;
+using VS_LOAN.Core.Repository.Interfaces;
+using VS_LOAN.Core.Business.Interfaces;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class HoSoController : BaseController
     {
-        public static Dictionary<string, ActionInfo> LstRole
+        protected readonly ITailieuRepository _rpTailieu;
+        protected readonly IPartnerRepository _rpPartner;
+        protected readonly IEmployeeRepository _rpEmployee;
+        protected readonly IMediaBusiness _bizMedia;
+        public HoSoController(ITailieuRepository tailieuBusiness,
+            IEmployeeRepository employeeRepository,
+            IMediaBusiness mediaBusiness,
+            IPartnerRepository partnerRepository) : base()
         {
-            get
-            {
-                Dictionary<string, ActionInfo> _lstRole = new Dictionary<string, ActionInfo>();
-                _lstRole.Add("AddNew", new ActionInfo() { _formindex = IndexMenu.M_1_1, _href = "HoSo/AddNew", _mangChucNang = new int[] { (int)QuyenIndex.Public } });
-                _lstRole.Add("Index", new ActionInfo() { _formindex = IndexMenu.M_1_2, _href = "HoSo/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } });
-                return _lstRole;
-            }
-
+            _rpTailieu = tailieuBusiness;
+            _rpPartner = partnerRepository;
+            _bizMedia = mediaBusiness;
+            _rpEmployee = employeeRepository;
         }
+
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult AddNew()
         {
-            ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;
+            ViewBag.formindex = Infrastructures.ControllerRoles.Roles[RouteData.Values["action"].ToString()]._formindex;
             Session["AddNewHoSoID"] = 0;
             Session["LstFileHoSo"] = new List<TaiLieuModel>();
             ViewBag.MaNV = GlobalData.User.IDUser;
@@ -45,20 +51,19 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<JsonResult> LayDSTaiLieu()
         {
-            var bizTailieu = new TailieuBusiness();
-            List<LoaiTaiLieuModel> rs =await bizTailieu.GetLoaiTailieuList();
-            return ToJsonResponse(true,null, rs);
-        }
-        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public JsonResult LayDSDoiTac()
-        {
-            List<DoiTacModel> rs = new DoiTacBLL().LayDS();
+            var rs = await _rpTailieu.GetLoaiTailieuList();
             return ToJsonResponse(true, null, rs);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public JsonResult LayDSCourier()
+        public async Task<JsonResult> LayDSDoiTac()
         {
-            List<NhanVienInfoModel> rs = new CourierCodeBLL().LayDS();
+            var rs = await _rpPartner.LayDS();
+            return ToJsonResponse(true, null, rs);
+        }
+        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
+        public async Task<JsonResult> LayDSCourier()
+        {
+            var rs = await _rpEmployee.GetCourierList();
             return ToJsonResponse(true, null, rs);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
@@ -79,7 +84,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public JsonResult LayDSSale()
         {
             List<UserPMModel> rs = new List<UserPMModel>();
-            var lstNhom = new GroupBusiness().LayDSCuaNhanVien(GlobalData.User.IDUser);
+            var lstNhom = new GroupRepository().LayDSCuaNhanVien(GlobalData.User.IDUser);
             if (lstNhom != null)
             {
                 foreach (var item in lstNhom)
@@ -112,7 +117,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 CommentTime = DateTime.Now,
                 TypeId = NoteType.Hoso
             };
-            var bizNote = new NoteBusiness();
+            var bizNote = new NoteRepository();
             await bizNote.AddNoteAsync(ghichu);
             return true;
         }
@@ -122,14 +127,14 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             var f88Service = new F88Service.F88Service();
             var result = await f88Service.LadipageReturnID(model);
-            if(result.Success)
+            if (result.Success)
                 return ToJsonResponse(true, null, result);
             return ToJsonResponse(false, result.Message, null);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<ActionResult> Save(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
            , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay,
-            string soTienVay, string ghiChu, string birthDayStr, string cmndDayStr, string link = null, int provinceId = 0, int doitacF88Value = 0, List<int> FileRequireIds = null)
+            string soTienVay, string ghiChu, string birthDayStr, string cmndDayStr, string link = null, int provinceId = 0, int doitacF88Value = 0, List<int> FileRequireIds = null, int partnerType = 0)
         {
             if (!string.IsNullOrWhiteSpace(ghiChu) && ghiChu.Length > 200)
             {
@@ -181,8 +186,8 @@ namespace VS_LOAN.Core.Web.Controllers
 
                 }
                 List<TaiLieuModel> lstTaiLieu = (List<TaiLieuModel>)Session["LstFileHoSo"];
-                var _bizTailieu = new TailieuBusiness();
-                List<LoaiTaiLieuModel> lstLoaiTaiLieu = await _bizTailieu.GetLoaiTailieuList();
+
+                var lstLoaiTaiLieu = await _rpTailieu.GetLoaiTailieuList();
                 lstLoaiTaiLieu.RemoveAll(x => x.BatBuoc == 0);
                 if (lstLoaiTaiLieu != null)
                 {
@@ -276,12 +281,12 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> UploadToHoso(int hosoId, bool isReset, List<FileUploadModelGroupByKey> filesGroup)
         {
-            if (hosoId <= 0 || filesGroup==null)
+            if (hosoId <= 0 || filesGroup == null)
                 return ToJsonResponse(false);
-            var bizTailieu = new TailieuBusiness();
+
             if (isReset)
             {
-                var deleteAll = await bizTailieu.RemoveAllTailieu(hosoId,(int)HosoType.Hoso);
+                var deleteAll = await _rpTailieu.RemoveAllTailieu(hosoId, (int)HosoType.Hoso);
                 if (!deleteAll)
                     return ToJsonResponse(false);
             }
@@ -295,11 +300,12 @@ namespace VS_LOAN.Core.Web.Controllers
                         {
                             FileName = file.FileName,
                             FilePath = file.FileUrl,
-                            HosoId = hosoId,
-                            TypeId = Convert.ToInt32(file.Key),
-                            LoaiHoso = (int)HosoType.Hoso
+                            ProfileId = hosoId,
+                            FileKey = Convert.ToInt32(file.Key),
+                            ProfileTypeId = (int)HosoType.Hoso,
+                            Folder = file.FileUrl
                         };
-                        await bizTailieu.Add(tailieu);
+                        await _rpTailieu.Add(tailieu);
                     }
                 }
             }
@@ -320,9 +326,8 @@ namespace VS_LOAN.Core.Web.Controllers
                     {
                         Stream stream = fileContent.InputStream;
                         string root = Server.MapPath("~/Upload");
-                        var _bizMedia = new MediaBusiness();
                         stream.Position = 0;
-                        file = _bizMedia.GetFileUploadUrl(fileContent.FileName, root);
+                        file = _bizMedia.GetFileUploadUrl(fileContent.FileName, root, Utility.FileUtils.GenerateProfileFolder());
                         using (var fileStream = System.IO.File.Create(file.FullPath))
                         {
                             await stream.CopyToAsync(fileStream);
@@ -332,7 +337,15 @@ namespace VS_LOAN.Core.Web.Controllers
                         deleteURL = fileId <= 0 ? $"/hoso/delete?key={key}" : $"/hoso/delete/0/{fileId}";
                         if (fileId > 0)
                         {
-                            await _bizMedia.UpdateExistingFile(fileId, file.Name, file.FileUrl,type );
+                           
+                            await _rpTailieu.UpdateExistingFile(new TaiLieu
+                            {
+                                FileName = file.Name,
+                                Folder = file.Folder,
+                                FilePath = file.FileUrl,
+                                ProfileId = 0,
+                                ProfileTypeId = type
+                            }, fileId);
                         }
                         _type = System.IO.Path.GetExtension(fileContent.FileName);
                     }
@@ -385,9 +398,9 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             if (fileId <= 0)
             {
-                return ToJsonResponse(false,null,"Dữ liệu không hợp lệ");
+                return ToJsonResponse(false, null, "Dữ liệu không hợp lệ");
             }
-            var bizHoso = new HosoBusiness();
+            var bizHoso = new HosoRepository();
             var result = await bizHoso.RemoveTailieu(hosoId, fileId);
             return ToJsonResponse(true);
         }
@@ -395,10 +408,10 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             if (hosoId <= 0)
             {
-                return ToJsonResponse(false,null,"Dữ liệu không hợp lệ");
+                return ToJsonResponse(false, null, "Dữ liệu không hợp lệ");
             }
-            var bizHoso = new HosoBusiness();
-            var bizTailieu = new TailieuBusiness();
+            var bizHoso = new HosoRepository();
+            var bizTailieu = new TailieuRepository();
             var lstLoaiTailieu = await bizTailieu.GetLoaiTailieuList();
             if (lstLoaiTailieu == null || !lstLoaiTailieu.Any())
                 return ToJsonResponse(false);
@@ -421,20 +434,20 @@ namespace VS_LOAN.Core.Web.Controllers
                 result.Add(item);
 
             }
-            return ToJsonResponse(true,null,result);
+            return ToJsonResponse(true, null, result);
         }
-        public async Task<JsonResult> TailieuByHoso(int hosoId, int type=1)
+        public async Task<JsonResult> TailieuByHoso(int hosoId, int type = 1)
         {
-            var bizHoso = new HosoBusiness();
+            var bizHoso = new HosoRepository();
             var result = await bizHoso.GetTailieuByHosoId(hosoId, type);
             if (result == null)
                 result = new List<FileUploadModel>();
-            return ToJsonResponse(true,null,result);
+            return ToJsonResponse(true, null, result);
         }
         public JsonResult Delete(int key)
         {
             string fileUrl = "";
-            
+
             return Json(new { Result = fileUrl });
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
@@ -525,12 +538,12 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToResponse(false, ex.Message);
             }
-            
+
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult Index()
         {
-            ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;
+            ViewBag.formindex = Infrastructures.ControllerRoles.Roles[RouteData.Values["action"].ToString()]._formindex;
             return View();
         }
 
@@ -550,11 +563,11 @@ namespace VS_LOAN.Core.Web.Controllers
                 rs = new HoSoBLL().TimHoSoCuaToi(GlobalData.User.IDUser, dtFromDate, dtToDate, maHS, sdt, trangthai);
                 if (rs == null)
                     rs = new List<HoSoCuaToiModel>();
-                return ToJsonResponse(true,null,rs);
+                return ToJsonResponse(true, null, rs);
             }
             catch (BusinessException ex)
             {
-                return ToJsonResponse(false,ex.Message);
+                return ToJsonResponse(false, ex.Message);
             }
         }
 
@@ -568,14 +581,14 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<ActionResult> ChiTietHoSo()
         {
-            ViewBag.formindex = LstRole["Index"]._formindex;
+            ViewBag.formindex = Infrastructures.ControllerRoles.Roles["profile_list"]._formindex;
             if (Session["HoSo_ChiTietHoSo_ID"] == null)
                 return RedirectToAction("Index");
             var hoso = new HoSoBLL().LayChiTiet((int)Session["HoSo_ChiTietHoSo_ID"]);
             ViewBag.HoSo = hoso;
-            ViewBag.MaDoiTac = new DoiTacBLL().LayMaDoiTac(hoso.SanPhamVay);
+            ViewBag.MaDoiTac = new PartnerRepository().LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
-            var bizTailieu = new TailieuBusiness();
+            var bizTailieu = new TailieuRepository();
             ViewBag.LstLoaiTaiLieu = await bizTailieu.GetLoaiTailieuList();
 
             return View();
@@ -591,15 +604,15 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult SuaHoSo()
         {
-            ViewBag.formindex = LstRole["Index"]._formindex;
+            ViewBag.formindex = Infrastructures.ControllerRoles.Roles["profile_list"]._formindex;
             if (Session["AddNewHoSoID"] == null)
                 return RedirectToAction("Index");
             var hoso = new HoSoBLL().LayChiTiet((int)Session["AddNewHoSoID"]);
             ViewBag.HoSo = hoso;
-            ViewBag.MaDoiTac = new DoiTacBLL().LayMaDoiTac(hoso.SanPhamVay);
+            ViewBag.MaDoiTac = new PartnerRepository().LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
             Session["LstFileHoSo"] = hoso.LstTaiLieu;
-            var bizTailieu = new TailieuBusiness();
+            var bizTailieu = new TailieuRepository();
             //ViewBag.LstLoaiTaiLieu = bizTailieu.GetLoaiTailieuList();
             return View();
         }
@@ -620,7 +633,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false);
             }
-            
+
         }
 
 

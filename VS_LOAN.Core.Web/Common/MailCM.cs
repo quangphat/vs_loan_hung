@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Net.Mail;
 using System.IO;
-using VS_LOAN.Core.Business;
+using VS_LOAN.Core.Repository;
 using VS_LOAN.Core.Entity.Model;
 using System.Web.Http.Results;
 using System.Web.Mvc;
