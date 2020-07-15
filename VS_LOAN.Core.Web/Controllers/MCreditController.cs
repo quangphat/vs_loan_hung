@@ -48,12 +48,21 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = await _svMCredit.AuthenByUserId(model.UserId, model.TableToUpdateIds);
             return ToJsonResponse(true, result, result);
         }
-        public async Task<JsonResult> CheckSaleApi(StringModel model)
+        public async Task<JsonResult> CheckSaleApi(StringModel2 model)
         {
             if (model == null || string.IsNullOrWhiteSpace(model.Value))
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var result = await _svMCredit.CheckSale(GlobalData.User.IDUser, model.Value);
-            return ToJsonResponse(true, result.msg != null ? result.msg.ToString() : string.Empty, result);
+            if(!string.IsNullOrWhiteSpace(model.Value2))
+            {
+                if (result.status == "success" && result.obj != null)
+                {
+                    var sale = _mapper.Map<UpdateSaleModel>(result.obj);
+                    _rpMCredit.UpdateSale(sale, Convert.ToInt32(model.Value2));
+                }
+            }
+            
+            return ToJsonResponse(result.status == "success" ? true : false, result.msg != null ? result.msg.ToString() : string.Empty, result);
         }
         public ActionResult CheckCat()
         {
@@ -103,11 +112,11 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             return View();
         }
-        public async Task<JsonResult> SearchTemps(string freeText,  int page = 1,int limit =20)
+        public async Task<JsonResult> SearchTemps(string freeText, int page = 1, int limit = 20)
         {
             page = page <= 0 ? 1 : page;
             var total = await _rpMCredit.CountTempProfiles(freeText);
-            var profiles = await _rpMCredit.GetTempProfiles( page, limit, freeText);
+            var profiles = await _rpMCredit.GetTempProfiles(page, limit, freeText);
             var result = DataPaging.Create(profiles, total);
             return ToJsonResponse(true, "", result);
         }
@@ -385,13 +394,15 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             if (model == null || model.Id <= 0)
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            if (model.SaleId <= 0)
+                return ToJsonResponse(false, "Vui lòng chọn Sale");
             var profileSql = _mapper.Map<MCredit_TempProfile>(model);
             profileSql.UpdatedBy = GlobalData.User.IDUser;
             var profileMC = _mapper.Map<MCProfilePostModel>(model);
             var result = await _svMCredit.CreateProfile(profileMC, GlobalData.User.IDUser);
             //if(result)
             //var createJsonFile = await _bizMedia.ProcessFilesToSendToMC(model.Id, Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}"));
-            return ToJsonResponse(result.status =="success" ? true:false,"", result);
+            return ToJsonResponse(result.status == "success" ? true : false, "", result);
         }
 
     }

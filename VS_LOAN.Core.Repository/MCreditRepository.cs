@@ -18,6 +18,24 @@ namespace VS_LOAN.Core.Repository
         {
 
         }
+        public async Task<bool> UpdateSale(UpdateSaleModel model, int profileId)
+        {
+
+                using (var con = GetConnection())
+                {
+
+                    await con.ExecuteAsync("sp_MCredit_TempProfile_update_Sale", new
+                    {
+                        profileId,
+                        model.SaleId,
+                        model.SaleNumber,
+                        model.SaleName
+                    }, commandType: CommandType.StoredProcedure);
+                }
+            
+            // await Task.WhenAll(tasks);
+            return true;
+        }
         public async Task<bool> DeleteMCTableDatas(int type)
         {
             using (var con = GetConnection())

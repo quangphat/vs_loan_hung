@@ -151,6 +151,7 @@
     <Compile Include="MCreditModels\SqlModel\MCreditProduct.cs" />
     <Compile Include="MCreditModels\SqlModel\MCreditProfile.cs" />
     <Compile Include="MCreditModels\SqlModel\MCredit_TempProfileAddModel.cs" />
+    <Compile Include="MCreditModels\SqlModel\UpdateSaleModel.cs" />
     <Compile Include="Model\AutoIDModel.cs" />
     <Compile Include="Model\Customer.cs" />
     <Compile Include="Model\CustomerCheck.cs" />

@@ -9,5 +9,12 @@ namespace VS_LOAN.Core.Entity
     public class StringModel
     {
         public string Value { get; set; }
+        public string Value2 { get; set; }
+    }
+    public class StringModel2:StringModel
+    {
+        public string Value2 { get; set; }
+        public string Value3 { get; set; }
+        public string Value4 { get; set; }
     }
 }

@@ -254,10 +254,11 @@ function checkCAT(controlId, value) {
             },
         });
 }
-function checkSale(controlId, value, controlToSetId = null) {
+function checkSale(controlId, value, controlToSetId = null, profileId = 0) {
 
     var objectSend = JSON.stringify({
-        'Value': value
+        'Value': value,
+        'Value2': profileId
     });
     $.ajax({
         traditional: true,
