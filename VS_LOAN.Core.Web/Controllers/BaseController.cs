@@ -69,6 +69,21 @@ namespace VS_LOAN.Core.Web.Controllers
                .ForMember(a => a.SaleName, b => b.MapFrom(c => c.name))
                .ForMember(a => a.SaleNumber, b => b.MapFrom(c => c.idNumber))
                .ForMember(a => a.SaleId, b => b.MapFrom(c => c.id));
+
+                x.CreateMap<ProfileGetByIdResponseObj, MCredit_TempProfile>()
+              .ForMember(a => a.CustomerName, b => b.MapFrom(c => c.Name))
+              .ForMember(a => a.MCId, b => b.MapFrom(c => c.Id))
+              .ForMember(a => a.Hometown, b => b.MapFrom(c => c.HomeTown))
+              .ForMember(a => a.BirthDay, b => b.MapFrom(c => c.Bod))
+              .ForMember(a => a.Phone, b => b.MapFrom(c => c.Phone))
+              .ForMember(a => a.IdNumber, b => b.MapFrom(c => c.IdNumber))
+              .ForMember(a => a.CCCDNumber, b => b.MapFrom(c => c.CccdNumber))
+              .ForMember(a => a.IssueDate, b => b.MapFrom(c => c.IdDate))
+              .ForMember(a => a.IsAddr, b => b.MapFrom(c => c.IsAddrSame))
+              .ForMember(a => a.ProvinceId ,b => b.MapFrom(c => c.CityId))
+              .ForMember(a => a.Address, b => b.MapFrom(c => c.LocSignAddr))
+              .ForMember(a => a.Hometown, b => b.MapFrom(c => c.HomeTown))
+              ;
             });
 
             _mapper = config.CreateMapper();

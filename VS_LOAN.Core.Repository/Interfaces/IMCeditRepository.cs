@@ -11,6 +11,7 @@ namespace VS_LOAN.Core.Repository.Interfaces
 {
     public interface IMCeditRepository
     {
+        Task<MCredit_TempProfile> GetTemProfileByMcId(string id);
         Task<List<OptionSimple>> GetMCProfileStatusList();
         Task<bool> UpdateSale(UpdateSaleModel model, int profileId);
         Task<int> CountTempProfiles(string freeText);

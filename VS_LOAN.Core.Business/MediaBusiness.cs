@@ -219,7 +219,7 @@ namespace VS_LOAN.Core.Business
                 return string.Empty;
             }
 
-            return $"{folder}/{ fileName}.zip";
+            return $"{folder}/{fileName}.zip";
         }
     }
 }

@@ -376,6 +376,9 @@ function renderOneItemFile_MCredit(model, className = '', generateInput = false,
     &orderId=${orderId}&profileId=${model.profileId}&documentName=${model.documentName}&documentCode=${model.documentCode}&documentId=${model.documentId}&groupId=${model.groupId}`
             : `/MCredit/UploadFile?key=${model.key}&fileId=0&orderId=${orderId}&profileId=${model.profileId}
                 &documentName=${model.documentName}&documentCode=${model.documentCode}&documentId=${model.documentId}&groupId=${model.groupId}`;
+        if (allowUpload == false)
+            uploadUrl = null;
+        debugger
         $(item).fileinput({
             uploadUrl: allowUpload === true ? uploadUrl : null,
             validateInitialCount: true,
@@ -412,7 +415,7 @@ function renderOneItemFile_MCredit(model, className = '', generateInput = false,
             fileActionSettings: {
                 showDownload: true,
                 showRemove: true,
-                showUpload: true,
+                showUpload: false,
                 showZoom: true,
                 showDrag: false
             },

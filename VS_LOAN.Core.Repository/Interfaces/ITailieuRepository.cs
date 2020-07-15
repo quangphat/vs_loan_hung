@@ -10,6 +10,8 @@ namespace VS_LOAN.Core.Repository.Interfaces
 {
     public interface ITailieuRepository
     {
+        Task<List<FileUploadModel>> GetTailieuByMCId(string mcId);
+        Task<bool> UpdateTailieuHosoMCId(int profileId, string mcId);
         Task<bool> UpdateExistingFile(TaiLieu taiLieu, int fileId);
         Task<List<LoaiTaiLieuModel>> GetLoaiTailieuList(int profileType = 0);
         Task<bool> RemoveAllTailieu(int hosoId, int typeId);

@@ -212,3 +212,33 @@ begin
 end;
 end
 ---------------
+create procedure [dbo].[getTailieuByMCId](@mcId varchar(20))
+
+as
+
+begin
+--3 is mcredit
+
+	select tl.ID as FileId,
+	tl.FileKey as [Key] 
+	, tl.FileName 
+		, tl.FilePath as FileUrl
+		,tl.DocumentName as KeyName
+		,tl.ProfileId
+		,tl.ProfileTypeId
+		,tl.Folder,
+		tl.DocumentName ,
+		tl.DocumentCode ,
+		tl.MC_DocumentId,
+		tl.MC_MapBpmVar,
+		tl.MC_GroupId
+	from TAI_LIEU_HS tl where MCId = @mcId and ProfileTypeId = 3
+end
+-------------------
+
+ALTER procedure [dbo].[sp_TaiLieuHoso_UpdateMCId] (@profileId int, @mcId varchar(20))
+as
+begin
+update TAI_LIEU_HS set MCId = @mcId where ProfileId = @profileId and ProfileTypeId =3 
+end
+-------------

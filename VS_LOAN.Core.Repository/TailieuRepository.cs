@@ -88,5 +88,30 @@ namespace VS_LOAN.Core.Repository
             }
 
         }
+        public async Task<List<FileUploadModel>> GetTailieuByMCId(string  mcId)
+        {
+            using (var con = GetConnection())
+            {
+                var p = new DynamicParameters();
+                p.Add("mcId", mcId);
+               
+                var result = await con.QueryAsync<FileUploadModel>("getTailieuByMCId", p,
+                    commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+
+        }
+        public async Task<bool> UpdateTailieuHosoMCId(int profileId, string mcId)
+        {
+            using (var con = GetConnection())
+            {
+                await con.ExecuteAsync("sp_TaiLieuHoso_UpdateMCId", new {
+                    profileId,
+                    mcId
+                },
+                    commandType: CommandType.StoredProcedure);
+                return true;
+            }
+        }
     }
 }
