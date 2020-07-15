@@ -1,6 +1,6 @@
 ﻿@using VS_LOAN.Core.Web.Resources;
 @{
-    ViewBag.Title = "Cập nhật hồ sơ tạm";
+    ViewBag.Title = "Hồ sơ MCredit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <script type="text/javascript">
@@ -11,11 +11,38 @@
         <ul class="breadcrumb">
             <li>
                 <i class="fa fa-caret-right"></i>
-                <a href="#">Cập nhật hồ sơ tạm</a>
+                <a href="#">Hồ sơ MCredit</a>
             </li>
         </ul>
     </div>
     <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">Thông tin hồ sơ:</h3>
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Case number <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtCustomerName" value="@ViewBag.model.CaseNumber" readonly class="form-control">
+                        </div>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Lý do <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtCustomerName" value="@ViewBag.model.Reason" readonly class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày giải ngân <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtCustomerName"  value="@ViewBag.model.MoneyReceiveDate" readonly class="form-control">
+                        </div>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Giải ngân<span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtHometown" value="@ViewBag.model.MoneyReceive" readonly class="form-control">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
         <div class="row">
             <div class="col-xs-12">
                 <h3 class="header smaller lighter blue">1.Thông tin khách hàng:</h3>
@@ -66,13 +93,13 @@
                                 </span>
                             </div>
                             @*<div style="margin-top:10px">
-                                <a class="btn btn-primary" id="btn_CheckCIC">
-                                    Check CIC
-                                </a>
-                                <a class="btn btn-primary" id="btn_CheckDup">
-                                    Check Duplicate
-                                </a>
-                            </div>*@
+                    <a class="btn btn-primary" id="btn_CheckCIC">
+                        Check CIC
+                    </a>
+                    <a class="btn btn-primary" id="btn_CheckDup">
+                        Check Duplicate
+                    </a>
+                </div>*@
                         </div>
                         <div class="col-sm-4">
                             <div class="input-group">
@@ -94,12 +121,12 @@
                             </label>
                         </div>
                         @*<label class="col-sm-2 control-label no-padding-right">Giới tính</label>
-                        <div class="col-sm-4">
-                            <select id="ddlGender" class="chosen-select form-control">
-                                <option value="1">Nam</option>
-                                <option value="0">Nữ</option>
-                            </select>
-                        </div>*@
+            <div class="col-sm-4">
+                <select id="ddlGender" class="chosen-select form-control">
+                    <option value="1">Nam</option>
+                    <option value="0">Nữ</option>
+                </select>
+            </div>*@
                     </div>
 
                     <div class="form-group">
@@ -108,39 +135,40 @@
                         <div class="col-sm-4">
                             <input type="text" id="txtCityName" value="@ViewBag.model.CityName" readonly class="form-control" />
                             @*<select id="ddlProvince" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
-            <option value="0"></option>
-        </select>*@
+                    <option value="0"></option>
+                </select>*@
                         </div>
                         @*<label class="col-sm-2 control-label no-padding-right">Quận/huyện<span class="required">(*)</span></label>
-                            <div class="col-sm-4">
-                                <select id="ddlHuyen" class="chosen-select form-control" data-placeholder="Chọn quận huyện">
-                                    <option value="0"></option>
-                                </select>
-                            </div>*@
+            <div class="col-sm-4">
+                <select id="ddlHuyen" class="chosen-select form-control" data-placeholder="Chọn quận huyện">
+                    <option value="0"></option>
+                </select>
+            </div>*@
                     </div>
                     @*<div class="form-group">
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Địa chỉ</label>
-                        <div class="col-sm-10">
-                            <textarea type="text" id="txtAddress" placeholder="Nhập địa chỉ" class="form-control">@ViewBag.model.Address</textarea>
-                        </div>
-                    </div>*@
+            <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Địa chỉ</label>
+            <div class="col-sm-10">
+                <textarea type="text" id="txtAddress" placeholder="Nhập địa chỉ" class="form-control">@ViewBag.model.Address</textarea>
+            </div>
+        </div>*@
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Sale (Số CMND | CCCD | Mã sale) </label>
                         <div class="col-sm-4">
 
                             <input type="text" id="txtSaleCode" value="@ViewBag.model.SaleIdNumber" readonly class="form-control">
-                            <input type="text" id="txtSaleId" display="none" value="@ViewBag.model.SaleId" style="display:none" class="form-control">
-                            @*<div style="margin-top:10px">
-                                <a class="btn btn-primary" id="btn_CheckSale">
-                                    Check Sale
-                                </a>
 
-                            </div>*@
                         </div>
+                        <label class="col-sm-2 control-label no-padding-right">Mã sale</label>
                         <div class="col-sm-4">
-                            <div class="input-group">
-                                <p id="checkSaleResult" style="color:green"></p>
-                            </div>
+                            <input type="text" id="txtSaleName" value="@(ViewBag.model.SaleCode)" readonly class="form-control">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        
+                        <label class="col-sm-2 control-label no-padding-right">Tên sale</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtSaleName" value="@(ViewBag.model.SaleName)" readonly class="form-control">
                         </div>
 
                     </div>
@@ -177,7 +205,7 @@
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số tiền đề nghị vay<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtLoanMoney" value="@ViewBag.model.LoanMoney" readonly  class="form-control">
+                            <input type="text" id="txtLoanMoney" value="@ViewBag.model.LoanMoney" readonly class="form-control">
                         </div>
                         <label class="col-sm-2 control-label no-padding-right">Thời hạn vay</label>
                         <div class="col-sm-4">
@@ -192,16 +220,16 @@
                         <div class="col-sm-4">
                             <input type="text" id="txtLoanMoney" value="@ViewBag.model.LocSignName" readonly class="form-control">
                         </div>
-                        
+
                     </div>
                     <div class="form-group">
-                       
+
                         <label class="col-sm-2 control-label no-padding-right">Địa chỉ<span class="required">(*)</span></label>
                         <div class="col-sm-10">
                             <input type="text" id="txtLoanMoney" value="@ViewBag.model.LocSignAddr" readonly class="form-control">
                         </div>
                     </div>
-                    
+
                 </form>
             </div>
         </div>
@@ -229,15 +257,12 @@
                         </div>
                     </div>
                     <div class="pull-right">
-                        <a class="btn btn-sm btn-primary" id="btn_Temp">
-                            Cập nhật
+                        <a class="btn btn-sm btn-primary" href="/MCredit/AddNew" >
+                            Tạo mới hồ sơ
                         </a>
-                        <a class="btn btn-sm btn-primary" id="btn_Save">
-                            Nộp hồ sơ
+                        <a class="btn btn-sm btn-primary" href="/MCredit/Index">
+                            Quay lại
                         </a>
-                        @*<a class="btn btn-sm btn-primary" href="/HoSo/AddNew" id="btn_addNew">
-                                Tạo mới
-                            </a>*@
                     </div>
                 </form>
             </div>
@@ -250,8 +275,8 @@
     $(document).ready(function () {
         setTextForPTag('checkSaleResult');
         setTextForPTag('checkdupResult');
-        
-       
+        setCheckedValueOfRadioButtonGroup('radio-isAddr', '@ViewBag.model.IsAddrSame');
+        setCheckboxValue('cbbIsInsurrance', '@ViewBag.model.IsInsurrance' =='0' ? false : true)
         @*GetLocSigns("#ddlLocSign",'@ViewBag.model.LocSignCode');
         GetLoanPeriods("#ddlLoanPeriod", '@ViewBag.model.LoanPeriodCode');
         GetLoanCities("#ddlProvince",'@ViewBag.model.ProvinceId');

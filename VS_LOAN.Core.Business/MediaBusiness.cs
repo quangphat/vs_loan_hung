@@ -72,13 +72,13 @@ namespace VS_LOAN.Core.Business
 
             //return new MediaUploadConfig();
         }
-        public FileModel GetFileUploadUrl(string fileInputName, string webRootPath, string folder)
+        public FileModel GetFileUploadUrl(string fileInputName, string webRootPath, string folder, bool isKeepFileName = false)
         {
             if (string.IsNullOrWhiteSpace(folder))
             {
                 folder = Utility.FileUtils.GenerateProfileFolder();
             }
-            string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + fileInputName.Trim().Replace(" ", "_");
+            string fileName = isKeepFileName ? fileInputName : DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + fileInputName.Trim().Replace(" ", "_");
             string fullFolder = $"{webRootPath}/{folder}";
             if (!Directory.Exists(fullFolder))
                 Directory.CreateDirectory(fullFolder);
@@ -145,8 +145,11 @@ namespace VS_LOAN.Core.Business
         }
         public async Task<string> ProcessFilesToSendToMC(int profileId, string rootPath)
         {
-            string mcProfileId = "99999";
+            string mcProfileId = string.Empty;
             var profile = await _rpMCredit.GetTemProfileById(profileId);
+            mcProfileId = profile.MCId;
+            if (string.IsNullOrWhiteSpace(mcProfileId))
+                return string.Empty;
             if (profile == null || string.IsNullOrWhiteSpace(profile.MCId))
                 return string.Empty;
             var files = await _rpTailieu.GetTailieuByHosoId(profileId, (int)HosoType.MCredit);
@@ -170,8 +173,10 @@ namespace VS_LOAN.Core.Business
                     doc = new MCJsonFileGroupDoc { code = f.DocumentCode, files = new List<MCJsonFileGroupDocFile>() };
                     group.docs.Add(doc);
                 }
-                doc.files.Add(new MCJsonFileGroupDocFile { name = f.FileName });
-                filePaths.Add(System.IO.Path.Combine(f.Folder, f.FileName));
+                var newFile = RenameFile(f.Folder, f.FileName, $"{mcProfileId}-{f.DocumentCode}-{(doc.files.Count + 1)}.jpg");
+                doc.files.Add(new MCJsonFileGroupDocFile { name = newFile.Name });
+                
+                filePaths.Add(System.IO.Path.Combine(f.Folder, newFile.Name));
             }
             var jsonFileInfo = CreateJsonFile(jsonFile, mcProfileId, rootPath);
             filePaths.Add(jsonFileInfo.FullPath);
@@ -181,7 +186,7 @@ namespace VS_LOAN.Core.Business
         {
             if (model == null)
                 return null;
-            var fileInfo = GetFileUploadUrl(profileId, rootPath, Utility.FileUtils.GenerateProfileFolderForMc());
+            var fileInfo = GetFileUploadUrl("info", rootPath, Utility.FileUtils.GenerateProfileFolderForMc(), true);
             if (fileInfo == null)
                 return null;
             var content = JsonConvert.SerializeObject(model, Formatting.None);
@@ -189,10 +194,10 @@ namespace VS_LOAN.Core.Business
             Utility.FileUtils.WriteToFile(fileInfo.FullPath, content);
             return fileInfo;
         }
-        protected string RenameFile(string folder, string oldFileName, string newFileName)
+        protected FileModel RenameFile(string folder, string oldFileName, string newFileName)
         {
             if (string.IsNullOrWhiteSpace(folder) || string.IsNullOrWhiteSpace(oldFileName) || string.IsNullOrWhiteSpace(newFileName))
-                return string.Empty;
+                return null;
             string newfile = System.IO.Path.Combine(folder, newFileName);
             string oldFile = System.IO.Path.Combine(folder, oldFileName);
             if (File.Exists(newfile))
@@ -200,7 +205,10 @@ namespace VS_LOAN.Core.Business
                 File.Delete(newfile);
             }
             File.Move(oldFile, newfile);
-            return newfile;
+            return new FileModel {
+                FullPath = newfile,
+                Name = newFileName
+            };
         }
         protected async Task<string> CreateZipFile(IEnumerable<string> filePaths, string folder, string fileName)
         {
@@ -221,5 +229,6 @@ namespace VS_LOAN.Core.Business
 
             return $"{folder}/{fileName}.zip";
         }
+        
     }
 }

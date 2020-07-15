@@ -230,12 +230,19 @@ namespace VS_LOAN.Core.Repository
         }
         public async Task<int> CreateDraftProfile(MCredit_TempProfile model)
         {
-            var p = GetParams(model, "Id", ignoreKey: new string[] { nameof(model.CreatedTime), nameof(model.UpdatedTime) });
+            model.Id = 0;
+            var param = GetParams(model, "Id", ignoreKey: new string[] {
+                nameof(model.CreatedTime),
+                nameof(model.UpdatedTime),
+                nameof(model.isAddr),
+                nameof(model.isInsur),
+                nameof(model.MCId)
+            });
 
             using (var con = GetConnection())
             {
-                await _connection.ExecuteAsync("sp_insert_MCredit_TempProfile", p, commandType: CommandType.StoredProcedure);
-                return p.Get<int>("Id");
+                await _connection.ExecuteAsync("sp_insert_MCredit_TempProfile", param, commandType: CommandType.StoredProcedure);
+                return param.Get<int>("Id");
             }
         }
         public async Task<bool> UpdateDraftProfile(MCredit_TempProfile model)

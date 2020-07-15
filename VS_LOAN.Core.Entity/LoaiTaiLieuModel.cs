@@ -45,5 +45,6 @@ namespace VS_LOAN.Core.Entity
         public int DocumentId { get; set; }
         public string MapBpmVar { get; set; }
         public int GroupId { get; set; }
+        public bool AllowUpload { get; set; }
     }
 }

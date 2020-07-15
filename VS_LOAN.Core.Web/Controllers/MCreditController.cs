@@ -53,7 +53,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (model == null || string.IsNullOrWhiteSpace(model.Value))
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var result = await _svMCredit.CheckSale(GlobalData.User.IDUser, model.Value);
-            if(!string.IsNullOrWhiteSpace(model.Value2))
+            if (!string.IsNullOrWhiteSpace(model.Value2))
             {
                 int profileId = Convert.ToInt32(model.Value2);
                 if (profileId > 0)
@@ -64,9 +64,9 @@ namespace VS_LOAN.Core.Web.Controllers
                         _rpMCredit.UpdateSale(sale, Convert.ToInt32(model.Value2));
                     }
                 }
-               
+
             }
-            
+
             return ToJsonResponse(result.status == "success" ? true : false, result.msg != null ? result.msg.ToString() : string.Empty, result);
         }
         public ActionResult CheckCat()
@@ -202,7 +202,9 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<ActionResult> MCreditProfile(int id)
         {
             var result = await _svMCredit.GetProfileById(id.ToString(), GlobalData.User.IDUser);
-            ViewBag.model = result.status == "success"? result.obj : new ProfileGetByIdResponseObj();
+            result.obj.IsAddrSame = "1";
+            result.obj.IsInsurrance = "1";
+            ViewBag.model = result.status == "success" ? result.obj : new ProfileGetByIdResponseObj();
             return View();
         }
         public async Task<JsonResult> Create(MCredit_TempProfileAddModel model)
@@ -249,7 +251,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<JsonResult> GetFileUpload(int profileId, int profileType = 3, bool isMcId = false)
         {
             var profile = null as MCredit_TempProfile;
-            profile =  isMcId ? await _rpMCredit.GetTemProfileByMcId(profileId.ToString()): await _rpMCredit.GetTemProfileById(profileId);
+            profile = isMcId ? await _rpMCredit.GetTemProfileByMcId(profileId.ToString()) : await _rpMCredit.GetTemProfileById(profileId);
             if (profile == null)
                 return ToJsonResponse(false, "Hồ sơ không tồn tại", new List<LoaiTaiLieuModel>());
 
@@ -266,7 +268,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var uploadedFiles = new List<FileUploadModel>();
             if (profileId > 0)
             {
-                uploadedFiles = isMcId ? await _rpTailieu.GetTailieuByMCId(profile.MCId) : await _rpTailieu.GetTailieuByHosoId(profile.Id, (int)HosoType.MCredit);               
+                uploadedFiles = isMcId ? await _rpTailieu.GetTailieuByMCId(profile.MCId) : await _rpTailieu.GetTailieuByHosoId(profile.Id, (int)HosoType.MCredit);
             }
             if (uploadedFiles == null)
                 uploadedFiles = new List<FileUploadModel>();
@@ -290,11 +292,13 @@ namespace VS_LOAN.Core.Web.Controllers
                         ProfileId = profileId,
                         ProfileTypeId = profileType,
                         DocumentName = doc.DocumentName,
-                        Tailieus = files.ToList()
+                        Tailieus = files.ToList(),
+                        AllowUpload = string.IsNullOrWhiteSpace(profile.MCId)
                     });
                 }
 
             }
+            result = result.OrderByDescending(p => p.BatBuoc == 1).ToList();
             return ToJsonResponse(true, "", result);
         }
         public async Task<JsonResult> UploadFile(int key, int fileId, int orderId, int profileId, string documentName, string documentCode, int documentId, int groupId)
@@ -415,16 +419,43 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             if (model.SaleId <= 0)
                 return ToJsonResponse(false, "Vui lòng chọn Sale");
+            var profile = await _rpMCredit.GetTemProfileById(model.Id);
+            if (profile == null)
+                return ToJsonResponse(false, "Hồ sơ không tồn tại");
             var profileSql = _mapper.Map<MCredit_TempProfile>(model);
             profileSql.UpdatedBy = GlobalData.User.IDUser;
             var profileMC = _mapper.Map<MCProfilePostModel>(model);
             var result = await _svMCredit.CreateProfile(profileMC, GlobalData.User.IDUser);
             if (result == null || result.status == "error")
                 return ToJsonResponse(false, "", result);
+            profileSql.MCId = result.id;
+            await _rpMCredit.UpdateDraftProfile(profileSql);
             _rpTailieu.UpdateTailieuHosoMCId(model.Id, result.id);
-            //var createJsonFile = await _bizMedia.ProcessFilesToSendToMC(model.Id, Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}"));
-            return ToJsonResponse(result.status == "success" ? true : false, "", result);
+            var zipFile = await _bizMedia.ProcessFilesToSendToMC(model.Id, Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}"));
+            //var sendFileResult = await _svMCredit.SendFiles(GlobalData.User.IDUser, zipFile, result.id);
+            //return ToJsonResponse(sendFileResult.status == "success" ? true : false, "", sendFileResult);
+            return ToJsonResponse(true, "", new { file = zipFile, id = result.id });
         }
-
+        public async Task<JsonResult> Copy(int profileId)
+        {
+            if (profileId <= 0)
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            
+            var profile = await _rpMCredit.GetTemProfileById(profileId);
+            if (profile == null)
+                return ToJsonResponse(false, "Hồ sơ không tồn tại");
+            profile.MCId = string.Empty;
+            profile.UpdatedBy = 0;
+            profile.Status = 0;
+            var id = await _rpMCredit.CreateDraftProfile(profile);
+            
+            return ToJsonResponse( true , "", id);
+        }
+        public async Task<JsonResult> SendFileToEC(StringModel2 model)
+        {
+            
+            var sendFileResult = await _svMCredit.SendFiles(Convert.ToInt32(model.Value3), model.Value, model.Value2);
+            return ToJsonResponse(sendFileResult.status == "success" ? true : false, "", sendFileResult);
+        }
     }
 }

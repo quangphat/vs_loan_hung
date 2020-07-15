@@ -47,7 +47,11 @@ function getCommentList(profileId, type) {
 function getRadioButtonValue(controlId) {
     return $('input[name="' + controlId + '"]:checked').val();
 }
-function getCheckboxValue(controlId, boolValue = false) {
+function getCheckboxValue(controlId) {
+    return $('#' + controlId).is(":checked");
+}
+function setCheckboxValue(controlId, boolValue = false) {
+    
     return $('#' + controlId).prop('checked', boolValue);
 }
 function setTextForPTag(controlId, value = '') {

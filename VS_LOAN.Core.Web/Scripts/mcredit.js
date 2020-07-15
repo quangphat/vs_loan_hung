@@ -378,7 +378,7 @@ function renderOneItemFile_MCredit(model, className = '', generateInput = false,
                 &documentName=${model.documentName}&documentCode=${model.documentCode}&documentId=${model.documentId}&groupId=${model.groupId}`;
         if (allowUpload == false)
             uploadUrl = null;
-        debugger
+        
         $(item).fileinput({
             uploadUrl: allowUpload === true ? uploadUrl : null,
             validateInitialCount: true,

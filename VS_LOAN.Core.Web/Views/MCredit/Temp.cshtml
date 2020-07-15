@@ -238,14 +238,6 @@
                 showError(jqXHR, exception);
             }
         });
-
-
-        //$.each(lstStatus, function (index, item) {
-        //    $("#ddlStatus").append("<option value='" + item.value + "'>" + item.display + "</option>")
-        //})
-        //$('#ddlStatus').chosen().trigger("chosen:updated");
-        //$('#ddlStatus').trigger("change");
-
     }
     function getTotalPage(totalRecord, limit) {
         return totalRecord > limit ? Math.ceil(totalRecord / limit) : 1
@@ -323,6 +315,10 @@
         getData(page, limit)
         //alert(limit)
     }
+    function renderTextLink(textValue, href, type, className = '') {
+        let display = getValueDisplay(textValue, type);
+        return "<td class='text-left " + className + "'><a href='" + href + "' >" + display + "</a></td>";
+    }
     function renderRow(index, rowData) {
 
         page = queries.get("page");
@@ -339,7 +335,7 @@
         return "<tr role='row' class = 'odd'>"
             + renderTextCenter(stt)
             + renderTextLeft(rowData.Id)
-            + renderTextLeft(rowData.CustomerName)
+            + renderTextLink(rowData.CustomerName, '/MCredit/TempProfile/' + rowData.Id)
             + renderTextLeft(rowData.Phone)
             + renderTextLeft(rowData.IdNumber)
             + renderTextLeft(rowData.SaleName)
@@ -362,9 +358,6 @@
             case 'datetime':
                 display = FormatDateTimeDMY(value);
             default: break;
-        }
-        if (type == 'test' && display == null) {
-            debugger
         }
         return display;
     }

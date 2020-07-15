@@ -42,14 +42,14 @@
                         </div>
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số điện thoại<span class="required">(*)</span> </label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtPhone"  value="@ViewBag.model.Phone"  placeholder="Nhập số điện thoại khách hàng" class="form-control">
+                            <input type="text" id="txtPhone" value="@ViewBag.model.Phone" placeholder="Nhập số điện thoại khách hàng" class="form-control">
                         </div>
 
                     </div>
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CMND<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtIdNumber"  value="@ViewBag.model.IdNumber" placeholder="Nhập số CMND" class="form-control" />
+                            <input type="text" id="txtIdNumber" value="@ViewBag.model.IdNumber" placeholder="Nhập số CMND" class="form-control" />
                         </div>
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CCCD<span class="required">(*)</span></label>
                         <div class="col-sm-4">
@@ -60,7 +60,7 @@
                         <label class="col-sm-2 control-label no-padding-right">Ngày cấp CMND/CCCD<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <div class="input-group">
-                                <input class="form-control date-picker"  value="@ViewBag.model.IssueDate.ToShortDateString()" id="txtIdDay" />
+                                <input class="form-control date-picker" value="@ViewBag.model.IssueDate.ToShortDateString()" id="txtIdDay" />
                                 <span class="input-group-addon">
                                     <i class="fa fa-calendar bigger-110"></i>
                                 </span>
@@ -219,15 +219,24 @@
                         </div>
                     </div>
                     <div class="pull-right">
-                        <a class="btn btn-sm btn-primary" id="btn_Temp">
-                            Cập nhật
-                        </a>
-                        <a class="btn btn-sm btn-primary" id="btn_Save">
-                            Nộp hồ sơ
-                        </a>
-                        @*<a class="btn btn-sm btn-primary" href="/HoSo/AddNew" id="btn_addNew">
-                                Tạo mới
-                            </a>*@
+
+
+                        @if (string.IsNullOrWhiteSpace(@ViewBag.model.MCId))
+                        {
+                            <a class="btn btn-sm btn-primary" id="btn_Temp">
+                                Cập nhật
+                            </a>
+                            <a class="btn btn-sm btn-primary" id="btn_Save">
+                                Nộp hồ sơ
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-sm btn-primary" id="btn_CreateNew">
+                                Tạo hồ sơ mới từ hồ sơ này
+                            </a>
+                        }
+
                     </div>
                 </form>
             </div>
@@ -269,7 +278,7 @@
         getFilesUpload();
         $("#ddlGender").val(('@ViewBag.model' != null && '@ViewBag.model.Gender' =='True') ?  "1" : "0")
         getCommentList(@ViewBag.model.Id, 3)
-        getCheckboxValue('cbbIsInsurrance', '@ViewBag.model' != null ? @ViewBag.model.isInsur: false)
+        setCheckboxValue('cbbIsInsurrance', '@ViewBag.model' != null ? @ViewBag.model.isInsur: false)
         setCheckedValueOfRadioButtonGroup('radio-isAddr', ('@ViewBag.model' != null && '@ViewBag.model.isAddr' =='true') ?  "1" : "0");
         //$("#txtIdDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
     });
@@ -348,7 +357,7 @@
                                 let keyName = '',
                                     isrequire = false,
                                     className = ''
-                                
+
                                 if (keys.indexOf(tailieu.Key) < 0) {
                                     keyName = tailieu.KeyName;
                                     isrequire = true
@@ -356,7 +365,7 @@
                                 else {
                                     className = 'mt-46'
                                 }
-                                // renderOneItemFile(tailieu.Key, tailieu.FileId, name, isrequire, className, true, _initialPreview, _initialPreviewConfig, true, true, onUploadFile, onDeleteFile)
+                                
                                 renderOneItemFile_MCredit(
                                     {
                                         key: tailieu.Key,
@@ -369,7 +378,7 @@
                                         documentId: item.DocumentId,
                                         groupId: item.GroupId
                                     }
-                                    , className, true, _initialPreview, _initialPreviewConfig, true, true, onUploadFile, onDeleteFile, filesUpload);
+                                    , className, true, _initialPreview, _initialPreviewConfig, item.AllowUpload, true, onUploadFile, onDeleteFile, filesUpload);
                                 keys.push(item.ID)
                             })
                             if (item.Tailieus.length < 50) {
@@ -386,7 +395,7 @@
                                         documentId: item.DocumentId,
                                         groupId: item.GroupId
                                     }
-                                    , 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
+                                    , 'mt-46', true, [], [], item.AllowUpload, false, onUploadFile, onDeleteFile, filesUpload);
                             }
 
                         }
@@ -403,12 +412,12 @@
                                     documentId: item.DocumentId,
                                     groupId: item.GroupId
                                 }
-                                , 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
+                                , 'mt-46', true, [], [], item.AllowUpload, false, onUploadFile, onDeleteFile, filesUpload);
                             //keys.push(item.ID);
                         }
                         //------------
-                       
-                       
+
+
                     })
                 }
 
@@ -491,16 +500,6 @@
             });
             return;
         }
-        if (isNullOrWhiteSpace($('#ddlProvince').val()) || $('#ddlProvince').val() =="0") {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn tỉnh/thành",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
         if (isNullOrWhiteSpace($('#txtIdDay').val())) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
@@ -511,37 +510,19 @@
             });
             return;
         }
+        if ((isNullOrWhiteSpace($('#txtIdNumber').val()) && isNullOrWhiteSpace($('#txtCCCDNumber').val()))) {
+            debugger
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng nhập số cmnd hoặc cccd",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
 
-        if ($('#ddlProduct').val() == "0" || $('#ddlProduct').val() == undefined) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn sản phẩm vay",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if (isNullOrWhiteSpace($('#ddlLocSign').val()) || $('#ddlLocSign').val() =="0") {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn địa điểm ký văn kiện",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if (isNullOrWhiteSpace($('#ddlLoanPeriod').val()) || $('#ddlLoanPeriod').val() =="0") {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn kỳ hạn vay",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
+
         var objectSend = JSON.stringify({
             "Id": @ViewBag.model.Id,
             "CustomerName": $("#txtCustomerName").val(),
@@ -565,7 +546,7 @@
             "Status":  @ViewBag.model.Status,
             "SaleId": $("#txtSaleId").val(),
         });
-        
+
         $.ajax({
             traditional: true,
             url: '@Url.Action("UpdateDraft", "MCredit")',
@@ -718,7 +699,116 @@
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-                        uploadFiles(data.data, true);
+                        window.location.reload()
+                        //uploadFiles(data.data, true);
+                    });
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.data.msg,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+    });
+    $('#btn_CreateNew').click(function (e) {
+
+        if ($('#txtCustomerName').val() == "" || $('#txtCustomerName').val() == undefined) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng nhập họ tên",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if (isNullOrWhiteSpace($('#txtBirthDay').val())) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn ngày sinh",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if (isNullOrWhiteSpace($('#ddlProvince').val()) || $('#ddlProvince').val() =="0") {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn tỉnh/thành",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if (isNullOrWhiteSpace($('#txtIdDay').val())) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn ngày cấp cmnd/cccd",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+
+        if ($('#ddlProduct').val() == "0" || $('#ddlProduct').val() == undefined) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn sản phẩm vay",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if (isNullOrWhiteSpace($('#ddlLocSign').val()) || $('#ddlLocSign').val() =="0") {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn địa điểm ký văn kiện",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if (isNullOrWhiteSpace($('#ddlLoanPeriod').val()) || $('#ddlLoanPeriod').val() =="0") {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn kỳ hạn vay",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        $.ajax({
+            traditional: true,
+            url: '/MCredit/Copy?profileId=' + @ViewBag.model.Id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                if (data.success == true) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: "Thành công",
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                            window.location = "/Mcredit/TempProfile/" + data.data;
                     });
                 }
                 else {
