@@ -1773,6 +1773,7 @@
     <Content Include="Views\MCredit\CheckStatus.cshtml" />
     <Content Include="Views\MCredit\AddNew.cshtml" />
     <Content Include="Views\MCredit\TempProfile.cshtml" />
+    <Content Include="Views\MCredit\Temp.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

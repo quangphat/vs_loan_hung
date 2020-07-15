@@ -22,7 +22,7 @@ namespace VS_LOAN.Core.Entity.MCreditModels
         public string name { get; set; }
         public string cccdNumber { get; set; }
         public string idNumber { get; set; }
-        public string monerReceiveDate { get; set; }
+        public string moneyReceiveDate { get; set; }
         public string status { get; set; }
         public string statusName { get; set; }
         public string createUserId { get; set; }

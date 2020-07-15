@@ -99,6 +99,18 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = await _svMCredit.CheckStatus(model.Value, GlobalData.User.IDUser);
             return ToJsonResponse(true, result.msg.ToString(), result);
         }
+        public ActionResult Temp()
+        {
+            return View();
+        }
+        public async Task<JsonResult> SearchTemps(string freeText,  int page = 1,int limit =20)
+        {
+            page = page <= 0 ? 1 : page;
+            var total = await _rpMCredit.CountTempProfiles(freeText);
+            var profiles = await _rpMCredit.GetTempProfiles( page, limit, freeText);
+            var result = DataPaging.Create(profiles, total);
+            return ToJsonResponse(true, "", result);
+        }
         public ActionResult Index()
         {
             return View();
@@ -108,6 +120,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = await _svMCredit.SearchProfiles(freeText, status, type, page, GlobalData.User.IDUser);
             return ToJsonResponse(true, "", result);
         }
+
         public ActionResult AddNew()
         {
             ViewBag.User = GlobalData.User;
@@ -372,10 +385,14 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             if (model == null || model.Id <= 0)
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
-            var profile = _mapper.Map<MCredit_TempProfile>(model);
-            profile.UpdatedBy = GlobalData.User.IDUser;
-            var createJsonFile = await _bizMedia.ProcessFilesToSendToMC(model.Id, Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}"));
-            return ToJsonResponse(true);
+            var profileSql = _mapper.Map<MCredit_TempProfile>(model);
+            profileSql.UpdatedBy = GlobalData.User.IDUser;
+            var profileMC = _mapper.Map<MCProfilePostModel>(model);
+            var result = await _svMCredit.CreateProfile(profileMC, GlobalData.User.IDUser);
+            //if(result)
+            //var createJsonFile = await _bizMedia.ProcessFilesToSendToMC(model.Id, Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}"));
+            return ToJsonResponse(result.status =="success" ? true:false,"", result);
         }
+
     }
 }

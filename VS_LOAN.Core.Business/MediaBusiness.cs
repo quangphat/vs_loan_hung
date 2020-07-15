@@ -5,14 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.HosoCourrier;
 using VS_LOAN.Core.Entity.MCreditModels;
 using VS_LOAN.Core.Entity.UploadModel;
-using VS_LOAN.Core.Repository;
 using VS_LOAN.Core.Repository.Interfaces;
 
 namespace VS_LOAN.Core.Business
@@ -21,10 +19,14 @@ namespace VS_LOAN.Core.Business
     {
         protected readonly ITailieuRepository _rpTailieu;
         protected readonly IHosoCourrierRepository _rpCourierProfile;
-        public MediaBusiness(ITailieuRepository tailieuRepository, IHosoCourrierRepository hosoCourrierRepository)
+        protected readonly IMCeditRepository _rpMCredit;
+        public MediaBusiness(ITailieuRepository tailieuRepository, 
+            IMCeditRepository mCeditRepository,
+            IHosoCourrierRepository hosoCourrierRepository)
         {
             _rpTailieu = tailieuRepository;
             _rpCourierProfile = hosoCourrierRepository;
+            _rpMCredit = mCeditRepository;
         }
         public async Task<MediaUploadConfig> UploadSingle(Stream stream, string key, int fileId, string name, string webRootPath)
         {
@@ -141,12 +143,15 @@ namespace VS_LOAN.Core.Business
             }
             return hosos;
         }
-        public async Task<bool> ProcessFilesToSendToMC(int profileId, string rootPath)
+        public async Task<string> ProcessFilesToSendToMC(int profileId, string rootPath)
         {
             string mcProfileId = "99999";
+            var profile = await _rpMCredit.GetTemProfileById(profileId);
+            if (profile == null || string.IsNullOrWhiteSpace(profile.MCId))
+                return string.Empty;
             var files = await _rpTailieu.GetTailieuByHosoId(profileId, (int)HosoType.MCredit);
             if (files == null || !files.Any())
-                return false;
+                return string.Empty;
             var jsonFile = new McJsonFile();
             var x = files.Select(p => p.MC_GroupId);
             //string values = "";
@@ -160,30 +165,29 @@ namespace VS_LOAN.Core.Business
                     jsonFile.groups.Add(group);
                 }
                 var doc = group.docs.FirstOrDefault(p => p.code == f.DocumentCode);
-                if(doc == null)
+                if (doc == null)
                 {
                     doc = new MCJsonFileGroupDoc { code = f.DocumentCode, files = new List<MCJsonFileGroupDocFile>() };
                     group.docs.Add(doc);
-                }   
+                }
                 doc.files.Add(new MCJsonFileGroupDocFile { name = f.FileName });
                 filePaths.Add(System.IO.Path.Combine(f.Folder, f.FileName));
             }
-            string jsonFilePath = CreateJsonFile(jsonFile, mcProfileId, rootPath);
-            filePaths.Add(jsonFilePath);
-            await CreateZipFile(filePaths, files[0].Folder,mcProfileId);
-            return true;
+            var jsonFileInfo = CreateJsonFile(jsonFile, mcProfileId, rootPath);
+            filePaths.Add(jsonFileInfo.FullPath);
+            return await CreateZipFile(filePaths, jsonFileInfo.Folder, mcProfileId);
         }
-        protected string CreateJsonFile(McJsonFile model, string profileId, string rootPath)
+        protected FileModel CreateJsonFile(McJsonFile model, string profileId, string rootPath)
         {
             if (model == null)
-                return string.Empty;
+                return null;
             var fileInfo = GetFileUploadUrl(profileId, rootPath, Utility.FileUtils.GenerateProfileFolderForMc());
             if (fileInfo == null)
-                return string.Empty;
+                return null;
             var content = JsonConvert.SerializeObject(model, Formatting.None);
-            string fullPath = $"{fileInfo.Folder}/{fileInfo.Name}";
-            Utility.FileUtils.WriteToFile(fullPath, content);
-            return fullPath;
+            fileInfo.FullPath = $"{fileInfo.FullPath}.txt";
+            Utility.FileUtils.WriteToFile(fileInfo.FullPath, content);
+            return fileInfo;
         }
         protected string RenameFile(string folder, string oldFileName, string newFileName)
         {
@@ -198,18 +202,24 @@ namespace VS_LOAN.Core.Business
             File.Move(oldFile, newfile);
             return newfile;
         }
-        protected async Task<bool> CreateZipFile(IEnumerable<string> filePaths, string folder, string fileName)
+        protected async Task<string> CreateZipFile(IEnumerable<string> filePaths, string folder, string fileName)
         {
             if (filePaths == null || !filePaths.Any())
-                return false;
-            using (ZipFile zip = new ZipFile())
+                return string.Empty;
+            try
             {
-                zip.AddFiles(filePaths, "");
-                zip.Save(System.IO.Path.Combine(folder, $"{fileName}.zip"));
+                using (ZipFile zip = new ZipFile())
+                {
+                    zip.AddFiles(filePaths, "");
+                    zip.Save(System.IO.Path.Combine(folder, $"{fileName}.zip"));
+                }
+            }
+            catch
+            {
+                return string.Empty;
             }
 
-            return true;
+            return $"{folder}/{ fileName}.zip";
         }
-
     }
 }

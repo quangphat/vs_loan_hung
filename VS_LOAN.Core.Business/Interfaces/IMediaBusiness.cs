@@ -11,7 +11,7 @@ namespace VS_LOAN.Core.Business.Interfaces
 {
     public interface IMediaBusiness
     {
-        Task<bool> ProcessFilesToSendToMC(int profileId, string rootPath);
+        Task<string> ProcessFilesToSendToMC(int profileId, string rootPath);
         Task<MediaUploadConfig> UploadSingle(Stream stream, string key, int fileId, string name, string webRootPath);
         Task<List<HosoCourier>> ReadXlsxFile(MemoryStream stream, int createBy);
         FileModel GetFileUploadUrl(string fileInputName, string webRootPath, string folder);

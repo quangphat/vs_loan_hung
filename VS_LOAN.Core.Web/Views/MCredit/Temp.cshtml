@@ -19,7 +19,7 @@
             <div class="col-xs-12">
                 <form class="form-horizontal" role="form">
                     <div class="space-4"></div>
-                    
+
                     <div class="form-group">
 
                         <label class="col-sm-1 col-xs-12  control-label no-padding-right">Tìm kiếm</label>
@@ -86,13 +86,14 @@
                                 <tr>
                                     <th class="center w-45">STT</th>
                                     <th class="w-98">ID</th>
-                                    <th class="w-94">Case Number</th>
                                     <th class="m-w-150">Tên khách hàng</th>
+                                    <th class="w-94">Phone</th>
                                     <th class="w-94">CMND</th>
+                                    <th class="w-94">Sale</th>
                                     <th style="width: 150px">Trạng thái</th>
                                     <th class="m-w-300">Ghi chú</th>
-                                    <th class="w-94">Ngày giải ngân</th>
-                                    <th class="w-94">Ngày cập nhật cuối</th>
+                                    <th class="w-94">Sản phẩm</th>
+                                    <th class="w-94">Kỳ hạn</th>
                                     <th class="w-84">Người tạo</th>
                                 </tr>
                             </thead>
@@ -157,7 +158,7 @@
 
             queries = new URLSearchParams(window.location.search)
             bindQueries()
-           
+
             page = queries.get("page");
             if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
                 page = 1;
@@ -192,7 +193,7 @@
                 limit = parseInt(limit)
             $("#ddlLimit").val(limit)
         }
-        
+
         $('#ddllimit').chosen({ width: '100%', allow_single_deselect: true });
         var status = decodeURI(queries.get("status"))
         if (!isNullOrWhiteSpace(status)) {
@@ -216,7 +217,7 @@
             url: '@Url.Action("LayDSTrangThai", "QuanLyHoSo")',
             data: {},
             success: function (data) {
-                
+
                 $('#ddlStatus').append("<option value='0'></option>");
                 if (data.data != null && data.success == true) {
                     $.each(data.data, function (index, item) {
@@ -317,50 +318,75 @@
         paging.append(next);
         paging.append(last)
     }
-    function getValueDisplay(value, type) {
-        if (isNullOrWhiteSpace(type))
-            return value
-        var display = null
-        switch (type) {
-            case 'datetime':
-                display = FormatDateTimeDMY(value);
-            default: break;
-        }
-        return display;
-    }
     function onSelectLimit() {
         limit = $("#ddlLimit").val()
         getData(page, limit)
         //alert(limit)
     }
-    function renderTextLeft(value, type, className = '') {
-        return "<td class='text-left " + className + "'>" + getValueDisplay(value, type) + "</td>";
+    function renderRow(index, rowData) {
+
+        page = queries.get("page");
+        if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+            page = 1;
+        else
+            page = parseInt(page)
+        limit = queries.get("limit")
+        if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+            limit = 10;
+        else
+            limit = parseInt(limit)
+        var stt = (page - 1) * limit + index + 1;
+        return "<tr role='row' class = 'odd'>"
+            + renderTextCenter(stt)
+            + renderTextLeft(rowData.Id)
+            + renderTextLeft(rowData.CustomerName)
+            + renderTextLeft(rowData.Phone)
+            + renderTextLeft(rowData.IdNumber)
+            + renderTextLeft(rowData.SaleName)
+            + renderStatus(rowData.McId > 0 ? 1 : 0, rowData.StatusName)
+            + renderTextLeft(rowData.LastNote, '', 'tb-row-breakword')
+            + renderTextLeft(rowData.ProductName)
+            + renderTextLeft(rowData.LoanPeriodName)
+            + renderTextLeft(rowData.CreatedUser)
+
+            + "</tr>";
     }
+    function getValueDisplay(value, type='TYPE') {
+       
+        if (isNullOrWhiteSpace(type))
+            return value
+        if (isNullOrWhiteSpace(value))
+            value = ''
+        var display = value;
+        switch (type) {
+            case 'datetime':
+                display = FormatDateTimeDMY(value);
+            default: break;
+        }
+        if (type == 'test' && display == null) {
+            debugger
+        }
+        return display;
+    }
+   
+    function renderTextLeft(value, type='test', className = '') {
+        let display = getValueDisplay(value, type)
+        
+       
+        return "<td class='text-left " + className + "'>" + display + "</td>";
+    }
+
     function renderTextCenter(value, type) {
         return "<td class='text-center'>" + getValueDisplay(value, type) + "</td>";
     }
-   function renderStatus(MaTrangThai, TrangThaiHS) {
+
+   function renderStatus(status, statusName) {
         var statusString = "";
-        if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.Nhap)')
-            statusString = "<span class='label label-sm label-light arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.NhapLieu)')
-            statusString = "<span class='label label-sm label-purple arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.ThamDinh)')
-            statusString = "<span class='label label-sm label-danger arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.DaDoiChieu)')
-            statusString = "<span class='label label-sm label-dadoichieu arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.TuChoi)')
-            statusString = "<span class='label label-sm label-inverse arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.Cancel)')
-            statusString = "<span class='label label-sm label-cancel arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.PCB)')
-            statusString = "<span class='label label-sm label-pcb arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.BoSungHoSo)')
-            statusString = "<span class='label label-sm label-info arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.GiaiNgan)')
-           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.Finish)')
-            statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        
+       if (status == 0)
+           statusString = "<span class='label label-sm  arrowed arrowed-righ'>" + statusName + "</span>";
+       else if (status == 1)
+           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + statusName + "</span>";
         return "<td class='text-left'>" + statusString + "</td>";;
     }
     function renderAction(id, MaTrangThai, MaNV) {
@@ -408,48 +434,22 @@
             value = "<td class='text-left'> <div class='green bolder'title = 'Có bảo hiểm' > <i class=\"ace-icon glyphicon glyphicon-ok bigger-130\"></i></div> </td>";
         return value;
     }
-    function renderRow(index, rowData) {
 
-        page = queries.get("page");
-        if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
-            page = 1;
-        else
-            page = parseInt(page)
-        limit = queries.get("limit")
-        if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
-            limit = 10;
-        else
-            limit = parseInt(limit)
-        var stt = (page - 1) * limit + index + 1;
-        return "<tr role='row' class = 'odd'>"
-            + renderTextCenter(stt)
-            + renderTextLeft(rowData.Id)
-            + renderTextLeft(rowData.CaseNumber)
-            + renderTextLeft(rowData.Name)
-            + renderTextLeft(rowData.IdNumber)
-            + renderStatus(rowData.Status, rowData.StatusName)
-            + renderTextLeft(rowData.GhiChu, '', 'tb-row-breakword')
-            + renderTextLeft(rowData.MoneyRecieveDate, 'datetime')
-            + renderTextLeft(rowData.CreatedDate, 'datetime')
-            + renderTextLeft(rowData.CreateUserFullName)
-           
-            + "</tr>";
-    }
     function renderTableBody(datas) {
         var table = $("#dtSource")
         var tableBody = $("#dtSource").find("tbody");
         tableBody.empty();
         if (isNullOrNoItem(datas))
             return;
-        debugger
+        
         $.each(datas, function (index, item) {
-            
+
             tableBody.append(renderRow(index, item));
         });
 
     }
     $(document).ready(function () {
-       
+
             page = queries.get("page");
             if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
                 page = 1;
@@ -462,7 +462,7 @@
                 limit = parseInt(limit)
             getData(page, limit)
             //InitTable();
-        
+
 
     });
 
@@ -470,7 +470,7 @@
     {
         showBlock($('#panel_body'), strLoading);
         $.ajax( {
-                url: '@Url.Action("Search", "MCredit")',
+                url: '@Url.Action("SearchTemps", "MCredit")',
                 type: "GET",
                 contentType: "application/json",
             data: {
@@ -481,11 +481,11 @@
                 'type':"draft"
             },
             success: function (response) {
-                debugger
+                
                 if (response.success == true) {
-                    totalRecord = response.data.total;
-                    var search = this.url.replace("/MCredit/Index", "");
-                    search = search.replace("/MCredit/Search","")
+                    totalRecord = response.data.TotalRecord;
+                    var search = this.url.replace("/MCredit/Temp", "");
+                    search = search.replace("/MCredit/SearchTemps","")
                     queries = new URLSearchParams(search)
 
                     page = queries.get("page");
@@ -499,8 +499,8 @@
                         limit = 10;
                     else
                         limit = parseInt(limit)
-                    
-                    renderTableBody(response.data.objs)
+
+                    renderTableBody(response.data.Datas)
                     //renderGoPreviousPage(page);
                     renderPageList(page, limit, totalRecord)
                     $("#dtSource_info").text("Tổng: " + totalRecord + " items");
@@ -523,7 +523,7 @@
                 complete: function () {
                     $('#panel_body').unblock();
                     if (!isPopState) {
-                        var requestUrl = this.url.replace("Search", "Index")
+                        var requestUrl = this.url.replace("SearchTemps", "Temp")
                         window.history.pushState(requestUrl, this.title, requestUrl)
                     }
 

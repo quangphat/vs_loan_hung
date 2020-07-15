@@ -46,5 +46,7 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
 
         public int Status { get; set; }
         public string LastNote { get; set; }
+        public int SaleId { get; set; }
+        public string SaleName { get; set; }
     }
 }

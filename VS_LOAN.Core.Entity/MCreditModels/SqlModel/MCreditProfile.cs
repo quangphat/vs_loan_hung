@@ -62,6 +62,9 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
 
         public bool IsDeleted { get; set; }
         public string LastNote { get; set; }
+        public string MCId { get; set; }
+        public int SaleId { get; set; }
+        public string SaleName { get; set; }
     }
 
 }

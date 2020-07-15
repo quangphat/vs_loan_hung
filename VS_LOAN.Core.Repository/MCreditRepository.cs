@@ -221,5 +221,28 @@ namespace VS_LOAN.Core.Repository
                 return true;
             }
         }
+        public async Task<List<ProfileSearchSql>> GetTempProfiles(int page, int limit, string freeText)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await _connection.QueryAsync<ProfileSearchSql>("sp_MCredit_TempProfile_Gets", new {
+                    freeText,
+                    page,
+                    limit_tmp = limit
+                }, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+        public async Task<int> CountTempProfiles(string freeText)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await _connection.ExecuteScalarAsync<int>("sp_MCredit_TempProfile_Counts", new
+                {
+                    freeText,
+                }, commandType: CommandType.StoredProcedure);
+                return result;
+            }
+        }
     }
 }

@@ -11,7 +11,8 @@ namespace VS_LOAN.Core.Repository.Interfaces
 {
     public interface IMCeditRepository
     {
-
+        Task<int> CountTempProfiles(string freeText);
+        Task<List<ProfileSearchSql>> GetTempProfiles(int page, int limit, string freeText);
         Task<int> CreateDraftProfile(MCredit_TempProfile model);
         Task<bool> UpdateDraftProfile(MCredit_TempProfile model);
         Task<bool> DeleteMCTableDatas(int type);

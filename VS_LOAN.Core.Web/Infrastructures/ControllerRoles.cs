@@ -33,7 +33,8 @@ namespace VS_LOAN.Core.Web.Infrastructures
              { "mcedit_checkcic", new ActionInfo{ _formindex = IndexMenu.M_9_2, _href = "MCredit/CheckCIC", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
              { "mcedit_checkdup", new ActionInfo{ _formindex = IndexMenu.M_9_3, _href = "MCredit/CheckDuplicate", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
              { "mcedit_checkstatus", new ActionInfo{ _formindex = IndexMenu.M_9_4, _href = "MCredit/CheckStatus", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
-             { "mcedit_list", new ActionInfo{ _formindex = IndexMenu.M_9_5, _href = "MCredit/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "mcedit_list_temp", new ActionInfo{ _formindex = IndexMenu.M_9_5, _href = "MCredit/Temp", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "mcedit_list", new ActionInfo{ _formindex = IndexMenu.M_9_6, _href = "MCredit/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
         };
     }
 }

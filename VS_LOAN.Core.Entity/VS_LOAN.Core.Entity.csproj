@@ -144,6 +144,7 @@
     <Compile Include="MCreditModels\ProfileAddResponse.cs" />
     <Compile Include="MCreditModels\ProfileSearchRequestModel.cs" />
     <Compile Include="MCreditModels\ProfileSearchResponse.cs" />
+    <Compile Include="MCreditModels\ProfileSearchSql.cs" />
     <Compile Include="MCreditModels\SqlModel\MCreditCity.cs" />
     <Compile Include="MCreditModels\SqlModel\MCreditLoanPeriod.cs" />
     <Compile Include="MCreditModels\SqlModel\MCreditlocations.cs" />

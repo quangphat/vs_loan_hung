@@ -45,8 +45,27 @@ namespace VS_LOAN.Core.Web.Controllers
                 .ForMember(a => a.LoanMoney, b => b.MapFrom(c => c.LoanMoney.ToString()))
                 .ForMember(a => a.LocSignCode, b => b.MapFrom(c => c.LocSignCode))
                 .ForMember(a => a.IsInsurrance, b => b.MapFrom(c => c.IsInsurrance))
+                .ForMember(a => a.SaleId, b => b.MapFrom(c => c.SaleId))
                 .ForMember(a => a.Status, b => b.MapFrom(c => c.Status))
                 ;
+                x.CreateMap<MCredit_TempProfileAddModel, MCProfilePostModel>()
+               .ForMember(a => a.Name, b => b.MapFrom(c => c.CustomerName))
+               .ForMember(a => a.HomeTown, b => b.MapFrom(c => c.Hometown))
+               .ForMember(a => a.Bod, b => b.MapFrom(c => c.BirthDay.ToShortDateString()))
+               .ForMember(a => a.Phone, b => b.MapFrom(c => c.Phone))
+               .ForMember(a => a.IdNumber, b => b.MapFrom(c => c.IdNumber))
+               .ForMember(a => a.CCCDNumber, b => b.MapFrom(c => c.CCCDNumber))
+               .ForMember(a => a.IdNumberDate, b => b.MapFrom(c => c.IssueDate.ToShortDateString()))
+               .ForMember(a => a.IsAddr, b => b.MapFrom(c => c.IsAddr))
+               .ForMember(a => a.CityId, b => b.MapFrom(c => c.ProvinceId))
+               .ForMember(a => a.ProductCode, b => b.MapFrom(c => c.ProductCode))
+               .ForMember(a => a.LoanPeriodCode, b => b.MapFrom(c => c.LoanPeriodCode))
+               .ForMember(a => a.LoanMoney, b => b.MapFrom(c => c.LoanMoney.ToString()))
+               .ForMember(a => a.LocSignCode, b => b.MapFrom(c => c.LocSignCode))
+               .ForMember(a => a.IsInsurrance, b => b.MapFrom(c => c.IsInsurrance))
+               .ForMember(a => a.SaleId, b => b.MapFrom(c => c.SaleId))
+               .ForMember(a => a.Status, b => b.MapFrom(c => c.Status))
+               ;
 
             });
 

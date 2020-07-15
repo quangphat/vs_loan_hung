@@ -254,7 +254,7 @@ function checkCAT(controlId, value) {
             },
         });
 }
-function checkSale(controlId, value) {
+function checkSale(controlId, value, controlToSetId = null) {
 
     var objectSend = JSON.stringify({
         'Value': value
@@ -275,7 +275,8 @@ function checkSale(controlId, value) {
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-
+                        //document.getElementById(con)
+                            $(controlToSetId).val(data.data.obj.id)
                     });
                 }
                 else {
