@@ -282,7 +282,7 @@ namespace VS_LOAN.Core.Repository
             {
                 var result = await _connection.QueryAsync<ProfileSearchSql>("sp_MCredit_TempProfile_Gets", new {
                     freeText,
-                    userId
+                    userId,
                     page,
                     limit_tmp = limit
                 }, commandType: CommandType.StoredProcedure);
