@@ -42,7 +42,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult AddNew()
         {
-            ViewBag.formindex = Infrastructures.ControllerRoles.Roles[RouteData.Values["action"].ToString()]._formindex;
+            ViewBag.formindex = "";// Infrastructures.ControllerRoles.Roles[RouteData.Values["action"].ToString()]._formindex;
             Session["AddNewHoSoID"] = 0;
             Session["LstFileHoSo"] = new List<TaiLieuModel>();
             ViewBag.MaNV = GlobalData.User.IDUser;
@@ -325,7 +325,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     if (fileContent != null && fileContent.ContentLength > 0)
                     {
                         Stream stream = fileContent.InputStream;
-                        string root = Server.MapPath("~/Upload");
+                        string root = Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}");
                         stream.Position = 0;
                         file = _bizMedia.GetFileUploadUrl(fileContent.FileName, root, Utility.FileUtils.GenerateProfileFolder());
                         using (var fileStream = System.IO.File.Create(file.FullPath))
