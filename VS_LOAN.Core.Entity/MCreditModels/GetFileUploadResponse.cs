@@ -17,7 +17,7 @@ namespace VS_LOAN.Core.Entity.MCreditModels
         public string GroupName { get; set; }
         public bool Mandatory { get; set; }
         public bool HasAlternate { get; set; }
-        public List<int> AlternateGroups { get; set; }
+        public List<object> AlternateGroups { get; set; }
         public List<GetFileUploadDocument> Documents { get; set; }
     }
     public class GetFileUploadDocument
