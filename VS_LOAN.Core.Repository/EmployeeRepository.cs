@@ -115,7 +115,7 @@ namespace VS_LOAN.Core.Repository
         {
             using (var con = GetConnection())
             {
-                await con.ExecuteAsync("update Nhan_vien set Mat_Khau = @password where Ten_dang_nhap = @username",
+                await con.ExecuteAsync("sp_ResetPassword",
                     new {
                         username = userName,
                         password = password
