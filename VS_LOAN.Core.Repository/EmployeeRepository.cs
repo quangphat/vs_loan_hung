@@ -111,6 +111,19 @@ namespace VS_LOAN.Core.Repository
             }
 
         }
+        public async Task<bool> ResetPassord(string userName, string password)
+        {
+            using (var con = GetConnection())
+            {
+                await con.ExecuteAsync("sp_ResetPassword",
+                    new {
+                        username = userName,
+                        password = password
+                    }, commandType: CommandType.StoredProcedure);
+                return true;
+            }
+
+        }
         public async Task<List<EmployeeViewModel>> Gets(
             DateTime workFromDate,
             DateTime workToDate,
