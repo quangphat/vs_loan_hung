@@ -11,6 +11,7 @@ namespace VS_LOAN.Core.Repository.Interfaces
 {
     public interface IEmployeeRepository
     {
+        Task<bool> ResetPassord(string userName, string password);
         Task<List<NhanVienInfoModel>> GetCourierList();
         Task<List<OptionSimple>> GetByProvinceId(int provinceId);
         Task<List<IDictionary<string, object>>> QuerySQLAsync(string sql);
