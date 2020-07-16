@@ -202,8 +202,14 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<ActionResult> MCreditProfile(int id)
         {
             var result = await _svMCredit.GetProfileById(id.ToString(), GlobalData.User.IDUser);
+            if (result.status == "error")
+            {
+                return RedirectToAction("Index");
+            }
             result.obj.IsAddrSame = "1";
             result.obj.IsInsurrance = "1";
+            var profile = await _rpMCredit.GetTemProfileByMcId(result.obj.Id);
+            result.obj.LocalProfileId = profile != null ? profile.Id : 0;
             ViewBag.model = result.status == "success" ? result.obj : new ProfileGetByIdResponseObj();
             return View();
         }
@@ -248,10 +254,10 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             return ToJsonResponse(true, "", result);
         }
-        public async Task<JsonResult> GetFileUpload(int profileId, int profileType = 3, bool isMcId = false)
+        public async Task<JsonResult> GetFileUpload(int profileId, int profileType = 3, string mcId = null)
         {
             var profile = null as MCredit_TempProfile;
-            profile = isMcId ? await _rpMCredit.GetTemProfileByMcId(profileId.ToString()) : await _rpMCredit.GetTemProfileById(profileId);
+            profile = await _rpMCredit.GetTemProfileById(profileId);
             if (profile == null)
                 return ToJsonResponse(false, "Hồ sơ không tồn tại", new List<LoaiTaiLieuModel>());
 
@@ -268,7 +274,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var uploadedFiles = new List<FileUploadModel>();
             if (profileId > 0)
             {
-                uploadedFiles = isMcId ? await _rpTailieu.GetTailieuByMCId(profile.MCId) : await _rpTailieu.GetTailieuByHosoId(profile.Id, (int)HosoType.MCredit);
+                uploadedFiles =  await _rpTailieu.GetTailieuByHosoId(profile.Id, (int)HosoType.MCredit);
             }
             if (uploadedFiles == null)
                 uploadedFiles = new List<FileUploadModel>();
@@ -301,7 +307,7 @@ namespace VS_LOAN.Core.Web.Controllers
             result = result.OrderByDescending(p => p.BatBuoc == 1).ToList();
             return ToJsonResponse(true, "", result);
         }
-        public async Task<JsonResult> UploadFile(int key, int fileId, int orderId, int profileId, string documentName, string documentCode, int documentId, int groupId)
+        public async Task<JsonResult> UploadFile(int key, int fileId, int orderId, int profileId, string documentName, string documentCode, int documentId, int groupId, string mcId = null)
         {
             //var profile = await _rpMCredit.GetTemProfileById(profileId);
             //if(!string.IsNullOrWhiteSpace(profile.MCId) || profile == null)
@@ -356,7 +362,8 @@ namespace VS_LOAN.Core.Web.Controllers
                                 MC_GroupId = groupId,
                                 OrderId = orderId,
                                 Folder = file.Folder,
-                                MC_MapBpmVar = string.Empty
+                                MC_MapBpmVar = string.Empty,
+                                McId = mcId
                             });
                         }
                         _type = System.IO.Path.GetExtension(fileContent.FileName);
@@ -440,7 +447,7 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             if (profileId <= 0)
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
-            
+
             var profile = await _rpMCredit.GetTemProfileById(profileId);
             if (profile == null)
                 return ToJsonResponse(false, "Hồ sơ không tồn tại");
@@ -448,13 +455,19 @@ namespace VS_LOAN.Core.Web.Controllers
             profile.UpdatedBy = 0;
             profile.Status = 0;
             var id = await _rpMCredit.CreateDraftProfile(profile);
-            
-            return ToJsonResponse( true , "", id);
+            if (id > 0)
+            {
+                await _rpTailieu.CopyFileFromProfile(profileId, (int)HosoType.MCredit, id);
+            }
+            return ToJsonResponse(true, "", id);
         }
-        public async Task<JsonResult> SendFileToEC(StringModel2 model)
+        public async Task<JsonResult> ReSendFileToEC(int profileId)
         {
-            
-            var sendFileResult = await _svMCredit.SendFiles(Convert.ToInt32(model.Value3), model.Value, model.Value2);
+            var profile = await _rpMCredit.GetTemProfileByMcId(profileId.ToString());
+            if (profile == null || string.IsNullOrWhiteSpace(profile.MCId))
+                return ToJsonResponse(false, "Hồ sơ không tồn tại hoặc chưa được gửi qua MCredit");
+            var zipFile = await _bizMedia.ProcessFilesToSendToMC(profile.Id, Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}"));
+            var sendFileResult = await _svMCredit.SendFiles(GlobalData.User.IDUser, zipFile, profile.MCId);
             return ToJsonResponse(sendFileResult.status == "success" ? true : false, "", sendFileResult);
         }
     }

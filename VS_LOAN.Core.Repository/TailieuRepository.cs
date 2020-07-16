@@ -15,6 +15,15 @@ namespace VS_LOAN.Core.Repository
     {
 
         public TailieuRepository() : base(typeof(TailieuRepository)) { }
+        public async Task<bool> CopyFileFromProfile(int copyProfileId, int profileTypeId, int newProfileId)
+        {
+            using (var con = GetConnection())
+            {
+               await con.ExecuteAsync("sp_ProfileFile_CopyFromProfile",
+                    new { copyProfileId , profileTypeId, newProfileId }, commandType: CommandType.StoredProcedure);
+                return true;
+            }
+        }
         public async Task<bool> UpdateExistingFile(TaiLieu model, int fileId)
         {
             var p =GetParams(model,ignoreKey: new string[] {nameof(model.FileKey),nameof(model.ProfileId) });

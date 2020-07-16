@@ -373,9 +373,9 @@ function renderOneItemFile_MCredit(model, className = '', generateInput = false,
 
         model.fileId = (isFileExist === true) ? model.fileId : getNewGuid();
         let uploadUrl = isFileExist === true ? `/MCredit/UploadFile?key=${model.key}&fileId=${model.fileId}
-    &orderId=${orderId}&profileId=${model.profileId}&documentName=${model.documentName}&documentCode=${model.documentCode}&documentId=${model.documentId}&groupId=${model.groupId}`
+    &orderId=${orderId}&profileId=${model.profileId}&documentName=${model.documentName}&documentCode=${model.documentCode}&documentId=${model.documentId}&groupId=${model.groupId}&mcId=${model.mcId}`
             : `/MCredit/UploadFile?key=${model.key}&fileId=0&orderId=${orderId}&profileId=${model.profileId}
-                &documentName=${model.documentName}&documentCode=${model.documentCode}&documentId=${model.documentId}&groupId=${model.groupId}`;
+                &documentName=${model.documentName}&documentCode=${model.documentCode}&documentId=${model.documentId}&groupId=${model.groupId}&mcId=${model.mcId}`;
         if (allowUpload == false)
             uploadUrl = null;
         

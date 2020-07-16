@@ -257,7 +257,10 @@
                         </div>
                     </div>
                     <div class="pull-right">
-                        <a class="btn btn-sm btn-primary" href="/MCredit/AddNew" >
+                        <a class="btn btn-sm btn-primary" id="btnUpdateFiles">
+                            Cập nhật tài liệu
+                        </a>
+                        <a class="btn btn-sm btn-primary" href="/MCredit/AddNew">
                             Tạo mới hồ sơ
                         </a>
                         <a class="btn btn-sm btn-primary" href="/MCredit/Index">
@@ -329,7 +332,7 @@
     function getFilesUpload() {
         $.ajax({
             type: "POST",
-            url: '/MCredit/GetFileUpload?profileId=' + @ViewBag.model.Id + '&profileTypeId=3&isMcId=true',
+            url: `/MCredit/GetFileUpload?profileId=${@ViewBag.model.LocalProfileId}&profileTypeId=3&mcId=${@ViewBag.model.Id}`,
             data: {},
             success: function (data) {
                 if (data.data != null) {
@@ -380,9 +383,10 @@
                                         documentName: item.DocumentName,
                                         documentCode: item.DocumentCode,
                                         documentId: item.DocumentId,
-                                        groupId: item.GroupId
+                                        groupId: item.GroupId,
+                                        mcId :'@ViewBag.model.Id'
                                     }
-                                    , className, true, _initialPreview, _initialPreviewConfig, false, true, null, onDeleteFile, filesUpload);
+                                    , className, true, _initialPreview, _initialPreviewConfig, true, true, null, onDeleteFile, filesUpload);
                                 keys.push(item.ID)
                             })
                             if (item.Tailieus.length < 50) {
@@ -397,9 +401,10 @@
                                         documentName: item.DocumentName,
                                         documentCode: item.DocumentCode,
                                         documentId: item.DocumentId,
-                                        groupId: item.GroupId
+                                        groupId: item.GroupId,
+                                        mcId :'@ViewBag.model.Id'
                                     }
-                                    , 'mt-46', true, [], [], false, false, null, onDeleteFile, filesUpload);
+                                    , 'mt-46', true, [], [], true, false, null, onDeleteFile, filesUpload);
                             }
 
                         }
@@ -414,9 +419,10 @@
                                     documentName: item.DocumentName,
                                     documentCode: item.DocumentCode,
                                     documentId: item.DocumentId,
-                                    groupId: item.GroupId
+                                    groupId: item.GroupId,
+                                    mcId :'@ViewBag.model.Id'
                                 }
-                                , 'mt-46', true, [], [], false, false, onUploadFile, onDeleteFile, filesUpload);
+                                , 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
                             //keys.push(item.ID);
                         }
                         //------------
@@ -482,6 +488,46 @@
     }
 
 
+    
+    $('#btnUpdateFiles').click(function (e) {
+        
+        $.ajax({
+            traditional: true,
+            url: '/MCredit/ReSendFileToEC?profileId=' + @ViewBag.model.Id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                if (data.success == true) {
+                     swal({
+                            title: "@Html.Raw(Global.Message_Title)",
+                            text: "Thành công",
+                            type: "success",
+                            timer: 4000,
+                            showConfirmButton: true,
+                        }, function () {
+                            //window.location = window.location;
+
+                            //uploadFiles(data.data, false);
+                        });
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.data.message,
+                        type: "error",
+                        timer: 10000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+    });
 
     $('#btn_Temp').click(function (e) {
         if ($('#txtCustomerName').val() == "" || $('#txtCustomerName').val() == undefined) {

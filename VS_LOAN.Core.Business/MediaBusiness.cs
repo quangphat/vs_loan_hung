@@ -222,7 +222,7 @@ namespace VS_LOAN.Core.Business
                     zip.Save(System.IO.Path.Combine(folder, $"{fileName}.zip"));
                 }
             }
-            catch
+            catch(Exception e)
             {
                 return string.Empty;
             }
