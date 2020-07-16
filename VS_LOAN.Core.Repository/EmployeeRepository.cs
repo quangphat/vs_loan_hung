@@ -18,6 +18,15 @@ namespace VS_LOAN.Core.Repository
         {
 
         }
+        public async Task<List<int>> GetPeopleIdCanViewMyProfile(int userId)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryAsync<int>("sp_GetUserIDCanViewMyProfile", new { userId }, commandType: CommandType.StoredProcedure);
+
+                return result.ToList();
+            }
+        }
         public async Task<List<NhanVienInfoModel>> GetCourierList()
         {
             try

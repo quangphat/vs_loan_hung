@@ -31,6 +31,7 @@ namespace VS_LOAN.Core.Entity
         public string MC_MapBpmVar { get; set; }
         public int MC_GroupId { get; set; }
         public int OrderId { get; set; }
+        public string McId { get; set; }
     }
     public class HosoTailieu : LoaiTaiLieuModel
     {

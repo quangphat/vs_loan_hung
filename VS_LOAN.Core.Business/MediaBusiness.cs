@@ -173,10 +173,10 @@ namespace VS_LOAN.Core.Business
                     doc = new MCJsonFileGroupDoc { code = f.DocumentCode, files = new List<MCJsonFileGroupDocFile>() };
                     group.docs.Add(doc);
                 }
-                var newFile = RenameFile(f.Folder, f.FileName, $"{mcProfileId}-{f.DocumentCode}-{(doc.files.Count + 1)}.jpg");
-                doc.files.Add(new MCJsonFileGroupDocFile { name = newFile.Name });
+                //var newFile = RenameFile(f.Folder, f.FileName, $"{mcProfileId}-{f.DocumentCode}-{(doc.files.Count + 1)}.jpg");
+                doc.files.Add(new MCJsonFileGroupDocFile { name = f.FileName });
                 
-                filePaths.Add(System.IO.Path.Combine(f.Folder, newFile.Name));
+                filePaths.Add(System.IO.Path.Combine(f.Folder, f.FileName));
             }
             var jsonFileInfo = CreateJsonFile(jsonFile, mcProfileId, rootPath);
             filePaths.Add(jsonFileInfo.FullPath);
@@ -222,7 +222,7 @@ namespace VS_LOAN.Core.Business
                     zip.Save(System.IO.Path.Combine(folder, $"{fileName}.zip"));
                 }
             }
-            catch
+            catch(Exception e)
             {
                 return string.Empty;
             }

@@ -55,6 +55,8 @@ function setCheckboxValue(controlId, boolValue = false) {
     return $('#' + controlId).prop('checked', boolValue);
 }
 function setTextForPTag(controlId, value = '') {
+    if (isNullOrWhiteSpace(value))
+        return;
     document.getElementById(controlId).innerHTML = value;
 }
 function getSliderValue(controlId) {

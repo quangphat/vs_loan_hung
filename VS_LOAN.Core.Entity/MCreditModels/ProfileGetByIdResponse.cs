@@ -63,7 +63,7 @@ namespace VS_LOAN.Core.Entity.MCreditModels
         public string SaleHomeTown { get; set; }
         public string SaleAddr { get; set; }
         public string SaleAvatar { get; set; }
-
+        public int LocalProfileId { get; set; }
     }
 
 
