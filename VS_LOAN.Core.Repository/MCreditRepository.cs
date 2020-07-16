@@ -188,6 +188,20 @@ namespace VS_LOAN.Core.Repository
             }
 
         }
+        public async Task<bool> InsertPeopleWhoCanViewProfile(int profileId, string peopleIds)
+        {
+            using (var con = GetConnection())
+            {
+
+                await con.ExecuteAsync("sp_MCProfilePeople_Insert", new
+                {
+                    profileId,
+                    peopleIds
+                }, commandType: CommandType.StoredProcedure);
+                return true;
+            }
+
+        }
         public async Task<List<OptionSimple>> GetMCProfileStatusList()
         {
             using (var con = GetConnection())
@@ -262,25 +276,27 @@ namespace VS_LOAN.Core.Repository
                 return true;
             }
         }
-        public async Task<List<ProfileSearchSql>> GetTempProfiles(int page, int limit, string freeText)
+        public async Task<List<ProfileSearchSql>> GetTempProfiles(int page, int limit, string freeText, int userId)
         {
             using (var con = GetConnection())
             {
                 var result = await _connection.QueryAsync<ProfileSearchSql>("sp_MCredit_TempProfile_Gets", new {
                     freeText,
+                    userId
                     page,
                     limit_tmp = limit
                 }, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
         }
-        public async Task<int> CountTempProfiles(string freeText)
+        public async Task<int> CountTempProfiles(string freeText, int userId)
         {
             using (var con = GetConnection())
             {
                 var result = await _connection.ExecuteScalarAsync<int>("sp_MCredit_TempProfile_Counts", new
                 {
                     freeText,
+                    userId
                 }, commandType: CommandType.StoredProcedure);
                 return result;
             }

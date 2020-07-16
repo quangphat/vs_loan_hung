@@ -26,11 +26,13 @@ namespace VS_LOAN.Core.Web.Controllers
         protected readonly IMCreditRepositoryTest _rpMcTest;
         protected readonly IMediaBusiness _bizMedia;
         protected readonly ITailieuRepository _rpTailieu;
+        protected readonly IEmployeeRepository _rpEmployee;
         public MCreditController(IMCeditRepository rpMCredit,
             INoteRepository noteRepository,
             IMCreditRepositoryTest mCreditRepositoryTest,
             IMediaBusiness mediaBusiness,
             ITailieuRepository tailieuRepository,
+            IEmployeeRepository employeeRepository,
             IMCreditService loanContractService) : base()
         {
             _rpMCredit = rpMCredit;
@@ -39,6 +41,7 @@ namespace VS_LOAN.Core.Web.Controllers
             _bizMedia = mediaBusiness;
             _rpMcTest = mCreditRepositoryTest;
             _rpTailieu = tailieuRepository;
+            _rpEmployee = employeeRepository;
         }
 
         public async Task<JsonResult> AuthenMC(AuthenMCModel model)
@@ -120,8 +123,8 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<JsonResult> SearchTemps(string freeText, int page = 1, int limit = 20)
         {
             page = page <= 0 ? 1 : page;
-            var total = await _rpMCredit.CountTempProfiles(freeText);
-            var profiles = await _rpMCredit.GetTempProfiles(page, limit, freeText);
+            var total = await _rpMCredit.CountTempProfiles(freeText, GlobalData.User.IDUser);
+            var profiles = await _rpMCredit.GetTempProfiles(page, limit, freeText, GlobalData.User.IDUser);
             var result = DataPaging.Create(profiles, total);
             return ToJsonResponse(true, "", result);
         }
@@ -161,6 +164,14 @@ namespace VS_LOAN.Core.Web.Controllers
                     };
                     _rpNote.AddNoteAsync(note);
                 }
+                var peopleCanView = await _rpEmployee.GetPeopleIdCanViewMyProfile(GlobalData.User.IDUser);
+                if(peopleCanView!=null && peopleCanView.Any())
+                {
+                    peopleCanView.Add(GlobalData.User.IDUser);
+                    peopleCanView.Add(1); //admin
+                    var ids = string.Join(".",peopleCanView);
+                    _rpMCredit.InsertPeopleWhoCanViewProfile(id, ids);
+                }
             }
             return ToJsonResponse(true, "", id);
         }
@@ -188,7 +199,14 @@ namespace VS_LOAN.Core.Web.Controllers
                 };
                 _rpNote.AddNoteAsync(note);
             }
-
+            var peopleCanView = await _rpEmployee.GetPeopleIdCanViewMyProfile(GlobalData.User.IDUser);
+            if (peopleCanView != null && peopleCanView.Any())
+            {
+                peopleCanView.Add(GlobalData.User.IDUser);
+                peopleCanView.Add(1); //admin
+                var ids = string.Join(".", peopleCanView);
+                _rpMCredit.InsertPeopleWhoCanViewProfile(model.Id, ids);
+            }
             //var obj = _mapper.Map<MCProfilePostModel>(profile);
             //var result = await _svMCredit.CreateProfile(obj, GlobalData.User.IDUser);
             return ToJsonResponse(true, "");
@@ -196,6 +214,12 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<ActionResult> TempProfile(int id)
         {
             var result = await _rpMCredit.GetTemProfileById(id);
+            var peopleCanView = await _rpEmployee.GetPeopleIdCanViewMyProfile(GlobalData.User.IDUser);
+            if (peopleCanView != null && peopleCanView.Any())
+            {
+                if (!peopleCanView.Contains(GlobalData.User.IDUser))
+                    return RedirectToAction("Temp");
+            }
             ViewBag.model = result;
             return View();
         }
@@ -210,6 +234,12 @@ namespace VS_LOAN.Core.Web.Controllers
             result.obj.IsInsurrance = "1";
             var profile = await _rpMCredit.GetTemProfileByMcId(result.obj.Id);
             result.obj.LocalProfileId = profile != null ? profile.Id : 0;
+            var peopleCanView = await _rpEmployee.GetPeopleIdCanViewMyProfile(GlobalData.User.IDUser);
+            if (peopleCanView != null && peopleCanView.Any())
+            {
+                if (!peopleCanView.Contains(GlobalData.User.IDUser))
+                    return RedirectToAction("Index");
+            }
             ViewBag.model = result.status == "success" ? result.obj : new ProfileGetByIdResponseObj();
             return View();
         }
