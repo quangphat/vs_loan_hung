@@ -214,7 +214,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<ActionResult> TempProfile(int id)
         {
             var result = await _rpMCredit.GetTemProfileById(id);
-            var peopleCanView = await _rpEmployee.GetPeopleIdCanViewMyProfile(GlobalData.User.IDUser);
+            var peopleCanView = await _rpMCredit.GetPeopleCanViewMyProfile(id);
             if (peopleCanView != null && peopleCanView.Any())
             {
                 if (!peopleCanView.Contains(GlobalData.User.IDUser))
@@ -234,7 +234,7 @@ namespace VS_LOAN.Core.Web.Controllers
             result.obj.IsInsurrance = "1";
             var profile = await _rpMCredit.GetTemProfileByMcId(result.obj.Id);
             result.obj.LocalProfileId = profile != null ? profile.Id : 0;
-            var peopleCanView = await _rpEmployee.GetPeopleIdCanViewMyProfile(GlobalData.User.IDUser);
+            var peopleCanView = await _rpMCredit.GetPeopleCanViewMyProfile(profile.Id);
             if (peopleCanView != null && peopleCanView.Any())
             {
                 if (!peopleCanView.Contains(GlobalData.User.IDUser))

@@ -18,6 +18,14 @@ namespace VS_LOAN.Core.Repository
         {
 
         }
+        public async Task<List<int>> GetPeopleCanViewMyProfile(int profileId)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await _connection.QueryAsync<int>("sp_MCProfilePeople_GetPeopleCanViewProfile", new { profileId}, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
         public async Task<bool> UpdateSale(UpdateSaleModel model, int profileId)
         {
 
