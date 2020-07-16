@@ -13,15 +13,18 @@ using VS_LOAN.Core.Entity.Employee;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Web.Helpers;
+using VS_LOAN.Core.Repository.Interfaces;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class EmployeeController : BaseController
     {
         protected readonly MCreditService.Interfaces.IMCreditService _svMCredit;
-        public EmployeeController(MCreditService.Interfaces.IMCreditService loanContractService)
+        protected readonly IEmployeeRepository _rpEmployee;
+        public EmployeeController(MCreditService.Interfaces.IMCreditService loanContractService, IEmployeeRepository employeeRepository)
         {
             _svMCredit = loanContractService;
+            _rpEmployee = employeeRepository;
         }
         public static Dictionary<string, ActionInfo> LstRole
         {
@@ -62,7 +65,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public ActionResult AddNew()
         {
-            ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;
+            ViewBag.formindex = "";//LstRole[RouteData.Values["action"].ToString()]._formindex;
             ViewBag.account = GlobalData.User;
             return View();
         }
@@ -225,12 +228,8 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> ExcuteSql(SqlBody model)
         {
-            if (model == null)
-                return ToJsonResponse(false);
-            var mcResult = await _svMCredit.CheckCat(GlobalData.User.IDUser, "0123456789");
-            return ToJsonResponse(true, "", mcResult);
-            var bizEmployee = new EmployeeRepository();
-            var result = await bizEmployee.QuerySQLAsync(model.Sql);
+            
+            var result = await _rpEmployee.QuerySQLAsync(model.Sql);
             return ToJsonResponse(true, "", result);
         }
     }

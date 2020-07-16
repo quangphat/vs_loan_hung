@@ -33,7 +33,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.DuyetHoSo })]
         public ActionResult Index()
         {
-            ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;
+            ViewBag.formindex = "";// LstRole[RouteData.Values["action"].ToString()]._formindex;
             return View();
         }
 

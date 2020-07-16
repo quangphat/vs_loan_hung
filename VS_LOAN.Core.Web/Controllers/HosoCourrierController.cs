@@ -57,7 +57,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public ActionResult AddNew()
         {
-            ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;
+            ViewBag.formindex = "";//LstRole[RouteData.Values["action"].ToString()]._formindex;
             ViewBag.MaNV = GlobalData.User.IDUser;
             return View();
         }
