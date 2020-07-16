@@ -195,7 +195,7 @@
                 </form>
             </div>
         </div>
-        <div class="row">
+        @*<div class="row">
             <div class="col-xs-12">
                 <h3 class="header smaller lighter blue">3.Hồ sơ đính kèm:</h3>
                 <div class="row">
@@ -206,7 +206,7 @@
 
             </div>
 
-        </div>
+        </div>*@
         <div class="row">
             <div class="col-xs-12">
                 <hr />
@@ -222,9 +222,9 @@
                         <a class="btn btn-sm btn-primary" id="btn_Temp">
                             Lưu tạm
                         </a>
-                        <a class="btn btn-sm btn-primary" id="btn_Save">
+                        @*<a class="btn btn-sm btn-primary" id="btn_Save">
                             Nộp hồ sơ
-                        </a>
+                        </a>*@
                         @*<a class="btn btn-sm btn-primary" href="/HoSo/AddNew" id="btn_addNew">
                                 Tạo mới
                             </a>*@
@@ -266,7 +266,7 @@
         GetLoanPeriods("#ddlLoanPeriod");
         GetLoanCities("#ddlProvince");
         GetLoanProducts("#ddlProduct");
-        LayDSTaiLieu();
+        //LayDSTaiLieu();
         //$("#txtIdDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
     });
 
@@ -495,7 +495,7 @@
             data: objectSend,
             success: function (data) {
                 if (data.success == true) {
-                    if (data.data.status == "success") {
+                    
                         swal({
                             title: "@Html.Raw(Global.Message_Title)",
                             text: "Thành công",
@@ -503,25 +503,12 @@
                             timer: 4000,
                             showConfirmButton: true,
                         }, function () {
-                            //window.location = window.location;
+                            window.location = "/MCredit/TempProfile/" + data.data;
 
                             //uploadFiles(data.data, false);
                         });
-                    }
-                    else {
-                        swal({
-                            title: "@Html.Raw(Global.Message_Title)",
-                            text: data.code,
-                            type: "error",
-                            timer: 4000,
-                            showConfirmButton: true,
-                        }, function () {
-                            //window.location = window.location;
-
-                            //uploadFiles(data.data, false);
-                        });
-                    }
-
+                    
+                    
                 }
                 else {
                     swal({
