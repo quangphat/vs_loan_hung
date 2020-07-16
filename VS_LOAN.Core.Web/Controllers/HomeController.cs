@@ -28,13 +28,13 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult Index()
         {
-            ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;
+            ViewBag.formindex = "";//LstRole[RouteData.Values["action"].ToString()]._formindex;
             return View();
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult HuongDanSuDung()
         {
-            ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;
+            ViewBag.formindex = "";//LstRole[RouteData.Values["action"].ToString()]._formindex;
             return View();
         }
 
@@ -56,7 +56,7 @@ namespace VS_LOAN.Core.Web.Controllers
        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult PhienBan()
         {
-            ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;            
+            ViewBag.formindex = "";//LstRole[RouteData.Values["action"].ToString()]._formindex;            
             return View();
         }
         

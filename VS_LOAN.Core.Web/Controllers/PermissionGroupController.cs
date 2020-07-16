@@ -32,7 +32,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLNHomQuyen })]
         public ActionResult TaoMoi()
         {
-            ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;
+            ViewBag.formindex = "";//LstRole[RouteData.Values["action"].ToString()]._formindex;
             return View();
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLNHomQuyen })]
@@ -81,7 +81,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
         public ActionResult QLToNhom()
         {
-            ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;
+            ViewBag.formindex = "";//LstRole[RouteData.Values["action"].ToString()]._formindex;
             return View();
         }
 
@@ -196,7 +196,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.CauHinhDuyet })]
         public ActionResult CauHinhDuyet()
         {
-            ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;
+            ViewBag.formindex = "";//LstRole[RouteData.Values["action"].ToString()]._formindex;
             return View();
         }
 

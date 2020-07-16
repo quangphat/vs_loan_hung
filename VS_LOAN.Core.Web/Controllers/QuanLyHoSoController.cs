@@ -15,11 +15,17 @@ using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Utility.Exceptions;
 using VS_LOAN.Core.Utility.OfficeOpenXML;
 using VS_LOAN.Core.Web.Helpers;
+using VS_LOAN.Core.Repository.Interfaces;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class QuanLyHoSoController : LoanController
     {
+        protected readonly IPartnerRepository _rpPartner;
+        public QuanLyHoSoController(IPartnerRepository partnerRepository)
+        {
+            _rpPartner = partnerRepository;
+        }
         public static Dictionary<string, ActionInfo> LstRole
         {
             get
@@ -33,7 +39,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult DanhSachHoSo()
         {
-            ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;
+            ViewBag.formindex = "";//LstRole[RouteData.Values["action"].ToString()]._formindex;
             List<NhomDropDownModel> dsNhom = new GroupRepository().LayDSCuaNhanVien(GlobalData.User.IDUser);
             if (dsNhom == null)
                 dsNhom = new List<NhomDropDownModel>();
@@ -143,7 +149,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var hoso = await bizHoso.GetDetail(id);
             new HoSoXemBLL().DaXem(id);
             ViewBag.HoSo = hoso;
-            ViewBag.MaDoiTac = new PartnerRepository().LayMaDoiTac(hoso.SanPhamVay);
+            ViewBag.MaDoiTac =await _rpPartner.LayMaDoiTac(hoso.SanPhamVay) ;
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
             //ViewBag.LstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
             return View();
@@ -563,7 +569,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
             ViewBag.formindex = LstRole["DanhSachHoSo"]._formindex;
             if (id <= 0)
@@ -571,7 +577,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var hoso = new HoSoBLL().LayChiTiet(id);
             new HoSoXemBLL().DaXem(id);
             ViewBag.HoSo = hoso;
-            ViewBag.MaDoiTac = new PartnerRepository().LayMaDoiTac(hoso.SanPhamVay);
+            ViewBag.MaDoiTac = await _rpPartner.LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
             //Session["QL_LstFileHoSo"] = hoso.LstTaiLieu;
             ViewBag.LstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
