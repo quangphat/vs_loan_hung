@@ -11,6 +11,7 @@ namespace VS_LOAN.Core.Repository.Interfaces
 {
     public interface IMCeditRepository
     {
+        Task<List<int>> GetPeopleCanViewMyProfile(int profileId);
         Task<bool> InsertPeopleWhoCanViewProfile(int profileId, string peopleIds);
         Task<MCredit_TempProfile> GetTemProfileByMcId(string id);
         Task<List<OptionSimple>> GetMCProfileStatusList();
