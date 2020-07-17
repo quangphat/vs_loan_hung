@@ -92,7 +92,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (id > 0)
             {
                 var tasks = new List<Task>();
-                var ids = new List<int>() { model.AssignId, GlobalData.User.IDUser };
+                var ids = new List<int>() { model.AssignId, GlobalData.User.IDUser, 1 };//1 is Thainm
                 foreach (var assigneeId in ids)
                 {
                     tasks.Add(_bizCourrier.InsertCourierAssignee(id, assigneeId));
@@ -287,6 +287,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 hoso.AssigneeIds = new List<int>();
             }
             hoso.AssigneeIds.Add(GlobalData.User.IDUser);
+            hoso.AssigneeIds.Add(1);//Thainm
             var tasks = new List<Task>();
             foreach (var assingeeId in hoso.AssigneeIds)
             {
