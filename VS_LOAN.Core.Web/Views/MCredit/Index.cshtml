@@ -373,7 +373,7 @@
         if ((MaTrangThai == @((int)VS_LOAN.Core.Entity.TrangThaiHoSo.TuChoi)
             || MaTrangThai == @((int)VS_LOAN.Core.Entity.TrangThaiHoSo.BoSungHoSo)
             || MaTrangThai == @((int)VS_LOAN.Core.Entity.TrangThaiHoSo.Nhap))
-            && MaNV == '@VS_LOAN.Core.Web.Helpers.GlobalData.User.Code')
+           )
         {
             thaoTac += "<a title='@Global.Button_Edit' class=\"green\" style='cursor: pointer' ID=" + id + " onclick='SuaHS(" + id + ")' >";
                 thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
@@ -383,16 +383,14 @@
         }
         else if ((MaTrangThai == @((int)VS_LOAN.Core.Entity.TrangThaiHoSo.NhapLieu)
                  || MaTrangThai == @((int)VS_LOAN.Core.Entity.TrangThaiHoSo.BoSungHoSo))
-                 && '@VS_LOAN.Core.Web.Helpers.GlobalData.User.UserType' == '@((int)VS_LOAN.Core.Entity.UserTypeEnum.Teamlead)') {
+               ) {
             thaoTac += "<a title='@Global.Button_Edit' class=\"green\" style='cursor: pointer' ID=" + id + " onclick='SuaHS(" + id +")' >";
             thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
             thaoTac += "</i>";
             thaoTac += "</a>";
             thaoTac += "</span>";
         }
-        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.BoSungHoSo)'
-
-            && '@VS_LOAN.Core.Web.Helpers.GlobalData.User.UserType' == '@((int)VS_LOAN.Core.Entity.UserTypeEnum.Sale)') {
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.BoSungHoSo)') {
             thaoTac += "<a title='@Global.Button_Edit' >";
             thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
             thaoTac += "</i>";
