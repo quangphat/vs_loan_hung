@@ -1,4 +1,4 @@
-﻿using VS_LOAN.Core.Business;
+﻿using VS_LOAN.Core.Repository;
 using VS_LOAN.Core.Entity;
 using System;
 using System.Collections.Generic;

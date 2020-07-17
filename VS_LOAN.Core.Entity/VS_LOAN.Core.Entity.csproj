@@ -56,6 +56,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.Helpers.dll</HintPath>
@@ -103,15 +107,54 @@
     <Compile Include="F88Model\LadipageModel.cs" />
     <Compile Include="F88ResponseModel.cs" />
     <Compile Include="GhichuViewModel.cs" />
+    <Compile Include="MCreditModels\AuthenMCModel.cs" />
+    <Compile Include="MCreditModels\CheckCatRequestModel.cs" />
+    <Compile Include="MCreditModels\CheckCatResponseModel.cs" />
     <Compile Include="HosoCourrier\HosoCorrierRequestModel.cs" />
     <Compile Include="HosoCourrier\HosoCourierListModel.cs" />
     <Compile Include="HosoCourrier\HosoCourrier.cs" />
+    <Compile Include="MCreditModels\CheckCICRequestModel.cs" />
+    <Compile Include="MCreditModels\CheckSaleRequestModel.cs" />
+    <Compile Include="MCreditModels\CheckSaleResponseModel.cs" />
+    <Compile Include="MCreditModels\CheckStatusResponseModel.cs" />
+    <Compile Include="MCreditModels\CheckDupRequestModel.cs" />
+    <Compile Include="MCreditModels\CheckDupResponseModel.cs" />
+    <Compile Include="MCreditModels\CheckStatusRequestModel.cs" />
+    <Compile Include="MCreditModels\CheckCICResponseModel.cs" />
+    <Compile Include="MCreditModels\GetFileUploadRequest.cs" />
+    <Compile Include="MCreditModels\GetFileUploadResponse.cs" />
+    <Compile Include="MCreditModels\McJsonFile.cs" />
+    <Compile Include="MCreditModels\MCProfilePostModel.cs" />
+    <Compile Include="MCreditModels\MCResponseModelBase.cs" />
     <Compile Include="HoSoCuaToiModel.cs" />
     <Compile Include="HoSoDuyetModel.cs" />
     <Compile Include="HoSoQuanLyModel.cs" />
     <Compile Include="JsonFileResult.cs" />
     <Compile Include="KetQuaHoSoModel.cs" />
     <Compile Include="LoaiTaiLieuModel.cs" />
+    <Compile Include="MCreditModels\AuthenRequestModel.cs" />
+    <Compile Include="MCreditModels\AuthenResponse.cs" />
+    <Compile Include="MCreditModels\AuthenResponseObj.cs" />
+    <Compile Include="MCreditModels\MCreditRequestModelBase.cs" />
+    <Compile Include="MCreditModels\MCreditUserToken.cs" />
+    <Compile Include="MCreditModels\NoteAddRequestModel.cs" />
+    <Compile Include="MCreditModels\NoteAddResponseModel.cs" />
+    <Compile Include="MCreditModels\NoteRequestModel.cs" />
+    <Compile Include="MCreditModels\NoteResponseModel.cs" />
+    <Compile Include="MCreditModels\ProfileAddRequest.cs" />
+    <Compile Include="MCreditModels\ProfileAddResponse.cs" />
+    <Compile Include="MCreditModels\ProfileGetByIdRequest.cs" />
+    <Compile Include="MCreditModels\ProfileGetByIdResponse.cs" />
+    <Compile Include="MCreditModels\ProfileSearchRequestModel.cs" />
+    <Compile Include="MCreditModels\ProfileSearchResponse.cs" />
+    <Compile Include="MCreditModels\ProfileSearchSql.cs" />
+    <Compile Include="MCreditModels\SqlModel\MCreditCity.cs" />
+    <Compile Include="MCreditModels\SqlModel\MCreditLoanPeriod.cs" />
+    <Compile Include="MCreditModels\SqlModel\MCreditlocations.cs" />
+    <Compile Include="MCreditModels\SqlModel\MCreditProduct.cs" />
+    <Compile Include="MCreditModels\SqlModel\MCreditProfile.cs" />
+    <Compile Include="MCreditModels\SqlModel\MCredit_TempProfileAddModel.cs" />
+    <Compile Include="MCreditModels\SqlModel\UpdateSaleModel.cs" />
     <Compile Include="Model\AutoIDModel.cs" />
     <Compile Include="Model\Customer.cs" />
     <Compile Include="Model\CustomerCheck.cs" />

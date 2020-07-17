@@ -6,11 +6,29 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Entity
 {
+    public enum MCreditTempProfileStatus
+    {
+        Draft = 0,
+        SubmitedTOMCredit = 2
+    }
+    public enum MCTableType
+    {
+        MCreditCity = 1,
+        MCreditLoanPeriod = 2,
+        MCreditlocations = 3,
+        MCreditProduct = 4,
+        MCreditProfileStatus = 5
+    }
+    public enum PartnerType
+    {
+        MCredit = 7
+    }
     public enum NoteType
     {
         Hoso = 1,
         HosoCourrier = 2,
-        Company = 3
+        Company = 3,
+        MCreditTemp = 4
 
     }
     public enum CatType
@@ -27,7 +45,8 @@ namespace VS_LOAN.Core.Entity
     public enum HosoType
     {
         Hoso = 1,
-        HosoCourrier = 2
+        HosoCourrier = 2,
+        MCredit = 3
     }
     public enum AutoID
     {

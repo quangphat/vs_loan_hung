@@ -11,8 +11,82 @@
 //        },
 //        message: '<h2 style="color:#fff">' + text + ' ...</h2>'
 //    });
-//}
+//}\
+function setddl(controlId) {
+    $('#' + controlId).chosen({ width: '100%', allow_single_deselect: true });
+}
+function getCommentList(profileId, type) {
+    //$('#ddlTrangThai').empty();
+    $.ajax({
+        type: "POST",
+        url: '/Common/Comments?profileId=' + profileId + "&type=" + type,
+        data: {},
+        success: function (data) {
+            if (data.data != null && data.success == true) {
+                $.each(data.data, function (index, item) {
+                    $('#dsGhichu').append(
+                        '<div class="timeline-event-content  active">' +
+                        '<div class="timeline-item">' +
+                        '<div class="timeline-body">' +
+                        '<div class="timeline__message-container">' +
+                        '<strong>' + item.Commentator + ' (' + SetFormatDateTimeDMY(item.CommentTime) + '): </strong><span>' + item.Noidung + '</span>' +
+                        '</div></div></div></div>'
 
+                    )
+                });
+            }
+
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+function getRadioButtonValue(controlId) {
+    return $('input[name="' + controlId + '"]:checked').val();
+}
+function getCheckboxValue(controlId) {
+    return $('#' + controlId).is(":checked");
+}
+function setCheckboxValue(controlId, boolValue = false) {
+    
+    return $('#' + controlId).prop('checked', boolValue);
+}
+function setTextForPTag(controlId, value = '') {
+    if (isNullOrWhiteSpace(value))
+        return;
+    document.getElementById(controlId).innerHTML = value;
+}
+function getSliderValue(controlId) {
+    return Number(document.getElementById(controlId).value);
+
+}
+function calculateAmountPerMonth(amount, month, controlDisplay) {
+
+    if (month <= 0)
+        return;
+    let value = amount / month;
+
+    document.getElementById(controlDisplay).innerHTML = formatCurrencyVND(value);
+}
+function setSlidebarValue(controlId, minValue = 0, maxValue = 0, step = 0, defaultValue = 0) {
+    document.getElementById(controlId).min = minValue;
+    document.getElementById(controlId).max = maxValue;
+    document.getElementById(controlId).step = step;
+    document.getElementById(controlId).value = defaultValue;
+}
+function slidebar(sliderControl, displayControl, isCurrency = false, unit = '') {
+    var slider = document.getElementById(sliderControl);
+    var output = document.getElementById(displayControl);
+
+    output.innerHTML = isCurrency ? formatCurrencyVND(slider.value) : slider.value + " " + unit;
+
+    slider.oninput = function () {
+        output.innerHTML = isCurrency ? formatCurrencyVND(this.value) : this.value + " " + unit;
+    }
+}
 function LayNhom(controlId, defaultValue = 0, subcontrolId = null, subControlValue = 0) {
     $(controlId).empty();
     $.ajax({
@@ -470,10 +544,11 @@ function getNewGuid() {
     };
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
-function setCheckedValueOfRadioButtonGroup(name, vValue) {
+function setCheckedValueOfRadioButtonGroup(name, boolValue) {
     var radios = document.getElementsByName(name);
+    
     for (var j = 0; j < radios.length; j++) {
-        if (radios[j].value === vValue) {
+        if (radios[j].value === boolValue) {
             radios[j].checked = true;
             break;
         }

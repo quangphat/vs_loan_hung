@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MCreditService;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -6,17 +7,25 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
-using VS_LOAN.Core.Business;
+using VS_LOAN.Core.Repository;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.Employee;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Web.Helpers;
+using VS_LOAN.Core.Repository.Interfaces;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class EmployeeController : BaseController
     {
+        protected readonly MCreditService.Interfaces.IMCreditService _svMCredit;
+        protected readonly IEmployeeRepository _rpEmployee;
+        public EmployeeController(MCreditService.Interfaces.IMCreditService loanContractService, IEmployeeRepository employeeRepository)
+        {
+            _svMCredit = loanContractService;
+            _rpEmployee = employeeRepository;
+        }
         public static Dictionary<string, ActionInfo> LstRole
         {
             get
@@ -28,9 +37,10 @@ namespace VS_LOAN.Core.Web.Controllers
             }
 
         }
+        
         public async Task<JsonResult> GetRoles()
         {
-            var bizEmployee = new EmployeeBusiness();
+            var bizEmployee = new EmployeeRepository();
             var rs = await bizEmployee.GetRoleList();
             return ToJsonResponse(true, null, rs);
         }
@@ -45,7 +55,7 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             var fromDate = string.IsNullOrWhiteSpace(workFromDate) ? DateTime.Now.AddDays(-7) : DateTimeFormat.ConvertddMMyyyyToDateTime(workFromDate);
             var toDate = string.IsNullOrWhiteSpace(workToDate) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(workToDate);
-            var bzEmployee = new EmployeeBusiness();
+            var bzEmployee = new EmployeeRepository();
             BusinessExtension.ProcessPaging(ref page, ref limit);
             freetext = string.IsNullOrWhiteSpace(freetext) ? string.Empty : freetext.Trim();
             var totalRecord = await bzEmployee.Count(fromDate, toDate, roleId, freetext);
@@ -55,13 +65,13 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public ActionResult AddNew()
         {
-            ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;
+            ViewBag.formindex = "";//LstRole[RouteData.Values["action"].ToString()]._formindex;
             ViewBag.account = GlobalData.User;
             return View();
         }
         public async Task<JsonResult> Create([FromBody] UserCreateModel entity)
         {
-            var isAdmin = new GroupBusiness().CheckIsAdmin(GlobalData.User.IDUser);
+            var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
             if (!isAdmin)
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             if (entity == null)
@@ -104,7 +114,7 @@ namespace VS_LOAN.Core.Web.Controllers
             //{
             //    return ToJsonResponse(false, "Vui lòng chọn quận/huyện");
             //}
-            var bizEmployee = new EmployeeBusiness();
+            var bizEmployee = new EmployeeRepository();
             var existUserName = await bizEmployee.GetByUserName(entity.UserName.Trim(), 0);
             if (existUserName != null)
             {
@@ -143,12 +153,12 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<ActionResult> Edit(int id)
         {
-            var isAdmin = new GroupBusiness().CheckIsAdmin(GlobalData.User.IDUser);
+            var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
             if (!isAdmin)
             {
                 return View();
             }
-            var bzEmployee = new EmployeeBusiness();
+            var bzEmployee = new EmployeeRepository();
             var employee = await bzEmployee.GetById(id);
             ViewBag.employee = employee;
             ViewBag.account = GlobalData.User;
@@ -157,7 +167,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<JsonResult> Update([FromBody] EmployeeEditModel model)
         {
 
-            var isAdmin = new GroupBusiness().CheckIsAdmin(GlobalData.User.IDUser);
+            var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
             if (!isAdmin)
             {
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
@@ -166,7 +176,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             }
-            var bzEmployee = new EmployeeBusiness();
+            var bzEmployee = new EmployeeRepository();
             if (string.IsNullOrWhiteSpace(model.WorkDateStr))
             {
                 return ToJsonResponse(false, "Vui lòng chọn ngày vào làm", null);
@@ -185,7 +195,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetPartner(int customerId)
         {
-            var bizCustomer = new CustomerBusiness();
+            var bizCustomer = new CustomerRepository();
             var bizPartner = new PartnerBLL();
             var customerCheck = bizCustomer.GetCustomerCheckByCustomerId(customerId);
             var partners = await bizPartner.GetListForCheckCustomerDuplicateAsync();
@@ -200,28 +210,26 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public JsonResult GetNotes(int customerId)
         {
-            var bizCustomer = new CustomerBusiness();
+            var bizCustomer = new CustomerRepository();
             var datas = bizCustomer.GetNoteByCustomerId(customerId);
             return ToJsonResponse(true, null, datas);
         }
         public async Task<JsonResult> GetUserByProvinceId(int provinceId)
         {
-            var bizEmployee = new EmployeeBusiness();
+            var bizEmployee = new EmployeeRepository();
             var datas = await bizEmployee.GetByProvinceId(provinceId);
             return ToJsonResponse(true, null, datas);
         }
         public JsonResult GetUserByDistrictId(int districtId)
         {
-            var bizEmployee = new EmployeeBusiness();
+            var bizEmployee = new EmployeeRepository();
             var datas = bizEmployee.GetByDistrictId(districtId);
             return ToJsonResponse(true, null, datas);
         }
         public async Task<JsonResult> ExcuteSql(SqlBody model)
         {
-            if (model == null)
-                return ToJsonResponse(false);
-            var bizEmployee = new EmployeeBusiness();
-            var result = await bizEmployee.QuerySQLAsync(model.Sql);
+            
+            var result = await _rpEmployee.QuerySQLAsync(model.Sql);
             return ToJsonResponse(true, "", result);
         }
     }

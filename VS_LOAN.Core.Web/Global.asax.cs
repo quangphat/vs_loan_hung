@@ -1,4 +1,4 @@
-﻿using VS_LOAN.Core.Business;
+﻿using VS_LOAN.Core.Repository;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Web.Helpers;
@@ -23,7 +23,6 @@ namespace VS_LOAN.Core.Web
         {
             //log4net.Config.XmlConfigurator.Configure();
             AreaRegistration.RegisterAllAreas();
-            UnityConfig.RegisterComponents();
             GlobalConfiguration.Configure(WebApiConfig.Register);
            // WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

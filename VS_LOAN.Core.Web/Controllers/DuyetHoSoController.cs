@@ -8,18 +8,28 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
-using VS_LOAN.Core.Business;
+using VS_LOAN.Core.Repository;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Utility.Exceptions;
 using VS_LOAN.Core.Utility.OfficeOpenXML;
 using VS_LOAN.Core.Web.Helpers;
+using VS_LOAN.Core.Business.Interfaces;
+using VS_LOAN.Core.Entity.UploadModel;
+using VS_LOAN.Core.Repository.Interfaces;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class DuyetHoSoController : BaseController
     {
+        protected readonly IMediaBusiness _bizMedia;
+        protected readonly IPartnerRepository _rpPartner;
+        public DuyetHoSoController(IMediaBusiness mediaBusiness, IPartnerRepository partnerRepository)
+        {
+            _bizMedia = mediaBusiness;
+            _rpPartner = partnerRepository;
+        }
         public static Dictionary<string, ActionInfo> LstRole
         {
             get
@@ -33,7 +43,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.DuyetHoSo })]
         public ActionResult Index()
         {
-            ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;
+            ViewBag.formindex = "";// LstRole[RouteData.Values["action"].ToString()]._formindex;
             return View();
         }
 
@@ -81,43 +91,28 @@ namespace VS_LOAN.Core.Web.Controllers
 
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public JsonResult UploadHoSo(string key)
+        public async Task<JsonResult> UploadHoSo(string key)
         {
             string fileUrl = "";
+            var file = new FileModel();
             try
             {
-                foreach (string file in Request.Files)
+                foreach (string f in Request.Files)
                 {
-                    var fileContent = Request.Files[file];
+                    var fileContent = Request.Files[f];
                     if (fileContent != null && fileContent.ContentLength > 0)
                     {
+                        Stream stream = fileContent.InputStream;
                         string[] p = fileContent.ContentType.Split('/');
                         // get a stream
-                        Stream stream = fileContent.InputStream;
-                        // and optionally write the file to disk       
-                        string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + fileContent.FileName.Trim().Replace(" ", "_");
-                        string root = System.IO.Path.Combine(Server.MapPath("~/Upload"), "HoSo");
-                        string pathTemp = "";
-                        if (!Directory.Exists(root))
-                            Directory.CreateDirectory(root);
-                        pathTemp = DateTime.Now.Year.ToString();
-                        string pathYear = System.IO.Path.Combine(root, pathTemp);
-                        if (!Directory.Exists(pathYear))
-                            Directory.CreateDirectory(pathYear);
-                        pathTemp += "/" + DateTime.Now.Month.ToString();
-                        string pathMonth = System.IO.Path.Combine(root, pathTemp);
-                        if (!Directory.Exists(pathMonth))
-                            Directory.CreateDirectory(pathMonth);
-                        pathTemp += "/" + DateTime.Now.Day.ToString();
-                        string pathDay = System.IO.Path.Combine(root, pathTemp);
-                        if (!Directory.Exists(pathDay))
-                            Directory.CreateDirectory(pathDay);
-                        string path = System.IO.Path.Combine(pathDay, fileName);
-                        using (var fileStream = System.IO.File.Create(path))
+                        string root = Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}");
+                        stream.Position = 0;
+                        file = _bizMedia.GetFileUploadUrl(fileContent.FileName, root, Utility.FileUtils.GenerateProfileFolder());
+                        using (var fileStream = System.IO.File.Create(file.FullPath))
                         {
-                            stream.CopyTo(fileStream);
+                            await stream.CopyToAsync(fileStream);
                             fileStream.Close();
-                            fileUrl = "/Upload/HoSo/" + pathTemp + "/" + fileName;
+                            fileUrl = file.FileUrl;
                         }
                         string deleteURL = Url.Action("Delete", "QuanLyHoSo") + "?key=" + key;
                         var _type = System.IO.Path.GetExtension(fileContent.FileName);
@@ -126,14 +121,14 @@ namespace VS_LOAN.Core.Web.Controllers
                         if (find != null)
                         {
                             find.LstFile[0].DuongDan = fileUrl;
-                            find.LstFile[0].Ten = fileName;
+                            find.LstFile[0].Ten = file.Name;
                         }
                         else
                         {
                             TaiLieuModel taiLieu = new TaiLieuModel();
                             taiLieu.MaLoai = Convert.ToInt32(key.Trim());
                             Entity.Model.FileInfo _file = new Entity.Model.FileInfo();
-                            _file.Ten = fileName;
+                            _file.Ten = file.Name;
                             _file.DuongDan = fileUrl;
                             taiLieu.LstFile.Add(_file);
                             lstTaiLieu.Add(taiLieu);
@@ -146,7 +141,7 @@ namespace VS_LOAN.Core.Web.Controllers
                                 initialPreview = fileUrl,
                                 initialPreviewConfig = new[] {
                                     new {
-                                        caption = fileName,
+                                        caption = file.Name,
                                         url = deleteURL,
                                         key =key,
                                         type="pdf",
@@ -164,7 +159,7 @@ namespace VS_LOAN.Core.Web.Controllers
                                 initialPreview = fileUrl,
                                 initialPreviewConfig = new[] {
                                     new {
-                                        caption = fileName,
+                                        caption = file.Name,
                                         url = deleteURL,
                                         key =key,
                                         width ="120px"
@@ -210,7 +205,7 @@ namespace VS_LOAN.Core.Web.Controllers
             return RedirectToAction("Edit", new { id = id });
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.DuyetHoSo })]
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
             ViewBag.formindex = LstRole["Index"]._formindex;
             if (id <= 0)
@@ -218,7 +213,7 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.ID = id;
             var hoso = new HoSoBLL().LayChiTiet(id);
             ViewBag.HoSo = hoso;
-            ViewBag.MaDoiTac = new DoiTacBLL().LayMaDoiTac(hoso.SanPhamVay);
+            ViewBag.MaDoiTac = await _rpPartner.LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
             ViewBag.LstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
             ViewBag.SellCode = new UserPMBLL().GetUserByID(hoso.HoSoCuaAi.ToString());
@@ -374,7 +369,7 @@ namespace VS_LOAN.Core.Web.Controllers
                             CommentTime = DateTime.Now,
                             TypeId = NoteType.Hoso
                         };
-                        var bizNote = new NoteBusiness();
+                        var bizNote = new NoteRepository();
                         await bizNote.AddNoteAsync(ghichu);
                         return ToJsonResponse(true, Resources.Global.Message_Succ, hs.ID);
                     }
@@ -439,7 +434,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public JsonResult LayDSNhom()
         {
-            List<NhomDropDownModel> rs = new GroupBusiness().LayDSDuyetCuaNhanVien(GlobalData.User.IDUser);
+            List<NhomDropDownModel> rs = new GroupRepository().LayDSDuyetCuaNhanVien(GlobalData.User.IDUser);
             if (rs == null)
                 rs = new List<NhomDropDownModel>();
             return ToJsonResponse(true, null, rs);
@@ -453,7 +448,7 @@ namespace VS_LOAN.Core.Web.Controllers
             else
             {
                 // Lấy ds nhóm của nv quản lý
-                List<NhomDropDownModel> lstNhom = new GroupBusiness().LayDSDuyetCuaNhanVien(GlobalData.User.IDUser);
+                List<NhomDropDownModel> lstNhom = new GroupRepository().LayDSDuyetCuaNhanVien(GlobalData.User.IDUser);
                 if (lstNhom != null)
                 {
                     for (int i = 0; i < lstNhom.Count; i++)
@@ -483,8 +478,8 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public JsonResult LayDSTrangThai()
         {
-            var isTeamlead = new GroupBusiness().CheckIsTeamlead(GlobalData.User.IDUser);
-            var isAdmin = new GroupBusiness().CheckIsAdmin(GlobalData.User.IDUser);
+            var isTeamlead = new GroupRepository().CheckIsTeamlead(GlobalData.User.IDUser);
+            var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
             bool isLimit = false;
             if (isTeamlead && !isAdmin)
                 isLimit = true;

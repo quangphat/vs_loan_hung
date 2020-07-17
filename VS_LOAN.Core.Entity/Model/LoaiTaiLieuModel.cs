@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VS_LOAN.Core.Business
+namespace VS_LOAN.Core.Repository
 {
    //public class LoaiTaiLieuModel
    // {

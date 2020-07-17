@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Mvc;
-using VS_LOAN.Core.Business;
+using VS_LOAN.Core.Repository;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Utility;
@@ -31,7 +31,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLSanPhamVay })]
         public ActionResult QuanLySanPham()
         {
-            ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;
+            ViewBag.formindex = "";//LstRole[RouteData.Values["action"].ToString()]._formindex;
             return View();
         }
 
@@ -128,7 +128,7 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLSanPhamVay })]
         public ActionResult Import()
         {
-            ViewBag.formindex = LstRole[RouteData.Values["action"].ToString()]._formindex;
+            ViewBag.formindex = "";//LstRole[RouteData.Values["action"].ToString()]._formindex;
             return View();
         }
         public ActionResult AjaxHandler(jQueryDataTableParamModel param, List<SanPhamModel> lstSanPham)

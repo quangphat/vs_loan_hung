@@ -1,43 +1,38 @@
-﻿using Dapper;
-using NPOI.HSSF.UserModel;
+﻿using Ionic.Zip;
+using Newtonsoft.Json;
 using NPOI.SS.UserModel;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.HosoCourrier;
+using VS_LOAN.Core.Entity.MCreditModels;
 using VS_LOAN.Core.Entity.UploadModel;
-using VS_LOAN.Core.Utility;
+using VS_LOAN.Core.Repository.Interfaces;
 
 namespace VS_LOAN.Core.Business
 {
-    public class MediaBusiness : BaseBusiness
+    public class MediaBusiness : IMediaBusiness
     {
-        public MediaBusiness() : base(typeof(MediaBusiness)) { }
-
-        public async Task<bool> UpdateExistingFile(int fileId, string name, string url, int typeId = 1)
+        protected readonly ITailieuRepository _rpTailieu;
+        protected readonly IHosoCourrierRepository _rpCourierProfile;
+        protected readonly IMCeditRepository _rpMCredit;
+        public MediaBusiness(ITailieuRepository tailieuRepository, 
+            IMCeditRepository mCeditRepository,
+            IHosoCourrierRepository hosoCourrierRepository)
         {
-            var p = new DynamicParameters();
-            p.Add("fileId", fileId);
-            p.Add("name", name);
-            p.Add("url", url);
-            p.Add("typeId", typeId);
-            using (var con = GetConnection())
-            {
-                var result = await con.ExecuteAsync("updateExistingFile", p,
-                    commandType: CommandType.StoredProcedure);
-                return true;
-            }
+            _rpTailieu = tailieuRepository;
+            _rpCourierProfile = hosoCourrierRepository;
+            _rpMCredit = mCeditRepository;
         }
         public async Task<MediaUploadConfig> UploadSingle(Stream stream, string key, int fileId, string name, string webRootPath)
         {
             stream.Position = 0;
             string fileUrl = string.Empty;
-            var file = GetFileUploadUrl(name, webRootPath);
+            var file = GetFileUploadUrl(name, webRootPath, Utility.FileUtils.GenerateProfileFolder());
             using (var fileStream = System.IO.File.Create(file.FullPath))
             {
                 await stream.CopyToAsync(fileStream);
@@ -47,7 +42,15 @@ namespace VS_LOAN.Core.Business
             string deleteURL = fileId <= 0 ? $"/hoso/delete?key={key}" : $"/hoso/delete/0/{fileId}";
             if (fileId > 0)
             {
-                await UpdateExistingFile(fileId, file.Name, file.FileUrl);
+
+                await _rpTailieu.UpdateExistingFile(new TaiLieu
+                {
+                    FileName = file.Name,
+                    Folder = file.Folder,
+                    FilePath = file.FileUrl,
+                    ProfileId = 0,
+                    ProfileTypeId = 0
+                }, fileId);
             }
 
             var _type = System.IO.Path.GetExtension(name);
@@ -69,46 +72,23 @@ namespace VS_LOAN.Core.Business
 
             //return new MediaUploadConfig();
         }
-        public FileModel GetFileUploadUrl(string fileInputName, string webRootPath)
+        public FileModel GetFileUploadUrl(string fileInputName, string webRootPath, string folder, bool isKeepFileName = false)
         {
-            string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + fileInputName.Trim().Replace(" ", "_");
-            string root = System.IO.Path.Combine(webRootPath, "HoSo");
-            try
+            if (string.IsNullOrWhiteSpace(folder))
             {
-                if (!Directory.Exists(root))
-                    Directory.CreateDirectory(root);
+                folder = Utility.FileUtils.GenerateProfileFolder();
             }
-            catch (Exception e)
-            {
-                return new FileModel
-                {
-                    FileUrl = "error",
-                    Name = e.Message,
-                    FullPath = ""
-                };
-            }
-            string pathTemp = "";
-            if (!Directory.Exists(root))
-                Directory.CreateDirectory(root);
-            pathTemp = DateTime.Now.Year.ToString();
-            string pathYear = System.IO.Path.Combine(root, pathTemp);
-            if (!Directory.Exists(pathYear))
-                Directory.CreateDirectory(pathYear);
-            pathTemp += "/" + DateTime.Now.Month.ToString();
-            string pathMonth = System.IO.Path.Combine(root, pathTemp);
-            if (!Directory.Exists(pathMonth))
-                Directory.CreateDirectory(pathMonth);
-            pathTemp += "/" + DateTime.Now.Day.ToString();
-            string pathDay = System.IO.Path.Combine(root, pathTemp);
-            if (!Directory.Exists(pathDay))
-                Directory.CreateDirectory(pathDay);
-            string path = System.IO.Path.Combine(pathDay, fileName);
-            string url = "/Upload/HoSo/" + pathTemp + "/" + fileName;
+            string fileName = isKeepFileName ? fileInputName : DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + fileInputName.Trim().Replace(" ", "_");
+            string fullFolder = $"{webRootPath}/{folder}";
+            if (!Directory.Exists(fullFolder))
+                Directory.CreateDirectory(fullFolder);
+            string fullPath = System.IO.Path.Combine(webRootPath, $"{folder}/{fileName}");
             return new FileModel
             {
-                FileUrl = url,
+                FileUrl = $"{Utility.FileUtils._profile_parent_folder}{folder}/{fileName}",
                 Name = fileName,
-                FullPath = path
+                FullPath = $"{webRootPath}/{folder}/{fileName}",
+                Folder = fullFolder
             };
 
         }
@@ -119,11 +99,7 @@ namespace VS_LOAN.Core.Business
             var sheet = workBook.GetSheetAt(0);
             var rows = sheet.GetRowEnumerator();
             var hasData = rows.MoveNext();
-            //if (((HSSFRow)rows.Current).Cells.Count < 3)
-            //{
-            //    return new TupleModel { success = false, message = "Dữ liệu không hợp lệ" };
-            //}
-            var bizCourier = new HosoCourrierBusiness();
+
             int count = 0;
             var hosos = new List<HosoCourier>();
             for (int i = 1; i < sheet.PhysicalNumberOfRows; i++)
@@ -153,14 +129,9 @@ namespace VS_LOAN.Core.Business
                         var assigneeIds = (assigneeIdsStr != null && assigneeIdsStr.Any()) ? assigneeIdsStr.Select(s => Convert.ToInt32(s)).ToList() : new List<int>();
                         hoso.AssigneeIds = assigneeIds;
                         hoso.AssignId = assigneeIds.FirstOrDefault();
-                        
-                        hoso.GroupId = await bizCourier.GetGroupIdByNguoiQuanLyId(hoso.AssignId);
-                        hosos.Add(hoso);
-                        //if (!string.IsNullOrWhiteSpace(hoso.CustomerName) && !string.IsNullOrWhiteSpace(hoso.Phone))
-                        //{
-                        //    await bizCourier.Create(hoso, groupId);
 
-                        //}
+                        hoso.GroupId = await _rpCourierProfile.GetGroupIdByNguoiQuanLyId(hoso.AssignId);
+                        hosos.Add(hoso);
                         count++;
                     }
                 }
@@ -171,12 +142,93 @@ namespace VS_LOAN.Core.Business
 
             }
             return hosos;
-            //result = new TupleModel
-            //{
-            //    success = true,
-            //    message = $"Import thành công {count} dòng."
-            //};
-            //return result;
         }
+        public async Task<string> ProcessFilesToSendToMC(int profileId, string rootPath)
+        {
+            string mcProfileId = string.Empty;
+            var profile = await _rpMCredit.GetTemProfileById(profileId);
+            mcProfileId = profile.MCId;
+            if (string.IsNullOrWhiteSpace(mcProfileId))
+                return string.Empty;
+            if (profile == null || string.IsNullOrWhiteSpace(profile.MCId))
+                return string.Empty;
+            var files = await _rpTailieu.GetTailieuByHosoId(profileId, (int)HosoType.MCredit);
+            if (files == null || !files.Any())
+                return string.Empty;
+            var jsonFile = new McJsonFile();
+            var x = files.Select(p => p.MC_GroupId);
+            //string values = "";
+            var filePaths = new List<string>();
+            foreach (var f in files)
+            {
+                var group = jsonFile.groups.FirstOrDefault(p => p.id == f.MC_GroupId);
+                if (group == null)
+                {
+                    group = new McJsonFileGroup { id = f.MC_GroupId, docs = new List<MCJsonFileGroupDoc>() };
+                    jsonFile.groups.Add(group);
+                }
+                var doc = group.docs.FirstOrDefault(p => p.code == f.DocumentCode);
+                if (doc == null)
+                {
+                    doc = new MCJsonFileGroupDoc { code = f.DocumentCode, files = new List<MCJsonFileGroupDocFile>() };
+                    group.docs.Add(doc);
+                }
+                //var newFile = RenameFile(f.Folder, f.FileName, $"{mcProfileId}-{f.DocumentCode}-{(doc.files.Count + 1)}.jpg");
+                doc.files.Add(new MCJsonFileGroupDocFile { name = f.FileName });
+                
+                filePaths.Add(System.IO.Path.Combine(f.Folder, f.FileName));
+            }
+            var jsonFileInfo = CreateJsonFile(jsonFile, mcProfileId, rootPath);
+            filePaths.Add(jsonFileInfo.FullPath);
+            return await CreateZipFile(filePaths, jsonFileInfo.Folder, mcProfileId);
+        }
+        protected FileModel CreateJsonFile(McJsonFile model, string profileId, string rootPath)
+        {
+            if (model == null)
+                return null;
+            var fileInfo = GetFileUploadUrl("info", rootPath, Utility.FileUtils.GenerateProfileFolderForMc(), true);
+            if (fileInfo == null)
+                return null;
+            var content = JsonConvert.SerializeObject(model, Formatting.None);
+            fileInfo.FullPath = $"{fileInfo.FullPath}.txt";
+            Utility.FileUtils.WriteToFile(fileInfo.FullPath, content);
+            return fileInfo;
+        }
+        protected FileModel RenameFile(string folder, string oldFileName, string newFileName)
+        {
+            if (string.IsNullOrWhiteSpace(folder) || string.IsNullOrWhiteSpace(oldFileName) || string.IsNullOrWhiteSpace(newFileName))
+                return null;
+            string newfile = System.IO.Path.Combine(folder, newFileName);
+            string oldFile = System.IO.Path.Combine(folder, oldFileName);
+            if (File.Exists(newfile))
+            {
+                File.Delete(newfile);
+            }
+            File.Move(oldFile, newfile);
+            return new FileModel {
+                FullPath = newfile,
+                Name = newFileName
+            };
+        }
+        protected async Task<string> CreateZipFile(IEnumerable<string> filePaths, string folder, string fileName)
+        {
+            if (filePaths == null || !filePaths.Any())
+                return string.Empty;
+            try
+            {
+                using (ZipFile zip = new ZipFile())
+                {
+                    zip.AddFiles(filePaths, "");
+                    zip.Save(System.IO.Path.Combine(folder, $"{fileName}.zip"));
+                }
+            }
+            catch(Exception e)
+            {
+                return string.Empty;
+            }
+
+            return $"{folder}/{fileName}.zip";
+        }
+        
     }
 }

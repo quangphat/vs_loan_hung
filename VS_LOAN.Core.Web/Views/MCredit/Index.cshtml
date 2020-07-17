@@ -1,0 +1,540 @@
+﻿@using VS_LOAN.Core.Web.Resources;
+@{
+    ViewBag.Title = "Hồ sơ MCredit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+    SetActiveMenu('@ViewBag.formindex', 9);
+</script>
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <a href="#">Danh sách hồ sơ</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+                <form class="form-horizontal" role="form">
+                    <div class="space-4"></div>
+                    
+                    <div class="form-group">
+
+                        <label class="col-sm-1 col-xs-12  control-label no-padding-right">Tìm kiếm</label>
+                        <div class="col-sm-2 col-xs-12">
+                            <input type="text" class="form-control" id="txtFreeText" placeholder="Tìm kiếm" />
+                        </div>
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
+                                <option value="0">Tất cả</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Loại</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlType" class="chosen-select form-control" data-placeholder="Chọn loại">
+                                <option value="draft">Draft</option>
+                                <option value="inbox">Inbox</option>
+                                <option value="participated">Participated</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group text-right">
+                        <div class="col-xs-12 ">
+                            <a class="btn btn-primary" id="btn_search">
+                                Tìm kiếm
+                            </a>
+                            <a class="btn btn-primary" href="/MCredit/AddNew">
+                                Thêm mới
+                            </a>
+                        </div>
+
+
+                    </div>
+                </form>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="clearfix">
+                    <div class="pull-right tableTools-container"></div>
+                </div>
+                <div class="table-header">
+                    Danh sách hồ sơ
+                </div>
+                <div class="dataTables_wrapper form-inline no-footer">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <label>
+                                Hiển thị
+                                <select id="ddlLimit" class="form-control input-sm" onchange="onSelectLimit()">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select> dòng mỗi trang
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- div.table-responsive -->
+                <!-- div.dataTables_borderWrap -->
+                <div class="col">
+                    <div class="report-table-custom--overflow">
+                        <table id="dtSource" class="report-table-custom table table-striped table-bordered table-hover">
+                            <thead class="table-header">
+                                <tr>
+                                    <th class="center w-45">STT</th>
+                                    <th class="w-98">ID</th>
+                                    <th class="m-w-150">Tên khách hàng</th>
+                                    <th class="w-94">CMND</th>
+                                    <th style="width: 150px">Trạng thái</th>
+                                    <th class="w-94">Ngày giải ngân</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="clearfix" />
+                <div class="one-row no-gutters justify-content-between paginate">
+                    <div class="col-auto">
+                        <div class="dataTables_info" id="dtSource_info" role="status" aria-live="polite"></div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="one-row no-gutters align-items-center">
+                            <div class="col-auto">
+                                <span id="totalPage"></span>
+                            </div>
+                            <div class="col">
+                                <div class="dataTables_paginate paging_simple_numbers" id="dtSource_paginate">
+                                    <ul class="pagination" id="paging"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+        <div class="row">
+            <div class="space-6" style="background-color: #d5e3ef;"></div>
+            <div class="col-xs-12" style="margin-bottom:40px;">
+                <div class="pull-right">
+                    <a id="btnDownReport" onclick="DownloadReport(this)" class="btn btn-sm btn-primary "><i class="ace-icon fa fa-download"></i>@Global.Button_Download</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var queries = new URLSearchParams(window.location.search);
+    var page = 1;
+    var limit = 10;
+    var pageMargin = 2;
+    var totalPage = 1;
+    var totalRecord = 0;
+    $(document).ready(function e() {
+        setddl('ddlType');
+        GetLoanProfileStatuses("#ddlStatus")
+        window.addEventListener('popstate', function (e) {
+
+            queries = new URLSearchParams(window.location.search)
+            bindQueries()
+           
+            page = queries.get("page");
+            if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+                page = 1;
+            else
+                page = parseInt(page)
+            limit = queries.get("limit")
+            if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                limit = 10;
+            else
+                limit = parseInt(limit)
+            getData(page, limit, memberId, true)
+        });
+        var input = document.getElementById("txtFreeText");
+        input.addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                $("#btn_search").click();
+            }
+        });
+       
+        
+        $('#ddllimit').chosen({ width: '100%', allow_single_deselect: true });
+        var status = decodeURI(queries.get("status"))
+        if (!isNullOrWhiteSpace(status)) {
+            $('#ddlStatus').val(status).chosen().trigger("chosen:updated")
+        }
+        var type = decodeURI(queries.get("type"))
+        if (!isNullOrWhiteSpace(type)) {
+            $('#ddlType').val(type).chosen().trigger("chosen:updated")
+        }
+
+        bindQueries()
+       //getData(page, limit)
+    });
+    function bindQueries() {
+        $('#txtFreeText').val(queries.get("freetext"))
+        var cmnd = queries.get("cmnd");
+        page = queries.get("page");
+        if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+            page = 1;
+        else
+            page = parseInt(page)
+        limit = queries.get("limit")
+        if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+            limit = 10;
+        else
+            limit = parseInt(limit)
+        $("#ddlLimit").val(limit)
+        
+        
+    }
+    var strLoading = '@Global.Message_Loading';
+    $('#btn_search').click(function (e) {
+        showBlock($('#panel_body'), strLoading);
+        getData(page, limit);
+        //$('#dtSource').DataTable().ajax.reload();
+        //$('#dtSource').DataTable().columns.adjust().draw();
+    });
+    function renderStatusList() {
+        $("#ddlStatus").empty();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSTrangThai", "QuanLyHoSo")',
+            data: {},
+            success: function (data) {
+                
+                $('#ddlStatus').append("<option value='0'></option>");
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, item) {
+                        $('#ddlStatus').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
+                    });
+
+                    var status = decodeURI(queries.get("status"))
+                    if (!isNullOrWhiteSpace(status)) {
+                        let arrStatus = status.split(',')
+                        $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
+                    }
+                    $('#ddlStatus').chosen().trigger("chosen:updated");
+                }
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+
+
+        //$.each(lstStatus, function (index, item) {
+        //    $("#ddlStatus").append("<option value='" + item.value + "'>" + item.display + "</option>")
+        //})
+        //$('#ddlStatus').chosen().trigger("chosen:updated");
+        //$('#ddlStatus').trigger("change");
+
+    }
+    function getTotalPage(totalRecord, limit) {
+        return totalRecord > limit ? Math.ceil(totalRecord / limit) : 1
+    }
+    function onClickPage(page) {
+        page = page;
+        getData(page, limit);
+    }
+    function renderGoPreviousPage(page) {
+        let newCurrentPage = page
+        if (page > 1) {
+            newCurrentPage = page - 1
+            return "<li class='paginate_button previous' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + newCurrentPage + ")'>"
+                + "<a href='javascript:;'>Trước</a>"
+                + "</li>"
+
+        } else {
+            return ""
+        }
+    }
+    function renderGoNextPage(page) {
+        if (page < totalPage) {
+            newCurrentPage = page + 1
+            return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + newCurrentPage + ")' >"
+                + "<a href='javascript:;'>Sau</a>"
+                + "</li>"
+
+        } else {
+            return ""
+        }
+    }
+    function renderGoLastPage(page) {
+
+        if (totalPage > page) {
+            return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + totalPage + ")' >"
+                + "<a href='javascript:;'>Trang cuối</a>"
+                + "</li>"
+        } else {
+            return ""
+        }
+    }
+    function renderGoFirstPage(page) {
+        if (totalPage > 1 && page > 1) {
+            return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + 1 + ")' >"
+                + "<a href='javascript:;'>Trang đầu</a>"
+                + "</li>"
+        } else {
+            return ""
+        }
+    }
+    function renderPageList(page, limit, totalRc) {
+        totalPage = getTotalPage(totalRc, limit)
+        var startPage = page > pageMargin ? page - pageMargin : 1;
+        var endPage = pageMargin + page > totalPage ? totalPage : pageMargin + page
+        var paging = $("#paging");
+        paging.empty();
+        var first = renderGoFirstPage(page)
+        var next = renderGoNextPage(page);
+        var prev = renderGoPreviousPage(page)
+        var last = renderGoLastPage(page)
+        paging.append(first)
+        paging.append(prev)
+        for (var i = startPage; i <= endPage; i++) {
+            var active = page == i ? ' active' : '';
+            var item = "<li class='paginate_button" + active + " aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + i + ")' >"
+                + "<a href='javascript:;'>" + i + "</a>"
+                + "</li>"
+            paging.append(item)
+        }
+        paging.append(next);
+        paging.append(last)
+    }
+    function getValueDisplay(value, type) {
+        if (isNullOrWhiteSpace(type))
+            return value
+        var display = null
+        switch (type) {
+            case 'datetime':
+                display = FormatDateTimeDMY(value);
+            default: break;
+        }
+        return display;
+    }
+    function onSelectLimit() {
+        limit = $("#ddlLimit").val()
+        getData(page, limit)
+        //alert(limit)
+    }
+    function renderTextLink(textValue, href, type, className = '') {
+        let display = getValueDisplay(textValue, type);
+        return "<td class='text-left " + className + "'><a href='" + href + "' >" + display + "</a></td>";
+    }
+    function renderTextLeft(value, type, className = '') {
+        return "<td class='text-left " + className + "'>" + getValueDisplay(value, type) + "</td>";
+    }
+    function renderTextCenter(value, type) {
+        return "<td class='text-center'>" + getValueDisplay(value, type) + "</td>";
+    }
+   function renderStatus(MaTrangThai, TrangThaiHS) {
+        var statusString = "";
+        if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.Nhap)')
+            statusString = "<span class='label label-sm label-light arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.NhapLieu)')
+            statusString = "<span class='label label-sm label-purple arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.ThamDinh)')
+            statusString = "<span class='label label-sm label-danger arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.DaDoiChieu)')
+            statusString = "<span class='label label-sm label-dadoichieu arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.TuChoi)')
+            statusString = "<span class='label label-sm label-inverse arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.Cancel)')
+            statusString = "<span class='label label-sm label-cancel arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.PCB)')
+            statusString = "<span class='label label-sm label-pcb arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.BoSungHoSo)')
+            statusString = "<span class='label label-sm label-info arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.GiaiNgan)')
+           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.Finish)')
+            statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
+        return "<td class='text-left'>" + statusString + "</td>";;
+    }
+    function renderAction(id, MaTrangThai, MaNV) {
+        var thaoTac = "<div class='action-buttons'>"
+            + "<a title='@Global.Button_View' class=\"blue\" style='cursor: pointer' id='" + id+ "' onClick='XemHS(" + id +")'>"
+            + "<i class=\"ace-icon fa fa-eye bigger-130\">"
+            + "</i></a>"
+        if ((MaTrangThai == @((int)VS_LOAN.Core.Entity.TrangThaiHoSo.TuChoi)
+            || MaTrangThai == @((int)VS_LOAN.Core.Entity.TrangThaiHoSo.BoSungHoSo)
+            || MaTrangThai == @((int)VS_LOAN.Core.Entity.TrangThaiHoSo.Nhap))
+           )
+        {
+            thaoTac += "<a title='@Global.Button_Edit' class=\"green\" style='cursor: pointer' ID=" + id + " onclick='SuaHS(" + id + ")' >";
+                thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
+                thaoTac += "</i>";
+                thaoTac += "</a>";
+                thaoTac += "</a>";
+        }
+        else if ((MaTrangThai == @((int)VS_LOAN.Core.Entity.TrangThaiHoSo.NhapLieu)
+                 || MaTrangThai == @((int)VS_LOAN.Core.Entity.TrangThaiHoSo.BoSungHoSo))
+               ) {
+            thaoTac += "<a title='@Global.Button_Edit' class=\"green\" style='cursor: pointer' ID=" + id + " onclick='SuaHS(" + id +")' >";
+            thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
+            thaoTac += "</i>";
+            thaoTac += "</a>";
+            thaoTac += "</span>";
+        }
+        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.BoSungHoSo)') {
+            thaoTac += "<a title='@Global.Button_Edit' >";
+            thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
+            thaoTac += "</i>";
+            thaoTac += "</a>";
+            thaoTac += "</span>";
+        }
+        thaoTac += "</div>";
+        return "<td class='text-center'>" + thaoTac + "</td>"
+    }
+    function renderCoBaoHiem(CoBaoHiem) {
+        var value = ""
+        if (CoBaoHiem == true)
+            value = "<td class='text-left'> <div class='orange bolder' title='Không có bảo hiểm' ><i class=\"ace-icon fa fa-ban bigger-130\"></i></div> </td>";
+        else
+            value = "<td class='text-left'> <div class='green bolder'title = 'Có bảo hiểm' > <i class=\"ace-icon glyphicon glyphicon-ok bigger-130\"></i></div> </td>";
+        return value;
+    }
+    function renderRow(index, rowData) {
+
+        page = queries.get("page");
+        if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+            page = 1;
+        else
+            page = parseInt(page)
+        limit = queries.get("limit")
+        if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+            limit = 10;
+        else
+            limit = parseInt(limit)
+        var stt = (page - 1) * limit + index + 1;
+        return "<tr role='row' class = 'odd'>"
+            + renderTextCenter(stt)
+            + renderTextLeft(rowData.id)
+            + renderTextLink(rowData.name, '/MCredit/MCreditProfile/' + rowData.id)
+            + renderTextLeft(rowData.idNumber)
+            + renderStatus(rowData.status, rowData.statusName)
+            + renderTextLeft(rowData.moneyReceiveDate, '')
+           
+            + "</tr>";
+    }
+    function renderTableBody(datas) {
+        var table = $("#dtSource")
+        var tableBody = $("#dtSource").find("tbody");
+        tableBody.empty();
+        if (isNullOrNoItem(datas))
+            return;
+        
+        $.each(datas, function (index, item) {
+            
+            tableBody.append(renderRow(index, item));
+        });
+
+    }
+    $(document).ready(function () {
+       
+            page = queries.get("page");
+            if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+                page = 1;
+            else
+                page = parseInt(page)
+            limit = queries.get("limit")
+            if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                limit = 10;
+            else
+                limit = parseInt(limit)
+            getData(page, limit)
+            //InitTable();
+        
+
+    });
+
+    function getData(page, limit, memberId = 0, isPopState = false)
+    {
+        showBlock($('#panel_body'), strLoading);
+        $.ajax( {
+                url: '@Url.Action("Search", "MCredit")',
+                type: "GET",
+                contentType: "application/json",
+            data: {
+                'page': page,
+                'limit': limit,
+                'freeText': $("#txtFreeText").val(),
+                'status': isNullOrWhiteSpace($("#ddlStatus").val()) ? "0" : $("#ddlStatus").val(),
+                'type': isNullOrWhiteSpace($("#ddlType").val()) ? "participated" : $("#ddlType").val()
+            },
+            success: function (response) {
+                
+                if (response.success == true) {
+                    totalRecord = response.data.total;
+                    var search = this.url.replace("/MCredit/Index", "");
+                    search = search.replace("/MCredit/Search","")
+                    queries = new URLSearchParams(search)
+
+                    page = queries.get("page");
+                    if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+                        page = 1;
+                    else
+                        page = parseInt(page)
+                    limit = queries.get("limit")
+
+                    if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                        limit = 10;
+                    else
+                        limit = parseInt(limit)
+                    
+                    renderTableBody(response.data.objs)
+                    //renderGoPreviousPage(page);
+                    renderPageList(page, limit, totalRecord)
+                    $("#dtSource_info").text("Tổng: " + totalRecord + " items");
+                    $("#totalPage").text("Tổng: " + totalPage + " trang");
+                }
+                else {
+                    swal({
+                        title: "",
+                        text: response.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+
+            },
+                error: function (jqXHR, exception) {
+                    showError(jqXHR, exception);
+                },
+                complete: function () {
+                    $('#panel_body').unblock();
+                    if (!isPopState) {
+                        var requestUrl = this.url.replace("Search", "Index")
+                        window.history.pushState(requestUrl, this.title, requestUrl)
+                    }
+
+            }
+        })
+
+    }
+
+</script>
+
+<script>
+    function XemHS(id) {
+        window.location = "/QuanLyHoSo/XemHSByID?id="  +id;
+    }
+    function SuaHS(id) {
+        window.location = "/QuanLyHoSo/SuaHSByID?id=" + id;
+    }
+</script>

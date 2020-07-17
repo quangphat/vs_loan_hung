@@ -6,7 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Entity.Model;
-using VS_LOAN.Core.Business;
+using VS_LOAN.Core.Repository;
 
 namespace VS_LOAN.Core.Web.Controllers
 {

@@ -1,5 +1,5 @@
 ﻿
-using VS_LOAN.Core.Business;
+using VS_LOAN.Core.Repository;
 using VS_LOAN.Core.Utility;
 using System;
 using System.Collections.Generic;
