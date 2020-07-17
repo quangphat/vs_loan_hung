@@ -17,15 +17,18 @@ using VS_LOAN.Core.Utility.OfficeOpenXML;
 using VS_LOAN.Core.Web.Helpers;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity.UploadModel;
+using VS_LOAN.Core.Repository.Interfaces;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class DuyetHoSoController : BaseController
     {
         protected readonly IMediaBusiness _bizMedia;
-        public DuyetHoSoController(IMediaBusiness mediaBusiness)
+        protected readonly IPartnerRepository _rpPartner;
+        public DuyetHoSoController(IMediaBusiness mediaBusiness, IPartnerRepository partnerRepository)
         {
             _bizMedia = mediaBusiness;
+            _rpPartner = partnerRepository;
         }
         public static Dictionary<string, ActionInfo> LstRole
         {
@@ -202,7 +205,7 @@ namespace VS_LOAN.Core.Web.Controllers
             return RedirectToAction("Edit", new { id = id });
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.DuyetHoSo })]
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
             ViewBag.formindex = LstRole["Index"]._formindex;
             if (id <= 0)
@@ -210,7 +213,7 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.ID = id;
             var hoso = new HoSoBLL().LayChiTiet(id);
             ViewBag.HoSo = hoso;
-            ViewBag.MaDoiTac = new PartnerRepository().LayMaDoiTac(hoso.SanPhamVay);
+            ViewBag.MaDoiTac = await _rpPartner.LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
             ViewBag.LstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
             ViewBag.SellCode = new UserPMBLL().GetUserByID(hoso.HoSoCuaAi.ToString());
