@@ -637,6 +637,7 @@ namespace VS_LOAN.Core.Web.Controllers
                                 excelOOXML.SetCellData(nameSheet, "C" + rowindex, rs[i].NgayTao.ToString("dd/MM/yyyy"));
                                 excelOOXML.SetCellData(nameSheet, "D" + rowindex, rs[i].DoiTac);
                                 excelOOXML.SetCellData(nameSheet, "E" + rowindex, rs[i].CMND);
+                                excelOOXML.SetCellData(nameSheet, "F" + rowindex, rs[i].Phone);
                                 excelOOXML.SetCellData(nameSheet, "F" + rowindex, rs[i].TenKH);
                                 excelOOXML.SetCellData(nameSheet, "G" + rowindex, rs[i].TrangThaiHS);
                                 excelOOXML.SetCellData(nameSheet, "H" + rowindex, rs[i].KetQuaHS);
