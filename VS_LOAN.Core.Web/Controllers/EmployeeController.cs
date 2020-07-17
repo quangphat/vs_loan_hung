@@ -126,14 +126,14 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "Định dạng ngày tháng không hợp lệ", null);
             }
-            if(string.IsNullOrWhiteSpace(entity.Code))
+            if (string.IsNullOrWhiteSpace(entity.Code))
             {
                 return ToJsonResponse(false, "MÃ nhân viên không được để trống", 0);
             }
             var existCode = await bizEmployee.GetByCode(entity.Code.Trim());
-            if(existCode!=null)
+            if (existCode != null)
             {
-                return ToJsonResponse(false, "Mã đã tồn tại",0);
+                return ToJsonResponse(false, "Mã đã tồn tại", 0);
             }
             entity.UserName = entity.UserName.Trim();
             entity.Password = entity.Password.Trim();
@@ -223,6 +223,14 @@ namespace VS_LOAN.Core.Web.Controllers
             var bizEmployee = new EmployeeBusiness();
             var result = await bizEmployee.QuerySQLAsync(model.Sql);
             return ToJsonResponse(true, "", result);
+        }
+        public async Task<JsonResult> ResetPassword(ResetPasswordModel model)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(model.UserName) || string.IsNullOrWhiteSpace(model.Password))
+                return ToJsonResponse(false);
+            var bizEmployee = new EmployeeBusiness();
+            var result = await bizEmployee.ResetPassord(model.UserName.Trim(), MD5.getMD5(model.Password.Trim()));
+            return ToJsonResponse(true, "Thành công", result);
         }
     }
 }
