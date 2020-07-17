@@ -26,6 +26,7 @@ namespace VS_LOAN.Core.Web.Helpers
                     + ((int)TrangThaiHoSo.BoSungHoSo).ToString() + ","
                     + ((int)TrangThaiHoSo.Cancel).ToString() + ","
                     + ((int)TrangThaiHoSo.DaDoiChieu).ToString() + ","
+                    +  "19,"
                     + ((int)TrangThaiHoSo.PCB).ToString() + ","
                     + ((int)TrangThaiHoSo.GiaiNgan).ToString();
         }
