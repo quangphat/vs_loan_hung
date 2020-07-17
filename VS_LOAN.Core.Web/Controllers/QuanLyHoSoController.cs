@@ -582,7 +582,8 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult DownloadReport(int maNhom, int maThanhVien, string fromDate, string toDate, string maHS, string cmnd, int loaiNgay)
         {
-
+            if (GlobalData.User.IDUser != 1)
+                return RedirectToAction("DanhSachHoSo");
             string newUrl = string.Empty;
             try
             {
@@ -593,8 +594,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 if (toDate != "")
                     dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTime(toDate);
 
-                string trangthai = "";
-                trangthai += ((int)TrangThaiHoSo.TuChoi).ToString() + "," + ((int)TrangThaiHoSo.NhapLieu).ToString() + "," + ((int)TrangThaiHoSo.ThamDinh).ToString() + "," + ((int)TrangThaiHoSo.BoSungHoSo).ToString() + "," + ((int)TrangThaiHoSo.GiaiNgan).ToString() + "," + ((int)TrangThaiHoSo.Nhap).ToString();
+                string trangthai =  Helpers.Helpers.GetAllStatusString();
                 int totalRecord = new HoSoBLL().CountHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freeText: null);
                 if (totalRecord <= 0)
                     return ToResponse(false, "Không có dữ liệu");
@@ -637,17 +637,18 @@ namespace VS_LOAN.Core.Web.Controllers
                                 excelOOXML.SetCellData(nameSheet, "C" + rowindex, rs[i].NgayTao.ToString("dd/MM/yyyy"));
                                 excelOOXML.SetCellData(nameSheet, "D" + rowindex, rs[i].DoiTac);
                                 excelOOXML.SetCellData(nameSheet, "E" + rowindex, rs[i].CMND);
-                                excelOOXML.SetCellData(nameSheet, "F" + rowindex, rs[i].TenKH);
-                                excelOOXML.SetCellData(nameSheet, "G" + rowindex, rs[i].TrangThaiHS);
-                                excelOOXML.SetCellData(nameSheet, "H" + rowindex, rs[i].KetQuaHS);
-                                excelOOXML.SetCellData(nameSheet, "I" + rowindex, rs[i].NgayCapNhat == DateTime.MinValue ? "" : rs[i].NgayCapNhat.ToString("dd/MM/yyyy"));
-                                excelOOXML.SetCellData(nameSheet, "J" + rowindex, rs[i].MaNV);
-                                excelOOXML.SetCellData(nameSheet, "K" + rowindex, rs[i].NhanVienBanHang);
-                                excelOOXML.SetCellData(nameSheet, "L" + rowindex, rs[i].DoiNguBanHang);
-                                excelOOXML.SetCellData(nameSheet, "M" + rowindex, rs[i].CoBaoHiem == true ? "N" : "Y");
-                                excelOOXML.SetCellData(nameSheet, "N" + rowindex, rs[i].KhuVucText);
-                                excelOOXML.SetCellData(nameSheet, "O" + rowindex, rs[i].GhiChu);
-                                excelOOXML.SetCellData(nameSheet, "P" + rowindex, rs[i].MaNVLayHS);
+                                excelOOXML.SetCellData(nameSheet, "F" + rowindex, rs[i].Phone);
+                                excelOOXML.SetCellData(nameSheet, "G" + rowindex, rs[i].TenKH);
+                                excelOOXML.SetCellData(nameSheet, "H" + rowindex, rs[i].TrangThaiHS);
+                                excelOOXML.SetCellData(nameSheet, "I" + rowindex, rs[i].KetQuaHS);
+                                excelOOXML.SetCellData(nameSheet, "J" + rowindex, rs[i].NgayCapNhat == DateTime.MinValue ? "" : rs[i].NgayCapNhat.ToString("dd/MM/yyyy"));
+                                excelOOXML.SetCellData(nameSheet, "K" + rowindex, rs[i].MaNV);
+                                excelOOXML.SetCellData(nameSheet, "L" + rowindex, rs[i].NhanVienBanHang);
+                                excelOOXML.SetCellData(nameSheet, "M" + rowindex, rs[i].DoiNguBanHang);
+                                excelOOXML.SetCellData(nameSheet, "N" + rowindex, rs[i].CoBaoHiem == true ? "N" : "Y");
+                                excelOOXML.SetCellData(nameSheet, "O" + rowindex, rs[i].KhuVucText);
+                                excelOOXML.SetCellData(nameSheet, "P" + rowindex, rs[i].GhiChu);
+                                excelOOXML.SetCellData(nameSheet, "Q" + rowindex, rs[i].MaNVLayHS);
                                 rowindex++;
                             }
                         }
