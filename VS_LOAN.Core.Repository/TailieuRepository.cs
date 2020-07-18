@@ -44,6 +44,19 @@ namespace VS_LOAN.Core.Repository
             }
 
         }
+        public async Task<bool> RemoveTailieu(int hosoId, int tailieuId)
+        {
+            var p = new DynamicParameters();
+            p.Add("hosoId", hosoId);
+            p.Add("tailieuId", tailieuId);
+            using (var con = GetConnection())
+            {
+                var result = await con.ExecuteAsync("removeTailieu", p,
+                    commandType: CommandType.StoredProcedure);
+                return true;
+            }
+
+        }
         public async Task<bool> RemoveAllTailieu(int hosoId, int typeId)
         {
             using (var con = GetConnection())

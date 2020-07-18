@@ -16,6 +16,7 @@ namespace VS_LOAN.Core.Repository.Interfaces
         Task<bool> UpdateExistingFile(TaiLieu taiLieu, int fileId);
         Task<List<LoaiTaiLieuModel>> GetLoaiTailieuList(int profileType = 0);
         Task<bool> RemoveAllTailieu(int hosoId, int typeId);
+        Task<bool> RemoveTailieu(int hosoId, int tailieuId);
         Task<bool> Add(TaiLieu model);
         Task<bool> AddMCredit(MCTailieuSqlModel model);
         Task<List<FileUploadModel>> GetTailieuByHosoId(int hosoId, int type);

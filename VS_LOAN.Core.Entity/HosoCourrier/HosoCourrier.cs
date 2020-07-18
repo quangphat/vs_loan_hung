@@ -12,18 +12,14 @@ namespace VS_LOAN.Core.Entity.HosoCourrier
         public string CustomerName { get; set; }
         public string Phone { get; set; }
         public string Cmnd { get; set; }
-        public DateTime ReceiveDate { get; set; }
-        public int ProductId { get; set; }
-        public int PartnerId { get; set; }
-        //public int DistrictId { get; set; }
-        //public int ProvinceId { get; set; }
-        //public string Address { get; set; }
+       
         public int Status { get; set; }
         public int GroupId { get; set; }
         public string LastNote { get; set; }
         public int AssignId { get; set; }
         public int ProvinceId { get; set; }
         public int DistrictId { get; set; }
+        public string SaleCode { get; set; }
         public List<int> AssigneeIds { get; set; }
     }
 }

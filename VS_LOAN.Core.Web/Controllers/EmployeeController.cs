@@ -21,9 +21,15 @@ namespace VS_LOAN.Core.Web.Controllers
     {
         protected readonly MCreditService.Interfaces.IMCreditService _svMCredit;
         protected readonly IEmployeeRepository _rpEmployee;
-        public EmployeeController(MCreditService.Interfaces.IMCreditService loanContractService, IEmployeeRepository employeeRepository)
+        protected readonly IPartnerRepository _rpPartner;
+        protected readonly ICustomerRepository _rpCustomer;
+        public EmployeeController(
+            ICustomerRepository customerRepository,
+            IPartnerRepository partnerRepository,
+            IEmployeeRepository employeeRepository)
         {
-            _svMCredit = loanContractService;
+            _rpPartner = partnerRepository;
+            _rpCustomer = customerRepository;
             _rpEmployee = employeeRepository;
         }
         public static Dictionary<string, ActionInfo> LstRole
@@ -195,10 +201,8 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetPartner(int customerId)
         {
-            var bizCustomer = new CustomerRepository();
-            var bizPartner = new PartnerBLL();
-            var customerCheck = bizCustomer.GetCustomerCheckByCustomerId(customerId);
-            var partners = await bizPartner.GetListForCheckCustomerDuplicateAsync();
+            var customerCheck = await _rpCustomer.GetCustomerCheckByCustomerId(customerId);
+            var partners = await _rpPartner.GetListForCheckCustomerDuplicateAsync();
             if (partners == null)
                 return ToJsonResponse(true, null, new List<OptionSimple>());
             foreach (var item in partners)
@@ -208,22 +212,21 @@ namespace VS_LOAN.Core.Web.Controllers
 
             return ToJsonResponse(true, null, partners);
         }
-        public JsonResult GetNotes(int customerId)
+        public async Task<JsonResult> GetNotes(int customerId)
         {
-            var bizCustomer = new CustomerRepository();
-            var datas = bizCustomer.GetNoteByCustomerId(customerId);
+            var datas = await _rpCustomer.GetNoteByCustomerId(customerId);
             return ToJsonResponse(true, null, datas);
         }
         public async Task<JsonResult> GetUserByProvinceId(int provinceId)
         {
-            var bizEmployee = new EmployeeRepository();
-            var datas = await bizEmployee.GetByProvinceId(provinceId);
+            
+            var datas = await _rpEmployee.GetByProvinceId(provinceId);
             return ToJsonResponse(true, null, datas);
         }
-        public JsonResult GetUserByDistrictId(int districtId)
+        public async Task<JsonResult> GetUserByDistrictId(int districtId)
         {
-            var bizEmployee = new EmployeeRepository();
-            var datas = bizEmployee.GetByDistrictId(districtId);
+           
+            var datas = await _rpEmployee.GetByDistrictId(districtId);
             return ToJsonResponse(true, null, datas);
         }
         public async Task<JsonResult> ExcuteSql(SqlBody model)
