@@ -11,6 +11,7 @@ namespace VS_LOAN.Core.Repository.Interfaces
 {
     public interface IEmployeeRepository
     {
+        Task<bool> CheckIsAdmin(int userId);
         Task<List<int>> GetPeopleIdCanViewMyProfile(int userId);
         Task<List<NhanVienInfoModel>> GetCourierList();
         Task<List<OptionSimple>> GetByProvinceId(int provinceId);

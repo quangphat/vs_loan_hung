@@ -410,6 +410,10 @@
             result += ' -' + item.DistrictName
         return result;
     }
+    function renderTextLink(textValue, href, type, className = '') {
+        let display = getValueDisplay(textValue, type);
+        return "<td class='text-left " + className + "'><a href='" + href + "' >" + display + "</a></td>";
+    }
     function renderRow(index, rowData) {
         
         page = queries.get("page");
@@ -426,7 +430,7 @@
         
         let result = "<tr role='row' class = 'odd'>"
             + renderTextCenter(stt, '','center w-45')
-            + renderTextLeft(rowData.CustomerName, '', "m-w-120")
+            + renderTextLink(rowData.CustomerName, `/Courrier/edit/${rowData.Id}`, '', "m-w-120")
             + renderTextLeft(rowData.Phone, '','w-84')
             + renderStatus(rowData.Status)
             + renderTextLeft(renderAddress(rowData), '', 'w-150' )
@@ -435,7 +439,7 @@
             + renderTextLeft(rowData.CreatedTime, 'datetime', 'w-150')
             + renderTextLeft(rowData.CreatedUser, '', "m-w-120")
             + renderTextLeft(rowData.UpdatedTime, 'datetime', 'w-150')
-            + renderAction(rowData.Id,(@ViewBag.isAdmin == 0 && rowData.Status == 7))
+            @*+ renderAction(rowData.Id,(@ViewBag.isAdmin == 0 && rowData.Status == 7))*@
             + "</tr>";
         return result
     }

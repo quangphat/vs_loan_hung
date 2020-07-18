@@ -368,7 +368,7 @@ function renderTextCenter(value, type) {
     return "<td class='text-center'>" + getValueDisplay(value, type) + "</td>";
 }
 function renderAction(id, displayNone = false) {
-    debugger
+    
     if (displayNone == true) {
         return "<td class='text-center'></td>";
     }

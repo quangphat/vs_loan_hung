@@ -28,11 +28,13 @@ namespace VS_LOAN.Core.Web.Controllers
         protected readonly IHosoRepository _rpHoso;
         protected readonly ITailieuRepository _rpTailieu;
         protected readonly INoteRepository _rpNote;
+        protected readonly IEmployeeRepository _rpEmployee;
         public CourrierController(IHosoCourrierRepository hosoCourrierRepository,
             IPartnerRepository partnerRepository,
             IHosoRepository hosoRepository,
             ITailieuRepository tailieuRepository,
             INoteRepository noteRepository,
+            IEmployeeRepository employeeRepository,
             ICustomerRepository customerRepository, IMediaBusiness mediaBusiness):base()
         {
             _rpNote = noteRepository;
@@ -42,6 +44,7 @@ namespace VS_LOAN.Core.Web.Controllers
             _rpHoso = hosoRepository;
             _rpPartner = partnerRepository;
             _bizMedia = mediaBusiness;
+            _rpEmployee = employeeRepository;
         }
         private bool result;
 
@@ -148,6 +151,19 @@ namespace VS_LOAN.Core.Web.Controllers
             if (model.AssignId <= 0)
             {
                 return ToResponse(false, "Vui lòng chọn courier");
+            }
+            var profile = await _rpCourierProfile.GetById(model.Id);
+            if(profile==null)
+            {
+                return ToJsonResponse(false, "Hồ sơ không tồn tại");
+            }
+            if(profile.Status == (int)TrangThaiHoSo.Cancel)
+            {
+                bool isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
+                if(!isAdmin)
+                {
+                    return ToJsonResponse(false, "Bạn không có quyền, vui lòng liên hệ Admin");
+                }
             }
             var hoso = new HosoCourier
             {
