@@ -13,7 +13,7 @@ using VS_LOAN.Core.Utility.Exceptions;
 
 namespace VS_LOAN.Core.Repository
 {
-    public class GroupRepository:BaseRepository
+    public class GroupRepository : BaseRepository
     {
         public GroupRepository() : base(typeof(GroupRepository))
         {
@@ -258,7 +258,7 @@ namespace VS_LOAN.Core.Repository
             using (var con = GetConnection())
             {
                 var result = await con.QueryAsync<OptionSimple>("sp_NHOM_GetEmployeesByGroupId",
-                    new { groupId, isGetLeader = isLeader},
+                    new { groupId, isGetLeader = isLeader },
                     commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
@@ -508,7 +508,7 @@ namespace VS_LOAN.Core.Repository
                         for (int i = lstFind.Count - 1; i >= 0; i--)
                         {
                             if (lstFind[i].ChuoiMaCha == maCha && lstFind[i].MaNguoiQL != maNguoiQL)
-                                continue;  
+                                continue;
                             stack.Push(lstFind[i]);
                             lstData.Remove(lstFind[i]);
                         }
@@ -624,7 +624,7 @@ namespace VS_LOAN.Core.Repository
                 throw ex;
             }
         }
-        
+
         public bool checkIsTeamLeadByUserId(int userId)
         {
             try

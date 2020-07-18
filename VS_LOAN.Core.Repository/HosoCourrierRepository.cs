@@ -105,22 +105,22 @@ namespace VS_LOAN.Core.Repository
             }
 
         }
-        public async Task<int> CountHosoCourrier(string freeText, int courierId, string status, int groupId = 0)
+        public async Task<int> CountHosoCourrier(string freeText, int courierId, string status, int groupId = 0, int provinceId=0)
         {
             status = string.IsNullOrWhiteSpace(status) ? string.Empty : status;
             using (var con = GetConnection())
             {
-                return await con.ExecuteScalarAsync<int>("sp_CountHosoCourier", new { freeText, courierId, status, groupId }, commandType: CommandType.StoredProcedure);
+                return await con.ExecuteScalarAsync<int>("sp_CountHosoCourier", new { freeText, courierId, status, groupId, provinceId }, commandType: CommandType.StoredProcedure);
 
             }
         }
-        public async Task<List<HosoCourierViewModel>> GetHosoCourrier(string freeText, int courierId, string status, int page, int limit, int groupId = 0)
+        public async Task<List<HosoCourierViewModel>> GetHosoCourrier(string freeText, int courierId, string status, int page, int limit, int groupId = 0,int provinceId = 0)
         {
             status = string.IsNullOrWhiteSpace(status) ? string.Empty : status;
             using (var con = GetConnection())
             {
                 var result = await con.QueryAsync<HosoCourierViewModel>("sp_GetHosoCourier",
-                    new { freeText, courierId, page, limit_tmp = limit, status, groupId },
+                    new { freeText, courierId, page, limit_tmp = limit, status, groupId , provinceId},
                     commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
