@@ -52,8 +52,8 @@ namespace VS_LOAN.Core.Repository
                 var param = GetParams(hoso, ignoreKey: new string[] {
                     nameof(hoso.CreatedTime),
                     nameof(hoso.UpdatedTime),
-                    nameof(hoso.AssigneeIds)
-
+                    nameof(hoso.AssigneeIds),
+                    nameof(hoso.CreatedBy)
                 });
 
                 await con.ExecuteAsync("sp_UpdateHosoCourier", param, commandType: CommandType.StoredProcedure);
@@ -63,16 +63,24 @@ namespace VS_LOAN.Core.Repository
         }
         public async Task<int> Create(HosoCourier hoso, int groupId = 0)
         {
-            using (var con = GetConnection())
+            try
             {
-                var param = GetParams(hoso, "id", DbType.Int32, ignoreKey: new string[] {
+                using (var con = GetConnection())
+                {
+                    var param = GetParams(hoso, "Id", DbType.Int32, ignoreKey: new string[] {
                     nameof(hoso.CreatedTime),
                     nameof(hoso.UpdatedTime),
+                    nameof(hoso.UpdatedBy),
                     nameof(hoso.AssigneeIds)
 
                 });
-                await con.ExecuteAsync("sp_InsertHosoCourrier", param, commandType: CommandType.StoredProcedure);
-                return param.Get<int>("id");
+                    await con.ExecuteAsync("sp_InsertHosoCourrier", param, commandType: CommandType.StoredProcedure);
+                    return param.Get<int>("Id");
+                }
+            }
+           catch(Exception e)
+            {
+                return 0;
             }
 
         }

@@ -81,7 +81,6 @@ namespace VS_LOAN.Core.Web.Controllers
             var hoso = new HosoCourier
             {
                 CustomerName = model.CustomerName,
-                ReceiveDate = DateTime.Now,
                 Cmnd = model.Cmnd,
                 Status = (int)HosoCourierStatus.New,
                 LastNote = model.LastNote,

@@ -12,7 +12,7 @@ namespace VS_LOAN.Core.Entity.HosoCourrier
         public string CustomerName { get; set; }
         public string Phone { get; set; }
         public string Cmnd { get; set; }
-        public DateTime ReceiveDate { get; set; }
+       
         public int Status { get; set; }
         public int GroupId { get; set; }
         public string LastNote { get; set; }
