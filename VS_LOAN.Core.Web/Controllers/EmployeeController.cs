@@ -46,8 +46,8 @@ namespace VS_LOAN.Core.Web.Controllers
 
         public async Task<JsonResult> GetRoles()
         {
-            var bizEmployee = new EmployeeRepository();
-            var rs = await bizEmployee.GetRoleList();
+            
+            var rs = await _rpEmployee.GetRoleList();
             return ToJsonResponse(true, null, rs);
         }
         public ActionResult Index()
@@ -61,11 +61,11 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             var fromDate = string.IsNullOrWhiteSpace(workFromDate) ? DateTime.Now.AddDays(-7) : DateTimeFormat.ConvertddMMyyyyToDateTime(workFromDate);
             var toDate = string.IsNullOrWhiteSpace(workToDate) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(workToDate);
-            var bzEmployee = new EmployeeRepository();
+            
             BusinessExtension.ProcessPaging(ref page, ref limit);
             freetext = string.IsNullOrWhiteSpace(freetext) ? string.Empty : freetext.Trim();
-            var totalRecord = await bzEmployee.Count(fromDate, toDate, roleId, freetext);
-            var datas = await bzEmployee.Gets(fromDate, toDate, roleId, freetext, page, limit);
+            var totalRecord = await _rpEmployee.Count(fromDate, toDate, roleId, freetext);
+            var datas = await _rpEmployee.Gets(fromDate, toDate, roleId, freetext, page, limit);
             var result = DataPaging.Create(datas, totalRecord);
             return ToJsonResponse(true, null, result);
         }
@@ -77,9 +77,11 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> Create([FromBody] UserCreateModel entity)
         {
-            var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
+            var isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
             if (!isAdmin)
-                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            {
+                return ToJsonResponse(false, "Bạn không có quyền");
+            }
             if (entity == null)
             {
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
@@ -87,6 +89,10 @@ namespace VS_LOAN.Core.Web.Controllers
             if (string.IsNullOrWhiteSpace(entity.UserName))
             {
                 return ToJsonResponse(false, "Tên đăng nhập không được để trống");
+            }
+            if (entity.UserName.Contains(" "))
+            {
+                return ToJsonResponse(false, "Tên đăng nhập viết liền không dấu cách");
             }
             if (string.IsNullOrWhiteSpace(entity.Password))
             {
@@ -120,8 +126,7 @@ namespace VS_LOAN.Core.Web.Controllers
             //{
             //    return ToJsonResponse(false, "Vui lòng chọn quận/huyện");
             //}
-            var bizEmployee = new EmployeeRepository();
-            var existUserName = await bizEmployee.GetByUserName(entity.UserName.Trim(), 0);
+            var existUserName = await _rpEmployee.GetByUserName(entity.UserName.Trim(), 0);
             if (existUserName != null)
             {
                 return ToJsonResponse(false, "Tên đăng nhập đã tồn tại");
@@ -146,15 +151,15 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "MÃ nhân viên không được để trống", 0);
             }
-            var existCode = await bizEmployee.GetByCode(entity.Code.Trim());
+            var existCode = await _rpEmployee.GetByCode(entity.Code.Trim());
             if (existCode != null)
             {
                 return ToJsonResponse(false, "Mã đã tồn tại", 0);
             }
-            entity.UserName = entity.UserName.Trim();
+            entity.UserName = entity.UserName.Trim().ToLower();
             entity.Password = entity.Password.Trim();
             entity.Password = MD5.getMD5(entity.Password);
-            var result = await bizEmployee.Create(entity);
+            var result = await _rpEmployee.Create(entity);
             return ToJsonResponse(true, null, result);
         }
         public async Task<ActionResult> Edit(int id)
@@ -162,10 +167,10 @@ namespace VS_LOAN.Core.Web.Controllers
             var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
             if (!isAdmin)
             {
-                return View();
+                return RedirectToAction("Index");
             }
-            var bzEmployee = new EmployeeRepository();
-            var employee = await bzEmployee.GetById(id);
+            
+            var employee = await _rpEmployee.GetById(id);
             ViewBag.employee = employee;
             ViewBag.account = GlobalData.User;
             return View();
@@ -182,7 +187,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             }
-            var bzEmployee = new EmployeeRepository();
+            
             if (string.IsNullOrWhiteSpace(model.WorkDateStr))
             {
                 return ToJsonResponse(false, "Vui lòng chọn ngày vào làm", null);
@@ -196,7 +201,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToJsonResponse(false, "Định dạng ngày tháng không hợp lệ", null);
             }
             model.UpdatedBy = GlobalData.User.IDUser;
-            var result = await bzEmployee.Update(model);
+            var result = await _rpEmployee.Update(model);
             return ToJsonResponse(result);
         }
         public async Task<JsonResult> GetPartner(int customerId)
@@ -237,6 +242,11 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> ResetPassword(ResetPasswordModel model)
         {
+            var isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
+            if(!isAdmin)
+            {
+                return ToJsonResponse(false, "Bạn không có quyền");
+            }
             if (model == null || model.Id<=0 || string.IsNullOrWhiteSpace(model.Confirm) || string.IsNullOrWhiteSpace(model.Password))
                 return ToJsonResponse(false, "Vui lòng nhập đầy đủ các thông tin");
             if (model.Password != model.Confirm)
