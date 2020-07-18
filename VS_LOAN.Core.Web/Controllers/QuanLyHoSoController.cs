@@ -25,9 +25,13 @@ namespace VS_LOAN.Core.Web.Controllers
     {
         protected readonly IPartnerRepository _rpPartner;
         protected readonly IMediaBusiness _bizMedia;
-        public QuanLyHoSoController(IPartnerRepository partnerRepository, IMediaBusiness mediaBusiness)
+        protected readonly IEmployeeRepository _rpEmployee;
+        public QuanLyHoSoController(IPartnerRepository partnerRepository,
+            IEmployeeRepository employeeRepository,
+            IMediaBusiness mediaBusiness)
         {
             _rpPartner = partnerRepository;
+            _rpEmployee = employeeRepository;
             _bizMedia = mediaBusiness;
         }
         public static Dictionary<string, ActionInfo> LstRole
@@ -52,7 +56,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public JsonResult TimHSQL(string fromDate,
+        public async Task<JsonResult> TimHSQL(string fromDate,
             string toDate,
             string maHS,
             string cmnd,
@@ -83,8 +87,9 @@ namespace VS_LOAN.Core.Web.Controllers
 
                 string trangthai = string.IsNullOrWhiteSpace(status) ? Helpers.Helpers.GetAllStatusString() : status;
                 //trangthai += 
+                var isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
                 totalRecord = new HoSoBLL().CountHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freetext);
-                lstHoso = new HoSoBLL().TimHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freetext, page, limit);
+                lstHoso = new HoSoBLL().TimHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freetext, page, limit,isAdmin: isAdmin);
                 if (lstHoso == null)
                     lstHoso = new List<HoSoQuanLyModel>();
                 var result = DataPaging.Create(lstHoso, totalRecord);
