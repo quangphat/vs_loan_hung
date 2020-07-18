@@ -19,6 +19,6 @@ namespace VS_LOAN.Core.Entity.HosoCourrier
         public string CreatedUser { get; set; }
         public string ProvinceName { get; set; }
         public string DistrictName { get; set; }
-        public string SaleCode { get; set; }
+        
     }
 }
