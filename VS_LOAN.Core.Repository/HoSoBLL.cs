@@ -1044,7 +1044,8 @@ namespace VS_LOAN.Core.Repository
                 int loaiNgay,
                 string freeText = null,
                 int page = 1, int limit = 10,
-                bool isDownload = false
+                bool isDownload = false,
+                bool isAdmin = false
                 )
         {
             page = page <= 0 ? 1 : page;
@@ -1116,6 +1117,10 @@ namespace VS_LOAN.Core.Repository
                                 hs.KhuVucText = item["KhuVucText"].ToString();
                                 hs.GhiChu = item["GhiChu"].ToString();
                                 hs.TenSanPham = item["TenSanPham"].ToString();
+                                if(!isAdmin)
+                                {
+                                    hs.Phone = string.Empty;
+                                }
                                 result.Add(hs);
                             }
                             return result;
