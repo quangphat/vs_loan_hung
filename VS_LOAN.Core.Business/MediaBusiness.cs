@@ -121,6 +121,7 @@ namespace VS_LOAN.Core.Business
                             LastNote = row.Cells[4] != null ? row.Cells[4].ToString() : "",
                             ProvinceId = row.Cells[5] != null ? Convert.ToInt32(row.Cells[5].ToString()) : 0,
                             DistrictId = row.Cells[6] != null ? Convert.ToInt32(row.Cells[6].ToString()) : 0,
+                            SaleCode = row.Cells[7] != null ? row.Cells[6].ToString().Trim().ToLower() :string.Empty,
                             Status = (int)HosoCourierStatus.New,
                             CreatedBy = createBy
                         };

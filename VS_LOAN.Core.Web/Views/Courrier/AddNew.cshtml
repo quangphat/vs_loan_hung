@@ -55,28 +55,21 @@
                             </select>
                         </div>
                     </div>
-                    
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Mã Sale<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtSaleCode" placeholder="Nhập số mã sale" class="form-control" />
+                        </div>
+
+                    </div>
                 </form>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <h3 class="header smaller lighter blue">2.Thông tin khoản vay và sản phẩm:</h3>
+                <h3 class="header smaller lighter blue">2.Người xử lý:</h3>
                 <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label no-padding-right">Tên ngân hàng<span class="required">(*)</span></label>
-                        <div class="col-sm-4">
-                            <select id="ddlDoiTac" class="chosen-select form-control" data-placeholder="Chọn đối tác">
-                                <option value="0"></option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 control-label no-padding-right">Sản phẩm vay<span class="required">(*)</span></label>
-                        <div class="col-sm-4">
-                            <select id="ddlSanPhamVay" class="chosen-select form-control" data-placeholder="Chọn sản phẩm vay">
-                                <option value="0"></option>
-                            </select>
-                        </div>
-                    </div>
+                   
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Nhóm<span class="required">(*)</span></label>
                         <div class="col-sm-4">
@@ -134,8 +127,7 @@
 
 <script>
     $(document).ready(function () {
-        $('#ddlSanPhamVay').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddlCourier').chosen({ width: '100%', allow_single_deselect: true });
+        
         $('#ddlGroup').chosen({ width: '100%', allow_single_deselect: true });
         
     });
@@ -164,15 +156,12 @@
 
     $(document).ready(function () {
         LayDSTaiLieu();
-        LayDSNganHang();
         LayDSTinh();
         $('#ddlTinh').on('change', function () {
             getDistricts('#ddlHuyen', this.value);
         });
         LayNhom('#ddlGroup');
-        $('#ddlDoiTac').on('change', function () {
-            LayDSSanPham(this.value);
-        });
+       
         $('#ddlGroup').on('change', function () {
             GetEmployeesByGroupId('#ddlCourier', this.value, true);
         });
@@ -221,31 +210,7 @@
             }
         });
     }
-    var lstDoitac =[]
-    function LayDSNganHang() {
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSDoiTac", "HoSo")',
-            data: {},
-            success: function (data) {
-                $('#ddlDoiTac').empty();
-                $('#ddlDoiTac').append("<option value='0'></option>");
-                if (data != null) {
 
-                    lstDoitac = data.data
-                    $.each(data.data, function (index, optionData) {
-                        $('#ddlDoiTac').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
-                    });
-                }
-                $('#ddlDoiTac').chosen().trigger("chosen:updated");
-            },
-            complete: function () {
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    }
 
     function LayDSTaiLieu() {
         $.ajax({
@@ -326,30 +291,7 @@
             }
         }
     }
-    function LayDSSanPham(maDoiTac) {
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSSanPham", "HoSo")',
-            data: { 'maDoiTac': maDoiTac },
-            success: function (data) {
-                $('#ddlSanPhamVay').empty();
-                $('#ddlSanPhamVay').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.data, function (index, optionData) {
-                        $('#ddlSanPhamVay').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
-                    });
-                }
-                $('#ddlSanPhamVay').chosen().trigger("chosen:updated");
-
-            },
-            complete: function () {
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    }
-
+    
     $('#btn_Save').click(function (e) {
         if ($('#txtHoTen').val() == "" || $('#txtHoTen').val() == undefined) {
             swal({
@@ -376,8 +318,7 @@
             'phone': $('#txtDienThoai').val(),
             'cmnd': $('#txtCMND').val(),
             'AssignId': $('#ddlCourier').val(),
-            'partnerId': $('#ddlDoiTac').val(), 
-            'productId': $('#ddlSanPhamVay').val(), 
+            'SaleCode': $('#txtSaleCode').val(),
             'LastNote': $('#txtGhiChu').val(),
             'GroupId': $('#ddlGroup').val(),
             'ProvinceId': $('#ddlTinh').val(),

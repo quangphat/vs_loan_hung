@@ -18,6 +18,14 @@ namespace VS_LOAN.Core.Repository
         {
 
         }
+        public async Task<OptionSimple> GetEmployeeByCode(string code)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryFirstOrDefaultAsync<OptionSimple>("sp_Employee_GetByCode", new { code }, commandType: CommandType.StoredProcedure);
+                return result;
+            }
+        }
         public async Task<bool> CheckIsAdmin(int userId)
         {
             try

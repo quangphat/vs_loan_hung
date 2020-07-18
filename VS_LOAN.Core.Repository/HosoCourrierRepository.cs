@@ -49,22 +49,14 @@ namespace VS_LOAN.Core.Repository
         {
             using (var con = GetConnection())
             {
-                var p = new DynamicParameters();
-                p.Add("id", id);
-                p.Add("customerName", hoso.CustomerName);
-                p.Add("cmnd", hoso.Cmnd);
-                p.Add("updatedDate", DateTime.Now);
-                p.Add("status", hoso.Status);
-                p.Add("note", hoso.LastNote);
-                p.Add("updatedBy", hoso.UpdatedBy);
-                p.Add("phone", hoso.Phone);
-                p.Add("assignId", hoso.AssignId);
-                p.Add("partnerId", hoso.PartnerId);
-                p.Add("productId", hoso.ProductId);
-                p.Add("groupId", hoso.GroupId);
-                p.Add("ProvinceId", hoso.ProvinceId);
-                p.Add("DistrictId", hoso.DistrictId);
-                await con.ExecuteAsync("sp_UpdateHosoCourier", p, commandType: CommandType.StoredProcedure);
+                var param = GetParams(hoso, ignoreKey: new string[] {
+                    nameof(hoso.CreatedTime),
+                    nameof(hoso.UpdatedTime),
+                    nameof(hoso.AssigneeIds)
+
+                });
+
+                await con.ExecuteAsync("sp_UpdateHosoCourier", param, commandType: CommandType.StoredProcedure);
                 return true;
             }
 
@@ -73,23 +65,14 @@ namespace VS_LOAN.Core.Repository
         {
             using (var con = GetConnection())
             {
-                var p = AddOutputParam("id");
-                p.Add("customerName", hoso.CustomerName);
-                p.Add("receiveDate", DateTime.Now);
-                p.Add("cmnd", hoso.Cmnd);
-                p.Add("createddate", DateTime.Now);
-                p.Add("status", hoso.Status);
-                p.Add("note", hoso.LastNote);
-                p.Add("createdby", hoso.CreatedBy);
-                p.Add("phone", hoso.Phone);
-                p.Add("assignId", hoso.AssignId);
-                p.Add("partnerId", hoso.PartnerId);
-                p.Add("productId", hoso.ProductId);
-                p.Add("groupId", hoso.GroupId);
-                p.Add("ProvinceId", hoso.ProvinceId);
-                p.Add("DistrictId", hoso.DistrictId);
-                await con.ExecuteAsync("sp_InsertHosoCourrier", p, commandType: CommandType.StoredProcedure);
-                return p.Get<int>("id");
+                var param = GetParams(hoso, "id", DbType.Int32, ignoreKey: new string[] {
+                    nameof(hoso.CreatedTime),
+                    nameof(hoso.UpdatedTime),
+                    nameof(hoso.AssigneeIds)
+
+                });
+                await con.ExecuteAsync("sp_InsertHosoCourrier", param, commandType: CommandType.StoredProcedure);
+                return param.Get<int>("id");
             }
 
         }
@@ -105,22 +88,22 @@ namespace VS_LOAN.Core.Repository
             }
 
         }
-        public async Task<int> CountHosoCourrier(string freeText, int courierId, string status, int groupId = 0, int provinceId=0)
+        public async Task<int> CountHosoCourrier(string freeText, int courierId, string status, int groupId = 0, int provinceId = 0, string saleCode = null)
         {
             status = string.IsNullOrWhiteSpace(status) ? string.Empty : status;
             using (var con = GetConnection())
             {
-                return await con.ExecuteScalarAsync<int>("sp_CountHosoCourier", new { freeText, courierId, status, groupId, provinceId }, commandType: CommandType.StoredProcedure);
+                return await con.ExecuteScalarAsync<int>("sp_CountHosoCourier", new { freeText, courierId, status, groupId, provinceId, saleCode }, commandType: CommandType.StoredProcedure);
 
             }
         }
-        public async Task<List<HosoCourierViewModel>> GetHosoCourrier(string freeText, int courierId, string status, int page, int limit, int groupId = 0,int provinceId = 0)
+        public async Task<List<HosoCourierViewModel>> GetHosoCourrier(string freeText, int courierId, string status, int page, int limit, int groupId = 0, int provinceId = 0, string saleCode = null)
         {
             status = string.IsNullOrWhiteSpace(status) ? string.Empty : status;
             using (var con = GetConnection())
             {
                 var result = await con.QueryAsync<HosoCourierViewModel>("sp_GetHosoCourier",
-                    new { freeText, courierId, page, limit_tmp = limit, status, groupId , provinceId},
+                    new { freeText, courierId, page, limit_tmp = limit, status, groupId, provinceId, saleCode },
                     commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }

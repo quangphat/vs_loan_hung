@@ -55,10 +55,10 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.isAdmin = isAdmin ? 1 : 0;
             return View();
         }
-        public async Task<JsonResult> Search(string freeText = null, int provinceId = 0, int courierId = 0, string status = null, int groupId = 0, int page = 1, int limit = 10)
+        public async Task<JsonResult> Search(string freeText = null, int provinceId = 0, int courierId = 0, string status = null, int groupId = 0, int page = 1, int limit = 10, string salecode = null)
         {
-            var totalRecord = await _rpCourierProfile.CountHosoCourrier(freeText, GlobalData.User.IDUser, status, groupId, provinceId);
-            var datas = await _rpCourierProfile.GetHosoCourrier(freeText, GlobalData.User.IDUser, status, page, limit, groupId, provinceId);
+            var totalRecord = await _rpCourierProfile.CountHosoCourrier(freeText, GlobalData.User.IDUser, status, groupId, provinceId, salecode);
+            var datas = await _rpCourierProfile.GetHosoCourrier(freeText, GlobalData.User.IDUser, status, page, limit, groupId, provinceId, salecode);
             var result = DataPaging.Create(datas, totalRecord);
             return ToJsonResponse(true, null, result);
         }
@@ -86,8 +86,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 Status = (int)HosoCourierStatus.New,
                 LastNote = model.LastNote,
                 CreatedBy = GlobalData.User.IDUser,
-                ProductId = model.ProductId,
-                PartnerId = model.PartnerId,
+                SaleCode = model.SaleCode,
                 Phone = model.Phone,
                 AssignId = model.AssignId,
                 GroupId = model.GroupId,
@@ -100,6 +99,14 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 var tasks = new List<Task>();
                 var ids = new List<int>() { model.AssignId, GlobalData.User.IDUser, 1 };//1 is Thainm
+                if(!string.IsNullOrWhiteSpace(model.SaleCode))
+                {
+                    var sale = await _rpEmployee.GetEmployeeByCode(model.SaleCode.Trim());
+                    if(sale!=null)
+                    {
+                        ids.Add(sale.Id);
+                    }
+                }
                 foreach (var assigneeId in ids)
                 {
                     tasks.Add(_rpCourierProfile.InsertCourierAssignee(id, assigneeId));
@@ -172,9 +179,8 @@ namespace VS_LOAN.Core.Web.Controllers
                 Status = model.Status,
                 LastNote = model.LastNote,
                 UpdatedBy = GlobalData.User.IDUser,
-                ProductId = model.ProductId,
-                PartnerId = model.PartnerId,
                 Phone = model.Phone,
+                SaleCode = model.SaleCode,
                 AssignId = model.AssignId,
                 Id = model.Id,
                 GroupId = model.GroupId,
@@ -185,6 +191,15 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = await _rpCourierProfile.Update(model.Id, hoso);
             if (result)
             {
+                if (!string.IsNullOrWhiteSpace(model.SaleCode))
+                {
+                    var sale = await _rpEmployee.GetEmployeeByCode(model.SaleCode.Trim());
+                    if (sale != null)
+                    {
+                       
+                        await _rpCourierProfile.InsertCourierAssignee(model.Id, sale.Id);
+                    }
+                }
                 _rpCourierProfile.InsertCourierAssignee(model.Id, model.AssignId);
                 if (!string.IsNullOrWhiteSpace(model.LastNote))
                 {
