@@ -6,6 +6,9 @@
 /*.form-group input, .form-group label, .form-group select, .form-group textarea {
   font-size: 11px !important;
 }*/
+#ddlLimit_chosen{
+    width:100px!important;
+}
 .pt-0 {
     padding-top: 0px;
 }
