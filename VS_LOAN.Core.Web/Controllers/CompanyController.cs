@@ -11,11 +11,19 @@ using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Web.Helpers;
+using VS_LOAN.Core.Repository.Interfaces;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class CompanyController : BaseController
     {
+        protected readonly IPartnerRepository _rpPartner;
+        protected readonly INoteRepository _rpNote;
+        public CompanyController(IPartnerRepository partnerRepository, INoteRepository noteRepository):base()
+        {
+            _rpPartner = partnerRepository;
+            _rpNote = noteRepository;
+        }
         public static Dictionary<string, ActionInfo> LstRole
         {
             get
@@ -104,23 +112,21 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetPartner()
         {
-            var bizPartner = new PartnerBLL();
-            var partners = await bizPartner.GetListForCheckCustomerDuplicateAsync();
+            var partners = await _rpPartner.GetListForCheckCustomerDuplicateAsync();
             if (partners == null)
                 return ToJsonResponse(true, null, new List<OptionSimple>());
             return ToJsonResponse(true, null, partners);
         }
         public async Task<JsonResult> GetAllPartner()
         {
-            var bizPartner = new PartnerBLL();
-            var partners = await bizPartner.GetListForCheckCustomerDuplicateAsync();
+            var partners = await _rpPartner.GetListForCheckCustomerDuplicateAsync();
 
             return ToJsonResponse(true, null, partners);
         }
         public async Task<JsonResult> GetNotes(int companyId)
         {
-            var bizNote = new NoteRepository();
-            var datas = await bizNote.GetNoteByTypeAsync(companyId, typeId: (int)NoteType.Company);
+            
+            var datas = await _rpNote.GetNoteByTypeAsync(companyId, typeId: (int)NoteType.Company);
             return ToJsonResponse(true, null, datas);
         }
     }

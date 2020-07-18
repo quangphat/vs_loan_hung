@@ -12,11 +12,19 @@ using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Web.Helpers;
+using VS_LOAN.Core.Repository.Interfaces;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class CustomerController : BaseController
     {
+        protected readonly ICustomerRepository _rpCustomer;
+        protected readonly IPartnerRepository _rpPartner;
+        public CustomerController(ICustomerRepository customerRepository, IPartnerRepository partnerRepository):base()
+        {
+            _rpCustomer = customerRepository;
+            _rpPartner = partnerRepository;
+        }
         public static Dictionary<string, ActionInfo> LstRole
         {
             get
@@ -32,11 +40,10 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             return View();
         }
-        public JsonResult Search(string freeText = null, int page = 1, int limit = 10)
+        public async Task<JsonResult> Search(string freeText = null, int page = 1, int limit = 10)
         {
-            var bzCustomer = new CustomerRepository();
-            var totalRecord = bzCustomer.Count(freeText, GlobalData.User.IDUser);
-            var datas = bzCustomer.Gets(freeText, page, limit, GlobalData.User.IDUser);
+            var totalRecord = await _rpCustomer.Count(freeText, GlobalData.User.IDUser);
+            var datas = await _rpCustomer.Gets(freeText, page, limit, GlobalData.User.IDUser);
             var result = DataPaging.Create(datas, totalRecord);
             return ToJsonResponse(true, null, result);
         }
@@ -46,7 +53,7 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.MaNV = GlobalData.User.IDUser;
             return View();
         }
-        public ActionResult Create(CustomerModel model)
+        public async Task<ActionResult> Create(CustomerModel model)
         {
             if (model.Partners == null || !model.Partners.Any())
                 return ToResponse(false, "Vui lòng chọn đối tác", 0);
@@ -71,8 +78,8 @@ namespace VS_LOAN.Core.Web.Controllers
                 Phone = model.Phone,
                 Salary = model.Salary
             };
-            var _bizCustomer = new CustomerRepository();
-            var id = _bizCustomer.Create(customer);
+            
+            var id = await _rpCustomer.Create(customer);
             if (id > 0)
             {
                 if (!string.IsNullOrWhiteSpace(model.Note))
@@ -83,16 +90,16 @@ namespace VS_LOAN.Core.Web.Controllers
                         CustomerId = id,
                         CreatedBy = customer.CreatedBy
                     };
-                    _bizCustomer.AddNote(note);
+                    _rpCustomer.AddNote(note);
                 }
                 return ToResponse(true);
             }
             return ToResponse(false);
 
         }
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            var customer = new CustomerRepository().GetById(id);
+            var customer = await  _rpCustomer.GetById(id);
             customer.BirthDay = BusinessExtension.FromUnixTime(customer.BirthDay.Value.ToUnixTime());
             ViewBag.customer = customer;
 
@@ -103,7 +110,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var customer = new CustomerRepository().GetById(id);
             return ToJsonResponse(true, null, customer);
         }
-        public ActionResult Update(CustomerEditModel model)
+        public async Task<ActionResult> Update(CustomerEditModel model)
         {
 
             if (model == null || model.Customer == null)
@@ -114,7 +121,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToResponse(false, "Vui lòng chọn đối tác", 0);
             var partner = model.Partners[0];
             bool isMatch = partner.IsSelect;
-            var bizCustomer = new CustomerRepository();
+           
            
             var customer = new Customer
             {
@@ -137,7 +144,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 Salary = model.Customer.Salary
             };
 
-            var result = bizCustomer.Update(customer);
+            var result = await _rpCustomer.Update(customer);
             if (!result)
                 return ToResponse(false);
             if (!string.IsNullOrWhiteSpace(model.Customer.Note))
@@ -148,30 +155,27 @@ namespace VS_LOAN.Core.Web.Controllers
                     CustomerId = customer.Id,
                     CreatedBy = customer.UpdatedBy
                 };
-                bizCustomer.AddNote(note);
+                _rpCustomer.AddNote(note);
             }
             
             return ToResponse(true);
         }
         public async Task<JsonResult> GetPartner(int customerId = 0)
         {
-            var bizPartner = new PartnerBLL();
-            var partners = await bizPartner.GetListForCheckCustomerDuplicateAsync();
+            var partners = await _rpPartner.GetListForCheckCustomerDuplicateAsync();
             if (partners == null)
                 return ToJsonResponse(true, null, new List<OptionSimple>());
             return ToJsonResponse(true, null, partners);
         }
         public async Task<JsonResult> GetAllPartner()
         {
-            var bizPartner = new PartnerBLL();
-            var partners = await bizPartner.GetListForCheckCustomerDuplicateAsync();
+            var partners = await _rpPartner.GetListForCheckCustomerDuplicateAsync();
 
             return ToJsonResponse(true, null, partners);
         }
-        public JsonResult GetNotes(int customerId)
+        public async Task<JsonResult> GetNotes(int customerId)
         {
-            var bizCustomer = new CustomerRepository();
-            var datas = bizCustomer.GetNoteByCustomerId(customerId);
+            var datas = await _rpCustomer.GetNoteByCustomerId(customerId);
             return ToJsonResponse(true, null, datas);
         }
     }

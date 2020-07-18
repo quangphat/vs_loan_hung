@@ -47,32 +47,8 @@ namespace VS_LOAN.Core.Repository
                 return true;
             }
         }
-        public async Task<List<FileUploadModel>> GetTailieuByHosoId(int hosoId, int type)
-        {
-            using (var con = GetConnection())
-            {
-                var p = new DynamicParameters();
-                p.Add("profileId", hosoId);
-                p.Add("profileTypeId", type);
-                var result = await con.QueryAsync<FileUploadModel>("getTailieuByHosoId", p,
-                    commandType: CommandType.StoredProcedure);
-                return result.ToList();
-            }
-
-        }
-        public async Task<bool> RemoveTailieu(int hosoId, int tailieuId)
-        {
-            var p = new DynamicParameters();
-            p.Add("hosoId", hosoId);
-            p.Add("tailieuId", tailieuId);
-            using (var con = GetConnection())
-            {
-                var result = await con.ExecuteAsync("removeTailieu", p,
-                    commandType: CommandType.StoredProcedure);
-                return true;
-            }
-
-        }
+       
+      
         public async Task<HoSoInfoModel> GetDetail(int id)
         {
             var p = new DynamicParameters();

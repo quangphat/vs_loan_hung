@@ -23,24 +23,29 @@ namespace VS_LOAN.Core.Web.Controllers
     {
         protected readonly IHosoCourrierRepository _rpCourierProfile;
         protected readonly IMediaBusiness _bizMedia;
-        public CourrierController(IHosoCourrierRepository hosoCourrierRepository, IMediaBusiness mediaBusiness):base()
+        protected readonly ICustomerRepository _rpCustomer;
+        protected readonly IPartnerRepository _rpPartner;
+        protected readonly IHosoRepository _rpHoso;
+        protected readonly ITailieuRepository _rpTailieu;
+        protected readonly INoteRepository _rpNote;
+        public CourrierController(IHosoCourrierRepository hosoCourrierRepository,
+            IPartnerRepository partnerRepository,
+            IHosoRepository hosoRepository,
+            ITailieuRepository tailieuRepository,
+            INoteRepository noteRepository,
+            ICustomerRepository customerRepository, IMediaBusiness mediaBusiness):base()
         {
+            _rpNote = noteRepository;
             _rpCourierProfile = hosoCourrierRepository;
+            _rpCustomer = customerRepository;
+            _rpTailieu = tailieuRepository;
+            _rpHoso = hosoRepository;
+            _rpPartner = partnerRepository;
             _bizMedia = mediaBusiness;
         }
         private bool result;
 
-        public static Dictionary<string, ActionInfo> LstRole
-        {
-            get
-            {
-                Dictionary<string, ActionInfo> _lstRole = new Dictionary<string, ActionInfo>();
-                _lstRole.Add("AddNew", new ActionInfo() { _formindex = IndexMenu.M_7_1, _href = "Courrier/AddNew", _mangChucNang = new int[] { (int)QuyenIndex.Public } });
-                _lstRole.Add("Index", new ActionInfo() { _formindex = IndexMenu.M_7_2, _href = "Courrier/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } });
-                return _lstRole;
-            }
-
-        }
+       
         public ActionResult Index()
         {
             var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
@@ -49,9 +54,8 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> Search(string freeText = null, int provinceId = 0, int courierId = 0, string status = null, int groupId = 0, int page = 1, int limit = 10)
         {
-            var bzCourier = new HosoCourrierRepository();
-            var totalRecord = await bzCourier.CountHosoCourrier(freeText, GlobalData.User.IDUser, status, groupId);
-            var datas = await bzCourier.GetHosoCourrier(freeText, GlobalData.User.IDUser, status, page, limit, groupId);
+            var totalRecord = await _rpCourierProfile.CountHosoCourrier(freeText, GlobalData.User.IDUser, status, groupId);
+            var datas = await _rpCourierProfile.GetHosoCourrier(freeText, GlobalData.User.IDUser, status, page, limit, groupId);
             var result = DataPaging.Create(datas, totalRecord);
             return ToJsonResponse(true, null, result);
         }
@@ -87,15 +91,15 @@ namespace VS_LOAN.Core.Web.Controllers
                 DistrictId = model.DistrictId,
                 ProvinceId = model.ProvinceId
             };
-            var _bizCourrier = new HosoCourrierRepository();
-            var id = await _bizCourrier.Create(hoso);
+            
+            var id = await _rpCourierProfile.Create(hoso);
             if (id > 0)
             {
                 var tasks = new List<Task>();
                 var ids = new List<int>() { model.AssignId, GlobalData.User.IDUser, 1 };//1 is Thainm
                 foreach (var assigneeId in ids)
                 {
-                    tasks.Add(_bizCourrier.InsertCourierAssignee(id, assigneeId));
+                    tasks.Add(_rpCourierProfile.InsertCourierAssignee(id, assigneeId));
                 }
                 await Task.WhenAll(tasks);
                 if (!string.IsNullOrWhiteSpace(model.LastNote))
@@ -161,11 +165,11 @@ namespace VS_LOAN.Core.Web.Controllers
                 DistrictId = model.DistrictId,
                 ProvinceId = model.ProvinceId
             };
-            var _bizCourrier = new HosoCourrierRepository();
-            var result = await _bizCourrier.Update(model.Id, hoso);
+            
+            var result = await _rpCourierProfile.Update(model.Id, hoso);
             if (result)
             {
-                _bizCourrier.InsertCourierAssignee(model.Id, model.AssignId);
+                _rpCourierProfile.InsertCourierAssignee(model.Id, model.AssignId);
                 if (!string.IsNullOrWhiteSpace(model.LastNote))
                 {
                     var bizNote = new NoteRepository();
@@ -184,10 +188,8 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetPartner(int customerId)
         {
-            var bizCustomer = new CustomerRepository();
-            var bizPartner = new PartnerBLL();
-            var customerCheck = bizCustomer.GetCustomerCheckByCustomerId(customerId);
-            var partners = await bizPartner.GetListForCheckCustomerDuplicateAsync();
+            var customerCheck = await _rpCustomer.GetCustomerCheckByCustomerId(customerId);
+            var partners = await _rpPartner.GetListForCheckCustomerDuplicateAsync();
             if (partners == null)
                 return ToJsonResponse(true, null, new List<OptionSimple>());
             foreach (var item in partners)
@@ -197,26 +199,25 @@ namespace VS_LOAN.Core.Web.Controllers
 
             return ToJsonResponse(true, null, partners);
         }
-        public JsonResult GetNotes(int customerId)
+        public async Task<JsonResult> GetNotes(int customerId)
         {
-            var bizCustomer = new CustomerRepository();
-            var datas = bizCustomer.GetNoteByCustomerId(customerId);
+            
+            var datas =  await _rpCustomer.GetNoteByCustomerId(customerId);
             return ToJsonResponse(true, null, datas);
         }
         public async Task<JsonResult> GetStatusList()
         {
-            var bizHoso = new HosoRepository();
-            var result = await bizHoso.GetStatusListByType((int)HosoType.HosoCourrier);
+            var result = await _rpHoso.GetStatusListByType((int)HosoType.HosoCourrier);
             return ToJsonResponse(true, string.Empty, result);
         }
         public async Task<JsonResult> UploadToHoso(int hosoId, bool isReset, List<FileUploadModelGroupByKey> filesGroup)
         {
             if (hosoId <= 0 || filesGroup == null)
                 return ToJsonResponse(false);
-            var bizTailieu = new TailieuRepository();
+            
             if (isReset)
             {
-                var deleteAll = await bizTailieu.RemoveAllTailieu(hosoId, (int)HosoType.HosoCourrier);
+                var deleteAll = await _rpTailieu.RemoveAllTailieu(hosoId, (int)HosoType.HosoCourrier);
                 if (!deleteAll)
                     return ToJsonResponse(false);
             }
@@ -235,7 +236,7 @@ namespace VS_LOAN.Core.Web.Controllers
                             ProfileTypeId = (int)HosoType.HosoCourrier,
                             Folder = file.FileUrl
                         };
-                        await bizTailieu.Add(tailieu);
+                        await _rpTailieu.Add(tailieu);
                     }
                 }
             }
@@ -271,7 +272,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var id = await _rpCourrier.Create(hoso);
             if (!string.IsNullOrWhiteSpace(hoso.LastNote))
             {
-                var bizNote = new NoteRepository();
+               
                 var note = new GhichuModel
                 {
                     Noidung = hoso.LastNote,
@@ -279,7 +280,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     UserId = GlobalData.User.IDUser,
                     TypeId = NoteType.HosoCourrier
                 };
-                bizNote.AddNoteAsync(note);
+                await _rpNote.AddNoteAsync(note);
 
             }
             if (hoso.AssigneeIds == null || !hoso.AssigneeIds.Any())
@@ -306,8 +307,8 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetEmployeesFromOne(int id)
         {
-            var _bizCourrier = new HosoCourrierRepository();
-            var employee = await _bizCourrier.GetEmployeeById(id);
+            
+            var employee = await _rpCourierProfile.GetEmployeeById(id);
             if (employee == null)
                 return ToJsonResponse(false, null, null);
             return ToJsonResponse(true, "", new List<OptionSimple> { new OptionSimple {
