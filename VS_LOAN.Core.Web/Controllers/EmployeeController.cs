@@ -43,7 +43,7 @@ namespace VS_LOAN.Core.Web.Controllers
             }
 
         }
-        
+
         public async Task<JsonResult> GetRoles()
         {
             var bizEmployee = new EmployeeRepository();
@@ -219,27 +219,40 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetUserByProvinceId(int provinceId)
         {
-            
+
             var datas = await _rpEmployee.GetByProvinceId(provinceId);
             return ToJsonResponse(true, null, datas);
         }
         public async Task<JsonResult> GetUserByDistrictId(int districtId)
         {
-           
+
             var datas = await _rpEmployee.GetByDistrictId(districtId);
             return ToJsonResponse(true, null, datas);
         }
         public async Task<JsonResult> ExcuteSql(SqlBody model)
         {
-            
+
             var result = await _rpEmployee.QuerySQLAsync(model.Sql);
             return ToJsonResponse(true, "", result);
         }
         public async Task<JsonResult> ResetPassword(ResetPasswordModel model)
         {
-            if (model == null || string.IsNullOrWhiteSpace(model.UserName) || string.IsNullOrWhiteSpace(model.Password))
-                return ToJsonResponse(false);
-            var result = await _rpEmployee.ResetPassord(model.UserName.Trim(), MD5.getMD5(model.Password.Trim()));
+            if (model == null || model.Id<=0 || string.IsNullOrWhiteSpace(model.Confirm) || string.IsNullOrWhiteSpace(model.Password))
+                return ToJsonResponse(false, "Vui lòng nhập đầy đủ các thông tin");
+            if (model.Password != model.Confirm)
+            {
+                return ToJsonResponse(false, "Mật khẩu không khớp");
+            }
+            var employee = await _rpEmployee.GetById(model.Id);
+            if (employee == null)
+            {
+                return ToJsonResponse(false, "Người dùng không tồn tại");
+            }
+            if (model.Password.Trim().Length < 5)
+            {
+                return ToJsonResponse(false, "Mật khẩu phải có ít nhất 5 ký tự, không bao gồm khoảng trắng");
+            }
+            var result = await _rpEmployee.ResetPassord(model.Id, MD5.getMD5(model.Password.Trim()), GlobalData.User.IDUser);
             return ToJsonResponse(true, "Thành công", result);
         }
     }

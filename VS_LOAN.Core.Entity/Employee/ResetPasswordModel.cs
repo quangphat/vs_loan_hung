@@ -8,7 +8,8 @@ namespace VS_LOAN.Core.Entity.Employee
 {
     public class ResetPasswordModel
     {
-        public string UserName { get; set; }
+        public int Id { get; set; }
         public string Password { get; set; }
+        public string Confirm { get; set; }
     }
 }
