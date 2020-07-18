@@ -1109,6 +1109,7 @@ namespace VS_LOAN.Core.Repository
                                 hs.DoiNguBanHang = item["DoiNguBanHang"].ToString();
                                 hs.MaNVLayHS = item["MaNVLayHS"].ToString();
                                 hs.MaNV = item["MaNV"].ToString();
+                                hs.Phone = item["Phone"].ToString();
                                 hs.MaNVSua = item["MaNVSua"].ToString();
                                 hs.CoBaoHiem = (bool)item["CoBaoHiem"];
                                 hs.DiaChiKH = item["DiaChiKH"].ToString();

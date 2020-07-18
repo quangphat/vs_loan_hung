@@ -13,6 +13,7 @@ namespace VS_LOAN.Core.Entity
         public DateTime NgayTao { get; set; }
         public string DoiTac { get; set; }
         public string CMND { get; set; }
+        public string Phone { get; set; }
         public string TenKH { get; set; }
 
         public int MaTrangThai { get; set; }
