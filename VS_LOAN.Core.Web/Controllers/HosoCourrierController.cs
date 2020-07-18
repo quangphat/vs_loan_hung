@@ -35,7 +35,7 @@ namespace VS_LOAN.Core.Web.Controllers
             ITailieuRepository tailieuRepository,
             INoteRepository noteRepository,
             IEmployeeRepository employeeRepository,
-            ICustomerRepository customerRepository, IMediaBusiness mediaBusiness):base()
+            ICustomerRepository customerRepository, IMediaBusiness mediaBusiness) : base()
         {
             _rpNote = noteRepository;
             _rpCourierProfile = hosoCourrierRepository;
@@ -48,7 +48,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         private bool result;
 
-       
+
         public ActionResult Index()
         {
             var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
@@ -78,6 +78,11 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToResponse(false, "Vui lòng chọn Courier", 0);
             }
+            var sale = await _rpEmployee.GetEmployeeByCode(model.SaleCode.ToString().Trim());
+            if (sale == null)
+            {
+                return ToResponse(false, "Sale không tồn tại, vui lòng kiểm tra lại");
+            }
             var hoso = new HosoCourier
             {
                 CustomerName = model.CustomerName,
@@ -92,16 +97,16 @@ namespace VS_LOAN.Core.Web.Controllers
                 DistrictId = model.DistrictId,
                 ProvinceId = model.ProvinceId
             };
-            
+
             var id = await _rpCourierProfile.Create(hoso);
             if (id > 0)
             {
                 var tasks = new List<Task>();
                 var ids = new List<int>() { model.AssignId, GlobalData.User.IDUser, 1 };//1 is Thainm
-                if(!string.IsNullOrWhiteSpace(model.SaleCode))
+                if (!string.IsNullOrWhiteSpace(model.SaleCode))
                 {
-                    var sale = await _rpEmployee.GetEmployeeByCode(model.SaleCode.Trim());
-                    if(sale!=null)
+
+                    if (sale != null)
                     {
                         ids.Add(sale.Id);
                     }
@@ -159,17 +164,22 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToResponse(false, "Vui lòng chọn courier");
             }
             var profile = await _rpCourierProfile.GetById(model.Id);
-            if(profile==null)
+            if (profile == null)
             {
                 return ToJsonResponse(false, "Hồ sơ không tồn tại");
             }
-            if(profile.Status == (int)TrangThaiHoSo.Cancel)
+            if (profile.Status == (int)TrangThaiHoSo.Cancel)
             {
                 bool isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
-                if(!isAdmin)
+                if (!isAdmin)
                 {
                     return ToJsonResponse(false, "Bạn không có quyền, vui lòng liên hệ Admin");
                 }
+            }
+            var sale = await _rpEmployee.GetEmployeeByCode(model.SaleCode.Trim());
+            if (sale == null)
+            {
+                return ToResponse(false, "Sale không tồn tại, vui lòng kiểm tra lại");
             }
             var hoso = new HosoCourier
             {
@@ -186,16 +196,16 @@ namespace VS_LOAN.Core.Web.Controllers
                 DistrictId = model.DistrictId,
                 ProvinceId = model.ProvinceId
             };
-            
+
             var result = await _rpCourierProfile.Update(model.Id, hoso);
             if (result)
             {
                 if (!string.IsNullOrWhiteSpace(model.SaleCode))
                 {
-                    var sale = await _rpEmployee.GetEmployeeByCode(model.SaleCode.Trim());
+
                     if (sale != null)
                     {
-                       
+
                         await _rpCourierProfile.InsertCourierAssignee(model.Id, sale.Id);
                     }
                 }
@@ -231,8 +241,8 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetNotes(int customerId)
         {
-            
-            var datas =  await _rpCustomer.GetNoteByCustomerId(customerId);
+
+            var datas = await _rpCustomer.GetNoteByCustomerId(customerId);
             return ToJsonResponse(true, null, datas);
         }
         public async Task<JsonResult> GetStatusList()
@@ -244,7 +254,7 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             if (hosoId <= 0 || filesGroup == null)
                 return ToJsonResponse(false);
-            
+
             if (isReset)
             {
                 var deleteAll = await _rpTailieu.RemoveAllTailieu(hosoId, (int)HosoType.HosoCourrier);
@@ -285,7 +295,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 var results = await _bizMedia.ReadXlsxFile(fileStream, GlobalData.User.IDUser);
                 if (results == null || !results.Any())
                     return ToJsonResponse(false, "Không thành công", null);
-                
+
                 var tasks = new List<Task>();
                 foreach (var item in results)
                 {
@@ -302,7 +312,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var id = await _rpCourrier.Create(hoso);
             if (!string.IsNullOrWhiteSpace(hoso.LastNote))
             {
-               
+
                 var note = new GhichuModel
                 {
                     Noidung = hoso.LastNote,
@@ -337,7 +347,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetEmployeesFromOne(int id)
         {
-            
+
             var employee = await _rpCourierProfile.GetEmployeeById(id);
             if (employee == null)
                 return ToJsonResponse(false, null, null);
