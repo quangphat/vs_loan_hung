@@ -134,6 +134,7 @@
                                     <th class="w-94">Ngày tạo</th>
                                     <th class="w-84">Đối tác</th>
                                     <th class="w-105">CMND</th>
+                                    <th class="w-105">Phone</th>
                                     <th class="m-w-150">Tên khách hàng</th>
                                     <th style="width: 150px">Trạng thái</th>
                                     <th class="m-w-300">Ghi chú</th>
@@ -524,6 +525,7 @@
             + renderTextLeft(rowData.NgayTao, 'datetime')
             + renderTextLeft(rowData.DoiTac)
             + renderTextLeft(rowData.CMND)
+            + renderTextLeft(rowData.Phone)
             + renderTextLeft(rowData.TenKH)
             + renderStatus(rowData.MaTrangThai, rowData.TrangThaiHS)
             + renderTextLeft(rowData.GhiChu, '', 'tb-row-breakword')
