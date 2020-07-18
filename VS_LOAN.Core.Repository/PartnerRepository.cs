@@ -10,6 +10,7 @@ using VS_LOAN.Core.Repository.Interfaces;
 using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Nhibernate;
 using VS_LOAN.Core.Utility.Exceptions;
+using VS_LOAN.Core.Entity;
 
 namespace VS_LOAN.Core.Repository
 {
@@ -33,6 +34,15 @@ namespace VS_LOAN.Core.Repository
             {
                 return null;
             }
+        }
+        public async Task<List<OptionSimple>> GetListForCheckCustomerDuplicateAsync()
+        {
+            using (var con = GetConnection())
+            {
+                var result = await _connection.QueryAsync<OptionSimple>("sp_getListPartnerForCustomerCheck", commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+
         }
         public async Task<int> LayMaDoiTac(int maSanPham)
         {

@@ -67,7 +67,6 @@ namespace VS_LOAN.Core.Entity
         Giaingan = 5,
         Finish = 6,
         Cancel = 7,
-
         Nhaplieu = 8,
         Thamdinh = 9,
         BosungHoso = 10,
