@@ -19,7 +19,7 @@ namespace VietStar.Repository
         {
             using (var con = GetConnection())
             {
-                var result = await con.QueryFirstOrDefaultAsync<Account>($"sp_NHAN_VIEN_Login", new
+                var result = await con.QueryFirstOrDefaultAsync<Account>("sp_Employee_Login", new
                 {
                     userName,
                     password

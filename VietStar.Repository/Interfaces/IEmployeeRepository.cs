@@ -8,6 +8,6 @@ namespace VietStar.Repository.Interfaces
 {
     public interface IEmployeeRepository
     {
-        Task<Account> Login(string userName, string password)
+        Task<Account> Login(string userName, string password);
     }
 }
