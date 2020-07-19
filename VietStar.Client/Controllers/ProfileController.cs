@@ -14,7 +14,7 @@ namespace VietStar.Client.Controllers
         public ProfileController(CurrentProcess process) : base(process)
         {
         }
-        [MyAuthorize(Permissions ="dd")]
+        [MyAuthorize(Permissions ="profile")]
         public IActionResult Index()
         {
             return View();
