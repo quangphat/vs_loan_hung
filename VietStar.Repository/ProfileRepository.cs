@@ -17,5 +17,9 @@ namespace VietStar.Repository
         public ProfileRepository(IConfiguration configuration) : base(configuration)
         {
         }
+        //public async Gets()
+        //{
+
+        //}
     }
 }
