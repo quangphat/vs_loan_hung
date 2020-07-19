@@ -16,5 +16,6 @@ namespace VietStar.Client.Controllers
         {
             return View();
         }
+        
     }
 }
