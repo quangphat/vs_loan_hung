@@ -83,8 +83,8 @@
                                             </label>
                                             <label class="block clearfix">
                                                 <span class="block input-icon input-icon-right">
-                                                    <input type="password" id="password" name="password" class="form-control" 
-                                                           placeholder="Mật khẩu" data-val="true" data-val-required="Vui lòng nhập mật khẩu" value="@ViewBag.Password" />
+                                                    <input type="password" id="password" name="password" class="form-control"
+                                                           placeholder="Mật khẩu" data-val="true" data-val-required="Vui lòng nhập mật khẩu" value="" />
                                                     <i class="ace-icon fa fa-lock"></i>
                                                 </span>
                                                 <span class="has-error" data-valmsg-for="password" data-valmsg-replace="true"></span>
@@ -92,7 +92,7 @@
                                             <div class="space"></div>
                                             <div class="clearfix">
                                                 <label class="inline">
-                                                    <input type="checkbox"  id="rememberMe" name="rememberMe" />
+                                                    <input type="checkbox" id="rememberMe" name="rememberMe" />
                                                     <span class="lbl">&nbsp;Lưu thông tin đăng nhập</span>
                                                 </label>
 
@@ -123,5 +123,61 @@
         </div>
         <!-- /.main-content -->
     </div>
+    <script>
+        $("#userName").focus();
+        $("#userName").keypress(function (e) {
+            if (e.which == 13) {
+                $("#password").focus();
+            }
+        });
+        $("#password").keypress(function (e) {
+            if (e.which == 13) {
+                DoLogint(e);
+            }
+        });
 
+        $('#btn_login').click(function (evt) {
+            DoLogint(evt);
+        });
+        function addAlert(message) {
+            $('#login_alert').empty();
+            $('#login_alert').append(
+                '<div class="alert alert-danger">' +
+                '<button type="button" class="close" data-dismiss="alert"><i class="ace-icon fa fa-times"></i></button>' +
+                '<strong><i class="ace-icon fa fa-exclamation-triangle bigger-120"></i></strong>' + message + '</div>');
+        }
+
+        function DoLogint(event) {
+            let data = {
+                "UserName": $("#userName").val(),
+                "Password": $("#password").val(),
+                "Rememberme": $('#rememberMe').is(":checked")
+            };
+            
+            $.ajax({
+                type: "POST",
+                datatype: "JSON",
+                url: '/Account/LoginApi',
+                data: data,
+                success: function (data) {
+                    
+                    if (data.success == false) {
+                        addAlert(data.code);
+                        $("#userName").focus();
+                    }
+                    else {
+                        window.location = data.data;
+                    }
+                },
+                error: function (jqXHR, exception) {
+                   
+                },
+                complete: function () {
+                    
+                },
+            });
+
+        }
+    </script>
 </body>
+</html>

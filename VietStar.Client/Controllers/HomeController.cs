@@ -12,17 +12,15 @@ namespace VietStar.Client.Controllers
 {
     public class HomeController : Controller
     {
-        
+        [Authorize]
         public IActionResult Index()
         {
             
-            HttpContext.Session.SetString("username", "quangphat");
             return View();
         }
 
         public IActionResult Privacy()
         {
-            var username = HttpContext.Session.GetString("username");
             return View();
         }
 
