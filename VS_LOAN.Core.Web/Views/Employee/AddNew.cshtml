@@ -48,7 +48,7 @@
                 <div class="hr hr16 dotted"></div>
             </div>
             <div class="col-sm-9" id="panel_body">
-                <form class="form-horizontal" role="form" autocomplete="off" id="frm_doimatkhau">
+               
                     <div class="tabbable">
                         <ul class="nav nav-tabs padding-16">
                             <li class="active">
@@ -63,94 +63,96 @@
                             <div id="info" class="tab-pane  in active">
                                 <div class="space-10"></div>
                                 <div class="form-group">
+                                    
+                                        <div class="profile-user-info profile-user-info-striped">
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name">@Global.NhanVien_UserProfile_Name: </div>
 
-                                    <div class="profile-user-info profile-user-info-striped">
-                                        <div class="profile-info-row">
-                                            <div class="profile-info-name">@Global.NhanVien_UserProfile_Name: </div>
-
-                                            <div class="profile-info-value col-sm-4">
-                                                <input type="text" id="txtFullName" placeholder="Họ tên" class="form-control">
+                                                <div class="profile-info-value col-sm-4">
+                                                    <input type="text" id="txtFullName" placeholder="Họ tên" class="form-control">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="profile-info-row">
-                                            <div class="profile-info-name"> @Global.NhanVien_UserProfile_Email: </div>
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> @Global.NhanVien_UserProfile_Email: </div>
 
-                                            <div class="profile-info-value col-sm-4">
-                                                <input type="text" id="txtEmail" placeholder="Email" class="form-control">
+                                                <div class="profile-info-value col-sm-4">
+                                                    <input type="text" id="txtEmail" placeholder="Email" autocomplete="off" value=" " class="form-control">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="profile-info-row">
-                                            <div class="profile-info-name"> @Global.NhanVien_UserProfile_Phone: </div>
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> @Global.NhanVien_UserProfile_Phone: </div>
 
-                                            <div class="profile-info-value col-sm-4">
-                                                <input type="text" id="txtPhone" placeholder="Số điện thoại" class="form-control">
+                                                <div class="profile-info-value col-sm-4">
+                                                    <input type="text" id="txtPhone" placeholder="Số điện thoại" class="form-control">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="profile-info-row">
-                                            <div class="profile-info-name"> Ngày vào làm: </div>
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> Ngày vào làm: </div>
 
-                                            <div class="profile-info-value col-sm-4">
-                                                <div class="input-group">
-                                                    <input class="form-control date-picker" id="txtWorkDate" />
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-calendar bigger-110"></i>
-                                                    </span>
+                                                <div class="profile-info-value col-sm-4">
+                                                    <div class="input-group">
+                                                        <input class="form-control date-picker" value=" " id="txtWorkDate" autocomplete="off" />
+                                                        <span class="input-group-addon">
+                                                            <i class="fa fa-calendar bigger-110"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name"> Tên đăng nhập: </div>
+
+                                                <div class="profile-info-value col-sm-4">
+                                                    <input type="text" id="txtUserNameddd" value=""
+                                                           placeholder="Nhập tên đăng nhập" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name">Mật khẩu: </div>
+
+                                                <div class="profile-info-value col-sm-4">
+                                                    <input type="password" id="txtPass" placeholder="Mật khẩu" value=" " autocomplete="off" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name">Xác nhận mật khẩu: </div>
+
+                                                <div class="profile-info-value col-sm-4">
+                                                    <input type="password" id="txtConfirmPass" placeholder="Xác nhận lại" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name">Mã nhân viên: </div>
+
+                                                <div class="profile-info-value col-sm-4">
+                                                    <input type="text" id="txtCode" placeholder="Mã nhân viên" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name">Tỉnh/Thành phố: </div>
+
+                                                <div class="profile-info-value col-sm-4">
+                                                    <select id="ddlProvince" class="chosen-select form-control" data-placeholder="Chọn tỉnh/thành phố">
+                                                        <option value="0"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name">Quận/Huyện: </div>
+                                                <div class="profile-info-value col-sm-4">
+                                                    <select id="ddlDistrict" class="chosen-select form-control" data-placeholder="Chọn quận/huyện">
+                                                        <option value="0"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="profile-info-row">
+                                                <div class="profile-info-name">Loại nhân viên: </div>
+                                                <div class="profile-info-value col-sm-4">
+                                                    <select id="ddlRole" class="chosen-select form-control" data-placeholder="Chọn loại"></select>
+
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="profile-info-row">
-                                            <div class="profile-info-name"> @Global.NhanVien_UserProfile_UserName: </div>
-
-                                            <div class="profile-info-value col-sm-4">
-                                                <input type="text" id="txtUserName" placeholder="Nhập mã nhân viên" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="profile-info-row">
-                                            <div class="profile-info-name">Mật khẩu: </div>
-
-                                            <div class="profile-info-value col-sm-4">
-                                                <input type="password" id="txtPass" placeholder="Mật khẩu" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="profile-info-row">
-                                            <div class="profile-info-name">Xác nhận mật khẩu: </div>
-
-                                            <div class="profile-info-value col-sm-4">
-                                                <input type="password" id="txtConfirmPass" placeholder="Xác nhận mật khẩu" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="profile-info-row">
-                                            <div class="profile-info-name">Mã nhân viên: </div>
-
-                                            <div class="profile-info-value col-sm-4">
-                                                <input type="text" id="txtCode" placeholder="Mã nhân viên" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="profile-info-row">
-                                            <div class="profile-info-name">Tỉnh/Thành phố: </div>
-
-                                            <div class="profile-info-value col-sm-4">
-                                                <select id="ddlProvince" class="chosen-select form-control" data-placeholder="Chọn tỉnh/thành phố">
-                                                    <option value="0"></option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="profile-info-row">
-                                            <div class="profile-info-name">Quận/Huyện: </div>
-                                            <div class="profile-info-value col-sm-4">
-                                                <select id="ddlDistrict" class="chosen-select form-control" data-placeholder="Chọn quận/huyện">
-                                                    <option value="0"></option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="profile-info-row">
-                                            <div class="profile-info-name">Loại nhân viên: </div>
-                                            <div class="profile-info-value col-sm-4">
-                                                <select id="ddlRole" class="chosen-select form-control" data-placeholder="Chọn loại"></select>
-
-                                            </div>
-                                        </div>
-                                    </div>
+                                    
                                     <div class="clearfix form-actions">
                                         <div class="col-md-offset-3 col-md-9">
                                             <button class="btn btn-info" type="button" id="btnSave">
@@ -165,7 +167,7 @@
                             </div>
                         </div>
                     </div>
-                </form>
+                
             </div>
         </div>
 
@@ -173,15 +175,12 @@
 </div>
 <script>
     var strLoading = '@Html.Raw(Global.Message_Loading)';
-</script>
-<script type="text/ecmascript">
     $('#btn_reset_matkhau').click(function (evt) {
         $('#newPassword').val('');
         $('#oldPassword').val('');
         $('#confirmPassword').val('');
     });
-</script>
-<script>
+
     var nhanvien = {
         UserName: '',
         Password: '',
@@ -194,6 +193,22 @@
         WorkDate:''
     }
     $(document).ready(function e() {
+        //$('form[autocomplete="off"] input, input[autocomplete="off"]').each(function () {
+
+        //    var input = this;
+        //    var name = $(input).attr('name');
+        //    var id = $(input).attr('id');
+
+        //    $(input).removeAttr('name');
+        //    $(input).removeAttr('id');
+
+        //    setTimeout(function () {
+        //        $(input).attr('name', name);
+        //        $(input).attr('id', id);
+        //    }, 10);
+        //}); 
+        
+        
         setDateTimeInput("#txtWorkDate")
         $("#txtPhone").ForceNumericOnly();
         getProvinces("#ddlProvince");
@@ -201,9 +216,10 @@
             getDistricts("#ddlDistrict", this.value);
         });
         $('#btnSave').click(function (e) {
-            createUser();
+            //createUser();
         })
-        getRoles("#ddlRole", true,"Chọn loại nhân viên");
+        getRoles("#ddlRole", true, "Chọn loại nhân viên");
+        $("#txtUserName").val('        ');
     })
 
     function createUser() {

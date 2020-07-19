@@ -55,8 +55,8 @@
                                     @Global.NhanVien_UserProfile_Info
                                 </a>
                             </li>
-                            <li id="tab_changePass" class="" onclick="setThisActive('tab_changePass')">
-                                <a data-toggle="tab" href="#edit-password" aria-expanded="false">
+                            <li id="tab_changePass" class="" onclick="setThisActive('tab_changePass')" style="display:block">
+                                <a data-toggle="tab" href="#edit-password" aria-expanded="true">
                                     <i class="blue ace-icon fa fa-key bigger-125"></i>
                                     <span>Đổi mật khẩu</span>
                                 </a>
@@ -113,7 +113,7 @@
                                             <div class="profile-info-name"> @Global.NhanVien_UserProfile_UserName: </div>
 
                                             <div class="profile-info-value col-sm-4">
-                                                <input type="text" id="txtUserName" placeholder="Tên đăng nhập" class="form-control">
+                                                <input type="text" id="txtUserName" readonly placeholder="Tên đăng nhập" class="form-control">
                                             </div>
                                         </div>
 
@@ -156,13 +156,7 @@
                             </div>
                             <div id="edit-password" class="tab-pane">
                                 <div class="space-10"></div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label no-padding-right" for="form-field-pass1">@Global.NhanVien_UserProfile_Password_PassOld</label>
-                                    <div class="col-sm-9">
-                                        <input type="password" class="col-sm-4" name="oldPassword" id="oldPass" />
-                                    </div>
-                                    <div class="space-4"></div>
-                                </div>
+                                
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label no-padding-right" for="form-field-pass1">@Global.NhanVien_UserProfile_Password_PassNew</label>
                                     <div class="col-sm-9">
@@ -208,19 +202,8 @@
     var employee = @Html.Raw(Json.Encode(ViewBag.employee));
     var account = @Html.Raw(Json.Encode(ViewBag.account));
     $(document).ready(function e() {
-        $("#tab_changePass").hide();
-        //if (!isNullOrUndefined(account)) {
-            
-        //    if (account.IDUser != employee.ID) {
-        //        $("#tab_changePass").hide();
-        //    }
-        //    else {
-
-        //    }
-        //}
-        //else {
-        //    $("#tab_changePass").hide();
-        //}
+        //$("#tab_changePass").hide();
+        
         $('#btn_reset_matkhau').click(function (evt) {
             $('#newPassword').val('');
             $('#oldPassword').val('');
@@ -232,7 +215,7 @@
         $("#txtPhone").ForceNumericOnly();
         getProvinces("#ddlProvince", employee.ProvinceId, employee.DistrictId);
         $('#ddlProvince').on('change', function () {
-            getDistricts(this.value, "#ddlDistrict", 0);
+            getDistricts("#ddlDistrict",this.value , 0);
         });
         bindToControl(employee)
         $('#btnSave').click(function (e) {
@@ -243,8 +226,8 @@
     function setThisActive(id) {
         if (isNullOrWhiteSpace(id))
             return
-        document.getElementsByTagName("LI").removeClass("active");
-        $("#" + id).addClass("active")
+        $("#" + id).closest("li").removeClass("active")
+        //$("#" + id).addClass("active")
     }
     function bindToControl(employee) {
         $("#txtFullName").val(employee.Ho_Ten);
@@ -368,22 +351,12 @@
     function ChangePass(e) {
 
         let model = {
-            Id: employee.Id,
-            OldPass : $("#oldPass").val(),
-            NewPass : $("#newPass").val(),
-            ConfirmPass : $("#confirmPass").val(),
+            Id: employee.ID,
+            Password : $("#newPass").val(),
+            Confirm : $("#confirmPass").val(),
         }
-        if (isNullOrWhiteSpace(model.OldPass)) {
-            swal({
-                title: "Lỗi",
-                text: "Mật khẩu không được để trống",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if (isNullOrWhiteSpace(model.NewPass)) {
+       
+        if (isNullOrWhiteSpace(model.Password)) {
             swal({
                 title: "Lỗi",
                 text: "Mật khẩu mới không được để trống",
@@ -393,7 +366,7 @@
             });
             return;
         }
-        if (isNullOrWhiteSpace(model.ConfirmPass)) {
+        if (isNullOrWhiteSpace(model.Confirm)) {
             swal({
                 title: "Lỗi",
                 text: "Xác nhận Mật khẩu mới không được để trống",
@@ -403,19 +376,10 @@
             });
             return;
         }
-        if (model.ConfirmPass != model.NewPass) {
-            swal({
-                title: "Lỗi",
-                text: "Mật khẩu không khớp",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
+        
         $.ajax({
             traditional: true,
-            url: '/account/reset',
+            url: '/Employee/ResetPassword',
             type: "POST",
             contentType: "application/json;",
             dataType: 'json',
@@ -429,14 +393,14 @@
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-                        window.location = "/employee"
+                        window.location = window.location
                     });
 
                 }
                 else {
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
-                        text: data.error.code,
+                        text: data.code,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,

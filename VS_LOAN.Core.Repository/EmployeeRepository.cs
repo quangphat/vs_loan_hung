@@ -143,14 +143,15 @@ namespace VS_LOAN.Core.Repository
             }
 
         }
-        public async Task<bool> ResetPassord(string userName, string password)
+        public async Task<bool> ResetPassord(int id, string password, int updatedBy)
         {
             using (var con = GetConnection())
             {
                 await con.ExecuteAsync("sp_ResetPassword",
                     new {
-                        username = userName,
-                        password = password
+                        id,
+                        password,
+                        updatedBy
                     }, commandType: CommandType.StoredProcedure);
                 return true;
             }
