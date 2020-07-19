@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using VietStar.Entities.Infrastructures;
+using VietStar.Entities.Messages;
 
 namespace VietStar.Business
 {
@@ -23,7 +24,7 @@ namespace VietStar.Business
         {
             if (string.IsNullOrWhiteSpace(_process.User.UserName))
             {
-                //AddError(errors.error_login_expected);
+                AddError(Errors.error_login_expected);
                 return true;
             }
             return false;
