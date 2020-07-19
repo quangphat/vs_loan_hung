@@ -44,8 +44,11 @@ namespace VietStar.Client.Controllers
                 claims.Add(new Claim("Code", account.Code));
             if (!string.IsNullOrWhiteSpace(account.Rolecode))
                 claims.Add(new Claim("RoleCode", account.Rolecode));
+            if (account.Permissions.Any())
+            {
+                claims.Add(new Claim("Scopes", string.Join(",", account.Permissions.ToArray())));
+            }
 
-            
             var userIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
             ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);

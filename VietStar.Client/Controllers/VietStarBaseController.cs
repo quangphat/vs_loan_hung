@@ -15,6 +15,7 @@ namespace VietStar.Client.Controllers
         public VietStarBaseController(CurrentProcess process)
         {
             _process = process;
+            
         }
         private JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings
         {

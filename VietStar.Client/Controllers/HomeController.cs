@@ -3,16 +3,20 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using KingOffice.Infrastructures;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VietStar.Client.Models;
+using VietStar.Entities.Infrastructures;
 
 namespace VietStar.Client.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : VietStarBaseController
     {
-        [Authorize]
+        public HomeController(CurrentProcess process) : base(process)
+        {
+        }
         public IActionResult Index()
         {
             

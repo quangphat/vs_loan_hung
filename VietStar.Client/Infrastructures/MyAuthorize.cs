@@ -17,7 +17,6 @@ namespace KingOffice.Infrastructures
     public class MyAuthorize : ActionFilterAttribute, IActionFilter
     {
         public string Permissions { get; set; }
-        public CurrentProcess _process { get; set; }
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             base.OnActionExecuting(context);
@@ -34,20 +33,27 @@ namespace KingOffice.Infrastructures
             {
                 throw new ArgumentNullException("httpContext");
             }
-
-
             var user = httpContext.User;
             if (user == null || !user.Identity.IsAuthenticated)
             {
                 return false;
             }
-            if (_process == null || _process.User == null)
+            List<Claim> list = user.Claims?.ToList();
+            if (list == null || !list.Any())
                 return false;
+            string scopeStr = list.FirstOrDefault((Claim a) => a.Type == "Scopes")?.Value;
+
+            if (string.IsNullOrWhiteSpace(scopeStr))
+            {
+                if (string.IsNullOrWhiteSpace(Permissions))
+                    return true;
+                return false;
+            }
             if (string.IsNullOrWhiteSpace(Permissions))
-                return false;
-            
-            var userScopes = Permissions.Split(',').ToList();
-            var isInRole = userScopes.IsSubsetOf(_process.User.Permissions);
+                return true;
+            var userScopes = scopeStr.Split(',').ToList();
+            var allowPermission = Permissions.Split(',').ToList();
+            var isInRole = userScopes.Any(x => allowPermission.Contains(x));
             if (!isInRole)
                 return false;
 

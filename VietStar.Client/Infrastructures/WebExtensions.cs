@@ -70,6 +70,11 @@ namespace KingOffice.Infrastructures
                     account.Email = list.FirstOrDefault((Claim a) => a.Type == "Email")?.Value;
                     account.FullName = list.FirstOrDefault((Claim a) => a.Type == "FullName")?.Value;
                     account.Rolecode = list.FirstOrDefault((Claim a) => a.Type == "Rolecode")?.Value;
+                    string scopeStr = list.FirstOrDefault((Claim a) => a.Type == "Scopes")?.Value;
+                    if (!string.IsNullOrWhiteSpace(scopeStr))
+                    {
+                        account.Permissions = scopeStr.Split(',').ToList();
+                    }
                     return account;
                 }
                 return null;
