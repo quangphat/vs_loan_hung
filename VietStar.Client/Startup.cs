@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using VietStar.Business.Infrastructures;
 using VietStar.Entities.Infrastructures;
 using VietStar.Repository.Infrastructures;
 
@@ -42,6 +43,7 @@ namespace VietStar.Client
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
             services.RegisterRepository();
+            services.RegisterBusiness();
             services.AddDistributedMemoryCache();
             services.AddSession(options=>{
                 options.IdleTimeout = TimeSpan.FromMinutes(1);
