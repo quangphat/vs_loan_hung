@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
@@ -15,6 +16,20 @@ namespace VietStar.Repository
         public EmployeeRepository(IConfiguration configuration) : base(configuration)
         {
         }
+
+        public async Task<List<string>> GetPermissions(int userId)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryAsync<string>("sp_getPermissionByUserId", new
+                {
+                    userId,
+                    
+                }, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+
         public async Task<Account> Login(string userName, string password)
         {
             using (var con = GetConnection())

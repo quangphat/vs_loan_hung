@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace VietStar.Utility
 {
@@ -17,6 +19,10 @@ namespace VietStar.Utility
             System.Text.UTF8Encoding encoder = new System.Text.UTF8Encoding();
             hashedBytes = md5Hasher.ComputeHash(encoder.GetBytes(data));
             return hashedBytes;
+        }
+        public static bool IsSubsetOf<T>(this IEnumerable<T> a, IEnumerable<T> b)
+        {
+            return !a.Except(b).Any();
         }
     }
 }

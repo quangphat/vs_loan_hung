@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using VietStar.Business.Interfaces;
 using VietStar.Entities.Infrastructures;
 using VietStar.Entities.ViewModels;
 
@@ -16,7 +17,7 @@ namespace KingOffice.Infrastructures
         {
             _next = next;
         }
-        public async Task Invoke(HttpContext httpContext, CurrentProcess process)
+        public async Task Invoke(HttpContext httpContext, CurrentProcess process, IEmployeeBusiness rpEmployee)
         {
             var raw = httpContext.Session.Get(SESSION_KEY);
             if (raw == null)
@@ -31,6 +32,9 @@ namespace KingOffice.Infrastructures
                 httpContext.Session.Set(SESSION_KEY, raw);
             }
             Account account = Utils.FromBinary(raw);
+            var permission = await rpEmployee.GetPermission(account.Id);
+            //httpContext.User.Claims
+            account.Permissions = permission;
             process.User = account;
             await _next(httpContext);
         }

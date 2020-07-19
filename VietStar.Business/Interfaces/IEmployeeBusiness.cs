@@ -9,5 +9,6 @@ namespace VietStar.Business.Interfaces
     public interface IEmployeeBusiness
     {
         Task<Account> Login(LoginModel model);
+        Task<List<string>> GetPermission(int userId);
     }
 }

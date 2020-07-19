@@ -73,8 +73,9 @@ namespace VietStar.Client
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();
-            
             app.UseSession();
+            app.UseMiddleware<SessionHandler>();
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

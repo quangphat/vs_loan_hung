@@ -8,15 +8,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using VietStar.Entities.Infrastructures;
+using VietStar.Utility;
+
 namespace KingOffice.Infrastructures
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
     public class MyAuthorize : ActionFilterAttribute, IActionFilter
     {
-        public string Roles { get; set; }
+        public string Permissions { get; set; }
+        public CurrentProcess _process { get; set; }
         public override void OnActionExecuting(ActionExecutingContext context)
-        { 
-
+        {
+            base.OnActionExecuting(context);
             var result = AuthorizeCore(context.HttpContext);
             if (result)
                 return;
@@ -37,32 +41,18 @@ namespace KingOffice.Infrastructures
             {
                 return false;
             }
-            List<Claim> list = user.Claims?.ToList();
-            
-            if (list == null && list.Count == 0)
+            if (_process == null || _process.User == null)
                 return false;
-            string scopeStr = list.FirstOrDefault((Claim a) => a.Type == "Scopes")?.Value;
-            
-            if (string.IsNullOrWhiteSpace(scopeStr))
-            {
-                if (string.IsNullOrWhiteSpace(this.Roles))
-                    return true;
+            if (string.IsNullOrWhiteSpace(Permissions))
                 return false;
-            }
-            var userScopes = scopeStr.Split(',').ToArray();
-            if (string.IsNullOrWhiteSpace(this.Roles))
-                return true;
-            var roles = this.Roles.Split(',').ToArray();
-            var result = false;
-            foreach(var r in userScopes)
-            {
-                var exist = roles.FirstOrDefault(p => p == r);
-                if (exist == null)
-                    continue;
-                else
-                    result = true;
-            }
-            return result;
+            
+            var userScopes = Permissions.Split(',').ToList();
+            var isInRole = userScopes.IsSubsetOf(_process.User.Permissions);
+            if (!isInRole)
+                return false;
+
+            return true;
         }
+        
     }
 }

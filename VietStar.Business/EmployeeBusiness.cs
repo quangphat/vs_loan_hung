@@ -20,6 +20,12 @@ namespace VietStar.Business
             _rpEmployee = employeeRepository;
         }
 
+        public async Task<List<string>> GetPermission(int userId)
+        {
+            var result = await _rpEmployee.GetPermissions(userId);
+            return result;
+        }
+
         public async Task<Account> Login(LoginModel model)
         {
             if(model==null)
