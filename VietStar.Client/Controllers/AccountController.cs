@@ -60,5 +60,11 @@ namespace VietStar.Client.Controllers
             string url = "/Home/Index";
             return ToResponse(url);
         }
+        public async Task<IActionResult> LogOut()
+        {
+            HttpContext.Session.Clear();
+            await  HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return new SignOutResult(new[] { "Cookies" });
+        }
     }
 }

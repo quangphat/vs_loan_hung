@@ -224,10 +224,10 @@
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                        <a href="#" class="btn btn-default btn-flat">Thông tin của tôi</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                        <a id="btnSignOut" href="javascript:void(0);"  onclick="doLogout()" class="btn btn-default btn-flat">Đăng xuất</a>
                                     </div>
                                 </li>
                             </ul>
@@ -675,7 +675,19 @@
 
     <!-- AdminLTE App -->
     <script src="~/js/adminlte.min.js"></script>
-   
+   <script type="text/javascript">
+       function doLogout() {
+        $.ajax({
+            type: "POST",
+            datatype: "JSON",
+            url: '@Url.Action("Logout", "Account")',
+            success: function (data) {
+                 window.location = "/Account/Login";
+            },
+            error: function (jqXHR, exception) { if (jqXHR.status != 0) alert('Error'); }
+        });
+    };
+   </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
