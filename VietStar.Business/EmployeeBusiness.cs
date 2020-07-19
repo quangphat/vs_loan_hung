@@ -8,6 +8,7 @@ using VietStar.Entities.Infrastructures;
 using VietStar.Entities.Messages;
 using VietStar.Entities.ViewModels;
 using VietStar.Repository.Interfaces;
+using VietStar.Utility;
 
 namespace VietStar.Business
 {
@@ -33,8 +34,9 @@ namespace VietStar.Business
                 AddError(Errors.username_or_password_must_not_be_empty);
                 return null;
             }
+            var encodePass = Utils.getMD5(model.Password);
 
-            var account = await _rpEmployee.Login(model.UserName, model.Password);
+            var account = await _rpEmployee.Login(model.UserName, encodePass);
 
             if (account == null)
             {
