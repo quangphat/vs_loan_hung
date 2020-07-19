@@ -15,7 +15,6 @@ namespace VS_LOAN.Core.Repository.Interfaces
         Task<OptionSimple> GetEmployeeByCode(string code);
         Task<bool> CheckIsAdmin(int userId);
         Task<List<int>> GetPeopleIdCanViewMyProfile(int userId);
-        Task<bool> ResetPassord(string userName, string password);
         Task<List<NhanVienInfoModel>> GetCourierList();
         Task<List<OptionSimple>> GetByProvinceId(int provinceId);
         Task<List<IDictionary<string, object>>> QuerySQLAsync(string sql);
