@@ -1,13 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using VietStar.Business.Interfaces;
+using VietStar.Entities.Infrastructures;
+using VietStar.Entities.ViewModels;
 
 namespace VietStar.Client.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : VietStarBaseController
     {
+        protected readonly IEmployeeBusiness _bizEmployee;
+        public AccountController(IEmployeeBusiness employeeBusiness, CurrentProcess process) : base(process)
+        {
+            _bizEmployee = employeeBusiness;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -16,6 +28,34 @@ namespace VietStar.Client.Controllers
         {
             return View();
         }
-        
+        public async Task<IActionResult> LoginApi(LoginModel model)
+        {
+            var account = await _bizEmployee.Login(model);
+            if (account == null)
+                return ToResponse(false);
+            List<Claim> claims = new List<Claim>();
+            claims.Add(new Claim("Id", account.Id.ToString()));
+            claims.Add(new Claim("UserName", account.UserName));
+            if (!string.IsNullOrWhiteSpace(account.FullName))
+                claims.Add(new Claim("FullName", account.FullName));
+            if (!string.IsNullOrWhiteSpace(account.Email))
+                claims.Add(new Claim("Email", account.Email));
+            if (!string.IsNullOrWhiteSpace(account.Code))
+                claims.Add(new Claim("Code", account.Code));
+            if (!string.IsNullOrWhiteSpace(account.Rolecode))
+                claims.Add(new Claim("RoleCode", account.Rolecode));
+
+            
+            var userIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = model.Rememberme
+            };
+            await HttpContext.SignInAsync(principal, authProperties);
+            string url = "/Home/Index";
+            return ToResponse(url);
+        }
     }
 }
