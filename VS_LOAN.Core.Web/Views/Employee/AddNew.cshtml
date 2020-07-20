@@ -102,7 +102,7 @@
                                                 <div class="profile-info-name"> Tên đăng nhập: </div>
 
                                                 <div class="profile-info-value col-sm-4">
-                                                    <input type="text" id="txtUserNameddd" value=""
+                                                    <input type="text" id="txtUserName" value=""
                                                            placeholder="Nhập tên đăng nhập" class="form-control">
                                                 </div>
                                             </div>
@@ -110,7 +110,7 @@
                                                 <div class="profile-info-name">Mật khẩu: </div>
 
                                                 <div class="profile-info-value col-sm-4">
-                                                    <input type="password" id="txtPass" placeholder="Mật khẩu" value=" " autocomplete="off" class="form-control">
+                                                    <input type="password" id="txtPass" placeholder="Mật khẩu" value="" autocomplete="off" class="form-control">
                                                 </div>
                                             </div>
                                             <div class="profile-info-row">
@@ -234,78 +234,7 @@
         nhanvien.PasswordConfirm = $("#txtConfirmPass").val();
         nhanvien.ProvinceId = (!isNullOrWhiteSpace($("#ddlProvince").val()) && !isNullOrUndefined($("#ddlProvince").val())) ? parseInt($("#ddlProvince").val()) : 0;
         nhanvien.DistrictId = (!isNullOrWhiteSpace($("#ddlDistrict").val()) && !isNullOrUndefined($("#ddlDistrict").val())) ? parseInt($("#ddlDistrict").val()) : 0;
-        if (isNullOrWhiteSpace(nhanvien.UserName)) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Tên đăng nhập không được để trống",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if (isNullOrWhiteSpace(nhanvien.WorkDateStr) || isNullOrUndefined(nhanvien.WorkDateStr)) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn ngày vào làm",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        @*if (isNullOrWhiteSpace(nhanvien.Email)) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Email không được để trống",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }*@
-        if (isNullOrWhiteSpace(nhanvien.FullName)) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Họ tên không được để trống",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-         if (isNullOrWhiteSpace(nhanvien.Code)) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Mã nhân viên không được để trống",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if (nhanvien.ProvinceId <= 0) {
-            nhanvien.ProvinceId = 0;
-            @*swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn tỉnh/thành phố",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;*@
-        }
-        if (nhanvien.DistrictId <= 0) {
-            nhanvien.DistrictId =0
-            @*swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn quận/huyện",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;*@
-        }
+        
         $.ajax({
             traditional: true,
             url: '/employee/Create',
