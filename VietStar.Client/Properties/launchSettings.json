@@ -27,7 +27,7 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "Company": "Company"
+        "ASPNETCORE_ENVIRONMENT": "Company"
       },
       "applicationUrl": "http://vietstar.vn:53323"
     }
