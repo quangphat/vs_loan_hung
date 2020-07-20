@@ -5,7 +5,52 @@
 }
 <div class="row">
     <div class="col-xs-12">
-        <div class="box">
+       
+        <form class="form-horizontal">
+            <div class="box-body">
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">Ngày tạo</label>
+
+                    <div class="col-sm-4">
+                        <div class="input-group date">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            <input type="text" class="form-control pull-right" id="datepicker">
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="input-group date">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            <input type="text" class="form-control pull-right" id="datepicker">
+                        </div>
+                    </div>
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"> Ngày cập nhật
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword3" class="col-sm-2 control-label">Trạng thái</label>
+
+                    <div class="col-sm-8">
+                        <input type="password" class="form-control" id="inputPassword3" placeholder="">
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.box-body -->
+            <button type="submit" class="btn btn-info pull-right">Tìm kiếm</button>
+           
+            <!-- /.box-footer -->
+        </form>
+        <div class="clearfix"></div>
+        <div class="box" style="margin-top:50px;">
             <div class="box-header">
                 <h3 class="box-title">Data Table With Full Features</h3>
             </div>
@@ -31,11 +76,11 @@
                             <table id="example1" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
                                 <thead>
                                     <tr role="row">
-                                        <th class="" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending" style="width: 231px;">Rendering engine</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending" style="width: 282px;">Browser</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending" style="width: 251px;">Platform(s)</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending" style="width: 198px;">Engine version</th>
-                                        <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending" style="width: 145px;">CSS grade</th>
+                                        <th class=""  aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending"  style="width: 231px;">Rendering engine</th>
+                                        <th class=""  aria-controls="example1" rowspan="1" colspan="1" style="width: 282px;">Browser</th>
+                                        <th class="" aria-controls="example1" rowspan="1" colspan="1"  style="width: 251px;">Platform(s)</th>
+                                        <th class="" aria-controls="example1" rowspan="1" colspan="1"  style="width: 198px;">Engine version</th>
+                                        <th class="" aria-controls="example1" rowspan="1" colspan="1"  style="width: 145px;">CSS grade</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -149,35 +194,35 @@
                 limit = parseInt(limit)
             getData(page, limit, memberId, true)
         });
-        var input = document.getElementById("txtFreeText");
-        input.addEventListener("keyup", function (event) {
-            if (event.keyCode === 13) {
-                event.preventDefault();
-                $("#btn_search").click();
-            }
-        });
+        //var input = document.getElementById("txtFreeText");
+        //input.addEventListener("keyup", function (event) {
+        //    if (event.keyCode === 13) {
+        //        event.preventDefault();
+        //        $("#btn_search").click();
+        //    }
+        //});
 
-        $('#ddlThanhVienNhom').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddlNhom').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddllimit').chosen({ width: '100%', allow_single_deselect: true });
-        $('#txtFromDate').datepicker({
-            dateFormat: 'dd-mm-yy'
-        }).next().on(ace.click_event, function () {
-            $(this).prev().focus();
-        });
-        $('#txtToDate').datepicker({
-            dateFormat: 'dd-mm-yy'
-        }).next().on(ace.click_event, function () {
-            $(this).prev().focus();
-        });
+        //$('#ddlThanhVienNhom').chosen({ width: '100%', allow_single_deselect: true });
+        //$('#ddlNhom').chosen({ width: '100%', allow_single_deselect: true });
+        //$('#ddllimit').chosen({ width: '100%', allow_single_deselect: true });
+        //$('#txtFromDate').datepicker({
+        //    dateFormat: 'dd-mm-yy'
+        //}).next().on(ace.click_event, function () {
+        //    $(this).prev().focus();
+        //});
+        //$('#txtToDate').datepicker({
+        //    dateFormat: 'dd-mm-yy'
+        //}).next().on(ace.click_event, function () {
+        //    $(this).prev().focus();
+        //});
 
-        var status = decodeURI(queries.get("status"))
-        if (!isNullOrWhiteSpace(status)) {
-            let arrStatus = status.split(',')
-            $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
-        }
+        //var status = decodeURI(queries.get("status"))
+        //if (!isNullOrWhiteSpace(status)) {
+        //    let arrStatus = status.split(',')
+        //    $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
+        //}
 
-        bindQueries()
+        //bindQueries()
     });
             function bindQueries() {
 
@@ -432,7 +477,7 @@
         });
 
     }
-    var dsNhom = @Html.Raw(Json.Serialize(@ViewBag.DSNhom));
+    @*var dsNhom = @Html.Raw(Json.Serialize(@ViewBag.DSNhom));
     $(document).ready(function () {
         if (dsNhom.length > 0)
             LayNhom();
@@ -451,7 +496,7 @@
             //InitTable();
         }
 
-    });
+    });*@
 
     function getData(page, limit, memberId = 0, isPopState = false)
     {
