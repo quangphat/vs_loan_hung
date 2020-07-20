@@ -17,9 +17,27 @@ namespace VietStar.Repository
         public ProfileRepository(IConfiguration configuration) : base(configuration)
         {
         }
-        //public async Gets()
-        //{
-
-        //}
+        public async Task<List<ProfileIndexModel>> Gets(int userId, DateTime fromDate, DateTime toDate,int dateType = 1 , int groupId = 0, int memberId =0,string status = null, string freeText = null, int page = 1, int limit = 20)
+        
+        {
+            ProcessInputPaging(page, ref limit, out offset);
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryAsync<ProfileIndexModel>("sp_HO_SO_TimHoSoQuanLy", new
+                {
+                    userId,
+                    groupId,
+                    memberId,
+                    fromDate,
+                    toDate,
+                    dateType,
+                    status,
+                    freeText,
+                    offset,
+                    limit
+                },commandType:CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
     }
 }

@@ -130,3 +130,92 @@ end
 
 
 ------------------------
+
+--keep old Name
+
+ALTER PROCEDURE [dbo].[sp_HO_SO_TimHoSoQuanLy] 
+	-- Add the parameters for the stored procedure here
+	@offset int,
+	@limit int,
+	@userId int,
+	@groupId int,
+	@memberId int,
+	@fromDate datetime,
+	@toDate datetime,
+	@status varchar(50),
+	@freeText as varchar(50) = '',
+	@dateType int = 1
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	if @freeText = '' begin set @freeText = null end;
+	set @status += ''
+	Declare @DSNhomQL TABLE(ID int)
+	if(@groupId = 0)
+	Begin
+	-- Lay nhom la thanh vien
+	Insert Into @DSNhomQL Select NHAN_VIEN_NHOM.Ma_Nhom From NHAN_VIEN_NHOM Where NHAN_VIEN_NHOM.Ma_Nhan_Vien = @userId
+	-- Lay nhom con truc tiep (nv la nguoi quan ly)
+	Insert Into @DSNhomQL Select NHOM.ID From NHOM Where NHOM.Ma_Nhom_Cha in (select * from @DSNhomQL)
+	-- Lay ds nhom tu nhom quan ly truc tiep tro xuong
+	Insert Into @DSNhomQL Select distinct NHOM.ID From NHOM Where 
+	(Select COUNT(*) From fn_SplitStringToTable(NHOM.Chuoi_Ma_Cha, '.') 
+		Where CONVERT(int, value) in (Select * From @DSNhomQL)) > 0
+	End
+	Select count(*) over() as TotalRecord, HO_SO.ID, HO_SO.Ma_Ho_So as ProfileCode
+	, HO_SO.Ngay_Tao as CreatedTime, DOI_TAC.Ten as PartnerName, HO_SO.CMND,
+	 HO_SO.Ten_Khach_Hang as CustomerName,HO_SO.Ma_Trang_Thai as Status 
+	 ,TRANG_THAI_HS.Ten as StatusName, HO_SO.Ngay_Cap_Nhat as UpdatedTime, NV1.Ho_Ten as EmployeeName,
+	  HO_SO.Dia_Chi as Address,kvt.Ten as ProvinceName, 
+	  fintechcom_vn_PortalNew.fn_getGhichuByHosoId(HO_SO.ID,1) as LastNote
+	  , NV3.Ma as MaNVLayHS,
+	CASE WHEN ((Select COUNT(*) From NHAN_VIEN_NHOM 
+	Where NHAN_VIEN_NHOM.Ma_Nhan_Vien = HO_SO.Ma_Nguoi_Tao) = 0) 
+	THEN '' ELSE (Select Top(1) NHOM.Ten From NHOM, NHAN_VIEN_NHOM 
+	Where NHAN_VIEN_NHOM.Ma_Nhom = NHOM.ID and NHAN_VIEN_NHOM.Ma_Nhan_Vien = HO_SO.Ma_Nguoi_Tao)
+	 END as DoiNguBanHang, 
+	 SAN_PHAM_VAY.Ten as TenSanPham
+	From HO_SO left join NHAN_VIEN as NV1 on HO_SO.Ma_Nguoi_Tao = NV1.ID
+		left join NHAN_VIEN as NV2 on HO_SO.Ma_Nguoi_Cap_Nhat = NV2.ID
+		left join NHAN_VIEN as NV3 on HO_SO.Courier_Code = NV3.ID
+		left join KHU_VUC kvh on kvh.ID=HO_SO.Ma_Khu_Vuc
+		left join KHU_VUC kvt on kvt.ID=kvh.Ma_Cha
+	, DOI_TAC, SAN_PHAM_VAY,TRANG_THAI_HS, KET_QUA_HS
+	Where HO_SO.San_Pham_Vay = SAN_PHAM_VAY.ID
+	and SAN_PHAM_VAY.Ma_Doi_Tac = DOI_TAC.ID
+	and (
+			(@memberId > 0 and HO_SO.Ma_Nguoi_Tao = @memberId) 
+			or (@groupId > 0 and @groupId = 0 and HO_SO.Ma_Nguoi_Tao in (
+			Select NHAN_VIEN_NHOM.Ma_Nhan_Vien 
+			From NHAN_VIEN_NHOM Where NHAN_VIEN_NHOM.Ma_Nhom in 
+			(Select NHOM.ID From NHOM Where 
+			((NHOM.Chuoi_Ma_Cha + '.' + Convert(nvarchar, NHOM.ID)) like '%.' + Convert(nvarchar, @groupId) + '.%') 
+			or ((NHOM.Chuoi_Ma_Cha + '.' + Convert(nvarchar, NHOM.ID)) like '%.' + Convert(nvarchar, @groupId)) or NHOM.ID = @groupId)
+			))
+			or (@groupId = 0 and HO_SO.Ma_Nguoi_Tao in (Select NVN1.Ma_Nhan_Vien From NHAN_VIEN_NHOM as NVN1 
+			Where NVN1.Ma_Nhom in (Select * From @DSNhomQL)) and @memberId = 0)
+	)
+	and HO_SO.Ma_Trang_Thai = TRANG_THAI_HS.ID
+	and HO_SO.Ma_Ket_Qua = KET_QUA_HS.ID
+	and ((HO_SO.Ngay_Tao between @fromDate and @toDate and @dateType = 1) 
+	or (HO_SO.Ngay_Cap_Nhat between @fromDate and @toDate and @dateType = 2))
+	and HO_SO.Da_Xoa = 0
+	and HO_SO.Ma_Trang_Thai in  (Select CONVERT(int,Value) From dbo.fn_SplitStringToTable(@status, ','))
+	and (@freeText is null or HO_SO.Ma_Ho_So like N'%' + @freeText + '%'
+		or DOI_TAC.Ten like N'%' + @freeText + '%'
+		or HO_SO.CMND like N'%' + @freeText + '%'
+		or HO_SO.Ten_Khach_Hang like N'%' + @freeText + '%'
+		or KET_QUA_HS.Ten like N'%' + @freeText + '%'
+		or NV1.Ma like N'%' + @freeText + '%'
+		or NV1.Ho_Ten like N'%' + @freeText + '%'
+		or NV2.Ma like N'%' + @freeText + '%'
+		or NV3.Ma like N'%' + @freeText + '%'
+		or kvt.Ten like N'%' + @freeText + '%'
+		or SAN_PHAM_VAY.Ten like N'%' + @freeText + '%'
+	)
+	order by HO_SO.Ngay_Cap_Nhat desc
+	offset @offset ROWS FETCH NEXT @limit ROWS ONLY
+END
+
+---------------

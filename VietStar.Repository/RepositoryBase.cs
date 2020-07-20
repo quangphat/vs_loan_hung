@@ -12,7 +12,7 @@ namespace VietStar.Repository
     {
         private IDbConnection _connection;
         protected readonly IConfiguration _configuration;
-
+        protected int offset;
         public RepositoryBase(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -29,6 +29,15 @@ namespace VietStar.Repository
             var p = new DynamicParameters();
             p.Add(name, dbType: type, direction: ParameterDirection.Output);
             return p;
+        }
+        protected void ProcessInputPaging(int page, ref int limit, out int offset)
+        {
+            page = page <= 0 ? 1 : page;
+            if (limit <= 0)
+                limit = 20;
+            if (limit > 1000)
+                limit = 100;
+            offset = (page - 1) * limit;
         }
     }
 }
