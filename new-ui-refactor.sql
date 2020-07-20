@@ -7,6 +7,8 @@
 --EXEC sp_rename '[Employee].Dien_Thoai', 'Phone', 'COLUMN'
 --EXEC sp_rename '[Employee].Trang_Thai', 'Status', 'COLUMN'
 --EXEC sp_rename '[Employee].Xoa', 'IsDeleted', 'COLUMN'
+
+
 ------------------
 --EXEC sp_rename 'dbo.HO_SO', 'Profile'
 --EXEC sp_rename '[Profile].Ma_Ho_so', 'Code', 'COLUMN'
@@ -30,6 +32,8 @@
 --EXEC sp_rename '[Profile].Han_Vay', 'LoanPeriod', 'COLUMN'
 --EXEC sp_rename '[Profile].Ghi_Chu', 'LastNote', 'COLUMN'
 --EXEC sp_rename '[Profile].Da_Xoa', 'IsDeleted', 'COLUMN'
+
+
 ----------------------------
 create PROCEDURE [dbo].[sp_Employee_Login]
 	@UserName nvarchar(50),

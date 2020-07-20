@@ -1,7 +1,7 @@
-﻿{
+{
   "iisSettings": {
-    "windowsAuthentication": false, 
-    "anonymousAuthentication": true, 
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:53213",
       "sslPort": 44357
@@ -15,13 +15,21 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "VietStar.Client": {
+    "VietStar.Home": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "http://vietstar.vn:53323",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "applicationUrl": "http://vietstar.vn:53323"
+    },
+    "VietStar.Company": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "Company": "Company"
+      },
+      "applicationUrl": "http://vietstar.vn:53323"
     }
   }
 }
