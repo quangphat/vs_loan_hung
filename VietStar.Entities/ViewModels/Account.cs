@@ -15,5 +15,6 @@ namespace VietStar.Entities.ViewModels
         public string FullName { get; set; }
         public List<string> Permissions { get; set; }
         public string Phone { get; set; }
+        public bool IsActive { get; set; }
     }
 }

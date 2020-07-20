@@ -122,3 +122,11 @@ end
 
 ---------------------
 
+create procedure sp_Employee_GetStatus(@userId int)
+as
+begin
+ select Status from Employee where Id = @userId
+end
+
+
+------------------------

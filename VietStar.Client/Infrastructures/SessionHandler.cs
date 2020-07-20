@@ -31,10 +31,15 @@ namespace KingOffice.Infrastructures
                 raw = Utils.ToBinary(user);
                 httpContext.Session.Set(SESSION_KEY, raw);
             }
-            Account account = Utils.FromBinary(raw);
-            var permission = await rpEmployee.GetPermission(account.Id);
-            //httpContext.User.Claims
-            account.Permissions = permission;
+            var account = Utils.FromBinary(raw);
+            var isActive = await rpEmployee.GetStatus(account.Id);
+            if(!isActive && httpContext.Request.Path.Value != "/Account/Login")
+            {
+                
+                httpContext.Response.Redirect("/Account/Login");
+                return;
+            }
+           
             process.User = account;
             await _next(httpContext);
         }

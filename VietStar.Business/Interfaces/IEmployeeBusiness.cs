@@ -8,6 +8,7 @@ namespace VietStar.Business.Interfaces
 {
     public interface IEmployeeBusiness
     {
+        Task<bool> GetStatus(int userId);
         Task<Account> Login(LoginModel model);
         Task<List<string>> GetPermission(int userId);
     }

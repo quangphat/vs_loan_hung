@@ -16,7 +16,17 @@ namespace VietStar.Repository
         public EmployeeRepository(IConfiguration configuration) : base(configuration)
         {
         }
-
+        public async Task<bool> GetStatus(int userId)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryFirstOrDefaultAsync<bool>("sp_Employee_GetStatus", new
+                {
+                    userId
+                }, commandType: CommandType.StoredProcedure);
+                return result;
+            }
+        }
         public async Task<List<string>> GetPermissions(int userId)
         {
             using (var con = GetConnection())
