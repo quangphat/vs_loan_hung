@@ -162,7 +162,7 @@
                 success: function (data) {
                     
                     if (data.success == false) {
-                        addAlert(data.code);
+                        addAlert(data.error.code);
                         $("#userName").focus();
                     }
                     else {

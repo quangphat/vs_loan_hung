@@ -55,7 +55,7 @@ namespace VietStar.Client.Controllers
 
                 model.error = new ErrorJsonModel()
                 {
-                    Result = false,
+                    result = false,
                     code = errorMessage.Message,
                     trace_keys = errorMessage.TraceKeys
                 };
@@ -78,6 +78,6 @@ namespace VietStar.Client.Controllers
     {
         public string code { get; set; }
         public List<object> trace_keys { get; set; }
-        public bool Result { get; set; }
+        public bool result { get; set; }
     }
 }
