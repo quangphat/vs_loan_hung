@@ -17,6 +17,7 @@ namespace VietStar.Client.Controllers
         public HomeController(CurrentProcess process) : base(process)
         {
         }
+        [MyAuthorize]
         public IActionResult Index()
         {
             
