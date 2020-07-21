@@ -119,9 +119,11 @@
     <Compile Include="Interfaces\Class1.cs" />
     <Compile Include="Interfaces\IEmployeeRepository.cs" />
     <Compile Include="Interfaces\IHosoCourrierRepository.cs" />
+    <Compile Include="Interfaces\ILogRepository.cs" />
     <Compile Include="Interfaces\IMCreditRepositoryTest.cs" />
     <Compile Include="Interfaces\INoteRepository.cs" />
     <Compile Include="Interfaces\IPartnerRepository.cs" />
+    <Compile Include="LogRepository.cs" />
     <Compile Include="MCreditRepositoryTest.cs" />
     <Compile Include="PartnerRepository.cs" />
     <Compile Include="EmployeeRepository.cs" />

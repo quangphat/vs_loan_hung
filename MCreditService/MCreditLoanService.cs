@@ -18,7 +18,7 @@ namespace MCreditService
 {
     public class MCreditLoanService : MCreditServiceBase, IMCreditService
     {
-        public MCreditLoanService(IMCeditRepository mCeditBusiness) : base(mCeditBusiness)
+        public MCreditLoanService(IMCeditRepository mCeditBusiness, ILogRepository logRepository) : base(mCeditBusiness, logRepository)
         {
 
         }

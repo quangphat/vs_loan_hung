@@ -69,6 +69,10 @@
       <Project>{EEED2E30-177B-48FE-9B5E-879E0FFCB0E3}</Project>
       <Name>VS_LOAN.Core.Repository</Name>
     </ProjectReference>
+    <ProjectReference Include="..\VS_LOAN.Core.Utility\VS_LOAN.Core.Utility.csproj">
+      <Project>{d439d023-c499-4540-af5a-7ac3d5c3a9a1}</Project>
+      <Name>VS_LOAN.Core.Utility</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
