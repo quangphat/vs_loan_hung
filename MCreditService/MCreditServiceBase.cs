@@ -38,8 +38,8 @@ namespace MCreditService
         protected static string _upload_file_Api = "api/act/profiledoc.html";
         protected static string _get_notes_Api = "api/act/notes.html";
         protected static string _add_notes_Api = "api/act/noteadd.html";
-        
-        
+
+
         protected readonly HttpClient _httpClient;
         protected HttpRequestMessage _requestMessage;
         protected readonly IMCeditRepository _bizMcredit;
@@ -137,8 +137,8 @@ namespace MCreditService
             _requestMessage.Headers.Add("xdncode", _xdnCode);
             model.token = await GetUserToken(userId);
             _rpLog.InsertLog($"mcredit-{apiPath}", model.Dump());
-            var result = await _httpClient.PostAsync<T>(_requestMessage, _baseUrl, apiPath, _contentType, null, model);
-            if(result!=null)
+            var result = await _httpClient.PostAsync<T>(_requestMessage, _baseUrl, apiPath, _contentType, null, model, rpLog: _rpLog);
+            if (result != null)
             {
                 _rpLog.InsertLog($"mcredit-{apiPath}", result.Dump());
             }
@@ -162,7 +162,7 @@ namespace MCreditService
             {
                 string requestURL = $"{_baseUrl}/{apiPath}";
 
-                string userAgent = "Someone";
+                string userAgent = "vietbank";
                 postParameters.Add("token", token);
                 var response = await FormUpload.MultipartFormPost<T>(requestURL, userAgent, postParameters, "xdncode", _xdnCode, token);
                 return response.Data;
