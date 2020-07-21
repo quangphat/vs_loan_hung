@@ -15,6 +15,7 @@ using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Entity.UploadModel;
 using VS_LOAN.Core.Web.Helpers;
 using VS_LOAN.Core.Business.Interfaces;
+using VS_LOAN.Core.Utility;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
@@ -27,11 +28,13 @@ namespace VS_LOAN.Core.Web.Controllers
         protected readonly IMediaBusiness _bizMedia;
         protected readonly ITailieuRepository _rpTailieu;
         protected readonly IEmployeeRepository _rpEmployee;
+        protected readonly ILogRepository _rpLog;
         public MCreditController(IMCeditRepository rpMCredit,
             INoteRepository noteRepository,
             IMCreditRepositoryTest mCreditRepositoryTest,
             IMediaBusiness mediaBusiness,
             ITailieuRepository tailieuRepository,
+            ILogRepository logRepository,
             IEmployeeRepository employeeRepository,
             IMCreditService loanContractService) : base()
         {
@@ -42,6 +45,7 @@ namespace VS_LOAN.Core.Web.Controllers
             _rpMcTest = mCreditRepositoryTest;
             _rpTailieu = tailieuRepository;
             _rpEmployee = employeeRepository;
+            _rpLog = logRepository;
         }
 
         public async Task<JsonResult> AuthenMC(AuthenMCModel model)
@@ -299,6 +303,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 Issl = profile.IsAddr ? "1" : "0",
                 Money = profile.LoanMoney.ToString().Replace(",0000", "")
             }, GlobalData.User.IDUser);
+            _rpLog.InsertLog("mcredit", data.Dump());
             if (data == null || data.Groups == null)
                 return ToJsonResponse(false, "Không thể lấy file", new List<LoaiTaiLieuModel>());
             var uploadedFiles = new List<FileUploadModel>();

@@ -12,11 +12,14 @@ using System.Text;
 using System.Threading.Tasks;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.MCreditModels;
+using VS_LOAN.Core.Repository;
+using VS_LOAN.Core.Repository.Interfaces;
 
 namespace HttpClientService
 {
     public static class CoreApiClient
     {
+        static ILogRepository _rpLog = new LogRepository();
         public static async Task<ExternalApiResponseModel<T>> GetAsync<T>(this HttpClient httpClient, HttpRequestMessage requestMessage
             , string baseUrl, string path = "/", string headerContentType = null, object param = null)
         {
@@ -68,6 +71,14 @@ namespace HttpClientService
                     //json = "{\"str\":\"ddddddddddd\",\"status\":\"0\",\"page\":1,\"type\":\"draft\",\"token\":\"7ac1e4d882b98a0086080706e354cf4c\"} ";
                     content = new StringContent(json, Encoding.UTF8, "application/json");
                 }
+            try
+            {
+                _rpLog.InsertLog($"mcredit-{path}", json);
+            }
+            catch
+            {
+
+            }
             var signature = string.Empty;
             var originalData = string.Empty;
             if (requestMessage.Method == HttpMethod.Get)
