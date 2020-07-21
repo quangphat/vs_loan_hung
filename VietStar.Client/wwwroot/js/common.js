@@ -3,31 +3,41 @@
     //$('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
   
 });
-function renderStatusList() {
+function isNullOrNoItem(arr) {
+    if (arr === null || arr === undefined || arr.length === 0)
+        return true;
+    return false;
+}
+function isNullOrUndefined(value) {
+    if (value === null || value === undefined)
+        return true;
+    return false;
+}
+function isNullOrWhiteSpace(text) {
+    if (text === null || text === undefined || text === '' || text.toString().trim() === '')
+        return true;
+    return false;
+}
+function renderStatusList(value = [0]) {
     $("#ddlStatus").empty();
     $.ajax({
-        type: "POST",
-        url: '@Url.Action("LayDSTrangThai", "QuanLyHoSo")',
+        type: "GET",
+        url: '/Common/GetStatusList',
         data: {},
         success: function (data) {
             $('#ddlStatus').append("<option value='0'></option>");
             if (data.data != null && data.success == true) {
                 $.each(data.data, function (index, item) {
-                    $('#ddlStatus').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
+                    $('#ddlStatus').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
 
-                var status = decodeURI(queries.get("status"))
-                if (!isNullOrWhiteSpace(status)) {
-                    let arrStatus = status.split(',')
-                    $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
-                }
-                $('#ddlStatus').chosen().trigger("chosen:updated");
             }
         },
         complete: function () {
+            $("#ddlStatus").val([1, 2, 3]).change();
         },
         error: function (jqXHR, exception) {
-            showError(jqXHR, exception);
+            //showError(jqXHR, exception);
         }
     });
 
