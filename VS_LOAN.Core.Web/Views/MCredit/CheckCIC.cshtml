@@ -71,7 +71,17 @@
     $(document).ready(function () {
         $("#txtValue").ForceNumericOnly();
     });
-   
+    function getMessage(data) {
+        let relate = ''
+        let result =''
+        if (data == null || isNullOrUndefined(data))
+            return ''
+        if (!isNullOrWhiteSpace(data.Relate))
+            relate = data.Relate;
+        if (!isNullOrWhiteSpace(data.Result))
+            result = data.Result
+        return `${relate} - ${result}`;
+    }
     $('#btn_Save').click(function (e) {
 
         var objectSend = JSON.stringify({
@@ -87,8 +97,8 @@
             success: function (data) {
                 if (data.success == true) {
                     swal({
-                        title: "@Html.Raw(Global.Message_Title)",
-                        text: `${getMessage(data.code)}`,
+                        title: "Thành công",
+                        text: `${getMessage(data.data)}`,
                         type: "success",
                         timer: 4000,
                         showConfirmButton: true,
