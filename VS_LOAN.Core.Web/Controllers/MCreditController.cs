@@ -166,7 +166,7 @@ namespace VS_LOAN.Core.Web.Controllers
                         CommentTime = DateTime.Now,
                         TypeId = NoteType.MCreditTemp
                     };
-                    _rpNote.AddNoteAsync(note);
+                   await _rpNote.AddNoteAsync(note);
                 }
                 var peopleCanView = await _rpEmployee.GetPeopleIdCanViewMyProfile(GlobalData.User.IDUser);
                 if(peopleCanView!=null && peopleCanView.Any())
@@ -174,7 +174,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     peopleCanView.Add(GlobalData.User.IDUser);
                     peopleCanView.Add(1); //admin
                     var ids = string.Join(".",peopleCanView);
-                    _rpMCredit.InsertPeopleWhoCanViewProfile(id, ids);
+                    await _rpMCredit.InsertPeopleWhoCanViewProfile(id, ids);
                 }
             }
             return ToJsonResponse(true, "", id);
@@ -201,7 +201,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     CommentTime = DateTime.Now,
                     TypeId = NoteType.MCreditTemp
                 };
-                _rpNote.AddNoteAsync(note);
+                await _rpNote.AddNoteAsync(note);
             }
             var peopleCanView = await _rpEmployee.GetPeopleIdCanViewMyProfile(GlobalData.User.IDUser);
             if (peopleCanView != null && peopleCanView.Any())
@@ -209,7 +209,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 peopleCanView.Add(GlobalData.User.IDUser);
                 peopleCanView.Add(1); //admin
                 var ids = string.Join(".", peopleCanView);
-                _rpMCredit.InsertPeopleWhoCanViewProfile(model.Id, ids);
+                await _rpMCredit.InsertPeopleWhoCanViewProfile(model.Id, ids);
             }
             //var obj = _mapper.Map<MCProfilePostModel>(profile);
             //var result = await _svMCredit.CreateProfile(obj, GlobalData.User.IDUser);
@@ -303,7 +303,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 Issl = profile.IsAddr ? "1" : "0",
                 Money = profile.LoanMoney.ToString().Replace(",0000", "")
             }, GlobalData.User.IDUser);
-            _rpLog.InsertLog("mcredit-GetFileUpload", data.Dump());
+            await _rpLog.InsertLog("mcredit-GetFileUpload", data.Dump());
             if (data == null || data.Groups == null)
                 return ToJsonResponse(false, "Không thể lấy file", new List<LoaiTaiLieuModel>());
             var uploadedFiles = new List<FileUploadModel>();
@@ -384,7 +384,7 @@ namespace VS_LOAN.Core.Web.Controllers
                         }
                         else
                         {
-                            _rpTailieu.AddMCredit(new MCTailieuSqlModel
+                            await _rpTailieu.AddMCredit(new MCTailieuSqlModel
                             {
                                 FileName = file.Name,
                                 FileKey = key,
@@ -472,7 +472,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToJsonResponse(false, "", result);
             profileSql.MCId = result.id;
             await _rpMCredit.UpdateDraftProfile(profileSql);
-            _rpTailieu.UpdateTailieuHosoMCId(model.Id, result.id);
+           await  _rpTailieu.UpdateTailieuHosoMCId(model.Id, result.id);
             var zipFile = await _bizMedia.ProcessFilesToSendToMC(model.Id, Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}"));
             var sendFileResult = await _svMCredit.SendFiles(GlobalData.User.IDUser, zipFile, result.id);
             return ToJsonResponse(sendFileResult.status == "success" ? true : false, "", sendFileResult);
