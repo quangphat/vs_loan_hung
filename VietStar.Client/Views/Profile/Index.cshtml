@@ -5,18 +5,18 @@
 }
 <div class="row">
     <div class="col-xs-12">
-       
+
         <form class="form-horizontal">
             <div class="box-body">
                 <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-2 control-label">Ngày tạo</label>
+                    <label for="inputEmail3" class="col-sm-2 control-label">Ngày</label>
 
                     <div class="col-sm-4">
                         <div class="input-group date">
                             <div class="input-group-addon">
                                 <i class="fa fa-calendar"></i>
                             </div>
-                            <input type="text" class="form-control pull-right" id="datepicker">
+                            <input type="date" data-date-inline-picker="true" class="form-control pull-right" id="datepicker">
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -24,29 +24,50 @@
                             <div class="input-group-addon">
                                 <i class="fa fa-calendar"></i>
                             </div>
-                            <input type="text" class="form-control pull-right" id="datepicker">
+                            <input type="date" class="form-control pull-right">
                         </div>
                     </div>
                     <div class="col-sm-offset-2 col-sm-10">
-                        <div class="checkbox">
+                        <div class="radio">
                             <label>
-                                <input type="checkbox"> Ngày cập nhật
+                                <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
+                                Ngày tạo
+                            </label>
+                            <label style="margin-left:20px">
+                                <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
+                                Ngày cập nhật
                             </label>
                         </div>
+
                     </div>
                 </div>
+                <div class="form-group" data-select2-id="25">
+                    <label class="col-sm-2 control-label">Multiple</label>
+                    <div class="col-sm-8">
+                        <select class="form-control select2 select2-hidden-accessible" multiple="" data-placeholder="Select a State" style="width: 100%;" data-select2-id="7" tabindex="-1" aria-hidden="true">
+                            <option data-select2-id="26">Alabama</option>
+                            <option data-select2-id="27">Alaska</option>
+                            <option data-select2-id="28">California</option>
+                            <option data-select2-id="29">Delaware</option>
+                            <option data-select2-id="30">Tennessee</option>
+                            <option data-select2-id="31">Texas</option>
+                            <option data-select2-id="32">Washington</option>
+                        </select>
+                    </div>
+                   
+                </div>
                 <div class="form-group">
-                    <label for="inputPassword3" class="col-sm-2 control-label">Trạng thái</label>
+                    <label for="inputPassword3" class="col-sm-2 control-label">Tìm kiếm</label>
 
                     <div class="col-sm-8">
-                        <input type="password" class="form-control" id="inputPassword3" placeholder="">
+                        <input type="search" class="form-control" id="txtSearch" placeholder="">
                     </div>
                 </div>
 
             </div>
             <!-- /.box-body -->
             <button type="submit" class="btn btn-info pull-right">Tìm kiếm</button>
-           
+
             <!-- /.box-footer -->
         </form>
         <div class="clearfix"></div>
@@ -76,11 +97,11 @@
                             <table id="example1" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
                                 <thead>
                                     <tr role="row">
-                                        <th class=""  aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending"  style="width: 231px;">Rendering engine</th>
-                                        <th class=""  aria-controls="example1" rowspan="1" colspan="1" style="width: 282px;">Browser</th>
-                                        <th class="" aria-controls="example1" rowspan="1" colspan="1"  style="width: 251px;">Platform(s)</th>
-                                        <th class="" aria-controls="example1" rowspan="1" colspan="1"  style="width: 198px;">Engine version</th>
-                                        <th class="" aria-controls="example1" rowspan="1" colspan="1"  style="width: 145px;">CSS grade</th>
+                                        <th class="" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" style="width: 231px;">Rendering engine</th>
+                                        <th class="" aria-controls="example1" rowspan="1" colspan="1" style="width: 282px;">Browser</th>
+                                        <th class="" aria-controls="example1" rowspan="1" colspan="1" style="width: 251px;">Platform(s)</th>
+                                        <th class="" aria-controls="example1" rowspan="1" colspan="1" style="width: 198px;">Engine version</th>
+                                        <th class="" aria-controls="example1" rowspan="1" colspan="1" style="width: 145px;">CSS grade</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -160,7 +181,11 @@
     ]
     $(document).ready(function e() {
         renderStatusList();
+       
+        //$('#datepicker').datepicker({
 
+        //    autoclose: true
+        //})
         window.addEventListener('popstate', function (e) {
 
             queries = new URLSearchParams(window.location.search)
@@ -224,6 +249,7 @@
 
         //bindQueries()
     });
+    
             function bindQueries() {
 
             var fromDate = queries.get("fromDate");
