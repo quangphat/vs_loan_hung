@@ -12,26 +12,28 @@ using System.Text;
 using System.Threading.Tasks;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.MCreditModels;
+using VS_LOAN.Core.Repository;
+using VS_LOAN.Core.Repository.Interfaces;
 
 namespace HttpClientService
 {
     public static class CoreApiClient
     {
         public static async Task<ExternalApiResponseModel<T>> GetAsync<T>(this HttpClient httpClient, HttpRequestMessage requestMessage
-            , string baseUrl, string path = "/", string headerContentType = null, object param = null)
+            , string baseUrl, string path = "/", string headerContentType = null, object param = null, ILogRepository rpLog =null)
         {
-            var response = await httpClient.Call<T>(requestMessage, baseUrl, path, headerContentType, param);
+            var response = await httpClient.Call<T>(requestMessage, baseUrl, path, headerContentType, param, rpLog:rpLog);
             return response;
         }
         public static async Task<ExternalApiResponseModel<T>> PostAsync<T>(this HttpClient httpClient, HttpRequestMessage requestMessage
-            , string baseUrl, string path = "/", string headerContentType = null, object param = null, object data = null)
+            , string baseUrl, string path = "/", string headerContentType = null, object param = null, object data = null, ILogRepository rpLog = null)
         {
             requestMessage.Method = HttpMethod.Post;
-            var response = await httpClient.Call<T>(requestMessage, baseUrl, path, headerContentType, param, data);
+            var response = await httpClient.Call<T>(requestMessage, baseUrl, path, headerContentType, param, data, rpLog:rpLog);
             return response;
         }
         private static async Task<ExternalApiResponseModel<T>> Call<T>(this HttpClient httpClient,
-             HttpRequestMessage requestMessage, string baseUrl, string path = "/", string headerContentType = null, object param = null, object data = null)
+             HttpRequestMessage requestMessage, string baseUrl, string path = "/", string headerContentType = null, object param = null, object data = null, ILogRepository rpLog = null)
         {
             //if (param != null)
             //    path = path.AddQuery(param);
@@ -68,6 +70,15 @@ namespace HttpClientService
                     //json = "{\"str\":\"ddddddddddd\",\"status\":\"0\",\"page\":1,\"type\":\"draft\",\"token\":\"7ac1e4d882b98a0086080706e354cf4c\"} ";
                     content = new StringContent(json, Encoding.UTF8, "application/json");
                 }
+            try
+            {
+                if(rpLog!=null)
+                    rpLog.InsertLog($"mcredit-{path}", json);
+            }
+            catch
+            {
+
+            }
             var signature = string.Empty;
             var originalData = string.Empty;
             if (requestMessage.Method == HttpMethod.Get)
@@ -172,7 +183,7 @@ namespace HttpClientService
     public static class FormUpload
     {
         private static readonly Encoding encoding = Encoding.UTF8;
-        public static async Task<ExternalApiResponseModel<T>> MultipartFormPost<T>(string postUrl, string userAgent, Dictionary<string, object> postParameters, string headerkey, string headervalue, string token)
+        public static async Task<ExternalApiResponseModel<T>> MultipartFormPost<T>(string postUrl, string userAgent, Dictionary<string, object> postParameters, string headerkey, string headervalue, string token, ILogRepository rpLog = null)
         {
             string formDataBoundary = String.Format("----------{0:N}", Guid.NewGuid());
             string contentType = "multipart/form-data; boundary=" + formDataBoundary;

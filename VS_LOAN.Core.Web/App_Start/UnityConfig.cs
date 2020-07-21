@@ -50,6 +50,7 @@ namespace VS_LOAN.Core.Web
             //business
             container.RegisterType<IMediaBusiness,MediaBusiness>();
             //repository
+            container.RegisterSingleton<ILogRepository, LogRepository>();
             container.RegisterSingleton<IHosoRepository, HosoRepository>();
             container.RegisterSingleton<ICustomerRepository, CustomerRepository>();
             container.RegisterSingleton<IHosoCourrierRepository, HosoCourrierRepository>();

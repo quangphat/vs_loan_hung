@@ -18,7 +18,7 @@ namespace MCreditService
 {
     public class MCreditLoanService : MCreditServiceBase, IMCreditService
     {
-        public MCreditLoanService(IMCeditRepository mCeditBusiness) : base(mCeditBusiness)
+        public MCreditLoanService(IMCeditRepository mCeditBusiness, ILogRepository logRepository) : base(mCeditBusiness, logRepository)
         {
 
         }
@@ -41,9 +41,9 @@ namespace MCreditService
             var result = await BeforeSendRequest<CheckDupResponseModel, CheckDupRequestModel>(_checkDupApi, model,userId);
             return result;
         }
-        public async Task<CheckCICResponseModel> CheckCIC(string value, int userId)
+        public async Task<CheckCICResponseModel> CheckCIC(string idNumber, string name, int userId)
         {
-            var model = new CheckCICRequestModel { IdNumber = value };
+            var model = new CheckCICRequestModel { IdNumber = idNumber, name = name };
             var result = await BeforeSendRequest<CheckCICResponseModel, CheckCICRequestModel>(_checkCICApi, model, userId);
             return result;
         }

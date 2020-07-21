@@ -26,6 +26,10 @@
                         <div class="col-sm-4">
                             <input type="text" id="txtValue" placeholder="" class="form-control">
                         </div>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtName" placeholder="" class="form-control">
+                        </div>
                         <div class="">
                             <a class="btn btn-sm btn-primary" id="btn_Save">
                                 Kiểm tra
@@ -71,7 +75,8 @@
     $('#btn_Save').click(function (e) {
 
         var objectSend = JSON.stringify({
-            'Value': $('#txtValue').val()
+            'Value': $('#txtValue').val(),
+            'Value2': $('#txtName').val(),
         });
         $.ajax({
             traditional: true,
@@ -83,7 +88,7 @@
                 if (data.success == true) {
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
-                        text: `${getMessage(data.data)}`,
+                        text: `${getMessage(data.code)}`,
                         type: "success",
                         timer: 4000,
                         showConfirmButton: true,

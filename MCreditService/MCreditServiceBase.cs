@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net;
 using System.IO;
+using VS_LOAN.Core.Utility;
 
 namespace MCreditService
 {
@@ -37,21 +38,23 @@ namespace MCreditService
         protected static string _upload_file_Api = "api/act/profiledoc.html";
         protected static string _get_notes_Api = "api/act/notes.html";
         protected static string _add_notes_Api = "api/act/noteadd.html";
-        
-        
+
+
         protected readonly HttpClient _httpClient;
         protected HttpRequestMessage _requestMessage;
         protected readonly IMCeditRepository _bizMcredit;
+        protected readonly ILogRepository _rpLog;
         protected int _userId;
         protected string _userToken;
         protected readonly IMapper _mapper;
-        protected MCreditServiceBase(IMCeditRepository mCeditBusiness)
+        protected MCreditServiceBase(IMCeditRepository mCeditBusiness, ILogRepository logRepository)
         {
             _httpClient = new HttpClient();
             _requestMessage = new HttpRequestMessage();
             _requestMessage.Headers.Add("xdncode", _xdnCode);
             _userToken = string.Empty;
             _bizMcredit = mCeditBusiness;
+            _rpLog = logRepository;
             //var config = new MapperConfiguration(x =>
             //{
             //    x.CreateMap<OptionSimple, ProfileAddObj>()
@@ -133,7 +136,12 @@ namespace MCreditService
             _requestMessage = new HttpRequestMessage();
             _requestMessage.Headers.Add("xdncode", _xdnCode);
             model.token = await GetUserToken(userId);
-            var result = await _httpClient.PostAsync<T>(_requestMessage, _baseUrl, apiPath, _contentType, null, model);
+            _rpLog.InsertLog($"mcredit-{apiPath}", model.Dump());
+            var result = await _httpClient.PostAsync<T>(_requestMessage, _baseUrl, apiPath, _contentType, null, model, rpLog: _rpLog);
+            if (result != null)
+            {
+                _rpLog.InsertLog($"mcredit-{apiPath}", result.Dump());
+            }
             if (result == null || result.Data == null)
                 return null;
             if (result.Data is T)
@@ -154,7 +162,7 @@ namespace MCreditService
             {
                 string requestURL = $"{_baseUrl}/{apiPath}";
 
-                string userAgent = "Someone";
+                string userAgent = "vietbank";
                 postParameters.Add("token", token);
                 var response = await FormUpload.MultipartFormPost<T>(requestURL, userAgent, postParameters, "xdncode", _xdnCode, token);
                 return response.Data;
