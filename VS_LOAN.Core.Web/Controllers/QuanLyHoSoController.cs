@@ -26,13 +26,16 @@ namespace VS_LOAN.Core.Web.Controllers
         protected readonly IPartnerRepository _rpPartner;
         protected readonly IMediaBusiness _bizMedia;
         protected readonly IEmployeeRepository _rpEmployee;
+        protected readonly ITailieuRepository _rpTailieu;
         public QuanLyHoSoController(IPartnerRepository partnerRepository,
+            ITailieuRepository tailieuRepository,
             IEmployeeRepository employeeRepository,
             IMediaBusiness mediaBusiness)
         {
             _rpPartner = partnerRepository;
             _rpEmployee = employeeRepository;
             _bizMedia = mediaBusiness;
+            _rpTailieu = tailieuRepository;
         }
         public static Dictionary<string, ActionInfo> LstRole
         {
@@ -248,7 +251,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     return ToJsonResponse(false, "Nội dung ghi chú không được nhiều hơn 300 ký tự");
 
                 }
-                List<LoaiTaiLieuModel> lstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
+               var lstLoaiTaiLieu = await _rpTailieu.LayDS();
                 lstLoaiTaiLieu.RemoveAll(x => x.BatBuoc == 0);
                 if (lstLoaiTaiLieu != null)
                 {
