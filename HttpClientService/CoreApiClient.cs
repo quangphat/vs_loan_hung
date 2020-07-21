@@ -73,7 +73,7 @@ namespace HttpClientService
             try
             {
                 if(rpLog!=null)
-                    rpLog.InsertLog($"mcredit-{path}", json);
+                    await rpLog.InsertLog($"mcredit-{path}", json);
             }
             catch
             {

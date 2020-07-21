@@ -136,11 +136,11 @@ namespace MCreditService
             _requestMessage = new HttpRequestMessage();
             _requestMessage.Headers.Add("xdncode", _xdnCode);
             model.token = await GetUserToken(userId);
-            _rpLog.InsertLog($"mcredit-{apiPath}", model.Dump());
+            await _rpLog.InsertLog($"mcredit-{apiPath}", model.Dump());
             var result = await _httpClient.PostAsync<T>(_requestMessage, _baseUrl, apiPath, _contentType, null, model, rpLog: _rpLog);
             if (result != null)
             {
-                _rpLog.InsertLog($"mcredit-{apiPath}", result.Dump());
+               await _rpLog.InsertLog($"mcredit-{apiPath}", result.Dump());
             }
             if (result == null || result.Data == null)
                 return null;
@@ -191,7 +191,7 @@ namespace MCreditService
                 if (tokenFromMCApi == null)
                     return null;
                 _userToken = tokenFromMCApi.Obj.Token;
-                _bizMcredit.InsertUserToken(new MCreditUserToken { UserId = _userId, Token = _userToken });
+                await _bizMcredit.InsertUserToken(new MCreditUserToken { UserId = _userId, Token = _userToken });
             }
             return _userToken;
         }
