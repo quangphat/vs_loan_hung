@@ -91,11 +91,11 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             return View();
         }
-        public async Task<JsonResult> CheckCICApi(StringModel model)
+        public async Task<JsonResult> CheckCICApi(StringModel2 model)
         {
             if (model == null || string.IsNullOrWhiteSpace(model.Value))
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
-            var result = await _svMCredit.CheckCIC(model.Value, GlobalData.User.IDUser);
+            var result = await _svMCredit.CheckCIC(model.Value, model.Value2, GlobalData.User.IDUser);
             return ToJsonResponse(result.status=="error" ? false:true, result.msg?.ToString(), result);
         }
         public ActionResult CheckDuplicate()
