@@ -303,7 +303,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 Issl = profile.IsAddr ? "1" : "0",
                 Money = profile.LoanMoney.ToString().Replace(",0000", "")
             }, GlobalData.User.IDUser);
-            _rpLog.InsertLog("mcredit", data.Dump());
+            _rpLog.InsertLog("mcredit-GetFileUpload", data.Dump());
             if (data == null || data.Groups == null)
                 return ToJsonResponse(false, "Không thể lấy file", new List<LoaiTaiLieuModel>());
             var uploadedFiles = new List<FileUploadModel>();
