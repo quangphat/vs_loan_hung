@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using VS_LOAN.Core.Repository.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.UploadModel;
+using VS_LOAN.Core.Nhibernate;
+using System.Data.SqlClient;
 
 namespace VS_LOAN.Core.Repository
 {
@@ -15,24 +17,55 @@ namespace VS_LOAN.Core.Repository
     {
 
         public TailieuRepository() : base(typeof(TailieuRepository)) { }
-        public async Task<List<LoaiTaiLieuModel>> LayDS()
+        public List<LoaiTaiLieuModel> LayDS()
         {
             try
             {
-                using (var con = GetConnection())
+                using (var session = LOANSessionManager.OpenSession())
                 {
-                    var result = await con.QueryAsync<LoaiTaiLieuModel>("sp_LOAI_TAI_LIEU_LayDS",
-                        null, commandType: CommandType.StoredProcedure);
-                    return result.ToList();
+                    IDbCommand command = new SqlCommand();
+                    command.Connection = session.Connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "sp_LOAI_TAI_LIEU_LayDS";
+                    var dt = new DataTable();
+                    dt.Load(command.ExecuteReader());
+                    if (dt == null)
+                        return null;
+                    List<LoaiTaiLieuModel> rs = new List<LoaiTaiLieuModel>();
+                    foreach (DataRow item in dt.Rows)
+                    {
+                        LoaiTaiLieuModel cm = new LoaiTaiLieuModel();
+                        cm.ID = Convert.ToInt32(item["ID"].ToString());
+                        cm.Ten = item["Ten"].ToString();
+                        cm.BatBuoc = Convert.ToInt32(item["BatBuoc"].ToString());
+                        rs.Add(cm);
+                    }
+                    return rs;
                 }
-
-
             }
             catch (Exception ex)
             {
-                return null;
+                throw ex;
             }
         }
+        //public async Task<List<LoaiTaiLieuModel>> LayDS()
+        //{
+        //    try
+        //    {
+        //        using (var con = GetConnection())
+        //        {
+        //            var result = await con.QueryAsync<LoaiTaiLieuModel>("sp_LOAI_TAI_LIEU_LayDS",
+        //                null, commandType: CommandType.StoredProcedure);
+        //            return result.ToList();
+        //        }
+
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return null;
+        //    }
+        //}
         public async Task<bool> CopyFileFromProfile(int copyProfileId, int profileTypeId, int newProfileId)
         {
             using (var con = GetConnection())

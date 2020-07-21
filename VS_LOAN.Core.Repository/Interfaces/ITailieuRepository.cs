@@ -10,7 +10,8 @@ namespace VS_LOAN.Core.Repository.Interfaces
 {
     public interface ITailieuRepository
     {
-        Task<List<LoaiTaiLieuModel>> LayDS();
+        List<LoaiTaiLieuModel> LayDS();
+        //Task<List<LoaiTaiLieuModel>> LayDS();
         Task<bool> CopyFileFromProfile(int copyProfileId, int profileTypeId, int newProfileId);
         Task<List<FileUploadModel>> GetTailieuByMCId(string mcId);
         Task<bool> UpdateTailieuHosoMCId(int profileId, string mcId);

@@ -27,8 +27,10 @@ namespace VS_LOAN.Core.Web.Controllers
         protected readonly IMediaBusiness _bizMedia;
         protected readonly IEmployeeRepository _rpEmployee;
         protected readonly ITailieuRepository _rpTailieu;
+        protected readonly ILogRepository _rpLog;
         public QuanLyHoSoController(IPartnerRepository partnerRepository,
             ITailieuRepository tailieuRepository,
+            ILogRepository logRepository,
             IEmployeeRepository employeeRepository,
             IMediaBusiness mediaBusiness)
         {
@@ -36,6 +38,7 @@ namespace VS_LOAN.Core.Web.Controllers
             _rpEmployee = employeeRepository;
             _bizMedia = mediaBusiness;
             _rpTailieu = tailieuRepository;
+            _rpLog = logRepository;
         }
         public static Dictionary<string, ActionInfo> LstRole
         {
@@ -92,7 +95,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 //trangthai += 
                 var isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
                 totalRecord = new HoSoBLL().CountHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freetext);
-                lstHoso = new HoSoBLL().TimHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freetext, page, limit,isAdmin: isAdmin);
+                lstHoso = new HoSoBLL().TimHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freetext, page, limit, isAdmin: isAdmin);
                 if (lstHoso == null)
                     lstHoso = new List<HoSoQuanLyModel>();
                 var result = DataPaging.Create(lstHoso, totalRecord);
@@ -161,7 +164,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var hoso = await bizHoso.GetDetail(id);
             new HoSoXemBLL().DaXem(id);
             ViewBag.HoSo = hoso;
-            ViewBag.MaDoiTac =await _rpPartner.LayMaDoiTac(hoso.SanPhamVay) ;
+            ViewBag.MaDoiTac = await _rpPartner.LayMaDoiTac(hoso.SanPhamVay);
             ViewBag.MaTinh = new KhuVucBLL().LayMaTinh(hoso.MaKhuVuc);
             //ViewBag.LstLoaiTaiLieu = new LoaiTaiLieuBLL().LayDS();
             return View();
@@ -193,6 +196,7 @@ namespace VS_LOAN.Core.Web.Controllers
              string birthDayStr, string cmndDayStr, int courier = 0, List<int> FileRequireIds = null)
         {
 
+            string error = "";
             if (GlobalData.User.UserType == (int)UserTypeEnum.Sale
                 || trangthai == (int)TrangThaiHoSo.Nhap)
             {
@@ -251,15 +255,31 @@ namespace VS_LOAN.Core.Web.Controllers
                     return ToJsonResponse(false, "Nội dung ghi chú không được nhiều hơn 300 ký tự");
 
                 }
-               var lstLoaiTaiLieu = await _rpTailieu.LayDS();
-                lstLoaiTaiLieu.RemoveAll(x => x.BatBuoc == 0);
-                if (lstLoaiTaiLieu != null)
+                try
                 {
-                    var missingNames = BusinessExtension.GetFilesMissingV2(lstLoaiTaiLieu, FileRequireIds);
-                    if (!string.IsNullOrWhiteSpace(missingNames))
+                    var lstLoaiTaiLieu = _rpTailieu.LayDS();
+                    if (lstLoaiTaiLieu == null)
                     {
-                        return ToJsonResponse(false, $"Vui lòng nhập: {missingNames}");
+                        await _rpLog.InsertLog("Update-Quanlyhoso", "lstLoaiTaiLieu = null");
                     }
+
+                    if (lstLoaiTaiLieu != null)
+                    {
+                        lstLoaiTaiLieu.RemoveAll(x => x.BatBuoc == 0);
+                        var missingNames = BusinessExtension.GetFilesMissingV2(lstLoaiTaiLieu, FileRequireIds);
+                        if (!string.IsNullOrWhiteSpace(missingNames))
+                        {
+                            return ToJsonResponse(false, $"Vui lòng nhập: {missingNames}");
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    error = e.Dump();
+                }
+                if(!string.IsNullOrWhiteSpace(error))
+                {
+                    await _rpLog.InsertLog("Update-Quanlyhoso", error);
                 }
 
                 HoSoModel hs = new HoSoModel();
@@ -314,8 +334,8 @@ namespace VS_LOAN.Core.Web.Controllers
                     if (hoso == null)
                         return ToJsonResponse(false, "Hồ sơ không tồn tại", hs.ID);
                     hs.DisbursementDate = hoso.DisbursementDate;
-                    if(hs.MaTrangThai == (int)TrangThaiHoSo.GiaiNgan)
-                        hs.DisbursementDate =  DateTime.Now;
+                    if (hs.MaTrangThai == (int)TrangThaiHoSo.GiaiNgan)
+                        hs.DisbursementDate = DateTime.Now;
 
                     bool isCheckMaSanPham = false;
                     //// chỉnh sửa
@@ -335,8 +355,10 @@ namespace VS_LOAN.Core.Web.Controllers
                 await AddGhichu(hs.ID, ghiChu);
                 return ToJsonResponse(true, Resources.Global.Message_Succ, hs.ID);
             }
-            catch (BusinessException ex)
+            catch (Exception ex)
             {
+                error = error.Dump();
+                await _rpLog.InsertLog("quanlyhoso", error);
                 return ToJsonResponse(false, ex.Message);
             }
         }
@@ -602,7 +624,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 if (toDate != "")
                     dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTime(toDate);
 
-                string trangthai =  Helpers.Helpers.GetAllStatusString();
+                string trangthai = Helpers.Helpers.GetAllStatusString();
                 int totalRecord = new HoSoBLL().CountHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freeText: null);
                 if (totalRecord <= 0)
                     return ToResponse(false, "Không có dữ liệu");
