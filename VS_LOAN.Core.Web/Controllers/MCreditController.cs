@@ -479,6 +479,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (result == null || result.status == "error")
                 return ToJsonResponse(false, "", result);
             profileSql.MCId = result.id;
+            profile.Status = 1;
             await _rpMCredit.UpdateDraftProfile(profileSql);
            await  _rpTailieu.UpdateTailieuHosoMCId(model.Id, result.id);
             var zipFile = await _bizMedia.ProcessFilesToSendToMC(model.Id, Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}"));
