@@ -58,7 +58,14 @@
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Mã TeleSale<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtSaleCode" placeholder="Nhập số mã telesale" class="form-control" />
+                            @if (ViewBag.isAdmin)
+                            {
+                                <input type="text" id="txtSaleCode" placeholder="Nhập số mã telesale" class="form-control" />
+                            }
+                            else
+                            {
+                                <input type="text" id="txtSaleCode" readonly placeholder="Nhập số mã telesale" class="form-control" />
+                            }
                         </div>
                     </div>
 
