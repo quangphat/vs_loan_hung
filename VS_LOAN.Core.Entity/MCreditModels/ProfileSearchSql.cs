@@ -18,7 +18,13 @@ namespace VS_LOAN.Core.Entity.MCreditModels
         {
             get
             {
-                return string.IsNullOrWhiteSpace(McId) ? "Lưu tạm" : "Đã gửi qua MC";
+                if (Status != 0 && Status != 4 && !string.IsNullOrWhiteSpace(McId))
+                    return "Đã gửi qua MC";
+                if (Status == 0)
+                    return "Lưu tạm";
+                if (Status == 4)
+                    return "Bổ sung hồ sơ";
+                return string.Empty;
             }
         }
         public string CreatedUser { get; set; }
