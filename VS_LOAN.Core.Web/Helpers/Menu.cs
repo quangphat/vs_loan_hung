@@ -7,6 +7,7 @@ using System.Text;
 using System.Web;
 using VS_LOAN.Core.Repository;
 using VS_LOAN.Core.Web.Infrastructures;
+using VS_LOAN.Core.Repository.Interfaces;
 
 namespace VS_LOAN.Core.Web.Helpers
 {
@@ -30,7 +31,11 @@ namespace VS_LOAN.Core.Web.Helpers
 
     public class Menu
     {
-
+        public IEmployeeRepository _rpEmployee;
+        public Menu(IEmployeeRepository employeeRepository)
+        {
+            _rpEmployee = employeeRepository;
+        }
         protected static bool checkMenuItem(int[] _mangChucNang)
         {
             List<string> lstQuyen = new List<string>();
@@ -82,6 +87,9 @@ namespace VS_LOAN.Core.Web.Helpers
         }
         public static string ReturnMenu()
         {
+            List<SiteMenuItem> menus = new List<SiteMenuItem> {
+                
+            };
             List<SiteMenuItem> _siteMenu = new List<SiteMenuItem>{
                     new SiteMenuItem(Resources.Global.Menu_TC,"menu-icon home",IndexMenu.M_0,"#",new int[] { (int)QuyenIndex.Public }),
                         new SiteMenuItem("Giới thiệu","",IndexMenu.M_0_1,ControllerRoles.Roles["home_about"]._href,new int[] { (int)QuyenIndex.Public }),
@@ -124,6 +132,7 @@ namespace VS_LOAN.Core.Web.Helpers
                     new SiteMenuItem("Nhân sự","menu-icon employee",IndexMenu.M_6,ControllerRoles.Roles["employee_list"]._href,new int[] { }),
                         new SiteMenuItem("Thêm mới","", IndexMenu.M_6_1,ControllerRoles.Roles["employee_add"]._href,ControllerRoles.Roles["employee_add"]._mangChucNang) // 1.3  
             };
+
             //var isTeamLead = new NhomBLL().CheckIsTeamlead(GlobalData.User.IDUser);
             var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
             if (isAdmin)

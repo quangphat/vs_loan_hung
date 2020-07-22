@@ -743,7 +743,7 @@ namespace VS_LOAN.Core.Repository
                     IDbCommand command = new SqlCommand();
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_HO_SO_TimHoSoCuaToiChuaXem";
+                    command.CommandText = "sp_Profile_GetMyProfilesNotSeen";
                     command.Parameters.Add(new SqlParameter("@MaNhanVien", maNV));
                     command.Parameters.Add(new SqlParameter("@TuNgay", tuNgay));
                     command.Parameters.Add(new SqlParameter("@DenNgay", denNgay));
@@ -1152,7 +1152,7 @@ namespace VS_LOAN.Core.Repository
                     IDbCommand command = new SqlCommand();
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_HO_SO_TimHoSoDuyetChuaXem";
+                    command.CommandText = "sp_Profile_GetProfileHaveNotSeen";
 
                     command.Parameters.Add(new SqlParameter("@MaNVDangNhap", maNVDangNhap));
                     command.Parameters.Add(new SqlParameter("@MaNhom", maNhom));

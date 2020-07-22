@@ -11,11 +11,17 @@ using System.Web.Mvc;
 using System.Web.Security;
 using VS_LOAN.Core.Entity;
 using System.Threading.Tasks;
+using VS_LOAN.Core.Repository.Interfaces;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
-    public class NhanVienController : LoanController
+    public class NhanVienController : BaseController
     {
+        protected readonly IEmployeeRepository _rpEmployee;
+        public NhanVienController(IEmployeeRepository employeeRepository):base()
+        {
+            _rpEmployee = employeeRepository;
+        }
         public static Dictionary<string, ActionInfo> LstRole
         {
             get
@@ -102,7 +108,7 @@ namespace VS_LOAN.Core.Web.Controllers
             }
            
         }
-        public ActionResult DangNhap(string userName, string password, string rememberMe)
+        public async Task<ActionResult> DangNhap(string userName, string password, string rememberMe)
         {
            
             string newUrl = string.Empty;
@@ -119,11 +125,12 @@ namespace VS_LOAN.Core.Web.Controllers
                     GlobalData.User = user;
                     GlobalData.User.UserType = (int)UserTypeEnum.Sale;
                     var isTeamLead = new GroupRepository().checkIsTeamLeadByUserId(user.IDUser);
-                    var isAdmin = new GroupRepository().CheckIsAdmin(user.IDUser);
+                    var isAdmin = await _rpEmployee.CheckIsAdmin(user.IDUser);
                     if(isAdmin)
                         GlobalData.User.UserType = (int)UserTypeEnum.Admin;
                     else if(isTeamLead)
                         GlobalData.User.UserType = (int)UserTypeEnum.Teamlead;
+                    GlobalData.User.OrgId = user.OrgId;
                     var cookieUserName = new HttpCookie("userName");
                     var cookiePassword = new HttpCookie("password");
                     if (rememberMe != null && rememberMe.ToLower().Equals("on"))

@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Entity
 {
+    public enum Organization
+    {
+        VietBank = 1,
+        RevokeDebt = 2
+    }
     public enum MCreditTempProfileStatus
     {
         Draft = 0,
