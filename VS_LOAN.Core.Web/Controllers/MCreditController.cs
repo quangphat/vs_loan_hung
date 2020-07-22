@@ -457,6 +457,11 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> SubmitToMCredit(MCredit_TempProfileAddModel model)
         {
+            var isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
+            if(!isAdmin)
+            {
+                return ToJsonResponse(false, "Vui lòng liên hệ Admin");
+            }
             if (model == null || model.Id <= 0)
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             if (model.SaleId <= 0)
