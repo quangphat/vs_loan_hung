@@ -15,18 +15,36 @@ namespace VS_LOAN.Core.Repository
     {
 
         public TailieuRepository() : base(typeof(TailieuRepository)) { }
+        public async Task<List<LoaiTaiLieuModel>> LayDS()
+        {
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    var result = await con.QueryAsync<LoaiTaiLieuModel>("sp_LOAI_TAI_LIEU_LayDS",
+                        null, commandType: CommandType.StoredProcedure);
+                    return result.ToList();
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
         public async Task<bool> CopyFileFromProfile(int copyProfileId, int profileTypeId, int newProfileId)
         {
             using (var con = GetConnection())
             {
-               await con.ExecuteAsync("sp_ProfileFile_CopyFromProfile",
-                    new { copyProfileId , profileTypeId, newProfileId }, commandType: CommandType.StoredProcedure);
+                await con.ExecuteAsync("sp_ProfileFile_CopyFromProfile",
+                     new { copyProfileId, profileTypeId, newProfileId }, commandType: CommandType.StoredProcedure);
                 return true;
             }
         }
         public async Task<bool> UpdateExistingFile(TaiLieu model, int fileId)
         {
-            var p =GetParams(model,ignoreKey: new string[] {nameof(model.FileKey),nameof(model.ProfileId) });
+            var p = GetParams(model, ignoreKey: new string[] { nameof(model.FileKey), nameof(model.ProfileId) });
             p.Add("fileId", fileId);
             using (var con = GetConnection())
             {
@@ -110,13 +128,13 @@ namespace VS_LOAN.Core.Repository
             }
 
         }
-        public async Task<List<FileUploadModel>> GetTailieuByMCId(string  mcId)
+        public async Task<List<FileUploadModel>> GetTailieuByMCId(string mcId)
         {
             using (var con = GetConnection())
             {
                 var p = new DynamicParameters();
                 p.Add("mcId", mcId);
-               
+
                 var result = await con.QueryAsync<FileUploadModel>("getTailieuByMCId", p,
                     commandType: CommandType.StoredProcedure);
                 return result.ToList();
@@ -127,7 +145,8 @@ namespace VS_LOAN.Core.Repository
         {
             using (var con = GetConnection())
             {
-                await con.ExecuteAsync("sp_TaiLieuHoso_UpdateMCId", new {
+                await con.ExecuteAsync("sp_TaiLieuHoso_UpdateMCId", new
+                {
                     profileId,
                     mcId
                 },
