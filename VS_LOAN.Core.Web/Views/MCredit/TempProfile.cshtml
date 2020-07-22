@@ -563,7 +563,7 @@
             "ProductCode": $("#ddlProduct").val(),
             "LoanPeriodCode": $("#ddlLoanPeriod").val(),
             "LocSignCode": $("#ddlLocSign").val(),
-            "LastNote": $("txtGhiChu").val(),
+            "LastNote": $("#txtGhiChu").val(),
             "LoanMoney": $('#txtLoanMoney').val().replace(/\./g, ''),
             "IsInsurrance": getCheckboxValue('cbbIsInsurrance'),
             "Status": (isNullOrUndefined($("#ddlStatus").val()) || isNullOrWhiteSpace($("#ddlStatus").val())) ? @ViewBag.model.Status : parseInt($("#ddlStatus").val()),
