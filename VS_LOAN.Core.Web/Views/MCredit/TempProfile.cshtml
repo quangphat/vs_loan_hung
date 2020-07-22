@@ -299,7 +299,7 @@
         GetLoanProducts("#ddlProduct",'@ViewBag.model.ProductCode');
         getFilesUpload();
         $("#ddlGender").val(('@ViewBag.model' != null && '@ViewBag.model.Gender' =='True') ?  "1" : "0")
-        getCommentList(@ViewBag.model.Id, 3)
+        getCommentList(@ViewBag.model.Id, 4)
         setCheckboxValue('cbbIsInsurrance', '@ViewBag.model' != null ? @ViewBag.model.isInsur: false)
         setCheckedValueOfRadioButtonGroup('radio-isAddr', ('@ViewBag.model' != null && '@ViewBag.model.isAddr' =='true') ?  "1" : "0");
         //$("#txtIdDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
@@ -892,34 +892,6 @@
             complete: function () {
                 $('#panel_body').unblock();
             },
-        });
-    }
-    function GetNotes() {
-        //$('#ddlTrangThai').empty();
-        $.ajax({
-            type: "POST",
-            url: '/MCredit/GetNotes?profileId=' + @ViewBag.model.Id,
-            data: {},
-            success: function (data) {
-                if (data.data != null && data.success == true) {
-                    $.each(data.data, function (index, item) {
-                        $('#dsGhichu').append(
-                            '<div class="timeline-event-content  active">' +
-                            '<div class="timeline-item">' +
-                            '<div class="timeline-body">' +
-                            '<div class="timeline__message-container">' +
-                            '<strong>' + item.Commentator + ' (' + SetFormatDateTimeDMY(item.CommentTime) + '): </strong><span>' + item.Noidung + '</span>' +
-                            '</div></div></div></div>'
-                        )
-                    });
-                }
-
-            },
-            complete: function () {
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
         });
     }
 </script>
