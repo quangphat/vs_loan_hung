@@ -316,7 +316,7 @@
     });
     $('#btn_CheckCIC').click(function (e) {
         let value = !isNullOrWhiteSpace($("#txtIdNumber").val()) ? $("#txtIdNumber").val() : $("#txtCCCDNumber").val();
-        checkCIC('', value);
+        checkCIC('', value, $("#txtCustomerName").val());
     });
     $('#btn_CheckDup').click(function (e) {
         let value = !isNullOrWhiteSpace($("#txtIdNumber").val()) ? $("#txtIdNumber").val() : $("#txtCCCDNumber").val();
