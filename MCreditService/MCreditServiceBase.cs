@@ -91,21 +91,25 @@ namespace MCreditService
             {
                 await _bizMcredit.DeleteMCTableDatas((int)MCTableType.MCreditProduct);
                 await _bizMcredit.InsertProducts(authen.Products);
+                await _rpLog.InsertLog("mcredit-update-product", authen.Products.Dump());
             }
             if (tableToUpdateIds.Contains((int)MCTableType.MCreditCity) && authen.Cities != null && authen.Cities.Any())
             {
                 await _bizMcredit.DeleteMCTableDatas((int)MCTableType.MCreditCity);
                 await _bizMcredit.InsertCities(authen.Cities);
+                await _rpLog.InsertLog("mcredit-update-cities", authen.Cities.Dump());
             }
             if (tableToUpdateIds.Contains((int)MCTableType.MCreditLoanPeriod) && authen.LoanPeriods != null && authen.LoanPeriods.Any())
             {
                 await _bizMcredit.DeleteMCTableDatas((int)MCTableType.MCreditLoanPeriod);
                 await _bizMcredit.InsertLoanPeriods(authen.LoanPeriods);
+                await _rpLog.InsertLog("mcredit-update-loanperiod", authen.LoanPeriods.Dump());
             }
             if (tableToUpdateIds.Contains((int)MCTableType.MCreditlocations) && authen.Locations != null && authen.Locations.Any())
             {
                 await _bizMcredit.DeleteMCTableDatas((int)MCTableType.MCreditlocations);
                 await _bizMcredit.InsertLocations(authen.Locations);
+                await _rpLog.InsertLog("mcredit-update-locations", authen.Locations.Dump());
             }
             if (tableToUpdateIds.Contains((int)MCTableType.MCreditProfileStatus) && authen.ProfileStatus != null && authen.ProfileStatus.Any())
             {
