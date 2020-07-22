@@ -185,6 +185,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var profile = _mapper.Map<MCredit_TempProfile>(model);
             profile.UpdatedBy = GlobalData.User.IDUser;
+            await _rpLog.InsertLog("mcredit-UpdateDraft", model.Dump());
             var result = await _rpMCredit.UpdateDraftProfile(profile);
             if (!result)
             {
@@ -520,7 +521,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetNotes(int profileId)
         {
-            var rs = await _rpNote.GetNoteByTypeAsync(profileId, (int)HosoType.MCredit);
+            var rs = await _rpNote.GetNoteByTypeAsync(profileId, (int)NoteType.MCreditTemp);
             if (rs == null)
                 rs = new List<GhichuViewModel>();
             return ToJsonResponse(true, null, rs);
