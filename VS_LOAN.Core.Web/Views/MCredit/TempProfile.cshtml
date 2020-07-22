@@ -564,7 +564,7 @@
             "LocSignCode": $("#ddlLocSign").val(),
             "LoanMoney": $('#txtLoanMoney').val().replace(/\./g, ''),
             "IsInsurrance": getCheckboxValue('cbbIsInsurrance'),
-            "Status": (isNullOrUndefined($("#ddlStatus").val()) || isNullOrWhiteSpace($("#ddlStatus").val())) : @ViewBag.model.Status : parseInt($("#ddlStatus").val()),
+            "Status": (isNullOrUndefined($("#ddlStatus").val()) || isNullOrWhiteSpace($("#ddlStatus").val())) ? @ViewBag.model.Status : parseInt($("#ddlStatus").val()),
             "SaleId": $("#txtSaleId").val(),
         });
 
