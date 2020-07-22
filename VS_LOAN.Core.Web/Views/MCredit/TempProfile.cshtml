@@ -724,7 +724,7 @@
     function getMessage(data) {
         if (isNullOrUndefined(data))
             return ''
-        if (isNullOrUndefined(data.data) && isNullOrUndefined(data.data.message))
+        if (isNullOrUndefined(data.data) || isNullOrUndefined(data.data.message))
             return data.code
         return data.data.message
        
