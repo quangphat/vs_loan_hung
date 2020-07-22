@@ -512,5 +512,12 @@ namespace VS_LOAN.Core.Web.Controllers
             var sendFileResult = await _svMCredit.SendFiles(GlobalData.User.IDUser, zipFile, profile.MCId);
             return ToJsonResponse(sendFileResult.status == "success" ? true : false, "", sendFileResult);
         }
+        public async Task<JsonResult> GetNotes(int profileId)
+        {
+            var rs = await _rpNote.GetNoteByTypeAsync(profileId, (int)HosoType.MCredit);
+            if (rs == null)
+                rs = new List<GhichuViewModel>();
+            return ToJsonResponse(true, null, rs);
+        }
     }
 }
