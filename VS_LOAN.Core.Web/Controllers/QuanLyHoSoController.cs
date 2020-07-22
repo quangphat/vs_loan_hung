@@ -677,7 +677,7 @@ namespace VS_LOAN.Core.Web.Controllers
             List<TrangThaiHoSoModel> rs = new TrangThaiHoSoBLL().LayDSTrangThai(isLimit);
             if (rs == null)
                 rs = new List<TrangThaiHoSoModel>();
-            rs.RemoveAll(x => x.ID == (int)TrangThaiHoSo.Nhap);
+            //rs.RemoveAll(x => x.ID == (int)TrangThaiHoSo.Nhap);
             //if (GlobalData.User.UserType != (int)UserTypeEnum.Teamlead)
             //    rs.RemoveAll(x => x.ID == (int)TrangThaiHoSo.NhapLieu);
             return ToJsonResponse(true, null, rs);
