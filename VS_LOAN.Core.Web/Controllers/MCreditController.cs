@@ -467,6 +467,9 @@ namespace VS_LOAN.Core.Web.Controllers
             var profileSql = _mapper.Map<MCredit_TempProfile>(model);
             profileSql.UpdatedBy = GlobalData.User.IDUser;
             var profileMC = _mapper.Map<MCProfilePostModel>(model);
+            var files = await _rpTailieu.GetTailieuByHosoId(model.Id, (int)HosoType.MCredit);
+            if (files == null || !files.Any())
+                return ToJsonResponse(false, "Vui lòng upload hồ sơ");
             var result = await _svMCredit.CreateProfile(profileMC, GlobalData.User.IDUser);
             if (result == null || result.status == "error")
                 return ToJsonResponse(false, "", result);
