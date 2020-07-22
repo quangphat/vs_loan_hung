@@ -474,6 +474,10 @@ namespace VS_LOAN.Core.Web.Controllers
             await _rpMCredit.UpdateDraftProfile(profileSql);
            await  _rpTailieu.UpdateTailieuHosoMCId(model.Id, result.id);
             var zipFile = await _bizMedia.ProcessFilesToSendToMC(model.Id, Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}"));
+            if (zipFile == "files_is_empty")
+            {
+                return ToJsonResponse(false, "Vui lòng upload hồ sơ");
+            }
             var sendFileResult = await _svMCredit.SendFiles(GlobalData.User.IDUser, zipFile, result.id);
             return ToJsonResponse(sendFileResult.status == "success" ? true : false, "", sendFileResult);
             //return ToJsonResponse(true, "", new { file = zipFile, id = result.id });
