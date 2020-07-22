@@ -487,15 +487,15 @@ namespace VS_LOAN.Core.Web.Controllers
                 isLimit = false;
             if (!isTeamlead && !isAdmin)
                 return Json(new { DSTrangThai = new List<TrangThaiHoSoModel>() });
-            List<TrangThaiHoSoModel> rs = new TrangThaiHoSoBLL().LayDSTrangThai(isLimit);
+            List<TrangThaiHoSoModel> rs = new TrangThaiHoSoBLL().LayDSTrangThai();
             if (rs == null)
                 rs = new List<TrangThaiHoSoModel>();
-            rs.RemoveAll(x => x.ID == (int)TrangThaiHoSo.Nhap);
-            rs.RemoveAll(x => x.ID == (int)TrangThaiHoSo.NhapLieu);
-            if (isAdmin)
-            {
-                rs.RemoveAll(x => x.ID == (int)TrangThaiHoSo.DaDoiChieu);
-            }
+            //rs.RemoveAll(x => x.ID == (int)TrangThaiHoSo.Nhap);
+            //rs.RemoveAll(x => x.ID == (int)TrangThaiHoSo.NhapLieu);
+            //if (isAdmin)
+            //{
+            //    rs.RemoveAll(x => x.ID == (int)TrangThaiHoSo.DaDoiChieu);
+            //}
             return ToJsonResponse(true, null, rs);
         }
 

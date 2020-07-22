@@ -333,7 +333,7 @@
             + renderTextLeft(rowData.Phone)
             + renderTextLeft(rowData.IdNumber)
             + renderTextLeft(rowData.SaleName)
-            + renderStatus(rowData.McId > 0 ? 1 : 0, rowData.StatusName)
+            + renderStatus(rowData.Status, rowData.StatusName)
             + renderTextLeft(rowData.LastNote, '', 'tb-row-breakword')
             + renderTextLeft(rowData.ProductName)
             + renderTextLeft(rowData.LoanPeriodName)
@@ -374,7 +374,10 @@
            statusString = "<span class='label label-sm  arrowed arrowed-righ'>" + statusName + "</span>";
        else if (status == 1)
            statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + statusName + "</span>";
-        return "<td class='text-left'>" + statusString + "</td>";;
+       
+       else if (status == 4)
+           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Bổ sung hồ sơ</span>";
+       return "<td class='text-left'>" + statusString + "</td>";
     }
     function renderAction(id, MaTrangThai, MaNV) {
         var thaoTac = "<div class='action-buttons'>"

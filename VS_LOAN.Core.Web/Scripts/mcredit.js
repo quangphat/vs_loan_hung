@@ -196,11 +196,12 @@ function checkDup(controlId, value) {
     
 
 }
-function checkCIC(controlId, value) {
+function checkCIC(controlId, value,name) {
     if (isNullOrWhiteSpace(value))
         return;
         var objectSend = JSON.stringify({
-            'Value': value
+            'Value': value,
+            'Value2':name
         });
         $.ajax({
             traditional: true,

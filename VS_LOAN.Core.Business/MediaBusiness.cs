@@ -155,7 +155,7 @@ namespace VS_LOAN.Core.Business
                 return string.Empty;
             var files = await _rpTailieu.GetTailieuByHosoId(profileId, (int)HosoType.MCredit);
             if (files == null || !files.Any())
-                return string.Empty;
+                return "files_is_empty";
             var jsonFile = new McJsonFile();
             var x = files.Select(p => p.MC_GroupId);
             //string values = "";

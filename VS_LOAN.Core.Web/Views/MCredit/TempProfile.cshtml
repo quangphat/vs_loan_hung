@@ -213,9 +213,29 @@
                 <form class="form-horizontal">
                     <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Ghi chú hồ sơ</h4>
                     <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
+                                <option value="0">Lưu Tạm</option>
+                                <option value="4">Bổ sung hồ sơ</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
                         <div class="col-md-11 col-sm-12 col-xs-12">
                             <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="activity-log">
+                                <div class="timline-addNote only-new-note">
+                                    <div class="timeline-date-event timline-date-event--margin mt-0" id="dsGhichu">
+
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="pull-right">
@@ -226,6 +246,7 @@
                             <a class="btn btn-sm btn-primary" id="btn_Temp">
                                 Cập nhật
                             </a>
+                            
                             <a class="btn btn-sm btn-primary" id="btn_Save">
                                 Nộp hồ sơ
                             </a>
@@ -249,6 +270,7 @@
     $(document).ready(function () {
         setTextForPTag('checkSaleResult');
         setTextForPTag('checkdupResult');
+        $("ddlStatus").val('@ViewBag.model.Status')
         $('#ddlProduct').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlProvince').chosen({ width: '100%', allow_single_deselect: true });
         $('#txtToDate').datepicker({
@@ -277,7 +299,7 @@
         GetLoanProducts("#ddlProduct",'@ViewBag.model.ProductCode');
         getFilesUpload();
         $("#ddlGender").val(('@ViewBag.model' != null && '@ViewBag.model.Gender' =='True') ?  "1" : "0")
-        getCommentList(@ViewBag.model.Id, 3)
+        getCommentList(@ViewBag.model.Id, 4)
         setCheckboxValue('cbbIsInsurrance', '@ViewBag.model' != null ? @ViewBag.model.isInsur: false)
         setCheckedValueOfRadioButtonGroup('radio-isAddr', ('@ViewBag.model' != null && '@ViewBag.model.isAddr' =='true') ?  "1" : "0");
         //$("#txtIdDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
@@ -316,7 +338,7 @@
     });
     $('#btn_CheckCIC').click(function (e) {
         let value = !isNullOrWhiteSpace($("#txtIdNumber").val()) ? $("#txtIdNumber").val() : $("#txtCCCDNumber").val();
-        checkCIC('', value);
+        checkCIC('', value, $("#txtCustomerName").val());
     });
     $('#btn_CheckDup').click(function (e) {
         let value = !isNullOrWhiteSpace($("#txtIdNumber").val()) ? $("#txtIdNumber").val() : $("#txtCCCDNumber").val();
@@ -511,7 +533,7 @@
             return;
         }
         if ((isNullOrWhiteSpace($('#txtIdNumber').val()) && isNullOrWhiteSpace($('#txtCCCDNumber').val()))) {
-            debugger
+            
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
                 text: "Vui lòng nhập số cmnd hoặc cccd",
@@ -541,9 +563,10 @@
             "ProductCode": $("#ddlProduct").val(),
             "LoanPeriodCode": $("#ddlLoanPeriod").val(),
             "LocSignCode": $("#ddlLocSign").val(),
+            "LastNote": $("#txtGhiChu").val(),
             "LoanMoney": $('#txtLoanMoney').val().replace(/\./g, ''),
             "IsInsurrance": getCheckboxValue('cbbIsInsurrance'),
-            "Status":  @ViewBag.model.Status,
+            "Status": (isNullOrUndefined($("#ddlStatus").val()) || isNullOrWhiteSpace($("#ddlStatus").val())) ? @ViewBag.model.Status : parseInt($("#ddlStatus").val()),
             "SaleId": $("#txtSaleId").val(),
         });
 
@@ -706,7 +729,7 @@
                 else {
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
-                        text: data.data.message,
+                        text: getMessage(data),
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,
@@ -721,6 +744,14 @@
             },
         });
     });
+    function getMessage(data) {
+        if (isNullOrUndefined(data))
+            return ''
+        if (isNullOrUndefined(data.data) && isNullOrUndefined(data.data.message))
+            return data.code
+        return data.data.message
+       
+    }
     $('#btn_CreateNew').click(function (e) {
 
         if ($('#txtCustomerName').val() == "" || $('#txtCustomerName').val() == undefined) {
@@ -862,5 +893,5 @@
                 $('#panel_body').unblock();
             },
         });
-        }
+    }
 </script>

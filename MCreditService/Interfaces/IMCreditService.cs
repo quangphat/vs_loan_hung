@@ -13,7 +13,7 @@ namespace MCreditService.Interfaces
         Task<CheckSaleResponseModel> CheckSale(int userId, string salecode);
         Task<CheckCatResponseModel> CheckCat(int userId, string taxNumber);
         Task<CheckDupResponseModel> CheckDup(string value, int userId);
-        Task<CheckCICResponseModel> CheckCIC(string value, int userId);
+        Task<CheckCICResponseModel> CheckCIC(string idNumber, string name, int userId);
         Task<CheckStatusResponseModel> CheckStatus(string value, int userId);
         Task<ProfileSearchResponse> SearchProfiles(string freetext, string status, string type, int page, int userId);
         Task<ProfileAddResponse> CreateProfile(MCProfilePostModel obj, int userId);
