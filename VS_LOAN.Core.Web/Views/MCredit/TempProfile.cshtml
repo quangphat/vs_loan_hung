@@ -270,6 +270,7 @@
     $(document).ready(function () {
         setTextForPTag('checkSaleResult');
         setTextForPTag('checkdupResult');
+        $("ddlStatus").val('@ViewBag.model.Status')
         $('#ddlProduct').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlProvince').chosen({ width: '100%', allow_single_deselect: true });
         $('#txtToDate').datepicker({
@@ -532,7 +533,7 @@
             return;
         }
         if ((isNullOrWhiteSpace($('#txtIdNumber').val()) && isNullOrWhiteSpace($('#txtCCCDNumber').val()))) {
-            debugger
+            
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
                 text: "Vui lòng nhập số cmnd hoặc cccd",
@@ -562,6 +563,7 @@
             "ProductCode": $("#ddlProduct").val(),
             "LoanPeriodCode": $("#ddlLoanPeriod").val(),
             "LocSignCode": $("#ddlLocSign").val(),
+            "LastNote": $("txtGhiChu").val(),
             "LoanMoney": $('#txtLoanMoney').val().replace(/\./g, ''),
             "IsInsurrance": getCheckboxValue('cbbIsInsurrance'),
             "Status": (isNullOrUndefined($("#ddlStatus").val()) || isNullOrWhiteSpace($("#ddlStatus").val())) ? @ViewBag.model.Status : parseInt($("#ddlStatus").val()),
