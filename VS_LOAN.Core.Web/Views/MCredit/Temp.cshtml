@@ -333,7 +333,7 @@
             + renderTextLeft(rowData.Phone)
             + renderTextLeft(rowData.IdNumber)
             + renderTextLeft(rowData.SaleName)
-            + renderStatus(rowData.Status, rowData.StatusName)
+            + renderStatus(rowData.Status)
             + renderTextLeft(rowData.LastNote, '', 'tb-row-breakword')
             + renderTextLeft(rowData.ProductName)
             + renderTextLeft(rowData.LoanPeriodName)
@@ -367,14 +367,15 @@
         return "<td class='text-center'>" + getValueDisplay(value, type) + "</td>";
     }
 
-   function renderStatus(status, statusName) {
+   function renderStatus(status) {
         var statusString = "";
         
        if (status == 0)
-           statusString = "<span class='label label-sm  arrowed arrowed-righ'>" + statusName + "</span>";
+           statusString = "<span class='label label-sm  arrowed arrowed-righ'>Lưu tạm</span>";
        else if (status == 1)
-           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + statusName + "</span>";
-       
+           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Đã gửi qua MC</span>";
+       else if (status == 3)
+           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Nộp hồ sơ</span>";
        else if (status == 4)
            statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Bổ sung hồ sơ</span>";
        return "<td class='text-left'>" + statusString + "</td>";

@@ -104,4 +104,11 @@ namespace VS_LOAN.Core.Entity
         Teamlead = 2,
         Sale = 3
     }
+    public enum MCreditProfileStatus
+    {
+        Draft = 0,
+        SentToMc = 1,
+        Submit = 3,
+        Addinional = 4
+    }
 }
