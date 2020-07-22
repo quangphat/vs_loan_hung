@@ -706,7 +706,7 @@
                 else {
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
-                        text: data.data.message,
+                        text: getMessage(data),
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,
@@ -721,6 +721,14 @@
             },
         });
     });
+    function getMessage(data) {
+        if (isNullOrUndefined(data))
+            return ''
+        if (isNullOrUndefined(data.data) && isNullOrUndefined(data.data.message))
+            return data.code
+        return data.data.message
+       
+    }
     $('#btn_CreateNew').click(function (e) {
 
         if ($('#txtCustomerName').val() == "" || $('#txtCustomerName').val() == undefined) {
