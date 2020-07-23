@@ -16,8 +16,8 @@ namespace VS_LOAN.Core.Repository.Interfaces
         Task<MCredit_TempProfile> GetTemProfileByMcId(string id);
         Task<List<OptionSimple>> GetMCProfileStatusList();
         Task<bool> UpdateSale(UpdateSaleModel model, int profileId);
-        Task<int> CountTempProfiles(string freeText, int userId);
-        Task<List<ProfileSearchSql>> GetTempProfiles(int page, int limit, string freeText, int userId);
+        Task<int> CountTempProfiles(string freeText, int userId, string status = null);
+        Task<List<ProfileSearchSql>> GetTempProfiles(int page, int limit, string freeText, int userId, string status = null);
         Task<int> CreateDraftProfile(MCredit_TempProfile model);
         Task<bool> UpdateDraftProfile(MCredit_TempProfile model);
         Task<bool> DeleteMCTableDatas(int type);

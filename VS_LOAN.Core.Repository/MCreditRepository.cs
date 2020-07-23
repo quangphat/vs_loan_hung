@@ -284,7 +284,7 @@ namespace VS_LOAN.Core.Repository
                 return true;
             }
         }
-        public async Task<List<ProfileSearchSql>> GetTempProfiles(int page, int limit, string freeText, int userId)
+        public async Task<List<ProfileSearchSql>> GetTempProfiles(int page, int limit, string freeText, int userId, string status = null)
         {
             using (var con = GetConnection())
             {
@@ -292,19 +292,21 @@ namespace VS_LOAN.Core.Repository
                     freeText,
                     userId,
                     page,
-                    limit_tmp = limit
+                    limit_tmp = limit,
+                    status
                 }, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
         }
-        public async Task<int> CountTempProfiles(string freeText, int userId)
+        public async Task<int> CountTempProfiles(string freeText, int userId, string status =null)
         {
             using (var con = GetConnection())
             {
                 var result = await _connection.ExecuteScalarAsync<int>("sp_MCredit_TempProfile_Counts", new
                 {
                     freeText,
-                    userId
+                    userId,
+                    status
                 }, commandType: CommandType.StoredProcedure);
                 return result;
             }
