@@ -94,7 +94,10 @@ namespace MCreditService
             {
                 Id = profileId
             };
+            await _rpLog.InsertLog("mcredit-GetNote-request", model.Dump());
+
             var result = await BeforeSendRequest<NoteResponseModel, NoteRequestModel>(_get_notes_Api, model, userId);
+            await _rpLog.InsertLog("mcredit-GetNote-result", result.Dump());
             return result;
         }
         public async Task<NoteAddResponseModel> AddNote(NoteAddRequestModel model, int userId)

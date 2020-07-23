@@ -528,12 +528,12 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetNotes(int profileId)
         {
-            var profile = await _rpMCredit.GetTemProfileById(profileId);
-            if(profile==null)
-                return ToJsonResponse(true, null);
-            var note = await _svMCredit.GetNotes(profile.MCId,GlobalData.User.IDUser);
+            //var profile = await _rpMCredit.GetTemProfileById(profileId);
+            //if(profile==null)
+            //    return ToJsonResponse(true, null);
+            var note = await _svMCredit.GetNotes(profileId.ToString(), GlobalData.User.IDUser);
             if (note == null || note.objs == null)
-                return ToJsonResponse(true, null);
+                return ToJsonResponse(true, "Không có dữ liệu");
             return ToJsonResponse(true, null, note.objs);
         }
         public async Task<JsonResult> AddNoteNotes(StringModel2 model)
@@ -542,7 +542,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToJsonResponse(false);
             var profile = await _rpMCredit.GetTemProfileById(Convert.ToInt32(model.Value));
             if (profile == null)
-                return ToJsonResponse(true, null);
+                return ToJsonResponse(true);
             await _svMCredit.AddNote(new NoteAddRequestModel {
                 Content = model.Value2,
                 Id = profile.MCId
