@@ -168,19 +168,31 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "Hồ sơ không tồn tại");
             }
+            bool isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
             if (profile.Status == (int)TrangThaiHoSo.Cancel)
             {
-                bool isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
+                
                 if (!isAdmin)
                 {
                     return ToJsonResponse(false, "Bạn không có quyền, vui lòng liên hệ Admin");
                 }
             }
-            var sale = await _rpEmployee.GetEmployeeByCode(model.SaleCode.Trim());
-            if (sale == null)
+            var sale = null as OptionSimple;
+            if(!isAdmin )
             {
-                return ToResponse(false, "Sale không tồn tại, vui lòng kiểm tra lại");
+                model.SaleCode = "";
             }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(model.SaleCode))
+                    return ToResponse(false, "Mã teleSale ko hợp lệ");
+                sale = await _rpEmployee.GetEmployeeByCode(model.SaleCode.Trim());
+                if (sale == null)
+                {
+                    return ToResponse(false, "Sale không tồn tại, vui lòng kiểm tra lại");
+                }
+            }
+            
             var hoso = new HosoCourier
             {
                 CustomerName = model.CustomerName,
