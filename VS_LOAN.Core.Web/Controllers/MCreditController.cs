@@ -16,6 +16,7 @@ using VS_LOAN.Core.Entity.UploadModel;
 using VS_LOAN.Core.Web.Helpers;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Utility;
+using Newtonsoft.Json;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
@@ -185,6 +186,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var profile = _mapper.Map<MCredit_TempProfile>(model);
             profile.UpdatedBy = GlobalData.User.IDUser;
+            profile.Status = (int)MCreditProfileStatus.Submit;
             await _rpLog.InsertLog("mcredit-UpdateDraft", model.Dump());
             var result = await _rpMCredit.UpdateDraftProfile(profile);
             if (!result)
@@ -244,6 +246,10 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 if (!peopleCanView.Contains(GlobalData.User.IDUser))
                     return RedirectToAction("Index");
+            }
+            if(result.obj!=null && result.obj.Reason!=null)
+            {
+                result.obj.ReasonName = JsonConvert.SerializeObject(result.obj.Reason);
             }
             ViewBag.model = result.status == "success" ? result.obj : new ProfileGetByIdResponseObj();
             return View();

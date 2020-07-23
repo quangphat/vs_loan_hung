@@ -53,7 +53,8 @@ namespace VS_LOAN.Core.Entity.MCreditModels
         public string SalePhone { get; set; }
         public string SaleIdNumber { get; set; }
         public string Refuse { get; set; }
-        public string Reason { get; set; }
+        public object Reason { get; set; }
+        public string ReasonName { get; set; }
         public string CreateUserId { get; set; }
         public string CreateUserCode { get; set; }
         public string CreateUserName { get; set; }
