@@ -367,9 +367,12 @@
         return "<td class='text-center'>" + getValueDisplay(value, type) + "</td>";
     }
 
-   function renderStatus(status) {
-        var statusString = "";
-        
+   function renderStatus(status, mcId) {
+       var statusString = "";
+       if (mcId > 0) {
+           statusString = "<span class='label label-sm  arrowed arrowed-righ'>Đã đẩy qua MC</span>";
+           return "<td class='text-left'>" + statusString + "</td>";
+       }
        if (status == 0)
            statusString = "<span class='label label-sm  arrowed arrowed-righ'>Lưu tạm</span>";
        else if (status == 1)
