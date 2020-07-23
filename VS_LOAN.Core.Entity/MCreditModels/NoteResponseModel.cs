@@ -9,6 +9,7 @@ namespace VS_LOAN.Core.Entity.MCreditModels
     public class NoteResponseModel:MCResponseModelBase
     {
         public int Total { get; set; }
+        public List<NoteObj> objs { get; set; }
 
     }
     public class NoteObj

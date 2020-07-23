@@ -527,10 +527,27 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetNotes(int profileId)
         {
-            var rs = await _rpNote.GetNoteByTypeAsync(profileId, (int)NoteType.MCreditTemp);
-            if (rs == null)
-                rs = new List<GhichuViewModel>();
-            return ToJsonResponse(true, null, rs);
+            var profile = await _rpMCredit.GetTemProfileById(profileId);
+            if(profile==null)
+                return ToJsonResponse(true, null);
+            var note = await _svMCredit.GetNotes(profile.MCId,GlobalData.User.IDUser);
+            if (note == null || note.objs == null)
+                return ToJsonResponse(true, null);
+            return ToJsonResponse(true, null, note.objs);
+        }
+        public async Task<JsonResult> AddNoteNotes(StringModel2 model)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(model.Value) || string.IsNullOrWhiteSpace(model.Value2))
+                return ToJsonResponse(false);
+            var profile = await _rpMCredit.GetTemProfileById(Convert.ToInt32(model.Value));
+            if (profile == null)
+                return ToJsonResponse(true, null);
+            await _svMCredit.AddNote(new NoteAddRequestModel {
+                Content = model.Value2,
+                Id = profile.MCId
+            }, GlobalData.User.IDUser);
+            
+            return ToJsonResponse(true);
         }
     }
 }
