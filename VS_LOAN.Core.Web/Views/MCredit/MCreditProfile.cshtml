@@ -44,7 +44,9 @@
 
                         <label class="col-sm-2 control-label no-padding-right">Lý do<span class="required">(*)</span></label>
                         <div class="col-sm-10">
-                            <input type="text"  value="@ViewBag.model.ReasonName" readonly class="form-control">
+                            <textarea type="text" value="" readonly class="form-control">
+                                @ViewBag.model.ReasonName
+                            </textarea>
                         </div>
                     </div>
                 </form>
