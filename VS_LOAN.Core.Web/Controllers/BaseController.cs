@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
+using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.MCreditModels;
 using VS_LOAN.Core.Entity.MCreditModels.SqlModel;
 using VS_LOAN.Core.Entity.Model;
@@ -84,6 +85,13 @@ namespace VS_LOAN.Core.Web.Controllers
               .ForMember(a => a.Address, b => b.MapFrom(c => c.LocSignAddr))
               .ForMember(a => a.Hometown, b => b.MapFrom(c => c.HomeTown))
               ;
+
+                x.CreateMap<NoteObj, GhichuViewModel>()
+             .ForMember(a => a.Commentator, b => b.MapFrom(c => c.CreateUserName))
+             .ForMember(a => a.CommentTime, b => b.MapFrom(c => c.CreateDated))
+             .ForMember(a => a.Noidung, b => b.MapFrom(c => c.Name))
+             
+             ;
             });
 
             _mapper = config.CreateMapper();
