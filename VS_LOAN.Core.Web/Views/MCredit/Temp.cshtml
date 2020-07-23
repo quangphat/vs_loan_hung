@@ -28,7 +28,12 @@
                         </div>
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Loại</label>
                         <div class="col-sm-5 col-xs-12 ">
-                            <select id="ddlStatus" class="chosen-select form-control" multiple data-placeholder="Chọn trạng thái"></select>
+                            <select id="ddlStatus" class="chosen-select form-control" multiple data-placeholder="Chọn trạng thái">
+                                <option value="0">Lưu Tạm</option>
+                                <option value="1">Đã gửi MC</option>
+                                <option value="3">Nộp hồ sơ</option>
+                                <option value="4">Bổ sung hồ sơ</option>
+                            </select>
                         </div>
                     </div>
                    
@@ -146,7 +151,7 @@
         { value: "8", display: "PCB" },
     ]
     $(document).ready(function e() {
-        renderStatusList();
+        //renderStatusList();
 
         window.addEventListener('popstate', function (e) {
 
@@ -186,6 +191,11 @@
             else
                 limit = parseInt(limit)
             $("#ddlLimit").val(limit)
+            var status = decodeURI(queries.get("status"))
+            if (!isNullOrWhiteSpace(status)) {
+                let arrStatus = status.split(',')
+                $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
+            }
         }
 
         $('#ddllimit').chosen({ width: '100%', allow_single_deselect: true });
@@ -453,7 +463,12 @@
             if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
                 limit = 10;
             else
-                limit = parseInt(limit)
+            limit = parseInt(limit)
+        var status = decodeURI(queries.get("status"))
+        if (!isNullOrWhiteSpace(status)) {
+            let arrStatus = status.split(',')
+            $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
+        }
             getData(page, limit)
             //InitTable();
 
@@ -472,7 +487,8 @@
                 'limit': limit,
                 'freeText': $("#txtFreeText").val(),
                 'status': "0",
-                'type':"draft"
+                'type': "draft",
+                'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
             },
             success: function (response) {
                 

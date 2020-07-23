@@ -125,11 +125,11 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             return View();
         }
-        public async Task<JsonResult> SearchTemps(string freeText, int page = 1, int limit = 20)
+        public async Task<JsonResult> SearchTemps(string freeText, string status, int page = 1, int limit = 20)
         {
             page = page <= 0 ? 1 : page;
-            var total = await _rpMCredit.CountTempProfiles(freeText, GlobalData.User.IDUser);
-            var profiles = await _rpMCredit.GetTempProfiles(page, limit, freeText, GlobalData.User.IDUser);
+            var total = await _rpMCredit.CountTempProfiles(freeText, GlobalData.User.IDUser, status);
+            var profiles = await _rpMCredit.GetTempProfiles(page, limit, freeText, GlobalData.User.IDUser, status);
             var result = DataPaging.Create(profiles, total);
             return ToJsonResponse(true, "", result);
         }
