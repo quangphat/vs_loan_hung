@@ -57,8 +57,8 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> Search(string freeText = null, int provinceId = 0, int courierId = 0, string status = null, int groupId = 0, int page = 1, int limit = 10, string salecode = null)
         {
-            var totalRecord = await _rpCourierProfile.CountHosoCourrier(freeText, GlobalData.User.IDUser, status, groupId, provinceId, salecode);
-            var datas = await _rpCourierProfile.GetHosoCourrier(freeText, GlobalData.User.IDUser, status, page, limit, groupId, provinceId, salecode);
+            var totalRecord = await _rpCourierProfile.CountHosoCourrier(freeText, courierId, GlobalData.User.IDUser, status, groupId, provinceId, salecode);
+            var datas = await _rpCourierProfile.GetHosoCourrier(freeText, courierId, GlobalData.User.IDUser, status, page, limit, groupId, provinceId, salecode);
             var result = DataPaging.Create(datas, totalRecord);
             return ToJsonResponse(true, null, result);
         }
