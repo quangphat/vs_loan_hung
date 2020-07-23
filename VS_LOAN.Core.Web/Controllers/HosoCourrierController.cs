@@ -46,8 +46,6 @@ namespace VS_LOAN.Core.Web.Controllers
             _bizMedia = mediaBusiness;
             _rpEmployee = employeeRepository;
         }
-        private bool result;
-
 
         public ActionResult Index()
         {
