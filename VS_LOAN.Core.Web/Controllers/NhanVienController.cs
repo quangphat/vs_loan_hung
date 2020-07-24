@@ -121,7 +121,6 @@ namespace VS_LOAN.Core.Web.Controllers
                 //};
                 if (user != null)
                 {
-                   
                     GlobalData.User = user;
                     GlobalData.User.UserType = (int)UserTypeEnum.Sale;
                     var isTeamLead = new GroupRepository().checkIsTeamLeadByUserId(user.IDUser);

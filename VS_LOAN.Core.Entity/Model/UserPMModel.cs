@@ -134,5 +134,6 @@ namespace VS_LOAN.Core.Entity.Model
         }
         public int UserType { get; set; }
         public int OrgId { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }

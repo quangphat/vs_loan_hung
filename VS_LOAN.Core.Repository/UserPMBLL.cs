@@ -34,6 +34,7 @@ namespace VS_LOAN.Core.Repository
                             userModel.Email = dt.Rows[0]["Email"].ToString();
                             userModel.UserName = dt.Rows[0]["UserName"].ToString();
                             userModel.FullName = dt.Rows[0]["FullName"].ToString();
+                            userModel.OrgId = Convert.ToInt32(dt.Rows[0]["OrgId"].ToString());
                             return userModel;
                         }
                     }
