@@ -12,7 +12,7 @@ ALTER PROCEDURE [dbo].[sp_Employee_Login]
 AS
 BEGIN
 	Select Id,Ten_Dang_Nhap AS UserName, Mat_Khau as Passowrd, RoleId, Ma as Code,
-	Email, Ho_Ten as FullName, Dien_Thoai as Phone, Status as IsActive, OrgId
+	Email, Ho_Ten as FullName, Dien_Thoai as Phone, Status as IsActive, isnull(OrgId,1) as OrgId
 	 From Employee where Ten_Dang_Nhap=@UserName and Mat_Khau=@Password and isnull(Xoa,0) =0
 END
 
@@ -112,3 +112,161 @@ END
 
 
 ------------------
+
+create procedure [dbo].[sp_CountEmployee]
+
+(
+
+@workFromDate datetime,
+
+@workToDate datetime,
+
+@roleId int,
+
+@freeText nvarchar(30)
+
+)
+
+as
+
+begin
+
+if @freeText = '' begin set @freeText = null end;
+
+Select count(*) from Employee n
+
+where (convert(varchar(10),n.WorkDate,121) >= (convert(varchar(10),@workFromDate,121))
+
+and convert(varchar(10),n.WorkDate,121) <= (convert(varchar(10),@workToDate,121)) or n.WorkDate is null)
+
+	and (@freeText is null or n.Ho_Ten like N'%' + @freeText + '%'
+
+		or n.Ten_Dang_Nhap like N'%' + @freeText + '%'
+
+		or n.Dien_Thoai like N'%' + @freeText + '%'
+
+		or n.Email like N'%' + @freeText + '%')
+
+		and ((@roleId <> 0 and n.RoleId = @roleId) or (@roleId = 0 and (n.RoleId <> 0 or n.RoleId is null)))
+
+		and n.Xoa = 0
+
+end
+
+
+
+
+--------------
+
+create procedure [dbo].[sp_GetEmployees]
+(
+@workFromDate datetime,
+@workToDate datetime,
+@freeText nvarchar(30),
+@roleId int,
+@page int,
+@limit int
+)
+as
+begin
+if @freeText = '' begin set @freeText = null end;
+declare @offset as int;
+set @offset = (@page-1)*@limit;
+Select n.ID,n.Ten_Dang_Nhap as UserName,n.Ho_Ten as FullName,n.RoleId,r.Name as RoleName,
+n.Email, n.Dien_Thoai as Phone,n.CreatedTime,
+n.Ma as Code,
+n.WorkDate,CONCAT(k.Ten + ' - ',k2.Ten) as Location
+ from Employee n left join KHU_VUC k on n.DistrictId = k.ID
+ left join KHU_VUC k2 on k.Ma_Cha = k2.ID
+ left join Role r on n.RoleId = r.Id
+where ( convert(varchar(10),n.WorkDate,121) >= (convert(varchar(10),@workFromDate,121))
+and convert(varchar(10),n.WorkDate,121) <= (convert(varchar(10),@workToDate,121)) or n.WorkDate is null)
+	and (@freeText is null or n.Ho_Ten like N'%' + @freeText + '%'
+		or n.Ten_Dang_Nhap like N'%' + @freeText + '%'
+		or n.Dien_Thoai like N'%' + @freeText + '%'
+		or n.Email like N'%' + @freeText + '%')
+		and ((@roleId <> 0 and n.RoleId = @roleId) or (@roleId = 0 and (n.RoleId <> 0 or n.RoleId is null)))
+		and n.Xoa = 0
+order by n.Id desc 
+	offset @offset ROWS FETCH NEXT @limit ROWS ONLY
+end
+
+
+
+
+
+
+-------------
+
+
+create procedure sp_GetEmployeeById(@userId int)
+as
+begin
+select * from Employee where ID = @userId
+end
+
+
+---------
+
+create procedure [dbo].[sp_Employee_UpdateUser_v2]
+(
+@id int,
+@fullName nvarchar(100),
+@phone varchar(50),
+@email varchar(50),
+@roleId int,
+@provinceId int,
+@districtId int,
+@updatedtime datetime,
+@updatedby int,
+@workDate datetime
+)
+as
+begin
+--declare @oldRoleId int = 0;
+--select @oldRoleId = RoleId from NHAN_VIEN where ID = @id;
+--if(@oldRoleId is not null and @oldRoleId >0 )
+--begin
+
+--end
+update Employee set 
+		Ho_Ten = @fullName,
+		Dien_Thoai = @phone,
+		Email = @email,
+		RoleId = @roleId,
+		ProvinceId = @provinceId,
+		DistrictId = @districtId,
+		UpdatedTime = @updatedtime,
+		UpdatedBy = @updatedby,
+		WorkDate = @workDate
+		where ID = @id
+end
+
+----------
+
+
+create procedure [dbo].[sp_Employee_InsertUser_v2]
+(
+@id int out,
+@userName varchar(50),
+@code varchar(50),
+@password varchar(50),
+@fullName nvarchar(100),
+@phone varchar(50),
+@email varchar(50),
+@roleId int,
+@provinceId int,
+@districtId int,
+@createdtime datetime,
+@createdby int,
+@workDate datetime
+)
+as
+begin
+insert into Employee(Ma,Ten_Dang_Nhap,Mat_Khau,Ho_Ten,Dien_Thoai,Email,RoleId,WorkDate,ProvinceId,DistrictId,Status,Xoa,CreatedTime,CreatedBy)
+values (@code,@userName,@password,@fullName,@phone,@email,@roleId,@workDate,@provinceId,@districtId,1,0,@createdtime,@createdby);
+SET @id=@@IDENTITY
+end
+
+
+---------

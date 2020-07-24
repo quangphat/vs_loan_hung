@@ -153,7 +153,7 @@ namespace VS_LOAN.Core.Repository
             p.Add("freeText", freeText);
             using (var con = GetConnection())
             {
-                var total = await con.ExecuteScalarAsync<int>("sp_CountNhanvien", p, commandType: CommandType.StoredProcedure);
+                var total = await con.ExecuteScalarAsync<int>("sp_CountEmployee", p, commandType: CommandType.StoredProcedure);
                 return total;
             }
 
@@ -188,17 +188,16 @@ namespace VS_LOAN.Core.Repository
             p.Add("limit", limit);
             using (var con = GetConnection())
             {
-                var results = await con.QueryAsync<EmployeeViewModel>("sp_GetNhanvien", p, commandType: CommandType.StoredProcedure);
+                var results = await con.QueryAsync<EmployeeViewModel>("sp_GetEmployees", p, commandType: CommandType.StoredProcedure);
                 return results.ToList();
             }
 
         }
-        public async Task<Nhanvien> GetById(int id)
+        public async Task<Nhanvien> GetById(int userId)
         {
-            string query = "select * from Nhan_Vien where ID = @id";
             using (var con = GetConnection())
             {
-                var result = await con.QueryFirstOrDefaultAsync<Nhanvien>(query, new { @id = id }, commandType: CommandType.Text);
+                var result = await con.QueryFirstOrDefaultAsync<Nhanvien>("sp_GetEmployeeById", new { userId }, commandType: CommandType.StoredProcedure);
                 return result;
             }
 
@@ -229,7 +228,7 @@ namespace VS_LOAN.Core.Repository
             p.Add("UpdatedBy", entity.UpdatedBy);
             using (var con = GetConnection())
             {
-                await con.ExecuteAsync("sp_UpdateUser", p, commandType: CommandType.StoredProcedure);
+                await con.ExecuteAsync("sp_Employee_UpdateUser_v2", p, commandType: CommandType.StoredProcedure);
                 return true;
             }
 
@@ -251,7 +250,7 @@ namespace VS_LOAN.Core.Repository
             p.Add("createdby", entity.CreatedBy);
             using (var con = GetConnection())
             {
-                await con.ExecuteAsync("sp_InsertUser", p, commandType: CommandType.StoredProcedure);
+                await con.ExecuteAsync("sp_Employee_InsertUser_v2", p, commandType: CommandType.StoredProcedure);
                 return p.Get<int>("id");
             }
 
