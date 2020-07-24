@@ -237,6 +237,7 @@
     <Compile Include="Controllers\F88Controller.cs" />
     <Compile Include="Controllers\MCreditController.cs" />
     <Compile Include="Controllers\QuanLyHoSoController.cs" />
+    <Compile Include="Controllers\RevokeController.cs" />
     <Compile Include="Controllers\SanPhamVayController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\FileController.cs" />
@@ -1776,6 +1777,7 @@
     <Content Include="Views\MCredit\Temp.cshtml" />
     <Content Include="Views\MCredit\MCreditProfile.cshtml" />
     <Content Include="Views\Shared\_RevokeDebtLayout.cshtml" />
+    <Content Include="Views\Revoke\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

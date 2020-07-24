@@ -55,7 +55,7 @@ namespace VS_LOAN.Core.Repository
                     IDbCommand command = new SqlCommand();
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_NHANVIEN_LayDS";
+                    command.CommandText = "sp_Employee_GetFull";
                     var dt = new DataTable();
                     dt.Load(command.ExecuteReader());
                     if (dt == null)

@@ -272,7 +272,7 @@ namespace VS_LOAN.Core.Repository
                     IDbCommand command = new SqlCommand();
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_NHOM_LayDSNhomCon";
+                    command.CommandText = "sp_Group_GetChildGroup";
                     command.Parameters.Add(new SqlParameter("@MaNhomCha", maNhomCha));
                     DataTable dt = new DataTable();
                     dt.Load(command.ExecuteReader());
@@ -346,8 +346,8 @@ namespace VS_LOAN.Core.Repository
                     IDbCommand command = new SqlCommand();
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_NHOM_LayThongTinChiTietTheoMa";
-                    command.Parameters.Add(new SqlParameter("@MaNhom", maNhom));
+                    command.CommandText = "sp_Group_GetById";
+                    command.Parameters.Add(new SqlParameter("@groupId", maNhom));
                     DataTable dt = new DataTable();
                     dt.Load(command.ExecuteReader());
                     if (dt != null)

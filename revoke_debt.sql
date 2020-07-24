@@ -270,3 +270,145 @@ end
 
 
 ---------
+create PROCEDURE [dbo].[sp_Employee_GetFull] 
+-- Add the parameters for the stored procedure here
+
+AS
+BEGIN
+-- SET NOCOUNT ON added to prevent extra result sets from
+-- interfering with SELECT statements.
+Select ID, Ma + ' - ' + Ho_Ten as HoTen From Employee
+END
+
+-----------
+
+create PROCEDURE [dbo].[sp_Employee_LayDSByMaQL_v2]
+	-- Add the parameters for the stored procedure here
+	@MaQL int
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	select ID,Ma as Code, Ma + ' - ' + Ho_Ten as HoTen from Employee where ID=@MaQL
+END
+
+
+--------
+
+create PROCEDURE [dbo].[sp_Group_GetChildGroup] 
+	-- Add the parameters for the stored procedure here
+	@MaNhomCha int
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	Select NHOM.ID, NHOM.Ten, 
+	NHOM.Ten_Viet_Tat as TenNgan, 
+	e.Ho_Ten as NguoiQuanLy, 
+	NHOM.Chuoi_Ma_Cha as ChuoiMaCha 
+	From NHOM, Employee e
+	Where NHOM.Ma_Nguoi_QL = e.ID 
+	and NHOM.Ma_Nhom_Cha = @MaNhomCha
+END
+
+-------
+
+create PROCEDURE [dbo].[sp_Group_GetById] 
+	-- Add the parameters for the stored procedure here
+	@groupId int
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	Select NHOM.ID, NHOM.Ten, NHOM.Ten_Viet_Tat as TenNgan, NHOMCHA.Ten as TenNhomCha, e.Ho_Ten as NguoiQuanLy
+	From Employee e, NHOM
+	left join NHOM as NHOMCHA on NHOM.Ma_Nhom_Cha = NHOMCHA.ID
+	Where NHOM.ID = @groupId and e.ID = NHOM.Ma_Nguoi_QL
+END
+
+----------
+
+create PROCEDURE [dbo].[sp_Employee_Group_GetEmployeeByGroup]
+-- Add the parameters for the stored procedure here
+@groupId int
+AS
+BEGIN
+-- SET NOCOUNT ON added to prevent extra result sets from
+-- interfering with SELECT statements.
+Select e.ID, e.Ma, e.Ho_Ten as HoTen, e.Email, e.Dien_Thoai as SDT 
+From Employee e, NHAN_VIEN_NHOM 
+Where e.ID = NHAN_VIEN_NHOM.Ma_Nhan_Vien and NHAN_VIEN_NHOM.Ma_Nhom = @groupId
+END
+
+
+--------
+
+create PROCEDURE [dbo].[sp_Employee_Group_LayDSChonThanhVienNhomCaCon_v2]
+	-- Add the parameters for the stored procedure here
+	@groupId int
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	Select e.ID, e.Ma + ' - ' + e.Ho_Ten as Ten, e.Ma as Code 
+	From Employee e
+	Where e.ID in (
+		Select NHAN_VIEN_NHOM.Ma_Nhan_Vien From NHAN_VIEN_NHOM 
+		Where NHAN_VIEN_NHOM.Ma_Nhom in 
+			(Select NHOM.ID From NHOM 
+				Where((NHOM.Chuoi_Ma_Cha + '.' + Convert(nvarchar, NHOM.ID)) 
+				like '%.' + Convert(nvarchar, @groupId) + '.%') 
+					or ((NHOM.Chuoi_Ma_Cha + '.' + Convert(nvarchar, NHOM.ID)) 
+						like '%.' + Convert(nvarchar, @groupId)) or NHOM.ID = @groupId)
+	)
+END
+
+------
+
+create PROCEDURE [dbo].[sp_employee_Group_LayDSKhongThanhVienNhom_v2]
+	-- Add the parameters for the stored procedure here
+	@groupId int
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	Select e.ID, e.Ma + ' - ' + e.Ho_Ten as Ten 
+	From Employee e 
+	Where e.ID not in (Select NHAN_VIEN_NHOM.Ma_Nhan_Vien From NHAN_VIEN_NHOM Where NHAN_VIEN_NHOM.Ma_Nhom = @groupId)
+END
+
+--------
+
+create PROCEDURE [dbo].[sp_Employee_Group_LayDSChonThanhVienNhom_v2] 
+	-- Add the parameters for the stored procedure here
+	@groupId int
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	Select e.ID, e.Ma + ' - ' + e.Ho_Ten as Ten 
+	From Employee e, NHAN_VIEN_NHOM Where e.ID = NHAN_VIEN_NHOM.Ma_Nhan_Vien and NHAN_VIEN_NHOM.Ma_Nhom = @groupId
+END
+
+
+
+----------
+
+create PROCEDURE [dbo].[sp_Employee_LayDSByRule]
+	-- Add the parameters for the stored procedure here
+	@UserId int,
+	@Rule int
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	select distinct e.ID, e.Ma as Code,e.Ho_Ten as FullName,e.Ten_Dang_Nhap as UserName,Dien_Thoai as Phone,Email as Email 
+	from Employee e,NHAN_VIEN_CF
+	where --ID=@UserID
+	 e.ID=NHAN_VIEN_CF.Ma_Nhan_Vien
+	and NHAN_VIEN_CF.Quyen=@Rule
+	and NHAN_VIEN_CF.Ma_Nhom in (Select Ma_Nhom from NHAN_VIEN_NHOM where Ma_Nhan_Vien=@UserId)
+
+END
+
+-------

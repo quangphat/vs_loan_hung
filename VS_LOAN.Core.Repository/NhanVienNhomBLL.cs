@@ -24,7 +24,7 @@ namespace VS_LOAN.Core.Repository
                     IDbCommand command = new SqlCommand();
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_NHAN_VIEN_LayDSByRule";
+                    command.CommandText = "sp_Employee_LayDSByRule";
                     command.Parameters.Add(new SqlParameter("@UserID", userID));
                     command.Parameters.Add(new SqlParameter("@Rule", quyen));
                     DataTable dt = new DataTable();
@@ -66,8 +66,8 @@ namespace VS_LOAN.Core.Repository
                     IDbCommand command = new SqlCommand();
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_NHAN_VIEN_NHOM_LayDSChonThanhVienNhom";
-                    command.Parameters.Add(new SqlParameter("@MaNhom", maNhom));
+                    command.CommandText = "sp_Employee_Group_LayDSChonThanhVienNhom_v2";
+                    command.Parameters.Add(new SqlParameter("@groupId", maNhom));
                     DataTable dt = new DataTable();
                     dt.Load(command.ExecuteReader());
                     if (dt != null)
@@ -103,8 +103,8 @@ namespace VS_LOAN.Core.Repository
                     IDbCommand command = new SqlCommand();
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_NHAN_VIEN_NHOM_LayDSKhongThanhVienNhom";
-                    command.Parameters.Add(new SqlParameter("@MaNhom", maNhom));
+                    command.CommandText = "sp_employee_Group_LayDSKhongThanhVienNhom_v2";
+                    command.Parameters.Add(new SqlParameter("@groupId", maNhom));
                     DataTable dt = new DataTable();
                     dt.Load(command.ExecuteReader());
                     if (dt != null)
@@ -140,8 +140,8 @@ namespace VS_LOAN.Core.Repository
                     IDbCommand command = new SqlCommand();
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_NHAN_VIEN_NHOM_LayDSChiTietThanhVienNhom";
-                    command.Parameters.Add(new SqlParameter("@MaNhom", maNhom));
+                    command.CommandText = "sp_Employee_Group_GetEmployeeByGroup";
+                    command.Parameters.Add(new SqlParameter("@groupId", maNhom));
                     DataTable dt = new DataTable();
                     dt.Load(command.ExecuteReader());
                     if (dt != null)
@@ -180,8 +180,8 @@ namespace VS_LOAN.Core.Repository
                     IDbCommand command = new SqlCommand();
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_NHAN_VIEN_NHOM_LayDSChonThanhVienNhomCaCon";
-                    command.Parameters.Add(new SqlParameter("@MaNhom", maNhom));
+                    command.CommandText = "sp_Employee_Group_LayDSChonThanhVienNhomCaCon_v2";
+                    command.Parameters.Add(new SqlParameter("@groupId", maNhom));
                     DataTable dt = new DataTable();
                     dt.Load(command.ExecuteReader());
                     if (dt != null)

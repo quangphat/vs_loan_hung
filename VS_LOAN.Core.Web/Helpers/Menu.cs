@@ -98,7 +98,7 @@ namespace VS_LOAN.Core.Web.Helpers
             List<SiteMenuItem> _siteMenu = new List<SiteMenuItem>{
 
                     new SiteMenuItem("Quản lý hồ sơ","menu-icon qlhs",IndexMenu.M_2,"#",new int[] { }),
-                        new SiteMenuItem("Danh sách hồ sơ","", IndexMenu.M_2_2,ControllerRoles.Roles["profile_list"]._href, ControllerRoles.Roles["profile_list"]._mangChucNang), // 1.3      
+                        new SiteMenuItem("Danh sách hồ sơ","", IndexMenu.M_10_1,ControllerRoles.Roles["revoke_list"]._href, ControllerRoles.Roles["revoke_list"]._mangChucNang), // 1.3      
             };
             List<SiteMenuItem> siteMenuAdmin = new List<SiteMenuItem>
             {
