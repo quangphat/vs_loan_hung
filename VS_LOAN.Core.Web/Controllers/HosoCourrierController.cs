@@ -29,12 +29,14 @@ namespace VS_LOAN.Core.Web.Controllers
         protected readonly ITailieuRepository _rpTailieu;
         protected readonly INoteRepository _rpNote;
         protected readonly IEmployeeRepository _rpEmployee;
+        //protected readonly ILogRepository _rpLog;
         public CourrierController(IHosoCourrierRepository hosoCourrierRepository,
             IPartnerRepository partnerRepository,
             IHosoRepository hosoRepository,
             ITailieuRepository tailieuRepository,
             INoteRepository noteRepository,
             IEmployeeRepository employeeRepository,
+            
             ICustomerRepository customerRepository, IMediaBusiness mediaBusiness) : base()
         {
             _rpNote = noteRepository;
@@ -45,6 +47,7 @@ namespace VS_LOAN.Core.Web.Controllers
             _rpPartner = partnerRepository;
             _bizMedia = mediaBusiness;
             _rpEmployee = employeeRepository;
+           // _rpLog = logRepository;
         }
 
         public ActionResult Index()
@@ -55,8 +58,10 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> Search(string freeText = null, int provinceId = 0, int courierId = 0, string status = null, int groupId = 0, int page = 1, int limit = 10, string salecode = null)
         {
-            var totalRecord = await _rpCourierProfile.CountHosoCourrier(freeText, courierId, GlobalData.User.IDUser, status, groupId, provinceId, salecode);
+            //var totalRecord = await _rpCourierProfile.CountHosoCourrier(freeText, courierId, GlobalData.User.IDUser, status, groupId, provinceId, salecode);
             var datas = await _rpCourierProfile.GetHosoCourrier(freeText, courierId, GlobalData.User.IDUser, status, page, limit, groupId, provinceId, salecode);
+            var totalRecord = (datas != null && datas.Any()) ? datas[0].TotalRecord : 0;
+            //await _rpLog.InsertLog("courier-search", $"freetext:{freeText}, userid:{ GlobalData.User.IDUser}, courierId:{courierId}, status:{status}, salecode: {salecode}");
             var result = DataPaging.Create(datas, totalRecord);
             return ToJsonResponse(true, null, result);
         }
