@@ -30,7 +30,7 @@ namespace VS_LOAN.Core.Business
             var tasks = new List<Task>();
             foreach (var param in pars)
             {
-                tasks.Add(_rpRevokeDebt.InsertManyByParameter(param, userId));
+               await _rpRevokeDebt.InsertManyByParameter(param, userId);
             }
             await Task.WhenAll(tasks);
             return new BaseResponse<bool>(string.Empty, true);

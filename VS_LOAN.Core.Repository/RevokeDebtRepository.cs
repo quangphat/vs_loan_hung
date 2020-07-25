@@ -20,12 +20,11 @@ namespace VS_LOAN.Core.Repository
             param.Add("CreatedBy", userId);
             try
             {
-                using (var con = GetConnection())
-                {
-                    await con.ExecuteAsync("sp_insert_RevokeDebt",
+               
+                    await _connection.ExecuteAsync("sp_insert_RevokeDebt",
                         param, commandType: CommandType.StoredProcedure);
                     return true;
-                }
+                
             }
             catch(Exception e)
             {

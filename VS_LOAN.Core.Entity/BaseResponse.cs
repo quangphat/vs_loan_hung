@@ -18,7 +18,7 @@ namespace VS_LOAN.Core.Entity
         {
             get
             {
-                return !string.IsNullOrWhiteSpace(Error);
+                return string.IsNullOrWhiteSpace(Error);
             }
         }
         public T Data { get; set; }
