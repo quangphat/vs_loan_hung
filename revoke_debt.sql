@@ -1,12 +1,14 @@
+--EXEC sp_rename 'Nhan_Vien', 'Employee'
+
 -- revoke debt
 
 alter table Employee 
 add OrgId int
 
-
+EXEC sp_rename 'Employee.Trang_Thai', 'Status', 'COLUMN'
 -----------
-
-ALTER PROCEDURE [dbo].[sp_Employee_Login]
+go
+create PROCEDURE [dbo].[sp_Employee_Login]
 	@UserName nvarchar(50),
 	@Password nvarchar(200)
 AS
@@ -17,7 +19,7 @@ BEGIN
 END
 
 --------------
-
+go
 create PROCEDURE [dbo].[sp_Profile_GetProfileHaveNotSeen] 
 	-- Add the parameters for the stored procedure here
 	@MaNVDangNhap int,
@@ -76,7 +78,7 @@ END
 
 -----------------------
 
-
+go
 create PROCEDURE [dbo].[sp_Profile_GetMyProfilesNotSeen] 
 	-- Add the parameters for the stored procedure here
 	@MaNhanVien int,
@@ -112,7 +114,7 @@ END
 
 
 ------------------
-
+go
 create procedure [dbo].[sp_CountEmployee]
 
 (
@@ -157,7 +159,7 @@ end
 
 
 --------------
-
+go
 create procedure [dbo].[sp_GetEmployees]
 (
 @workFromDate datetime,
@@ -198,7 +200,7 @@ end
 
 -------------
 
-
+go
 create procedure sp_GetEmployeeById(@userId int)
 as
 begin
@@ -207,7 +209,7 @@ end
 
 
 ---------
-
+go
 create procedure [dbo].[sp_Employee_UpdateUser_v2]
 (
 @id int,
@@ -244,7 +246,7 @@ end
 
 ----------
 
-
+go
 create procedure [dbo].[sp_Employee_InsertUser_v2]
 (
 @id int out,
@@ -270,6 +272,7 @@ end
 
 
 ---------
+go
 create PROCEDURE [dbo].[sp_Employee_GetFull] 
 -- Add the parameters for the stored procedure here
 
@@ -281,7 +284,7 @@ Select ID, Ma + ' - ' + Ho_Ten as HoTen From Employee
 END
 
 -----------
-
+go
 create PROCEDURE [dbo].[sp_Employee_LayDSByMaQL_v2]
 	-- Add the parameters for the stored procedure here
 	@MaQL int
@@ -294,7 +297,7 @@ END
 
 
 --------
-
+go
 create PROCEDURE [dbo].[sp_Group_GetChildGroup] 
 	-- Add the parameters for the stored procedure here
 	@MaNhomCha int
@@ -312,7 +315,7 @@ BEGIN
 END
 
 -------
-
+go
 create PROCEDURE [dbo].[sp_Group_GetById] 
 	-- Add the parameters for the stored procedure here
 	@groupId int
@@ -327,7 +330,7 @@ BEGIN
 END
 
 ----------
-
+go
 create PROCEDURE [dbo].[sp_Employee_Group_GetEmployeeByGroup]
 -- Add the parameters for the stored procedure here
 @groupId int
@@ -342,7 +345,7 @@ END
 
 
 --------
-
+go
 create PROCEDURE [dbo].[sp_Employee_Group_LayDSChonThanhVienNhomCaCon_v2]
 	-- Add the parameters for the stored procedure here
 	@groupId int
@@ -364,7 +367,7 @@ BEGIN
 END
 
 ------
-
+go
 create PROCEDURE [dbo].[sp_employee_Group_LayDSKhongThanhVienNhom_v2]
 	-- Add the parameters for the stored procedure here
 	@groupId int
@@ -378,7 +381,7 @@ BEGIN
 END
 
 --------
-
+go
 create PROCEDURE [dbo].[sp_Employee_Group_LayDSChonThanhVienNhom_v2] 
 	-- Add the parameters for the stored procedure here
 	@groupId int
@@ -393,7 +396,7 @@ END
 
 
 ----------
-
+go
 create PROCEDURE [dbo].[sp_Employee_LayDSByRule]
 	-- Add the parameters for the stored procedure here
 	@UserId int,
