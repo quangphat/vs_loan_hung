@@ -49,7 +49,9 @@ namespace VS_LOAN.Core.Web
             // TODO: Register your type's mappings here.
             //business
             container.RegisterType<IMediaBusiness,MediaBusiness>();
+            container.RegisterType<IRevokeDebtBusiness, RevokeDebtBusiness>();
             //repository
+            container.RegisterSingleton<IRevokeDebtRepository, RevokeDebtRepository>();
             container.RegisterSingleton<ILogRepository, LogRepository>();
             container.RegisterSingleton<IHosoRepository, HosoRepository>();
             container.RegisterSingleton<ICustomerRepository, CustomerRepository>();

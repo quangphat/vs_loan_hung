@@ -91,6 +91,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseResponse.cs" />
     <Compile Include="BaseSqlEntity.cs" />
     <Compile Include="Company.cs" />
     <Compile Include="CustomerEditModel.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="F88Model\LadipageModel.cs" />
     <Compile Include="F88ResponseModel.cs" />
     <Compile Include="GhichuViewModel.cs" />
+    <Compile Include="ImportExcelFrameWorkModel.cs" />
     <Compile Include="MCreditModels\AuthenMCModel.cs" />
     <Compile Include="MCreditModels\CheckCatRequestModel.cs" />
     <Compile Include="MCreditModels\CheckCatResponseModel.cs" />

@@ -1,4 +1,5 @@
-﻿using Ionic.Zip;
+﻿using Dapper;
+using Ionic.Zip;
 using Newtonsoft.Json;
 using NPOI.SS.UserModel;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using VS_LOAN.Core.Business.Infrastuctures;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.HosoCourrier;
@@ -94,12 +96,16 @@ namespace VS_LOAN.Core.Business
         }
         public async Task<List<HosoCourier>> ReadXlsxFile(MemoryStream stream, int createBy)
         {
+            var importExelFrameWork = await _rpTailieu.GetImportTypes((int)HosoType.HosoCourrier);
+            BusinessExtentions.GetObjectParams(importExelFrameWork);
+            //return null;
             var result = new TupleModel();
             var workBook = WorkbookFactory.Create(stream);
             var sheet = workBook.GetSheetAt(0);
             var rows = sheet.GetRowEnumerator();
             var hasData = rows.MoveNext();
-
+            var param = new DynamicParameters();
+            var pars = new List<DynamicParameters>();
             int count = 0;
             var hosos = new List<HosoCourier>();
             for (int i = 1; i < sheet.PhysicalNumberOfRows; i++)
@@ -113,6 +119,12 @@ namespace VS_LOAN.Core.Business
                         {
                             bool isNullRow = row.Cells.Count < 3 ? true : false;
                         }
+                        
+                        foreach(var col in importExelFrameWork)
+                        {
+                            param.Add(col.Name, BusinessExtentions.TryGetValueFromCell(row.Cells[col.Position].ToString(), col.ValueType));
+                        }
+                        pars.Add(param);
                         var hoso = new HosoCourier()
                         {
                             CustomerName = row.Cells[0] != null ? row.Cells[0].ToString() : "",

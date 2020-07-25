@@ -415,3 +415,234 @@ BEGIN
 END
 
 -------
+
+create table RevokeDebt
+(Id int identity(1,1) not null,
+AgreementNo varchar(50),
+CustomerName nvarchar(200),
+LastestPaymentDate varchar(20),
+PaymentStore nvarchar(50),
+OSPri varchar(20),
+TotalCurros varchar(20),
+LateFee varchar(20),
+LiquidationFee varchar(20),
+LateDate varchar(10),
+InterestrateScheme varchar(20),
+InstallmentPeriod varchar(10),
+InstallmentNo varchar(10),
+BillAmountOfCurrentMonth varchar(20),
+ProductName nvarchar(100),
+ProductBrand nvarchar(100),
+CashPrice varchar(20),
+DepositAmount varchar(20),
+FinancePrice varchar(20),
+FirstDueDate varchar(20),
+AgentCode varchar(20),
+Gender nvarchar(10),
+Age varchar(5),
+AgreementDate varchar(20),
+MobilePhone varchar(12),
+HomePhone varchar(12),
+CompanyPhone varchar(12),
+TotalPayableAmount varchar(20),
+LastPaymentAmount varchar(20),
+TotalPaidAmount varchar(20),
+FirstPaymentAmount varchar(20),
+FinalDueDate varchar(20),
+ReferenceName nvarchar(200),
+RefPhone varchar(12),
+[Relative] nvarchar(200),
+IdCardNumber varchar(12),
+Bod varchar(20),
+PermanentAddress nvarchar(300),
+CompanyName nvarchar(300),
+Department nvarchar(200),
+WorkAddress nvarchar(300)
+)
+
+----------------
+
+
+CREATE TABLE [dbo].[ImportExcel](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](100) NULL,
+	[Position] [int] NULL,
+	[ImportType] [int] NULL,
+	[ValueType] [varchar](20) NULL
+)
+-----------
+
+insert into ImportExcel(Name,Position,ImportType,ValueType)
+select COLUMN_NAME,ROW_NUMBER() OVER(ORDER BY (SELECT NULL)) AS rownum, 5, 'string'
+from INFORMATION_SCHEMA.COLUMNS
+where TABLE_NAME='RevokeDebt'
+
+-------------
+go
+create PROCEDURE sp_update_RevokeDebt
+@AgreementNo varchar(50),
+@CustomerName nvarchar(200),
+@LastestPaymentDate varchar(20),
+@PaymentStore nvarchar(50),
+@OSPri varchar(20),
+@TotalCurros varchar(20),
+@LateFee varchar(20),
+@LiquidationFee varchar(20),
+@LateDate varchar(10),
+@InterestrateScheme varchar(20),
+@InstallmentPeriod varchar(10),
+@InstallmentNo varchar(10),
+@BillAmountOfCurrentMonth varchar(20),
+@ProductName nvarchar(100),
+@ProductBrand nvarchar(100),
+@CashPrice varchar(20),
+@DepositAmount varchar(20),
+@FinancePrice varchar(20),
+@FirstDueDate varchar(20),
+@AgentCode varchar(20),
+@Gender nvarchar(10),
+@Age varchar(5),
+@AgreementDate varchar(20),
+@MobilePhone varchar(12),
+@HomePhone varchar(12),
+@CompanyPhone varchar(12),
+@TotalPayableAmount varchar(20),
+@LastPaymentAmount varchar(20),
+@TotalPaidAmount varchar(20),
+@FirstPaymentAmount varchar(20),
+@FinalDueDate varchar(20),
+@FinalPaymentAmount varchar(20),
+@ReferenceName nvarchar(200),
+@RefPhone varchar(12),
+@Relative nvarchar(200),
+@IdCardNumber varchar(12),
+@Bod varchar(20),
+@PermanentAddress nvarchar(300),
+@CompanyName nvarchar(300),
+@Department nvarchar(200),
+@WorkAddress nvarchar(300) ,
+@UpdatedBy int,
+@Id int ,
+@AssigneeGroupIds varchar(50),
+@AssigneeIds varchar(50)
+AS
+BEGIN
+	UPDATE [dbo].RevokeDebt 
+	SET AgreementNo=@AgreementNo
+	,CustomerName=@CustomerName
+	,LastestPaymentDate=@LastestPaymentDate
+	,PaymentStore=@PaymentStore
+	,OSPri=@OSPri
+	,TotalCurros=@TotalCurros
+	,LateFee=@LateFee
+	,LiquidationFee=@LiquidationFee
+	,LateDate=@LateDate
+	,InterestrateScheme=@InterestrateScheme
+	,InstallmentPeriod=@InstallmentPeriod
+	,InstallmentNo=@InstallmentNo
+	,BillAmountOfCurrentMonth=@BillAmountOfCurrentMonth
+	,ProductName=@ProductName
+	,ProductBrand=@ProductBrand
+	,CashPrice=@CashPrice
+	,DepositAmount=@DepositAmount
+	,FinancePrice=@FinancePrice
+	,FirstDueDate=@FirstDueDate
+	,AgentCode=@AgentCode
+	,Gender=@Gender
+	,Age=@Age
+	,AgreementDate=@AgreementDate
+	,MobilePhone=@MobilePhone
+	,HomePhone=@HomePhone
+	,CompanyPhone=@CompanyPhone
+	,TotalPayableAmount=@TotalPayableAmount
+	,LastPaymentAmount=@LastPaymentAmount
+	,TotalPaidAmount=@TotalPaidAmount
+	,FirstPaymentAmount=@FirstPaymentAmount
+	,FinalDueDate=@FinalDueDate
+	,FinalPaymentAmount = @FinalPaymentAmount
+	,ReferenceName=@ReferenceName
+	,RefPhone=@RefPhone
+	,[Relative]=@Relative
+	,IdCardNumber=@IdCardNumber
+	,Bod=@Bod
+	,PermanentAddress=@PermanentAddress
+	,CompanyName=@CompanyName
+	,Department=@Department
+	,WorkAddress=@WorkAddress 
+	,UpdatedBy = @UpdatedBy
+	,UpdatedTime = GETDATE(),
+	AssigneeGroupIds = @AssigneeGroupIds,
+	AssigneeIds = @AssigneeIds
+	WHERE Id=@Id
+end
+
+----------------
+go
+create PROCEDURE sp_insert_RevokeDebt
+@AgreementNo varchar(50),
+@CustomerName nvarchar(200),
+@LastestPaymentDate varchar(20),
+@PaymentStore nvarchar(50),
+@OSPri varchar(20),
+@TotalCurros varchar(20),
+@LateFee varchar(20),
+@LiquidationFee varchar(20),
+@LateDate varchar(10),
+@InterestrateScheme varchar(20),
+@InstallmentPeriod varchar(10),
+@InstallmentNo varchar(10),
+@BillAmountOfCurrentMonth varchar(20),
+@ProductName nvarchar(100),
+@ProductBrand nvarchar(100),
+@CashPrice varchar(20),
+@DepositAmount varchar(20),
+@FinancePrice varchar(20),
+@FirstDueDate varchar(20),
+@AgentCode varchar(20),
+@Gender nvarchar(10),
+@Age varchar(5),
+@AgreementDate varchar(20),
+@MobilePhone varchar(12),
+@HomePhone varchar(12),
+@CompanyPhone varchar(12),
+@TotalPayableAmount varchar(20),
+@LastPaymentAmount varchar(20),
+@TotalPaidAmount varchar(20),
+@FirstPaymentAmount varchar(20),
+@FinalDueDate varchar(20),
+@FinalPaymentAmount varchar(20),
+@ReferenceName nvarchar(200),
+@RefPhone varchar(12),
+@Relative nvarchar(200),
+@IdCardNumber varchar(12),
+@Bod varchar(20),
+@PermanentAddress nvarchar(300),
+@CompanyName nvarchar(300),
+@Department nvarchar(200),
+@WorkAddress nvarchar(300)  ,
+@CreatedBy int
+AS
+BEGIN
+	Insert into RevokeDebt (AgreementNo,CustomerName,LastestPaymentDate
+	,PaymentStore,OSPri,TotalCurros,LateFee,LiquidationFee,LateDate
+	,InterestrateScheme,InstallmentPeriod,InstallmentNo,BillAmountOfCurrentMonth
+	,ProductName,ProductBrand,CashPrice,DepositAmount,FinancePrice,FirstDueDate,AgentCode
+	,Gender,Age,AgreementDate,MobilePhone,HomePhone,CompanyPhone,TotalPayableAmount
+	,LastPaymentAmount,TotalPaidAmount,FirstPaymentAmount,FinalDueDate,FinalPaymentAmount,ReferenceName
+	,RefPhone,[Relative],IdCardNumber,Bod,PermanentAddress,CompanyName,Department,WorkAddress
+	,CreatedTime,CreatedBy,UpdatedTime)
+	values(@AgreementNo,@CustomerName,@LastestPaymentDate
+	,@PaymentStore,@OSPri,@TotalCurros,@LateFee,@LiquidationFee,@LateDate
+	,@InterestrateScheme,@InstallmentPeriod,@InstallmentNo,@BillAmountOfCurrentMonth
+	,@ProductName,@ProductBrand,@CashPrice,@DepositAmount,@FinancePrice,@FirstDueDate,@AgentCode
+	,@Gender,@Age,@AgreementDate,@MobilePhone,@HomePhone,@CompanyPhone,@TotalPayableAmount
+	,@LastPaymentAmount,@TotalPaidAmount,@FirstPaymentAmount,@FinalDueDate,@FinalPaymentAmount,@ReferenceName
+	,@RefPhone,@Relative,@IdCardNumber,@Bod,@PermanentAddress,@CompanyName,@Department,@WorkAddress
+	,GETDATE(),@CreatedBy, GETDATE())
+END
+
+
+-----------------
+
+
+ 
