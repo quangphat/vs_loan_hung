@@ -773,15 +773,21 @@ function strip(html,numchar) {
         return result.substring(0, numchar) + "...";
      return result
 }
+function reverseString(value) {
+    if (isNullOrWhiteSpace(value))
+        return ''
+    return value.split('-').reverse().join('/');
+}
 function formatCurrency(number) {
     var n = number.toString().split('').reverse().join("");
     var n2 = n.replace(/\d\d\d(?!$)/g, "$&.");
     return n2.split('').reverse().join('') + '';
 }
-function formatCurrencyVND(number) {
+function formatCurrencyVND(number, unit = '') {
     var n = number.toString().split('').reverse().join("");
     var n2 = n.replace(/\d\d\d(?!$)/g, "$&.");
-    return n2.split('').reverse().join('') + 'VND';
+    let result = n2.split('').reverse().join('') + ' ' + unit;
+    return result;
 }
 function addDays(date, days) {
     var result = new Date(date);

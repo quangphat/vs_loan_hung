@@ -647,14 +647,14 @@ END
 -----------------
 
 
- alter procedure [dbo].[sp_RevokeDebt_Search]
+ ALTER procedure [dbo].[sp_RevokeDebt_Search]
 (
 @freeText nvarchar(30),
-@assigneeId int = 0,
 @status varchar(20) ='',
 @page int =1,
 @limit_tmp int = 10,
 @groupId int =0,
+@AssigneeId int =0,
 @userId int)as
 begin
 declare @where  nvarchar(1000) = '';
@@ -665,8 +665,10 @@ declare @offset int = 0;
 set @offset = (@page-1)*@limit_tmp;
 set @mainClause = 'select count(*) over() as TotalRecord, rv.* 
 ,fintechcom_vn_PortalNew.fn_getGhichuByHosoId(rv.Id,2) as LastNote,
- nv1.Ho_Ten as CreatedUser,
-from RevokeDebt hc left join Nhan_Vien nv1 on rv.CreatedBy = nv1.ID'
+ nv1.Ho_Ten as CreatedUser, nv2.Ho_Ten as UpdatedUser
+from RevokeDebt rv left join Employee nv1 on rv.CreatedBy = nv1.ID
+left join Employee nv2 on rv.UpdatedBy = nv2.Id
+'
 	if(@freeText  is not null)
 	begin
 	set @where = ' (rv.CustomerName like  N''%' + @freeText +'%''';
@@ -687,6 +689,12 @@ begin
 if(@where <> '')
 set @where = @where + ' and';
 set @where = @where + ' rv.GroupId = @groupId';
+end;
+if(@assigneeId <> 0)
+begin
+if(@where <> '')
+set @where = @where + ' and';
+set @where = @where + ' @AssigneeId in (select distinct value from dbo.fn_SplitStringToTable(rv.AssigneeIds, ''.''))';
 end;										   
 if(@where <>'')
 begin
@@ -695,8 +703,8 @@ end
 set @where = @where + ' and isnull(IsDeleted,0) = 0  order by rv.createdTime desc';
 set @where += ' offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
 set @mainClause = @mainClause +  @where
-set @params =N'@status varchar(20), @offset int, @limit int, @groupId int,@userId int';
+set @params =N'@status varchar(20), @offset int, @limit int, @groupId int, @AssigneeId int ,@userId int';
 EXECUTE sp_executesql @mainClause,@params,  
-@status = @status, @offset = @offset, @limit = @limit_tmp, @groupId = @groupId, @userId = @userId;
+@status = @status, @offset = @offset, @limit = @limit_tmp, @groupId = @groupId, @AssigneeId = @AssigneeId, @userId = @userId;
 print @mainClause;
 end

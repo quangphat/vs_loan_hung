@@ -18,13 +18,15 @@
                     <div class="space-4"></div>
 
                     <div class="form-group">
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Tỉnh thành</label>
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Nhóm</label>
                         <div class="col-sm-5 col-xs-12 ">
-                            <select id="ddlProvince" class="chosen-select form-control" data-placeholder="Tỉnh thành của courier"></select>
+                            <select id="ddlNhomCha" class="chosen-select form-control" data-placeholder="Chọn nhóm">
+                                <option value="0"></option>
+                            </select>
                         </div>
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Courier</label>
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Nhân viên xử lý</label>
                         <div class="col-sm-5 col-xs-12 ">
-                            <select id="ddlCourier" class="chosen-select form-control" data-placeholder="Courier">
+                            <select id="ddlAssignee" class="chosen-select form-control" data-placeholder="">
                                 <option value="0">Tất cả</option>
                             </select>
                         </div>
@@ -42,12 +44,7 @@
 
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Nhóm cha</label>
-                        <div class="col-sm-5 col-xs-12 ">
-                            <select id="ddlNhomCha" class="chosen-select form-control" data-placeholder="Chọn nhóm cha">
-                                <option value="0"></option>
-                            </select>
-                        </div>
+                       
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Tìm kiếm</label>
                         <div class="col-sm-5 col-xs-12 ">
                             <input type="text" class="form-control" id="txtFreeText" placeholder="Tìm kiếm" />
@@ -112,16 +109,20 @@
                                 <tr>
                                     <th class="center w-45">STT</th>
                                     <th class="m-w-120">Khách hàng</th>
+                                    <th class="w-84">Điên thoại</th>
                                     <th class="w-84">Số CMND</th>
                                     <th style="width: 150px">Trạng thái</th>
-                                    <th style="width: 150px">Địa chỉ</th>
-                                    <th class="m-w-120">Nhân viên</th>
-                                    <th class="m-w-120">Ghi chú</th>
-                                    <th class="w-150">Ngày tạo</th>
-                                    <th class="m-w-120">Người tạo</th>
-                                    <th class="m-w-120">Sale code</th>
-                                    <th class="w-150">Ngày cập nhật</th>
+                                    <th style="width: 150px">Ngày thanh toán gần nhất</th>
+                                    <th style="width: 150px">Tổng nợ còn lại</th>
+                                    <th style="width: 150px">Địa chỉ thường chú</th>
 
+                                    <th class="m-w-120">Ghi chú</th>
+
+                                    <th class="m-w-120">Người tạo</th>
+                                    <th class="w-150">Ngày tạo</th>
+
+                                    <th class="m-w-120">Người cập nhật</th>
+                                    <th class="w-150">Ngày cập nhật</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -177,7 +178,7 @@
             $('#ddlNhomCha').chosen({ width: '100%', allow_single_deselect: true });
         });
         $('#ddlProvince').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddlCourier').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlAssignee').chosen({ width: '100%', allow_single_deselect: true });
         LayDSTinh();
         LayNhom();
         preventTxtSearchEnter();
@@ -250,17 +251,17 @@
             url: '@Url.Action("GetUserByProvinceId", "Employee")',
             data: {'provinceID':maTinh},
             success: function (data) {
-                $('#ddlCourier').empty();
-                $('#ddlCourier').append("<option value='0'>Tất cả</option>");
+                $('#ddlAssignee').empty();
+                $('#ddlAssignee').append("<option value='0'>Tất cả</option>");
                 if (data != null) {
                     $.each(data.data, function (index, optionData) {
-                        $('#ddlCourier').append("<option value='" + optionData.Id + "'>" + optionData.Name + "</option>");
+                        $('#ddlAssignee').append("<option value='" + optionData.Id + "'>" + optionData.Name + "</option>");
                     });
                     let courierId = queries.get("courierId");
-                    $('#ddlCourier').val(courierId)
-                    $('#ddlCourier').chosen().trigger("chosen:updated").change();
+                    $('#ddlAssignee').val(courierId)
+                    $('#ddlAssignee').chosen().trigger("chosen:updated").change();
                 }
-                $('#ddlCourier').chosen().trigger("chosen:updated");
+                $('#ddlAssignee').chosen().trigger("chosen:updated");
             },
             complete: function () {
             },
@@ -436,14 +437,16 @@
         let result = "<tr role='row' class = 'odd'>"
             + renderTextCenter(stt, '','center w-45')
             + renderTextLink(rowData.CustomerName, `/Revoke/edit/${rowData.Id}`, '', "m-w-120")
+            + renderTextLeft(rowData.MobilePhone, '', 'w-84')
             + renderTextLeft(rowData.IdCardNumber, '','w-84')
             + renderStatus(rowData.Status)
-            + renderTextLeft(rowData.PermanentAddress, '', 'w-150')
-            + renderTextLeft(rowData.AssignUser, '', "m-w-120")
-            + renderTextLeft(rowData.LastNote, '', "m-w-120")
-            + renderTextLeft(rowData.CreatedTime, 'datetime', 'w-150')
+            + renderTextLeft(reverseString(rowData.LastestPaymentDate), '', 'w-150')
+            + renderTextLeft(formatCurrencyVND(rowData.TotalCurros,''), '', 'w-150')
+            + renderTextLeft(rowData.PermanentAddress, '', 'tb-row-breakword w-150')
+            + renderTextLeft(rowData.LastNote, '', "tb-row-breakword")
             + renderTextLeft(rowData.CreatedUser, '', "m-w-120")
-            + renderTextLeft(rowData.SaleCode, '', "m-w-120")
+            + renderTextLeft(rowData.CreatedTime, 'datetime', 'w-150')
+            + renderTextLeft(rowData.UpdatedUser, '', "m-w-120")
             + renderTextLeft(rowData.UpdatedTime, 'datetime', 'w-150')
             @*+ renderAction(rowData.Id,(@ViewBag.isAdmin == 0 && rowData.Status == 7))*@
             + "</tr>";

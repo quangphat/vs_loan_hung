@@ -106,5 +106,7 @@ namespace VS_LOAN.Core.Entity.RevokeDebt
         public string AssigneeIds { get; set; }
 
         public bool IsDeleted { get; set; }
+        public string CreatedUser { get; set; }
+        public string UpdatedUser { get; set; }
     }
 }
