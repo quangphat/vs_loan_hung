@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using VS_LOAN.Core.Entity.RevokeDebt;
 using VS_LOAN.Core.Repository.Interfaces;
 
 namespace VS_LOAN.Core.Repository
@@ -30,6 +31,16 @@ namespace VS_LOAN.Core.Repository
             {
                 return false;
             }
+        }
+        public async Task<List<RevokeDebtSearch>> Search(int userId,string freeText, string status, int page, int limit, int groupId = 0)
+        {
+           
+                var result = await _connection.QueryAsync<RevokeDebtSearch>("sp_RevokeDebt_Search",
+                     new { freeText, page, limit_tmp = limit, status, groupId, userId}
+                     , commandType: CommandType.StoredProcedure);
+                return result.ToList();
+
+           
         }
     }
 }

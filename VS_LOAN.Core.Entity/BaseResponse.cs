@@ -13,6 +13,11 @@ namespace VS_LOAN.Core.Entity
             this.Error = error;
             this.Data = data;
         }
+        public BaseResponse(T data)
+        {
+            this.Error = string.Empty;
+            this.Data = data;
+        }
         public string Error { get; set; }
         public bool IsSuccess
         {

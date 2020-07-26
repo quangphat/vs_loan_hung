@@ -178,8 +178,10 @@
     <Compile Include="NhomDropDownModel.cs" />
     <Compile Include="NhomModel.cs" />
     <Compile Include="OptionSimple.cs" />
+    <Compile Include="Pagination.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResponseModel.cs" />
+    <Compile Include="RevokeDebt\RevokeDebtSearch.cs" />
     <Compile Include="RLanguage.cs" />
     <Compile Include="RMessage.cs" />
     <Compile Include="SanPhamVayModel.cs" />

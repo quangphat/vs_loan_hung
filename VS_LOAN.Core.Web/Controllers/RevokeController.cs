@@ -22,6 +22,11 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             return View();
         }
+        public async Task<JsonResult> Search(string freeText = null, string status = null, int groupId = 0, int page = 1, int limit = 10)
+        {
+            var result = await _bizRevokeDebt.Search(GlobalData.User.IDUser, freeText, status, page, limit, groupId);
+            return ToJsonResponse(true, null, result);
+        }
         public async Task<JsonResult> Import()
         {
             var file = Request.Files[0];

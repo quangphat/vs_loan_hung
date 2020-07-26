@@ -58,7 +58,7 @@
                             <a class="btn btn-primary" id="btnSearch">
                                 Tìm kiếm
                             </a>
-                            <a class="btn btn-primary" href="/Courrier/AddNew">
+                            <a class="btn btn-primary" href="/Revoke/AddNew">
                                 Tạo mới
                             </a>
                         </div>
@@ -72,7 +72,7 @@
                     </div>
                     <div class="form-group">
                         <div class=" col-sm-8">
-                            <a style="font-style: italic;" href="/Courrier/DownloadTemplateFile?fileName=ImportCourierTemplate.xlsx">Nhấp vào để download mẫu import</a>
+                            <a style="font-style: italic;" href="/Revoke/DownloadTemplateFile?fileName=ImportCourierTemplate.xlsx">Nhấp vào để download mẫu import</a>
                         </div>
 
                     </div>
@@ -195,7 +195,7 @@
             else
                 limit = parseInt(limit)
             groupId = queries.get("groupId");
-            //getData(page, limit, memberId, groupId, true)
+            getData(page, limit, groupId, true)
         });
         renderStatusList();
         setTableLimit("#ddlLimit");
@@ -208,7 +208,7 @@
         let courierId = queries.get("courierId");
         provinceId = queries.get("provinceId");
         groupId = queries.get("groupId");
-        //getData(page, limit, courierId, groupId);
+        getData(page, limit, groupId);
     })
     function LayNhom() {
         $('#ddlNhomCha').empty();
@@ -239,9 +239,9 @@
     }
     var strLoading = 'Vui lòng chờ';
     $('#btnSearch').click(function (e) {
-        //getData(page, limit);
+        getData(page, limit);
     });
-    function getCourrier(maTinh) {
+    function getRevoke(maTinh) {
 
         if (isNullOrWhiteSpace(maTinh))
             return;
@@ -270,7 +270,7 @@
         });
     }
     $('#btnImport').click(function (e) {
-
+        showBlock($('#panel_body'), 'Vui lòng chờ');
         var formData = new FormData();
         formData.append('file', $('#file')[0].files[0]);
 
@@ -305,6 +305,7 @@
                 }
             },
             complete: function () {
+                $('#panel_body').unblock();
             },
             error: function (jqXHR, exception) {
                 showError(jqXHR, exception);
@@ -343,7 +344,7 @@
         $('#ddlThanhVienNhom').empty();
         $('#ddlThanhVienNhom').append("<option value='0'></option>");
         provinceId = this.value
-        getCourrier(this.value)
+        getRevoke(this.value)
     });
     function renderStatusList() {
         $("#ddlStatus").empty();
@@ -356,7 +357,7 @@
     }
     function onClickPage(page) {
         page = page;
-        //getData(page, limit);
+        getData(page, limit);
     }
     function bindQueries() {
 
@@ -376,7 +377,7 @@
     }
     function onSelectLimit() {
         limit = $("#ddlLimit").val()
-        //getData(1, limit)
+        getData(1, limit)
     }
    function renderStatus(statusId) {
         var statusString = "";
@@ -434,10 +435,10 @@
 
         let result = "<tr role='row' class = 'odd'>"
             + renderTextCenter(stt, '','center w-45')
-            + renderTextLink(rowData.CustomerName, `/Courrier/edit/${rowData.Id}`, '', "m-w-120")
-            + renderTextLeft(rowData.Cmnd, '','w-84')
+            + renderTextLink(rowData.CustomerName, `/Revoke/edit/${rowData.Id}`, '', "m-w-120")
+            + renderTextLeft(rowData.IdCardNumber, '','w-84')
             + renderStatus(rowData.Status)
-            + renderTextLeft(renderAddress(rowData), '', 'w-150' )
+            + renderTextLeft(rowData.PermanentAddress, '', 'w-150')
             + renderTextLeft(rowData.AssignUser, '', "m-w-120")
             + renderTextLeft(rowData.LastNote, '', "m-w-120")
             + renderTextLeft(rowData.CreatedTime, 'datetime', 'w-150')
@@ -461,12 +462,12 @@
     function onEdit(id) {
         if (isNullOrUndefined(id))
             return;
-        window.location = "/Courrier/edit/" + id;
+        window.location = "/Revoke/edit/" + id;
     }
-    function getData(page, limit,courierId=0,groupId =0, isPopState = false)
+    function getData(page, limit,groupId =0, isPopState = false)
     {
         $.ajax({
-            url: '/Courrier/Search',
+            url: '/Revoke/Search',
             type: "GET",
             contentType: "application/json",
 
@@ -474,18 +475,16 @@
                 'page': page,
                 'limit': limit,
                 'provinceId': (isNaN(provinceId) || provinceId == 0) ? $('#ddlProvince').val() : provinceId,
-                'courierId': (isNaN(courierId) || courierId == 0) ? $('#ddlCourier').val() : courierId,
                 'freetext': $("#txtFreeText").val(),
-                'salecode': $("#txtSaleCode").val(),
                 'groupId': (isNaN(groupId) || groupId == 0) ? $('#ddlNhomCha').val() : groupId,
                 'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
             },
             success: function (response) {
                 if (response.Message == null) {
                     totalRecord = response.data.TotalRecord;
-                    let search = this.url.replace("/Courrier/Index", "");
+                    let search = this.url.replace("/Revoke/Index", "");
 
-                    search = search.replace("/Courrier/Search", "")
+                    search = search.replace("/Revoke/Search", "")
                     queries = new URLSearchParams(search)
                     page = queries.get("page");
                     if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))

@@ -457,7 +457,8 @@ Bod varchar(20),
 PermanentAddress nvarchar(300),
 CompanyName nvarchar(300),
 Department nvarchar(200),
-WorkAddress nvarchar(300)
+WorkAddress nvarchar(300),
+IsDeleted bit
 )
 
 ----------------
@@ -620,7 +621,8 @@ create PROCEDURE sp_insert_RevokeDebt
 @CompanyName nvarchar(300),
 @Department nvarchar(200),
 @WorkAddress nvarchar(300)  ,
-@CreatedBy int
+@CreatedBy int,
+@AssigneeIds varchar(20)
 AS
 BEGIN
 	Insert into RevokeDebt (AgreementNo,CustomerName,LastestPaymentDate
@@ -630,7 +632,7 @@ BEGIN
 	,Gender,Age,AgreementDate,MobilePhone,HomePhone,CompanyPhone,TotalPayableAmount
 	,LastPaymentAmount,TotalPaidAmount,FirstPaymentAmount,FinalDueDate,FinalPaymentAmount,ReferenceName
 	,RefPhone,[Relative],IdCardNumber,Bod,PermanentAddress,CompanyName,Department,WorkAddress
-	,CreatedTime,CreatedBy,UpdatedTime)
+	,CreatedTime,CreatedBy,UpdatedTime,AssigneeGroupIds)
 	values(@AgreementNo,@CustomerName,@LastestPaymentDate
 	,@PaymentStore,@OSPri,@TotalCurros,@LateFee,@LiquidationFee,@LateDate
 	,@InterestrateScheme,@InstallmentPeriod,@InstallmentNo,@BillAmountOfCurrentMonth
@@ -638,11 +640,63 @@ BEGIN
 	,@Gender,@Age,@AgreementDate,@MobilePhone,@HomePhone,@CompanyPhone,@TotalPayableAmount
 	,@LastPaymentAmount,@TotalPaidAmount,@FirstPaymentAmount,@FinalDueDate,@FinalPaymentAmount,@ReferenceName
 	,@RefPhone,@Relative,@IdCardNumber,@Bod,@PermanentAddress,@CompanyName,@Department,@WorkAddress
-	,GETDATE(),@CreatedBy, GETDATE())
+	,GETDATE(),@CreatedBy, GETDATE(),@AssigneeIds)
 END
 
 
 -----------------
 
 
- 
+ alter procedure [dbo].[sp_RevokeDebt_Search]
+(
+@freeText nvarchar(30),
+@assigneeId int = 0,
+@status varchar(20) ='',
+@page int =1,
+@limit_tmp int = 10,
+@groupId int =0,
+@userId int)as
+begin
+declare @where  nvarchar(1000) = '';
+declare @mainClause nvarchar(max);
+declare @params nvarchar(300);
+if @freeText = '' begin set @freeText = null end;
+declare @offset int = 0;
+set @offset = (@page-1)*@limit_tmp;
+set @mainClause = 'select count(*) over() as TotalRecord, rv.* 
+,fintechcom_vn_PortalNew.fn_getGhichuByHosoId(rv.Id,2) as LastNote,
+ nv1.Ho_Ten as CreatedUser,
+from RevokeDebt hc left join Nhan_Vien nv1 on rv.CreatedBy = nv1.ID'
+	if(@freeText  is not null)
+	begin
+	set @where = ' (rv.CustomerName like  N''%' + @freeText +'%''';
+	set @where = @where + ' or rv.IdCardNumber like  N''%' + @freeText +'%''';
+	set @where = @where + ' or rv.MobilePhone like  N''%' + @freeText +'%''';
+	end;
+   if(@where <> '')
+     set @where = @where + ' and';
+	   set @where = @where + ' (@userId in (select * from fn_GetUserIDCanViewMyProfile_v2 (rv.CreatedBy)) )'
+if(@status <> '')
+begin
+if(@where <> '')
+set @where = @where + ' and';
+set @where = @where + ' rv.Status in ('+ @status +')'; 
+end;
+if(@groupId <> 0)
+begin
+if(@where <> '')
+set @where = @where + ' and';
+set @where = @where + ' rv.GroupId = @groupId';
+end;										   
+if(@where <>'')
+begin
+set @where= ' where ' + @where
+end
+set @where = @where + ' and isnull(IsDeleted,0) = 0  order by rv.createdTime desc';
+set @where += ' offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
+set @mainClause = @mainClause +  @where
+set @params =N'@status varchar(20), @offset int, @limit int, @groupId int,@userId int';
+EXECUTE sp_executesql @mainClause,@params,  
+@status = @status, @offset = @offset, @limit = @limit_tmp, @groupId = @groupId, @userId = @userId;
+print @mainClause;
+end
