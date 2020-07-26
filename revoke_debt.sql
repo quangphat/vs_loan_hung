@@ -1,4 +1,4 @@
---EXEC sp_rename 'Nhan_Vien', 'Employee'
+﻿--EXEC sp_rename 'Nhan_Vien', 'Employee'
 
 -- revoke debt
 
@@ -708,3 +708,14 @@ EXECUTE sp_executesql @mainClause,@params,
 @status = @status, @offset = @offset, @limit = @limit_tmp, @groupId = @groupId, @AssigneeId = @AssigneeId, @userId = @userId;
 print @mainClause;
 end
+
+-----------
+  insert into ProfileStatus (Code, Name, Value, ProfileType,IsDeleted, OrgId)
+  Values ('BRP',N'Xe đã được thu hồi',1,'revoke_Field',0,2),
+    ('DIE',N'Khách hàng chết, gia đình gặp khó khăn kinh tế',2,'revoke_Field',0,2),
+	  ('F_CGI',N'Khách hàng đi tù/nghĩa vụ/cai nghiện',3,'revoke_Field',0,2),
+	    ('F_HOS',N'Nhà đã bán',4,'revoke_Field',0,2),
+		  ('F_NAH',N'Không gặp được khách hàng, đã để lại thư báo. KH bỏ nhà đi, thỉnh thoảng mới về',5,'revoke_Field',0,2)
+
+
+---------------
