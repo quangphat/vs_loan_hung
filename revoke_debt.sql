@@ -832,4 +832,32 @@ end
 
 
 
-------------
+------------USE [fintechcom_vn_PortalNew]
+GO
+
+/****** Object:  Table [dbo].[ProfileStatus]    Script Date: 27/07/2020 2:34:50 CH ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[ProfileStatus](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Code] [varchar](100) NULL,
+	[Name] [nvarchar](500) NULL,
+	[Value] [int] NULL,
+	[IsDeleted] [bit] NULL,
+	[OrgId] [int] NULL,
+	[ProfileType] [varchar](100) NULL
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
