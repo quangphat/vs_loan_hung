@@ -733,4 +733,35 @@ end
 		  ('F_NAH',N'Không gặp được khách hàng, đã để lại thư báo. KH bỏ nhà đi, thỉnh thoảng mới về',5,'revoke_Field',0,2)
 
 
----------------
+---------------USE [fintechcom_vn_PortalNew]
+GO
+/****** Object:  UserDefinedFunction [dbo].[fn_GetUserIDCanViewMyProfile_v2]    Script Date: 27/07/2020 11:29:41 SA ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER function [dbo].[fn_GetUserIDCanViewMyProfile_v2]
+(@userIds varchar(50))
+returns @tempTable TABLE (userId int)
+as 
+BEGIN
+declare @parentCode varchar(20);
+declare @tempGroupIds table(ids int PRIMARY key)
+insert @tempGroupIds select Ma_Nhom from NHAN_VIEN_NHOM where Ma_Nhan_Vien in (select distinct value as UserId from dbo.fn_SplitStringToTable(@userIds, '.'))
+select @parentCode = g.Chuoi_Ma_Cha
+from NHOM g where g.id in  (select * from @tempGroupIds)
+--(select Ma_Nhom from NHAN_VIEN_NHOM where Ma_Nhan_Vien = @userId)
+insert into @tempTable
+select Ma_Nguoi_QL as UserId from NHOM g where g.Id 
+in ( select * from dbo.fn_SplitStringToTable(@parentCode, '.'))
+union 
+select Ma_Nguoi_QL as UserId  from NHOM g where g.id in (select * from @tempGroupIds)
+--(select Ma_Nhom from NHAN_VIEN_NHOM where Ma_Nhan_Vien = @userId)
+union select Ma_nhan_vien as UserId from NHAN_VIEN_CF where Ma_Nhom  in (select * from @tempGroupIds)
+--(select Ma_nhom  as UserId from NHAN_VIEN_NHOM where Ma_Nhan_Vien = @userId)
+union
+select distinct value as UserId from dbo.fn_SplitStringToTable(@userIds, '.')
+union select Id  as UserId from Employee where RoleId =1
+delete @tempGroupIds
+return
+END
