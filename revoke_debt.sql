@@ -978,3 +978,70 @@ END
 
 
 -----------
+
+ALTER procedure [dbo].[sp_MCredit_TempProfile_Gets]
+(
+@freeText nvarchar(30),
+@userId int,
+@status varchar(20),
+@page int =1,
+@limit_tmp int = 10
+)
+as
+begin
+declare @where  nvarchar(500) = '';
+declare @mainClause nvarchar(max);
+declare @params nvarchar(300);
+
+if @freeText = '' begin set @freeText = null end;
+declare @offset int = 0;
+set @offset = (@page-1)*@limit_tmp;
+set @mainClause = 'select mc.Id,mc.McId, mc.CustomerName,isnull(mc.IdNumber,mc.CCCDNumber) as IDNumber
+,mc.Status, mc.Phone, mc.CreatedBy, mc.UpdatedBy,mc.LoanMoney,mc.CreatedTime, mc.UpdatedTime,
+isnull(fintechcom_vn_PortalNew.fn_getGhichuByHosoId(mc.Id,4),'''') as LastNote,
+mc.SaleNumber +'' '' + isnull(mc.SaleName,'''') as SaleName,
+nv1.Ho_Ten as CreatedUser, mcl.Name as LoanPeriodName, p.Name  as ProductName
+from MCredit_TempProfile mc left join NHAN_VIEN nv1 on mc.CreatedBy = nv1.ID
+left join MCreditProduct p on mc.ProductCode = p.Code
+left join MCreditLoanPeriod mcl on mc.LoanPeriodCode = mcl.Code
+'
+if(@freeText  is not null)
+begin
+ set @where = 'where (mc.CustomerName like  N''%' + @freeText +'%''';
+ set @where = @where + ' or mc.IdNumber like  N''%' + @freeText +'%''';
+ set @where = @where + ' or mc.Phone like  N''%' + @freeText +'%''';
+ set @where = @where + ' or nv2.CCCDNumber like  N''%' + @freeText +'%'' )';
+end;
+
+--if(@courierId > 0)
+--begin
+--if(@where <> '')
+--set @where = @where + ' and';
+--set @where = @where + ' mc.Id in (
+--select CourierId from CourierAssignee 
+--where AssigneeId = @CourierId)'; 
+--end;
+if(@status <> '')
+begin
+if(@where <> '')
+set @where = @where + ' and';
+set @where = @where + ' mc.Status in ('+ @status +')'; 
+end;
+if(@where <>'')
+begin
+set @where= ' where ' + @where + ' and @userId in (select * from fn_GetUserIDCanViewMyProfile (mc.CreatedBy)) '
+end
+else
+begin
+ set @where =' where  @userId in (select * from fn_GetUserIDCanViewMyProfile (mc.CreatedBy))'
+end
+set @where = @where + ' and Isnull(mc.IsDeleted,0) = 0 order by mc.UpdatedTime '; 
+set @where += ' offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
+set @mainClause = @mainClause +  @where
+set @params =N' @offset int, @limit int, @userId int';
+EXECUTE sp_executesql @mainClause,@params,  @offset = @offset, @limit = @limit_tmp, @userId = @userId
+print @mainClause;
+end
+  
+
+  -----------------
