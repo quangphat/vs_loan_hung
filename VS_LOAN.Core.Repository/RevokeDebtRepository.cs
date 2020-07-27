@@ -21,7 +21,6 @@ namespace VS_LOAN.Core.Repository
             param.Add("CreatedBy", userId);
             try
             {
-               
                     await _connection.ExecuteAsync("sp_insert_RevokeDebt",
                         param, commandType: CommandType.StoredProcedure);
                     return true;

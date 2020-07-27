@@ -54,6 +54,12 @@ namespace VS_LOAN.Core.Repository
             }
             return p;
         }
+        protected IDbConnection GetOneConnection()
+        {
+            if(_connection.State == ConnectionState.Closed)
+                _connection = new SqlConnection(_connectionString);
+            return _connection;
+        }
         protected IDbConnection GetConnection()
         {
             var con = new SqlConnection(_connectionString);
