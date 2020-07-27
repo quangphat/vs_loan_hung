@@ -611,7 +611,7 @@
     });
 
     $('#btn_Save').click(function (e) {
-
+        
                 if ($('#txtCustomerName').val() == "" || $('#txtCustomerName').val() == undefined) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
@@ -683,7 +683,7 @@
             });
             return;
         }
-
+        showBlock($('#panel_body'), 'Vui lòng chờ');
         let FileRequireIds = [];
         var objectSend = JSON.stringify({
             "Id": @ViewBag.model.Id,

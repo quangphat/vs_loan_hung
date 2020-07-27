@@ -514,6 +514,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (id > 0)
             {
                 await _rpTailieu.CopyFileFromProfile(profileId, (int)HosoType.MCredit, id);
+                await _rpMCredit.DeleteById(profileId);
             }
             return ToJsonResponse(true, "", id);
         }
