@@ -120,7 +120,7 @@
         $('#duallistNhanVien').empty();
         $.ajax({
             type: "POST",
-            url: '@Url.Action("LayDSNhanVien", "NhanVien")',
+            url: '@Url.Action("GetAllEmployee", "Employee")',
             data: { },
             success: function (data) {
                 if (data != null) {
@@ -146,7 +146,7 @@
         $('#ddlNguoiQL').append("<option value='0'></option>");
         $.ajax({
             type: "POST",
-            url: '@Url.Action("LayDSNhanVien", "NhanVien")',
+            url: '@Url.Action("GetAllEmployee", "Employee")',
             data: {},
             success: function (data) {
                 if (data != null) {

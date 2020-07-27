@@ -27,7 +27,7 @@ function DoLogint(event) {
         $.ajax({
             type: "POST",
             datatype: "JSON",
-            url: '/NhanVien/DangNhap',
+            url: '/Employee/DangNhap',
             data: $('#form_login').serialize(),
             success: function (data) {
                 if (data.Message.Result == false) {

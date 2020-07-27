@@ -257,7 +257,6 @@
     <Compile Include="Helpers\DataPaging.cs" />
     <Compile Include="Helpers\DataTables\jQueryDataTableParamModel.cs" />
     <Compile Include="Helpers\EnumIndexMenu.cs" />
-    <Compile Include="Controllers\NhanVienController.cs" />
     <Compile Include="Helpers\ActionInfo.cs" />
     <Compile Include="Helpers\GlobalData.cs" />
     <Compile Include="Global.asax.cs">
@@ -1732,8 +1731,8 @@
     <Content Include="Views\Shared\_Menu.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
     <Content Include="Views\Shared\_ShowMessage.cshtml" />
-    <Content Include="Views\NhanVien\Login.cshtml" />
-    <Content Include="Views\NhanVien\UserProfile.cshtml" />
+    <Content Include="Views\Employee\Login.cshtml" />
+    <Content Include="Views\Employee\UserProfile.cshtml" />
     <Content Include="Views\NoAuthorities\Index.cshtml" />
     <Content Include="Views\NotPage\Index.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />

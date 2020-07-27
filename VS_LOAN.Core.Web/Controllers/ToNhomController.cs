@@ -12,11 +12,17 @@ using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Utility.Exceptions;
 using VS_LOAN.Core.Web.Helpers;
+using VS_LOAN.Core.Repository.Interfaces;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class ToNhomController : LoanController
     {
+        protected readonly IEmployeeRepository _rpEmployee;
+        public ToNhomController(IEmployeeRepository employeeRepository):base()
+        {
+            _rpEmployee = employeeRepository;
+        }
         private readonly GroupRepository _bizGroup = new GroupRepository();
         public static Dictionary<string, ActionInfo> LstRole
         {
@@ -37,13 +43,6 @@ namespace VS_LOAN.Core.Web.Controllers
             return View();
         }
 
-        public JsonResult LayDSNhanVien()
-        {
-            List<UserPMModel> rs = new NhanVienBLL().LayDSNhanVien();
-            if (rs == null)
-                rs = new List<UserPMModel>();
-            return ToJsonResponse(true, null, rs);
-        }
 
         public async Task<JsonResult> LayDSNhomCha(bool isAddAll = false)
         {
