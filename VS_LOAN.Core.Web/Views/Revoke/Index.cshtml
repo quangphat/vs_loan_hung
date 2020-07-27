@@ -20,7 +20,7 @@
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Nhóm</label>
                         <div class="col-sm-5 col-xs-12 ">
-                            <select id="ddlNhomCha" class="chosen-select form-control" data-placeholder="Chọn nhóm">
+                            <select id="ddlGroup" class="chosen-select form-control" data-placeholder="Chọn nhóm">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -164,18 +164,10 @@
     var totalRecord = 0;
     var provinceId = 0;
     var groupId = 0;
-    var lstStatus = [
-        { value: "1", display: "Mới" },
-        { value: "2", display: "Đang xử lý" },
-        { value: "3", display: "Từ chối" },
-        { value: "4", display: "Chấp nhận" },
-        { value: "5", display: "Giải ngân" },
-        { value: "6", display: "Hoàn thành" }
-    ]
 
     $(document).ready(function e() {
         $(document).ready(function e() {
-            $('#ddlNhomCha').chosen({ width: '100%', allow_single_deselect: true });
+            $('#ddlGroup').chosen({ width: '100%', allow_single_deselect: true });
         });
         $('#ddlProvince').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlAssignee').chosen({ width: '100%', allow_single_deselect: true });
@@ -212,21 +204,21 @@
         getData(page, limit, groupId);
     })
     function LayNhom() {
-        $('#ddlNhomCha').empty();
+        $('#ddlGroup').empty();
         $.ajax({
             type: "POST",
             url: '@Url.Action("LayDSNhomCha", "ToNhom")',
             data: {},
             success: function (data) {
-                $('#ddlNhomCha').append("<option value='0'></option>");
+                $('#ddlGroup').append("<option value='0'></option>");
                 if (data.data != null && data.success == true) {
                     data.data.unshift({ ID: 0, Ten: 'Tất cả', MaNguoiQL: -1, ChuoiMaCha: "0"})
                     $.each(data.data, function (index, item) {
-                        $('#ddlNhomCha').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
+                        $('#ddlGroup').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
                     });
                     let groupId = queries.get("groupId");
-                    $('#ddlNhomCha').val(groupId)
-                    $('#ddlNhomCha').chosen().trigger("chosen:updated").change();
+                    $('#ddlGroup').val(groupId)
+                    $('#ddlGroup').chosen().trigger("chosen:updated").change();
 
                 }
             },
@@ -348,13 +340,30 @@
         getRevoke(this.value)
     });
     function renderStatusList() {
-        $("#ddlStatus").empty();
-        $.each(lstStatus, function (index, item) {
-            $("#ddlStatus").append("<option value='" + item.value + "'>" + item.display + "</option>")
-        })
-        $('#ddlStatus').chosen().trigger("chosen:updated");
-        $('#ddlStatus').trigger("change");
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("ProfileStatus", "Common")',
+            data: {},
+            success: function (data) {
+                $('#ddlStatus').empty();
+                $('#ddlStatus').append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#ddlStatus').append("<option value='" + optionData.Id + "'>" + optionData.Name + "</option>");
+                    });
+                    let provinceId = queries.get("status");
+                    $('#ddlStatus').val(provinceId)
+                    $('#ddlStatus').chosen().trigger("chosen:updated").change();
+                }
 
+                $('#ddlStatus').chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
     }
     function onClickPage(page) {
         page = page;
@@ -479,7 +488,7 @@
                 'limit': limit,
                 'provinceId': (isNaN(provinceId) || provinceId == 0) ? $('#ddlProvince').val() : provinceId,
                 'freetext': $("#txtFreeText").val(),
-                'groupId': (isNaN(groupId) || groupId == 0) ? $('#ddlNhomCha').val() : groupId,
+                'groupId': (isNaN(groupId) || groupId == 0) ? $('#ddlGroup').val() : groupId,
                 'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
             },
             success: function (response) {

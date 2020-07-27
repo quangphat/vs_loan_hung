@@ -26,7 +26,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> ProfileStatus()
         {
-            var result = await _rpCommon.GetProfileStatusByCode(Constanst.revoke_debt_max_row_import, GlobalData.User.OrgId, roleId: GlobalData.User.RoleId);
+            var result = await _rpCommon.GetProfileStatusByCode(Constanst.revoke_debt_max_row_import, GlobalData.User.OrgId,isGetAll:true, roleId: GlobalData.User.RoleId);
             return ToJsonResponse(true, "", data: result);
         }
     }

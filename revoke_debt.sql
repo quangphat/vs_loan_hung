@@ -893,11 +893,11 @@ create procedure sp_ProfileStatus_Gets
 as begin
 if(@isGetAll = 0)
 begin
-select * from ProfileStatus where ProfileType = @profileType and OrgId = @orgId and isnull(IsDeleted,0) = 0
+select Value as Id, Code, (Code +' - ' + Name) as Name  from ProfileStatus where ProfileType = @profileType and OrgId = @orgId and isnull(IsDeleted,0) = 0
 end
 else
 begin
-select * from ProfileStatus where OrgId = @orgId and isnull(IsDeleted,0) = 0
+select Value as Id, Code, (Code +' - ' + Name) as Name from ProfileStatus where OrgId = @orgId and isnull(IsDeleted,0) = 0
 end
 end
 --------------
