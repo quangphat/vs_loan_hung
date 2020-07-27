@@ -1776,7 +1776,6 @@
     <Content Include="Views\MCredit\TempProfile.cshtml" />
     <Content Include="Views\MCredit\Temp.cshtml" />
     <Content Include="Views\MCredit\MCreditProfile.cshtml" />
-    <Content Include="Views\Shared\_RevokeDebtLayout.cshtml" />
     <Content Include="Views\Revoke\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
