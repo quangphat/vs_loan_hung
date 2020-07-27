@@ -735,12 +735,95 @@ print @mainClause;
 end
 
 -----------
+GO
+CREATE TABLE [dbo].[ProfileStatus](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Code] [varchar](100) NULL,
+	[Name] [nvarchar](500) NULL,
+	[Value] [int] NULL,
+	[IsDeleted] [bit] NULL,
+	[OrgId] [int] NULL,
+	[ProfileType] [varchar](100) NULL
+)
+
+
   insert into ProfileStatus (Code, Name, Value, ProfileType,IsDeleted, OrgId)
   Values ('BRP',N'Xe đã được thu hồi',1,'revoke_Field',0,2),
-    ('DIE',N'Khách hàng chết, gia đình gặp khó khăn kinh tế',2,'revoke_Field',0,2),
-	  ('F_CGI',N'Khách hàng đi tù/nghĩa vụ/cai nghiện',3,'revoke_Field',0,2),
-	    ('F_HOS',N'Nhà đã bán',4,'revoke_Field',0,2),
-		  ('F_NAH',N'Không gặp được khách hàng, đã để lại thư báo. KH bỏ nhà đi, thỉnh thoảng mới về',5,'revoke_Field',0,2)
+('DIE',N'Khách hàng chết, gia đình gặp khó khăn kinh tế',2,'revoke_Field',0,2),
+('F_CGI',N'Khách hàng đi tù/nghĩa vụ/cai nghiện',3,'revoke_Field',0,2),
+('F_HOS',N'Nhà đã bán',4,'revoke_Field',0,2),
+('F_NAH',N'Không gặp được khách hàng, đã để lại thư báo. KH bỏ nhà đi, thỉnh thoảng mới về',5,'revoke_Field',0,2),
+('F_NFH',N'Không tìm thấy nhà tại địa chỉ cung cấp. Nhà đã bị giải tỏa',6,'revoke_Field',0,2),
+('F_NIW',N'Công ty không Hợp tác, Ko xác định được rõ KH còn làm hay không',7,'revoke_Field',0,2),
+('F_NLA',N'Khách hàng chưa từng sống tại địa chỉ được cung cấp',8,'revoke_Field',0,2),
+('F_OBT',N'Đã thu được tiền',9,'revoke_Field',0,2),
+('F_RENT',N'Khách hàng thuê nhà trọ ở nhưng đã dọn đi',6,'revoke_Field',0,2),
+('F_SOB',N'Xe đã bán',7,'revoke_Field',0,2),
+('F_WAU',N'Khách hàng bỏ trốn, gia đình còn ở tại địa phương',8,'revoke_Field',0,2),
+('F_WET',N'Khách hàng bỏ trốn, Không gặp gia đình',9,'revoke_Field',0,2),
+('GSF',N'Nghi ngờ gian lận',10,'revoke_Field',0,2),
+('IGN1',N'Khách hàng chưa nhận khoản vay',11,'revoke_Field',0,2),
+('IGN2',N'Khách hàng báo đã hủy Hợp đồng',12,'revoke_Field',0,2),
+('LEM',N'Để lại lời nhắn cho người thân',13,'revoke_Field',0,2),
+('MCW',N'Khách hàng bị bệnh/ tai nạn',14,'revoke_Field',0,2),
+('PTP',N'Hứa thanh toán',15,'revoke_Field',0,2),
+('RTP',N'Từ chối thanh toán',16,'revoke_Field',0,2),
+('WFP',N'Khách hàng đã thanh toán đang chờ phòng Thanh toán kiểm tra',17,'revoke_Field',0,2)
+
+----------
+
+  insert into ProfileStatus (Code, Name, Value, ProfileType,IsDeleted, OrgId)
+  Values ('CAB',N'call back – gọi lại ',1,'revoke_Call',0,2),
+('CGI',N'Khách hàng đi tù/nghĩa vụ/cai nghiện',2,'revoke_Call',0,2),
+('DIE',N'Khách hàng chết, gia đình gặp khó khăn kinh tế',3,'revoke_Call',0,2),
+('GSF',N'Nghi ngờ gian lận',4,'revoke_Call',0,2),
+('HUP',N'Cúp máy ngang',5,'revoke_Call',0,2),
+('IGN1',N'Khách hàng chưa nhận khoản vay',7,'revoke_Call',0,2),
+('IGN2',N'Khách hàng báo đã hủy Hợp đồng',8,'revoke_Call',0,2),
+('LEM',N'Để lại lời nhắn cho người thân',9,'revoke_Call',0,2),
+('MCW',N'Khách hàng bị bệnh/ tai nạn',10,'revoke_Call',0,2),
+('NAB',N'phone number in not available - số không liên lạc được, số không tồn tại, số không đúng',11,'revoke_Call',0,2),
+('NCP',N'not customer or other`s phone number - không phải số KH/ số người thân khác',12,'revoke_Call',0,2),
+('NKP',N'has signal but not answer - không nhấc máy, máy bận, gọi vào hộp thư thoại',13,'revoke_Call',0,2),
+('PTP',N'promise to pay – hứa thanh toán',14,'revoke_Call',0,2),
+('RTP',N'refuse to pay – từ chối thanh toán',15,'revoke_Call',0,2),
+('WFP',N'Khách hàng đã thanh toán đang chờ phòng Thanh toán kiểm tra',16,'revoke_Call',0,2)
+
+-----------------
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 
 ---------------
@@ -832,32 +915,5 @@ end
 
 
 
-------------USE [fintechcom_vn_PortalNew]
-GO
-
-/****** Object:  Table [dbo].[ProfileStatus]    Script Date: 27/07/2020 2:34:50 CH ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-SET ANSI_PADDING ON
-GO
-
-CREATE TABLE [dbo].[ProfileStatus](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Code] [varchar](100) NULL,
-	[Name] [nvarchar](500) NULL,
-	[Value] [int] NULL,
-	[IsDeleted] [bit] NULL,
-	[OrgId] [int] NULL,
-	[ProfileType] [varchar](100) NULL
-) ON [PRIMARY]
-
-GO
-
-SET ANSI_PADDING OFF
-GO
-
+------------
 
