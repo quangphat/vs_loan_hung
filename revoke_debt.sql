@@ -772,3 +772,25 @@ return
 END
 
 --------------
+
+create table SystemConfig
+(Id int identity(1,1) not null,
+Code varchar(50),
+Name nvarchar(100),
+Value int
+)
+
+--------------
+
+insert into SystemConfig(Code, Name, Value)
+values('revoke_debt_max_row_import',N'Import thu hồi nợ', 1000)
+
+--------------
+
+go
+create procedure sp_SystemConfig_GetByCode(@code varchar(50))
+as begin
+select top 1 * from SystemConfig where Code = @code
+end
+
+------------
