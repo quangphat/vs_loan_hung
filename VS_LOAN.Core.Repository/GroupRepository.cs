@@ -29,7 +29,7 @@ namespace VS_LOAN.Core.Repository
             //return true;
         }
         // Danh sách quản lý hồ sơ (lấy từ quản lý nhóm)
-        public List<NhomDropDownModel> LayDSCuaNhanVien(int userID)
+        public List<NhomDropDownModel> LayDSCuaNhanVien(int userId)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace VS_LOAN.Core.Repository
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = "sp_NHOM_LayDSChonTheoNhanVien";
-                    command.Parameters.Add(new SqlParameter("@UserID", userID));
+                    command.Parameters.Add(new SqlParameter("@UserID", userId));
                     DataTable dt = new DataTable();
                     dt.Load(command.ExecuteReader());
                     if (dt != null)
@@ -89,7 +89,7 @@ namespace VS_LOAN.Core.Repository
                                                 nhom2.TenQL = item2["TenQL"].ToString();
                                                 lstTemp.Add(nhom2);
                                             }
-                                            result.AddRange(TaoCayDSNhom(lstTemp, resultTemp[i].ChuoiMaCha + "." + resultTemp[i].ID.ToString(), userID));
+                                            result.AddRange(TaoCayDSNhom(lstTemp, resultTemp[i].ChuoiMaCha + "." + resultTemp[i].ID.ToString(), userId));
                                         }
                                     }
                                 }
@@ -148,8 +148,7 @@ namespace VS_LOAN.Core.Repository
             //    throw ex;
             //}
         }
-
-        public int Them(NhomModel nhom, List<int> lstThanhVien)
+        public int Them(NhomModel nhom, List<int> lstThanhVien, int createdBy)
         {
             using (var session = LOANSessionManager.OpenSession())
             using (var transaction = session.BeginTransaction(IsolationLevel.RepeatableRead))
@@ -167,6 +166,7 @@ namespace VS_LOAN.Core.Repository
                     commandNhom.Parameters.Add(new SqlParameter("@TenVietTat", nhom.TenNgan));
                     commandNhom.Parameters.Add(new SqlParameter("@Ten", nhom.Ten));
                     commandNhom.Parameters.Add(new SqlParameter("@ChuoiMaCha", nhom.ChuoiMaCha));
+                    commandNhom.Parameters.Add(new SqlParameter("@createdBy",createdBy));
                     commandNhom.ExecuteNonQuery();
                     int maNhom = Convert.ToInt32((((SqlParameter)commandNhom.Parameters["@ID"]).Value).ToString());
                     IDbCommand commandNhanVienNhom = new SqlCommand();
@@ -230,16 +230,7 @@ namespace VS_LOAN.Core.Repository
                 throw ex;
             }
         }
-        public async Task<List<OptionSimple>> GetEmployeesByGroupId(int groupId, bool isLeader = false)
-        {
-            using (var con = GetConnection())
-            {
-                var result = await con.QueryAsync<OptionSimple>("sp_NHOM_GetEmployeesByGroupId",
-                    new { groupId, isGetLeader = isLeader },
-                    commandType: CommandType.StoredProcedure);
-                return result.ToList();
-            }
-        }
+       
         public List<ThongTinToNhomModel> LayDSNhomCon(int maNhomCha)
         {
             try
@@ -402,6 +393,45 @@ namespace VS_LOAN.Core.Repository
                 }
             }
         }
+        public List<ThongTinNhanVienModel> LayDSChiTietThanhVienNhom(int maNhom)
+        {
+            try
+            {
+                using (ISession session = LOANSessionManager.OpenSession())
+                {
+                    IDbCommand command = new SqlCommand();
+                    command.Connection = session.Connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "sp_Employee_Group_GetEmployeeByGroup";
+                    command.Parameters.Add(new SqlParameter("@groupId", maNhom));
+                    DataTable dt = new DataTable();
+                    dt.Load(command.ExecuteReader());
+                    if (dt != null)
+                    {
+                        if (dt.Rows.Count > 0)
+                        {
+                            List<ThongTinNhanVienModel> result = new List<ThongTinNhanVienModel>();
+                            foreach (DataRow item in dt.Rows)
+                            {
+                                ThongTinNhanVienModel nv = new ThongTinNhanVienModel();
+                                nv.ID = Convert.ToInt32(item["ID"].ToString());
+                                nv.HoTen = item["HoTen"].ToString();
+                                nv.Ma = item["Ma"].ToString();
+                                nv.Email = item["Email"].ToString();
+                                nv.SDT = item["SDT"].ToString();
+                                result.Add(nv);
+                            }
+                            return result;
+                        }
+                    }
+                    return null;
+                }
+            }
+            catch (BusinessException ex)
+            {
+                throw ex;
+            }
+        }
 
         private List<NhomDropDownModel> TaoCayDSNhom(List<NhomDropDownModel> lstData, string maCha)
         {
@@ -500,7 +530,7 @@ namespace VS_LOAN.Core.Repository
         }
 
         // Danh sách nhóm duyệt(lấy từ bảng cấu hình)
-        public List<NhomDropDownModel> LayDSDuyetCuaNhanVien(int userID)
+        public List<NhomDropDownModel> LayDSDuyetCuaNhanVien(int userId)
         {
             try
             {
@@ -510,7 +540,7 @@ namespace VS_LOAN.Core.Repository
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = "sp_NHOM_LayDSNhomDuyetChonTheoNhanVien";
-                    command.Parameters.Add(new SqlParameter("@UserID", userID));
+                    command.Parameters.Add(new SqlParameter("@UserID", userId));
                     DataTable dt = new DataTable();
                     dt.Load(command.ExecuteReader());
                     if (dt != null)
@@ -540,11 +570,11 @@ namespace VS_LOAN.Core.Repository
                                     IDbCommand commandLayDSCon = new SqlCommand();
                                     commandLayDSCon.Connection = session.Connection;
                                     commandLayDSCon.CommandType = CommandType.StoredProcedure;
-                                    commandLayDSCon.CommandText = "sp_NHOM_LayCayNhomCon";
+                                    commandLayDSCon.CommandText = "sp_NHOM_LayCayNhomCon_v2";
                                     for (int i = 0; i < resultTemp.Count; i++)
                                     {
                                         commandLayDSCon.Parameters.Clear();
-                                        commandLayDSCon.Parameters.Add(new SqlParameter("@MaNhomCha", resultTemp[i].ID));
+                                        commandLayDSCon.Parameters.Add(new SqlParameter("@parentGroupId", resultTemp[i].ID));
                                         DataTable dt2 = new DataTable();
                                         dt2.Load(commandLayDSCon.ExecuteReader());
                                         if (dt2 != null && dt2.Rows.Count > 0)
@@ -642,6 +672,79 @@ namespace VS_LOAN.Core.Repository
                 throw ex;
             }
         }
+        public List<NhanVienNhomDropDownModel> LayDSThanhVienNhom(int maNhom)
+        {
+            try
+            {
+                using (ISession session = LOANSessionManager.OpenSession())
+                {
+                    IDbCommand command = new SqlCommand();
+                    command.Connection = session.Connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "sp_Employee_Group_LayDSChonThanhVienNhom_v2";
+                    command.Parameters.Add(new SqlParameter("@groupId", maNhom));
+                    DataTable dt = new DataTable();
+                    dt.Load(command.ExecuteReader());
+                    if (dt != null)
+                    {
+                        if (dt.Rows.Count > 0)
+                        {
+                            List<NhanVienNhomDropDownModel> result = new List<NhanVienNhomDropDownModel>();
+                            foreach (DataRow item in dt.Rows)
+                            {
+                                NhanVienNhomDropDownModel nv = new NhanVienNhomDropDownModel();
+                                nv.ID = Convert.ToInt32(item["ID"].ToString());
+                                nv.Ten = item["Ten"].ToString();
+                                result.Add(nv);
+                            }
+                            return result;
+                        }
+                    }
+                    return null;
+                }
+            }
+            catch (BusinessException ex)
+            {
+                throw ex;
+            }
+        }
+        public List<NhanVienNhomDropDownModel> LayDSKhongThanhVienNhom(int maNhom)
+        {
+            try
+            {
+                using (ISession session = LOANSessionManager.OpenSession())
+                {
+                    IDbCommand command = new SqlCommand();
+                    command.Connection = session.Connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "sp_employee_Group_LayDSKhongThanhVienNhom_v2";
+                    command.Parameters.Add(new SqlParameter("@groupId", maNhom));
+                    DataTable dt = new DataTable();
+                    dt.Load(command.ExecuteReader());
+                    if (dt != null)
+                    {
+                        if (dt.Rows.Count > 0)
+                        {
+                            List<NhanVienNhomDropDownModel> result = new List<NhanVienNhomDropDownModel>();
+                            foreach (DataRow item in dt.Rows)
+                            {
+                                NhanVienNhomDropDownModel nv = new NhanVienNhomDropDownModel();
+                                nv.ID = Convert.ToInt32(item["ID"].ToString());
+                                nv.Ten = item["Ten"].ToString();
+                                result.Add(nv);
+                            }
+                            return result;
+                        }
+                    }
+                    return null;
+                }
+            }
+            catch (BusinessException ex)
+            {
+                throw ex;
+            }
+        }
+
 
     }
 }

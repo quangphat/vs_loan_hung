@@ -15,5 +15,6 @@ namespace VS_LOAN.Core.Entity
         public int MaNguoiQL { get; set; }
 
         public string ChuoiMaCha { get; set; }
+        public int CreatedBy { get; set; }
     }
 }

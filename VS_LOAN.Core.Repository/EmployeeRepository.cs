@@ -9,12 +9,15 @@ using VS_LOAN.Core.Repository.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.Employee;
 using VS_LOAN.Core.Entity.Model;
+using VS_LOAN.Core.Nhibernate;
+using System.Data.SqlClient;
+using NHibernate;
 
 namespace VS_LOAN.Core.Repository
 {
-    public class EmployeeRepository :BaseRepository,IEmployeeRepository
+    public class EmployeeRepository : BaseRepository, IEmployeeRepository
     {
-        public EmployeeRepository():base(typeof(EmployeeRepository))
+        public EmployeeRepository() : base(typeof(EmployeeRepository))
         {
 
         }
@@ -47,7 +50,7 @@ namespace VS_LOAN.Core.Repository
             {
                 using (var con = GetConnection())
                 {
-                    var result = await con.ExecuteScalarAsync<bool>("sp_CheckIsAdmin", new { userId },commandType: CommandType.StoredProcedure);
+                    var result = await con.ExecuteScalarAsync<bool>("sp_CheckIsAdmin", new { userId }, commandType: CommandType.StoredProcedure);
                     return result;
                 }
             }
@@ -72,11 +75,11 @@ namespace VS_LOAN.Core.Repository
                 using (var con = GetConnection())
                 {
                     var result = await con.QueryAsync<NhanVienInfoModel>("sp_NHAN_VIEN_LayDSCourierCode", null, commandType: CommandType.StoredProcedure);
-                    
+
                     return result.ToList();
                 }
             }
-            catch 
+            catch
             {
                 return null;
             }
@@ -85,7 +88,7 @@ namespace VS_LOAN.Core.Repository
         {
             using (var con = GetConnection())
             {
-                var result = await con.QueryAsync<OptionSimple>("spGetAllUserByProvinceId",new { provinceId }, commandType: CommandType.StoredProcedure);
+                var result = await con.QueryAsync<OptionSimple>("spGetAllUserByProvinceId", new { provinceId }, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
 
@@ -163,7 +166,8 @@ namespace VS_LOAN.Core.Repository
             using (var con = GetConnection())
             {
                 await con.ExecuteAsync("sp_ResetPassword",
-                    new {
+                    new
+                    {
                         username = userName,
                         password = password
                     }, commandType: CommandType.StoredProcedure);
@@ -256,6 +260,102 @@ namespace VS_LOAN.Core.Repository
                 return p.Get<int>("id");
             }
 
+        }
+        public async Task<List<UserPMModel>> GetAllEmployee(int orgId)
+        {
+            using (var con = GetConnection())
+            {
+                var rs = await con.QueryAsync<UserPMModel>("sp_Employee_GetFull", new { orgId }, commandType: CommandType.StoredProcedure);
+                return rs.ToList();
+            }
+        }
+        public async Task<List<OptionSimple>> GetEmployeesByGroupId(int groupId, bool isLeader = false)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryAsync<OptionSimple>("sp_NHOM_GetEmployeesByGroupId",
+                    new { groupId, isGetLeader = isLeader },
+                    commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+        public bool CapNhat(int maNhanVien, List<int> lstIDNhom)
+        {
+            using (var session = LOANSessionManager.OpenSession())
+            using (var transaction = session.BeginTransaction(IsolationLevel.RepeatableRead))
+            {
+                try
+                {
+                    IDbCommand commandXoaNhanVienNhom = new SqlCommand();
+                    commandXoaNhanVienNhom.Connection = session.Connection;
+                    commandXoaNhanVienNhom.CommandType = CommandType.StoredProcedure;
+                    commandXoaNhanVienNhom.CommandText = "sp_NHAN_VIEN_CF_Xoa";
+                    session.Transaction.Enlist(commandXoaNhanVienNhom);
+                    commandXoaNhanVienNhom.Parameters.Add(new SqlParameter("@MaNhanVien", maNhanVien));
+                    commandXoaNhanVienNhom.ExecuteNonQuery();
+
+                    IDbCommand commandNhanVienNhom = new SqlCommand();
+                    commandNhanVienNhom.Connection = session.Connection;
+                    commandNhanVienNhom.CommandType = CommandType.StoredProcedure;
+                    commandNhanVienNhom.CommandText = "sp_NHAN_VIEN_CF_Them";
+                    session.Transaction.Enlist(commandNhanVienNhom);
+                    if (lstIDNhom != null)
+                    {
+                        for (int i = 0; i < lstIDNhom.Count; i++)
+                        {
+                            commandNhanVienNhom.Parameters.Clear();
+                            commandNhanVienNhom.Parameters.Add(new SqlParameter("@MaNhom", lstIDNhom[i]));
+                            commandNhanVienNhom.Parameters.Add(new SqlParameter("@MaNhanVien", maNhanVien));
+                            commandNhanVienNhom.ExecuteNonQuery();
+                        }
+                    }
+                    transaction.Commit();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        public List<NhanVienNhomDropDownModel> LayDSThanhVienNhomCaCon(int maNhom)
+        {
+            try
+            {
+                using (ISession session = LOANSessionManager.OpenSession())
+                {
+                    IDbCommand command = new SqlCommand();
+                    command.Connection = session.Connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "sp_Employee_Group_LayDSChonThanhVienNhomCaCon_v2";
+                    command.Parameters.Add(new SqlParameter("@groupId", maNhom));
+                    DataTable dt = new DataTable();
+                    dt.Load(command.ExecuteReader());
+                    if (dt != null)
+                    {
+                        if (dt.Rows.Count > 0)
+                        {
+                            List<NhanVienNhomDropDownModel> result = new List<NhanVienNhomDropDownModel>();
+                            foreach (DataRow item in dt.Rows)
+                            {
+                                NhanVienNhomDropDownModel nv = new NhanVienNhomDropDownModel();
+                                nv.ID = Convert.ToInt32(item["ID"].ToString());
+                                nv.Ten = item["Ten"].ToString();
+                                nv.Code = item["Code"].ToString();
+                                result.Add(nv);
+                            }
+                            return result;
+                        }
+                    }
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ namespace VS_LOAN.Core.Repository.Interfaces
 {
     public interface IEmployeeRepository
     {
+        Task<List<OptionSimple>> GetEmployeesByGroupId(int groupId, bool isLeader = false);
         Task<bool> ResetPassord(string userName, string password);
         Task<OptionSimple> GetEmployeeByCode(string code);
         Task<bool> CheckIsAdmin(int userId);
@@ -38,5 +39,8 @@ namespace VS_LOAN.Core.Repository.Interfaces
         Task<List<OptionSimple>> GetRoleList();
         Task<bool> Update(EmployeeEditModel entity);
         Task<int> Create(UserCreateModel entity);
+        Task<List<UserPMModel>> GetAllEmployee(int orgId);
+        bool CapNhat(int maNhanVien, List<int> lstIDNhom);
+        List<NhanVienNhomDropDownModel> LayDSThanhVienNhomCaCon(int maNhom);
     }
 }
