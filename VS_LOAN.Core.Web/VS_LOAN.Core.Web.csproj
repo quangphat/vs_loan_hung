@@ -1776,6 +1776,7 @@
     <Content Include="Views\MCredit\Temp.cshtml" />
     <Content Include="Views\MCredit\MCreditProfile.cshtml" />
     <Content Include="Views\Revoke\Index.cshtml" />
+    <Content Include="Views\Revoke\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

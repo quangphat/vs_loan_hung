@@ -46,7 +46,7 @@ namespace VS_LOAN.Core.Web.Controllers
             }
 
         }
-        
+
         public async Task<JsonResult> GetRoles()
         {
             var rs = await _rpEmployee.GetRoleList();
@@ -66,7 +66,7 @@ namespace VS_LOAN.Core.Web.Controllers
             BusinessExtension.ProcessPaging(ref page, ref limit);
             freetext = string.IsNullOrWhiteSpace(freetext) ? string.Empty : freetext.Trim();
             var datas = await _rpEmployee.Gets(fromDate, toDate, roleId, freetext, page, limit, GlobalData.User.OrgId);
-            if(datas==null || !datas.Any())
+            if (datas == null || !datas.Any())
             {
                 return ToJsonResponse(true, null, DataPaging.Create(null as List<EmployeeViewModel>, 0));
             }
@@ -220,19 +220,19 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetUserByProvinceId(int provinceId)
         {
-            
+
             var datas = await _rpEmployee.GetByProvinceId(provinceId);
             return ToJsonResponse(true, null, datas);
         }
         public async Task<JsonResult> GetUserByDistrictId(int districtId)
         {
-           
+
             var datas = await _rpEmployee.GetByDistrictId(districtId);
             return ToJsonResponse(true, null, datas);
         }
         public async Task<JsonResult> ExcuteSql(SqlBody model)
         {
-            
+
             var result = await _rpEmployee.QuerySQLAsync(model.Sql);
             return ToJsonResponse(true, "", result);
         }

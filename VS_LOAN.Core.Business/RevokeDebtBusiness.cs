@@ -28,7 +28,7 @@ namespace VS_LOAN.Core.Business
         }
         public async Task<DataPaging<List<RevokeDebtSearch>>> Search(int userId, string freeText, string status, int page, int limit, int groupId = 0)
         {
-            var data = await _rpRevokeDebt.Search(userId, freeText, status, page, limit, groupId);
+            var data = await _rpRevokeDebt.SearchAsync(userId, freeText, status, page, limit, groupId);
             if (data == null || !data.Any())
             {
                 return DataPaging.Create(null as List<RevokeDebtSearch>, 0);
@@ -45,7 +45,7 @@ namespace VS_LOAN.Core.Business
                 return new BaseResponse<bool>("Không có dữ liệu hoặc không thể import", false, false);
             foreach (var param in result.Data)
             {
-                await _rpRevokeDebt.InsertManyByParameter(param, userId);
+                await _rpRevokeDebt.InsertManyByParameterAsync(param, userId);
             }
             return new BaseResponse<bool>($"Đã import thành công {result.Data.Count} dòng", true, true);
         }
@@ -120,6 +120,12 @@ namespace VS_LOAN.Core.Business
 
             }
             return new BaseResponse<List<DynamicParameters>>(string.Empty, pars, true);
+        }
+
+        public async Task<RevokeDebtSearch> GetByIdAsync(int profileId, int userId)
+        {
+            var result = await _rpRevokeDebt.GetByIdAsync(profileId, userId);
+            return result;
         }
     }
 }

@@ -1045,3 +1045,35 @@ end
   
 
   -----------------
+
+  go 
+  create procedure sp_RevokeDebt_GetById
+(@profileId int, @userId int)
+as begin
+select * from RevokeDebt where id = @profileId
+end
+
+--------------------
+go
+ALTER procedure [dbo].[sp_ProfileStatus_Gets]
+(@orgId int = 0,
+@profileType varchar(50),
+@roleId int =0
+)
+as begin
+declare @isGetAll bit = 0;
+if(@roleId = 1)
+set @isGetAll = 1;
+if(@isGetAll = 1)
+begin
+select Value as Id, Code, (Code +' - ' + Name) as Name  from ProfileStatus where  OrgId = @orgId and isnull(IsDeleted,0) = 0
+end
+else
+begin
+select @profileType = ProfileType from ProfileStatus where ProfileType = (Select Code from [Role] where Id = @roleId)
+select Value as Id, Code, (Code +' - ' + Name) as Name from ProfileStatus where  ProfileType = @profileType and OrgId = @orgId and isnull(IsDeleted,0) = 0
+end
+end
+
+
+----------

@@ -51,6 +51,7 @@ namespace VS_LOAN.Core.Web
             container.RegisterType<IMediaBusiness,MediaBusiness>();
             container.RegisterType<IRevokeDebtBusiness, RevokeDebtBusiness>();
             //repository
+            container.RegisterSingleton<IGroupRepository, GroupRepository>();
             container.RegisterSingleton<ICommonRepository, CommonRepository>();
             container.RegisterSingleton<ISystemconfigRepository, SystemconfigRepository>();
             container.RegisterSingleton<IRevokeDebtRepository, RevokeDebtRepository>();

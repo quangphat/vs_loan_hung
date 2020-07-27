@@ -16,7 +16,16 @@ namespace VS_LOAN.Core.Repository
         {
         }
 
-        public async Task<bool> InsertManyByParameter(DynamicParameters param, int userId)
+        public async Task<RevokeDebtSearch> GetByIdAsync(int profileId, int userId)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryFirstOrDefaultAsync<RevokeDebtSearch>("sp_RevokeDebt_GetById", new { profileId, userId }, commandType: CommandType.StoredProcedure);
+                return result;
+            }
+        }
+
+        public async Task<bool> InsertManyByParameterAsync(DynamicParameters param, int userId)
         {
             param.Add("CreatedBy", userId);
             try
@@ -32,7 +41,7 @@ namespace VS_LOAN.Core.Repository
                 return false;
             }
         }
-        public async Task<List<RevokeDebtSearch>> Search(int userId, string freeText, string status, int page, int limit, int groupId = 0)
+        public async Task<List<RevokeDebtSearch>> SearchAsync(int userId, string freeText, string status, int page, int limit, int groupId = 0)
         {
             using (var con = GetConnection())
             {

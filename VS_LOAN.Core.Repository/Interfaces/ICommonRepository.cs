@@ -9,6 +9,6 @@ namespace VS_LOAN.Core.Repository.Interfaces
 {
     public interface ICommonRepository
     {
-        Task<List<OptionSimple>> GetProfileStatusByCode(string profileType, int orgId, bool isGetAll = false, int roleId = 0);
+        Task<List<OptionSimple>> GetProfileStatusByCode(string profileType, int orgId,  int roleId = 0);
     }
 }

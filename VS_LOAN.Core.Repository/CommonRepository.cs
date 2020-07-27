@@ -15,11 +15,11 @@ namespace VS_LOAN.Core.Repository
         {
         }
 
-        public async Task<List<OptionSimple>> GetProfileStatusByCode(string profileType, int orgId, bool isGetAll = false, int roleId = 0)
+        public async Task<List<OptionSimple>> GetProfileStatusByCode(string profileType, int orgId,int roleId = 0)
         {
             using (var con = GetConnection())
             {
-                var result = await con.QueryAsync<OptionSimple>("sp_ProfileStatus_Gets", new { orgId, profileType, isGetAll, roleId }, commandType: System.Data.CommandType.StoredProcedure);
+                var result = await con.QueryAsync<OptionSimple>("sp_ProfileStatus_Gets", new { orgId, profileType,roleId }, commandType: System.Data.CommandType.StoredProcedure);
                 return result.ToList();
             }
         }

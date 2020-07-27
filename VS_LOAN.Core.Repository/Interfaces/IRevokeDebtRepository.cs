@@ -10,7 +10,8 @@ namespace VS_LOAN.Core.Repository.Interfaces
 {
     public interface IRevokeDebtRepository
     {
-        Task<bool> InsertManyByParameter(DynamicParameters param, int userId);
-        Task<List<RevokeDebtSearch>> Search(int userId, string freeText, string status, int page, int limit, int groupId = 0);
+        Task<bool> InsertManyByParameterAsync(DynamicParameters param, int userId);
+        Task<List<RevokeDebtSearch>> SearchAsync(int userId, string freeText, string status, int page, int limit, int groupId = 0);
+        Task<RevokeDebtSearch> GetByIdAsync(int profileId, int userId);
     }
 }

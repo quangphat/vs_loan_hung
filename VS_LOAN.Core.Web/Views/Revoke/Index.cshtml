@@ -304,32 +304,7 @@
         provinceId = this.value
         getRevoke(this.value)
     });
-    function renderStatusList() {
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("ProfileStatus", "Common")',
-            data: {},
-            success: function (data) {
-                $('#ddlStatus').empty();
-                $('#ddlStatus').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.data, function (index, optionData) {
-                        $('#ddlStatus').append("<option value='" + optionData.Id + "'>" + optionData.Name + "</option>");
-                    });
-                    let provinceId = queries.get("status");
-                    $('#ddlStatus').val(provinceId)
-                    $('#ddlStatus').chosen().trigger("chosen:updated").change();
-                }
 
-                $('#ddlStatus').chosen().trigger("chosen:updated");
-            },
-            complete: function () {
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    }
     function onClickPage(page) {
         page = page;
         getData(page, limit);
@@ -410,7 +385,7 @@
 
         let result = "<tr role='row' class = 'odd'>"
             + renderTextCenter(stt, '','center w-45')
-            + renderTextLink(rowData.CustomerName, `/Revoke/edit/${rowData.Id}`, '', "m-w-120")
+            + renderTextLink(rowData.CustomerName, `/Revoke/Edit/${rowData.Id}`, '', "m-w-120")
             + renderTextLeft(rowData.MobilePhone, '', 'w-84')
             + renderTextLeft(rowData.IdCardNumber, '','w-84')
             + renderStatus(rowData.Status)

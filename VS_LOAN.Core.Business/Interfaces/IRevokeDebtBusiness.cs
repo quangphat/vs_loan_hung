@@ -14,5 +14,6 @@ namespace VS_LOAN.Core.Business.Interfaces
     {
         Task<BaseResponse<bool>> InsertFromFile(MemoryStream stream, int userId);
         Task<DataPaging<List<RevokeDebtSearch>>> Search(int userId, string freeText, string status, int page, int limit, int groupId = 0);
+        Task<RevokeDebtSearch> GetByIdAsync(int profileId, int userId);
     }
 }

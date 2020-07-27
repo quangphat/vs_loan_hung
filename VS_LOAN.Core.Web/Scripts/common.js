@@ -12,6 +12,34 @@
 //        message: '<h2 style="color:#fff">' + text + ' ...</h2>'
 //    });
 //}\
+function renderStatusList(controlId = '#ddlStatus',defaulValue = null) {
+    $.ajax({
+        type: "POST",
+        url: '/Common/ProfileStatus',
+        data: {},
+        success: function (data) {
+            $(controlId).empty();
+            $(controlId).append("<option value='0'></option>");
+            if (data != null) {
+                $.each(data.data, function (index, optionData) {
+                    $(controlId).append("<option value='" + optionData.Id + "'>" + optionData.Name + "</option>");
+                });
+                if (defaulValue != null) {
+                    $(controlId).val(defaulValue);
+                    $(controlId).chosen().trigger("chosen:updated").change();
+                }
+                
+            }
+
+            $(controlId).chosen().trigger("chosen:updated");
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
 function renderTextLink(textValue, href, type, className = '') {
     let display = getValueDisplay(textValue, type);
     return "<td class='text-left " + className + "'><a href='" + href + "' >" + display + "</a></td>";

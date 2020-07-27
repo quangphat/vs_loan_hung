@@ -42,5 +42,11 @@ namespace VS_LOAN.Core.Web.Controllers
             }
 
         }
+        public async Task<ActionResult> Edit(int id)
+        {
+            var profile = await _bizRevokeDebt.GetByIdAsync(id, GlobalData.User.IDUser);
+            ViewBag.model = profile;
+            return View();
+        }
     }
 }
