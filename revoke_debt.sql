@@ -901,3 +901,14 @@ select Value as Id, Code, (Code +' - ' + Name) as Name from ProfileStatus where 
 end
 end
 --------------
+alter table [Role]
+add OrgId int
+--------
+insert into [Role] (Code,Name,Deleted, OrgId)
+values
+('admin',N'Admin',0, 2),
+('sup',N'Sup',0, 2),
+('call',N'Call',0, 2),
+('field',N'Field',0, 2)
+
+------------

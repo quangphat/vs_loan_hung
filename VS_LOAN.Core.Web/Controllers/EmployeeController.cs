@@ -78,7 +78,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> Create([FromBody] UserCreateModel entity)
         {
-            var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
+            var isAdmin = GlobalData.User.UserType == (int)UserTypeEnum.Admin ? true : false;
             if (!isAdmin)
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             if (entity == null)
@@ -159,7 +159,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<ActionResult> Edit(int id)
         {
-            var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
+            var isAdmin = GlobalData.User.UserType == (int)UserTypeEnum.Admin ? true : false;
             if (!isAdmin)
             {
                 return View();
@@ -172,7 +172,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<JsonResult> Update([FromBody] EmployeeEditModel model)
         {
 
-            var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
+            var isAdmin = GlobalData.User.UserType == (int)UserTypeEnum.Admin ? true : false;
             if (!isAdmin)
             {
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");

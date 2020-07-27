@@ -162,7 +162,7 @@ namespace VS_LOAN.Core.Web.Helpers
             };
 
             //var isTeamLead = new NhomBLL().CheckIsTeamlead(GlobalData.User.IDUser);
-            var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
+            var isAdmin = GlobalData.User.UserType == (int)UserTypeEnum.Admin ? true : false;
             if (isAdmin)
             {
                 _siteMenu = _siteMenu.Concat(siteMenuAdmin).ToList();

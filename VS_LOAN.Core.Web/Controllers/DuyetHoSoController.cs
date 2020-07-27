@@ -478,13 +478,8 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public JsonResult LayDSTrangThai()
         {
-            var isTeamlead = new GroupRepository().CheckIsTeamlead(GlobalData.User.IDUser);
-            var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
-            bool isLimit = false;
-            if (isTeamlead && !isAdmin)
-                isLimit = true;
-            else
-                isLimit = false;
+            var isTeamlead = GlobalData.User.UserType == (int)UserTypeEnum.Teamlead ? true : false;
+            var isAdmin = GlobalData.User.UserType == (int)UserTypeEnum.Admin ? true : false;
             if (!isTeamlead && !isAdmin)
                 return Json(new { DSTrangThai = new List<TrangThaiHoSoModel>() });
             List<TrangThaiHoSoModel> rs = new TrangThaiHoSoBLL().LayDSTrangThai();

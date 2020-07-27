@@ -51,7 +51,7 @@ namespace VS_LOAN.Core.Web.Controllers
 
         public ActionResult Index()
         {
-            var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
+            var isAdmin = GlobalData.User.UserType == (int)UserTypeEnum.Admin ? true : false;
             ViewBag.isAdmin = isAdmin ? 1 : 0;
             return View();
         }
