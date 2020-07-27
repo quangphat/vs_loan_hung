@@ -14,7 +14,7 @@ create PROCEDURE [dbo].[sp_Employee_Login]
 AS
 BEGIN
 	Select Id,Ten_Dang_Nhap AS UserName, Mat_Khau as Passowrd, RoleId, Ma as Code,
-	Email, Ho_Ten as FullName, Dien_Thoai as Phone, Status as IsActive, isnull(OrgId,1) as OrgId
+	Email, Ho_Ten as FullName, Dien_Thoai as Phone, Status as IsActive, isnull(OrgId,1) as OrgId, RoleId
 	 From Employee where Ten_Dang_Nhap=@UserName and Mat_Khau=@Password and isnull(Xoa,0) =0
 END
 
@@ -265,8 +265,10 @@ create procedure [dbo].[sp_Employee_InsertUser_v2]
 )
 as
 begin
-insert into Employee(Ma,Ten_Dang_Nhap,Mat_Khau,Ho_Ten,Dien_Thoai,Email,RoleId,WorkDate,ProvinceId,DistrictId,Status,Xoa,CreatedTime,CreatedBy)
-values (@code,@userName,@password,@fullName,@phone,@email,@roleId,@workDate,@provinceId,@districtId,1,0,@createdtime,@createdby);
+declare @orgId int  = 0;
+select @orgId = isnull(OrgId,0) from Employee where Id = @createdby;
+insert into Employee(Ma,Ten_Dang_Nhap,Mat_Khau,Ho_Ten,Dien_Thoai,Email,RoleId,WorkDate,ProvinceId,DistrictId,Status,Xoa,CreatedTime,CreatedBy, OrgId)
+values (@code,@userName,@password,@fullName,@phone,@email,@roleId,@workDate,@provinceId,@districtId,1,0,@createdtime,@createdby, @orgId);
 SET @id=@@IDENTITY
 end
 
@@ -789,42 +791,6 @@ CREATE TABLE [dbo].[ProfileStatus](
 ('RTP',N'refuse to pay – từ chối thanh toán',15,'revoke_Call',0,2),
 ('WFP',N'Khách hàng đã thanh toán đang chờ phòng Thanh toán kiểm tra',16,'revoke_Call',0,2)
 
------------------
-
-
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 
 ---------------
 
@@ -917,3 +883,21 @@ end
 
 ------------
 
+go
+create procedure sp_ProfileStatus_Gets
+(@orgId int = 0,
+@profileType varchar(50),
+@isGetAll bit = 0,
+@roleId int =0
+)
+as begin
+if(@isGetAll = 0)
+begin
+select * from ProfileStatus where ProfileType = @profileType and OrgId = @orgId and isnull(IsDeleted,0) = 0
+end
+else
+begin
+select * from ProfileStatus where OrgId = @orgId and isnull(IsDeleted,0) = 0
+end
+end
+--------------
