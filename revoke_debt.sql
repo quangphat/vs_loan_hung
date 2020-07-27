@@ -461,6 +461,18 @@ WorkAddress nvarchar(300),
 IsDeleted bit
 )
 
+
+alter table RevokeDebt
+add FinalPaymentAmount varchar(20),
+UpdatedTime datetime,
+UpdatedBy int,
+CreatedTime datetime,
+CreatedBy int
+
+alter table RevokeDebt
+add AssigneeGroupIds varchar(50),
+AssigneeIds varchar(50)
+ 
 ----------------
 
 
@@ -479,6 +491,9 @@ from INFORMATION_SCHEMA.COLUMNS
 where TABLE_NAME='RevokeDebt'
 
 -------------
+
+update ImportExcel set Position = Position - 2 where ImportType = 5
+-------------------
 go
 create PROCEDURE sp_update_RevokeDebt
 @AgreementNo varchar(50),
@@ -647,7 +662,7 @@ END
 -----------------
 
 
- ALTER procedure [dbo].[sp_RevokeDebt_Search]
+ create procedure [dbo].[sp_RevokeDebt_Search]
 (
 @freeText nvarchar(30),
 @status varchar(20) ='',
