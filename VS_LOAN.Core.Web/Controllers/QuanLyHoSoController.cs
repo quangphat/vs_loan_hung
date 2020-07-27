@@ -27,15 +27,18 @@ namespace VS_LOAN.Core.Web.Controllers
         protected readonly IMediaBusiness _bizMedia;
         protected readonly IEmployeeRepository _rpEmployee;
         protected readonly ITailieuRepository _rpTailieu;
+        protected readonly IGroupRepository _rpGroup;
         public QuanLyHoSoController(IPartnerRepository partnerRepository,
             ITailieuRepository tailieuRepository,
             IEmployeeRepository employeeRepository,
+            IGroupRepository groupRepository,
             IMediaBusiness mediaBusiness)
         {
             _rpPartner = partnerRepository;
             _rpEmployee = employeeRepository;
             _bizMedia = mediaBusiness;
             _rpTailieu = tailieuRepository;
+            _rpGroup = groupRepository;
         }
         public static Dictionary<string, ActionInfo> LstRole
         {
@@ -118,16 +121,16 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             List<NhanVienNhomDropDownModel> rs = new List<NhanVienNhomDropDownModel>();
             if (maNhom > 0)
-                rs = new NhanVienNhomBLL().LayDSThanhVienNhomCaCon(maNhom);
+                rs = _rpEmployee.LayDSThanhVienNhomCaCon(maNhom);
             else
             {
                 // Lấy ds nhóm của nv quản lý
-                List<NhomDropDownModel> lstNhom = new GroupRepository().LayDSCuaNhanVien(GlobalData.User.IDUser);
+                List<NhomDropDownModel> lstNhom = _rpGroup.LayDSCuaNhanVien(GlobalData.User.IDUser);
                 if (lstNhom != null)
                 {
                     for (int i = 0; i < lstNhom.Count; i++)
                     {
-                        List<NhanVienNhomDropDownModel> lstThanhVien = new NhanVienNhomBLL().LayDSThanhVienNhom(lstNhom[i].ID);
+                        List<NhanVienNhomDropDownModel> lstThanhVien = _rpGroup.LayDSThanhVienNhom(lstNhom[i].ID);
                         if (lstThanhVien != null)
                         {
                             for (int j = 0; j < lstThanhVien.Count; j++)

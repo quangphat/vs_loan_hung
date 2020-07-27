@@ -19,11 +19,12 @@ namespace VS_LOAN.Core.Web.Controllers
     public class ToNhomController : LoanController
     {
         protected readonly IEmployeeRepository _rpEmployee;
-        public ToNhomController(IEmployeeRepository employeeRepository):base()
+        protected readonly IGroupRepository _rpGroup;
+        public ToNhomController(IEmployeeRepository employeeRepository, IGroupRepository groupRepository) : base()
         {
             _rpEmployee = employeeRepository;
+            _rpGroup = groupRepository;
         }
-        private readonly GroupRepository _bizGroup = new GroupRepository();
         public static Dictionary<string, ActionInfo> LstRole
         {
             get
@@ -46,7 +47,7 @@ namespace VS_LOAN.Core.Web.Controllers
 
         public async Task<JsonResult> LayDSNhomCha(bool isAddAll = false)
         {
-            List<NhomDropDownModel> rs = await _bizGroup.GetAll();
+            List<NhomDropDownModel> rs = await _rpGroup.GetAll();
 
             if (rs == null)
                 rs = new List<NhomDropDownModel>();
@@ -69,12 +70,16 @@ namespace VS_LOAN.Core.Web.Controllers
                 nhom.MaNguoiQL = maNguoiQuanLy;
                 nhom.MaNhomCha = maNhomCha;
                 if (maNhomCha != 0)
-                    nhom.ChuoiMaCha = new GroupRepository().LayChuoiMaCha(maNhomCha) + "." + maNhomCha;
+                {
+                    var parentCode = _rpGroup.LayChuoiMaCha(maNhomCha);
+                    nhom.ChuoiMaCha = parentCode + "." + maNhomCha;
+                }
+
                 else
                     nhom.ChuoiMaCha = "0";
                 nhom.Ten = ten;
                 nhom.TenNgan = tenNgan;
-                result = new GroupRepository().Them(nhom, lstThanhVien);
+                result = _rpGroup.Them(nhom, lstThanhVien, GlobalData.User.IDUser);
                 if (result > 0)
                 {
                     return ToResponse(true, null, result);
@@ -97,7 +102,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetEmployeesByGroupId(int groupId, bool isLeader = false)
         {
-            var results = await _bizGroup.GetEmployeesByGroupId(groupId,isLeader);
+            var results = await _rpEmployee.GetEmployeesByGroupId(groupId, isLeader);
             return ToJsonResponse(true, null, results);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
@@ -108,7 +113,7 @@ namespace VS_LOAN.Core.Web.Controllers
             List<ThongTinToNhomModel> rs = new List<ThongTinToNhomModel>();
             try
             {
-                rs = new GroupRepository().LayDSNhomCon(maNhomCha);
+                rs = _rpGroup.LayDSNhomCon(maNhomCha);
                 if (rs == null)
                     rs = new List<ThongTinToNhomModel>();
             }
@@ -127,7 +132,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (Session["ToNhom_Sua_ID"] == null)
                 return RedirectToAction("QLToNhom");
             int idNhom = (int)Session["ToNhom_Sua_ID"];
-            ViewBag.ThongTinNhom = new GroupRepository().LayTheoMa(idNhom);
+            ViewBag.ThongTinNhom = _rpGroup.LayTheoMa(idNhom);
             return View();
         }
 
@@ -139,8 +144,8 @@ namespace VS_LOAN.Core.Web.Controllers
 
         public JsonResult LayThongTinThanhVienSuaNhom(int maNhom)
         {
-            List<NhanVienNhomDropDownModel> lstThanhVienNhom = new NhanVienNhomBLL().LayDSThanhVienNhom(maNhom);
-            List<NhanVienNhomDropDownModel> lstKhongThanhVienNhom = new NhanVienNhomBLL().LayDSKhongThanhVienNhom(maNhom);
+            List<NhanVienNhomDropDownModel> lstThanhVienNhom = _rpGroup.LayDSThanhVienNhom(maNhom);
+            List<NhanVienNhomDropDownModel> lstKhongThanhVienNhom = _rpGroup.LayDSKhongThanhVienNhom(maNhom);
             return Json(new { DSThanhVien = lstThanhVienNhom, DSChuaThanhVien = lstKhongThanhVienNhom });
         }
 
@@ -151,7 +156,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (Session["ToNhom_ChiTiet_ID"] == null)
                 return RedirectToAction("QLToNhom");
             int idNhom = (int)Session["ToNhom_ChiTiet_ID"];
-            ViewBag.ThongTinNhom = new GroupRepository().LayChiTietTheoMa(idNhom);
+            ViewBag.ThongTinNhom = _rpGroup.LayChiTietTheoMa(idNhom);
             return View();
         }
 
@@ -173,12 +178,16 @@ namespace VS_LOAN.Core.Web.Controllers
                 nhom.MaNguoiQL = maNguoiQuanLy;
                 nhom.MaNhomCha = maNhomCha;
                 if (maNhomCha != 0)
-                    nhom.ChuoiMaCha = new GroupRepository().LayChuoiMaCha(maNhomCha) + "." + maNhomCha;
+                {
+                    var parentCode = _rpGroup.LayChuoiMaCha(maNhomCha);
+                    nhom.ChuoiMaCha = parentCode + "." + maNhomCha;
+                }
+                   
                 else
                     nhom.ChuoiMaCha = "0";
                 nhom.Ten = ten;
                 nhom.TenNgan = tenNgan;
-                result = new GroupRepository().Sua(nhom, lstThanhVien);
+                result = _rpGroup.Sua(nhom, lstThanhVien);
                 if (result)
                 {
                     return ToResponse(true, null, result);
@@ -199,7 +208,7 @@ namespace VS_LOAN.Core.Web.Controllers
             List<ThongTinNhanVienModel> rs = new List<ThongTinNhanVienModel>();
             try
             {
-                rs = new NhanVienNhomBLL().LayDSChiTietThanhVienNhom(maNhom);
+                rs = _rpGroup.LayDSChiTietThanhVienNhom(maNhom);
                 if (rs == null)
                     rs = new List<ThongTinNhanVienModel>();
             }
@@ -224,7 +233,7 @@ namespace VS_LOAN.Core.Web.Controllers
 
             try
             {
-                bool result = new NhanVienConfigBLL().CapNhat(maNhanVien, lstIDNhom);
+                bool result = _rpEmployee.CapNhat(maNhanVien, lstIDNhom);
                 return ToResponse(result);
             }
             catch (BusinessException ex)
