@@ -60,10 +60,9 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             var fromDate = string.IsNullOrWhiteSpace(workFromDate) ? DateTime.Now.AddDays(-7) : DateTimeFormat.ConvertddMMyyyyToDateTime(workFromDate);
             var toDate = string.IsNullOrWhiteSpace(workToDate) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(workToDate);
-            var bzEmployee = new EmployeeRepository();
             BusinessExtension.ProcessPaging(ref page, ref limit);
             freetext = string.IsNullOrWhiteSpace(freetext) ? string.Empty : freetext.Trim();
-            var datas = await bzEmployee.Gets(fromDate, toDate, roleId, freetext, page, limit, GlobalData.User.OrgId);
+            var datas = await _rpEmployee.Gets(fromDate, toDate, roleId, freetext, page, limit, GlobalData.User.OrgId);
             if(datas==null || !datas.Any())
             {
                 return ToJsonResponse(true, null, DataPaging.Create(null as List<EmployeeViewModel>, 0));
@@ -122,7 +121,6 @@ namespace VS_LOAN.Core.Web.Controllers
             //{
             //    return ToJsonResponse(false, "Vui lòng chọn quận/huyện");
             //}
-            var bizEmployee = new EmployeeRepository();
             var existUserName = await bizEmployee.GetByUserName(entity.UserName.Trim(), 0);
             if (existUserName != null)
             {
@@ -148,7 +146,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "MÃ nhân viên không được để trống", 0);
             }
-            var existCode = await bizEmployee.GetByCode(entity.Code.Trim());
+            var existCode = await _rpEmployee.GetByCode(entity.Code.Trim());
             if (existCode != null)
             {
                 return ToJsonResponse(false, "Mã đã tồn tại", 0);
@@ -156,7 +154,7 @@ namespace VS_LOAN.Core.Web.Controllers
             entity.UserName = entity.UserName.Trim();
             entity.Password = entity.Password.Trim();
             entity.Password = MD5.getMD5(entity.Password);
-            var result = await bizEmployee.Create(entity);
+            var result = await _rpEmployee.Create(entity);
             return ToJsonResponse(true, null, result);
         }
         public async Task<ActionResult> Edit(int id)
@@ -166,8 +164,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return View();
             }
-            var bzEmployee = new EmployeeRepository();
-            var employee = await bzEmployee.GetById(id);
+            var employee = await _rpEmployee.GetById(id);
             ViewBag.employee = employee;
             ViewBag.account = GlobalData.User;
             return View();
@@ -184,7 +181,6 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             }
-            var bzEmployee = new EmployeeRepository();
             if (string.IsNullOrWhiteSpace(model.WorkDateStr))
             {
                 return ToJsonResponse(false, "Vui lòng chọn ngày vào làm", null);
@@ -198,7 +194,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToJsonResponse(false, "Định dạng ngày tháng không hợp lệ", null);
             }
             model.UpdatedBy = GlobalData.User.IDUser;
-            var result = await bzEmployee.Update(model);
+            var result = await _rpEmployee.Update(model);
             return ToJsonResponse(result);
         }
         public async Task<JsonResult> GetPartner(int customerId)
