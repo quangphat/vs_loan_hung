@@ -33,5 +33,6 @@ namespace VS_LOAN.Core.Repository.Interfaces
         Task<List<OptionSimple>> GetMCLoanPerodSimpleList();
         Task<List<OptionSimple>> GetMCCitiesSimpleList();
         Task<MCredit_TempProfile> GetTemProfileById(int id);
+        Task<bool> DeleteById(int profileId);
     }
 }

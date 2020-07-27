@@ -267,6 +267,15 @@ namespace VS_LOAN.Core.Repository
                 return param.Get<int>("Id");
             }
         }
+        public async Task<bool> DeleteById(int profileId)
+        {
+           
+            using (var con = GetConnection())
+            {
+                await _connection.ExecuteAsync("sp_MCProfile_DeleteProfile", new { profileId }, commandType: CommandType.StoredProcedure);
+                return true;
+            }
+        }
         public async Task<bool> UpdateDraftProfile(MCredit_TempProfile model)
         {
             var param = GetParams(model, ignoreKey: new string[] 
