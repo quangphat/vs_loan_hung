@@ -124,6 +124,7 @@
     <Compile Include="Interfaces\INoteRepository.cs" />
     <Compile Include="Interfaces\IPartnerRepository.cs" />
     <Compile Include="Interfaces\IRevokeDebtRepository.cs" />
+    <Compile Include="Interfaces\ISystemconfigRepository.cs" />
     <Compile Include="LogRepository.cs" />
     <Compile Include="MCreditRepositoryTest.cs" />
     <Compile Include="PartnerRepository.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RevokeDebtRepository.cs" />
     <Compile Include="SanPhamBLL.cs" />
+    <Compile Include="SystemconfigRepository.cs" />
     <Compile Include="TailieuRepository.cs" />
     <Compile Include="TrangThaiHoSoBLL.cs" />
     <Compile Include="UserPMBLL.cs" />

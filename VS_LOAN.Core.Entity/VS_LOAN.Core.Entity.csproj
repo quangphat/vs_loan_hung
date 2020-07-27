@@ -94,6 +94,7 @@
     <Compile Include="BaseResponse.cs" />
     <Compile Include="BaseSqlEntity.cs" />
     <Compile Include="Company.cs" />
+    <Compile Include="Constanst.cs" />
     <Compile Include="CustomerEditModel.cs" />
     <Compile Include="CustomerModel.cs" />
     <Compile Include="CustomerNoteViewModel.cs" />
@@ -187,6 +188,7 @@
     <Compile Include="SanPhamVayModel.cs" />
     <Compile Include="SqlBody.cs" />
     <Compile Include="StringModel.cs" />
+    <Compile Include="Systemconfig.cs" />
     <Compile Include="ThongTinChiTietToNhomModel.cs" />
     <Compile Include="ThongTinNhanVienModel.cs" />
     <Compile Include="ThongTinSanPhamVayModel.cs" />
