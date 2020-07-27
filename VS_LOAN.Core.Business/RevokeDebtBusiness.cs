@@ -24,20 +24,6 @@ namespace VS_LOAN.Core.Business
             _rpTailieu = tailieuRepository;
             _rpRevokeDebt = revokeDebtRepository;
         }
-        public async Task<BaseResponse<bool>> InsertFromFile(MemoryStream stream, int userId)
-        {
-            var pars = await ReadXlsxFile(stream);
-            if (pars == null || !pars.Any())
-                return new BaseResponse<bool>("Không có dữ liệu hoặc không thể import", false);
-            var tasks = new List<Task>();
-
-            foreach (var param in pars)
-            {
-                await _rpRevokeDebt.InsertManyByParameter(param, userId);
-            }
-            await Task.WhenAll(tasks);
-            return new BaseResponse<bool>(string.Empty, true);
-        }
         public async Task<DataPaging<List<RevokeDebtSearch>>> Search(int userId, string freeText, string status, int page, int limit, int groupId = 0)
         {
             var data = await _rpRevokeDebt.Search(userId, freeText, status, page, limit, groupId);
@@ -48,6 +34,18 @@ namespace VS_LOAN.Core.Business
             var result = DataPaging.Create(data, data[0].TotalRecord);
             return result;
         }
+        public async Task<BaseResponse<bool>> InsertFromFile(MemoryStream stream, int userId)
+        {
+            var pars = await ReadXlsxFile(stream);
+            if (pars == null || !pars.Any())
+                return new BaseResponse<bool>("Không có dữ liệu hoặc không thể import", false, false);
+            foreach (var param in pars)
+            {
+                await _rpRevokeDebt.InsertManyByParameter(param, userId);
+            }
+            return new BaseResponse<bool>($"Đã import thành công {pars.Count} dòng", true, true);
+        }
+       
         protected async Task<List<DynamicParameters>> ReadXlsxFile(MemoryStream stream)
         {
 

@@ -38,7 +38,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 await stream.CopyToAsync(fileStream);
                 var results = await _bizRevokeDebt.InsertFromFile(fileStream, GlobalData.User.IDUser);
-                return ToJsonResponse(results.IsSuccess, results.Error, results.Data);
+                return ToJsonResponse(results.IsSuccess, results.Message, results.Data);
             }
 
         }

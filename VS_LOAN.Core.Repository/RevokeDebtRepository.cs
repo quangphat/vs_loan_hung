@@ -21,25 +21,29 @@ namespace VS_LOAN.Core.Repository
             param.Add("CreatedBy", userId);
             try
             {
-                    await _connection.ExecuteAsync("sp_insert_RevokeDebt",
-                        param, commandType: CommandType.StoredProcedure);
-                    return true;
-                
+                var con = GetOneConnection();
+                await con.ExecuteAsync("sp_insert_RevokeDebt",
+                    param, commandType: CommandType.StoredProcedure);
+                return true;
+
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return false;
             }
         }
-        public async Task<List<RevokeDebtSearch>> Search(int userId,string freeText, string status, int page, int limit, int groupId = 0)
+        public async Task<List<RevokeDebtSearch>> Search(int userId, string freeText, string status, int page, int limit, int groupId = 0)
         {
-           
-                var result = await _connection.QueryAsync<RevokeDebtSearch>("sp_RevokeDebt_Search",
-                     new { freeText, page, limit_tmp = limit, status, groupId, userId}
-                     , commandType: CommandType.StoredProcedure);
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryAsync<RevokeDebtSearch>("sp_RevokeDebt_Search",
+                    new { freeText, page, limit_tmp = limit, status, groupId, userId }
+                    , commandType: CommandType.StoredProcedure);
                 return result.ToList();
+            }
+               
 
-           
+
         }
     }
 }

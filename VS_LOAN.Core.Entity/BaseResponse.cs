@@ -8,24 +8,20 @@ namespace VS_LOAN.Core.Entity
 {
     public class BaseResponse<T>
     {
-        public BaseResponse(string error, T data)
+        public BaseResponse(string message, T data, bool success)
         {
-            this.Error = error;
+            this.Message = message;
             this.Data = data;
+            this.IsSuccess = success;
         }
         public BaseResponse(T data)
         {
-            this.Error = string.Empty;
+            this.Message = string.Empty;
             this.Data = data;
+            this.IsSuccess = true;
         }
-        public string Error { get; set; }
-        public bool IsSuccess
-        {
-            get
-            {
-                return string.IsNullOrWhiteSpace(Error);
-            }
-        }
+        public string Message { get; set; }
+        public bool IsSuccess { get; set; }
         public T Data { get; set; }
     }
 }

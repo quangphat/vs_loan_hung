@@ -22,7 +22,7 @@ namespace VS_LOAN.Core.Repository
             var cfg = new Configuration();
             cfg.Configure(System.IO.Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, DBConfig.DB_LOAN));
             _connectionString = cfg.GetProperty("connection.connection_string");
-            _connection = new SqlConnection(_connectionString);
+            //_connection = new SqlConnection(_connectionString);
             _log = LogManager.GetLogger(inheritBiz);
         }
 
@@ -56,7 +56,7 @@ namespace VS_LOAN.Core.Repository
         }
         protected IDbConnection GetOneConnection()
         {
-            if(_connection.State == ConnectionState.Closed)
+            if(_connection ==null || _connection.State == ConnectionState.Closed)
                 _connection = new SqlConnection(_connectionString);
             return _connection;
         }
