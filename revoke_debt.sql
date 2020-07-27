@@ -495,6 +495,16 @@ where TABLE_NAME='RevokeDebt'
 update ImportExcel set Position = Position - 2 where ImportType = 5
 -------------------
 go
+create procedure sp_ImportExcel_GetByType
+(@type int)
+as begin
+select * from ImportExcel where ImportType = @type 
+order by Position
+end
+
+
+------------
+go
 create PROCEDURE sp_update_RevokeDebt
 @AgreementNo varchar(50),
 @CustomerName nvarchar(200),
@@ -733,14 +743,9 @@ end
 		  ('F_NAH',N'Không gặp được khách hàng, đã để lại thư báo. KH bỏ nhà đi, thỉnh thoảng mới về',5,'revoke_Field',0,2)
 
 
----------------USE [fintechcom_vn_PortalNew]
-GO
-/****** Object:  UserDefinedFunction [dbo].[fn_GetUserIDCanViewMyProfile_v2]    Script Date: 27/07/2020 11:29:41 SA ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-ALTER function [dbo].[fn_GetUserIDCanViewMyProfile_v2]
+---------------
+
+create function [dbo].[fn_GetUserIDCanViewMyProfile_v2]
 (@userIds varchar(50))
 returns @tempTable TABLE (userId int)
 as 
@@ -765,3 +770,5 @@ union select Id  as UserId from Employee where RoleId =1
 delete @tempGroupIds
 return
 END
+
+--------------
