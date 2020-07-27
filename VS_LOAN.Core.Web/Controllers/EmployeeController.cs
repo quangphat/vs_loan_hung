@@ -121,7 +121,7 @@ namespace VS_LOAN.Core.Web.Controllers
             //{
             //    return ToJsonResponse(false, "Vui lòng chọn quận/huyện");
             //}
-            var existUserName = await bizEmployee.GetByUserName(entity.UserName.Trim(), 0);
+            var existUserName = await _rpEmployee.GetByUserName(entity.UserName.Trim(), 0);
             if (existUserName != null)
             {
                 return ToJsonResponse(false, "Tên đăng nhập đã tồn tại");
