@@ -112,10 +112,12 @@
     <Compile Include="AutoIDBLL.cs" />
     <Compile Include="BaseRepository.cs" />
     <Compile Include="BusinessExtension.cs" />
+    <Compile Include="CommonRepository.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="CourierCodeRepository.cs" />
     <Compile Include="CompanyRepository.cs" />
     <Compile Include="CustomerRepository.cs" />
+    <Compile Include="Interfaces\ICommonRepository.cs" />
     <Compile Include="Interfaces\ICustomerRepository.cs" />
     <Compile Include="Interfaces\IEmployeeRepository.cs" />
     <Compile Include="Interfaces\IHosoCourrierRepository.cs" />
