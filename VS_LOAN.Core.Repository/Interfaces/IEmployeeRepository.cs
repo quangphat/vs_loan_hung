@@ -32,7 +32,8 @@ namespace VS_LOAN.Core.Repository.Interfaces
             int roleId,
             string freeText,
             int page,
-            int limit);
+            int limit,
+            int orgId);
         Task<Nhanvien> GetById(int id);
         Task<List<OptionSimple>> GetRoleList();
         Task<bool> Update(EmployeeEditModel entity);

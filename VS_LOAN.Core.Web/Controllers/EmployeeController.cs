@@ -46,8 +46,7 @@ namespace VS_LOAN.Core.Web.Controllers
         
         public async Task<JsonResult> GetRoles()
         {
-            var bizEmployee = new EmployeeRepository();
-            var rs = await bizEmployee.GetRoleList();
+            var rs = await _rpEmployee.GetRoleList();
             return ToJsonResponse(true, null, rs);
         }
         public ActionResult Index()
@@ -64,9 +63,12 @@ namespace VS_LOAN.Core.Web.Controllers
             var bzEmployee = new EmployeeRepository();
             BusinessExtension.ProcessPaging(ref page, ref limit);
             freetext = string.IsNullOrWhiteSpace(freetext) ? string.Empty : freetext.Trim();
-            var totalRecord = await bzEmployee.Count(fromDate, toDate, roleId, freetext);
-            var datas = await bzEmployee.Gets(fromDate, toDate, roleId, freetext, page, limit);
-            var result = DataPaging.Create(datas, totalRecord);
+            var datas = await bzEmployee.Gets(fromDate, toDate, roleId, freetext, page, limit, GlobalData.User.OrgId);
+            if(datas==null || !datas.Any())
+            {
+                return ToJsonResponse(true, null, DataPaging.Create(null as List<EmployeeViewModel>, 0));
+            }
+            var result = DataPaging.Create(datas, datas[0].TotalRecord);
             return ToJsonResponse(true, null, result);
         }
         public ActionResult AddNew()

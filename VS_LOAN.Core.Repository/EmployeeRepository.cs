@@ -177,7 +177,7 @@ namespace VS_LOAN.Core.Repository
             int roleId,
             string freeText,
             int page,
-            int limit)
+            int limit, int OrgId)
         {
             var p = new DynamicParameters();
             p.Add("workFromDate", workFromDate);
@@ -186,6 +186,8 @@ namespace VS_LOAN.Core.Repository
             p.Add("page", page);
             p.Add("roleId", roleId);
             p.Add("limit", limit);
+            p.Add("OrgId", OrgId);
+
             using (var con = GetConnection())
             {
                 var results = await con.QueryAsync<EmployeeViewModel>("sp_GetEmployees", p, commandType: CommandType.StoredProcedure);

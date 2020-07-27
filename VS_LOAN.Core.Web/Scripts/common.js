@@ -12,6 +12,10 @@
 //        message: '<h2 style="color:#fff">' + text + ' ...</h2>'
 //    });
 //}\
+function renderTextLink(textValue, href, type, className = '') {
+    let display = getValueDisplay(textValue, type);
+    return "<td class='text-left " + className + "'><a href='" + href + "' >" + display + "</a></td>";
+}
 function setddl(controlId) {
     $('#' + controlId).chosen({ width: '100%', allow_single_deselect: true });
 }

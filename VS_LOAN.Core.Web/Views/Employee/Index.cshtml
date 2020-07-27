@@ -130,7 +130,6 @@
                                     <th style="width: 150px">Vai trò trên trang</th>
                                     <th class="m-w-300">Khu vực</th>
                                     <th class="w-150">Ngày vào làm</th>
-                                    <th class="w-84">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -245,6 +244,7 @@
         limit = $("#ddlLimit").val()
         getData(1, limit)
     }
+
     function renderRow(index, rowData) {
         page = queries.get("page");
         if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
@@ -258,8 +258,8 @@
             limit = parseInt(limit)
         var stt = (page - 1) * limit + index + 1;
         return "<tr role='row' class = 'odd'>"
-            + renderTextCenter(stt, '','center w-45')
-            + renderTextLeft(rowData.FullName, '', "m-w-120")
+            + renderTextCenter(stt, '', 'center w-45')
+            + renderTextLink(rowData.FullName, `/employee/edit/${rowData.Id}`, '', "m-w-120")
             + renderTextLeft(rowData.Code, '', "w-150")
             + renderTextLeft(rowData.UserName, '', "w-150")
             + renderTextLeft(rowData.Email, '','w-150')
@@ -267,7 +267,6 @@
             + renderTextLeft(rowData.RoleName, '', "w-150")
             + renderTextLeft(rowData.Location, '', "m-w-300")
             + renderTextLeft(rowData.WorkDate, 'datetime', 'w-150')
-            + renderAction(rowData.Id)
             + "</tr>";
     }
     function renderTableBody(datas) {
