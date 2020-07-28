@@ -11,7 +11,7 @@ namespace VS_LOAN.Core.Repository.Interfaces
     {
         List<NhomDropDownModel> LayDSDuyetCuaNhanVien(int userId);
         int Them(NhomModel nhom, List<int> lstThanhVien, int createdBy);
-        Task<List<NhomDropDownModel>> GetAll();
+        Task<List<NhomDropDownModel>> GetAll(int userId);
         string LayChuoiMaCha(int maNhom);
         List<ThongTinToNhomModel> LayDSNhomCon(int maNhomCha);
         ThongTinToNhomSuaModel LayTheoMa(int maNhom);

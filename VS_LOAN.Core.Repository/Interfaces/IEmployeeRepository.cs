@@ -39,7 +39,7 @@ namespace VS_LOAN.Core.Repository.Interfaces
         Task<List<OptionSimple>> GetRoleList(int userId);
         Task<bool> Update(EmployeeEditModel entity);
         Task<int> Create(UserCreateModel entity);
-        Task<List<UserPMModel>> GetAllEmployee(int orgId);
+        Task<List<OptionSimple>> GetAllEmployee(int orgId, int page, string freeText);
         bool CapNhat(int maNhanVien, List<int> lstIDNhom);
         List<NhanVienNhomDropDownModel> LayDSThanhVienNhomCaCon(int maNhom);
     }

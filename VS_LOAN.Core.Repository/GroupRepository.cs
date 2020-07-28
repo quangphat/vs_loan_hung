@@ -106,11 +106,11 @@ namespace VS_LOAN.Core.Repository
             }
         }
 
-        public async Task<List<NhomDropDownModel>> GetAll()
+        public async Task<List<NhomDropDownModel>> GetAll(int userId)
         {
             using (var con = GetConnection())
             {
-                var result = await con.QueryAsync<NhomDropDownModel>("sp_NHOM_LayDSNhom",
+                var result = await con.QueryAsync<NhomDropDownModel>("sp_NHOM_LayDSNhom", new {userId },
                     commandType: CommandType.StoredProcedure);
                 return TaoCayDSNhom(result.ToList(), "0");
             }

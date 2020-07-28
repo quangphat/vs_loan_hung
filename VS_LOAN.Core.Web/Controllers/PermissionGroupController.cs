@@ -43,15 +43,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         
         
-        public async Task<JsonResult> LayDSNhomCha()
-        {
-            var bizGroup = new GroupRepository();
-            List<NhomDropDownModel> rs = await bizGroup.GetAll();
-            if (rs == null)
-                rs = new List<NhomDropDownModel>();
-            return Json(new { DSNhom = rs });
-        }
-
+       
 
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]

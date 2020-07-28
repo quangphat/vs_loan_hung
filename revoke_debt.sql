@@ -14,7 +14,7 @@ create PROCEDURE [dbo].[sp_Employee_Login]
 AS
 BEGIN
 	Select Id,Ten_Dang_Nhap AS UserName, Mat_Khau as Passowrd, RoleId, Ma as Code,
-	Email, Ho_Ten as FullName, Dien_Thoai as Phone, Status as IsActive, isnull(OrgId,1) as OrgId, RoleId
+	Email, Ho_Ten as FullName, Dien_Thoai as Phone, Status as IsActive, isnull(OrgId,0) as OrgId, RoleId
 	 From Employee where Ten_Dang_Nhap=@UserName and Mat_Khau=@Password and isnull(Xoa,0) =0
 END
 
@@ -264,17 +264,31 @@ end
 
 ---------
 go
-create PROCEDURE [dbo].[sp_Employee_GetFull] (@orgId int =0)
--- Add the parameters for the stored procedure here
-
+alter PROCEDURE [dbo].[sp_Employee_GetFull] 
+(@orgId int =0, 
+@freetext nvarchar(50) ='',
+ @page int = 1,
+  @limit int= 20)
 AS
 BEGIN
--- SET NOCOUNT ON added to prevent extra result sets from
--- interfering with SELECT statements.
-Select ID, Ma + ' - ' + Ho_Ten as HoTen From Employee
-where isnull(OrgId,0) = @orgId 
+declare @offset int = 0;
+set @offset = (@page-1)*@limit;
+declare @where  nvarchar(1000) = '';
+declare @mainClause nvarchar(max);
+declare @params nvarchar(300);
+if @freetext = '' begin set @freetext = null end;
+set @mainClause = 'Select count(*) over() as TotalRecord, Id, Ma + '' - '' + Ho_Ten as Name From Employee where isnull(OrgId,0) = @orgId and isnull(Xoa,0) = 0 ';
+if(@freetext  is not null)
+	begin
+	set @where +=' and (Ma like  N''%' + @freetext +'%''';
+	set @where +=' or Ho_Ten like  N''%' + @freetext +'%'' )';
+end;
+set @where += ' order by createdTime desc offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
+set @mainClause = @mainClause +  @where
+set @params =N' @offset int, @limit int, @orgId int';
+EXECUTE sp_executesql @mainClause, @params, @offset = @offset, @limit = @limit,@orgId = @orgId;
+print @mainClause;
 END
-
 -----------
 go
 create PROCEDURE [dbo].[sp_Employee_LayDSByMaQL_v2]
@@ -1145,3 +1159,15 @@ end
   
 
   ------------------
+  go
+  ALTER PROCEDURE [dbo].[sp_NHOM_LayDSNhom](@userId int =0)
+	-- Add the parameters for the stored procedure here
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	declare @orgId int = 0;
+  select @orgId = isnull(OrgId,0) from Employee where Id = @userId;
+	Select NHOM.ID, NHOM.Ten, NHOM.Chuoi_Ma_Cha as ChuoiMaCha From NHOM where OrgId = @orgId
+END
+----------

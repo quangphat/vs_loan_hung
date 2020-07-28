@@ -248,11 +248,11 @@ namespace VS_LOAN.Core.Repository
             }
 
         }
-        public async Task<List<UserPMModel>> GetAllEmployee(int orgId)
+        public async Task<List<OptionSimple>> GetAllEmployee(int orgId, int page, string freeText)
         {
             using (var con = GetConnection())
             {
-                var rs = await con.QueryAsync<UserPMModel>("sp_Employee_GetFull", new { orgId }, commandType: CommandType.StoredProcedure);
+                var rs = await con.QueryAsync<OptionSimple>("sp_Employee_GetFull", new { orgId, page,freeText }, commandType: CommandType.StoredProcedure);
                 return rs.ToList();
             }
         }

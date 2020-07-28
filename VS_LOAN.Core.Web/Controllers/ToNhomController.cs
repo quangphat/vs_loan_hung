@@ -47,7 +47,7 @@ namespace VS_LOAN.Core.Web.Controllers
 
         public async Task<JsonResult> LayDSNhomCha(bool isAddAll = false)
         {
-            List<NhomDropDownModel> rs = await _rpGroup.GetAll();
+            List<NhomDropDownModel> rs = await _rpGroup.GetAll(GlobalData.User.IDUser);
 
             if (rs == null)
                 rs = new List<NhomDropDownModel>();
