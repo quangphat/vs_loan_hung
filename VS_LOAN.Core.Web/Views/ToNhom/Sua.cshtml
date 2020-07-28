@@ -274,7 +274,14 @@
             });
             return;
         }
-        var objectSend = JSON.stringify({ 'maNhom': model.ID, 'ten': $('#txtTenNhom').val(), 'tenNgan': $('#txtTenNgan').val(), 'maNguoiQuanLy': $('#ddlNguoiQL').val(), 'maNhomCha': $('#ddlNhomCha').val(), 'lstThanhVien': lstSelectedId });
+        var objectSend = JSON.stringify({
+            'maNhom': @ViewBag.model.ID,
+            'ten': $('#txtTenNhom').val(),
+            'tenNgan': $('#txtTenNgan').val(),
+            'maNguoiQuanLy': $('#ddlNguoiQL').val(),
+            'maNhomCha': $('#ddlNhomCha').val(),
+            'lstThanhVien': lstSelectedId
+        });
         $.ajax({
             traditional: true,
             url: '@Url.Action("LuuSua", "ToNhom")',
