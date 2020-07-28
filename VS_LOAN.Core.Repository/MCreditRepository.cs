@@ -22,7 +22,7 @@ namespace VS_LOAN.Core.Repository
         {
             using (var con = GetConnection())
             {
-                var result = await _connection.QueryAsync<int>("sp_MCProfilePeople_GetPeopleCanViewProfile", new { profileId}, commandType: CommandType.StoredProcedure);
+                var result = await con.QueryAsync<int>("sp_MCProfilePeople_GetPeopleCanViewProfile", new { profileId}, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
         }
@@ -48,7 +48,7 @@ namespace VS_LOAN.Core.Repository
         {
             using (var con = GetConnection())
             {
-                await _connection.ExecuteAsync("sp_deleteMCTable", new { type }, commandType: CommandType.StoredProcedure);
+                await con.ExecuteAsync("sp_deleteMCTable", new { type }, commandType: CommandType.StoredProcedure);
                 return true;
             }
 
@@ -57,7 +57,7 @@ namespace VS_LOAN.Core.Repository
         {
             using (var con = GetConnection())
             {
-                var result = await _connection.QueryFirstOrDefaultAsync<MCredit_TempProfile>("sp_MCredit_TempProfile_GetById", new { id }, commandType: CommandType.StoredProcedure);
+                var result = await con.QueryFirstOrDefaultAsync<MCredit_TempProfile>("sp_MCredit_TempProfile_GetById", new { id }, commandType: CommandType.StoredProcedure);
                 return result;
             }
         }
@@ -65,7 +65,7 @@ namespace VS_LOAN.Core.Repository
         {
             using (var con = GetConnection())
             {
-                var result = await _connection.QueryFirstOrDefaultAsync<MCredit_TempProfile>("sp_MCredit_TempProfile_GetByMCId", new { id }, commandType: CommandType.StoredProcedure);
+                var result = await con.QueryFirstOrDefaultAsync<MCredit_TempProfile>("sp_MCredit_TempProfile_GetByMCId", new { id }, commandType: CommandType.StoredProcedure);
                 return result;
             }
         }
@@ -74,7 +74,7 @@ namespace VS_LOAN.Core.Repository
             string sql = $"sp_MCreditUserToken_GetTokenByUserId";
             using (var con = GetConnection())
             {
-                var result = await _connection.QueryFirstOrDefaultAsync<MCreditUserToken>(sql, new
+                var result = await con.QueryFirstOrDefaultAsync<MCreditUserToken>(sql, new
                 {
                     userId
                 }, commandType: CommandType.StoredProcedure);
@@ -214,7 +214,7 @@ namespace VS_LOAN.Core.Repository
         {
             using (var con = GetConnection())
             {
-                var result = await _connection.QueryAsync<OptionSimple>("sp_MCStatus_GetSimpleList", null, commandType: CommandType.StoredProcedure);
+                var result = await con.QueryAsync<OptionSimple>("sp_MCStatus_GetSimpleList", null, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
         }
@@ -222,7 +222,7 @@ namespace VS_LOAN.Core.Repository
         {
             using (var con = GetConnection())
             {
-                var result = await _connection.QueryAsync<OptionSimple>("sp_MCLocation_GetSimpleList", null, commandType: CommandType.StoredProcedure);
+                var result = await con.QueryAsync<OptionSimple>("sp_MCLocation_GetSimpleList", null, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
         }
@@ -230,7 +230,7 @@ namespace VS_LOAN.Core.Repository
         {
             using (var con = GetConnection())
             {
-                var result = await _connection.QueryAsync<OptionSimple>("sp_MCProduct_GetSimpleList", null, commandType: CommandType.StoredProcedure);
+                var result = await con.QueryAsync<OptionSimple>("sp_MCProduct_GetSimpleList", null, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
         }
@@ -238,7 +238,7 @@ namespace VS_LOAN.Core.Repository
         {
             using (var con = GetConnection())
             {
-                var result = await _connection.QueryAsync<OptionSimple>("sp_MCLoanPeriod_GetSimpleList", null, commandType: CommandType.StoredProcedure);
+                var result = await con.QueryAsync<OptionSimple>("sp_MCLoanPeriod_GetSimpleList", null, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
         }
@@ -246,7 +246,7 @@ namespace VS_LOAN.Core.Repository
         {
             using (var con = GetConnection())
             {
-                var result = await _connection.QueryAsync<OptionSimple>("sp_MCCities_GetSimpleList", null, commandType: CommandType.StoredProcedure);
+                var result = await con.QueryAsync<OptionSimple>("sp_MCCities_GetSimpleList", null, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
         }
@@ -263,7 +263,7 @@ namespace VS_LOAN.Core.Repository
 
             using (var con = GetConnection())
             {
-                await _connection.ExecuteAsync("sp_insert_MCredit_TempProfile", param, commandType: CommandType.StoredProcedure);
+                await con.ExecuteAsync("sp_insert_MCredit_TempProfile", param, commandType: CommandType.StoredProcedure);
                 return param.Get<int>("Id");
             }
         }
@@ -280,7 +280,7 @@ namespace VS_LOAN.Core.Repository
 
             using (var con = GetConnection())
             {
-                await _connection.ExecuteAsync("sp_update_MCredit_TempProfile", param, commandType: CommandType.StoredProcedure);
+                await con.ExecuteAsync("sp_update_MCredit_TempProfile", param, commandType: CommandType.StoredProcedure);
                 return true;
             }
         }
@@ -288,7 +288,7 @@ namespace VS_LOAN.Core.Repository
         {
             using (var con = GetConnection())
             {
-                var result = await _connection.QueryAsync<ProfileSearchSql>("sp_MCredit_TempProfile_Gets", new {
+                var result = await con.QueryAsync<ProfileSearchSql>("sp_MCredit_TempProfile_Gets", new {
                     freeText,
                     userId,
                     page,
@@ -301,7 +301,7 @@ namespace VS_LOAN.Core.Repository
         {
             using (var con = GetConnection())
             {
-                var result = await _connection.ExecuteScalarAsync<int>("sp_MCredit_TempProfile_Counts", new
+                var result = await con.ExecuteScalarAsync<int>("sp_MCredit_TempProfile_Counts", new
                 {
                     freeText,
                     userId
