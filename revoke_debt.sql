@@ -336,16 +336,17 @@ END
 
 --------
 go
-create PROCEDURE [dbo].[sp_Employee_Group_LayDSChonThanhVienNhomCaCon_v2]
+alter PROCEDURE [dbo].[sp_Employee_Group_LayDSChonThanhVienNhomCaCon_v2]
 	-- Add the parameters for the stored procedure here
-	@groupId int
+	@groupId int,
+	@userId int = 0
 AS
 BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
+	declare @orgId int = 0;
+  select @orgId = isnull(OrgId,0) from Employee where Id = @userId;
 	Select e.ID, e.Ma + ' - ' + e.Ho_Ten as Ten, e.Ma as Code 
 	From Employee e
-	Where e.ID in (
+	Where e.OrgId = @orgId and e.ID in (
 		Select NHAN_VIEN_NHOM.Ma_Nhan_Vien From NHAN_VIEN_NHOM 
 		Where NHAN_VIEN_NHOM.Ma_Nhom in 
 			(Select NHOM.ID From NHOM 
