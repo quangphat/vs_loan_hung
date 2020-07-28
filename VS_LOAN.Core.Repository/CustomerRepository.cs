@@ -40,21 +40,19 @@ namespace VS_LOAN.Core.Repository
                 p.Add("BirthDay", customer.BirthDay);
                 p.Add("Phone", customer.Phone);
                 p.Add("Salary", customer.Salary);
-                using (var _connection = GetConnection())
-                {
-                    await con.ExecuteAsync("sp_InsertCustomer", p, commandType: CommandType.StoredProcedure);
-                    return p.Get<int>("id");
-                }
-               
+
+                await con.ExecuteAsync("sp_InsertCustomer", p, commandType: CommandType.StoredProcedure);
+                return p.Get<int>("id");
+
             }
-               
+
         }
         public async Task<bool> AddNote(CustomerNote note)
         {
             string sql = $"insert into CustomerNote(CustomerId, Note,CreatedTime,CreatedBy) values (@customerId,@note,@createdTime,@createdBy)";
-            using (var _connection = GetConnection())
+            using (var con = GetConnection())
             {
-                await _connection.ExecuteAsync(sql, new
+                await con.ExecuteAsync(sql, new
                 {
                     customerId = note.CustomerId,
                     note = note.Note,
@@ -63,7 +61,7 @@ namespace VS_LOAN.Core.Repository
                 }, commandType: CommandType.Text);
                 return true;
             }
-           
+
         }
         public async Task<bool> Update(Customer customer)
         {
@@ -84,51 +82,51 @@ namespace VS_LOAN.Core.Repository
             p.Add("BirthDay", customer.BirthDay);
             p.Add("Phone", customer.Phone);
             p.Add("Salary", customer.Salary);
-            using (var _connection = GetConnection())
+            using (var con = GetConnection())
             {
-                await _connection.ExecuteAsync("sp_UpdateCustomer", p, commandType: CommandType.StoredProcedure);
+                await con.ExecuteAsync("sp_UpdateCustomer", p, commandType: CommandType.StoredProcedure);
                 return true;
             }
-           
+
         }
         public async Task<Customer> GetById(int customerId)
         {
             string sql = $"select * from Customer where Id = @id";
-            using (var _connection = GetConnection())
+            using (var con = GetConnection())
             {
-                var customer = _connection.QueryFirstOrDefault<Customer>(sql, new
+                var customer = con.QueryFirstOrDefault<Customer>(sql, new
                 {
                     id = customerId
                 }, commandType: CommandType.Text);
                 return customer;
             }
-            
+
         }
         public async Task<bool> DeleteCustomerCheck(int customerId)
         {
             string sql = $"delete  CustomerCheck where CustomerId = @CustomerId";
-            using (var _connection = GetConnection())
+            using (var con = GetConnection())
             {
-                await _connection.ExecuteAsync(sql, new
+                await con.ExecuteAsync(sql, new
                 {
                     CustomerId = customerId
                 }, commandType: CommandType.Text);
                 return true;
             }
-           
+
         }
         public async Task<List<int>> GetCustomerCheckByCustomerId(int customerId)
         {
             string sql = $"select PartnerId from CustomerCheck where CustomerId = @CustomerId";
-            using (var _connection = GetConnection())
+            using (var con = GetConnection())
             {
-                var result = await _connection.QueryAsync<int>(sql, new
+                var result = await con.QueryAsync<int>(sql, new
                 {
                     CustomerId = customerId
                 }, commandType: CommandType.Text);
                 return result.ToList();
             }
-           
+
         }
         public async Task<bool> InserCustomerCheck(CustomerCheck check)
         {
@@ -138,12 +136,12 @@ namespace VS_LOAN.Core.Repository
             p.Add("status", check.Status);
             p.Add("createdtime", DateTime.Now);
             p.Add("createdby", check.CreatedBy);
-            using (var _connection = GetConnection())
+            using (var con = GetConnection())
             {
-                await _connection.ExecuteAsync("sp_InserCustomerCheck", p, commandType: CommandType.StoredProcedure);
+                await con.ExecuteAsync("sp_InserCustomerCheck", p, commandType: CommandType.StoredProcedure);
                 return true;
             }
-            
+
         }
         public async Task<int> Count(string freeText, int userId)
         {
@@ -152,18 +150,18 @@ namespace VS_LOAN.Core.Repository
                 freeText = "";
             p.Add("freeText", freeText);
             p.Add("userId", userId);
-            using (var _connection = GetConnection())
+            using (var con = GetConnection())
             {
-                var total = await _connection.ExecuteScalarAsync<int>("sp_CountCustomer", p, commandType: CommandType.StoredProcedure);
+                var total = await con.ExecuteScalarAsync<int>("sp_CountCustomer", p, commandType: CommandType.StoredProcedure);
                 return total;
             }
-           
+
         }
         public async Task<List<Customer>> Gets(
             string freeText,
             int page,
             int limit
-            ,int userId)
+            , int userId)
         {
             page = page <= 0 ? 1 : page;
             limit = (limit <= 0 || limit >= Constant.Limit_Max_Page) ? Constant.Limit_Max_Page : limit;
@@ -175,23 +173,23 @@ namespace VS_LOAN.Core.Repository
             p.Add("offset", offset);
             p.Add("limit", limit);
             p.Add("userId", userId);
-            using (var _connection = GetConnection())
+            using (var con = GetConnection())
             {
-                var results = await _connection.QueryAsync<Customer>("sp_GetCustomer", p, commandType: CommandType.StoredProcedure);
+                var results = await con.QueryAsync<Customer>("sp_GetCustomer", p, commandType: CommandType.StoredProcedure);
                 return results.ToList();
             }
-            
+
         }
-        public async Task<List<CustomerNoteViewModel>>  GetNoteByCustomerId(int customerId)
+        public async Task<List<CustomerNoteViewModel>> GetNoteByCustomerId(int customerId)
         {
             var p = new DynamicParameters();
             p.Add("customerId", customerId);
-            using (var _connection = GetConnection())
+            using (var con = GetConnection())
             {
-                var results = await _connection.QueryAsync<CustomerNoteViewModel>("sp_GetNotesByCustomerId", p, commandType: CommandType.StoredProcedure);
+                var results = await con.QueryAsync<CustomerNoteViewModel>("sp_GetNotesByCustomerId", p, commandType: CommandType.StoredProcedure);
                 return results.ToList();
             }
-                
+
         }
     }
 }

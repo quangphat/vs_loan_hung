@@ -1,5 +1,5 @@
-﻿--EXEC sp_rename 'Employee', 'Nhan_Vien'
-
+﻿--for production EXEC sp_rename 'Employee', 'Nhan_Vien'
+--for local EXEC sp_rename 'Nhan_Vien','Employee'
 -- revoke debt
 
 alter table Nhan_Vien 
@@ -18,7 +18,9 @@ BEGIN
 	 From Nhan_Vien where Ten_Dang_Nhap=@UserName and Mat_Khau=@Password and isnull(Xoa,0) =0
 END
 
---------------
+
+
+--------------x
 go
 create PROCEDURE [dbo].[sp_Profile_GetProfileHaveNotSeen] 
 	-- Add the parameters for the stored procedure here
@@ -76,7 +78,7 @@ BEGIN
 END
 
 
------------------------
+-----------------------xx
 
 go
 create PROCEDURE [dbo].[sp_Profile_GetMyProfilesNotSeen] 
@@ -113,7 +115,7 @@ BEGIN
 END
 
 
-------------------
+------------------x
 go
 create procedure [dbo].[sp_CountEmployee]
 
@@ -158,7 +160,7 @@ end
 
 
 
---------------
+--------------x
 go
 create procedure [dbo].[sp_GetEmployees]
 (
@@ -198,7 +200,7 @@ end
 
 
 
--------------
+-------------x
 
 go
 create procedure sp_GetEmployeeById(@userId int)
@@ -208,7 +210,7 @@ select * from Nhan_Vien where ID = @userId
 end
 
 
----------
+---------x
 go
 create procedure [dbo].[sp_Employee_UpdateUser_v2]
 (
@@ -237,7 +239,7 @@ update Nhan_Vien set
 		where ID = @id
 end
 
-----------
+----------x
 
 go
 create procedure [dbo].[sp_Employee_InsertUser_v2]
@@ -262,9 +264,9 @@ SET @id=@@IDENTITY
 end
 
 
----------
+---------x
 go
-alter PROCEDURE [dbo].[sp_Employee_GetFull] 
+create PROCEDURE [dbo].[sp_Employee_GetFull] 
 (@orgId int =0)
 AS
 BEGIN
@@ -272,7 +274,7 @@ Select  Id, Ma + ' - ' + Ho_Ten as Name From Nhan_Vien where isnull(OrgId,0) = @
  order by ID desc
 END
 
------------
+-----------x
 go
 create PROCEDURE [dbo].[sp_Employee_LayDSByMaQL_v2]
 	-- Add the parameters for the stored procedure here
@@ -285,7 +287,11 @@ BEGIN
 END
 
 
---------
+--------x
+alter table Nhom 
+add OrgId int
+
+--------xx
 go
 create PROCEDURE [dbo].[sp_Group_GetChildGroup] 
 	-- Add the parameters for the stored procedure here
@@ -304,7 +310,9 @@ BEGIN
 	and isnull(g.OrgId, 0) = @orgId
 END
 
--------
+-------xx
+
+
 go
 create PROCEDURE [dbo].[sp_Group_GetById] 
 	-- Add the parameters for the stored procedure here
@@ -319,7 +327,7 @@ BEGIN
 	Where NHOM.ID = @groupId and e.ID = NHOM.Ma_Nguoi_QL
 END
 
-----------
+----------x
 go
 create PROCEDURE [dbo].[sp_Employee_Group_GetEmployeeByGroup]
 -- Add the parameters for the stored procedure here
@@ -334,9 +342,9 @@ Where e.ID = NHAN_VIEN_NHOM.Ma_Nhan_Vien and NHAN_VIEN_NHOM.Ma_Nhom = @groupId
 END
 
 
---------
+--------xxx
 go
-alter PROCEDURE [dbo].[sp_Employee_Group_LayDSChonThanhVienNhomCaCon_v2]
+create PROCEDURE [dbo].[sp_Employee_Group_LayDSChonThanhVienNhomCaCon_v2]
 	-- Add the parameters for the stored procedure here
 	@groupId int,
 	@userId int = 0
@@ -357,7 +365,9 @@ BEGIN
 	)
 END
 
-------
+------xx
+
+
 go
 create PROCEDURE [dbo].[sp_employee_Group_LayDSKhongThanhVienNhom_v2]
 	-- Add the parameters for the stored procedure here
@@ -373,7 +383,9 @@ BEGIN
 	and e.OrgId = @orgId
 END
 
---------
+--------x
+
+
 go
 create PROCEDURE [dbo].[sp_Employee_Group_LayDSChonThanhVienNhom_v2] 
 	-- Add the parameters for the stored procedure here
@@ -389,7 +401,9 @@ BEGIN
 END
 
 
-----------
+----------x
+
+
 go
 create PROCEDURE [dbo].[sp_Employee_LayDSByRule]
 	-- Add the parameters for the stored procedure here
@@ -408,7 +422,7 @@ BEGIN
 
 END
 
--------
+-------x
 
 create table RevokeDebt
 (Id int identity(1,1) not null,
@@ -468,7 +482,7 @@ alter table RevokeDebt
 add AssigneeGroupIds varchar(50),
 AssigneeIds varchar(50)
  
-----------------
+----------------x
 
 
 CREATE TABLE [dbo].[ImportExcel](
@@ -478,14 +492,14 @@ CREATE TABLE [dbo].[ImportExcel](
 	[ImportType] [int] NULL,
 	[ValueType] [varchar](20) NULL
 )
------------
+-----------x
 
 insert into ImportExcel(Name,Position,ImportType,ValueType)
 select COLUMN_NAME,ROW_NUMBER() OVER(ORDER BY (SELECT NULL)) AS rownum, 5, 'string'
 from INFORMATION_SCHEMA.COLUMNS
 where TABLE_NAME='RevokeDebt'
 
--------------
+-------------x
 
 update ImportExcel set Position = Position - 2 where ImportType = 5
 -------------------
@@ -498,7 +512,7 @@ order by Position
 end
 
 
-------------
+------------xx
 go
 create PROCEDURE sp_update_RevokeDebt
 @AgreementNo varchar(50),
@@ -597,7 +611,7 @@ BEGIN
 	WHERE Id=@Id
 end
 
-----------------
+----------------x
 go
 create PROCEDURE sp_insert_RevokeDebt
 @AgreementNo varchar(50),
@@ -664,7 +678,7 @@ BEGIN
 END
 
 
------------------
+-----------------x
 
 
  create procedure [dbo].[sp_RevokeDebt_Search]
@@ -729,7 +743,9 @@ EXECUTE sp_executesql @mainClause,@params,
 print @mainClause;
 end
 
------------
+-----------x
+
+
 GO
 CREATE TABLE [dbo].[ProfileStatus](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -765,29 +781,29 @@ CREATE TABLE [dbo].[ProfileStatus](
 ('RTP',N'Từ chối thanh toán',16,'revoke_Field',0,2),
 ('WFP',N'Khách hàng đã thanh toán đang chờ phòng Thanh toán kiểm tra',17,'revoke_Field',0,2)
 
-----------
+----------x
 
   insert into ProfileStatus (Code, Name, Value, ProfileType,IsDeleted, OrgId)
-  Values ('CAB',N'call back – gọi lại ',1,'revoke_Call',0,2),
-('CGI',N'Khách hàng đi tù/nghĩa vụ/cai nghiện',2,'revoke_Call',0,2),
-('DIE',N'Khách hàng chết, gia đình gặp khó khăn kinh tế',3,'revoke_Call',0,2),
-('GSF',N'Nghi ngờ gian lận',4,'revoke_Call',0,2),
-('HUP',N'Cúp máy ngang',5,'revoke_Call',0,2),
-('IGN1',N'Khách hàng chưa nhận khoản vay',7,'revoke_Call',0,2),
-('IGN2',N'Khách hàng báo đã hủy Hợp đồng',8,'revoke_Call',0,2),
-('LEM',N'Để lại lời nhắn cho người thân',9,'revoke_Call',0,2),
-('MCW',N'Khách hàng bị bệnh/ tai nạn',10,'revoke_Call',0,2),
-('NAB',N'phone number in not available - số không liên lạc được, số không tồn tại, số không đúng',11,'revoke_Call',0,2),
-('NCP',N'not customer or other`s phone number - không phải số KH/ số người thân khác',12,'revoke_Call',0,2),
-('NKP',N'has signal but not answer - không nhấc máy, máy bận, gọi vào hộp thư thoại',13,'revoke_Call',0,2),
-('PTP',N'promise to pay – hứa thanh toán',14,'revoke_Call',0,2),
-('RTP',N'refuse to pay – từ chối thanh toán',15,'revoke_Call',0,2),
-('WFP',N'Khách hàng đã thanh toán đang chờ phòng Thanh toán kiểm tra',16,'revoke_Call',0,2)
+  Values ('CAB',N'call back – gọi lại ',18,'revoke_Call',0,2),
+('CGI',N'Khách hàng đi tù/nghĩa vụ/cai nghiện',19,'revoke_Call',0,2),
+('DIE',N'Khách hàng chết, gia đình gặp khó khăn kinh tế',20,'revoke_Call',0,2),
+('GSF',N'Nghi ngờ gian lận',21,'revoke_Call',0,2),
+('HUP',N'Cúp máy ngang',22,'revoke_Call',0,2),
+('IGN1',N'Khách hàng chưa nhận khoản vay',23,'revoke_Call',0,2),
+('IGN2',N'Khách hàng báo đã hủy Hợp đồng',24,'revoke_Call',0,2),
+('LEM',N'Để lại lời nhắn cho người thân',25,'revoke_Call',0,2),
+('MCW',N'Khách hàng bị bệnh/ tai nạn',26,'revoke_Call',0,2),
+('NAB',N'phone number in not available - số không liên lạc được, số không tồn tại, số không đúng',27,'revoke_Call',0,2),
+('NCP',N'not customer or other`s phone number - không phải số KH/ số người thân khác',28,'revoke_Call',0,2),
+('NKP',N'has signal but not answer - không nhấc máy, máy bận, gọi vào hộp thư thoại',29,'revoke_Call',0,2),
+('PTP',N'promise to pay – hứa thanh toán',30,'revoke_Call',0,2),
+('RTP',N'refuse to pay – từ chối thanh toán',31,'revoke_Call',0,2),
+('WFP',N'Khách hàng đã thanh toán đang chờ phòng Thanh toán kiểm tra',32,'revoke_Call',0,2)
 
 
----------------
+---------------x
 
-create function [dbo].[fn_GetUserIDCanViewMyProfile_v2]
+alter function [dbo].[fn_GetUserIDCanViewMyProfile_v2]
 (@userIds varchar(50))
 returns @tempTable TABLE (userId int)
 as 
@@ -813,7 +829,7 @@ delete @tempGroupIds
 return
 END
 
---------------
+--------------x
 
 create table SystemConfig
 (Id int identity(1,1) not null,
@@ -822,12 +838,12 @@ Name nvarchar(100),
 Value int
 )
 
---------------
+--------------x
 
 insert into SystemConfig(Code, Name, Value)
 values('revoke_debt_max_row_import',N'Import thu hồi nợ', 1000)
 
---------------
+--------------x
 
 go
 create procedure sp_SystemConfig_GetByCode(@code varchar(50))
@@ -835,7 +851,7 @@ as begin
 select top 1 * from SystemConfig where Code = @code
 end
 
-------------
+------------x
 go
 ALTER procedure [dbo].[sp_GetEmployees]
 (
@@ -874,7 +890,7 @@ end
 
 
 
-------------
+------------x
 
 go
 create procedure sp_ProfileStatus_Gets
@@ -893,7 +909,11 @@ begin
 select Value as Id, Code, (Code +' - ' + Name) as Name from ProfileStatus where OrgId = @orgId and isnull(IsDeleted,0) = 0
 end
 end
---------------
+
+
+--------------x
+
+
 alter table [Role]
 add OrgId int
 --------
@@ -904,15 +924,18 @@ values
 ('call',N'Call',0, 2),
 ('field',N'Field',0, 2)
 
-------------
+------------x
 
   alter table NHOM
-  add OrgId int,
+  add 
   CreatedBy int,
 CreatedTime datetime,
 UpdatedBy int,
 UpdatedTime datetime
-  ----------
+
+  ----------x
+
+
   go
   ALTER PROCEDURE [dbo].[sp_NHOM_LayDSChonTheoNhanVien]
 	-- Add the parameters for the stored procedure here
@@ -927,7 +950,7 @@ select @orgId = isnull(OrgId,0) from Nhan_Vien where id = @UserID;
 	g.ID in (Select NHAN_VIEN_NHOM.Ma_Nhom From NHAN_VIEN_NHOM Where NHAN_VIEN_NHOM.Ma_Nhan_Vien = @UserID)
 END
 
-------------
+------------x
 
 go
 create PROCEDURE [dbo].[sp_NHOM_LayCayNhomCon_v2] 
@@ -945,7 +968,7 @@ END
 
 
 
---------------
+--------------xx
 go
 ALTER PROCEDURE [dbo].[sp_NHOM_Them]
 	-- Add the parameters for the stored procedure here
@@ -969,7 +992,7 @@ select @orgId = isnull(OrgId,0) from Nhan_Vien where id = @createdBy;
 END
 
 
------------
+-----------x
 
 ALTER procedure [dbo].[sp_MCredit_TempProfile_Gets]
 (
@@ -1036,7 +1059,7 @@ print @mainClause;
 end
   
 
-  -----------------
+  -----------------x
 
   go 
   create procedure sp_RevokeDebt_GetById
@@ -1045,7 +1068,7 @@ as begin
 select * from RevokeDebt where id = @profileId
 end
 
---------------------
+--------------------x
 go
 ALTER procedure [dbo].[sp_ProfileStatus_Gets]
 (@orgId int = 0,
@@ -1068,7 +1091,7 @@ end
 end
 
 
-----------
+----------x
 
 go
 
@@ -1077,7 +1100,7 @@ go
   begin
   declare @orgId int = 0;
   select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
-  select Id, Name from Role where isnull(Deleted,0) = 0 and OrgId = @orgId
+  select Id, Name from Role where isnull(Deleted,0) = 0 and isnull(OrgId,0) = @orgId
   end
 
   ----------------
@@ -1119,12 +1142,12 @@ order by n.Id desc
 end
 
 
----------
+---------x
 
 ALTER TABLE Nhan_Vien
 ALTER COLUMN Ten_Dang_nhap varchar(50);
 
------------
+-----------x
 
 
   go
@@ -1136,7 +1159,8 @@ ALTER COLUMN Ten_Dang_nhap varchar(50);
   select * from Nhan_Vien where isnull(Xoa,0) = 0 and OrgId = @orgId and Ten_Dang_Nhap = @username
   end
 
-  ----------------
+  ----------------x
+
   go
    ALTER procedure [dbo].[sp_Employee_GetByCode](@code varchar(20), @userId int)
 as
@@ -1147,7 +1171,9 @@ select top 1 Id, Ma as Code from Nhan_Vien where Ma = @code and isnull(Xoa,0) = 
 end
   
 
-  ------------------
+  ------------------x
+
+
   go
   ALTER PROCEDURE [dbo].[sp_NHOM_LayDSNhom](@userId int =0)
 	-- Add the parameters for the stored procedure here
@@ -1159,7 +1185,7 @@ BEGIN
   select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
 	Select NHOM.ID, NHOM.Ten, NHOM.Chuoi_Ma_Cha as ChuoiMaCha From NHOM where OrgId = @orgId
 END
-----------
+----------x
 
 
 go
@@ -1189,7 +1215,9 @@ EXECUTE sp_executesql @mainClause, @params, @offset = @offset, @limit = @limit,@
 print @mainClause;
 END
 
-------------
+------------x
+
+
 go
 ALTER function [dbo].[fn_GetUserIDCanViewMyProfile_v2]
 (@userIds varchar(50), @assigneeIds varchar(50))
@@ -1221,7 +1249,9 @@ delete @tempGroupIds
 return
 END
 
----------------
+---------------x
+
+
 go
 ALTER procedure [dbo].[sp_RevokeDebt_Search]
 (
@@ -1272,7 +1302,9 @@ EXECUTE sp_executesql @mainClause,@params,
 @status = @status, @offset = @offset, @limit = @limit_tmp, @groupId = @groupId, @AssigneeId = @AssigneeId, @userId = @userId;
 print @mainClause;
 end
----------------
+---------------x
+
+
 go
 create procedure sp_RevokeDebt_Delete(@profileId int, @userId int)
 as begin
@@ -1280,7 +1312,7 @@ update RevokeDebt set IsDeleted = 1, UpdatedBy  = @userId, UpdatedTime = GETDATE
 where id = @profileId
 end
 
------------
+-----------x
 go
 create procedure sp_RevokeDebt_UpdateStatus(@profileId int, @userId int,@status int =0 )
 as begin
@@ -1289,4 +1321,10 @@ where id = @profileId
 end
 
 
---------------
+--------------x
+
+update [Role] set Code = 'revoke_Call' where Code ='Call'
+
+update [Role] set Code = 'revoke_Field' where Code ='Field'
+
+----------
