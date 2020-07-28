@@ -49,7 +49,7 @@ namespace VS_LOAN.Core.Web.Controllers
 
         public async Task<JsonResult> GetRoles()
         {
-            var rs = await _rpEmployee.GetRoleList();
+            var rs = await _rpEmployee.GetRoleList(GlobalData.User.IDUser);
             return ToJsonResponse(true, null, rs);
         }
         public ActionResult Index()
@@ -108,48 +108,24 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "Mật khẩu không khớp");
             }
-            //if (string.IsNullOrWhiteSpace(entity.Email))
-            //{
-            //    return ToJsonResponse(false, "Dữ liệu không hợp lệ");
-            //}
+           
             if (!string.IsNullOrWhiteSpace(entity.Email) && !BusinessExtension.IsValidEmail(entity.Email, 50))
             {
                 return ToJsonResponse(false, "Email không hợp lệ");
             }
-            //if (entity.ProvinceId <= 0)
-            //{
-            //    return ToJsonResponse(false, "Vui lòng chọn tỉnh");
-            //}
-            //if (entity.DistrictId <= 0)
-            //{
-            //    return ToJsonResponse(false, "Vui lòng chọn quận/huyện");
-            //}
-            var existUserName = await _rpEmployee.GetByUserName(entity.UserName.Trim(), 0);
+           
+            var existUserName = await _rpEmployee.GetByUserName(entity.UserName.Trim(), GlobalData.User.IDUser);
             if (existUserName != null)
             {
                 return ToJsonResponse(false, "Tên đăng nhập đã tồn tại");
             }
-            if (entity.WorkDateStr == null)
-            {
-                return ToJsonResponse(false, "Vui lòng chọn ngày vào làm");
-            }
-            if (string.IsNullOrWhiteSpace(entity.WorkDateStr))
-            {
-                return ToJsonResponse(false, "Vui lòng chọn ngày vào làm", null);
-            }
-            try
-            {
-                entity.WorkDate = DateTimeFormat.ConvertddMMyyyyToDateTime(entity.WorkDateStr);
-            }
-            catch (Exception ex)
-            {
-                return ToJsonResponse(false, "Định dạng ngày tháng không hợp lệ", null);
-            }
+           
+           
             if (string.IsNullOrWhiteSpace(entity.Code))
             {
-                return ToJsonResponse(false, "MÃ nhân viên không được để trống", 0);
+                return ToJsonResponse(false, "Mã nhân viên không được để trống", 0);
             }
-            var existCode = await _rpEmployee.GetByCode(entity.Code.Trim());
+            var existCode = await _rpEmployee.GetByCode(entity.Code.Trim(),GlobalData.User.IDUser);
             if (existCode != null)
             {
                 return ToJsonResponse(false, "Mã đã tồn tại", 0);
@@ -157,6 +133,7 @@ namespace VS_LOAN.Core.Web.Controllers
             entity.UserName = entity.UserName.Trim();
             entity.Password = entity.Password.Trim();
             entity.Password = MD5.getMD5(entity.Password);
+            entity.CreatedBy = GlobalData.User.IDUser;
             var result = await _rpEmployee.Create(entity);
             return ToJsonResponse(true, null, result);
         }
@@ -184,18 +161,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             }
-            if (string.IsNullOrWhiteSpace(model.WorkDateStr))
-            {
-                return ToJsonResponse(false, "Vui lòng chọn ngày vào làm", null);
-            }
-            try
-            {
-                model.WorkDate = DateTimeFormat.ConvertddMMyyyyToDateTime(model.WorkDateStr);
-            }
-            catch (Exception ex)
-            {
-                return ToJsonResponse(false, "Định dạng ngày tháng không hợp lệ", null);
-            }
+           
             model.UpdatedBy = GlobalData.User.IDUser;
             var result = await _rpEmployee.Update(model);
             return ToJsonResponse(result);

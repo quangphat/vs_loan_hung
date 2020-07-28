@@ -249,7 +249,7 @@ function getProvinces(controlId, value = null, districtValue = 0, districtContro
 
         },
         complete: function () {
-            debugger
+            
             getDistricts(districtControlId, value, districtValue);
 
         },

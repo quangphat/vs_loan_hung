@@ -20,8 +20,8 @@ namespace VS_LOAN.Core.Repository.Interfaces
         Task<List<OptionSimple>> GetByProvinceId(int provinceId);
         Task<List<IDictionary<string, object>>> QuerySQLAsync(string sql);
         Task<List<OptionSimple>> GetByDistrictId(int districtId);
-        Task<Nhanvien> GetByUserName(string userName, int id = 0);
-        Task<Nhanvien> GetByCode(string code, int id = 0);
+        Task<Nhanvien> GetByUserName(string userName, int userId);
+        Task<Nhanvien> GetByCode(string code, int userId);
         Task<int> Count(
             DateTime workFromDate,
             DateTime workToDate,
@@ -36,7 +36,7 @@ namespace VS_LOAN.Core.Repository.Interfaces
             int limit,
             int orgId);
         Task<Nhanvien> GetById(int id);
-        Task<List<OptionSimple>> GetRoleList();
+        Task<List<OptionSimple>> GetRoleList(int userId);
         Task<bool> Update(EmployeeEditModel entity);
         Task<int> Create(UserCreateModel entity);
         Task<List<UserPMModel>> GetAllEmployee(int orgId);

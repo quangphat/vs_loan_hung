@@ -115,30 +115,22 @@ namespace VS_LOAN.Core.Repository
 
 
         }
-        public async Task<Nhanvien> GetByUserName(string userName, int id = 0)
+        public async Task<Nhanvien> GetByUserName(string userName, int userId)
         {
-            string query = "select * from Nhan_Vien where Ten_Dang_Nhap = @userName";
-            if (id > 0)
-            {
-                query += " and ID <> @id";
-            }
+            
             using (var con = GetConnection())
             {
-                var result = await con.QueryFirstOrDefaultAsync<Nhanvien>(query, new { @userName = userName, @id = id }, commandType: CommandType.Text);
+                var result = await con.QueryFirstOrDefaultAsync<Nhanvien>("sp_Employee_GetByUsername", new { userName, userId }, commandType: CommandType.StoredProcedure);
                 return result;
             }
 
         }
-        public async Task<Nhanvien> GetByCode(string code, int id = 0)
+        public async Task<Nhanvien> GetByCode(string code, int userId)
         {
-            string query = "select * from Nhan_Vien where Ma = @code";
-            if (id > 0)
-            {
-                query += " and ID <> @id";
-            }
+            
             using (var con = GetConnection())
             {
-                var result = await con.QueryFirstOrDefaultAsync<Nhanvien>(query, new { code = code, @id = id }, commandType: CommandType.Text);
+                var result = await con.QueryFirstOrDefaultAsync<Nhanvien>("sp_Employee_GetByCode", new { code,userId  }, commandType: CommandType.StoredProcedure);
                 return result;
             }
 
@@ -208,12 +200,12 @@ namespace VS_LOAN.Core.Repository
             }
 
         }
-        public async Task<List<OptionSimple>> GetRoleList()
+        public async Task<List<OptionSimple>> GetRoleList(int userId)
         {
-            string query = "select Id, Name from Role where isnull(Deleted,0) =0";
+          
             using (var con = GetConnection())
             {
-                var result = await con.QueryAsync<OptionSimple>(query, commandType: CommandType.Text);
+                var result = await con.QueryAsync<OptionSimple>("sp_Role_GetRoles",new { userId}, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
 
@@ -223,14 +215,12 @@ namespace VS_LOAN.Core.Repository
         {
             var p = new DynamicParameters();
             p.Add("id", entity.Id);
-            p.Add("provinceId", entity.ProvinceId);
-            p.Add("districtId", entity.DistrictId);
+          
             p.Add("fullName", entity.FullName);
             p.Add("phone", entity.Phone);
             p.Add("roleId", entity.RoleId);
             p.Add("email", entity.Email);
-            p.Add("workDate", entity.WorkDate);
-            p.Add("UpdatedTime", DateTime.Now);
+            
             p.Add("UpdatedBy", entity.UpdatedBy);
             using (var con = GetConnection())
             {
@@ -243,16 +233,13 @@ namespace VS_LOAN.Core.Repository
         {
             var p = AddOutputParam("id");
             p.Add("code", entity.Code);
-            p.Add("ProvinceId", entity.ProvinceId);
-            p.Add("DistrictId", entity.DistrictId);
+           
             p.Add("userName", entity.UserName);
             p.Add("password", entity.Password);
             p.Add("fullName", entity.FullName);
             p.Add("phone", entity.Phone);
             p.Add("roleId", entity.RoleId);
             p.Add("email", entity.Email);
-            p.Add("workDate", entity.WorkDate);
-            p.Add("createdtime", DateTime.Now);
             p.Add("createdby", entity.CreatedBy);
             using (var con = GetConnection())
             {

@@ -80,7 +80,7 @@
                                             <div class="profile-info-name"> Mã nhân viên: </div>
 
                                             <div class="profile-info-value col-sm-4">
-                                                <input type="text" id="txtCode" disabled placeholder="MÃ" class="form-control">
+                                                <input type="text" id="txtCode" disabled  class="form-control">
                                             </div>
                                         </div>
                                         <div class="profile-info-row">
@@ -97,18 +97,7 @@
                                                 <input type="text" id="txtPhone" placeholder="Số điện thoại" class="form-control">
                                             </div>
                                         </div>
-                                        <div class="profile-info-row">
-                                            <div class="profile-info-name"> Ngày vào làm: </div>
-
-                                            <div class="profile-info-value col-sm-4">
-                                                <div class="input-group">
-                                                    <input class="form-control date-picker" id="txtWorkDate" />
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-calendar bigger-110"></i>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
+                                       
                                         <div class="profile-info-row">
                                             <div class="profile-info-name"> @Global.NhanVien_UserProfile_UserName: </div>
 
@@ -118,23 +107,7 @@
                                         </div>
 
 
-                                        <div class="profile-info-row">
-                                            <div class="profile-info-name">Tỉnh/Thành phố: </div>
-
-                                            <div class="profile-info-value col-sm-4">
-                                                <select id="ddlProvince" class="chosen-select form-control" data-placeholder="Chọn tỉnh/thành phố">
-                                                    <option value="0"></option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="profile-info-row">
-                                            <div class="profile-info-name">Quận/Huyện: </div>
-                                            <div class="profile-info-value col-sm-4">
-                                                <select id="ddlDistrict" class="chosen-select form-control" data-placeholder="Chọn quận/huyện">
-                                                    <option value="0"></option>
-                                                </select>
-                                            </div>
-                                        </div>
+                                        
                                         <div class="profile-info-row">
                                             <div class="profile-info-name">Vai trò trên trang: </div>
                                             <div class="profile-info-value col-sm-4">
@@ -227,13 +200,9 @@
             $('#confirmPassword').val('');
         });
         $('.chosen-select').chosen({ width: '100%', allow_single_deselect: true });
-        setDateTimeInput("#txtWorkDate");
         
         $("#txtPhone").ForceNumericOnly();
-        getProvinces("#ddlProvince", employee.ProvinceId, employee.DistrictId);
-        $('#ddlProvince').on('change', function () {
-            getDistricts(this.value, "#ddlDistrict", 0);
-        });
+       
         bindToControl(employee)
         $('#btnSave').click(function (e) {
             updateUser();
@@ -258,10 +227,9 @@
         employee.FullName = $("#txtFullName").val();
         employee.Email = $("#txtEmail").val();
         employee.Phone = $("#txtPhone").val();
-        employee.WorkDateStr = $("#txtWorkDate").val();
+       
         employee.RoleId = (!isNullOrWhiteSpace($("#ddlRole").val()) && !isNullOrUndefined($("#ddlRole").val())) ? parseInt($("#ddlRole").val()) : 0;
-        employee.ProvinceId = (!isNullOrWhiteSpace($("#ddlProvince").val()) && !isNullOrUndefined($("#ddlProvince").val())) ? parseInt($("#ddlProvince").val()) : 0;
-        employee.DistrictId = (!isNullOrWhiteSpace($("#ddlDistrict").val()) && !isNullOrUndefined($("#ddlDistrict").val())) ? parseInt($("#ddlDistrict").val()) : 0;
+       
 
         if (isNullOrWhiteSpace(employee.WorkDate) || isNullOrUndefined(employee.WorkDate)) {
             swal({
