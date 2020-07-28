@@ -1222,7 +1222,7 @@ return
 END
 
 ---------------
-GO
+go
 ALTER procedure [dbo].[sp_RevokeDebt_Search]
 (
 @freeText nvarchar(30),
@@ -1241,10 +1241,11 @@ declare @offset int = 0;
 set @offset = (@page-1)*@limit_tmp;
 set @mainClause = 'select count(*) over() as TotalRecord, rv.* 
 ,fintechcom_vn_PortalNew.fn_getGhichuByHosoId(rv.Id,2) as LastNote,
+isnull(s.Name,'''') as StatusName,
  nv1.Ho_Ten as CreatedUser, nv2.Ho_Ten as UpdatedUser
 from RevokeDebt rv left join Employee nv1 on rv.CreatedBy = nv1.ID
 left join Employee nv2 on rv.UpdatedBy = nv2.Id
-'
+left join ProfileStatus s on rv.Status = s.Value'
 	if(@freeText  is not null)
 	begin
 	set @where = ' and (rv.CustomerName like  N''%' + @freeText +'%''';
@@ -1264,14 +1265,13 @@ if(@assigneeId <> 0)
 begin
 set @where += ' and @AssigneeId in (select distinct value from dbo.fn_SplitStringToTable(rv.AssigneeIds, ''.''))';
 end;										   
-set @where += ' and isnull(IsDeleted,0) = 0  order by rv.createdTime desc  offset @offset ROWS FETCH NEXT @limit ROWS ONLY';
+set @where += ' and isnull(rv.IsDeleted,0) = 0  order by rv.createdTime desc  offset @offset ROWS FETCH NEXT @limit ROWS ONLY';
 set @mainClause = @mainClause +  @where
 set @params =N'@status varchar(20), @offset int, @limit int, @groupId int, @AssigneeId int ,@userId int';
 EXECUTE sp_executesql @mainClause,@params,  
 @status = @status, @offset = @offset, @limit = @limit_tmp, @groupId = @groupId, @AssigneeId = @AssigneeId, @userId = @userId;
 print @mainClause;
 end
-
 ---------------
 go
 create procedure sp_RevokeDebt_Delete(@profileId int, @userId int)

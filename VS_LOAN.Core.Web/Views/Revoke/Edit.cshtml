@@ -287,16 +287,26 @@
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
                         <div class="col-md-11 col-sm-12 col-xs-12">
-                            <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
+                            <textarea class="form-control" id="txtNote" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="activity-log">
+                                <div class="timline-addNote only-new-note">
+                                    <div class="timeline-date-event timline-date-event--margin mt-0" id="dsGhichu">
+
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="pull-right">
+                        <a style="cursor:pointer" id="btnDelete">Xóa</a>
+                        <a class="btn btn-sm btn-primary" href="/Revoke/Index">
+                            Quay lại
+                        </a>
                         <a class="btn btn-sm btn-primary" id="btnAddNote">
                             Thêm ghi chú
-                        </a>
-
-                        <a class="btn btn-sm btn-primary" href="/MCredit/Index">
-                            Quay lại
                         </a>
                         <a class="btn btn-sm btn-primary" id="btnUpdate">
                             Cập nhật
@@ -336,7 +346,8 @@
         $("#FinalPaymentAmount").val(formatCurrency('@ViewBag.model.FinalPaymentAmount'));
         $("#CashPrice").val(formatCurrency('@ViewBag.model.CashPrice')); 
         $("#TotalPayableAmount").val(formatCurrency('@ViewBag.model.TotalPayableAmount')); 
-        renderStatusList();
+        renderStatusList('#ddlStatus',@ViewBag.model.Status);
+        Getcomments();
         @*GetLocSigns("#ddlLocSign",'@ViewBag.model.LocSignCode');
         GetLoanPeriods("#ddlLoanPeriod", '@ViewBag.model.LoanPeriodCode');
         GetLoanCities("#ddlProvince",'@ViewBag.model.ProvinceId');
@@ -386,6 +397,34 @@
         let value = !isNullOrWhiteSpace($("#txtIdNumber").val()) ? $("#txtIdNumber").val() : $("#txtCCCDNumber").val();
         checkDup('checkdupResult', value);
     });
+    function Getcomments() {
+        //$('#ddlTrangThai').empty();
+        $.ajax({
+            type: "POST",
+            url: `/Revoke/Comments?profileId=${@ViewBag.model.Id}`,
+            data: {},
+            success: function (data) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, item) {
+                        $('#dsGhichu').append(
+                            '<div class="timeline-event-content  active">' +
+                            '<div class="timeline-item">' +
+                            '<div class="timeline-body">' +
+                            '<div class="timeline__message-container">' +
+                            '<strong>' + item.Commentator + ' (' + SetFormatDateTimeDMY(item.CommentTime) + '): </strong><span>' + item.Noidung + '</span>' +
+                            '</div></div></div></div>'
+                        )
+                    });
+                }
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
     function getFilesUpload() {
         $.ajax({
             type: "POST",
@@ -585,109 +624,15 @@
             },
         });
     });
-
-    $('#btn_Temp').click(function (e) {
-        if ($('#txtCustomerName').val() == "" || $('#txtCustomerName').val() == undefined) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng nhập họ tên",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if (isNullOrWhiteSpace($('#txtBirthDay').val())) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn ngày sinh",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if (isNullOrWhiteSpace($('#ddlProvince').val()) || $('#ddlProvince').val() =="0") {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn tỉnh/thành",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if (isNullOrWhiteSpace($('#txtIdDay').val())) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn ngày cấp cmnd/cccd",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-
-        if ($('#ddlProduct').val() == "0" || $('#ddlProduct').val() == undefined) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn sản phẩm vay",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if (isNullOrWhiteSpace($('#ddlLocSign').val()) || $('#ddlLocSign').val() =="0") {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn địa điểm ký văn kiện",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if (isNullOrWhiteSpace($('#ddlLoanPeriod').val()) || $('#ddlLoanPeriod').val() =="0") {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn kỳ hạn vay",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        var objectSend = JSON.stringify({
-            "Id": @ViewBag.model.Id,
-            "CustomerName": $("#txtCustomerName").val(),
-            "Hometown": $("#txtHometown").val(),
-            "BirthDay": $('#txtBirthDay').val(),
-            "Phone": $('#txtPhone').val(),
-            "IdNumber": $('#txtIdNumber').val(),
-            "CCCDNumber": $('#txtCCCDNumber').val(),
-            "IssueDate": $('#txtIdDay').val(),
-            "IsAddr": getRadioButtonValue('radio-isAddr'),
-            "Gender": $("#ddlGender").val() == "1" ? true : false,
-            "ProvinceId": $("#ddlProvince").val(),
-            "DistrictId": 0,
-            "Address": $("#txtAddress").val(),
-            "SaleNumber": $("#txtSaleCode").val(),
-            "ProductCode": $("#ddlProduct").val(),
-            "LoanPeriodCode": $("#ddlLoanPeriod").val(),
-            "LocSignCode": $("#ddlLocSign").val(),
-            "LoanMoney": $('#txtLoanMoney').val().replace(/\./g, ''),
-            "IsInsurrance": getCheckboxValue('cbbIsInsurrance'),
-            "Status": 1,
-            "SaleId": $("#txtSaleId").val(),
-        });
-
+    $('#btnUpdate').click(function (e) {
+       
+        let status = $("#ddlStatus").val()
+        
         $.ajax({
-            traditional: true,
-            url: '@Url.Action("UpdateDraft", "MCredit")',
+            traditional: false,
+            url: `/Revoke/UpdateStatus?profileId=${@ViewBag.model.Id}&status=${status}`,
             type: "POST",
             contentType: "application/json; charset=utf-8",
-            data: objectSend,
             success: function (data) {
                 if (data.success == true) {
                      swal({
@@ -697,9 +642,9 @@
                             timer: 4000,
                             showConfirmButton: true,
                         }, function () {
-                            //window.location = window.location;
+                            window.location = window.location;
 
-                            //uploadFiles(data.data, false);
+                            
                         });
                 }
                 else {
@@ -720,127 +665,36 @@
             },
         });
     });
-
-    $('#btn_Save').click(function (e) {
-
-                if ($('#txtCustomerName').val() == "" || $('#txtCustomerName').val() == undefined) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng nhập họ tên",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if (isNullOrWhiteSpace($('#txtBirthDay').val())) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn ngày sinh",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if (isNullOrWhiteSpace($('#ddlProvince').val()) || $('#ddlProvince').val() =="0") {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn tỉnh/thành",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if (isNullOrWhiteSpace($('#txtIdDay').val())) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn ngày cấp cmnd/cccd",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-
-        if ($('#ddlProduct').val() == "0" || $('#ddlProduct').val() == undefined) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn sản phẩm vay",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if (isNullOrWhiteSpace($('#ddlLocSign').val()) || $('#ddlLocSign').val() =="0") {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn địa điểm ký văn kiện",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if (isNullOrWhiteSpace($('#ddlLoanPeriod').val()) || $('#ddlLoanPeriod').val() =="0") {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn kỳ hạn vay",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-
-        let FileRequireIds = [];
-        var objectSend = JSON.stringify({
-            "Id": @ViewBag.model.Id,
-            "CustomerName": $("#txtCustomerName").val(),
-            "Hometown": $("#txtHometown").val(),
-            "BirthDay": $('#txtBirthDay').val(),
-            "Phone": $('#txtPhone').val(),
-            "IdNumber": $('#txtIdNumber').val(),
-            "CCCDNumber": $('#txtCCCDNumber').val(),
-            "IssueDate": $('#txtIdDay').val(),
-            "IsAddr": getRadioButtonValue('radio-isAddr'),
-            "Gender": $("#ddlGender").val() == "1" ? true : false,
-            "ProvinceId": $("#ddlProvince").val(),
-            "DistrictId": 0,
-            "Address": $("#txtAddress").val(),
-            "SaleNumber": $("#txtSaleCode").val(),
-            "ProductCode": $("#ddlProduct").val(),
-            "LoanPeriodCode": $("#ddlLoanPeriod").val(),
-            "LocSignCode": $("#ddlLocSign").val(),
-            "LoanMoney": $('#txtLoanMoney').val().replace(/\./g, ''),
-            "IsInsurrance": getCheckboxValue('cbbIsInsurrance'),
-            "Status": 0,
-            "SaleId": $("#txtSaleId").val()
+    $('#btnAddNote').click(function (e) {
+       
+        let objectSend = JSON.stringify({
+            "Value": $("#txtNote").val()
         });
+        
         $.ajax({
-            traditional: true,
-            url: '@Url.Action("SubmitToMCredit", "MCredit")',
+            traditional: false,
+            url: `/Revoke/AddNote?profileId=${@ViewBag.model.Id}`,
             type: "POST",
             contentType: "application/json; charset=utf-8",
             data: objectSend,
             success: function (data) {
                 if (data.success == true) {
-                    swal({
-                        title: "@Html.Raw(Global.Message_Title)",
-                        text: "Thành công",
-                        type: "success",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    }, function () {
-                        uploadFiles(data.data, true);
-                    });
+                     swal({
+                            title: "@Html.Raw(Global.Message_Title)",
+                            text: "Thành công",
+                            type: "success",
+                            timer: 4000,
+                            showConfirmButton: true,
+                        }, function () {
+                            window.location = window.location;
+
+                            
+                        });
                 }
                 else {
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
-                        text: data.data.message,
+                        text: data.code,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,
@@ -855,6 +709,60 @@
             },
         });
     });
+    $('#btnDelete').click(function (e) {
+               swal({
+            title: "@Html.Raw(Global.DialogConfirmYesNo)",
+            text: "",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            cancelButtonText: "@Html.Raw(Global.DialogConfirmNo)",
+            confirmButtonText: "@Html.Raw(Global.DialogConfirmYes)",
+            closeOnConfirm: false
+
+        }, function () {
+            
+            
+            $.ajax({
+                url: `/Revoke/Delete?profileId=${@ViewBag.model.Id}`,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+               
+                success: function (data) {
+                    
+                    if (data.success == true) {
+                        swal({
+                            title: "Thành công",
+                            text: "Thành công",
+                            type: "success",
+                            timer: 4000,
+                            showConfirmButton: true,
+                        }, function () {
+                            window.location = "Revoke/Index"
+                        });
+                    }
+                    else {
+                        swal({
+                            title: "",
+                            text: data.code,
+                            type: "error",
+                            timer: 4000,
+                            showConfirmButton: true,
+                        });
+                    }
+                },
+                error: function (jqXHR, exception) {
+                    showError(jqXHR, exception);
+                },
+                complete: function () {
+                    $('#panel_body').unblock();
+                },
+            });
+        }
+        );
+       
+    });
+
          function uploadFiles(hosoId, reloadOnSuccess = false) {
             if (isNullOrNoItem(filesUpload))
                 return;

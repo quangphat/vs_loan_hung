@@ -17,5 +17,7 @@ namespace VS_LOAN.Core.Business.Interfaces
         Task<RevokeDebtSearch> GetByIdAsync(int profileId, int userId);
         Task<bool> DeleteByIdAsync(int userId, int profileId);
         Task<BaseResponse<bool>> AddNoteAsync(int profileId, string content, int userId);
+        Task<bool> UpdateStatusAsync(int userId, int profileId, int status);
+        Task<List<GhichuViewModel>> GetCommentsAsync(int profileId);
     }
 }

@@ -329,32 +329,6 @@
         limit = $("#ddlLimit").val()
         getData(1, limit)
     }
-   function renderStatus(statusId) {
-        var statusString = "";
-        if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.New)')
-            statusString = "<span class='label label-sm label-purple arrowed arrowed-righ'>Mới</span>";
-        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.InProgress)')
-            statusString = "<span class='label label-sm label-danger arrowed arrowed-righ'>Đang xử lý</span>";
-        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.Deny)')
-            statusString = "<span class='label label-sm label-inverse arrowed arrowed-righ'>Từ chối</span>";
-        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.Accept)')
-            statusString = "<span class='label label-sm label-cancel arrowed arrowed-righ'>Chấp nhận</span>";
-        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.Finish)')
-            statusString = "<span class='label label-sm label-pcb arrowed arrowed-righ'>Hoàn thành</span>";
-        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.Cancel)')
-           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Hủy</span>";
-       else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.Nhaplieu)')
-           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Nhập liệu</span>";
-        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.Thamdinh)')
-           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Thẩm định</span>";
-        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.BosungHoso)')
-           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Bổ sung hồ sơ</span>";
-        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.DaDoichieu)')
-           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Đã đối chiếu</span>";
-        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.PCB)')
-            statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>PCB</span>";
-        return "<td class='text-left'>" + statusString + "</td>";
-    }
     function renderAddress(item) {
         if (item == null || item == undefined)
             return ''
@@ -387,8 +361,8 @@
             + renderTextCenter(stt, '','center w-45')
             + renderTextLink(rowData.CustomerName, `/Revoke/Edit/${rowData.Id}`, '', "m-w-120")
             + renderTextLeft(rowData.MobilePhone, '', 'w-84')
-            + renderTextLeft(rowData.IdCardNumber, '','w-84')
-            + renderStatus(rowData.Status)
+            + renderTextLeft(rowData.IdCardNumber, '', 'w-84')
+            + renderStatusOnIndexPage(rowData.Status, rowData.StatusName)
             + renderTextLeft(reverseString(rowData.LastestPaymentDate), '', 'w-150')
             + renderTextLeft(formatCurrencyVND(rowData.TotalCurros,''), '', 'w-150')
             + renderTextLeft(rowData.PermanentAddress, '', 'tb-row-breakword w-150')

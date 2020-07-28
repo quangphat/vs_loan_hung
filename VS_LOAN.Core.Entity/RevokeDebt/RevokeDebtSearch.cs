@@ -108,5 +108,8 @@ namespace VS_LOAN.Core.Entity.RevokeDebt
         public bool IsDeleted { get; set; }
         public string CreatedUser { get; set; }
         public string UpdatedUser { get; set; }
+        public int Status { get; set; }
+        public string StatusName { get; set; }
+        public string LastNote { get; set; }
     }
 }

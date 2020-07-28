@@ -139,6 +139,14 @@ namespace VS_LOAN.Core.Business
         {
             return await _rpRevokeDebt.DeleteByIdAsync(userId, profileId);
         }
+        public async Task<bool> UpdateStatusAsync(int userId, int profileId, int status)
+        {
+            return await _rpRevokeDebt.UpdateStatusAsync(userId, profileId, status);
+        }
+        public async Task<List<GhichuViewModel>> GetCommentsAsync(int profileId)
+        {
+            return await _rpNote.GetNoteByTypeAsync(profileId, (int)HosoType.RevokeDebt);
+        }
         public async Task<BaseResponse<bool>> AddNoteAsync(int profileId , string content ,int userId)
         {
             if(string.IsNullOrWhiteSpace(content))

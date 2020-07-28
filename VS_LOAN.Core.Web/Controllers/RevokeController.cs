@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Http;
 using System.Web.Mvc;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
@@ -51,10 +52,28 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> Delete(int profileId)
         {
-            if (GlobalData.User.RoleId == (int)UserTypeEnum.Admin)
+            if (GlobalData.User.RoleId != (int)UserTypeEnum.Admin)
                 return ToJsonResponse(false, "Vui lòng liên hệ admin");
             await _bizRevokeDebt.DeleteByIdAsync(GlobalData.User.IDUser, profileId);
             return ToJsonResponse(true);
+        }
+        public async Task<JsonResult> UpdateStatus(int profileId, int status)
+        {
+           
+            await _bizRevokeDebt.UpdateStatusAsync(GlobalData.User.IDUser, profileId, status);
+            return ToJsonResponse(true);
+        }
+        public async Task<JsonResult> Comments(int profileId)
+        {
+            var result = await _bizRevokeDebt.GetCommentsAsync( profileId);
+            return ToJsonResponse(true,null, result);
+        }
+        public async Task<JsonResult> AddNote(int profileId, StringModel model)
+        {
+            if (model ==null)
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            var result = await _bizRevokeDebt.AddNoteAsync(profileId, model.Value, GlobalData.User.IDUser);
+            return ToJsonResponse(result.IsSuccess,result.Message);
         }
     }
 }

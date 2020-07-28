@@ -61,5 +61,15 @@ namespace VS_LOAN.Core.Repository
                 return true;
             }
         }
+        public async Task<bool> UpdateStatusAsync(int userId, int profileId, int status)
+        {
+            using (var con = GetConnection())
+            {
+                await con.ExecuteAsync("sp_RevokeDebt_UpdateStatus",
+                     new { profileId, userId ,status}
+                     , commandType: CommandType.StoredProcedure);
+                return true;
+            }
+        }
     }
 }
