@@ -1,11 +1,11 @@
-﻿--EXEC sp_rename 'Nhan_Vien', 'Employee'
+﻿--EXEC sp_rename 'Employee', 'Nhan_Vien'
 
 -- revoke debt
 
-alter table Employee 
+alter table Nhan_Vien 
 add OrgId int
 
-EXEC sp_rename 'Employee.Trang_Thai', 'Status', 'COLUMN'
+EXEC sp_rename 'Nhan_Vien.Trang_Thai', 'Status', 'COLUMN'
 -----------
 go
 create PROCEDURE [dbo].[sp_Employee_Login]
@@ -15,7 +15,7 @@ AS
 BEGIN
 	Select Id,Ten_Dang_Nhap AS UserName, Mat_Khau as Passowrd, RoleId, Ma as Code,
 	Email, Ho_Ten as FullName, Dien_Thoai as Phone, Status as IsActive, isnull(OrgId,0) as OrgId, RoleId
-	 From Employee where Ten_Dang_Nhap=@UserName and Mat_Khau=@Password and isnull(Xoa,0) =0
+	 From Nhan_Vien where Ten_Dang_Nhap=@UserName and Mat_Khau=@Password and isnull(Xoa,0) =0
 END
 
 --------------
@@ -47,9 +47,9 @@ BEGIN
 	End
 	Select HO_SO.ID, HO_SO.Ma_Ho_So as MaHoSo, HO_SO.Ngay_Tao as NgayTao, DOI_TAC.Ten as DoiTac, HO_SO.CMND, HO_SO.Ten_Khach_Hang as TenKH,HO_SO.Ma_Trang_Thai as MaTrangThai, TRANG_THAI_HS.Ten as TrangThaiHS, KET_QUA_HS.Ten as KetQuaHS, HO_SO.Ngay_Cap_Nhat as NgayCapNhat, NV1.Ma as MaNV, NV1.Ho_Ten as NhanVienBanHang, NV2.Ma as MaNVSua, HO_SO.Co_Bao_Hiem as CoBaoHiem, kvt.Ten as DiaChiKH, HO_SO.Ghi_Chu as GhiChu, NV3.Ma as MaNVLayHS,
 	CASE WHEN ((Select COUNT(*) From NHAN_VIEN_NHOM Where NHAN_VIEN_NHOM.Ma_Nhan_Vien = HO_SO.Ma_Nguoi_Tao) = 0) THEN '' ELSE (Select Top(1) NHOM.Ten From NHOM, NHAN_VIEN_NHOM Where NHAN_VIEN_NHOM.Ma_Nhom = NHOM.ID and NHAN_VIEN_NHOM.Ma_Nhan_Vien = HO_SO.Ma_Nguoi_Tao) END as DoiNguBanHang
-	From HO_SO_DUYET_XEM,HO_SO left join Employee as NV1 on HO_SO.Ma_Nguoi_Tao = NV1.ID
-		left join Employee as NV2 on HO_SO.Ma_Nguoi_Cap_Nhat = NV2.ID
-		left join Employee as NV3 on HO_SO.Courier_Code = NV3.ID
+	From HO_SO_DUYET_XEM,HO_SO left join Nhan_Vien as NV1 on HO_SO.Ma_Nguoi_Tao = NV1.ID
+		left join Nhan_Vien as NV2 on HO_SO.Ma_Nguoi_Cap_Nhat = NV2.ID
+		left join Nhan_Vien as NV3 on HO_SO.Courier_Code = NV3.ID
 		left join KHU_VUC kvh on kvh.ID=HO_SO.Ma_Khu_Vuc
 		left join KHU_VUC kvt on kvt.ID=kvh.Ma_Cha
 	, DOI_TAC, SAN_PHAM_VAY, TRANG_THAI_HS, KET_QUA_HS
@@ -92,8 +92,8 @@ BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	Select HO_SO.ID, HO_SO.Ma_Ho_So as MaHoSo, HO_SO.Ngay_Tao as NgayTao, DOI_TAC.Ten as DoiTac, HO_SO.CMND, HO_SO.Ten_Khach_Hang as TenKH,HO_SO.Ma_Trang_Thai as MaTrangThai, TRANG_THAI_HS.Ten as TrangThaiHS, KET_QUA_HS.Ten as KetQuaHS, HO_SO.Ngay_Cap_Nhat as NgayCapNhat, NV1.Ma as MaNV, NV1.Ho_Ten as NhanVienBanHang, NV2.Ma as MaNVSua, HO_SO.Co_Bao_Hiem as CoBaoHiem, HO_SO.Dia_Chi as DiaChiKH,kvt.Ten as KhuVucText, HO_SO.Ghi_Chu as GhiChu 
-	From HO_SO_XEM,HO_SO left join Employee as NV1 on HO_SO.Ma_Nguoi_Tao = NV1.ID
-		left join Employee as NV2 on HO_SO.Ma_Nguoi_Cap_Nhat = NV2.ID
+	From HO_SO_XEM,HO_SO left join Nhan_Vien as NV1 on HO_SO.Ma_Nguoi_Tao = NV1.ID
+		left join Nhan_Vien as NV2 on HO_SO.Ma_Nguoi_Cap_Nhat = NV2.ID
 		left  join SAN_PHAM_VAY on HO_SO.San_Pham_Vay = SAN_PHAM_VAY.ID
 		left join DOI_TAC on SAN_PHAM_VAY.Ma_Doi_Tac = DOI_TAC.ID
 		left join TRANG_THAI_HS on  HO_SO.Ma_Trang_Thai = TRANG_THAI_HS.ID
@@ -135,7 +135,7 @@ begin
 
 if @freeText = '' begin set @freeText = null end;
 
-Select count(*) from Employee n
+Select count(*) from Nhan_Vien n
 
 where (convert(varchar(10),n.WorkDate,121) >= (convert(varchar(10),@workFromDate,121))
 
@@ -178,7 +178,7 @@ Select n.ID,n.Ten_Dang_Nhap as UserName,n.Ho_Ten as FullName,n.RoleId,r.Name as 
 n.Email, n.Dien_Thoai as Phone,n.CreatedTime,
 n.Ma as Code,
 n.WorkDate,CONCAT(k.Ten + ' - ',k2.Ten) as Location
- from Employee n left join KHU_VUC k on n.DistrictId = k.ID
+ from Nhan_Vien n left join KHU_VUC k on n.DistrictId = k.ID
  left join KHU_VUC k2 on k.Ma_Cha = k2.ID
  left join Role r on n.RoleId = r.Id
 where ( convert(varchar(10),n.WorkDate,121) >= (convert(varchar(10),@workFromDate,121))
@@ -204,7 +204,7 @@ go
 create procedure sp_GetEmployeeById(@userId int)
 as
 begin
-select * from Employee where ID = @userId
+select * from Nhan_Vien where ID = @userId
 end
 
 
@@ -227,7 +227,7 @@ begin
 --begin
 
 --end
-update Employee set 
+update Nhan_Vien set 
 		Ho_Ten = @fullName,
 		Dien_Thoai = @phone,
 		Email = @email,
@@ -255,8 +255,8 @@ create procedure [dbo].[sp_Employee_InsertUser_v2]
 as
 begin
 declare @orgId int  = 0;
-select @orgId = isnull(OrgId,0) from Employee where Id = @createdby;
-insert into Employee(Ma,Ten_Dang_Nhap,Mat_Khau,Ho_Ten,Dien_Thoai,Email,RoleId,Status,Xoa,CreatedTime,CreatedBy, OrgId, UpdatedTime)
+select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @createdby;
+insert into Nhan_Vien(Ma,Ten_Dang_Nhap,Mat_Khau,Ho_Ten,Dien_Thoai,Email,RoleId,Status,Xoa,CreatedTime,CreatedBy, OrgId, UpdatedTime)
 values (@code,@userName,@password,@fullName,@phone,@email,@roleId,1,0,GETDATE(),@createdby, @orgId, GETDATE());
 SET @id=@@IDENTITY
 end
@@ -268,7 +268,7 @@ alter PROCEDURE [dbo].[sp_Employee_GetFull]
 (@orgId int =0)
 AS
 BEGIN
-Select  Id, Ma + ' - ' + Ho_Ten as Name From Employee where isnull(OrgId,0) = @orgId and isnull(Xoa,0) = 0 
+Select  Id, Ma + ' - ' + Ho_Ten as Name From Nhan_Vien where isnull(OrgId,0) = @orgId and isnull(Xoa,0) = 0 
  order by ID desc
 END
 
@@ -281,7 +281,7 @@ AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
-	select ID,Ma as Code, Ma + ' - ' + Ho_Ten as HoTen from Employee where ID=@MaQL
+	select ID,Ma as Code, Ma + ' - ' + Ho_Ten as HoTen from Nhan_Vien where ID=@MaQL
 END
 
 
@@ -294,12 +294,12 @@ create PROCEDURE [dbo].[sp_Group_GetChildGroup]
 AS
 BEGIN
 	declare @orgId int = 0;
-  select @orgId = isnull(OrgId,0) from Employee where Id = @userId;
+  select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
 	Select g.ID, g.Ten, 
 	g.Ten_Viet_Tat as TenNgan, 
 	e.Ho_Ten as NguoiQuanLy, 
 	g.Chuoi_Ma_Cha as ChuoiMaCha 
-	From NHOM g left join Employee e on g.Ma_Nguoi_QL = e.ID
+	From NHOM g left join Nhan_Vien e on g.Ma_Nguoi_QL = e.ID
 	Where g.Ma_Nhom_Cha = @parentGroupId
 	and isnull(g.OrgId, 0) = @orgId
 END
@@ -314,7 +314,7 @@ BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	Select NHOM.ID, NHOM.Ten, NHOM.Ten_Viet_Tat as TenNgan, NHOMCHA.Ten as TenNhomCha, e.Ho_Ten as NguoiQuanLy
-	From Employee e, NHOM
+	From Nhan_Vien e, NHOM
 	left join NHOM as NHOMCHA on NHOM.Ma_Nhom_Cha = NHOMCHA.ID
 	Where NHOM.ID = @groupId and e.ID = NHOM.Ma_Nguoi_QL
 END
@@ -329,7 +329,7 @@ BEGIN
 -- SET NOCOUNT ON added to prevent extra result sets from
 -- interfering with SELECT statements.
 Select e.ID, e.Ma, e.Ho_Ten as HoTen, e.Email, e.Dien_Thoai as SDT 
-From Employee e, NHAN_VIEN_NHOM 
+From Nhan_Vien e, NHAN_VIEN_NHOM 
 Where e.ID = NHAN_VIEN_NHOM.Ma_Nhan_Vien and NHAN_VIEN_NHOM.Ma_Nhom = @groupId
 END
 
@@ -343,9 +343,9 @@ alter PROCEDURE [dbo].[sp_Employee_Group_LayDSChonThanhVienNhomCaCon_v2]
 AS
 BEGIN
 	declare @orgId int = 0;
-  select @orgId = isnull(OrgId,0) from Employee where Id = @userId;
+  select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
 	Select e.ID, e.Ma + ' - ' + e.Ho_Ten as Ten, e.Ma as Code 
-	From Employee e
+	From Nhan_Vien e
 	Where e.OrgId = @orgId and e.ID in (
 		Select NHAN_VIEN_NHOM.Ma_Nhan_Vien From NHAN_VIEN_NHOM 
 		Where NHAN_VIEN_NHOM.Ma_Nhom in 
@@ -366,9 +366,9 @@ create PROCEDURE [dbo].[sp_employee_Group_LayDSKhongThanhVienNhom_v2]
 AS
 BEGIN
 	declare @orgId int = 0;
-  select @orgId = isnull(OrgId,0) from Employee where Id = @userId;
+  select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
 	Select e.Id, e.Ma + ' - ' + e.Ho_Ten as Name 
-	From Employee e 
+	From Nhan_Vien e 
 	Where e.ID not in (Select NHAN_VIEN_NHOM.Ma_Nhan_Vien From NHAN_VIEN_NHOM Where NHAN_VIEN_NHOM.Ma_Nhom = @groupId)
 	and e.OrgId = @orgId
 END
@@ -382,9 +382,9 @@ create PROCEDURE [dbo].[sp_Employee_Group_LayDSChonThanhVienNhom_v2]
 AS
 BEGIN
 	declare @orgId int = 0;
-  select @orgId = isnull(OrgId,0) from Employee where Id = @userId;
+  select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
 	Select e.Id, e.Ma + ' - ' + e.Ho_Ten as Name 
-	From Employee e, NHAN_VIEN_NHOM Where e.ID = NHAN_VIEN_NHOM.Ma_Nhan_Vien and NHAN_VIEN_NHOM.Ma_Nhom = @groupId
+	From Nhan_Vien e, NHAN_VIEN_NHOM Where e.ID = NHAN_VIEN_NHOM.Ma_Nhan_Vien and NHAN_VIEN_NHOM.Ma_Nhom = @groupId
 	and e.OrgId = @orgId
 END
 
@@ -400,7 +400,7 @@ BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	select distinct e.ID, e.Ma as Code,e.Ho_Ten as FullName,e.Ten_Dang_Nhap as UserName,Dien_Thoai as Phone,Email as Email 
-	from Employee e,NHAN_VIEN_CF
+	from Nhan_Vien e,NHAN_VIEN_CF
 	where --ID=@UserID
 	 e.ID=NHAN_VIEN_CF.Ma_Nhan_Vien
 	and NHAN_VIEN_CF.Quyen=@Rule
@@ -686,8 +686,8 @@ set @offset = (@page-1)*@limit_tmp;
 set @mainClause = 'select count(*) over() as TotalRecord, rv.* 
 ,fintechcom_vn_PortalNew.fn_getGhichuByHosoId(rv.Id,2) as LastNote,
  nv1.Ho_Ten as CreatedUser, nv2.Ho_Ten as UpdatedUser
-from RevokeDebt rv left join Employee nv1 on rv.CreatedBy = nv1.ID
-left join Employee nv2 on rv.UpdatedBy = nv2.Id
+from RevokeDebt rv left join Nhan_Vien nv1 on rv.CreatedBy = nv1.ID
+left join Nhan_Vien nv2 on rv.UpdatedBy = nv2.Id
 '
 	if(@freeText  is not null)
 	begin
@@ -808,7 +808,7 @@ union select Ma_nhan_vien as UserId from NHAN_VIEN_CF where Ma_Nhom  in (select 
 --(select Ma_nhom  as UserId from NHAN_VIEN_NHOM where Ma_Nhan_Vien = @userId)
 union
 select distinct value as UserId from dbo.fn_SplitStringToTable(@userIds, '.')
-union select Id  as UserId from Employee where RoleId =1
+union select Id  as UserId from Nhan_Vien where RoleId =1
 delete @tempGroupIds
 return
 END
@@ -856,7 +856,7 @@ Select count(*) over() as TotalRecord, n.ID,n.Ten_Dang_Nhap as UserName,n.Ho_Ten
 n.Email, n.Dien_Thoai as Phone,n.CreatedTime,
 n.Ma as Code,
 n.WorkDate,CONCAT(k.Ten + ' - ',k2.Ten) as Location
- from Employee n left join KHU_VUC k on n.DistrictId = k.ID
+ from Nhan_Vien n left join KHU_VUC k on n.DistrictId = k.ID
  left join KHU_VUC k2 on k.Ma_Cha = k2.ID
  left join Role r on n.RoleId = r.Id
 where ( convert(varchar(10),n.WorkDate,121) >= (convert(varchar(10),@workFromDate,121))
@@ -920,7 +920,7 @@ UpdatedTime datetime
 AS
 BEGIN
 declare @orgId int =0;
-select @orgId = isnull(OrgId,0) from Employee where id = @UserID;
+select @orgId = isnull(OrgId,0) from Nhan_Vien where id = @UserID;
 	Select g.ID, g.Ten, g.Chuoi_Ma_Cha as ChuoiMaCha, g.Ma_Nhom_Cha as MaNhomCha, g.Ten_Viet_Tat as TenQL 
 	From NHOM  g
 	Where isnull(g.OrgId,0) = @orgId and
@@ -962,7 +962,7 @@ BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	declare @orgId int =0;
-select @orgId = isnull(OrgId,0) from Employee where id = @createdBy;
+select @orgId = isnull(OrgId,0) from Nhan_Vien where id = @createdBy;
 	Insert Into NHOM (Ma_Nhom_Cha, Ma_Nguoi_QL, Ten_Viet_Tat, Ten, Chuoi_Ma_Cha, OrgId, CreatedBy,CreatedTime)
 	 Values (@MaNhomCha, @MaNguoiQL, @TenVietTat, @Ten, @ChuoiMaCha, @orgId , @createdBy, GETDATE())
 	Set @ID = @@IDENTITY
@@ -1076,7 +1076,7 @@ go
   as
   begin
   declare @orgId int = 0;
-  select @orgId = isnull(OrgId,0) from Employee where Id = @userId;
+  select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
   select Id, Name from Role where isnull(Deleted,0) = 0 and OrgId = @orgId
   end
 
@@ -1101,7 +1101,7 @@ Select count(*) over() as TotalRecord, n.ID,n.Ten_Dang_Nhap as UserName,n.Ho_Ten
 n.Email, n.Dien_Thoai as Phone,n.CreatedTime,
 n.Ma as Code,
 n.WorkDate,CONCAT(k.Ten + ' - ',k2.Ten) as Location
- from Employee n left join KHU_VUC k on n.DistrictId = k.ID
+ from Nhan_Vien n left join KHU_VUC k on n.DistrictId = k.ID
  left join KHU_VUC k2 on k.Ma_Cha = k2.ID
  left join Role r on n.RoleId = r.Id
 where 
@@ -1121,7 +1121,7 @@ end
 
 ---------
 
-ALTER TABLE Employee
+ALTER TABLE Nhan_Vien
 ALTER COLUMN Ten_Dang_nhap varchar(50);
 
 -----------
@@ -1132,8 +1132,8 @@ ALTER COLUMN Ten_Dang_nhap varchar(50);
   as
   begin
   declare @orgId int = 0;
-  select @orgId = isnull(OrgId,0) from Employee where Id = @userId;
-  select * from Employee where isnull(Xoa,0) = 0 and OrgId = @orgId and Ten_Dang_Nhap = @username
+  select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
+  select * from Nhan_Vien where isnull(Xoa,0) = 0 and OrgId = @orgId and Ten_Dang_Nhap = @username
   end
 
   ----------------
@@ -1142,8 +1142,8 @@ ALTER COLUMN Ten_Dang_nhap varchar(50);
 as
 begin
   declare @orgId int = 0;
-  select @orgId = isnull(OrgId,0) from Employee where Id = @userId;
-select top 1 Id, Ma as Code from Employee where Ma = @code and isnull(Xoa,0) = 0 and OrgId = @orgId
+  select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
+select top 1 Id, Ma as Code from Nhan_Vien where Ma = @code and isnull(Xoa,0) = 0 and OrgId = @orgId
 end
   
 
@@ -1156,7 +1156,7 @@ BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	declare @orgId int = 0;
-  select @orgId = isnull(OrgId,0) from Employee where Id = @userId;
+  select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
 	Select NHOM.ID, NHOM.Ten, NHOM.Chuoi_Ma_Cha as ChuoiMaCha From NHOM where OrgId = @orgId
 END
 ----------
@@ -1176,7 +1176,7 @@ declare @where  nvarchar(1000) = '';
 declare @mainClause nvarchar(max);
 declare @params nvarchar(300);
 if @freetext = '' begin set @freetext = null end;
-set @mainClause = 'Select count(*) over() as TotalRecord, Id, Ma + '' - '' + Ho_Ten as Name From Employee where isnull(OrgId,0) = @orgId and isnull(Xoa,0) = 0 ';
+set @mainClause = 'Select count(*) over() as TotalRecord, Id, Ma + '' - '' + Ho_Ten as Name From Nhan_Vien where isnull(OrgId,0) = @orgId and isnull(Xoa,0) = 0 ';
 if(@freetext  is not null)
 	begin
 	set @where +=' and (Ma like  N''%' + @freetext +'%''';
@@ -1215,7 +1215,7 @@ union select Ma_nhan_vien as UserId from NHAN_VIEN_CF where Ma_Nhom  in (select 
 --(select Ma_nhom  as UserId from NHAN_VIEN_NHOM where Ma_Nhan_Vien = @userId)
 union
 select distinct ids as UserId from @tempUserIds
-union select Id  as UserId from Employee where RoleId =1 
+union select Id  as UserId from Nhan_Vien where RoleId =1 
 union select value as UserId  from dbo.fn_SplitStringToTable(@assigneeIds, '.')
 delete @tempGroupIds
 return
@@ -1243,8 +1243,8 @@ set @mainClause = 'select count(*) over() as TotalRecord, rv.*
 ,fintechcom_vn_PortalNew.fn_getGhichuByHosoId(rv.Id,5) as LastNote,
 isnull(s.Name,'''') as StatusName,
  nv1.Ho_Ten as CreatedUser, nv2.Ho_Ten as UpdatedUser
-from RevokeDebt rv left join Employee nv1 on rv.CreatedBy = nv1.ID
-left join Employee nv2 on rv.UpdatedBy = nv2.Id
+from RevokeDebt rv left join Nhan_Vien nv1 on rv.CreatedBy = nv1.ID
+left join Nhan_Vien nv2 on rv.UpdatedBy = nv2.Id
 left join ProfileStatus s on rv.Status = s.Value'
 	if(@freeText  is not null)
 	begin
