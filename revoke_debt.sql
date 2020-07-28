@@ -452,7 +452,8 @@ PermanentAddress nvarchar(300),
 CompanyName nvarchar(300),
 Department nvarchar(200),
 WorkAddress nvarchar(300),
-IsDeleted bit
+IsDeleted bit,
+[Status] int
 )
 
 
@@ -651,7 +652,7 @@ BEGIN
 	,Gender,Age,AgreementDate,MobilePhone,HomePhone,CompanyPhone,TotalPayableAmount
 	,LastPaymentAmount,TotalPaidAmount,FirstPaymentAmount,FinalDueDate,FinalPaymentAmount,ReferenceName
 	,RefPhone,[Relative],IdCardNumber,Bod,PermanentAddress,CompanyName,Department,WorkAddress
-	,CreatedTime,CreatedBy,UpdatedTime,AssigneeGroupIds)
+	,CreatedTime,CreatedBy,UpdatedTime,AssigneeIds,Status)
 	values(@AgreementNo,@CustomerName,@LastestPaymentDate
 	,@PaymentStore,@OSPri,@TotalCurros,@LateFee,@LiquidationFee,@LateDate
 	,@InterestrateScheme,@InstallmentPeriod,@InstallmentNo,@BillAmountOfCurrentMonth
@@ -659,7 +660,7 @@ BEGIN
 	,@Gender,@Age,@AgreementDate,@MobilePhone,@HomePhone,@CompanyPhone,@TotalPayableAmount
 	,@LastPaymentAmount,@TotalPaidAmount,@FirstPaymentAmount,@FinalDueDate,@FinalPaymentAmount,@ReferenceName
 	,@RefPhone,@Relative,@IdCardNumber,@Bod,@PermanentAddress,@CompanyName,@Department,@WorkAddress
-	,GETDATE(),@CreatedBy, GETDATE(),@AssigneeIds)
+	,GETDATE(),@CreatedBy, GETDATE(),@AssigneeIds, 0)
 END
 
 
@@ -1189,3 +1190,103 @@ print @mainClause;
 END
 
 ------------
+go
+ALTER function [dbo].[fn_GetUserIDCanViewMyProfile_v2]
+(@userIds varchar(50), @assigneeIds varchar(50))
+returns @tempTable TABLE (userId int)
+as 
+BEGIN
+declare @parentCode varchar(20);
+declare @tempGroupIds table(ids int PRIMARY key)
+declare @tempUserIds table(ids int PRIMARY key)
+insert @tempUserIds select distinct value from dbo.fn_SplitStringToTable(@userIds, '.');
+insert @tempGroupIds select Ma_Nhom from NHAN_VIEN_NHOM 
+where Ma_Nhan_Vien in (select * from @tempUserIds)
+select @parentCode = g.Chuoi_Ma_Cha
+from NHOM g where g.id in  (select * from @tempGroupIds)
+--(select Ma_Nhom from NHAN_VIEN_NHOM where Ma_Nhan_Vien = @userId)
+insert into @tempTable
+select Ma_Nguoi_QL as UserId from NHOM g where g.Id 
+in ( select * from dbo.fn_SplitStringToTable(@parentCode, '.'))
+union 
+select Ma_Nguoi_QL as UserId  from NHOM g where g.id in (select * from @tempGroupIds)
+--(select Ma_Nhom from NHAN_VIEN_NHOM where Ma_Nhan_Vien = @userId)
+union select Ma_nhan_vien as UserId from NHAN_VIEN_CF where Ma_Nhom  in (select * from @tempGroupIds)
+--(select Ma_nhom  as UserId from NHAN_VIEN_NHOM where Ma_Nhan_Vien = @userId)
+union
+select distinct ids as UserId from @tempUserIds
+union select Id  as UserId from Employee where RoleId =1 
+union select value as UserId  from dbo.fn_SplitStringToTable(@assigneeIds, '.')
+delete @tempGroupIds
+return
+END
+
+---------------
+GO
+ALTER procedure [dbo].[sp_RevokeDebt_Search]
+(
+@freeText nvarchar(30),
+@status varchar(20) ='',
+@page int =1,
+@limit_tmp int = 10,
+@groupId int =0,
+@AssigneeId int =0,
+@userId int)as
+begin
+declare @where  nvarchar(1000) = ' where isnull(rv.IsDeleted,0) = 0';
+declare @mainClause nvarchar(max);
+declare @params nvarchar(300);
+if @freeText = '' begin set @freeText = null end;
+declare @offset int = 0;
+set @offset = (@page-1)*@limit_tmp;
+set @mainClause = 'select count(*) over() as TotalRecord, rv.* 
+,fintechcom_vn_PortalNew.fn_getGhichuByHosoId(rv.Id,2) as LastNote,
+ nv1.Ho_Ten as CreatedUser, nv2.Ho_Ten as UpdatedUser
+from RevokeDebt rv left join Employee nv1 on rv.CreatedBy = nv1.ID
+left join Employee nv2 on rv.UpdatedBy = nv2.Id
+'
+	if(@freeText  is not null)
+	begin
+	set @where = ' and (rv.CustomerName like  N''%' + @freeText +'%''';
+	set @where = @where + ' or rv.IdCardNumber like  N''%' + @freeText +'%''';
+	set @where = @where + ' or rv.MobilePhone like  N''%' + @freeText +'%''';
+	end;
+	   set @where += ' and (@userId in (select * from fn_GetUserIDCanViewMyProfile_v2 (rv.CreatedBy,rv.AssigneeIds)) )'
+if(@status <> '')
+begin
+set @where += ' and rv.Status in ('+ @status +')'; 
+end;
+if(@groupId <> 0)
+begin
+set @where +=' and rv.GroupId = @groupId';
+end;
+if(@assigneeId <> 0)
+begin
+set @where += ' and @AssigneeId in (select distinct value from dbo.fn_SplitStringToTable(rv.AssigneeIds, ''.''))';
+end;										   
+set @where += ' and isnull(IsDeleted,0) = 0  order by rv.createdTime desc  offset @offset ROWS FETCH NEXT @limit ROWS ONLY';
+set @mainClause = @mainClause +  @where
+set @params =N'@status varchar(20), @offset int, @limit int, @groupId int, @AssigneeId int ,@userId int';
+EXECUTE sp_executesql @mainClause,@params,  
+@status = @status, @offset = @offset, @limit = @limit_tmp, @groupId = @groupId, @AssigneeId = @AssigneeId, @userId = @userId;
+print @mainClause;
+end
+
+---------------
+go
+create procedure sp_RevokeDebt_Delete(@profileId int, @userId int)
+as begin
+update RevokeDebt set IsDeleted = 1, UpdatedBy  = @userId, UpdatedTime = GETDATE()
+where id = @profileId
+end
+
+-----------
+go
+create procedure sp_RevokeDebt_UpdateStatus(@profileId int, @userId int,@status int =0 )
+as begin
+update RevokeDebt set [status] = @status, UpdatedBy  = @userId, UpdatedTime = GETDATE()
+where id = @profileId
+end
+
+
+--------------

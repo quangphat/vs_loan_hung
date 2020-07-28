@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using VS_LOAN.Core.Business.Interfaces;
+using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Web.Helpers;
 
 namespace VS_LOAN.Core.Web.Controllers
@@ -24,7 +25,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> Search(string freeText = null, string status = null, int groupId = 0, int page = 1, int limit = 10)
         {
-            var result = await _bizRevokeDebt.Search(GlobalData.User.IDUser, freeText, status, page, limit, groupId);
+            var result = await _bizRevokeDebt.SearchAsync(GlobalData.User.IDUser, freeText, status, page, limit, groupId);
             return ToJsonResponse(true, null, result);
         }
         public async Task<JsonResult> Import()
@@ -37,7 +38,7 @@ namespace VS_LOAN.Core.Web.Controllers
             using (var fileStream = new MemoryStream())
             {
                 await stream.CopyToAsync(fileStream);
-                var results = await _bizRevokeDebt.InsertFromFile(fileStream, GlobalData.User.IDUser);
+                var results = await _bizRevokeDebt.InsertFromFileAsync(fileStream, GlobalData.User.IDUser);
                 return ToJsonResponse(results.IsSuccess, results.Message, results.Data);
             }
 
@@ -47,6 +48,13 @@ namespace VS_LOAN.Core.Web.Controllers
             var profile = await _bizRevokeDebt.GetByIdAsync(id, GlobalData.User.IDUser);
             ViewBag.model = profile;
             return View();
+        }
+        public async Task<JsonResult> Delete(int profileId)
+        {
+            if (GlobalData.User.RoleId == (int)UserTypeEnum.Admin)
+                return ToJsonResponse(false, "Vui lòng liên hệ admin");
+            await _bizRevokeDebt.DeleteByIdAsync(GlobalData.User.IDUser, profileId);
+            return ToJsonResponse(true);
         }
     }
 }

@@ -28,15 +28,18 @@ namespace VS_LOAN.Core.Web.Controllers
         protected readonly IPartnerRepository _rpPartner;
         protected readonly IEmployeeRepository _rpEmployee;
         protected readonly IMediaBusiness _bizMedia;
+        protected readonly INoteRepository _rpNote;
         public HoSoController(ITailieuRepository tailieuBusiness,
             IEmployeeRepository employeeRepository,
             IMediaBusiness mediaBusiness,
-            IPartnerRepository partnerRepository) : base()
+            IPartnerRepository partnerRepository,
+            INoteRepository noteRepository) : base()
         {
             _rpTailieu = tailieuBusiness;
             _rpPartner = partnerRepository;
             _bizMedia = mediaBusiness;
             _rpEmployee = employeeRepository;
+            _rpNote = noteRepository;
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
@@ -115,10 +118,10 @@ namespace VS_LOAN.Core.Web.Controllers
                 HosoId = hosoId,
                 Noidung = ghiChu,
                 CommentTime = DateTime.Now,
-                TypeId = NoteType.Hoso
+                TypeId = (int)NoteType.Hoso
             };
-            var bizNote = new NoteRepository();
-            await bizNote.AddNoteAsync(ghichu);
+            
+            await _rpNote.AddNoteAsync(ghichu);
             return true;
         }
         [System.Web.Http.HttpPost]

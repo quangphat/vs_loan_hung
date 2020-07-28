@@ -28,10 +28,12 @@ namespace VS_LOAN.Core.Web.Controllers
         protected readonly IEmployeeRepository _rpEmployee;
         protected readonly ITailieuRepository _rpTailieu;
         protected readonly IGroupRepository _rpGroup;
+        protected readonly INoteRepository _rpNote;
         public QuanLyHoSoController(IPartnerRepository partnerRepository,
             ITailieuRepository tailieuRepository,
             IEmployeeRepository employeeRepository,
             IGroupRepository groupRepository,
+            INoteRepository noteRepository,
             IMediaBusiness mediaBusiness)
         {
             _rpPartner = partnerRepository;
@@ -39,6 +41,7 @@ namespace VS_LOAN.Core.Web.Controllers
             _bizMedia = mediaBusiness;
             _rpTailieu = tailieuRepository;
             _rpGroup = groupRepository;
+            _rpNote = noteRepository;
         }
         public static Dictionary<string, ActionInfo> LstRole
         {
@@ -183,10 +186,10 @@ namespace VS_LOAN.Core.Web.Controllers
                 HosoId = hosoId,
                 Noidung = ghiChu,
                 CommentTime = DateTime.Now,
-                TypeId = NoteType.Hoso
+                TypeId = (int)NoteType.Hoso
             };
-            var bizNote = new NoteRepository();
-            await bizNote.AddNoteAsync(ghichu);
+            
+            await _rpNote.AddNoteAsync(ghichu);
             return true;
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]

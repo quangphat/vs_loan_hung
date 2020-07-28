@@ -20,13 +20,18 @@ namespace VS_LOAN.Core.Business
         protected readonly IRevokeDebtRepository _rpRevokeDebt;
         protected readonly ITailieuRepository _rpTailieu;
         protected readonly ISystemconfigRepository _rpConfig;
-        public RevokeDebtBusiness(IRevokeDebtRepository revokeDebtRepository, ITailieuRepository tailieuRepository, ISystemconfigRepository systemconfigRepository)
+        protected readonly INoteRepository _rpNote;
+        public RevokeDebtBusiness(IRevokeDebtRepository revokeDebtRepository
+            , ITailieuRepository tailieuRepository
+            , ISystemconfigRepository systemconfigRepository
+            ,INoteRepository noteRepository)
         {
             _rpTailieu = tailieuRepository;
             _rpRevokeDebt = revokeDebtRepository;
             _rpConfig = systemconfigRepository;
+            _rpNote = noteRepository;
         }
-        public async Task<DataPaging<List<RevokeDebtSearch>>> Search(int userId, string freeText, string status, int page, int limit, int groupId = 0)
+        public async Task<DataPaging<List<RevokeDebtSearch>>> SearchAsync(int userId, string freeText, string status, int page, int limit, int groupId = 0)
         {
             var data = await _rpRevokeDebt.SearchAsync(userId, freeText, status, page, limit, groupId);
             if (data == null || !data.Any())
@@ -36,7 +41,7 @@ namespace VS_LOAN.Core.Business
             var result = DataPaging.Create(data, data[0].TotalRecord);
             return result;
         }
-        public async Task<BaseResponse<bool>> InsertFromFile(MemoryStream stream, int userId)
+        public async Task<BaseResponse<bool>> InsertFromFileAsync(MemoryStream stream, int userId)
         {
             var result = await ReadXlsxFile(stream);
             if (result.IsSuccess == false || result.Data == null)
@@ -80,7 +85,9 @@ namespace VS_LOAN.Core.Business
                     {
                         if (row.Cells.Count > 1)
                         {
-                            bool isNullRow = row.Cells.Count < 3 ? true : false;
+                            bool isNullRow = row.Cells.Count < 20 ? true : false;
+                            if (isNullRow)
+                                continue;
                         }
 
                         foreach (var col in importExelFrameWork)
@@ -126,6 +133,27 @@ namespace VS_LOAN.Core.Business
         {
             var result = await _rpRevokeDebt.GetByIdAsync(profileId, userId);
             return result;
+        }
+
+        public async Task<bool> DeleteByIdAsync(int userId, int profileId)
+        {
+            return await _rpRevokeDebt.DeleteByIdAsync(userId, profileId);
+        }
+        public async Task<BaseResponse<bool>> AddNoteAsync(int profileId , string content ,int userId)
+        {
+            if(string.IsNullOrWhiteSpace(content))
+            {
+                return new BaseResponse<bool>("Dữ liệu không hợp lệ", false, false);
+            }
+            await _rpNote.AddNoteAsync(new Entity.Model.GhichuModel
+            {
+                CommentTime = DateTime.Now,
+                HosoId = profileId,
+                Noidung = content,
+                TypeId = (int)HosoType.RevokeDebt,
+                UserId = userId
+            });
+            return new BaseResponse<bool>(true);
         }
     }
 }

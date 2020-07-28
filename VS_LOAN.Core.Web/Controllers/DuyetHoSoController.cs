@@ -27,12 +27,18 @@ namespace VS_LOAN.Core.Web.Controllers
         protected readonly IPartnerRepository _rpPartner;
         protected readonly IGroupRepository _rpGroup;
         protected readonly IEmployeeRepository _rpEmployee;
-        public DuyetHoSoController(IMediaBusiness mediaBusiness, IPartnerRepository partnerRepository, IGroupRepository groupRepository, IEmployeeRepository employeeRepository)
+        protected readonly INoteRepository _rpNote;
+        public DuyetHoSoController(IMediaBusiness mediaBusiness,
+            IPartnerRepository partnerRepository,
+            IGroupRepository groupRepository,
+            IEmployeeRepository employeeRepository,
+            INoteRepository noteRepository)
         {
             _bizMedia = mediaBusiness;
             _rpEmployee = employeeRepository;
             _rpGroup = groupRepository;
             _rpPartner = partnerRepository;
+            _rpNote = noteRepository;
         }
         public static Dictionary<string, ActionInfo> LstRole
         {
@@ -371,10 +377,10 @@ namespace VS_LOAN.Core.Web.Controllers
                             HosoId = hs.ID,
                             Noidung = ghiChu,
                             CommentTime = DateTime.Now,
-                            TypeId = NoteType.Hoso
+                            TypeId = (int)NoteType.Hoso
                         };
-                        var bizNote = new NoteRepository();
-                        await bizNote.AddNoteAsync(ghichu);
+                       
+                        await _rpNote.AddNoteAsync(ghichu);
                         return ToJsonResponse(true, Resources.Global.Message_Succ, hs.ID);
                     }
                     return ToJsonResponse(false, "Không thành công, xin thử lại sau");

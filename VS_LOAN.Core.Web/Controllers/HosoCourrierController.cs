@@ -118,15 +118,15 @@ namespace VS_LOAN.Core.Web.Controllers
                 await Task.WhenAll(tasks);
                 if (!string.IsNullOrWhiteSpace(model.LastNote))
                 {
-                    var bizNote = new NoteRepository();
+                    
                     var note = new GhichuModel
                     {
                         Noidung = model.LastNote,
                         HosoId = id,
                         UserId = hoso.CreatedBy,
-                        TypeId = NoteType.HosoCourrier
+                        TypeId = (int)NoteType.HosoCourrier
                     };
-                    bizNote.AddNoteAsync(note);
+                    await _rpNote.AddNoteAsync(note);
 
                 }
 
@@ -224,15 +224,15 @@ namespace VS_LOAN.Core.Web.Controllers
                 _rpCourierProfile.InsertCourierAssignee(model.Id, model.AssignId);
                 if (!string.IsNullOrWhiteSpace(model.LastNote))
                 {
-                    var bizNote = new NoteRepository();
+                    
                     var note = new GhichuModel
                     {
                         Noidung = model.LastNote,
                         HosoId = model.Id,
                         UserId = hoso.UpdatedBy,
-                        TypeId = NoteType.HosoCourrier
+                        TypeId = (int)NoteType.HosoCourrier
                     };
-                    bizNote.AddNoteAsync(note);
+                    await _rpNote.AddNoteAsync(note);
                 }
 
             }
@@ -330,7 +330,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     Noidung = hoso.LastNote,
                     HosoId = id,
                     UserId = GlobalData.User.IDUser,
-                    TypeId = NoteType.HosoCourrier
+                    TypeId = (int)NoteType.HosoCourrier
                 };
                 await _rpNote.AddNoteAsync(note);
 

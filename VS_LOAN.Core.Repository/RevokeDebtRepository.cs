@@ -50,9 +50,16 @@ namespace VS_LOAN.Core.Repository
                     , commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
-               
-
-
+        }
+        public async Task<bool> DeleteByIdAsync(int userId,int profileId)
+        {
+            using (var con = GetConnection())
+            {
+               await con.ExecuteAsync("sp_RevokeDebt_Delete",
+                    new { profileId, userId }
+                    , commandType: CommandType.StoredProcedure);
+                return true;
+            }
         }
     }
 }

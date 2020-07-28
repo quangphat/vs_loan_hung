@@ -164,7 +164,7 @@ namespace VS_LOAN.Core.Web.Controllers
                         HosoId = id,
                         Noidung = model.LastNote,
                         CommentTime = DateTime.Now,
-                        TypeId = NoteType.MCreditTemp
+                        TypeId = (int)NoteType.MCreditTemp
                     };
                    await _rpNote.AddNoteAsync(note);
                 }
@@ -200,7 +200,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     HosoId = model.Id,
                     Noidung = model.LastNote,
                     CommentTime = DateTime.Now,
-                    TypeId = NoteType.MCreditTemp
+                    TypeId = (int)NoteType.MCreditTemp
                 };
                 await _rpNote.AddNoteAsync(note);
             }
