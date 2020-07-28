@@ -978,7 +978,7 @@ END
 
 
 -----------
-
+---count(*) over() as TotalRecord
 ALTER procedure [dbo].[sp_MCredit_TempProfile_Gets]
 (
 @freeText nvarchar(30),
