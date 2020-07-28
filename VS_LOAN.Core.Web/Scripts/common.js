@@ -12,6 +12,28 @@
 //        message: '<h2 style="color:#fff">' + text + ' ...</h2>'
 //    });
 //}\
+function renderStatusOnIndexPage(statusId, statusName) {
+    let greenGroup = [1, 5, 9];
+    let danger = [2, 6, 10];
+    let orrange = [3, 7, 11];
+    let succsess = [4, 8, 12];
+    let cancel = [13,17,21];
+    let inverse = [14, 18, 22];
+    let colorClass = 'label-orrange'
+    if (greenGroup.indexOf(statusId) >= 0)
+        colorClass = 'label-green';
+    if (danger.indexOf(statusId) >= 0)
+        colorClass = 'label-danger'
+    if (succsess.indexOf(statusId) >= 0)
+        colorClass = 'label-success'
+    if (inverse.indexOf(statusId) >= 0)
+        colorClass = 'label-inverse'
+    if (cancel.indexOf(statusId) >= 0)
+        colorClass = 'label-cancel'
+
+    var statusString = `<span class='label label-sm ${colorClass} arrowed arrowed-righ'>${statusName}</span>`;
+    return "<td class='text-left'>" + statusString + "</td>";
+}
 function renderStatusList(controlId = '#ddlStatus',defaulValue = null) {
     $.ajax({
         type: "POST",
