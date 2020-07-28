@@ -1240,7 +1240,7 @@ if @freeText = '' begin set @freeText = null end;
 declare @offset int = 0;
 set @offset = (@page-1)*@limit_tmp;
 set @mainClause = 'select count(*) over() as TotalRecord, rv.* 
-,fintechcom_vn_PortalNew.fn_getGhichuByHosoId(rv.Id,2) as LastNote,
+,fintechcom_vn_PortalNew.fn_getGhichuByHosoId(rv.Id,5) as LastNote,
 isnull(s.Name,'''') as StatusName,
  nv1.Ho_Ten as CreatedUser, nv2.Ho_Ten as UpdatedUser
 from RevokeDebt rv left join Employee nv1 on rv.CreatedBy = nv1.ID
