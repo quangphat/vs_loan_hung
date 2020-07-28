@@ -29,5 +29,12 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = await _rpCommon.GetProfileStatusByCode(Constanst.revoke_debt_max_row_import, GlobalData.User.OrgId, roleId: GlobalData.User.RoleId);
             return ToJsonResponse(true, "", data: result);
         }
+        public FileResult DownloadTemplateFile(string fileName)
+        {
+            byte[] fileBytes = System.IO.File.ReadAllBytes(AppDomain.CurrentDomain.BaseDirectory + "App_Data\\TemplateReport\\" + fileName);
+            var response = new FileContentResult(fileBytes, "application/octet-stream");
+            response.FileDownloadName = fileName;
+            return response;
+        }
     }
 }
