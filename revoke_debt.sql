@@ -1022,9 +1022,9 @@ left join MCreditLoanPeriod mcl on mc.LoanPeriodCode = mcl.Code
 '
 if(@freeText  is not null)
 begin
- set @where = 'and (mc.CustomerName like  N''%' + @freeText +'%''';
- set @where = @where + ' or mc.IdNumber like  N''%' + @freeText +'%''';
- set @where = @where + ' or mc.Phone like  N''%' + @freeText +'%'')';
+ set @where += 'and (mc.CustomerName like  N''%' + @freeText +'%''';
+ set @where += ' or mc.IdNumber like  N''%' + @freeText +'%''';
+ set @where += ' or mc.Phone like  N''%' + @freeText +'%'')';
  --set @where = @where + ' or nv2.CCCDNumber like  N''%' + @freeText +'%'' )';
 end;
 
@@ -1176,7 +1176,7 @@ BEGIN
 	-- interfering with SELECT statements.
 	declare @orgId int = 0;
   select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
-	Select NHOM.ID, NHOM.Ten, NHOM.Chuoi_Ma_Cha as ChuoiMaCha From NHOM where OrgId = @orgId
+	Select NHOM.ID, NHOM.Ten, NHOM.Chuoi_Ma_Cha as ChuoiMaCha From NHOM where isnull(OrgId,0) = @orgId
 END
 ----------x
 
