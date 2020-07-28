@@ -65,11 +65,11 @@ namespace VS_LOAN.Core.Web.Controllers
                     {
                         Noidung = model.LastNote,
                         HosoId = id,
-                        TypeId = NoteType.Company,
+                        TypeId = (int)NoteType.Company,
                         UserId = GlobalData.User.IDUser
                     };
-                    var bizNote = new NoteRepository();
-                    await bizNote.AddNoteAsync(note);
+                    
+                    await _rpNote.AddNoteAsync(note);
                 }
                 return ToResponse(true);
             }
@@ -101,11 +101,11 @@ namespace VS_LOAN.Core.Web.Controllers
                 {
                     Noidung = model.LastNote,
                     HosoId = model.Id,
-                    TypeId = NoteType.Company,
+                    TypeId = (int)NoteType.Company,
                     UserId = GlobalData.User.IDUser
                 };
-                var bizNote = new NoteRepository();
-                await bizNote.AddNoteAsync(note);
+               
+                await _rpNote.AddNoteAsync(note);
             }
             
             return ToResponse(true);

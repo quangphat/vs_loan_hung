@@ -66,16 +66,16 @@
         $('#ddlNhanVien').append("<option value='0'></option>");
         $.ajax({
             type: "POST",
-            url: '@Url.Action("LayDSNhanVien", "ToNhom")',
+            url: '@Url.Action("GetAllEmployee", "Employee")',
             data: {},
             success: function (data) {
                 if (data != null) {
                     if (data.data != null && data.data.length > 0) {
                         $.each(data.data, function (index, item) {
-                            $('#ddlNhanVien').append("<option value='" + item.IDUser + "'>" + item.FullName + "</option>");
+                            $('#ddlNhanVien').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                         });
                         if (data.data.length == 1) {
-                            $('#ddlNhanVien').val(data.data[0].IDUser);
+                            $('#ddlNhanVien').val(data.data[0].Id);
                         }
                     }
                 }

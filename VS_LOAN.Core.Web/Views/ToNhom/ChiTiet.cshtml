@@ -24,21 +24,21 @@
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên</label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtTenNhom" readonly="readonly" placeholder="Nhập tên nhóm" class="form-control" value="@ViewBag.ThongTinNhom.Ten" />
+                            <input type="text" id="txtTenNhom" readonly="readonly" placeholder="Nhập tên nhóm" class="form-control" value="@ViewBag.model.Ten" />
                         </div>
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên ngắn</label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtTenNgan" readonly="readonly" placeholder="Nhập tên ngắn" class="form-control" value="@ViewBag.ThongTinNhom.TenNgan" />
+                            <input type="text" id="txtTenNgan" readonly="readonly" placeholder="Nhập tên ngắn" class="form-control" value="@ViewBag.model.TenNgan" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Người quản lý</label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtNguoiQuanLy" readonly="readonly" placeholder="" class="form-control" value="@ViewBag.ThongTinNhom.NguoiQuanLy" />
+                            <input type="text" id="txtNguoiQuanLy" readonly="readonly" placeholder="" class="form-control" value="@ViewBag.model.NguoiQuanLy" />
                         </div>
                         <label class="col-sm-2 control-label no-padding-right">Nhóm cha</label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtNhomCha" readonly="readonly" placeholder="" class="form-control" value="@ViewBag.ThongTinNhom.TenNhomCha" />
+                            <input type="text" id="txtNhomCha" readonly="readonly" placeholder="" class="form-control" value="@ViewBag.model.TenNhomCha" />
                         </div>
                     </div>
                 </form>
@@ -90,7 +90,7 @@
                 type: "GET",
                 contentType: "application/json",
                 data: function (d) {
-                    d.maNhom = '@ViewBag.ThongTinNhom.ID';
+                    d.maNhom = '@ViewBag.model.ID';
                 },
                 error: function (jqXHR, exception) {
                     showError(jqXHR, exception);
@@ -114,7 +114,7 @@
                    data: null,
                    bSortable: false,
                    "render": function (data, type, full, meta) {
-                       debugger
+                       
                        return data.Ma;
                    },
                    className: 'hidden-480 text-left'

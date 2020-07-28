@@ -17,7 +17,7 @@ namespace VS_LOAN.Core.Web
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "NhanVien", action = "Login", id = UrlParameter.Optional },
+                defaults: new { controller = "Employee", action = "Login", id = UrlParameter.Optional },
                 namespaces: new string[] { "VS_LOAN.Core.Web.Controllers" }
             );
         }

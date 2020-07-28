@@ -19,7 +19,7 @@ namespace VS_LOAN.Core.Repository
                     IDbCommand command = new SqlCommand();
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_NHAN_VIEN_Login";
+                    command.CommandText = "sp_Employee_Login";
                     command.Parameters.Add(new SqlParameter("@UserName", user));
                     command.Parameters.Add(new SqlParameter("@Password", pass));
                     var dt = new DataTable();
@@ -34,6 +34,8 @@ namespace VS_LOAN.Core.Repository
                             userModel.Email = dt.Rows[0]["Email"].ToString();
                             userModel.UserName = dt.Rows[0]["UserName"].ToString();
                             userModel.FullName = dt.Rows[0]["FullName"].ToString();
+                            userModel.OrgId = Convert.ToInt32(dt.Rows[0]["OrgId"].ToString());
+                            userModel.RoleId = Convert.ToInt32(dt.Rows[0]["RoleId"].ToString());
                             return userModel;
                         }
                     }

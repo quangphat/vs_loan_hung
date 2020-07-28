@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,8 +11,8 @@ namespace VS_LOAN.Core.Repository.Interfaces
 {
     public interface ITailieuRepository
     {
-        List<LoaiTaiLieuModel> LayDS();
-        //Task<List<LoaiTaiLieuModel>> LayDS();
+        Task<List<ImportExcelFrameWorkModel>> GetImportTypes(int type);
+        Task<List<LoaiTaiLieuModel>> LayDS();
         Task<bool> CopyFileFromProfile(int copyProfileId, int profileTypeId, int newProfileId);
         Task<List<FileUploadModel>> GetTailieuByMCId(string mcId);
         Task<bool> UpdateTailieuHosoMCId(int profileId, string mcId);

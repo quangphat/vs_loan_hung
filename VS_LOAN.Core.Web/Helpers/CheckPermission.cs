@@ -36,7 +36,7 @@ namespace VS_LOAN.Core.Web.Helpers
                 {
                     // response.StatusCode = 509;//SessionOut
                     response.StatusCode = 403;
-                    filterContext.Result = new JsonResult() { Data = new { Url = "/NhanVien/Login", Flag = "NoLogin" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+                    filterContext.Result = new JsonResult() { Data = new { Url = "/Employee/Login", Flag = "NoLogin" }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
                     return;
                 }
                 else
@@ -48,7 +48,7 @@ namespace VS_LOAN.Core.Web.Helpers
                         if (adRS == false)
                         {
                             filterContext.Result = new RedirectToRouteResult(
-                                new RouteValueDictionary { { "Controller", "NhanVien" }, { "Action", "Login" } });
+                                new RouteValueDictionary { { "Controller", "Employee" }, { "Action", "Login" } });
                             return;
                         }
                         else
@@ -57,7 +57,7 @@ namespace VS_LOAN.Core.Web.Helpers
                     else
                     {
                         filterContext.Result = new RedirectToRouteResult(
-                            new RouteValueDictionary { { "Controller", "NhanVien" }, { "Action", "Login" } });
+                            new RouteValueDictionary { { "Controller", "Employee" }, { "Action", "Login" } });
                         return;
                     }
                 }

@@ -12,6 +12,60 @@
 //        message: '<h2 style="color:#fff">' + text + ' ...</h2>'
 //    });
 //}\
+function renderStatusOnIndexPage(statusId, statusName) {
+    let greenGroup = [1, 5, 9];
+    let danger = [2, 6, 10];
+    let orrange = [3, 7, 11];
+    let succsess = [4, 8, 12];
+    let cancel = [13,17,21];
+    let inverse = [14, 18, 22];
+    let colorClass = 'label-orrange'
+    if (greenGroup.indexOf(statusId) >= 0)
+        colorClass = 'label-green';
+    if (danger.indexOf(statusId) >= 0)
+        colorClass = 'label-danger'
+    if (succsess.indexOf(statusId) >= 0)
+        colorClass = 'label-success'
+    if (inverse.indexOf(statusId) >= 0)
+        colorClass = 'label-inverse'
+    if (cancel.indexOf(statusId) >= 0)
+        colorClass = 'label-cancel'
+
+    var statusString = `<span class='label label-sm ${colorClass} arrowed arrowed-righ'>${statusName}</span>`;
+    return "<td class='text-left'>" + statusString + "</td>";
+}
+function renderStatusList(controlId = '#ddlStatus',defaulValue = null) {
+    $.ajax({
+        type: "POST",
+        url: '/Common/ProfileStatus',
+        data: {},
+        success: function (data) {
+            $(controlId).empty();
+            $(controlId).append("<option value='0'></option>");
+            if (data != null) {
+                $.each(data.data, function (index, optionData) {
+                    $(controlId).append("<option value='" + optionData.Id + "'>" + optionData.Name + "</option>");
+                });
+                if (defaulValue != null) {
+                    $(controlId).val(defaulValue);
+                    $(controlId).chosen().trigger("chosen:updated").change();
+                }
+                
+            }
+
+            $(controlId).chosen().trigger("chosen:updated");
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+function renderTextLink(textValue, href, type, className = '') {
+    let display = getValueDisplay(textValue, type);
+    return "<td class='text-left " + className + "'><a href='" + href + "' >" + display + "</a></td>";
+}
 function setddl(controlId) {
     $('#' + controlId).chosen({ width: '100%', allow_single_deselect: true });
 }
@@ -153,7 +207,7 @@ function GetEmployeesByGroupId(controlId, groupId, isLeader = false, defaultValu
             $(controlId).append("<option value='0'></option>");
             if (data.data != null && data.success == true) {
                 $.each(data.data, function (index, item) {
-                    $(controlId).append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
+                    $(controlId).append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
                 if (defaultValue > 0) {
                     $(controlId).val(defaultValue);
@@ -773,15 +827,21 @@ function strip(html,numchar) {
         return result.substring(0, numchar) + "...";
      return result
 }
+function reverseString(value) {
+    if (isNullOrWhiteSpace(value))
+        return ''
+    return value.split('-').reverse().join('/');
+}
 function formatCurrency(number) {
     var n = number.toString().split('').reverse().join("");
     var n2 = n.replace(/\d\d\d(?!$)/g, "$&.");
     return n2.split('').reverse().join('') + '';
 }
-function formatCurrencyVND(number) {
+function formatCurrencyVND(number, unit = '') {
     var n = number.toString().split('').reverse().join("");
     var n2 = n.replace(/\d\d\d(?!$)/g, "$&.");
-    return n2.split('').reverse().join('') + 'VND';
+    let result = n2.split('').reverse().join('') + ' ' + unit;
+    return result;
 }
 function addDays(date, days) {
     var result = new Date(date);

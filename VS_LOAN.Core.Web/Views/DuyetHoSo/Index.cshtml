@@ -642,7 +642,7 @@
             success: function (data) {
                 if (data.data != null) {
                     $.each(data.data, function (index, item) {
-                        $('#ddlThanhVienNhom').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
+                        $('#ddlThanhVienNhom').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                     });
                     var memberId = queries.get("maThanhVien");
                     $('#ddlThanhVienNhom').val(memberId)

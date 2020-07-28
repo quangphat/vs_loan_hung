@@ -346,7 +346,7 @@ Layout = "~/Views/Shared/_Layout.cshtml";
         $.ajax({
             type: "POST",
             datatype: "JSON",
-            url: '@Url.Action("ChangePass", "NhanVien")',
+            url: '@Url.Action("ChangePass", "Employee")',
             data: $('#frm_doimatkhau').serialize(),
             success: function (data) {
                 if (data.success == true) {
