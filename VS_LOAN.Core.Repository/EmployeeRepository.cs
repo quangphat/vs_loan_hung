@@ -248,11 +248,19 @@ namespace VS_LOAN.Core.Repository
             }
 
         }
-        public async Task<List<OptionSimple>> GetAllEmployee(int orgId, int page, string freeText)
+        public async Task<List<OptionSimple>> GetAllEmployee(int orgId)
         {
             using (var con = GetConnection())
             {
-                var rs = await con.QueryAsync<OptionSimple>("sp_Employee_GetFull", new { orgId, page,freeText }, commandType: CommandType.StoredProcedure);
+                var rs = await con.QueryAsync<OptionSimple>("sp_Employee_GetFull", new { orgId }, commandType: CommandType.StoredProcedure);
+                return rs.ToList();
+            }
+        }
+        public async Task<List<OptionSimple>> GetAllEmployeePaging(int orgId, int page, string freeText)
+        {
+            using (var con = GetConnection())
+            {
+                var rs = await con.QueryAsync<OptionSimple>("sp_Employee_GetPaging", new { orgId, page, freeText }, commandType: CommandType.StoredProcedure);
                 return rs.ToList();
             }
         }
@@ -307,41 +315,22 @@ namespace VS_LOAN.Core.Repository
             }
         }
 
-        public List<NhanVienNhomDropDownModel> LayDSThanhVienNhomCaCon(int maNhom)
+        public async Task<List<OptionSimple>> LayDSThanhVienNhomCaConAsync(int groupId, int userId)
         {
             try
             {
-                using (ISession session = LOANSessionManager.OpenSession())
+                using (var con = GetConnection())
                 {
-                    IDbCommand command = new SqlCommand();
-                    command.Connection = session.Connection;
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_Employee_Group_LayDSChonThanhVienNhomCaCon_v2";
-                    command.Parameters.Add(new SqlParameter("@groupId", maNhom));
-                    DataTable dt = new DataTable();
-                    dt.Load(command.ExecuteReader());
-                    if (dt != null)
-                    {
-                        if (dt.Rows.Count > 0)
-                        {
-                            List<NhanVienNhomDropDownModel> result = new List<NhanVienNhomDropDownModel>();
-                            foreach (DataRow item in dt.Rows)
-                            {
-                                NhanVienNhomDropDownModel nv = new NhanVienNhomDropDownModel();
-                                nv.ID = Convert.ToInt32(item["ID"].ToString());
-                                nv.Ten = item["Ten"].ToString();
-                                nv.Code = item["Code"].ToString();
-                                result.Add(nv);
-                            }
-                            return result;
-                        }
-                    }
-                    return null;
+                    var result = await con.QueryAsync<OptionSimple>("sp_Employee_Group_LayDSChonThanhVienNhomCaCon_v2",
+                        new { groupId, userId },
+                        commandType: CommandType.StoredProcedure);
+                    return result.ToList();
                 }
+                
             }
             catch (Exception ex)
             {
-                throw ex;
+                return null;
             }
         }
     }

@@ -106,14 +106,14 @@ namespace VS_LOAN.Core.Web.Controllers
             return ToJsonResponse(true, null, results);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
-        public JsonResult LayDSToNhomCon(int maNhomCha)
+        public async Task<JsonResult> LayDSToNhomCon(int maNhomCha)
         {
 
             RMessage message = new RMessage { code = Resources.Global.Message_Succ, success = true };
             List<ThongTinToNhomModel> rs = new List<ThongTinToNhomModel>();
             try
             {
-                rs = _rpGroup.LayDSNhomCon(maNhomCha);
+                rs = await _rpGroup.LayDSNhomConAsync(maNhomCha, GlobalData.User.IDUser);
                 if (rs == null)
                     rs = new List<ThongTinToNhomModel>();
             }
@@ -126,45 +126,29 @@ namespace VS_LOAN.Core.Web.Controllers
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
-        public ActionResult Sua()
+        public async Task<ActionResult> Sua(int id)
         {
-            ViewBag.formindex = LstRole["QLToNhom"]._formindex;
-            if (Session["ToNhom_Sua_ID"] == null)
-                return RedirectToAction("QLToNhom");
-            int idNhom = (int)Session["ToNhom_Sua_ID"];
-            ViewBag.ThongTinNhom = _rpGroup.LayTheoMa(idNhom);
+
+            ViewBag.model = await _rpGroup.LayTheoMaAsync(id);
             return View();
         }
 
-        public ActionResult SuaToNhomByID(int id)
+        public async Task<JsonResult> GetMember(int groupId)
         {
-            Session["ToNhom_Sua_ID"] = id;
-            return RedirectToAction("Sua");
+            var result = await _rpGroup.LayDSThanhVienNhomAsync(groupId, GlobalData.User.IDUser);
+            return ToJsonResponse(true, null, result);
         }
-
-        public JsonResult LayThongTinThanhVienSuaNhom(int maNhom)
-        {
-            List<NhanVienNhomDropDownModel> lstThanhVienNhom = _rpGroup.LayDSThanhVienNhom(maNhom);
-            List<NhanVienNhomDropDownModel> lstKhongThanhVienNhom = _rpGroup.LayDSKhongThanhVienNhom(maNhom);
-            return Json(new { DSThanhVien = lstThanhVienNhom, DSChuaThanhVien = lstKhongThanhVienNhom });
-        }
+      
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
-        public ActionResult ChiTiet()
+        public async Task<ActionResult> ChiTiet(int id)
         {
             ViewBag.formindex = LstRole["QLToNhom"]._formindex;
-            if (Session["ToNhom_ChiTiet_ID"] == null)
-                return RedirectToAction("QLToNhom");
-            int idNhom = (int)Session["ToNhom_ChiTiet_ID"];
-            ViewBag.ThongTinNhom = _rpGroup.LayChiTietTheoMa(idNhom);
+
+            ViewBag.model = await _rpGroup.LayChiTietTheoMaAsync(id);
             return View();
         }
 
-        public ActionResult XemToNhomByID(int id)
-        {
-            Session["ToNhom_ChiTiet_ID"] = id;
-            return RedirectToAction("ChiTiet");
-        }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
         public ActionResult LuuSua(int maNhom, string ten, string tenNgan, int maNguoiQuanLy, int maNhomCha, List<int> lstThanhVien)
@@ -182,7 +166,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     var parentCode = _rpGroup.LayChuoiMaCha(maNhomCha);
                     nhom.ChuoiMaCha = parentCode + "." + maNhomCha;
                 }
-                   
+
                 else
                     nhom.ChuoiMaCha = "0";
                 nhom.Ten = ten;

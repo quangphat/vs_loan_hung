@@ -26,7 +26,7 @@
                         <div class="col-sm-4">
                             <input type="text" id="txtTenNhom" placeholder="Nhập tên nhóm" class="form-control">
                         </div>
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên ngắn <span class="required">(*)</span> </label>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên khác <span class="required">(*)</span> </label>
                         <div class="col-sm-4">
                             <input type="text" id="txtTenNgan" placeholder="Nhập tên ngắn" class="form-control">
                         </div>
@@ -85,7 +85,8 @@
 <script>
     let page = 1;
     $(document).ready(function () {
-        LayNhanVien(page);
+        GetMembers(page);
+        GetAllEmployees();
         LayDSNhom();
         //filter id = "#duallist_filter_id"
         demo1 = $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox();
@@ -94,7 +95,7 @@
             filterBox.addEventListener("keyup", function (event) {
                 
                 if (event.key === "Enter") {
-                    LayNhanVien(1);
+                    GetMembers(1);
                 }
             });
         }
@@ -142,25 +143,61 @@
     //});
     $("#btnNext").click(function () {
         page += 1;
-        LayNhanVien(page)
+        GetMembers(page)
     })
     $("#btnPrevious").click(function () {
         page -= 1;
         page = page <= 0 ? 1 : page
-        LayNhanVien(page)
+        GetMembers(page)
     })
     $("#btnSearch").click(function () {
         page = 1;
-        LayNhanVien(page)
+        GetMembers(page)
     })
-    function LayNhanVien(page) {
+    function GetAllEmployees(page) {
+        showBlock($('#panel_body'), 'Vui lòng chờ');
+        $('#ddlNguoiQL').empty();
+
+        
+        $.ajax({
+            type: "GET",
+            url: `/Employee/GetAllEmployee`,
+            data: {},
+            success: function (data) {
+                if (data.data != null && data.success == true) {
+                    if (data.data != null && data.data.length > 0) {
+                        $.each(data.data, function (index, item) {
+
+                           
+                            $('#ddlNguoiQL').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+
+                        });
+                        if (data.data.length == 1) {
+                            $('#ddlNguoiQL').val(data.data[0].Id);
+                        }
+                    }
+                }
+               
+                $('#ddlNguoiQL').chosen().trigger("chosen:updated");
+                $('#ddlNguoiQL').trigger("change");
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+                page = page
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+    function GetMembers(page) {
         showBlock($('#panel_body'), 'Vui lòng chờ');
         $('#duallistNhanVien').empty();
 
         let freeText = isNullOrUndefined($("#duallist_filter_id").val()) ? '' : $("#duallist_filter_id").val();
         $.ajax({
             type: "GET",
-            url: `/Employee/GetAllEmployee?page=${page}&freeText=${freeText}`,
+            url: `/Employee/GetAllEmployeePaging?page=${page}&freeText=${freeText}`,
             data: { },
             success: function (data) {
                 if (data.data != null && data.success == true) {
@@ -243,8 +280,6 @@
             return;
         }
         var lstRightSelect = $('select[name="duallistbox_demo1[]_helper2"]')[0];
-        
-        return
         var lstSelectedId = [];
         for (var i = 0; i < lstRightSelect.length; i++) {
             lstSelectedId.push(lstRightSelect[i].attributes[0].value);

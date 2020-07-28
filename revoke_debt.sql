@@ -265,30 +265,13 @@ end
 ---------
 go
 alter PROCEDURE [dbo].[sp_Employee_GetFull] 
-(@orgId int =0, 
-@freetext nvarchar(50) ='',
- @page int = 1,
-  @limit int= 20)
+(@orgId int =0)
 AS
 BEGIN
-declare @offset int = 0;
-set @offset = (@page-1)*@limit;
-declare @where  nvarchar(1000) = '';
-declare @mainClause nvarchar(max);
-declare @params nvarchar(300);
-if @freetext = '' begin set @freetext = null end;
-set @mainClause = 'Select count(*) over() as TotalRecord, Id, Ma + '' - '' + Ho_Ten as Name From Employee where isnull(OrgId,0) = @orgId and isnull(Xoa,0) = 0 ';
-if(@freetext  is not null)
-	begin
-	set @where +=' and (Ma like  N''%' + @freetext +'%''';
-	set @where +=' or Ho_Ten like  N''%' + @freetext +'%'' )';
-end;
-set @where += ' order by createdTime desc offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
-set @mainClause = @mainClause +  @where
-set @params =N' @offset int, @limit int, @orgId int';
-EXECUTE sp_executesql @mainClause, @params, @offset = @offset, @limit = @limit,@orgId = @orgId;
-print @mainClause;
+Select  Id, Ma + ' - ' + Ho_Ten as Name From Employee where isnull(OrgId,0) = @orgId and isnull(Xoa,0) = 0 
+ order by ID desc
 END
+
 -----------
 go
 create PROCEDURE [dbo].[sp_Employee_LayDSByMaQL_v2]
@@ -306,18 +289,19 @@ END
 go
 create PROCEDURE [dbo].[sp_Group_GetChildGroup] 
 	-- Add the parameters for the stored procedure here
-	@MaNhomCha int
+	@parentGroupId int,
+	@userId int =0
 AS
 BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	Select NHOM.ID, NHOM.Ten, 
-	NHOM.Ten_Viet_Tat as TenNgan, 
+	declare @orgId int = 0;
+  select @orgId = isnull(OrgId,0) from Employee where Id = @userId;
+	Select g.ID, g.Ten, 
+	g.Ten_Viet_Tat as TenNgan, 
 	e.Ho_Ten as NguoiQuanLy, 
-	NHOM.Chuoi_Ma_Cha as ChuoiMaCha 
-	From NHOM, Employee e
-	Where NHOM.Ma_Nguoi_QL = e.ID 
-	and NHOM.Ma_Nhom_Cha = @MaNhomCha
+	g.Chuoi_Ma_Cha as ChuoiMaCha 
+	From NHOM g left join Employee e on g.Ma_Nguoi_QL = e.ID
+	Where g.Ma_Nhom_Cha = @parentGroupId
+	and isnull(g.OrgId, 0) = @orgId
 END
 
 -------
@@ -376,29 +360,32 @@ END
 go
 create PROCEDURE [dbo].[sp_employee_Group_LayDSKhongThanhVienNhom_v2]
 	-- Add the parameters for the stored procedure here
-	@groupId int
+	@groupId int,
+	@userId int = 0
 AS
 BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	Select e.ID, e.Ma + ' - ' + e.Ho_Ten as Ten 
+	declare @orgId int = 0;
+  select @orgId = isnull(OrgId,0) from Employee where Id = @userId;
+	Select e.Id, e.Ma + ' - ' + e.Ho_Ten as Name 
 	From Employee e 
 	Where e.ID not in (Select NHAN_VIEN_NHOM.Ma_Nhan_Vien From NHAN_VIEN_NHOM Where NHAN_VIEN_NHOM.Ma_Nhom = @groupId)
+	and e.OrgId = @orgId
 END
 
 --------
 go
 create PROCEDURE [dbo].[sp_Employee_Group_LayDSChonThanhVienNhom_v2] 
 	-- Add the parameters for the stored procedure here
-	@groupId int
+	@groupId int,
+	@userId int = 0
 AS
 BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	Select e.ID, e.Ma + ' - ' + e.Ho_Ten as Ten 
+	declare @orgId int = 0;
+  select @orgId = isnull(OrgId,0) from Employee where Id = @userId;
+	Select e.Id, e.Ma + ' - ' + e.Ho_Ten as Name 
 	From Employee e, NHAN_VIEN_NHOM Where e.ID = NHAN_VIEN_NHOM.Ma_Nhan_Vien and NHAN_VIEN_NHOM.Ma_Nhom = @groupId
+	and e.OrgId = @orgId
 END
-
 
 
 ----------
@@ -1171,3 +1158,33 @@ BEGIN
 	Select NHOM.ID, NHOM.Ten, NHOM.Chuoi_Ma_Cha as ChuoiMaCha From NHOM where OrgId = @orgId
 END
 ----------
+
+
+go
+create PROCEDURE [dbo].[sp_Employee_GetPaging] 
+(@orgId int =0, 
+@freetext nvarchar(50) ='',
+ @page int = 1,
+  @limit int= 20)
+AS
+BEGIN
+declare @offset int = 0;
+set @offset = (@page-1)*@limit;
+declare @where  nvarchar(1000) = '';
+declare @mainClause nvarchar(max);
+declare @params nvarchar(300);
+if @freetext = '' begin set @freetext = null end;
+set @mainClause = 'Select count(*) over() as TotalRecord, Id, Ma + '' - '' + Ho_Ten as Name From Employee where isnull(OrgId,0) = @orgId and isnull(Xoa,0) = 0 ';
+if(@freetext  is not null)
+	begin
+	set @where +=' and (Ma like  N''%' + @freetext +'%''';
+	set @where +=' or Ho_Ten like  N''%' + @freetext +'%'' )';
+end;
+set @where += ' order by createdTime desc offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
+set @mainClause = @mainClause +  @where
+set @params =N' @offset int, @limit int, @orgId int';
+EXECUTE sp_executesql @mainClause, @params, @offset = @offset, @limit = @limit,@orgId = @orgId;
+print @mainClause;
+END
+
+------------

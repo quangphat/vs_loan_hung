@@ -209,9 +209,14 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = await _rpEmployee.ResetPassord(model.UserName.Trim(), MD5.getMD5(model.Password.Trim()));
             return ToJsonResponse(true, "Thành công", result);
         }
-        public async Task<JsonResult> GetAllEmployee( string freeText, int page = 1)
+        public async Task<JsonResult> GetAllEmployee()
         {
-            var result = await _rpEmployee.GetAllEmployee(GlobalData.User.OrgId, page, freeText);
+            var result = await _rpEmployee.GetAllEmployee(GlobalData.User.OrgId);
+            return ToJsonResponse(true, data: result);
+        }
+        public async Task<JsonResult> GetAllEmployeePaging(string freeText, int page = 1)
+        {
+            var result = await _rpEmployee.GetAllEmployeePaging(GlobalData.User.OrgId, page, freeText);
             return ToJsonResponse(true, data: result);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]

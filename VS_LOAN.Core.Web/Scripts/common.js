@@ -185,7 +185,7 @@ function GetEmployeesByGroupId(controlId, groupId, isLeader = false, defaultValu
             $(controlId).append("<option value='0'></option>");
             if (data.data != null && data.success == true) {
                 $.each(data.data, function (index, item) {
-                    $(controlId).append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
+                    $(controlId).append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
                 if (defaultValue > 0) {
                     $(controlId).val(defaultValue);

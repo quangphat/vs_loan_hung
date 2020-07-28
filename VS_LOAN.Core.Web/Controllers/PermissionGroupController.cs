@@ -53,24 +53,7 @@ namespace VS_LOAN.Core.Web.Controllers
             return View();
         }
 
-        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
-        public JsonResult LayDSToNhomCon(int maNhomCha)
-        {
-            
-            List<ThongTinToNhomModel> rs = new List<ThongTinToNhomModel>();
-            try
-            {
-                rs = new GroupRepository().LayDSNhomCon(maNhomCha);
-                if (rs == null)
-                    rs = new List<ThongTinToNhomModel>();
-                return ToJsonResponse(true,null, rs);
-            }
-            catch (BusinessException ex)
-            {
-                return ToJsonResponse(false, ex.Message);
-            }
-            
-        }
+        
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
         public ActionResult Sua()
@@ -79,7 +62,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if(Session["ToNhom_Sua_ID"] == null)
                 return RedirectToAction("QLToNhom");
             int idNhom = (int)Session["ToNhom_Sua_ID"];
-            ViewBag.ThongTinNhom = new GroupRepository().LayTheoMa(idNhom);
+            ViewBag.ThongTinNhom = new GroupRepository().LayTheoMaAsync(idNhom);
             return View();
         }
 
@@ -89,23 +72,8 @@ namespace VS_LOAN.Core.Web.Controllers
             return RedirectToAction("Sua");
         }
 
-        public JsonResult LayThongTinThanhVienSuaNhom(int maNhom)
-        {
-            List<NhanVienNhomDropDownModel> lstThanhVienNhom = _rpGroup.LayDSThanhVienNhom(maNhom);
-            List<NhanVienNhomDropDownModel> lstKhongThanhVienNhom = _rpGroup.LayDSKhongThanhVienNhom(maNhom);
-            return Json(new { DSThanhVien = lstThanhVienNhom, DSChuaThanhVien = lstKhongThanhVienNhom });
-        }
-        
-        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
-        public ActionResult ChiTiet()
-        {
-            ViewBag.formindex = LstRole["QLToNhom"]._formindex;
-            if(Session["ToNhom_ChiTiet_ID"] == null)
-                return RedirectToAction("QLToNhom");
-            int idNhom = (int)Session["ToNhom_ChiTiet_ID"];
-            ViewBag.ThongTinNhom = new GroupRepository().LayChiTietTheoMa(idNhom);
-            return View();
-        }
+      
+       
 
         public ActionResult XemToNhomByID(int id)
         {

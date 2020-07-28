@@ -13,11 +13,11 @@ namespace VS_LOAN.Core.Repository.Interfaces
         int Them(NhomModel nhom, List<int> lstThanhVien, int createdBy);
         Task<List<NhomDropDownModel>> GetAll(int userId);
         string LayChuoiMaCha(int maNhom);
-        List<ThongTinToNhomModel> LayDSNhomCon(int maNhomCha);
-        ThongTinToNhomSuaModel LayTheoMa(int maNhom);
-        List<NhanVienNhomDropDownModel> LayDSThanhVienNhom(int maNhom);
-        List<NhanVienNhomDropDownModel> LayDSKhongThanhVienNhom(int maNhom);
-        ThongTinChiTietToNhomModel LayChiTietTheoMa(int maNhom);
+        Task<List<ThongTinToNhomModel>> LayDSNhomConAsync(int parentGroupId, int userId);
+        Task<ThongTinToNhomSuaModel> LayTheoMaAsync(int maNhom);
+        Task<List<OptionSimple>> LayDSThanhVienNhomAsync(int groupId, int userId);
+        Task<List<OptionSimple>> LayDSKhongThanhVienNhomAsync(int groupId, int userId);
+        Task<ThongTinChiTietToNhomModel> LayChiTietTheoMaAsync(int groupId);
         bool Sua(NhomModel nhom, List<int> lstThanhVien);
         List<ThongTinNhanVienModel> LayDSChiTietThanhVienNhom(int maNhom);
         List<NhomDropDownModel> LayDSCuaNhanVien(int userId);

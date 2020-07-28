@@ -81,7 +81,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public JsonResult LayDSSale()
+        public async Task<JsonResult> LayDSSale()
         {
             List<UserPMModel> rs = new List<UserPMModel>();
             var lstNhom = new GroupRepository().LayDSCuaNhanVien(GlobalData.User.IDUser);
@@ -89,15 +89,15 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 foreach (var item in lstNhom)
                 {
-                    var lstNhanVien =_rpEmployee.LayDSThanhVienNhomCaCon(item.ID);
+                    var lstNhanVien =await _rpEmployee.LayDSThanhVienNhomCaConAsync(item.ID, GlobalData.User.IDUser);
                     if (lstNhanVien != null)
                     {
                         foreach (var jtem in lstNhanVien)
                         {
                             var user = new UserPMModel();
-                            user.FullName = jtem.Ten;
+                            user.FullName = jtem.Name;
                             user.Code = jtem.Code;
-                            user.IDUser = jtem.ID;
+                            user.IDUser = jtem.Id;
                             rs.Add(user);
                         }
                     }

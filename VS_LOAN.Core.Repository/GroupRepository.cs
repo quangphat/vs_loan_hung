@@ -231,112 +231,54 @@ namespace VS_LOAN.Core.Repository
             }
         }
        
-        public List<ThongTinToNhomModel> LayDSNhomCon(int maNhomCha)
+        public async Task<List<ThongTinToNhomModel>> LayDSNhomConAsync(int parentGroupId, int userId)
         {
             try
             {
-                using (ISession session = LOANSessionManager.OpenSession())
+                using (var con = GetConnection())
                 {
-                    IDbCommand command = new SqlCommand();
-                    command.Connection = session.Connection;
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_Group_GetChildGroup";
-                    command.Parameters.Add(new SqlParameter("@MaNhomCha", maNhomCha));
-                    DataTable dt = new DataTable();
-                    dt.Load(command.ExecuteReader());
-                    if (dt != null)
-                    {
-                        if (dt.Rows.Count > 0)
-                        {
-                            List<ThongTinToNhomModel> result = new List<ThongTinToNhomModel>();
-                            foreach (DataRow item in dt.Rows)
-                            {
-                                ThongTinToNhomModel nhom = new ThongTinToNhomModel();
-                                nhom.ID = Convert.ToInt32(item["ID"].ToString());
-                                nhom.Ten = item["Ten"].ToString();
-                                nhom.TenNgan = item["TenNgan"].ToString();
-                                nhom.NguoiQuanLy = item["NguoiQuanLy"].ToString();
-                                result.Add(nhom);
-                            }
-                            return result;
-                        }
-                    }
-                    return null;
+                    var result = await con.QueryAsync<ThongTinToNhomModel>("sp_Group_GetChildGroup", new { parentGroupId, userId }, commandType: CommandType.StoredProcedure);
+                    return result.ToList();
                 }
+               
             }
             catch (BusinessException ex)
             {
-                throw ex;
+                return null;
             }
         }
 
-        public ThongTinToNhomSuaModel LayTheoMa(int maNhom)
+        public async Task<ThongTinToNhomSuaModel> LayTheoMaAsync(int maNhom)
         {
             try
             {
-                using (ISession session = LOANSessionManager.OpenSession())
+                using (var con = GetConnection())
                 {
-                    IDbCommand command = new SqlCommand();
-                    command.Connection = session.Connection;
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_NHOM_LayThongTinTheoMa";
-                    command.Parameters.Add(new SqlParameter("@MaNhom", maNhom));
-                    DataTable dt = new DataTable();
-                    dt.Load(command.ExecuteReader());
-                    if (dt != null)
-                    {
-                        if (dt.Rows.Count > 0)
-                        {
-                            ThongTinToNhomSuaModel nhom = new ThongTinToNhomSuaModel();
-                            nhom.ID = Convert.ToInt32(dt.Rows[0]["ID"].ToString());
-                            nhom.Ten = dt.Rows[0]["Ten"].ToString();
-                            nhom.TenNgan = dt.Rows[0]["TenNgan"].ToString();
-                            nhom.MaNguoiQuanLy = Convert.ToInt32(dt.Rows[0]["MaNguoiQuanLy"].ToString());
-                            nhom.MaNhomCha = Convert.ToInt32(dt.Rows[0]["MaNhomCha"].ToString());
-                            return nhom;
-                        }
-                    }
-                    return null;
+                    var result = await con.QueryFirstOrDefaultAsync<ThongTinToNhomSuaModel>("sp_NHOM_LayThongTinTheoMa", new { maNhom }, commandType: CommandType.StoredProcedure);
+                    return result;
                 }
+               
             }
             catch (BusinessException ex)
             {
-                throw ex;
+                return null;
             }
         }
 
-        public ThongTinChiTietToNhomModel LayChiTietTheoMa(int maNhom)
+        public async Task<ThongTinChiTietToNhomModel> LayChiTietTheoMaAsync(int groupId)
         {
             try
             {
-                using (ISession session = LOANSessionManager.OpenSession())
+                using (var con = GetConnection())
                 {
-                    IDbCommand command = new SqlCommand();
-                    command.Connection = session.Connection;
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_Group_GetById";
-                    command.Parameters.Add(new SqlParameter("@groupId", maNhom));
-                    DataTable dt = new DataTable();
-                    dt.Load(command.ExecuteReader());
-                    if (dt != null)
-                    {
-                        if (dt.Rows.Count > 0)
-                        {
-                            ThongTinChiTietToNhomModel nhom = new ThongTinChiTietToNhomModel();
-                            nhom.ID = Convert.ToInt32(dt.Rows[0]["ID"].ToString());
-                            nhom.Ten = dt.Rows[0]["Ten"].ToString();
-                            nhom.TenNgan = dt.Rows[0]["TenNgan"].ToString();
-                            nhom.NguoiQuanLy = dt.Rows[0]["NguoiQuanLy"].ToString();
-                            nhom.TenNhomCha = dt.Rows[0]["TenNhomCha"].ToString();
-                            return nhom;
-                        }
-                    }
-                    return null;
+                    var result = await con.QueryFirstOrDefaultAsync<ThongTinChiTietToNhomModel>("sp_Group_GetById", new { groupId }, commandType: CommandType.StoredProcedure);
+                    return result;
                 }
+                
             }
             catch (BusinessException ex)
             {
-                throw ex;
+                return null ;
             }
         }
 
@@ -672,77 +614,38 @@ namespace VS_LOAN.Core.Repository
                 throw ex;
             }
         }
-        public List<NhanVienNhomDropDownModel> LayDSThanhVienNhom(int maNhom)
+        public async Task<List<OptionSimple>> LayDSThanhVienNhomAsync(int groupId, int userId)
         {
             try
             {
-                using (ISession session = LOANSessionManager.OpenSession())
+                using (var con = GetConnection())
                 {
-                    IDbCommand command = new SqlCommand();
-                    command.Connection = session.Connection;
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_Employee_Group_LayDSChonThanhVienNhom_v2";
-                    command.Parameters.Add(new SqlParameter("@groupId", maNhom));
-                    DataTable dt = new DataTable();
-                    dt.Load(command.ExecuteReader());
-                    if (dt != null)
-                    {
-                        if (dt.Rows.Count > 0)
-                        {
-                            List<NhanVienNhomDropDownModel> result = new List<NhanVienNhomDropDownModel>();
-                            foreach (DataRow item in dt.Rows)
-                            {
-                                NhanVienNhomDropDownModel nv = new NhanVienNhomDropDownModel();
-                                nv.ID = Convert.ToInt32(item["ID"].ToString());
-                                nv.Ten = item["Ten"].ToString();
-                                result.Add(nv);
-                            }
-                            return result;
-                        }
-                    }
-                    return null;
+                    var result = await con.QueryAsync<OptionSimple>("sp_Employee_Group_LayDSChonThanhVienNhom_v2", new { groupId, userId }, commandType: CommandType.StoredProcedure);
+                    return result.ToList();
                 }
+               
             }
             catch (BusinessException ex)
             {
-                throw ex;
+                return null;
             }
         }
-        public List<NhanVienNhomDropDownModel> LayDSKhongThanhVienNhom(int maNhom)
+        public async Task<List<OptionSimple>> LayDSKhongThanhVienNhomAsync(int groupId, int userId)
         {
             try
             {
-                using (ISession session = LOANSessionManager.OpenSession())
+                using (var con = GetConnection())
                 {
-                    IDbCommand command = new SqlCommand();
-                    command.Connection = session.Connection;
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_employee_Group_LayDSKhongThanhVienNhom_v2";
-                    command.Parameters.Add(new SqlParameter("@groupId", maNhom));
-                    DataTable dt = new DataTable();
-                    dt.Load(command.ExecuteReader());
-                    if (dt != null)
-                    {
-                        if (dt.Rows.Count > 0)
-                        {
-                            List<NhanVienNhomDropDownModel> result = new List<NhanVienNhomDropDownModel>();
-                            foreach (DataRow item in dt.Rows)
-                            {
-                                NhanVienNhomDropDownModel nv = new NhanVienNhomDropDownModel();
-                                nv.ID = Convert.ToInt32(item["ID"].ToString());
-                                nv.Ten = item["Ten"].ToString();
-                                result.Add(nv);
-                            }
-                            return result;
-                        }
-                    }
-                    return null;
+                    var result = await con.QueryAsync<OptionSimple>("sp_employee_Group_LayDSKhongThanhVienNhom_v2", new { groupId, userId }, commandType: CommandType.StoredProcedure);
+                    return result.ToList();
                 }
+
             }
             catch (BusinessException ex)
             {
-                throw ex;
+                return null;
             }
+            
         }
 
 

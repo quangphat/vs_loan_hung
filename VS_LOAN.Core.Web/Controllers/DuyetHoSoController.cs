@@ -444,11 +444,11 @@ namespace VS_LOAN.Core.Web.Controllers
             return ToJsonResponse(true, null, rs);
         }
 
-        public JsonResult LayDSThanhVienNhom(int maNhom)
+        public async Task<JsonResult> LayDSThanhVienNhom(int maNhom)
         {
-            List<NhanVienNhomDropDownModel> rs = new List<NhanVienNhomDropDownModel>();
+            var rs = new List<OptionSimple>();
             if (maNhom > 0)
-                rs = _rpEmployee.LayDSThanhVienNhomCaCon(maNhom);
+                rs = await _rpEmployee.LayDSThanhVienNhomCaConAsync(maNhom, GlobalData.User.IDUser);
             else
             {
                 // Lấy ds nhóm của nv quản lý
@@ -457,12 +457,12 @@ namespace VS_LOAN.Core.Web.Controllers
                 {
                     for (int i = 0; i < lstNhom.Count; i++)
                     {
-                        List<NhanVienNhomDropDownModel> lstThanhVien = _rpGroup.LayDSThanhVienNhom(lstNhom[i].ID);
+                        var lstThanhVien = await _rpGroup.LayDSThanhVienNhomAsync(lstNhom[i].ID, GlobalData.User.IDUser);
                         if (lstThanhVien != null)
                         {
                             for (int j = 0; j < lstThanhVien.Count; j++)
                             {
-                                if (rs.Find(x => x.ID == lstThanhVien[j].ID) == null)
+                                if (rs.Find(x => x.Id == lstThanhVien[j].Id) == null)
                                     rs.Add(lstThanhVien[j]);
                             }
                         }
@@ -470,7 +470,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 }
             }
             if (rs == null)
-                rs = new List<NhanVienNhomDropDownModel>();
+                rs = new List<OptionSimple>();
             return ToJsonResponse(true, null, rs);
         }
         public JsonResult LayDSGhichu(int id)
