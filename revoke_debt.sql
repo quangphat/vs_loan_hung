@@ -992,8 +992,8 @@ select @orgId = isnull(OrgId,0) from Nhan_Vien where id = @createdBy;
 END
 
 
------------x
-
+-----------
+---count(*) over() as TotalRecord
 ALTER procedure [dbo].[sp_MCredit_TempProfile_Gets]
 (
 @freeText nvarchar(30),
@@ -1004,28 +1004,28 @@ ALTER procedure [dbo].[sp_MCredit_TempProfile_Gets]
 )
 as
 begin
-declare @where  nvarchar(500) = '';
+declare @where  nvarchar(500) = 'where  isnull(mc.IsDeleted,0) = 0';
 declare @mainClause nvarchar(max);
 declare @params nvarchar(300);
 
 if @freeText = '' begin set @freeText = null end;
 declare @offset int = 0;
 set @offset = (@page-1)*@limit_tmp;
-set @mainClause = 'select mc.Id,mc.McId, mc.CustomerName,isnull(mc.IdNumber,mc.CCCDNumber) as IDNumber
+set @mainClause = 'select count(*) over() as TotalRecord, mc.Id,mc.McId, mc.CustomerName,isnull(mc.IdNumber,mc.CCCDNumber) as IDNumber
 ,mc.Status, mc.Phone, mc.CreatedBy, mc.UpdatedBy,mc.LoanMoney,mc.CreatedTime, mc.UpdatedTime,
 isnull(fintechcom_vn_PortalNew.fn_getGhichuByHosoId(mc.Id,4),'''') as LastNote,
 mc.SaleNumber +'' '' + isnull(mc.SaleName,'''') as SaleName,
 nv1.Ho_Ten as CreatedUser, mcl.Name as LoanPeriodName, p.Name  as ProductName
-from MCredit_TempProfile mc left join NHAN_VIEN nv1 on mc.CreatedBy = nv1.ID
+from MCredit_TempProfile mc left join Employee nv1 on mc.CreatedBy = nv1.ID
 left join MCreditProduct p on mc.ProductCode = p.Code
 left join MCreditLoanPeriod mcl on mc.LoanPeriodCode = mcl.Code
 '
 if(@freeText  is not null)
 begin
- set @where = 'where (mc.CustomerName like  N''%' + @freeText +'%''';
+ set @where = 'and (mc.CustomerName like  N''%' + @freeText +'%''';
  set @where = @where + ' or mc.IdNumber like  N''%' + @freeText +'%''';
- set @where = @where + ' or mc.Phone like  N''%' + @freeText +'%''';
- set @where = @where + ' or nv2.CCCDNumber like  N''%' + @freeText +'%'' )';
+ set @where = @where + ' or mc.Phone like  N''%' + @freeText +'%'')';
+ --set @where = @where + ' or nv2.CCCDNumber like  N''%' + @freeText +'%'' )';
 end;
 
 --if(@courierId > 0)
@@ -1038,19 +1038,12 @@ end;
 --end;
 if(@status <> '')
 begin
-if(@where <> '')
-set @where = @where + ' and';
-set @where = @where + ' mc.Status in ('+ @status +')'; 
-end;
-if(@where <>'')
-begin
-set @where= ' where ' + @where + ' and @userId in (select * from fn_GetUserIDCanViewMyProfile (mc.CreatedBy)) '
+set @where += ' and mc.Status in ('+ @status +')'; 
 end
-else
-begin
- set @where =' where  @userId in (select * from fn_GetUserIDCanViewMyProfile (mc.CreatedBy))'
-end
-set @where = @where + ' and Isnull(mc.IsDeleted,0) = 0 order by mc.UpdatedTime '; 
+set @where +=  ' and @userId in (select * from fn_GetUserIDCanViewMyProfile (mc.CreatedBy)) '
+
+
+set @where +=' order by mc.UpdatedTime '; 
 set @where += ' offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
 set @mainClause = @mainClause +  @where
 set @params =N' @offset int, @limit int, @userId int';
@@ -1328,3 +1321,45 @@ update [Role] set Code = 'revoke_Call' where Code ='Call'
 update [Role] set Code = 'revoke_Field' where Code ='Field'
 
 ----------
+
+--backup for mcredit
+
+CREATE procedure [dbo].[sp_MCredit_TempProfile_Counts]\n(\n@freeText nvarchar(30),\n@userId int,\n@status varchar(20) =''\n)\nas\nbegin\ndeclare @where  nvarchar(500) = '';\ndeclare @mainClause nvarchar(max);\ndeclare @params nvarchar(500);\n\nif @freeText = '' begi"
+}
+],
+[
+{
+"Key": "Text",
+"Value": "n set @freeText = null end;\ndeclare @offset int = 0;\nset @mainClause = 'select count(mc.Id)\nfrom MCredit_TempProfile mc left join NHAN_VIEN nv1 on mc.CreatedBy = nv1.ID\nleft join MCreditProduct p on mc.ProductCode = p.Code\nleft join MCreditLoanPeriod mcl "
+}
+],
+[
+{
+"Key": "Text",
+"Value": "on mc.LoanPeriodCode = mcl.Code\n'\nif(@freeText  is not null)\nbegin\n set @where = ' (mc.CustomerName like  N''%' + @freeText +'%''';\n set @where = @where + ' or mc.IdNumber like  N''%' + @freeText +'%''';\n set @where = @where + ' or mc.Phone like  N''%' + "
+}
+],
+[
+{
+"Key": "Text",
+"Value": "@freeText +'%''';\n set @where = @where + ' or nv2.CCCDNumber like  N''%' + @freeText +'%'' )';\nend;\n\n--if(@courierId > 0)\n--begin\n--if(@where <> '')\n--set @where = @where + ' and';\n--set @where = @where + ' mc.Id in (\n--select CourierId from CourierAssign"
+}
+],
+[
+{
+"Key": "Text",
+"Value": "ee \n--where AssigneeId = @CourierId)'; \n--end;\nif(@status <> '')\nbegin\nif(@where <> '')\nset @where = @where + ' and';\nset @where = @where + ' mc.Status in ('+ @status +')'; \nend;\nif(@where <>'')\nbegin\nset @where= ' where ' + @where + '  and @userId in (se"
+}
+],
+[
+{
+"Key": "Text",
+"Value": "lect * from fn_GetUserIDCanViewMyProfile (mc.CreatedBy))'\nend\nelse\nbegin\n set @where =' where  @userId in (select * from fn_GetUserIDCanViewMyProfile (mc.CreatedBy))'\nend\nset @mainClause = @mainClause +  @where\nset @params =N' @userId int';\nEXECUTE sp_exe"
+}
+],
+[
+{
+"Key": "Text",
+"Value": "cutesql @mainClause, @params ,@userId = @userId\nprint @mainClause;\nend
+
+-----------

@@ -128,9 +128,14 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<JsonResult> SearchTemps(string freeText, string status, int page = 1, int limit = 20)
         {
             page = page <= 0 ? 1 : page;
-            var total = await _rpMCredit.CountTempProfiles(freeText, GlobalData.User.IDUser, status);
+            
+            
             var profiles = await _rpMCredit.GetTempProfiles(page, limit, freeText, GlobalData.User.IDUser, status);
-            var result = DataPaging.Create(profiles, total);
+            if(profiles==null || !profiles.Any())
+            {
+                return ToJsonResponse(true, "", DataPaging.Create(null as List<ProfileSearchSql>, 0));
+            }
+            var result = DataPaging.Create(profiles, profiles[0].TotalRecord);
             return ToJsonResponse(true, "", result);
         }
         public ActionResult Index()
