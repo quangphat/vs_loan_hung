@@ -41,11 +41,4 @@ function renderStatusList(value = [0]) {
         }
     });
 
-
-    //$.each(lstStatus, function (index, item) {
-    //    $("#ddlStatus").append("<option value='" + item.value + "'>" + item.display + "</option>")
-    //})
-    //$('#ddlStatus').chosen().trigger("chosen:updated");
-    //$('#ddlStatus').trigger("change");
-
 }
