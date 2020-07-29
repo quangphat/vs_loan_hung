@@ -1,8 +1,18 @@
 ﻿
-function ProfileSearch(dateType = 1) {
-    fetch('/profile/search?dateType=2')
+function ProfileSearch(dateType = 1, group = 2) {
+    fetch(`/profile/search?dateType=${dateType}&groupId=${group}`)
         .then(res => res.json())
         .then(res => {
-            console.log(`success`);
+            if (res.success == true) {
+                console.log(res.data)
+                return res.data
+            }
+            else {
+                return null;
+            }
+        })
+        .catch(err => {
+            console.log("failed");
+            return null;
         });
 }
