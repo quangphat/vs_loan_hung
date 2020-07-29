@@ -387,7 +387,7 @@ END
 
 
 go
-create PROCEDURE [dbo].[sp_Employee_Group_LayDSChonThanhVienNhom_v2] 
+alter PROCEDURE [dbo].[sp_Employee_Group_LayDSChonThanhVienNhom_v2] 
 	-- Add the parameters for the stored procedure here
 	@groupId int,
 	@userId int = 0
@@ -397,7 +397,7 @@ BEGIN
   select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
 	Select e.Id, e.Ma + ' - ' + e.Ho_Ten as Name 
 	From Nhan_Vien e, NHAN_VIEN_NHOM Where e.ID = NHAN_VIEN_NHOM.Ma_Nhan_Vien and NHAN_VIEN_NHOM.Ma_Nhom = @groupId
-	and e.OrgId = @orgId
+	and isnull(e.OrgId,0) = @orgId
 END
 
 
