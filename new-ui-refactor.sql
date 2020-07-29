@@ -13,17 +13,17 @@ EXEC sp_rename 'dbo.Employee', 'Nhan_Vien'
 ------------------
 --EXEC sp_rename 'dbo.HO_SO', 'Profile'
 --EXEC sp_rename '[Profile].Ma_Ho_so', 'Code', 'COLUMN'
---EXEC sp_rename '[Profile].Ma_Khach_Hang', 'CustomerCode', 'COLUMN'
---EXEC sp_rename '[Profile].Ten_Khach_Hang', 'CustomerName', 'COLUMN'
+--EXEC sp_rename '[HO_SO].Ma_Khach_Hang', 'CustomerCode', 'COLUMN'
+--EXEC sp_rename '[HO_SO].Ten_Khach_Hang', 'CustomerName', 'COLUMN'
 --EXEC sp_rename '[Profile].Dia_Chi', 'Address', 'COLUMN'
 --EXEC sp_rename '[Profile].Ma_Khu_Vuc', 'DistricId', 'COLUMN'
---EXEC sp_rename '[Profile].SDT', 'Phone', 'COLUMN'
+--EXEC sp_rename '[HO_SO].SDT', 'Phone', 'COLUMN'
 --EXEC sp_rename '[Profile].SDT2', 'Phone2', 'COLUMN'
---EXEC sp_rename '[Profile].Ngay_Tao', 'CreatedTime', 'COLUMN'
---EXEC sp_rename '[Profile].Ma_Nguoi_Tao', 'CreatedBy', 'COLUMN'
+--EXEC sp_rename '[HO_SO].Ngay_Tao', 'CreatedTime', 'COLUMN'
+--EXEC sp_rename '[HO_SO].Ma_Nguoi_Tao', 'CreatedBy', 'COLUMN'
 --EXEC sp_rename '[Profile].Ho_So_Cua_Ai', 'AssigneeId', 'COLUMN'
---EXEC sp_rename '[Profile].Ngay_Cap_Nhat', 'UpdatedTime', 'COLUMN'
---EXEC sp_rename '[Profile].Ma_Nguoi_Cap_Nhat', 'UpdatedBy', 'COLUMN'
+--EXEC sp_rename '[HO_SO].Ngay_Cap_Nhat', 'UpdatedTime', 'COLUMN'
+--EXEC sp_rename '[HO_SO].Ma_Nguoi_Cap_Nhat', 'UpdatedBy', 'COLUMN'
 --EXEC sp_rename '[Profile].Ngay_Nhan_Don', 'ReceiveDate', 'COLUMN'
 --EXEC sp_rename '[Profile].Ma_Trang_Thai', 'StatusId', 'COLUMN'
 --EXEC sp_rename '[Profile].Ma_Ket_Qua', 'ResultId', 'COLUMN'
@@ -32,7 +32,7 @@ EXEC sp_rename 'dbo.Employee', 'Nhan_Vien'
 --EXEC sp_rename '[Profile].So_Tien_Vay', 'LoanMoney', 'COLUMN'
 --EXEC sp_rename '[Profile].Han_Vay', 'LoanPeriod', 'COLUMN'
 --EXEC sp_rename '[Profile].Ghi_Chu', 'LastNote', 'COLUMN'
---EXEC sp_rename '[Profile].Da_Xoa', 'IsDeleted', 'COLUMN'
+--EXEC sp_rename '[HO_SO].Da_Xoa', 'IsDeleted', 'COLUMN'
 
 
 ----------------------------
@@ -61,64 +61,6 @@ begin
 end
 
 
----------------------
-
-ALTER procedure [dbo].[sp_Profile_Search]
-(
-	@offset int,
-	@limit int,
-	@userId int,
-	@groupId int,
-	@FromDate datetime,
-	@ToDate datetime,
-	@status varchar(50),
-	@freeText as nvarchar(50) = '',
-	@DateType int
-)
-as
-begin
-if @freeText = '' begin set @freeText = null end;
-declare @where  nvarchar(1000) = 'where isnull(IsDeleted,0) = 0';
-declare @mainClause nvarchar(max);
-declare @params nvarchar(300);
-set @mainClause = 'select count(*) over() as TotalRecord, p.Id, p.CustomerName,
-p.Cmnd,p.Status, p.Phone, p.AssigneeId, p.CreatedTime, p.UpdatedTime
-,fintecpom_vn_PortalNew.fn_getGhichuByHosoId(p.Id,1) as LastNote
-,nv2.FullName as Assignee, nv1.FullName as CreatedUser,
-ISNULL(kv1.Ten,'''') as ProvinceName, isnull(kv2.Ten,'''') as DistrictName
-from Profile p left join Employee nv1 on p.CreatedBy = nv1.ID
-left join Employee nv2 on p.AssigneeId = nv2.ID 
-left join Khu_vuc kv1 on p.ProvinceId = kv1.Id
-left join Khu_vuc kv2 on p.DistrictId = kv2.Id
-left join San_Pham_Vay sp on p.ProductId = sp.Id
-left join Doi_Tac dt on sp.Ma_Doi_Tac = dt.Id'
-if(@freeText  is not null)
-begin
- set @where = ' and (hc.CustomerName like  N''%' + @freeText +'%''';
- set @where = @where + ' or hc.cmnd like  N''%' + @freeText +'%''';
- set @where = @where + ' or hc.phone like  N''%' + @freeText +'%'')';
-end;
-if(@status<>'')
-begin
-	set @where += ' and p.Status in (Select CONVERT(int,Value) From dbo.fn_SplitStringToTable(@status, '' + '',))'
-end;
-if(@DateType =1)
-begin
-	set @where += ' and p.CreatedTime between @fromDate and @toDate'
-end
-else
-begin
-	set @where += ' and p.UpdatedTime between @fromDate and @toDate'
-end
-set @where+= ' and p.Id in (select * from fn_GetUserIDCanViewMyProfile (@userId))'
-set @where += ' offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
-
-set @mainClause = @mainClause +  @where
-set @params =N'@userIdId  int,@status varchar(20), @offset int, @limit int, @fromDate datetime, @toDate datetime';
-EXECUTE sp_executesql @mainClause,@params, @userId = @userId, @status = @status
-, @offset = @offset, @limit = @limit, @fromDate = @fromDate, @toDate = @toDate;
-print @mainClause;
-end
 
 
 ---------------------
@@ -192,8 +134,8 @@ BEGIN
 			From NHAN_VIEN_NHOM Where NHAN_VIEN_NHOM.Ma_Nhom in 
 			(Select NHOM.ID From NHOM Where 
 			((NHOM.Chuoi_Ma_Cha + '.' + Convert(nvarchar, NHOM.ID)) like '%.' + Convert(nvarchar, @groupId) + '.%') 
-			or ((NHOM.Chuoi_Ma_Cha + '.' + Convert(nvarchar, NHOM.ID)) like '%.' + Convert(nvarchar, @groupId)) or NHOM.ID = @groupId)
-			))
+			or ((NHOM.Chuoi_Ma_Cha + '.' + Convert(nvarchar, NHOM.ID)) like '%.' + Convert(nvarchar, @groupId)) or NHOM.ID = @groupId))
+			)
 			or (@groupId = 0 and HO_SO.Ma_Nguoi_Tao in (Select NVN1.Ma_Nhan_Vien From NHAN_VIEN_NHOM as NVN1 
 			Where NVN1.Ma_Nhom in (Select * From @DSNhomQL)) and @memberId = 0)
 	)
@@ -221,7 +163,7 @@ END
 
 ---------------
 
-ALTER procedure [dbo].[sp_Profile_Search]
+create procedure [dbo].[sp_Profile_Search]
 (
 	@offset int,
 	@limit int,
@@ -293,7 +235,7 @@ if(@status<>'')
 begin
 	set @where += ' and p.Ma_Trang_Thai in (Select CONVERT(int,Value) From dbo.fn_SplitStringToTable(@status, '' + '',))'
 end;
-if(@DateType =1)
+if(@dateType =1)
 begin
 	set @where += ' and p.CreatedTime between @fromDate and @toDate'
 end
@@ -301,12 +243,15 @@ else
 begin
 	set @where += ' and p.UpdatedTime between @fromDate and @toDate'
 end
-set @where+= ' and p.Id in (select * from fn_GetUserIDCanViewMyProfile (@userId))'
-set @where += ' offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
+set @where += ' order by p.UpdatedTime offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
 
 set @mainClause = @mainClause +  @where
-set @params =N'@userIdId  int,@status varchar(20), @offset int, @limit int, @fromDate datetime, @toDate datetime';
+set @params =N'@userIdId  int,@status varchar(20), @offset int, @limit int, @fromDate datetime, @toDate datetime, @dateType int,
+@memberId int,@DSNhomQL TABLE(ID int)';
 EXECUTE sp_executesql @mainClause,@params, @userId = @userId, @status = @status
-, @offset = @offset, @limit = @limit, @fromDate = @fromDate, @toDate = @toDate;
+, @offset = @offset, @limit = @limit, @fromDate = @fromDate, @toDate = @toDate, @dateType = @dateType, @memberId = @memberId, @DSNhomQL = @DSNhomQL;
 print @mainClause;
 end
+
+
+-----------------
