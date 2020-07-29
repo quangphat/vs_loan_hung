@@ -163,6 +163,8 @@ END
 
 ---------------
 
+--exec sp_Profile_Search 0,10,1,0,0,'2020-01-01','2020-07-30','','',1
+--exec sp_Profile_Search 0,10,4375,0,0,'2020-01-01','2020-07-30','','',1
 create procedure [dbo].[sp_Profile_Search]
 (
 	@offset int,
@@ -179,57 +181,45 @@ create procedure [dbo].[sp_Profile_Search]
 as
 begin
 if @freeText = '' begin set @freeText = null end;
-declare @where  nvarchar(1000) = 'where isnull(IsDeleted,0) = 0';
+declare @where  nvarchar(1000) = ' where isnull(p.IsDeleted,0) = 0';
 declare @mainClause nvarchar(max);
 declare @params nvarchar(300);
-Declare @DSNhomQL TABLE(ID int)
-	if(@groupId = 0)
-	Begin
-	-- Lay nhom la thanh vien
-	Insert Into @DSNhomQL Select eg.Ma_Nhom From NHAN_VIEN_NHOM eg Where eg.Ma_Nhan_Vien = @userId
-	-- Lay nhom con truc tiep (nv la nguoi quan ly)
-	Insert Into @DSNhomQL Select NHOM.ID From NHOM Where NHOM.Ma_Nhom_Cha in (select * from @DSNhomQL)
-	-- Lay ds nhom tu nhom quan ly truc tiep tro xuong
-	Insert Into @DSNhomQL Select distinct NHOM.ID From NHOM Where 
-	(Select COUNT(*) From fn_SplitStringToTable(NHOM.Chuoi_Ma_Cha, '.') 
-		Where CONVERT(int, value) in (Select * From @DSNhomQL)) > 0
-End
-set @mainClause = 'Select count(*) over() as TotalRecord, p.ID, p.Ma_Ho_So as ProfileCode
-	, p.Ngay_Tao as CreatedTime, DOI_TAC.Ten as PartnerName, p.CMND,
-	 p.Ten_Khach_Hang as CustomerName,p.Ma_Trang_Thai as Status 
-	 ,TRANG_THAI_HS.Ten as StatusName, p.Ngay_Cap_Nhat as UpdatedTime, NV1.Ho_Ten as EmployeeName,
-	  p.Dia_Chi as Address,kvt.Ten as ProvinceName, 
+set @mainClause = 'Select count(*) over() as TotalRecord, p.ID,p.CreatedBy, p.Ma_Ho_So as ProfileCode
+	, p.CreatedTime, dt.Ten as PartnerName, p.CMND,
+	 p.CustomerName,p.Ma_Trang_Thai as Status 
+	 ,s.Ten as StatusName, p.UpdatedTime, NV1.Ho_Ten as EmployeeName,
+	  p.Dia_Chi as Address,prov.Ten as ProvinceName, 
 	  fintechcom_vn_PortalNew.fn_getGhichuByHosoId(p.ID,1) as LastNote
 	  , NV3.Ma as MaNVLayHS,
 	CASE WHEN ((Select COUNT(*) From NHAN_VIEN_NHOM 
-	Where NHAN_VIEN_NHOM.Ma_Nhan_Vien = p.Ma_Nguoi_Tao) = 0) 
-	THEN '' ELSE (Select Top(1) NHOM.Ten From NHOM, NHAN_VIEN_NHOM 
-	Where NHAN_VIEN_NHOM.Ma_Nhom = NHOM.ID and NHAN_VIEN_NHOM.Ma_Nhan_Vien = HO_SO.Ma_Nguoi_Tao)
+	Where NHAN_VIEN_NHOM.Ma_Nhan_Vien = p.CreatedBy) = 0) 
+	THEN '''' ELSE (Select Top(1) NHOM.Ten From NHOM, NHAN_VIEN_NHOM 
+	Where NHAN_VIEN_NHOM.Ma_Nhom = NHOM.ID and NHAN_VIEN_NHOM.Ma_Nhan_Vien = p.CreatedBy)
 	 END as DoiNguBanHang, 
-	 SAN_PHAM_VAY.Ten as TenSanPham from HO_SO p left join NHAN_VIEN as nv1 on HO_SO.Ma_Nguoi_Tao = nv1.Id
-		left join NHAN_VIEN as nv2 on HO_SO.Ma_Nguoi_Cap_Nhat = NV2.ID
-		left join NHAN_VIEN as nv3 on HO_SO.Courier_Code = nv3.ID
-		left join KHU_VUC as dtrict on dtrict.ID = HO_SO.Ma_Khu_Vuc
+	 sv.Ten as TenSanPham from HO_SO p left join NHAN_VIEN as nv1 on p.CreatedBy = nv1.Id
+		left join NHAN_VIEN as nv2 on p.UpdatedBy = NV2.ID
+		left join NHAN_VIEN as nv3 on p.Courier_Code = nv3.ID
+		left join KHU_VUC as dtrict on dtrict.ID = p.Ma_Khu_Vuc
 		left join KHU_VUC as prov on prov.ID = dtrict.Ma_Cha
 		left join San_Pham_Vay sv on p.San_Pham_Vay = sv.Id
 		left join Doi_Tac dt on sv.Ma_Doi_Tac = dt.Id
 		left join Trang_Thai_HS s on p.Ma_Trang_Thai = s.Id'
 if(@freeText  is not null)
 begin
- set @where += ' and (hc.CustomerName like  N''%' + @freeText +'%''';
- set @where += ' or hc.cmnd like  N''%' + @freeText +'%''';
- set @where += ' or hc.phone like  N''%' + @freeText +'%'')';
+ set @where += ' and (p.CustomerName like  N''%' + @freeText +'%''';
+ set @where += ' or p.cmnd like  N''%' + @freeText +'%''';
+ set @where += ' or p.phone like  N''%' + @freeText +'%'')';
 end;
-if(@groupId > 0)
+if(@memberId > 0)
 begin
-	set @where += ' and p.Ma_Nguoi_Tao in (
-			Select eg.Ma_Nhan_Vien 
-			From NHAN_VIEN_NHOM eg Where eg.Ma_Nhom in 
-			(Select NHOM.ID From NHOM Where 
-			((NHOM.Chuoi_Ma_Cha + ''.'' + Convert(nvarchar, NHOM.ID)) like ''%.'' + Convert(nvarchar, @groupId) + ''.%'') 
-			or ((NHOM.Chuoi_Ma_Cha + ''.'' + Convert(nvarchar, NHOM.ID)) like ''%.'' + Convert(nvarchar, @groupId)) or NHOM.ID = @groupId)))
-			or (HO_SO.Ma_Nguoi_Tao in (Select NVN1.Ma_Nhan_Vien From NHAN_VIEN_NHOM as eg1 
-			Where eg1.Ma_Nhom in (Select * From @DSNhomQL)) and @memberId = 0)'
+	set @where += ' and p.CreatedBy = @memberId'
+end;
+else
+begin
+	if(@groupId > 0)
+	begin
+		set @where += ' and p.CreatedBy in (select Ma_Nhan_Vien from NHAN_VIEN_NHOM where MA_Nhom = @groupId)'
+	end;
 end;
 if(@status<>'')
 begin
@@ -243,15 +233,19 @@ else
 begin
 	set @where += ' and p.UpdatedTime between @fromDate and @toDate'
 end
-set @where += ' order by p.UpdatedTime offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
+set @where += ' and @userId in (select * from fn_GetUserIDCanViewMyProfile_v2(p.CreatedBy,0))
+ order by p.UpdatedTime offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
 
 set @mainClause = @mainClause +  @where
-set @params =N'@userIdId  int,@status varchar(20), @offset int, @limit int, @fromDate datetime, @toDate datetime, @dateType int,
-@memberId int,@DSNhomQL TABLE(ID int)';
+set @params =N'@userId  int,@status varchar(20), @offset int, @limit int, @fromDate datetime, @toDate datetime, @dateType int,
+@memberId int, @groupId int';
 EXECUTE sp_executesql @mainClause,@params, @userId = @userId, @status = @status
-, @offset = @offset, @limit = @limit, @fromDate = @fromDate, @toDate = @toDate, @dateType = @dateType, @memberId = @memberId, @DSNhomQL = @DSNhomQL;
+, @offset = @offset, @limit = @limit, @fromDate = @fromDate, @toDate = @toDate,
+ @dateType = @dateType, @memberId = @memberId, @groupId = @groupId;
 print @mainClause;
 end
+
+
 
 
 -----------------
