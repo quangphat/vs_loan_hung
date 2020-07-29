@@ -1151,23 +1151,23 @@ ALTER COLUMN Ten_Dang_nhap varchar(50);
 
 
   go
-  create procedure sp_Employee_GetByUsername(@userId int, @username varchar(40))
+  alter procedure sp_Employee_GetByUsername(@userId int, @username varchar(40))
   as
   begin
   declare @orgId int = 0;
   select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
-  select * from Nhan_Vien where isnull(Xoa,0) = 0 and OrgId = @orgId and Ten_Dang_Nhap = @username
+  select * from Nhan_Vien where isnull(Xoa,0) = 0 and isnull(OrgId,0) = @orgId and Ten_Dang_Nhap = @username
   end
 
   ----------------x
 
   go
-   ALTER procedure [dbo].[sp_Employee_GetByCode](@code varchar(20), @userId int)
+   ALTER procedure [dbo].[sp_Employee_GetByCode](@code varchar(20), @userId int = 0)
 as
 begin
   declare @orgId int = 0;
   select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
-select top 1 Id, Ma as Code from Nhan_Vien where Ma = @code and isnull(Xoa,0) = 0 and OrgId = @orgId
+select top 1 Id, Ma as Code from Nhan_Vien where Ma = @code and isnull(Xoa,0) = 0 and isnull(OrgId,0) = @orgId
 end
   
 
@@ -1183,7 +1183,7 @@ BEGIN
 	-- interfering with SELECT statements.
 	declare @orgId int = 0;
   select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
-	Select NHOM.ID, NHOM.Ten, NHOM.Chuoi_Ma_Cha as ChuoiMaCha From NHOM where OrgId = @orgId
+	Select NHOM.ID, NHOM.Ten, NHOM.Chuoi_Ma_Cha as ChuoiMaCha From NHOM where isnull(OrgId,0)  = @orgId
 END
 ----------x
 
@@ -1220,10 +1220,12 @@ END
 
 go
 ALTER function [dbo].[fn_GetUserIDCanViewMyProfile_v2]
-(@userIds varchar(50), @assigneeIds varchar(50))
+(@userIds varchar(100), @assigneeIds varchar(50)='0')
 returns @tempTable TABLE (userId int)
 as 
 BEGIN
+if(@assigneeIds <>'' and @assigneeIds is not null)
+	set @userIds += '.' + @assigneeIds
 declare @parentCode varchar(20);
 declare @tempGroupIds table(ids int PRIMARY key)
 declare @tempUserIds table(ids int PRIMARY key)
