@@ -111,12 +111,10 @@
                                     <th style="width: 150px">Ngày thanh toán gần nhất</th>
                                     <th style="width: 150px">Tổng nợ còn lại</th>
                                     <th style="width: 150px">Địa chỉ thường chú</th>
-
                                     <th class="m-w-120">Ghi chú</th>
-
+                                    <th class="m-w-120">Nhân viên xử lý</th>
                                     <th class="m-w-120">Người tạo</th>
                                     <th class="w-150">Ngày tạo</th>
-
                                     <th class="m-w-120">Người cập nhật</th>
                                     <th class="w-150">Ngày cập nhật</th>
                                 </tr>
@@ -164,23 +162,11 @@
     $(document).ready(function e() {
             $('#ddlGroup').chosen({ width: '100%', allow_single_deselect: true });
             $('#ddlAssignee').chosen({ width: '100%', allow_single_deselect: true });
-        LayNhom();
         preventTxtSearchEnter();
         window.addEventListener('popstate', function (e) {
 
             queries = new URLSearchParams(window.location.search)
-            page = queries.get("page");
-            if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
-                page = 1;
-            else
-                page = parseInt(page)
-            limit = queries.get("limit")
-            if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
-                limit = 10;
-            else
-                limit = parseInt(limit)
-            groupId = queries.get("groupId");
-            getData(page, limit, groupId, true)
+            getData(true)
         });
         renderStatusList();
         setTableLimit("#ddlLimit");
@@ -190,14 +176,18 @@
             $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
         }
         bindQueries()
-        let courierId = queries.get("courierId");
-        provinceId = queries.get("provinceId");
+        
         groupId = queries.get("groupId");
-        getData(page, limit, groupId);
+        getData();
+        let assigneeId = queries.get("assigneeId");
+        LayNhom('#ddlGroup', groupId, '#ddlAssignee', assigneeId);
+        $('#ddlGroup').on('change', function () {
+            GetEmployeesByGroupId('#ddlAssignee', this.value, false, assigneeId);
+        });
     })
     var strLoading = 'Vui lòng chờ';
     $('#btnSearch').click(function (e) {
-        getData(page, limit);
+        getData();
     });
     function getRevoke(maTinh) {
 
@@ -214,8 +204,8 @@
                     $.each(data.data, function (index, optionData) {
                         $('#ddlAssignee').append("<option value='" + optionData.Id + "'>" + optionData.Name + "</option>");
                     });
-                    let courierId = queries.get("courierId");
-                    $('#ddlAssignee').val(courierId)
+                    let assigneeId = queries.get("assigneeId");
+                    $('#ddlAssignee').val(assigneeId)
                     $('#ddlAssignee').chosen().trigger("chosen:updated").change();
                 }
                 $('#ddlAssignee').chosen().trigger("chosen:updated");
@@ -307,7 +297,7 @@
 
     function onClickPage(page) {
         page = page;
-        getData(page, limit);
+        getData();
     }
     function bindQueries() {
 
@@ -327,7 +317,7 @@
     }
     function onSelectLimit() {
         limit = $("#ddlLimit").val()
-        getData(1, limit)
+        getData()
     }
     function renderAddress(item) {
         if (item == null || item == undefined)
@@ -366,7 +356,8 @@
             + renderTextLeft(reverseString(rowData.LastestPaymentDate), '', 'w-150')
             + renderTextLeft(formatCurrencyVND(rowData.TotalCurros,''), '', 'w-150')
             + renderTextLeft(rowData.PermanentAddress, '', 'tb-row-breakword w-150')
-            + renderTextLeft(rowData.LastNote, '', "tb-row-breakword")
+            + renderTextLeft(rowData.LastNote, '', "tb-row-breakword m-w-120")
+            + renderTextLeft(rowData.AssigneeName, '', "m-w-120")
             + renderTextLeft(rowData.CreatedUser, '', "m-w-120")
             + renderTextLeft(rowData.CreatedTime, 'datetime', 'w-150')
             + renderTextLeft(rowData.UpdatedUser, '', "m-w-120")
@@ -390,8 +381,27 @@
             return;
         window.location = "/Revoke/edit/" + id;
     }
-    function getData(page, limit,groupId =0, isPopState = false)
+    function getData(isPopState = false)
     {
+        debugger
+        let search = window.location.search;
+        queries = new URLSearchParams(search)
+        page = queries.get("page");
+        if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+            page = 1;
+        else
+            page = parseInt(page)
+        limit = queries.get("limit")
+        if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+            limit = 10;
+        else
+            limit = parseInt(limit)
+        let groupId = queries.get("groupId");
+        let assigneeId = queries.get("assigneeId");
+        if (isNullOrWhiteSpace(assigneeId)) {
+            assigneeId = $('#ddlAssignee').val();
+        }
+        let status = isNullOrWhiteSpace(queries.get("status")) ? "" : decodeURI(queries.get("status"))
         $.ajax({
             url: '/Revoke/Search',
             type: "GET",
@@ -400,10 +410,10 @@
             data: {
                 'page': page,
                 'limit': limit,
-                'provinceId': (isNaN(provinceId) || provinceId == 0) ? $('#ddlProvince').val() : provinceId,
+                'assigneeId': (isNaN(assigneeId) || assigneeId == 0 || isNullOrUndefined(assigneeId)) ? $('#ddlAssignee').val() : assigneeId,
                 'freetext': $("#txtFreeText").val(),
-                'groupId': (isNaN(groupId) || groupId == 0) ? $('#ddlGroup').val() : groupId,
-                'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
+                'groupId': (isNaN(groupId) || groupId == 0 || isNullOrUndefined(groupId)) ? $('#ddlGroup').val() : groupId,
+                'status': (!isNullOrWhiteSpace($("#ddlStatus").val()) || isNullOrWhiteSpace(status)) ? (!isNullOrWhiteSpace($("#ddlStatus").val()) ? $("#ddlStatus").val().toString():"") : ""
             },
             success: function (response) {
                 if (response.Message == null) {
@@ -411,7 +421,7 @@
                     let search = this.url.replace("/Revoke/Index", "");
 
                     search = search.replace("/Revoke/Search", "")
-                    queries = new URLSearchParams(search)
+                    
                     page = queries.get("page");
                     if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
                         page = 1;

@@ -131,5 +131,6 @@ namespace VS_LOAN.Core.Entity.RevokeDebt
                 return AssigneeIds.Split('.').FirstOrDefault();
             }
         }
+        public string AssigneeName { get; set; }
     }
 }

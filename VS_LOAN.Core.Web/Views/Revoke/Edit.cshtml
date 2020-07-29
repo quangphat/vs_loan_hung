@@ -399,9 +399,13 @@
         renderStatusList('#ddlStatus',@ViewBag.model.Status);
         Getcomments();
         getFilesUpload();
-         getProvinces('#ddlTinh', hoso.ProvinceId, hoso.DistrictId, '#ddlHuyen');
+         getProvinces('#ddlTinh', @ViewBag.model.ProvinceId, @ViewBag.model.DistrictId, '#ddlHuyen');
         $('#ddlTinh').on('change', function () {
             getDistricts('#ddlHuyen', this.value);
+        });
+        LayNhom('#ddlGroup', @ViewBag.model.GroupId, '#ddlCourier', @ViewBag.model.AssigneeId);
+        $('#ddlGroup').on('change', function () {
+            GetEmployeesByGroupId('#ddlCourier', this.value, false, hoso.AssignId);
         });
     });
 
@@ -660,13 +664,21 @@
     });
     $('#btnUpdate').click(function (e) {
 
-        let status = $("#ddlStatus").val()
+        let model = JSON.stringify({
+            'Status': $("#ddlStatus").val(),
+            'DistrictId': $("#ddlHuyen").val(),
+            'ProvinceId': $("#ddlTinh").val(),
+            'AssigneeId': $("#ddlCourier").val(),
+            'GroupId': $("#ddlGroup").val()
+        })
+        
 
         $.ajax({
             traditional: false,
-            url: `/Revoke/UpdateStatus?profileId=${@ViewBag.model.Id}&status=${status}`,
+            url: `/Revoke/Update?profileId=${@ViewBag.model.Id}`,
             type: "POST",
             contentType: "application/json; charset=utf-8",
+            data: model,
             success: function (data) {
                 if (data.success == true) {
                      swal({

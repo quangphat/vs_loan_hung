@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
+using VS_LOAN.Core.Entity.RevokeDebt;
 using VS_LOAN.Core.Entity.UploadModel;
 using VS_LOAN.Core.Repository.Interfaces;
 using VS_LOAN.Core.Web.Helpers;
@@ -30,9 +31,9 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             return View();
         }
-        public async Task<JsonResult> Search(string freeText = null, string status = null, int groupId = 0, int page = 1, int limit = 10)
+        public async Task<JsonResult> Search(string freeText = null, string status = null, int groupId = 0, int assigneeId =0, int page = 1, int limit = 10)
         {
-            var result = await _bizRevokeDebt.SearchAsync(GlobalData.User.IDUser, freeText, status, page, limit, groupId);
+            var result = await _bizRevokeDebt.SearchAsync(GlobalData.User.IDUser, freeText, status, page, limit, groupId, assigneeId);
             return ToJsonResponse(true, null, result);
         }
         public async Task<JsonResult> Import()
@@ -63,10 +64,10 @@ namespace VS_LOAN.Core.Web.Controllers
             await _bizRevokeDebt.DeleteByIdAsync(GlobalData.User.IDUser, profileId);
             return ToJsonResponse(true);
         }
-        public async Task<JsonResult> UpdateStatus(int profileId, int status)
+        public async Task<JsonResult> Update(int profileId, RevokeSimpleUpdate model)
         {
            
-            await _bizRevokeDebt.UpdateStatusAsync(GlobalData.User.IDUser, profileId, status);
+            await _bizRevokeDebt.UpdateSimpleAsync(model,GlobalData.User.IDUser, profileId);
             return ToJsonResponse(true);
         }
         public async Task<JsonResult> Comments(int profileId)
