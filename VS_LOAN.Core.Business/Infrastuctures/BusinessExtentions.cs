@@ -34,7 +34,19 @@ namespace VS_LOAN.Core.Business.Infrastuctures
             if (type == "string")
                 return value;
             if (type == "int")
-                return Convert.ToInt32(value);
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    return 0;
+                try
+                {
+                    return Convert.ToInt32(value);
+                }
+                catch
+                {
+                    return 0;
+                }
+            }
+                
             return string.Empty;
         }
     }
