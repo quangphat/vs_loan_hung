@@ -92,8 +92,7 @@
                                 <tr>
                                     <th class="center w-45">STT</th>
                                     <th class="w-98">ID</th>
-                                    <th class="m-w-150">Tên khách hàng</th>
-                                    <th class="w-94">CMND</th>
+                                    <th class="m-w-150">Tên khách hàng</th>                            
                                     <th style="width: 150px">Trạng thái</th>
                                     <th class="w-94">Ngày giải ngân</th>
                                 </tr>
@@ -426,7 +425,6 @@
             + renderTextCenter(stt)
             + renderTextLeft(rowData.id)
             + renderTextLink(rowData.name, '/MCredit/MCreditProfile/' + rowData.id)
-            + renderTextLeft(rowData.idNumber)
             + renderStatus(rowData.status, rowData.statusName)
             + renderTextLeft(rowData.moneyReceiveDate, '')
            

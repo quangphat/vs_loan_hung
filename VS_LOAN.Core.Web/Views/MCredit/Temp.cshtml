@@ -94,6 +94,9 @@
                                     <th class="w-94">Sản phẩm</th>
                                     <th class="w-94">Kỳ hạn</th>
                                     <th class="w-84">Người tạo</th>
+                                    <th class="w-84">Ngày tạo</th>
+                                    <th class="w-84">Người Cập nhật</th>
+                                    <th class="w-84">Người Cập nhật</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -348,7 +351,9 @@
             + renderTextLeft(rowData.ProductName)
             + renderTextLeft(rowData.LoanPeriodName)
             + renderTextLeft(rowData.CreatedUser)
-
+            + renderTextLeft(rowData.CreatedTime, 'datetime', 'w-150')
+            + renderTextLeft(rowData.UpdatedUser)
+            + renderTextLeft(rowData.UpdatedTime, 'datetime', 'w-150')
             + "</tr>";
     }
     function getValueDisplay(value, type='TYPE') {
