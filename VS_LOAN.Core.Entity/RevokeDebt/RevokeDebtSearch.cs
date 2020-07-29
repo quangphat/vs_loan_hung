@@ -111,5 +111,25 @@ namespace VS_LOAN.Core.Entity.RevokeDebt
         public int Status { get; set; }
         public string StatusName { get; set; }
         public string LastNote { get; set; }
+        public int ProvinceId { get; set; }
+        public int DistrictId { get; set; }
+        public string GroupId
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(AssigneeGroupIds))
+                    return "0";
+                return  AssigneeGroupIds.Split('.').FirstOrDefault();
+            }
+        }
+        public string AssigneeId
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(AssigneeIds))
+                    return "0";
+                return AssigneeIds.Split('.').FirstOrDefault();
+            }
+        }
     }
 }

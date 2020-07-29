@@ -8,6 +8,8 @@ using System.Web.Http;
 using System.Web.Mvc;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
+using VS_LOAN.Core.Entity.UploadModel;
+using VS_LOAN.Core.Repository.Interfaces;
 using VS_LOAN.Core.Web.Helpers;
 
 namespace VS_LOAN.Core.Web.Controllers
@@ -15,9 +17,13 @@ namespace VS_LOAN.Core.Web.Controllers
     public class RevokeController : BaseController
     {
         protected readonly IRevokeDebtBusiness _bizRevokeDebt;
-        public RevokeController(IRevokeDebtBusiness revokeDebtBusiness) : base()
+        protected readonly IMediaBusiness _bizMedia;
+        protected readonly ITailieuRepository _rpTailieu;
+        public RevokeController(IRevokeDebtBusiness revokeDebtBusiness, IMediaBusiness mediaBusiness, ITailieuRepository tailieuRepository) : base()
         {
             _bizRevokeDebt = revokeDebtBusiness;
+            _bizMedia = mediaBusiness;
+            _rpTailieu = tailieuRepository;
         }
         // GET: Revoke
         public ActionResult Index()
@@ -74,6 +80,110 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var result = await _bizRevokeDebt.AddNoteAsync(profileId, model.Value, GlobalData.User.IDUser);
             return ToJsonResponse(result.IsSuccess,result.Message);
+        }
+        public async Task<JsonResult> GetFileUpload(int profileId, int profileType)
+        {
+            var result = await _bizMedia.GetFilesUploadByProfile(profileId, profileType);
+            return ToJsonResponse(result.IsSuccess, result.Message, result.Data);
+        }
+        public async Task<JsonResult> UploadFile(int key,int fileId, int profileId)
+        {
+            //var profile = await _rpMCredit.GetTemProfileById(profileId);
+            //if(!string.IsNullOrWhiteSpace(profile.MCId) || profile == null)
+            //    return Json(new { Result = string.Empty });
+            string fileUrl = "";
+            var _type = string.Empty;
+            string deleteURL = string.Empty;
+            var file = new FileModel();
+            try
+            {
+                foreach (string f in Request.Files)
+                {
+                    var fileContent = Request.Files[f];
+                    if (fileContent != null && fileContent.ContentLength > 0)
+                    {
+                        Stream stream = fileContent.InputStream;
+                        string root = Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}");
+
+                        stream.Position = 0;
+                        file = _bizMedia.GetFileUploadUrl(fileContent.FileName, root, Utility.FileUtils.GenerateProfileFolderForRevoke());
+                        using (var fileStream = System.IO.File.Create(file.FullPath))
+                        {
+                            await stream.CopyToAsync(fileStream);
+                            fileStream.Close();
+                            fileUrl = file.FileUrl;
+                        }
+                        deleteURL = fileId <= 0 ? $"/hoso/delete?key={key}" : $"/hoso/delete/0/{fileId}";
+                        if (fileId > 0)
+                        {
+                            await _rpTailieu.UpdateExistingFile(new TaiLieu
+                            {
+                                FileKey = key,
+                                FileName = file.Name,
+                                Folder = file.Folder,
+                                FilePath = file.FileUrl,
+                                ProfileId = profileId,
+                                ProfileTypeId = (int)HosoType.RevokeDebt
+                            }, fileId);
+                        }
+                        else
+                        {
+                            await _rpTailieu.Add(new TaiLieu
+                            {
+                                FileName = file.Name,
+                                FileKey = key,
+                                FilePath = file.FileUrl,
+                                ProfileId = profileId,
+                                ProfileTypeId = (int)HosoType.RevokeDebt,
+                                Folder = file.Folder,
+                            });
+                        }
+                        _type = System.IO.Path.GetExtension(fileContent.FileName);
+                    }
+
+                }
+                if (_type.IndexOf("pdf") > 0)
+                {
+                    var config = new
+                    {
+                        initialPreview = fileUrl,
+                        initialPreviewConfig = new[] {
+                                            new {
+                                                caption = file.Name,
+                                                url = deleteURL,
+                                                key =key,
+                                                type="pdf",
+                                                width ="120px"
+                                                }
+                                        },
+                        append = false
+                    };
+                    return Json(config);
+                }
+                else
+                {
+                    var config = new
+                    {
+                        initialPreview = fileUrl,
+                        initialPreviewConfig = new[] {
+                                            new {
+                                                caption = file.Name,
+                                                url = deleteURL,
+                                                key =key,
+                                                width ="120px"
+                                            }
+                                        },
+                        append = false
+                    };
+                    return Json(config);
+                }
+                //return Json(result);
+            }
+            catch (Exception)
+            {
+                Session["LstFileHoSo"] = null;
+            }
+            return Json(new { Result = fileUrl });
         }
     }
 }

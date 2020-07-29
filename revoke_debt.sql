@@ -8,14 +8,14 @@ add OrgId int
 EXEC sp_rename 'Nhan_Vien.Trang_Thai', 'Status', 'COLUMN'
 -----------
 go
-create PROCEDURE [dbo].[sp_Employee_Login]
+alter PROCEDURE [dbo].[sp_Employee_Login]
 	@UserName nvarchar(50),
 	@Password nvarchar(200)
 AS
 BEGIN
-	Select Id,Ten_Dang_Nhap AS UserName, Mat_Khau as Passowrd, RoleId, Ma as Code,
-	Email, Ho_Ten as FullName, Dien_Thoai as Phone, Status as IsActive, isnull(OrgId,0) as OrgId, RoleId
-	 From Nhan_Vien where Ten_Dang_Nhap=@UserName and Mat_Khau=@Password and isnull(Xoa,0) =0
+	Select Id,Ten_Dang_Nhap AS UserName, Mat_Khau as Passowrd, Ma as Code,
+	Email, Ho_Ten as FullName, Dien_Thoai as Phone, Status as IsActive, isnull(OrgId,0) as OrgId, isnull(RoleId,0) as RoleId
+	 From Employee where Ten_Dang_Nhap=@UserName and Mat_Khau=@Password and isnull(Xoa,0) =0
 END
 
 
@@ -681,69 +681,7 @@ END
 -----------------x
 
 
- create procedure [dbo].[sp_RevokeDebt_Search]
-(
-@freeText nvarchar(30),
-@status varchar(20) ='',
-@page int =1,
-@limit_tmp int = 10,
-@groupId int =0,
-@AssigneeId int =0,
-@userId int)as
-begin
-declare @where  nvarchar(1000) = '';
-declare @mainClause nvarchar(max);
-declare @params nvarchar(300);
-if @freeText = '' begin set @freeText = null end;
-declare @offset int = 0;
-set @offset = (@page-1)*@limit_tmp;
-set @mainClause = 'select count(*) over() as TotalRecord, rv.* 
-,fintechcom_vn_PortalNew.fn_getGhichuByHosoId(rv.Id,2) as LastNote,
- nv1.Ho_Ten as CreatedUser, nv2.Ho_Ten as UpdatedUser
-from RevokeDebt rv left join Nhan_Vien nv1 on rv.CreatedBy = nv1.ID
-left join Nhan_Vien nv2 on rv.UpdatedBy = nv2.Id
-'
-	if(@freeText  is not null)
-	begin
-	set @where = ' (rv.CustomerName like  N''%' + @freeText +'%''';
-	set @where = @where + ' or rv.IdCardNumber like  N''%' + @freeText +'%''';
-	set @where = @where + ' or rv.MobilePhone like  N''%' + @freeText +'%''';
-	end;
-   if(@where <> '')
-     set @where = @where + ' and';
-	   set @where = @where + ' (@userId in (select * from fn_GetUserIDCanViewMyProfile_v2 (rv.CreatedBy)) )'
-if(@status <> '')
-begin
-if(@where <> '')
-set @where = @where + ' and';
-set @where = @where + ' rv.Status in ('+ @status +')'; 
-end;
-if(@groupId <> 0)
-begin
-if(@where <> '')
-set @where = @where + ' and';
-set @where = @where + ' rv.GroupId = @groupId';
-end;
-if(@assigneeId <> 0)
-begin
-if(@where <> '')
-set @where = @where + ' and';
-set @where = @where + ' @AssigneeId in (select distinct value from dbo.fn_SplitStringToTable(rv.AssigneeIds, ''.''))';
-end;										   
-if(@where <>'')
-begin
-set @where= ' where ' + @where
-end
-set @where = @where + ' and isnull(IsDeleted,0) = 0  order by rv.createdTime desc';
-set @where += ' offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
-set @mainClause = @mainClause +  @where
-set @params =N'@status varchar(20), @offset int, @limit int, @groupId int, @AssigneeId int ,@userId int';
-EXECUTE sp_executesql @mainClause,@params,  
-@status = @status, @offset = @offset, @limit = @limit_tmp, @groupId = @groupId, @AssigneeId = @AssigneeId, @userId = @userId;
-print @mainClause;
-end
 
------------x
 
 
 GO
@@ -1062,10 +1000,12 @@ end
   -----------------x
 
   go 
-  create procedure sp_RevokeDebt_GetById
+  alter procedure sp_RevokeDebt_GetById
 (@profileId int, @userId int)
 as begin
-select * from RevokeDebt where id = @profileId
+select rv.*, s.Name as StatusName from RevokeDebt rv left join ProfileStatus s
+on rv.Status = s.Value
+ where rv.id = @profileId
 end
 
 --------------------x
@@ -1271,10 +1211,11 @@ declare @offset int = 0;
 set @offset = (@page-1)*@limit_tmp;
 set @mainClause = 'select count(*) over() as TotalRecord, rv.* 
 ,fintechcom_vn_PortalNew.fn_getGhichuByHosoId(rv.Id,5) as LastNote,
-isnull(s.Name,'''') as StatusName,
- nv1.Ho_Ten as CreatedUser, nv2.Ho_Ten as UpdatedUser
-from RevokeDebt rv left join Nhan_Vien nv1 on rv.CreatedBy = nv1.ID
-left join Nhan_Vien nv2 on rv.UpdatedBy = nv2.Id
+isnull(s.Name,'''') as StatusName,nv3.Ho_Ten as AssigneeName,
+nv1.Ho_Ten as CreatedUser, nv2.Ho_Ten as UpdatedUser
+from RevokeDebt rv left join Employee nv1 on rv.CreatedBy = nv1.ID
+left join Employee nv2 on rv.UpdatedBy = nv2.Id
+left join Employee nv3 on rv.AssigneeId = nv3.Id
 left join ProfileStatus s on rv.Status = s.Value'
 	if(@freeText  is not null)
 	begin
@@ -1327,4 +1268,24 @@ update [Role] set Code = 'revoke_Call' where Code ='Call'
 
 update [Role] set Code = 'revoke_Field' where Code ='Field'
 
-----------
+----------x
+
+alter table RevokeDebt
+add DistrictId int,
+ProvinceId int
+
+---------x
+
+alter table RevokeDebt
+add AssigneeId int
+
+---------x
+
+insert into ImportExcel(Name, Position, ImportType, ValueType)
+values
+('DistrictId',42,5,'int'),
+('ProvinceId',43,5,'int'),
+('AssigneeId',44,5,'int')
+
+------------x
+
