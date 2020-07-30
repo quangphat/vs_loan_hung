@@ -108,7 +108,7 @@
                                     <th class="w-84">Điên thoại</th>
                                     <th class="w-84">Số CMND</th>
                                     <th style="width: 150px">Trạng thái</th>
-                                    <th style="width: 150px">Ngày thanh toán gần nhất</th>
+                                    <th style="width: 150px">Ngày sinh</th>
                                     <th style="width: 150px">Tổng nợ còn lại</th>
                                     <th style="width: 150px">Địa chỉ thường chú</th>
                                     <th class="m-w-120">Ghi chú</th>
@@ -353,7 +353,7 @@
             + renderTextLeft(rowData.MobilePhone, '', 'w-84')
             + renderTextLeft(rowData.IdCardNumber, '', 'w-84')
             + renderStatusOnIndexPage(rowData.Status, rowData.StatusName)
-            + renderTextLeft(reverseString(rowData.LastestPaymentDate), '', 'w-150')
+            + renderTextLeft(reverseString(rowData.Bod), '', 'w-150')
             + renderTextLeft(formatCurrencyVND(rowData.TotalCurros,''), '', 'w-150')
             + renderTextLeft(rowData.PermanentAddress, '', 'tb-row-breakword w-150')
             + renderTextLeft(rowData.LastNote, '', "tb-row-breakword m-w-120")
