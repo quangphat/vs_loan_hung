@@ -180,7 +180,7 @@
         groupId = queries.get("groupId");
         getData();
         let assigneeId = queries.get("assigneeId");
-        LayNhom('#ddlGroup', groupId, '#ddlAssignee', assigneeId);
+        LayDSNhomCha('#ddlGroup', groupId, '#ddlAssignee', assigneeId);
         $('#ddlGroup').on('change', function () {
             GetEmployeesByGroupId('#ddlAssignee', this.value, false, assigneeId);
         });

@@ -1005,16 +1005,18 @@ ALTER procedure [dbo].[sp_ProfileStatus_Gets]
 )
 as begin
 declare @isGetAll bit = 0;
-if(@roleId = 1)
+if(@roleId = 1 or @roleId = 5)
 set @isGetAll = 1;
 if(@isGetAll = 1)
 begin
-select Value as Id, Code, (Code +' - ' + Name) as Name  from ProfileStatus where  OrgId = @orgId and isnull(IsDeleted,0) = 0
+select Value as Id, Code, (Code +' - ' + Name) as Name, 0 as IsSelect  from ProfileStatus 
+where  isnull(OrgId,0) = @orgId and isnull(IsDeleted,0) = 0
 end
 else
 begin
 select @profileType = ProfileType from ProfileStatus where ProfileType = (Select Code from [Role] where Id = @roleId)
-select Value as Id, Code, (Code +' - ' + Name) as Name from ProfileStatus where  ProfileType = @profileType and OrgId = @orgId and isnull(IsDeleted,0) = 0
+select Value as Id, Code, (Code +' - ' + Name) as Name , 0 as IsSelect from ProfileStatus where  ProfileType = @profileType 
+and isnull(OrgId,0) = @orgId and isnull(IsDeleted,0) = 0
 end
 end
 
@@ -1110,7 +1112,7 @@ BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	declare @orgId int = 0;
-  select @orgId = isnull(OrgId,0) from Employee where Id = @userId;
+  select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
 	Select NHOM.ID, NHOM.Ten, NHOM.Chuoi_Ma_Cha as ChuoiMaCha From NHOM where isnull(OrgId,0) = @orgId
 END
 ----------x
