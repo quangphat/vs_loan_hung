@@ -1,5 +1,7 @@
 ﻿--EXEC sp_rename 'Nhan_Vien', 'Employee'
 
+EXEC sp_rename 'Employee', 'Nhan_Vien'
+
 -- revoke debt
 
 alter table Employee 

@@ -320,5 +320,14 @@ namespace VS_LOAN.Core.Repository
                 return result;
             }
         }
+        public async Task<bool> IsCheckCat(string productCode)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryFirstOrDefaultAsync<int>($"select   dbo.fn_MCProduct_ISCheckCat('{productCode.Trim()}')"
+                , commandType: CommandType.Text);
+                return result ==1 ? true:false;
+            }
+        }
     }
 }

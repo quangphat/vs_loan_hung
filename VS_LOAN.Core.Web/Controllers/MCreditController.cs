@@ -88,6 +88,13 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = await _svMCredit.CheckCat(GlobalData.User.IDUser, model.Value);
             return ToJsonResponse(true, result.msg?.ToString(), result);
         }
+        public async Task<JsonResult> IsCheckCat(StringModel model)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(model.Value))
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            var result = await _rpMCredit.IsCheckCat(model.Value);
+            return ToJsonResponse(true, null, result);
+        }
         public ActionResult CheckCIC()
         {
             return View();
