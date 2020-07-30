@@ -250,7 +250,7 @@ namespace VS_LOAN.Core.Business
             var uploadedFiles =  await _rpTailieu.GetTailieuByHosoId(profileId, (int)HosoType.RevokeDebt);
             if (uploadedFiles == null)
                 uploadedFiles = new List<FileUploadModel>();
-            var lstLoaiTailieu = await _rpTailieu.GetLoaiTailieuList();
+            var lstLoaiTailieu = await _rpTailieu.GetLoaiTailieuList((int)HosoType.RevokeDebt);
             if (lstLoaiTailieu == null || !lstLoaiTailieu.Any())
                 return new BaseResponse<List<HosoTailieu>>("Không có hồ sơ cần upload", null, true);
             var result = new List<HosoTailieu>();
