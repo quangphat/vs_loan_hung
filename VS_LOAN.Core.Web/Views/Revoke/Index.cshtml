@@ -166,7 +166,17 @@
         window.addEventListener('popstate', function (e) {
 
             queries = new URLSearchParams(window.location.search)
-            getData(true)
+            page = queries.get("page");
+            if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+                page = 1;
+            else
+                page = parseInt(page)
+            limit = queries.get("limit")
+            if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                limit = 10;
+            else
+                limit = parseInt(limit)
+            getData(page, limit,true)
         });
         renderStatusList();
         setTableLimit("#ddlLimit");
@@ -178,7 +188,7 @@
         bindQueries()
         
         groupId = queries.get("groupId");
-        getData();
+        getData(page, limit);
         let assigneeId = queries.get("assigneeId");
         LayDSNhomCha('#ddlGroup', groupId, '#ddlAssignee', assigneeId);
         $('#ddlGroup').on('change', function () {
@@ -187,7 +197,7 @@
     })
     var strLoading = 'Vui lòng chờ';
     $('#btnSearch').click(function (e) {
-        getData();
+        getData(page, limit);
     });
     function getRevoke(maTinh) {
 
@@ -297,7 +307,7 @@
 
     function onClickPage(page) {
         page = page;
-        getData();
+        getData(page, limit);
     }
     function bindQueries() {
 
@@ -317,7 +327,7 @@
     }
     function onSelectLimit() {
         limit = $("#ddlLimit").val()
-        getData()
+        getData(page, limit)
     }
     function renderAddress(item) {
         if (item == null || item == undefined)
@@ -381,21 +391,12 @@
             return;
         window.location = "/Revoke/edit/" + id;
     }
-    function getData(isPopState = false)
+    function getData(page, limit ,isPopState = false)
     {
-        debugger
+        
         let search = window.location.search;
         queries = new URLSearchParams(search)
-        page = queries.get("page");
-        if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
-            page = 1;
-        else
-            page = parseInt(page)
-        limit = queries.get("limit")
-        if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
-            limit = 10;
-        else
-            limit = parseInt(limit)
+        
         let groupId = queries.get("groupId");
         let assigneeId = queries.get("assigneeId");
         if (isNullOrWhiteSpace(assigneeId)) {
