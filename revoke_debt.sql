@@ -13,9 +13,13 @@ alter PROCEDURE [dbo].[sp_Employee_Login]
 	@Password nvarchar(200)
 AS
 BEGIN
+declare @roleId int = 1;
+select @roleId = isnull(RoleId, 0) from  Nhan_Vien where Ten_Dang_Nhap=@UserName and Mat_Khau=@Password and isnull(Xoa,0) =0
+if(@roleId =5)
+set @roleId = 1;
 	Select Id,Ten_Dang_Nhap AS UserName, Mat_Khau as Passowrd, Ma as Code,
-	Email, Ho_Ten as FullName, Dien_Thoai as Phone, Status as IsActive, isnull(OrgId,0) as OrgId, isnull(RoleId,0) as RoleId
-	 From Employee where Ten_Dang_Nhap=@UserName and Mat_Khau=@Password and isnull(Xoa,0) =0
+	Email, Ho_Ten as FullName, Dien_Thoai as Phone, Status as IsActive, isnull(OrgId,0) as OrgId, @roleId as RoleId
+	 From Nhan_Vien where Ten_Dang_Nhap=@UserName and Mat_Khau=@Password and isnull(Xoa,0) =0
 END
 
 
