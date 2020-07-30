@@ -272,7 +272,7 @@ namespace VS_LOAN.Core.Repository
            
             using (var con = GetConnection())
             {
-                await _connection.ExecuteAsync("sp_MCProfile_DeleteProfile", new { profileId }, commandType: CommandType.StoredProcedure);
+                await con.ExecuteAsync("sp_MCProfile_DeleteProfile", new { profileId }, commandType: CommandType.StoredProcedure);
                 return true;
             }
         }
