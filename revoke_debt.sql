@@ -1285,16 +1285,30 @@ values
 ------------x
 
 go
-alter procedure sp_RevokeDebt_UpdateSimple(@profileId int, @updateBy int,@provinceId int , @districtId int,@assigneeId int,@status int =0 )
+create procedure sp_RevokeDebt_UpdateSimple(@profileId int, @updateBy int,@provinceId int , @districtId int,@assigneeId int,@status int =0 )
 as begin
-update RevokeDebt 
-set [status] = @status, 
-DistrictId = @districtId, 
-ProvinceId = @provinceId,
-AssigneeId = @assigneeId,
-UpdatedBy  = @updateBy, 
-UpdatedTime = GETDATE()
-where id = @profileId
+
+declare @isHasRight bit =0
+if exists (select top 1 * from NHOM where Ma_Nguoi_QL = @updateBy)
+begin
+
+	update RevokeDebt 
+	set [status] = @status, 
+	UpdatedBy  = @updateBy, 
+	UpdatedTime = GETDATE()
+	where id = @profileId
+end
+else
+begin
+	update RevokeDebt 
+	set [status] = @status, 
+	DistrictId = @districtId, 
+	ProvinceId = @provinceId,
+	AssigneeId = @assigneeId,
+	UpdatedBy  = @updateBy, 
+	UpdatedTime = GETDATE()
+	where id = @profileId
+end
 end
 
 
@@ -1316,5 +1330,15 @@ declare @orgId int = 0;
 	)
 END
 
+
+----------x
+
+
+ insert into LOAI_TAI_LIEU (Ten, Bat_Buoc, ProfileTypeId)
+ values 
+ (N'Biên lai Thu tiền',0,5),
+  (N'Hình ảnh Nhà KH',0,5),
+   (N'Ảnh KH/ Người thân',0,5),
+    (N'Ảnh khác',0,5)
 
 ----------x
