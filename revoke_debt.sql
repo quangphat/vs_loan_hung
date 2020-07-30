@@ -1278,16 +1278,30 @@ values
 ------------x
 
 go
-alter procedure sp_RevokeDebt_UpdateSimple(@profileId int, @updateBy int,@provinceId int , @districtId int,@assigneeId int,@status int =0 )
+create procedure sp_RevokeDebt_UpdateSimple(@profileId int, @updateBy int,@provinceId int , @districtId int,@assigneeId int,@status int =0 )
 as begin
-update RevokeDebt 
-set [status] = @status, 
-DistrictId = @districtId, 
-ProvinceId = @provinceId,
-AssigneeId = @assigneeId,
-UpdatedBy  = @updateBy, 
-UpdatedTime = GETDATE()
-where id = @profileId
+
+declare @isHasRight bit =0
+if exists (select top 1 * from NHOM where Ma_Nguoi_QL = @updateBy)
+begin
+
+	update RevokeDebt 
+	set [status] = @status, 
+	UpdatedBy  = @updateBy, 
+	UpdatedTime = GETDATE()
+	where id = @profileId
+end
+else
+begin
+	update RevokeDebt 
+	set [status] = @status, 
+	DistrictId = @districtId, 
+	ProvinceId = @provinceId,
+	AssigneeId = @assigneeId,
+	UpdatedBy  = @updateBy, 
+	UpdatedTime = GETDATE()
+	where id = @profileId
+end
 end
 
 
@@ -1311,46 +1325,13 @@ END
 
 
 ----------x
-----------
 
---backup for mcredit
 
-CREATE procedure [dbo].[sp_MCredit_TempProfile_Counts]\n(\n@freeText nvarchar(30),\n@userId int,\n@status varchar(20) =''\n)\nas\nbegin\ndeclare @where  nvarchar(500) = '';\ndeclare @mainClause nvarchar(max);\ndeclare @params nvarchar(500);\n\nif @freeText = '' begi"
-}
-],
-[
-{
-"Key": "Text",
-"Value": "n set @freeText = null end;\ndeclare @offset int = 0;\nset @mainClause = 'select count(mc.Id)\nfrom MCredit_TempProfile mc left join NHAN_VIEN nv1 on mc.CreatedBy = nv1.ID\nleft join MCreditProduct p on mc.ProductCode = p.Code\nleft join MCreditLoanPeriod mcl "
-}
-],
-[
-{
-"Key": "Text",
-"Value": "on mc.LoanPeriodCode = mcl.Code\n'\nif(@freeText  is not null)\nbegin\n set @where = ' (mc.CustomerName like  N''%' + @freeText +'%''';\n set @where = @where + ' or mc.IdNumber like  N''%' + @freeText +'%''';\n set @where = @where + ' or mc.Phone like  N''%' + "
-}
-],
-[
-{
-"Key": "Text",
-"Value": "@freeText +'%''';\n set @where = @where + ' or nv2.CCCDNumber like  N''%' + @freeText +'%'' )';\nend;\n\n--if(@courierId > 0)\n--begin\n--if(@where <> '')\n--set @where = @where + ' and';\n--set @where = @where + ' mc.Id in (\n--select CourierId from CourierAssign"
-}
-],
-[
-{
-"Key": "Text",
-"Value": "ee \n--where AssigneeId = @CourierId)'; \n--end;\nif(@status <> '')\nbegin\nif(@where <> '')\nset @where = @where + ' and';\nset @where = @where + ' mc.Status in ('+ @status +')'; \nend;\nif(@where <>'')\nbegin\nset @where= ' where ' + @where + '  and @userId in (se"
-}
-],
-[
-{
-"Key": "Text",
-"Value": "lect * from fn_GetUserIDCanViewMyProfile (mc.CreatedBy))'\nend\nelse\nbegin\n set @where =' where  @userId in (select * from fn_GetUserIDCanViewMyProfile (mc.CreatedBy))'\nend\nset @mainClause = @mainClause +  @where\nset @params =N' @userId int';\nEXECUTE sp_exe"
-}
-],
-[
-{
-"Key": "Text",
-"Value": "cutesql @mainClause, @params ,@userId = @userId\nprint @mainClause;\nend
+ insert into LOAI_TAI_LIEU (Ten, Bat_Buoc, ProfileTypeId)
+ values 
+ (N'Biên lai Thu tiền',0,5),
+  (N'Hình ảnh Nhà KH',0,5),
+   (N'Ảnh KH/ Người thân',0,5),
+    (N'Ảnh khác',0,5)
 
------------
+----------x
