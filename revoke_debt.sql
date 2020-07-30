@@ -8,14 +8,14 @@ add OrgId int
 EXEC sp_rename 'Nhan_Vien.Trang_Thai', 'Status', 'COLUMN'
 -----------
 go
-create PROCEDURE [dbo].[sp_Employee_Login]
+alter PROCEDURE [dbo].[sp_Employee_Login]
 	@UserName nvarchar(50),
 	@Password nvarchar(200)
 AS
 BEGIN
-	Select Id,Ten_Dang_Nhap AS UserName, Mat_Khau as Passowrd, RoleId, Ma as Code,
+	Select Id,Ten_Dang_Nhap AS UserName, Mat_Khau as Passowrd, Ma as Code,
 	Email, Ho_Ten as FullName, Dien_Thoai as Phone, Status as IsActive, isnull(OrgId,0) as OrgId, isnull(RoleId,0) as RoleId
-	 From Nhan_Vien where Ten_Dang_Nhap=@UserName and Mat_Khau=@Password and isnull(Xoa,0) =0
+	 From Employee where Ten_Dang_Nhap=@UserName and Mat_Khau=@Password and isnull(Xoa,0) =0
 END
 
 
@@ -344,17 +344,17 @@ END
 
 --------xxx
 go
-create PROCEDURE [dbo].[sp_Employee_Group_LayDSChonThanhVienNhomCaCon_v2]
+alter PROCEDURE [dbo].[sp_Employee_Group_LayDSChonThanhVienNhomCaCon_v2]
 	-- Add the parameters for the stored procedure here
 	@groupId int,
 	@userId int = 0
 AS
 BEGIN
 	declare @orgId int = 0;
-  select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
-	Select e.ID, e.Ma + ' - ' + e.Ho_Ten as Ten, e.Ma as Code 
-	From Nhan_Vien e
-	Where e.OrgId = @orgId and e.ID in (
+  select @orgId = isnull(OrgId,0) from Employee where Id = @userId;
+	Select e.ID, e.Ma + ' - ' + e.Ho_Ten as Name, e.Ma as Code 
+	From Employee e
+	Where isnull(e.OrgId,0) = @orgId and e.ID in (
 		Select NHAN_VIEN_NHOM.Ma_Nhan_Vien From NHAN_VIEN_NHOM 
 		Where NHAN_VIEN_NHOM.Ma_Nhom in 
 			(Select NHOM.ID From NHOM 
@@ -387,7 +387,7 @@ END
 
 
 go
-create PROCEDURE [dbo].[sp_Employee_Group_LayDSChonThanhVienNhom_v2] 
+alter PROCEDURE [dbo].[sp_Employee_Group_LayDSChonThanhVienNhom_v2] 
 	-- Add the parameters for the stored procedure here
 	@groupId int,
 	@userId int = 0
@@ -397,7 +397,7 @@ BEGIN
   select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
 	Select e.Id, e.Ma + ' - ' + e.Ho_Ten as Name 
 	From Nhan_Vien e, NHAN_VIEN_NHOM Where e.ID = NHAN_VIEN_NHOM.Ma_Nhan_Vien and NHAN_VIEN_NHOM.Ma_Nhom = @groupId
-	and e.OrgId = @orgId
+	and isnull(e.OrgId,0) = @orgId
 END
 
 
@@ -613,7 +613,7 @@ end
 
 ----------------x
 go
-create PROCEDURE sp_insert_RevokeDebt
+alter PROCEDURE sp_insert_RevokeDebt
 @AgreementNo varchar(50),
 @CustomerName nvarchar(200),
 @LastestPaymentDate varchar(20),
@@ -656,7 +656,10 @@ create PROCEDURE sp_insert_RevokeDebt
 @Department nvarchar(200),
 @WorkAddress nvarchar(300)  ,
 @CreatedBy int,
-@AssigneeIds varchar(20)
+@AssigneeIds varchar(20),
+@AssigneeId int =0,
+@DistrictId int =0,
+@ProvinceId int = 0
 AS
 BEGIN
 	Insert into RevokeDebt (AgreementNo,CustomerName,LastestPaymentDate
@@ -666,7 +669,7 @@ BEGIN
 	,Gender,Age,AgreementDate,MobilePhone,HomePhone,CompanyPhone,TotalPayableAmount
 	,LastPaymentAmount,TotalPaidAmount,FirstPaymentAmount,FinalDueDate,FinalPaymentAmount,ReferenceName
 	,RefPhone,[Relative],IdCardNumber,Bod,PermanentAddress,CompanyName,Department,WorkAddress
-	,CreatedTime,CreatedBy,UpdatedTime,AssigneeIds,Status)
+	,CreatedTime,CreatedBy,UpdatedTime,AssigneeIds,Status, AssigneeId,DistrictId, ProvinceId)
 	values(@AgreementNo,@CustomerName,@LastestPaymentDate
 	,@PaymentStore,@OSPri,@TotalCurros,@LateFee,@LiquidationFee,@LateDate
 	,@InterestrateScheme,@InstallmentPeriod,@InstallmentNo,@BillAmountOfCurrentMonth
@@ -674,76 +677,14 @@ BEGIN
 	,@Gender,@Age,@AgreementDate,@MobilePhone,@HomePhone,@CompanyPhone,@TotalPayableAmount
 	,@LastPaymentAmount,@TotalPaidAmount,@FirstPaymentAmount,@FinalDueDate,@FinalPaymentAmount,@ReferenceName
 	,@RefPhone,@Relative,@IdCardNumber,@Bod,@PermanentAddress,@CompanyName,@Department,@WorkAddress
-	,GETDATE(),@CreatedBy, GETDATE(),@AssigneeIds, 0)
+	,GETDATE(),@CreatedBy, GETDATE(),@AssigneeIds, 0, @AssigneeId, @DistrictId, @ProvinceId)
 END
 
 
 -----------------x
 
 
- create procedure [dbo].[sp_RevokeDebt_Search]
-(
-@freeText nvarchar(30),
-@status varchar(20) ='',
-@page int =1,
-@limit_tmp int = 10,
-@groupId int =0,
-@AssigneeId int =0,
-@userId int)as
-begin
-declare @where  nvarchar(1000) = '';
-declare @mainClause nvarchar(max);
-declare @params nvarchar(300);
-if @freeText = '' begin set @freeText = null end;
-declare @offset int = 0;
-set @offset = (@page-1)*@limit_tmp;
-set @mainClause = 'select count(*) over() as TotalRecord, rv.* 
-,fintechcom_vn_PortalNew.fn_getGhichuByHosoId(rv.Id,2) as LastNote,
- nv1.Ho_Ten as CreatedUser, nv2.Ho_Ten as UpdatedUser
-from RevokeDebt rv left join Nhan_Vien nv1 on rv.CreatedBy = nv1.ID
-left join Nhan_Vien nv2 on rv.UpdatedBy = nv2.Id
-'
-	if(@freeText  is not null)
-	begin
-	set @where = ' (rv.CustomerName like  N''%' + @freeText +'%''';
-	set @where = @where + ' or rv.IdCardNumber like  N''%' + @freeText +'%''';
-	set @where = @where + ' or rv.MobilePhone like  N''%' + @freeText +'%''';
-	end;
-   if(@where <> '')
-     set @where = @where + ' and';
-	   set @where = @where + ' (@userId in (select * from fn_GetUserIDCanViewMyProfile_v2 (rv.CreatedBy)) )'
-if(@status <> '')
-begin
-if(@where <> '')
-set @where = @where + ' and';
-set @where = @where + ' rv.Status in ('+ @status +')'; 
-end;
-if(@groupId <> 0)
-begin
-if(@where <> '')
-set @where = @where + ' and';
-set @where = @where + ' rv.GroupId = @groupId';
-end;
-if(@assigneeId <> 0)
-begin
-if(@where <> '')
-set @where = @where + ' and';
-set @where = @where + ' @AssigneeId in (select distinct value from dbo.fn_SplitStringToTable(rv.AssigneeIds, ''.''))';
-end;										   
-if(@where <>'')
-begin
-set @where= ' where ' + @where
-end
-set @where = @where + ' and isnull(IsDeleted,0) = 0  order by rv.createdTime desc';
-set @where += ' offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
-set @mainClause = @mainClause +  @where
-set @params =N'@status varchar(20), @offset int, @limit int, @groupId int, @AssigneeId int ,@userId int';
-EXECUTE sp_executesql @mainClause,@params,  
-@status = @status, @offset = @offset, @limit = @limit_tmp, @groupId = @groupId, @AssigneeId = @AssigneeId, @userId = @userId;
-print @mainClause;
-end
 
------------x
 
 
 GO
@@ -1055,10 +996,12 @@ end
   -----------------x
 
   go 
-  create procedure sp_RevokeDebt_GetById
+  alter procedure sp_RevokeDebt_GetById
 (@profileId int, @userId int)
 as begin
-select * from RevokeDebt where id = @profileId
+select rv.*, s.Name as StatusName from RevokeDebt rv left join ProfileStatus s
+on rv.Status = s.Value
+ where rv.id = @profileId
 end
 
 --------------------x
@@ -1144,23 +1087,23 @@ ALTER COLUMN Ten_Dang_nhap varchar(50);
 
 
   go
-  create procedure sp_Employee_GetByUsername(@userId int, @username varchar(40))
+  alter procedure sp_Employee_GetByUsername(@userId int, @username varchar(40))
   as
   begin
   declare @orgId int = 0;
   select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
-  select * from Nhan_Vien where isnull(Xoa,0) = 0 and OrgId = @orgId and Ten_Dang_Nhap = @username
+  select * from Nhan_Vien where isnull(Xoa,0) = 0 and isnull(OrgId,0) = @orgId and Ten_Dang_Nhap = @username
   end
 
   ----------------x
 
   go
-   ALTER procedure [dbo].[sp_Employee_GetByCode](@code varchar(20), @userId int)
+   ALTER procedure [dbo].[sp_Employee_GetByCode](@code varchar(20), @userId int = 0)
 as
 begin
   declare @orgId int = 0;
   select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
-select top 1 Id, Ma as Code from Nhan_Vien where Ma = @code and isnull(Xoa,0) = 0 and OrgId = @orgId
+select top 1 Id, Ma as Code from Nhan_Vien where Ma = @code and isnull(Xoa,0) = 0 and isnull(OrgId,0) = @orgId
 end
   
 
@@ -1213,10 +1156,12 @@ END
 
 go
 ALTER function [dbo].[fn_GetUserIDCanViewMyProfile_v2]
-(@userIds varchar(50), @assigneeIds varchar(50))
+(@userIds varchar(100), @assigneeIds varchar(50)='0')
 returns @tempTable TABLE (userId int)
 as 
 BEGIN
+if(@assigneeIds <>'' and @assigneeIds is not null)
+	set @userIds += '.' + @assigneeIds
 declare @parentCode varchar(20);
 declare @tempGroupIds table(ids int PRIMARY key)
 declare @tempUserIds table(ids int PRIMARY key)
@@ -1264,31 +1209,32 @@ declare @offset int = 0;
 set @offset = (@page-1)*@limit_tmp;
 set @mainClause = 'select count(*) over() as TotalRecord, rv.* 
 ,fintechcom_vn_PortalNew.fn_getGhichuByHosoId(rv.Id,5) as LastNote,
-isnull(s.Name,'''') as StatusName,
- nv1.Ho_Ten as CreatedUser, nv2.Ho_Ten as UpdatedUser
-from RevokeDebt rv left join Nhan_Vien nv1 on rv.CreatedBy = nv1.ID
-left join Nhan_Vien nv2 on rv.UpdatedBy = nv2.Id
+isnull(s.Name,'''') as StatusName,nv3.Ho_Ten as AssigneeName,
+nv1.Ho_Ten as CreatedUser, nv2.Ho_Ten as UpdatedUser
+from RevokeDebt rv left join Employee nv1 on rv.CreatedBy = nv1.ID
+left join Employee nv2 on rv.UpdatedBy = nv2.Id
+left join Employee nv3 on rv.AssigneeId = nv3.Id
 left join ProfileStatus s on rv.Status = s.Value'
 	if(@freeText  is not null)
 	begin
-	set @where = ' and (rv.CustomerName like  N''%' + @freeText +'%''';
-	set @where = @where + ' or rv.IdCardNumber like  N''%' + @freeText +'%''';
-	set @where = @where + ' or rv.MobilePhone like  N''%' + @freeText +'%''';
+	set @where += ' and (rv.CustomerName like  N''%' + @freeText +'%''';
+	set @where += ' or rv.IdCardNumber like  N''%' + @freeText +'%''';
+	set @where += ' or rv.MobilePhone like  N''%' + @freeText +'%'')';
 	end;
-	   set @where += ' and (@userId in (select * from fn_GetUserIDCanViewMyProfile_v2 (rv.CreatedBy,rv.AssigneeIds)) )'
+set @where += ' and (@userId in (select * from fn_GetUserIDCanViewMyProfile_v2 (rv.CreatedBy,rv.AssigneeIds)) )'
 if(@status <> '')
 begin
 set @where += ' and rv.Status in ('+ @status +')'; 
 end;
-if(@groupId <> 0)
-begin
-set @where +=' and rv.GroupId = @groupId';
-end;
+--if(@groupId <> 0)
+--begin
+--set @where +=' and  @groupId in (select distinct value from dbo.fn_SplitStringToTable(rv.AssigneeGroupIds, ''.''))';
+--end;
 if(@assigneeId <> 0)
 begin
 set @where += ' and @AssigneeId in (select distinct value from dbo.fn_SplitStringToTable(rv.AssigneeIds, ''.''))';
 end;										   
-set @where += ' and isnull(rv.IsDeleted,0) = 0  order by rv.createdTime desc  offset @offset ROWS FETCH NEXT @limit ROWS ONLY';
+set @where += ' order by rv.createdTime desc  offset @offset ROWS FETCH NEXT @limit ROWS ONLY';
 set @mainClause = @mainClause +  @where
 set @params =N'@status varchar(20), @offset int, @limit int, @groupId int, @AssigneeId int ,@userId int';
 EXECUTE sp_executesql @mainClause,@params,  
@@ -1320,6 +1266,64 @@ update [Role] set Code = 'revoke_Call' where Code ='Call'
 
 update [Role] set Code = 'revoke_Field' where Code ='Field'
 
+----------x
+
+alter table RevokeDebt
+add DistrictId int,
+ProvinceId int
+
+---------x
+
+alter table RevokeDebt
+add AssigneeId int
+
+alter table RevokeDebt
+add AssigneeId int
+
+---------x
+
+insert into ImportExcel(Name, Position, ImportType, ValueType)
+values
+('DistrictId',42,5,'int'),
+('ProvinceId',43,5,'int'),
+('AssigneeId',44,5,'int')
+
+------------x
+
+go
+alter procedure sp_RevokeDebt_UpdateSimple(@profileId int, @updateBy int,@provinceId int , @districtId int,@assigneeId int,@status int =0 )
+as begin
+update RevokeDebt 
+set [status] = @status, 
+DistrictId = @districtId, 
+ProvinceId = @provinceId,
+AssigneeId = @assigneeId,
+UpdatedBy  = @updateBy, 
+UpdatedTime = GETDATE()
+where id = @profileId
+end
+
+
+-----------x
+
+create PROCEDURE [dbo].[sp_NHOM_LayDSNhomDuyetChonTheoNhanVien_v2]
+	-- Add the parameters for the stored procedure here
+	@UserID int
+AS
+BEGIN
+declare @orgId int = 0;
+  select @orgId = isnull(OrgId,0) from Employee where Id = @userId;
+	Select NHOM.ID, NHOM.Ten, NHOM.Chuoi_Ma_Cha as ChuoiMaCha, NHOM.Ma_Nhom_Cha as MaNhomCha, NHOM.Ten_Viet_Tat 
+	as TenQL From NHOM
+	Where isnull(NHOM.OrgId,0) = @orgId and NHOM.ID in 
+	(Select NHAN_VIEN_CF.Ma_Nhom 
+	From NHAN_VIEN_CF 
+	--Where NHAN_VIEN_CF.Ma_Nhan_Vien = @UserID
+	)
+END
+
+
+----------x
 ----------
 
 --backup for mcredit

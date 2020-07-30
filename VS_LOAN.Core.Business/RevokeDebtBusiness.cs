@@ -31,9 +31,9 @@ namespace VS_LOAN.Core.Business
             _rpConfig = systemconfigRepository;
             _rpNote = noteRepository;
         }
-        public async Task<DataPaging<List<RevokeDebtSearch>>> SearchAsync(int userId, string freeText, string status, int page, int limit, int groupId = 0)
+        public async Task<DataPaging<List<RevokeDebtSearch>>> SearchAsync(int userId, string freeText, string status, int page, int limit, int groupId = 0, int assigneeId = 0)
         {
-            var data = await _rpRevokeDebt.SearchAsync(userId, freeText, status, page, limit, groupId);
+            var data = await _rpRevokeDebt.SearchAsync(userId, freeText, status, page, limit, groupId,assigneeId);
             if (data == null || !data.Any())
             {
                 return DataPaging.Create(null as List<RevokeDebtSearch>, 0);
@@ -162,6 +162,11 @@ namespace VS_LOAN.Core.Business
                 UserId = userId
             });
             return new BaseResponse<bool>(true);
+        }
+
+        public async Task<bool> UpdateSimpleAsync(RevokeSimpleUpdate model, int updateBy, int profileId)
+        {
+            return await _rpRevokeDebt.UpdateSimpleAsync(model, updateBy, profileId);
         }
     }
 }

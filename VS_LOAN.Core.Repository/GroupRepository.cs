@@ -481,7 +481,7 @@ namespace VS_LOAN.Core.Repository
                     IDbCommand command = new SqlCommand();
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_NHOM_LayDSNhomDuyetChonTheoNhanVien";
+                    command.CommandText = "sp_NHOM_LayDSNhomDuyetChonTheoNhanVien_v2";
                     command.Parameters.Add(new SqlParameter("@UserID", userId));
                     DataTable dt = new DataTable();
                     dt.Load(command.ExecuteReader());

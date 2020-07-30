@@ -137,7 +137,7 @@
                         }
                     }
                 }
-
+                $('#ddlNguoiQL').val(@ViewBag.model.MaNguoiQuanLy);
                 $('#ddlNguoiQL').chosen().trigger("chosen:updated");
                 $('#ddlNguoiQL').trigger("change");
             },
@@ -169,8 +169,13 @@
 
                     }
                 }
+                
+                var lstRightSelect = $('select[name="duallistbox_demo1[]_helper2"]')[0];
+                for (var i = 0; i < lstRightSelect.length; i++) {
+                    $('#duallistNhanVien').append("<option value='" + lstRightSelect[i].attributes[0].value + "' selected='selected'>" + lstRightSelect[i].innerText + "</option>");
+                    
+                }
                 $('#duallistNhanVien').bootstrapDualListbox('refresh', true);
-
             },
             complete: function () {
                 $('#panel_body').unblock();
@@ -189,7 +194,7 @@
             data: { 'groupId': @ViewBag.model.ID },
             success: function (data) {
                 if (data != null) {
-                    debugger
+                    
                     if (data.data != null && data.data.length > 0) {
                         $.each(data.data, function (index, item) {
 
