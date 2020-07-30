@@ -665,9 +665,16 @@ alter PROCEDURE sp_insert_RevokeDebt
 @AssigneeIds varchar(20),
 @AssigneeId int =0,
 @DistrictId int =0,
-@ProvinceId int = 0
+@ProvinceId int = 0,
+@Deleted int =0
 AS
 BEGIN
+if(@Deleted > 0)
+begin
+ update RevokeDebt set IsDeleted = 1 where AgreementNo = @AgreementNo;
+end
+else
+begin
 	Insert into RevokeDebt (AgreementNo,CustomerName,LastestPaymentDate
 	,PaymentStore,OSPri,TotalCurros,LateFee,LiquidationFee,LateDate
 	,InterestrateScheme,InstallmentPeriod,InstallmentNo,BillAmountOfCurrentMonth
@@ -684,6 +691,7 @@ BEGIN
 	,@LastPaymentAmount,@TotalPaidAmount,@FirstPaymentAmount,@FinalDueDate,@FinalPaymentAmount,@ReferenceName
 	,@RefPhone,@Relative,@IdCardNumber,@Bod,@PermanentAddress,@CompanyName,@Department,@WorkAddress
 	,GETDATE(),@CreatedBy, GETDATE(),@AssigneeIds, 0, @AssigneeId, @DistrictId, @ProvinceId)
+end
 END
 
 
@@ -1346,3 +1354,10 @@ END
     (N'Ảnh khác',0,5)
 
 ----------x
+
+select * from ImportExcel where ImportType = 5
+order by Position
+insert into ImportExcel (Name,Position,ImportType,ValueType)
+values ('Deleted', 45, 5,'int')
+
+--------x
