@@ -472,6 +472,8 @@ IsDeleted bit,
 
 
 alter table RevokeDebt
+add [Status] int
+alter table RevokeDebt
 add FinalPaymentAmount varchar(20),
 UpdatedTime datetime,
 UpdatedBy int,
@@ -833,23 +835,6 @@ end
 
 ------------x
 
-go
-create procedure sp_ProfileStatus_Gets
-(@orgId int = 0,
-@profileType varchar(50),
-@isGetAll bit = 0,
-@roleId int =0
-)
-as begin
-if(@isGetAll = 0)
-begin
-select Value as Id, Code, (Code +' - ' + Name) as Name  from ProfileStatus where ProfileType = @profileType and OrgId = @orgId and isnull(IsDeleted,0) = 0
-end
-else
-begin
-select Value as Id, Code, (Code +' - ' + Name) as Name from ProfileStatus where OrgId = @orgId and isnull(IsDeleted,0) = 0
-end
-end
 
 
 --------------x
@@ -996,7 +981,7 @@ end
   -----------------x
 
   go 
-  alter procedure sp_RevokeDebt_GetById
+  create procedure sp_RevokeDebt_GetById
 (@profileId int, @userId int)
 as begin
 select rv.*, s.Name as StatusName from RevokeDebt rv left join ProfileStatus s
@@ -1013,16 +998,18 @@ ALTER procedure [dbo].[sp_ProfileStatus_Gets]
 )
 as begin
 declare @isGetAll bit = 0;
-if(@roleId = 1)
+if(@roleId = 1 or @roleId = 5)
 set @isGetAll = 1;
 if(@isGetAll = 1)
 begin
-select Value as Id, Code, (Code +' - ' + Name) as Name  from ProfileStatus where  OrgId = @orgId and isnull(IsDeleted,0) = 0
+select Value as Id, Code, (Code +' - ' + Name) as Name, 0 as IsSelect  from ProfileStatus 
+where  isnull(OrgId,0) = @orgId and isnull(IsDeleted,0) = 0
 end
 else
 begin
 select @profileType = ProfileType from ProfileStatus where ProfileType = (Select Code from [Role] where Id = @roleId)
-select Value as Id, Code, (Code +' - ' + Name) as Name from ProfileStatus where  ProfileType = @profileType and OrgId = @orgId and isnull(IsDeleted,0) = 0
+select Value as Id, Code, (Code +' - ' + Name) as Name , 0 as IsSelect from ProfileStatus where  ProfileType = @profileType 
+and isnull(OrgId,0) = @orgId and isnull(IsDeleted,0) = 0
 end
 end
 
@@ -1211,9 +1198,9 @@ set @mainClause = 'select count(*) over() as TotalRecord, rv.*
 ,fintechcom_vn_PortalNew.fn_getGhichuByHosoId(rv.Id,5) as LastNote,
 isnull(s.Name,'''') as StatusName,nv3.Ho_Ten as AssigneeName,
 nv1.Ho_Ten as CreatedUser, nv2.Ho_Ten as UpdatedUser
-from RevokeDebt rv left join Employee nv1 on rv.CreatedBy = nv1.ID
-left join Employee nv2 on rv.UpdatedBy = nv2.Id
-left join Employee nv3 on rv.AssigneeId = nv3.Id
+from RevokeDebt rv left join Nhan_Vien nv1 on rv.CreatedBy = nv1.ID
+left join Nhan_Vien nv2 on rv.UpdatedBy = nv2.Id
+left join Nhan_Vien nv3 on rv.AssigneeId = nv3.Id
 left join ProfileStatus s on rv.Status = s.Value'
 	if(@freeText  is not null)
 	begin
@@ -1306,13 +1293,13 @@ end
 
 -----------x
 
-create PROCEDURE [dbo].[sp_NHOM_LayDSNhomDuyetChonTheoNhanVien_v2]
+alter PROCEDURE [dbo].[sp_NHOM_LayDSNhomDuyetChonTheoNhanVien_v2]
 	-- Add the parameters for the stored procedure here
 	@UserID int
 AS
 BEGIN
 declare @orgId int = 0;
-  select @orgId = isnull(OrgId,0) from Employee where Id = @userId;
+  select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
 	Select NHOM.ID, NHOM.Ten, NHOM.Chuoi_Ma_Cha as ChuoiMaCha, NHOM.Ma_Nhom_Cha as MaNhomCha, NHOM.Ten_Viet_Tat 
 	as TenQL From NHOM
 	Where isnull(NHOM.OrgId,0) = @orgId and NHOM.ID in 

@@ -403,7 +403,7 @@
         $('#ddlTinh').on('change', function () {
             getDistricts('#ddlHuyen', this.value);
         });
-        LayNhom('#ddlGroup', @ViewBag.model.GroupId, '#ddlCourier', @ViewBag.model.AssigneeId);
+        LayDSNhomCha('#ddlGroup', @ViewBag.model.GroupId, '#ddlCourier', @ViewBag.model.AssigneeId);
         $('#ddlGroup').on('change', function () {
             GetEmployeesByGroupId('#ddlCourier', this.value, false, hoso.AssignId);
         });

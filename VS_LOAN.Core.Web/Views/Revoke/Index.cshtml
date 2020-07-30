@@ -108,7 +108,7 @@
                                     <th class="w-84">Điên thoại</th>
                                     <th class="w-84">Số CMND</th>
                                     <th style="width: 150px">Trạng thái</th>
-                                    <th style="width: 150px">Ngày thanh toán gần nhất</th>
+                                    <th style="width: 150px">Ngày sinh</th>
                                     <th style="width: 150px">Tổng nợ còn lại</th>
                                     <th style="width: 150px">Địa chỉ thường chú</th>
                                     <th class="m-w-120">Ghi chú</th>
@@ -166,7 +166,17 @@
         window.addEventListener('popstate', function (e) {
 
             queries = new URLSearchParams(window.location.search)
-            getData(true)
+            page = queries.get("page");
+            if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+                page = 1;
+            else
+                page = parseInt(page)
+            limit = queries.get("limit")
+            if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                limit = 10;
+            else
+                limit = parseInt(limit)
+            getData(page, limit,true)
         });
         renderStatusList();
         setTableLimit("#ddlLimit");
@@ -178,16 +188,16 @@
         bindQueries()
         
         groupId = queries.get("groupId");
-        getData();
+        getData(page, limit);
         let assigneeId = queries.get("assigneeId");
-        LayNhom('#ddlGroup', groupId, '#ddlAssignee', assigneeId);
+        LayDSNhomCha('#ddlGroup', groupId, '#ddlAssignee', assigneeId);
         $('#ddlGroup').on('change', function () {
             GetEmployeesByGroupId('#ddlAssignee', this.value, false, assigneeId);
         });
     })
     var strLoading = 'Vui lòng chờ';
     $('#btnSearch').click(function (e) {
-        getData();
+        getData(page, limit);
     });
     function getRevoke(maTinh) {
 
@@ -297,7 +307,7 @@
 
     function onClickPage(page) {
         page = page;
-        getData();
+        getData(page, limit);
     }
     function bindQueries() {
 
@@ -317,7 +327,7 @@
     }
     function onSelectLimit() {
         limit = $("#ddlLimit").val()
-        getData()
+        getData(page, limit)
     }
     function renderAddress(item) {
         if (item == null || item == undefined)
@@ -353,7 +363,7 @@
             + renderTextLeft(rowData.MobilePhone, '', 'w-84')
             + renderTextLeft(rowData.IdCardNumber, '', 'w-84')
             + renderStatusOnIndexPage(rowData.Status, rowData.StatusName)
-            + renderTextLeft(reverseString(rowData.LastestPaymentDate), '', 'w-150')
+            + renderTextLeft(reverseString(rowData.Bod), '', 'w-150')
             + renderTextLeft(formatCurrencyVND(rowData.TotalCurros,''), '', 'w-150')
             + renderTextLeft(rowData.PermanentAddress, '', 'tb-row-breakword w-150')
             + renderTextLeft(rowData.LastNote, '', "tb-row-breakword m-w-120")
@@ -381,21 +391,12 @@
             return;
         window.location = "/Revoke/edit/" + id;
     }
-    function getData(isPopState = false)
+    function getData(page, limit ,isPopState = false)
     {
-        debugger
+        
         let search = window.location.search;
         queries = new URLSearchParams(search)
-        page = queries.get("page");
-        if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
-            page = 1;
-        else
-            page = parseInt(page)
-        limit = queries.get("limit")
-        if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
-            limit = 10;
-        else
-            limit = parseInt(limit)
+        
         let groupId = queries.get("groupId");
         let assigneeId = queries.get("assigneeId");
         if (isNullOrWhiteSpace(assigneeId)) {
