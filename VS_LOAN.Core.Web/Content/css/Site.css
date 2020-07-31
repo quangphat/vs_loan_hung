@@ -1,4 +1,10 @@
-﻿.logo_kpmg {
+﻿.btn {
+    border-radius: 2px !important;
+    border: 2px solid #FFF !important;
+    line-height:1.5!important;
+}
+
+.logo_kpmg {
     width: 72px;
     vertical-align: text-top;
 }

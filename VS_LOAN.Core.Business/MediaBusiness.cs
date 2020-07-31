@@ -193,7 +193,8 @@ namespace VS_LOAN.Core.Business
             }
             var jsonFileInfo = CreateJsonFile(jsonFile, mcProfileId, rootPath);
             filePaths.Add(jsonFileInfo.FullPath);
-            return await CreateZipFile(filePaths, jsonFileInfo.Folder, mcProfileId);
+            var result = await CreateZipFile(filePaths, jsonFileInfo.Folder, mcProfileId);
+            return result;
         }
         protected FileModel CreateJsonFile(McJsonFile model, string profileId, string rootPath)
         {
@@ -223,10 +224,10 @@ namespace VS_LOAN.Core.Business
                 Name = newFileName
             };
         }
-        protected async Task<string> CreateZipFile(IEnumerable<string> filePaths, string folder, string fileName)
+        protected Task<string> CreateZipFile(IEnumerable<string> filePaths, string folder, string fileName)
         {
             if (filePaths == null || !filePaths.Any())
-                return string.Empty;
+                return Task.FromResult(string.Empty);
             try
             {
                 using (ZipFile zip = new ZipFile())
@@ -237,10 +238,10 @@ namespace VS_LOAN.Core.Business
             }
             catch(Exception e)
             {
-                return string.Empty;
+                return Task.FromResult(string.Empty);
             }
 
-            return $"{folder}/{fileName}.zip";
+            return Task.FromResult($"{folder}/{fileName}.zip");
         }
 
         public async Task<BaseResponse<List<HosoTailieu>>> GetFilesUploadByProfile(int profileId, int profileType)

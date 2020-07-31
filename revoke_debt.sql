@@ -1,5 +1,7 @@
-﻿--for production EXEC sp_rename 'Employee', 'Nhan_Vien'
---for local EXEC sp_rename 'Nhan_Vien','Employee'
+﻿--EXEC sp_rename 'Nhan_Vien', 'Employee'
+
+EXEC sp_rename 'Employee', 'Nhan_Vien'
+
 -- revoke debt
 
 alter table Nhan_Vien 
