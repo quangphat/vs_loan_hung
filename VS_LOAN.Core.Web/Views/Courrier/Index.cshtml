@@ -150,9 +150,14 @@
             </div>
             <!-- /.col -->
         </div>
-        <div class="clearfix"></div>
-
-        <div class="clearfix"></div>
+        <div class="row">
+            <div class="space-6" style="background-color: #d5e3ef;"></div>
+            <div class="col-xs-12" style="margin-bottom:40px;">
+                <div class="pull-right">
+                    <a id="btnDownReport" onclick="DownloadReport(this)" class="btn btn-sm btn-primary "><i class="ace-icon fa fa-download"></i>@Global.Button_Download</a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <script>
@@ -527,5 +532,46 @@
             }
         })
 
+    }
+    function DownloadReport(e) {
+        let data = JSON.stringify({
+            'page': page,
+            'limit': limit,
+            'provinceId':$('#ddlProvince').val() ,
+            'courierId':  $('#ddlCourier').val(),
+            'freetext': $("#txtFreeText").val(),
+            'salecode': $("#txtSaleCode").val(),
+            'groupId': $('#ddlNhomCha').val(),
+            'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
+        });
+        $.ajax({
+            traditional: true,
+            url: '/Courrier/Export',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: data,
+            success: function (data) {
+                //if (data.success == true) {
+                //    var link = document.createElement("a");
+                //    link.href = data.code;
+                //    link.click();
+                //}
+                //else {
+                //    swal({
+                //        title: "",
+                //        text: data.Message.ErrorMessage,
+                //        type: "error",
+                //        timer: 4000,
+                //        showConfirmButton: true,
+                //    });
+                //}
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+
+            },
+        });
     }
 </script>

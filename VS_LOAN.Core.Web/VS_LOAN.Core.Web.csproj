@@ -254,7 +254,6 @@
     <Compile Include="Helpers\Constant.cs" />
     <Compile Include="Helpers\DataContractAttribute.cs" />
     <Compile Include="Helpers\DataMemberAttribute.cs" />
-    <Compile Include="Helpers\DataPaging.cs" />
     <Compile Include="Helpers\DataTables\jQueryDataTableParamModel.cs" />
     <Compile Include="Helpers\EnumIndexMenu.cs" />
     <Compile Include="Helpers\ActionInfo.cs" />

@@ -66,7 +66,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Infrastuctures\BusinessExtentions.cs" />
-    <Compile Include="Infrastuctures\DataPaging.cs" />
     <Compile Include="Interfaces\IRevokeDebtBusiness.cs" />
     <Compile Include="MediaBusiness.cs" />
     <Compile Include="Interfaces\IMediaBusiness.cs" />

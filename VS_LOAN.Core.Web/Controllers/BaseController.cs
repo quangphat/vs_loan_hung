@@ -6,9 +6,12 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using VS_LOAN.Core.Entity;
+using VS_LOAN.Core.Entity.HosoCourrier;
 using VS_LOAN.Core.Entity.MCreditModels;
 using VS_LOAN.Core.Entity.MCreditModels.SqlModel;
 using VS_LOAN.Core.Entity.Model;
+using VS_LOAN.Core.Utility;
+
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class BaseController : Controller
@@ -92,6 +95,9 @@ namespace VS_LOAN.Core.Web.Controllers
              .ForMember(a => a.Noidung, b => b.MapFrom(c => c.Name))
              
              ;
+                x.CreateMap<HosoCourierViewModel, CourierExportModel>()
+            .ForMember(a => a.Status, b => b.MapFrom(c => StatusUtil.ReturnStatusString(c.Status)))
+            ;
             });
 
             _mapper = config.CreateMapper();

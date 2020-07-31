@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VS_LOAN.Core.Entity.Courier
+namespace VS_LOAN.Core.Entity.HosoCourrier
 {
     public class CourierSearchRequestModel : BaseFindRequest
     {

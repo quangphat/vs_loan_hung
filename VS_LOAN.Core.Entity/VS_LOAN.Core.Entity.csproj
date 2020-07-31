@@ -97,7 +97,9 @@
     <Compile Include="BaseSqlEntity.cs" />
     <Compile Include="Company.cs" />
     <Compile Include="Constanst.cs" />
-    <Compile Include="Courier\CourierSearchRequestModel.cs" />
+    <Compile Include="DataPaging.cs" />
+    <Compile Include="HosoCourrier\CourierExportModel.cs" />
+    <Compile Include="HosoCourrier\CourierSearchRequestModel.cs" />
     <Compile Include="CustomerEditModel.cs" />
     <Compile Include="CustomerModel.cs" />
     <Compile Include="CustomerNoteViewModel.cs" />
@@ -193,6 +195,7 @@
     <Compile Include="SqlBody.cs" />
     <Compile Include="StringModel.cs" />
     <Compile Include="Systemconfig.cs" />
+    <Compile Include="TextValue.cs" />
     <Compile Include="ThongTinChiTietToNhomModel.cs" />
     <Compile Include="ThongTinNhanVienModel.cs" />
     <Compile Include="ThongTinSanPhamVayModel.cs" />

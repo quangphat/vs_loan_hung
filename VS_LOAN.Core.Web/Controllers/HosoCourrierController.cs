@@ -67,7 +67,22 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = DataPaging.Create(datas, totalRecord);
             return ToJsonResponse(true, null, result);
         }
-        //public async Task<ActionResult>
+        public async Task<ActionResult> Export(string freeText = null, int provinceId = 0, int courierId = 0, string status = null, int groupId = 0, int page = 1, int limit = 10, string salecode = null)
+        {
+            var request = new CourierSearchRequestModel
+            {
+                freeText = freeText,
+                provinceId = provinceId,
+                courierId = courierId,
+                status = status,
+                groupId = groupId,
+                page = page,
+                limit = limit,
+                salecode = salecode
+            };
+            var columns = ExportUtil.GetColumns(typeof(CourierExportModel).GetProperties()).Select(p => p.Value).ToArray();
+            return await ExportUtil.Export<CourierSearchRequestModel, CourierExportModel>(Response , SearchByModel, request, "CourierProfiles", columns);
+        }
         public ActionResult AddNew()
         {
             ViewBag.formindex = "";//LstRole[RouteData.Values["action"].ToString()]._formindex;
@@ -367,6 +382,15 @@ namespace VS_LOAN.Core.Web.Controllers
                 Id = employee.IDUser,
                 Name = employee.FullName
             } });
+        }
+        private async Task<DataPaging<List<CourierExportModel>>> SearchByModel(CourierSearchRequestModel request)
+        {
+
+            var datas = await _rpCourierProfile.GetHosoCourrier(request.freeText, request.courierId, GlobalData.User.IDUser, request.status, request.PageNumber, request.limit, request.groupId, request.provinceId, request.salecode);
+            var totalRecord = (datas != null && datas.Any()) ? datas[0].TotalRecord : 0;
+            var profiles = _mapper.Map<List<CourierExportModel>>(datas);
+            var result = DataPaging.Create(profiles, totalRecord);
+            return result;
         }
     }
 }

@@ -16,7 +16,17 @@ namespace VS_LOAN.Core.Utility
 {
     public  class ExportUtil
     {
-        public static async Task<ActionResult> Export<TRequest, TResult>(HttpResponseBase Response,Func<TRequest, Task<BaseFindResponse<TResult>>> func, TRequest request, string fileName, string[] columns)
+        public static List<TextValue> GetColumns(params PropertyInfo[] properties)
+        {
+            return properties.Select(item => new TextValue(item.Name, GetColumnDescription(item))).ToList();
+        }
+
+        private static string GetColumnDescription(PropertyInfo column)
+        {
+            var descriptionAttribute = column.GetCustomAttribute<DescriptionAttribute>();
+            return descriptionAttribute?.Description ?? column.Name;
+        }
+        public static async Task<ActionResult> Export<TRequest, TResult>(HttpResponseBase Response,Func<TRequest, Task<DataPaging<List<TResult>>>> func, TRequest request, string fileName, string[] columns)
             where TRequest : BaseFindRequest
             where TResult : class
         {
@@ -25,21 +35,20 @@ namespace VS_LOAN.Core.Utility
             sw.Start();
             Response.ContentType = "text/comma-separated-values";
             Response.AddHeader("Content-Disposition", "attachment; filename=" + fileName);
-
+            long totalRecord = 100;
             var exportHelper = new CsvExportHelper<TResult>();
-            for (var pageNumber = 1; pageNumber <=2; pageNumber++)
+            for (var pageNumber = 1; pageNumber <= totalRecord; pageNumber++)
             {
                 if (Response.IsClientConnected)
                 {
                     request.PageNumber = 1;
                     var result = await func(request);
-                    if (result != null && result.Results.Count > 0)
+                    totalRecord = result.TotalRecord;
+                    if (result != null && result.Datas.Count > 0)
                     {
-                        //request.MinId = result.MinId;
-                        request.MaxId = result.MaxId;
                         using (var stream = new MemoryStream())
                         {
-                            await exportHelper.WriteDataAsync(stream, result.Results, columns, pageNumber == 1);
+                            await exportHelper.WriteDataAsync(stream, result.Datas, columns, pageNumber == 1);
                             Response.OutputStream.Write(stream.GetBuffer(), 0, (int)stream.Length);
                             Response.Flush();
                             await stream.FlushAsync();
