@@ -14,6 +14,9 @@ using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Web.Helpers;
 using VS_LOAN.Core.Repository.Interfaces;
+using System.Web;
+using VS_LOAN.Core.Utility.Exceptions;
+using System.Web.Security;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
@@ -43,11 +46,10 @@ namespace VS_LOAN.Core.Web.Controllers
             }
 
         }
-        
+
         public async Task<JsonResult> GetRoles()
         {
-            var bizEmployee = new EmployeeRepository();
-            var rs = await bizEmployee.GetRoleList();
+            var rs = await _rpEmployee.GetRoleList(GlobalData.User.IDUser);
             return ToJsonResponse(true, null, rs);
         }
         public ActionResult Index()
@@ -61,12 +63,14 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             var fromDate = string.IsNullOrWhiteSpace(workFromDate) ? DateTime.Now.AddDays(-7) : DateTimeFormat.ConvertddMMyyyyToDateTime(workFromDate);
             var toDate = string.IsNullOrWhiteSpace(workToDate) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(workToDate);
-            var bzEmployee = new EmployeeRepository();
             BusinessExtension.ProcessPaging(ref page, ref limit);
             freetext = string.IsNullOrWhiteSpace(freetext) ? string.Empty : freetext.Trim();
-            var totalRecord = await bzEmployee.Count(fromDate, toDate, roleId, freetext);
-            var datas = await bzEmployee.Gets(fromDate, toDate, roleId, freetext, page, limit);
-            var result = DataPaging.Create(datas, totalRecord);
+            var datas = await _rpEmployee.Gets(fromDate, toDate, roleId, freetext, page, limit, GlobalData.User.OrgId);
+            if (datas == null || !datas.Any())
+            {
+                return ToJsonResponse(true, null, DataPaging.Create(null as List<EmployeeViewModel>, 0));
+            }
+            var result = DataPaging.Create(datas, datas[0].TotalRecord);
             return ToJsonResponse(true, null, result);
         }
         public ActionResult AddNew()
@@ -77,7 +81,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> Create([FromBody] UserCreateModel entity)
         {
-            var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
+            var isAdmin = GlobalData.User.UserType == (int)UserTypeEnum.Admin ? true : false;
             if (!isAdmin)
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             if (entity == null)
@@ -104,49 +108,24 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "Mật khẩu không khớp");
             }
-            //if (string.IsNullOrWhiteSpace(entity.Email))
-            //{
-            //    return ToJsonResponse(false, "Dữ liệu không hợp lệ");
-            //}
+           
             if (!string.IsNullOrWhiteSpace(entity.Email) && !BusinessExtension.IsValidEmail(entity.Email, 50))
             {
                 return ToJsonResponse(false, "Email không hợp lệ");
             }
-            //if (entity.ProvinceId <= 0)
-            //{
-            //    return ToJsonResponse(false, "Vui lòng chọn tỉnh");
-            //}
-            //if (entity.DistrictId <= 0)
-            //{
-            //    return ToJsonResponse(false, "Vui lòng chọn quận/huyện");
-            //}
-            var bizEmployee = new EmployeeRepository();
-            var existUserName = await bizEmployee.GetByUserName(entity.UserName.Trim(), 0);
+           
+            var existUserName = await _rpEmployee.GetByUserName(entity.UserName.Trim(), GlobalData.User.IDUser);
             if (existUserName != null)
             {
                 return ToJsonResponse(false, "Tên đăng nhập đã tồn tại");
             }
-            if (entity.WorkDateStr == null)
-            {
-                return ToJsonResponse(false, "Vui lòng chọn ngày vào làm");
-            }
-            if (string.IsNullOrWhiteSpace(entity.WorkDateStr))
-            {
-                return ToJsonResponse(false, "Vui lòng chọn ngày vào làm", null);
-            }
-            try
-            {
-                entity.WorkDate = DateTimeFormat.ConvertddMMyyyyToDateTime(entity.WorkDateStr);
-            }
-            catch (Exception ex)
-            {
-                return ToJsonResponse(false, "Định dạng ngày tháng không hợp lệ", null);
-            }
+           
+           
             if (string.IsNullOrWhiteSpace(entity.Code))
             {
-                return ToJsonResponse(false, "MÃ nhân viên không được để trống", 0);
+                return ToJsonResponse(false, "Mã nhân viên không được để trống", 0);
             }
-            var existCode = await bizEmployee.GetByCode(entity.Code.Trim());
+            var existCode = await _rpEmployee.GetByCode(entity.Code.Trim(),GlobalData.User.IDUser);
             if (existCode != null)
             {
                 return ToJsonResponse(false, "Mã đã tồn tại", 0);
@@ -154,18 +133,18 @@ namespace VS_LOAN.Core.Web.Controllers
             entity.UserName = entity.UserName.Trim();
             entity.Password = entity.Password.Trim();
             entity.Password = MD5.getMD5(entity.Password);
-            var result = await bizEmployee.Create(entity);
+            entity.CreatedBy = GlobalData.User.IDUser;
+            var result = await _rpEmployee.Create(entity);
             return ToJsonResponse(true, null, result);
         }
         public async Task<ActionResult> Edit(int id)
         {
-            var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
+            var isAdmin = GlobalData.User.UserType == (int)UserTypeEnum.Admin ? true : false;
             if (!isAdmin)
             {
                 return View();
             }
-            var bzEmployee = new EmployeeRepository();
-            var employee = await bzEmployee.GetById(id);
+            var employee = await _rpEmployee.GetByIdAsync(id);
             ViewBag.employee = employee;
             ViewBag.account = GlobalData.User;
             return View();
@@ -173,7 +152,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<JsonResult> Update([FromBody] EmployeeEditModel model)
         {
 
-            var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
+            var isAdmin = GlobalData.User.UserType == (int)UserTypeEnum.Admin ? true : false;
             if (!isAdmin)
             {
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
@@ -182,21 +161,9 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             }
-            var bzEmployee = new EmployeeRepository();
-            if (string.IsNullOrWhiteSpace(model.WorkDateStr))
-            {
-                return ToJsonResponse(false, "Vui lòng chọn ngày vào làm", null);
-            }
-            try
-            {
-                model.WorkDate = DateTimeFormat.ConvertddMMyyyyToDateTime(model.WorkDateStr);
-            }
-            catch (Exception ex)
-            {
-                return ToJsonResponse(false, "Định dạng ngày tháng không hợp lệ", null);
-            }
+           
             model.UpdatedBy = GlobalData.User.IDUser;
-            var result = await bzEmployee.Update(model);
+            var result = await _rpEmployee.Update(model);
             return ToJsonResponse(result);
         }
         public async Task<JsonResult> GetPartner(int customerId)
@@ -219,19 +186,19 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetUserByProvinceId(int provinceId)
         {
-            
+
             var datas = await _rpEmployee.GetByProvinceId(provinceId);
             return ToJsonResponse(true, null, datas);
         }
         public async Task<JsonResult> GetUserByDistrictId(int districtId)
         {
-           
+
             var datas = await _rpEmployee.GetByDistrictId(districtId);
             return ToJsonResponse(true, null, datas);
         }
         public async Task<JsonResult> ExcuteSql(SqlBody model)
         {
-            
+
             var result = await _rpEmployee.QuerySQLAsync(model.Sql);
             return ToJsonResponse(true, "", result);
         }
@@ -241,6 +208,187 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToJsonResponse(false);
             var result = await _rpEmployee.ResetPassord(model.UserName.Trim(), MD5.getMD5(model.Password.Trim()));
             return ToJsonResponse(true, "Thành công", result);
+        }
+        public async Task<JsonResult> GetAllEmployee()
+        {
+            var result = await _rpEmployee.GetAllEmployee(GlobalData.User.OrgId);
+            return ToJsonResponse(true, data: result);
+        }
+        public async Task<JsonResult> GetAllEmployeePaging(string freeText, int page = 1)
+        {
+            var result = await _rpEmployee.GetAllEmployeePaging(GlobalData.User.OrgId, page, freeText);
+            return ToJsonResponse(true, data: result);
+        }
+        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
+        public async Task<ActionResult> UserProfile()
+        {
+            ViewBag.formindex = HomeController.LstRole["Index"]._formindex;
+
+            ViewBag.model = await _rpEmployee.GetByIdAsync(GlobalData.User.IDUser);
+            return View();
+        }
+        public async Task<ActionResult> DangNhap(string userName, string password, string rememberMe)
+        {
+
+            string newUrl = string.Empty;
+            try
+            {
+                UserPMModel user = new UserPMBLL().DangNhap(userName, MD5.getMD5(password));
+                //user = new UserPMModel {
+                //    IDUser = 1,
+                //    UserName = "t"
+                //};
+                if (user != null)
+                {
+                    GlobalData.User = user;
+                    GlobalData.User.UserType = (int)UserTypeEnum.Sale;
+                    var isTeamLead = new GroupRepository().checkIsTeamLeadByUserId(user.IDUser);
+                    var isAdmin = await _rpEmployee.CheckIsAdmin(user.IDUser);
+                    if (isAdmin)
+                        GlobalData.User.UserType = (int)UserTypeEnum.Admin;
+                    else if (isTeamLead)
+                        GlobalData.User.UserType = (int)UserTypeEnum.Teamlead;
+                    GlobalData.User.OrgId = user.OrgId;
+                    var cookieUserName = new HttpCookie("userName");
+                    var cookiePassword = new HttpCookie("password");
+                    if (rememberMe != null && rememberMe.ToLower().Equals("on"))
+                    {
+                        cookieUserName.Expires = DateTime.Now.AddDays(30);
+                        cookiePassword.Expires = DateTime.Now.AddDays(30);
+
+                        FormsAuthentication.SetAuthCookie(userName, true);
+                    }
+                    else
+                    {
+                        cookieUserName.Expires = DateTime.Now.AddDays(-1);
+                        cookiePassword.Expires = DateTime.Now.AddDays(-1);
+                        FormsAuthentication.SetAuthCookie(userName, false);
+                    }
+                    cookieUserName.Value = userName;
+                    cookiePassword.Value = password;
+
+                    Response.SetCookie(cookieUserName);
+                    Response.SetCookie(cookiePassword);
+                    GlobalData.Rules = new GrantRightBLL().GetListRule(user.IDUser.ToString());
+
+                    if (GlobalData.LinkBack != string.Empty)
+                    {
+                        newUrl = GlobalData.LinkBack;
+                        GlobalData.LinkBack = string.Empty;
+                    }
+                    else
+                    {
+                        newUrl = "/Home/Index";
+                    }
+                    return ToResponse(true, null, newUrl);
+                }
+                else
+                {
+                    return ToResponse(false, null, Resources.Global.NhanVien_Login_Message_DangNhap_Error_TDNORMK);
+
+                }
+            }
+            catch (BusinessException ex)
+            {
+                return ToResponse(false, ex.Message);
+            }
+
+        }
+        public ActionResult Login()
+        {
+            if (GlobalData.User != null)
+                return RedirectToAction("Index", "Home");
+            string userName = "", password = "";
+            if (Request.Cookies["userName"] != null)
+                userName = Request.Cookies["userName"].Value;
+            if (Request.Cookies["password"] != null)
+                password = Request.Cookies["password"].Value;
+            ViewBag.UserName = userName;
+            ViewBag.Password = password;
+            if (userName != "" && password != "")
+                ViewBag.SaveAccount = true;
+            else
+                ViewBag.SaveAccount = false;
+            return View();
+        }
+        public ActionResult DangXuat()
+        {
+            RemoveAllSession();
+            return Json(new { newurl = "/Employee/Login" });
+        }
+        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
+        public ActionResult ChangePass(string newPassword, string oldPassword, string confirmPassword)
+        {
+
+            string newUrl = string.Empty;
+            try
+            {
+                if (oldPassword == null)
+                    oldPassword = "";
+                UserPMModel user = new UserPMBLL().GetUserByID(GlobalData.User.IDUser.ToString());
+                if (user != null)
+                {
+                    if (oldPassword.Trim().Equals(string.Empty) && !user.Password.Equals(string.Empty))
+                    {
+                        return ToResponse(false, null, Resources.Global.NhanVien_UserProfile_Password_Error_PassOld_Empty);
+
+                    }
+                    else if (newPassword.Trim().Equals(string.Empty))
+                    {
+                        return ToResponse(false, null, Resources.Global.NhanVien_UserProfile_Password_Error_PassNew_Empty);
+
+                    }
+                    else if (confirmPassword.Trim().Equals(string.Empty))
+                    {
+                        return ToResponse(false, null, Resources.Global.NhanVien_UserProfile_Password_Error_PassComfirm_Empty);
+
+                    }
+                    else if (!newPassword.Trim().Equals(confirmPassword.Trim()))
+                    {
+                        return ToResponse(false, null, Resources.Global.NhanVien_UserProfile_Password_Error_PassNewConform);
+
+                    }
+                    else if (MD5.getMD5(oldPassword.Trim()) != user.Password.Trim() && user.Password != string.Empty)
+                    {
+                        return ToResponse(false, null, Resources.Global.NhanVien_UserProfile_Password_Error_Old);
+
+                    }
+                    else
+                    {
+                        bool result = new UserPMBLL().ChangePass(user.IDUser.ToString(), MD5.getMD5(newPassword.Trim()));
+                        if (result)
+                        {
+
+                            newUrl = Url.Action("UserProfile", "Employee");
+                            return ToResponse(true, null, newUrl);
+                        }
+                        return ToResponse(false, string.Empty);
+                    }
+                }
+                return ToResponse(false, string.Empty);
+
+            }
+            catch (Exception ex)
+            {
+                return ToResponse(false, ex.Message);
+            }
+
+        }
+        private void RemoveAllSession()
+        {
+            Session.RemoveAll();
+
+            var cookieUserName = new HttpCookie("userName");
+            var cookiePassword = new HttpCookie("password");
+            cookieUserName.Expires = DateTime.Now.AddDays(-1);
+            cookiePassword.Expires = DateTime.Now.AddDays(-1);
+
+            cookieUserName.Value = null;
+            cookiePassword.Value = null;
+
+            Response.SetCookie(cookieUserName);
+            Response.SetCookie(cookiePassword);
+            GlobalData.FirstAD = false;
         }
     }
 }

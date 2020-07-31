@@ -91,8 +91,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseResponse.cs" />
     <Compile Include="BaseSqlEntity.cs" />
     <Compile Include="Company.cs" />
+    <Compile Include="Constanst.cs" />
     <Compile Include="CustomerEditModel.cs" />
     <Compile Include="CustomerModel.cs" />
     <Compile Include="CustomerNoteViewModel.cs" />
@@ -107,6 +109,7 @@
     <Compile Include="F88Model\LadipageModel.cs" />
     <Compile Include="F88ResponseModel.cs" />
     <Compile Include="GhichuViewModel.cs" />
+    <Compile Include="ImportExcelFrameWorkModel.cs" />
     <Compile Include="MCreditModels\AuthenMCModel.cs" />
     <Compile Include="MCreditModels\CheckCatRequestModel.cs" />
     <Compile Include="MCreditModels\CheckCatResponseModel.cs" />
@@ -176,13 +179,17 @@
     <Compile Include="NhomDropDownModel.cs" />
     <Compile Include="NhomModel.cs" />
     <Compile Include="OptionSimple.cs" />
+    <Compile Include="Pagination.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResponseModel.cs" />
+    <Compile Include="RevokeDebt\RevokeDebtSearch.cs" />
+    <Compile Include="RevokeDebt\RevokeSimpleUpdate.cs" />
     <Compile Include="RLanguage.cs" />
     <Compile Include="RMessage.cs" />
     <Compile Include="SanPhamVayModel.cs" />
     <Compile Include="SqlBody.cs" />
     <Compile Include="StringModel.cs" />
+    <Compile Include="Systemconfig.cs" />
     <Compile Include="ThongTinChiTietToNhomModel.cs" />
     <Compile Include="ThongTinNhanVienModel.cs" />
     <Compile Include="ThongTinSanPhamVayModel.cs" />

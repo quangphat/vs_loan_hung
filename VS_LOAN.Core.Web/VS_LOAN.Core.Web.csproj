@@ -237,6 +237,7 @@
     <Compile Include="Controllers\F88Controller.cs" />
     <Compile Include="Controllers\MCreditController.cs" />
     <Compile Include="Controllers\QuanLyHoSoController.cs" />
+    <Compile Include="Controllers\RevokeController.cs" />
     <Compile Include="Controllers\SanPhamVayController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\FileController.cs" />
@@ -256,7 +257,6 @@
     <Compile Include="Helpers\DataPaging.cs" />
     <Compile Include="Helpers\DataTables\jQueryDataTableParamModel.cs" />
     <Compile Include="Helpers\EnumIndexMenu.cs" />
-    <Compile Include="Controllers\NhanVienController.cs" />
     <Compile Include="Helpers\ActionInfo.cs" />
     <Compile Include="Helpers\GlobalData.cs" />
     <Compile Include="Global.asax.cs">
@@ -975,6 +975,7 @@
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\kendo.ui.core.min.js" />
+    <Content Include="Scripts\revoke.js" />
     <Content Include="Scripts\mcredit.js" />
     <Content Include="Scripts\returnerror.js" />
     <Content Include="Scripts\stupidtable.js" />
@@ -1731,8 +1732,8 @@
     <Content Include="Views\Shared\_Menu.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
     <Content Include="Views\Shared\_ShowMessage.cshtml" />
-    <Content Include="Views\NhanVien\Login.cshtml" />
-    <Content Include="Views\NhanVien\UserProfile.cshtml" />
+    <Content Include="Views\Employee\Login.cshtml" />
+    <Content Include="Views\Employee\UserProfile.cshtml" />
     <Content Include="Views\NoAuthorities\Index.cshtml" />
     <Content Include="Views\NotPage\Index.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -1775,6 +1776,8 @@
     <Content Include="Views\MCredit\TempProfile.cshtml" />
     <Content Include="Views\MCredit\Temp.cshtml" />
     <Content Include="Views\MCredit\MCreditProfile.cshtml" />
+    <Content Include="Views\Revoke\Index.cshtml" />
+    <Content Include="Views\Revoke\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

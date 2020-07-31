@@ -3,9 +3,8 @@
     ViewBag.Title = "Sửa tổ nhóm";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@model String
 <script type="text/javascript">
-    SetActiveMenu('@ViewBag.formindex', 2);
+
 </script>
 <div class="main-content-inner">
     <div class="breadcrumbs" id="breadcrumbs">
@@ -24,11 +23,11 @@
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên <span class="required">(*)</span> </label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtTenNhom" placeholder="Nhập tên nhóm" class="form-control" value="@ViewBag.ThongTinNhom.Ten" />
+                            <input type="text" id="txtTenNhom" placeholder="Nhập tên nhóm" class="form-control" value="@ViewBag.model.Ten" />
                         </div>
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên ngắn <span class="required">(*)</span> </label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtTenNgan" placeholder="Nhập tên ngắn" class="form-control" value="@ViewBag.ThongTinNhom.TenNgan" />
+                            <input type="text" id="txtTenNgan" placeholder="Nhập tên ngắn" class="form-control" value="@ViewBag.model.TenNgan" />
                         </div>
                     </div>
                     <div class="form-group">
@@ -54,7 +53,15 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <select multiple="multiple" size="10" name="duallistbox_demo1[]" id="duallistNhanVien"></select>
-                        <div class="hr hr-16 hr-dotted"></div>
+
+                        <div class="col-sm-6">
+                            <div style="float:right; margin-top:10px;">
+                                <input type="button" value="<<Previous" id="btnPrevious" />
+                                <input type="button" value="Next>>" id="btnNext" />
+                                <input type="button" value="Tìm kiếm" id="btnSearch" />
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -75,139 +82,166 @@
 </div>
 <script src="~/Content/ace-master/assets/js/jquery.bootstrap-duallistbox.min.js"></script>
 <script>
-    var thongTinNhom = @Html.Raw(Json.Encode(@ViewBag.ThongTinNhom));
+ let page = 1;
     $(document).ready(function () {
-        LayNhanVien();
-        LayDSNhanVienQL();
+        GetMembers();
+        GetAllEmployees();
+        GetNotMembers(page)
         LayDSNhom();
-    });
-</script>
-<script>
-    jQuery(function ($) {
-        var demo1 = $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox({ infoTextFiltered: '<span class="label label-purple label-lg">Filtered</span>', filterPlaceHolder: '', filterTextClear: '', infoText: '', infoTextFiltered: '' });
+        //filter id = "#duallist_filter_id"
+        demo1 = $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox();
+        var filterBox = document.getElementById('duallist_filter_id');
+        if (filterBox != null) {
+            filterBox.addEventListener("keyup", function (event) {
 
-        var container1 = demo1.bootstrapDualListbox('getContainer');
-        container1.find('.btn').addClass('btn-white btn-info btn-bold');
-
-        ///////////////////
-        //example taken from plugin's page at: https://twitter.github.io/typeahead.js/examples/
-        var substringMatcher = function (strs) {
-            return function findMatches(q, cb) {
-                var matches, substringRegex;
-
-                // an array that will be populated with substring matches
-                matches = [];
-
-                // regex used to determine if a string contains the substring `q`
-                substrRegex = new RegExp(q, 'i');
-
-                // iterate through the pool of strings and for any string that
-                // contains the substring `q`, add it to the `matches` array
-                $.each(strs, function (i, str) {
-                    if (substrRegex.test(str)) {
-                        // the typeahead jQuery plugin expects suggestions to a
-                        // JavaScript object, refer to typeahead docs for more info
-                        matches.push({ value: str });
-                    }
-                });
-
-                cb(matches);
-            }
+                if (event.key === "Enter") {
+                    GetNotMembers(1);
+                }
+            });
         }
 
-        //in ajax mode, remove remaining elements before leaving page
-        $(document).one('ajaxloadstart.page', function (e) {
-            $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox('destroy');
-        });
-
     });
-</script>
-<script>
-    function LayNhanVien() {
-        $('#duallistNhanVien').empty();
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayThongTinThanhVienSuaNhom", "ToNhom")',
-            data: { 'maNhom' : thongTinNhom.ID },
-            success: function (data) {
-                if (data != null) {
-                    if (data.DSChuaThanhVien != null && data.DSChuaThanhVien.length > 0) {
-                        $.each(data.DSChuaThanhVien, function (index, item) {
-                            $('#duallistNhanVien').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
-                        });
-                    }
-                    if (data.DSThanhVien != null && data.DSThanhVien.length > 0) {
-                        $.each(data.DSThanhVien, function (index, item) {
-                            $('#duallistNhanVien').append("<option value='" + item.ID + "' selected='selected'>" + item.Ten + "</option>");
-                        });
-                    }
-                }
-                $('#duallistNhanVien').bootstrapDualListbox('refresh', true);
-            },
-            complete: function () {
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    }
-
-    function LayDSNhanVienQL()
-    {
+    $("#btnNext").click(function () {
+        page += 1;
+        GetNotMembers(page)
+    })
+    $("#btnPrevious").click(function () {
+        page -= 1;
+        page = page <= 0 ? 1 : page
+        GetNotMembers(page)
+    })
+    $("#btnSearch").click(function () {
+        page = 1;
+        GetNotMembers(page)
+    })
+    function GetAllEmployees(page) {
+        showBlock($('#panel_body'), 'Vui lòng chờ');
         $('#ddlNguoiQL').empty();
-        $('#ddlNguoiQL').append("<option value='0'></option>");
+
+
         $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSNhanVien", "ToNhom")',
+            type: "GET",
+            url: `/Employee/GetAllEmployee`,
             data: {},
             success: function (data) {
                 if (data.data != null && data.success == true) {
                     if (data.data != null && data.data.length > 0) {
                         $.each(data.data, function (index, item) {
-                            $('#ddlNguoiQL').append("<option value='" + item.IDUser + "'>" + item.FullName + "</option>");
+
+
+                            $('#ddlNguoiQL').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+
                         });
+                        if (data.data.length == 1) {
+                            $('#ddlNguoiQL').val(data.data[0].Id);
+                        }
                     }
                 }
-                $('#ddlNguoiQL').val(thongTinNhom.MaNguoiQuanLy);
+                $('#ddlNguoiQL').val(@ViewBag.model.MaNguoiQuanLy);
                 $('#ddlNguoiQL').chosen().trigger("chosen:updated");
                 $('#ddlNguoiQL').trigger("change");
             },
             complete: function () {
+                $('#panel_body').unblock();
+                page = page
             },
             error: function (jqXHR, exception) {
                 showError(jqXHR, exception);
             }
         });
     }
+    function GetNotMembers(page) {
+        showBlock($('#panel_body'), 'Vui lòng chờ');
+        $('#duallistNhanVien').empty();
 
-    function LayDSNhom() {
-        $('#ddlNhomCha').empty();
-        $('#ddlNhomCha').append("<option value='0'></option>");
+        let freeText = isNullOrUndefined($("#duallist_filter_id").val()) ? '' : $("#duallist_filter_id").val();
         $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSNhomCha", "ToNhom")',
+            type: "GET",
+            url: `/Employee/GetAllEmployeePaging?page=${page}&freeText=${freeText}`,
             data: {},
             success: function (data) {
                 if (data.data != null && data.success == true) {
                     if (data.data != null && data.data.length > 0) {
                         $.each(data.data, function (index, item) {
-                            $('#ddlNhomCha').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
+
+                            $('#duallistNhanVien').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                         });
+
                     }
                 }
-                $('#ddlNhomCha').val(thongTinNhom.MaNhomCha);
-                $('#ddlNhomCha').chosen().trigger("chosen:updated");
-                $('#ddlNhomCha').trigger("change");
+                
+                var lstRightSelect = $('select[name="duallistbox_demo1[]_helper2"]')[0];
+                for (var i = 0; i < lstRightSelect.length; i++) {
+                    $('#duallistNhanVien').append("<option value='" + lstRightSelect[i].attributes[0].value + "' selected='selected'>" + lstRightSelect[i].innerText + "</option>");
+                    
+                }
+                $('#duallistNhanVien').bootstrapDualListbox('refresh', true);
             },
             complete: function () {
+                $('#panel_body').unblock();
+                page = page
             },
             error: function (jqXHR, exception) {
                 showError(jqXHR, exception);
             }
         });
     }
-</script>
-<script>
+    function GetMembers() {
+         $('#duallistNhanVien').empty();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetMember", "ToNhom")',
+            data: { 'groupId': @ViewBag.model.ID },
+            success: function (data) {
+                if (data != null) {
+                    
+                    if (data.data != null && data.data.length > 0) {
+                        $.each(data.data, function (index, item) {
+
+                            $('#duallistNhanVien').append("<option value='" + item.Id + "' selected='selected'>" + item.Name + "</option>");
+                        });
+                       
+                    }
+
+                }
+                    $('#duallistNhanVien').bootstrapDualListbox('refresh', true);
+                    },
+                    complete: function () {
+                    },
+                    error: function (jqXHR, exception) {
+                    showError(jqXHR, exception);
+                    }
+                    });
+            }
+
+
+
+            function LayDSNhom() {
+            $('#ddlNhomCha').empty();
+            $('#ddlNhomCha').append("<option value='0'></option>");
+            $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSNhomCha", "ToNhom")',
+            data: {},
+            success: function (data) {
+            if (data.data != null && data.success == true) {
+            if (data.data != null && data.data.length > 0) {
+            $.each(data.data, function (index, item) {
+            $('#ddlNhomCha').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
+            });
+            }
+            }
+            $('#ddlNhomCha').val(@ViewBag.model.MaNhomCha);
+            $('#ddlNhomCha').chosen().trigger("chosen:updated");
+            $('#ddlNhomCha').trigger("change");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+            }
+            });
+            }
     $('#btn_Save').click(function (e) {
         if ($('#txtTenNhom').val() == '') {
             swal({
@@ -245,7 +279,14 @@
             });
             return;
         }
-        var objectSend = JSON.stringify({ 'maNhom': thongTinNhom.ID, 'ten': $('#txtTenNhom').val(), 'tenNgan': $('#txtTenNgan').val(), 'maNguoiQuanLy': $('#ddlNguoiQL').val(), 'maNhomCha': $('#ddlNhomCha').val(), 'lstThanhVien': lstSelectedId });
+        var objectSend = JSON.stringify({
+            'maNhom': @ViewBag.model.ID,
+            'ten': $('#txtTenNhom').val(),
+            'tenNgan': $('#txtTenNgan').val(),
+            'maNguoiQuanLy': $('#ddlNguoiQL').val(),
+            'maNhomCha': $('#ddlNhomCha').val(),
+            'lstThanhVien': lstSelectedId
+        });
         $.ajax({
             traditional: true,
             url: '@Url.Action("LuuSua", "ToNhom")',

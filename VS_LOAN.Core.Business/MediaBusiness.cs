@@ -1,4 +1,5 @@
-﻿using Ionic.Zip;
+﻿using Dapper;
+using Ionic.Zip;
 using Newtonsoft.Json;
 using NPOI.SS.UserModel;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using VS_LOAN.Core.Business.Infrastuctures;
 using VS_LOAN.Core.Business.Interfaces;
 using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.HosoCourrier;
@@ -94,12 +96,16 @@ namespace VS_LOAN.Core.Business
         }
         public async Task<List<HosoCourier>> ReadXlsxFile(MemoryStream stream, int createBy)
         {
+            var importExelFrameWork = await _rpTailieu.GetImportTypes((int)HosoType.HosoCourrier);
+            BusinessExtentions.GetObjectParams(importExelFrameWork);
+            //return null;
             var result = new TupleModel();
             var workBook = WorkbookFactory.Create(stream);
             var sheet = workBook.GetSheetAt(0);
             var rows = sheet.GetRowEnumerator();
             var hasData = rows.MoveNext();
-
+            var param = new DynamicParameters();
+            var pars = new List<DynamicParameters>();
             int count = 0;
             var hosos = new List<HosoCourier>();
             for (int i = 1; i < sheet.PhysicalNumberOfRows; i++)
@@ -113,6 +119,12 @@ namespace VS_LOAN.Core.Business
                         {
                             bool isNullRow = row.Cells.Count < 3 ? true : false;
                         }
+                        
+                        foreach(var col in importExelFrameWork)
+                        {
+                            param.Add(col.Name, BusinessExtentions.TryGetValueFromCell(row.Cells[col.Position].ToString(), col.ValueType));
+                        }
+                        pars.Add(param);
                         var hoso = new HosoCourier()
                         {
                             CustomerName = row.Cells[0] != null ? row.Cells[0].ToString() : "",
@@ -231,6 +243,37 @@ namespace VS_LOAN.Core.Business
 
             return Task.FromResult($"{folder}/{fileName}.zip");
         }
-        
+
+        public async Task<BaseResponse<List<HosoTailieu>>> GetFilesUploadByProfile(int profileId, int profileType)
+        {
+            if (profileId <= 0 || profileType <= 0)
+                return new BaseResponse<List<HosoTailieu>>("Dữ liệu không hợp lệ", null, false);
+            var uploadedFiles =  await _rpTailieu.GetTailieuByHosoId(profileId, (int)HosoType.RevokeDebt);
+            if (uploadedFiles == null)
+                uploadedFiles = new List<FileUploadModel>();
+            var lstLoaiTailieu = await _rpTailieu.GetLoaiTailieuList((int)HosoType.RevokeDebt);
+            if (lstLoaiTailieu == null || !lstLoaiTailieu.Any())
+                return new BaseResponse<List<HosoTailieu>>("Không có hồ sơ cần upload", null, true);
+            var result = new List<HosoTailieu>();
+
+            foreach (var loai in lstLoaiTailieu)
+            {
+                var tailieus = uploadedFiles.Where(p => p.Key == loai.ID);
+
+                var item = new HosoTailieu
+                {
+                    ID = loai.ID,
+                    Ten = loai.Ten,
+                    BatBuoc = loai.BatBuoc,
+                    ProfileId = profileId,
+                    ProfileTypeId = profileType,
+                    FileKey = loai.ID,
+                    Tailieus = tailieus != null ? tailieus.ToList() : new List<FileUploadModel>()
+                };
+                result.Add(item);
+
+            }
+            return new BaseResponse<List<HosoTailieu>>(result);
+        }
     }
 }

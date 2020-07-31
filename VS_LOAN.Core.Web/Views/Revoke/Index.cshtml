@@ -1,0 +1,467 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <a href="#" class="active">Hồ sơ courier</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+                <form class="form-horizontal" role="form">
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Nhóm</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlGroup" class="chosen-select form-control" data-placeholder="Chọn nhóm">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Nhân viên xử lý</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlAssignee" class="chosen-select form-control" data-placeholder="">
+                                <option value="0">Tất cả</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlStatus" class="chosen-select form-control" multiple data-placeholder="Chọn trạng thái"></select>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Tìm kiếm</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <input type="text" class="form-control" id="txtFreeText" placeholder="Tìm kiếm" />
+                        </div>
+                    </div>
+                    <div class="form-group text-right">
+                        <div class="col-xs-12 ">
+                            <a class="btn btn-primary" id="btnSearch">
+                                Tìm kiếm
+                            </a>
+                            <a class="btn btn-primary" href="/Revoke/AddNew">
+                                Tạo mới
+                            </a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class=" col-sm-8">
+                            <input multiple="" class="col-sm-4" type="file" id="file" />
+                            <a class="btn btn-primary" id="btnImport">Import file</a>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <div class=" col-sm-8">
+                            <a style="font-style: italic;" href="/Common/DownloadTemplateFile?fileName=ImportRevokeDebtTemplate.xlsx">Nhấp vào để download mẫu import</a>
+                        </div>
+
+                    </div>
+                </form>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="clearfix">
+                    <div class="pull-right tableTools-container"></div>
+                </div>
+                <div class="table-header">
+                    Danh sách hồ sơ
+                </div>
+                <div class="dataTables_wrapper form-inline no-footer">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <label>
+                                Hiển thị
+                                <select id="ddlLimit" class="form-control input-sm" onchange="onSelectLimit()">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select> dòng mỗi trang
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- div.table-responsive -->
+                <!-- div.dataTables_borderWrap -->
+                <div class="col">
+                    <div class="report-table-custom--overflow">
+                        <table id="dtSource" class="report-table-custom table table-striped table-bordered table-hover">
+                            <thead class="table-header">
+                                <tr>
+                                    <th class="center w-45">STT</th>
+                                    <th class="m-w-120">Khách hàng</th>
+                                    <th class="w-84">Điên thoại</th>
+                                    <th class="w-84">Số CMND</th>
+                                    <th style="width: 150px">Trạng thái</th>
+                                    <th style="width: 150px">Ngày sinh</th>
+                                    <th style="width: 150px">Tổng nợ còn lại</th>
+                                    <th style="width: 150px">Địa chỉ thường chú</th>
+                                    <th class="m-w-120">Ghi chú</th>
+                                    <th class="m-w-120">Nhân viên xử lý</th>
+                                    <th class="m-w-120">Người tạo</th>
+                                    <th class="w-150">Ngày tạo</th>
+                                    <th class="m-w-120">Người cập nhật</th>
+                                    <th class="w-150">Ngày cập nhật</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="clearfix" />
+                <div class="one-row no-gutters justify-content-between paginate mb-50">
+                    <div class="col-auto">
+                        <div class="dataTables_info" id="dtSource_info" role="status" aria-live="polite"></div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="one-row no-gutters align-items-center">
+                            <div class="col-auto">
+                                <span id="totalPage"></span>
+                            </div>
+                            <div class="col">
+                                <div class="dataTables_paginate paging_simple_numbers" id="dtSource_paginate">
+                                    <ul class="pagination" id="paging"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="clearfix"></div>
+    </div>
+</div>
+<script>
+    var queries = new URLSearchParams(window.location.search);
+    var page = 1;
+    var limit = 10;
+    var pageMargin = 2;
+    var totalPage = 1;
+    var totalRecord = 0;
+    var provinceId = 0;
+    var groupId = 0;
+
+    $(document).ready(function e() {
+            $('#ddlGroup').chosen({ width: '100%', allow_single_deselect: true });
+            $('#ddlAssignee').chosen({ width: '100%', allow_single_deselect: true });
+        preventTxtSearchEnter();
+        window.addEventListener('popstate', function (e) {
+
+            queries = new URLSearchParams(window.location.search)
+            page = queries.get("page");
+            if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+                page = 1;
+            else
+                page = parseInt(page)
+            limit = queries.get("limit")
+            if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                limit = 10;
+            else
+                limit = parseInt(limit)
+            getData(page, limit,true)
+        });
+        renderStatusList();
+        setTableLimit("#ddlLimit");
+        var status = decodeURI(queries.get("status"))
+        if (!isNullOrWhiteSpace(status)) {
+            let arrStatus = status.split(',')
+            $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
+        }
+        bindQueries()
+        
+        groupId = queries.get("groupId");
+        getData(page, limit);
+        let assigneeId = queries.get("assigneeId");
+        LayDSNhomCha('#ddlGroup', groupId, '#ddlAssignee', assigneeId);
+        $('#ddlGroup').on('change', function () {
+            GetEmployeesByGroupId('#ddlAssignee', this.value, false, assigneeId);
+        });
+    })
+    var strLoading = 'Vui lòng chờ';
+    $('#btnSearch').click(function (e) {
+        getData(page, limit);
+    });
+    function getRevoke(maTinh) {
+
+        if (isNullOrWhiteSpace(maTinh))
+            return;
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetUserByProvinceId", "Employee")',
+            data: {'provinceID':maTinh},
+            success: function (data) {
+                $('#ddlAssignee').empty();
+                $('#ddlAssignee').append("<option value='0'>Tất cả</option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#ddlAssignee').append("<option value='" + optionData.Id + "'>" + optionData.Name + "</option>");
+                    });
+                    let assigneeId = queries.get("assigneeId");
+                    $('#ddlAssignee').val(assigneeId)
+                    $('#ddlAssignee').chosen().trigger("chosen:updated").change();
+                }
+                $('#ddlAssignee').chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+    $('#btnImport').click(function (e) {
+        showBlock($('#panel_body'), 'Vui lòng chờ');
+        var formData = new FormData();
+        formData.append('file', $('#file')[0].files[0]);
+
+        $.ajax({
+            url: '/Revoke/Import',
+            type: 'POST',
+            data: formData,
+            processData: false,  // tell jQuery not to process the data
+            contentType: false,  // tell jQuery not to set contentType
+            success: function (data) {
+
+                if (data != null && data.success) {
+                    swal({
+                        title: "",
+                        text: data.code,
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                        window.location = window.location
+                    });
+                }
+
+                else {
+                    swal({
+                        title: "",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    })
+
+    function LayDSTinh() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSTinh", "KhuVuc")',
+            data: {},
+            success: function (data) {
+                $('#ddlProvince').empty();
+                $('#ddlProvince').append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#ddlProvince').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                    });
+                    let provinceId = queries.get("provinceId");
+                    $('#ddlProvince').val(provinceId)
+                    $('#ddlProvince').chosen().trigger("chosen:updated").change();
+                }
+
+                $('#ddlProvince').chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+    $('#ddlProvince').change(function () {
+        $('#ddlThanhVienNhom').empty();
+        $('#ddlThanhVienNhom').append("<option value='0'></option>");
+        provinceId = this.value
+        getRevoke(this.value)
+    });
+
+    function onClickPage(page) {
+        page = page;
+        getData(page, limit);
+    }
+    function bindQueries() {
+
+        $('#txtFreeText').val(queries.get("freetext"))
+        $('#txtSaleCode').val(queries.get("salecode"))
+        page = queries.get("page");
+        if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+            page = 1;
+        else
+            page = parseInt(page)
+        limit = queries.get("limit")
+        if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+            limit = 10;
+        else
+            limit = parseInt(limit)
+        $("#ddlLimit").val(limit)
+    }
+    function onSelectLimit() {
+        limit = $("#ddlLimit").val()
+        getData(page, limit)
+    }
+    function renderAddress(item) {
+        if (item == null || item == undefined)
+            return ''
+        let result = ''
+        if (!isNullOrUndefined(item.ProvinceName))
+            result += item.ProvinceName
+        if (!isNullOrUndefined(item.DistrictName))
+            result += ' -' + item.DistrictName
+        return result;
+    }
+    function renderTextLink(textValue, href, type, className = '') {
+        let display = getValueDisplay(textValue, type);
+        return "<td class='text-left " + className + "'><a href='" + href + "' >" + display + "</a></td>";
+    }
+    function renderRow(index, rowData) {
+
+        page = queries.get("page");
+        if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+            page = 1;
+        else
+            page = parseInt(page)
+        limit = queries.get("limit")
+        if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+            limit = 10;
+        else
+            limit = parseInt(limit)
+        var stt = (page - 1) * limit + index + 1;
+
+        let result = "<tr role='row' class = 'odd'>"
+            + renderTextCenter(stt, '','center w-45')
+            + renderTextLink(rowData.CustomerName, `/Revoke/Edit/${rowData.Id}`, '', "m-w-120")
+            + renderTextLeft(rowData.MobilePhone, '', 'w-84')
+            + renderTextLeft(rowData.IdCardNumber, '', 'w-84')
+            + renderStatusOnIndexPage(rowData.Status, rowData.StatusName)
+            + renderTextLeft(reverseString(rowData.Bod), '', 'w-150')
+            + renderTextLeft(formatCurrencyVND(rowData.TotalCurros,''), '', 'w-150')
+            + renderTextLeft(rowData.PermanentAddress, '', 'tb-row-breakword w-150')
+            + renderTextLeft(rowData.LastNote, '', "tb-row-breakword m-w-120")
+            + renderTextLeft(rowData.AssigneeName, '', "m-w-120")
+            + renderTextLeft(rowData.CreatedUser, '', "m-w-120")
+            + renderTextLeft(rowData.CreatedTime, 'datetime', 'w-150')
+            + renderTextLeft(rowData.UpdatedUser, '', "m-w-120")
+            + renderTextLeft(rowData.UpdatedTime, 'datetime', 'w-150')
+            @*+ renderAction(rowData.Id,(@ViewBag.isAdmin == 0 && rowData.Status == 7))*@
+            + "</tr>";
+        return result
+    }
+    function renderTableBody(datas) {
+        var tableBody = $("#dtSource").find("tbody");
+        tableBody.empty();
+        if (isNullOrNoItem(datas))
+            return;
+        $.each(datas, function (index, item) {
+            tableBody.append(renderRow(index, item));
+        });
+
+    }
+    function onEdit(id) {
+        if (isNullOrUndefined(id))
+            return;
+        window.location = "/Revoke/edit/" + id;
+    }
+    function getData(page, limit ,isPopState = false)
+    {
+        
+        let search = window.location.search;
+        queries = new URLSearchParams(search)
+        
+        let groupId = queries.get("groupId");
+        let assigneeId = queries.get("assigneeId");
+        if (isNullOrWhiteSpace(assigneeId)) {
+            assigneeId = $('#ddlAssignee').val();
+        }
+        let status = isNullOrWhiteSpace(queries.get("status")) ? "" : decodeURI(queries.get("status"))
+        $.ajax({
+            url: '/Revoke/Search',
+            type: "GET",
+            contentType: "application/json",
+
+            data: {
+                'page': page,
+                'limit': limit,
+                'assigneeId': (isNaN(assigneeId) || assigneeId == 0 || isNullOrUndefined(assigneeId)) ? $('#ddlAssignee').val() : assigneeId,
+                'freetext': $("#txtFreeText").val(),
+                'groupId': (isNaN(groupId) || groupId == 0 || isNullOrUndefined(groupId)) ? $('#ddlGroup').val() : groupId,
+                'status': (!isNullOrWhiteSpace($("#ddlStatus").val()) || isNullOrWhiteSpace(status)) ? (!isNullOrWhiteSpace($("#ddlStatus").val()) ? $("#ddlStatus").val().toString():"") : ""
+            },
+            success: function (response) {
+                if (response.Message == null) {
+                    totalRecord = response.data.TotalRecord;
+                    let search = this.url.replace("/Revoke/Index", "");
+
+                    search = search.replace("/Revoke/Search", "")
+                    
+                    page = queries.get("page");
+                    if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+                        page = 1;
+                    else
+                        page = parseInt(page)
+                    limit = queries.get("limit")
+                    if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                        limit = 10;
+                    else
+                        limit = parseInt(limit)
+                    renderTableBody(response.data.Datas)
+                    renderPageList(page, limit, totalRecord)
+                    totalPage = getTotalPage(totalRecord, limit);
+                    $("#dtSource_info").text("Tổng: " + totalRecord + " items");
+                    $("#totalPage").text("Tổng: " + totalPage + " trang");
+                }
+                else {
+                    swal({
+                        title: "",
+                        text: response.Message.ErrorMessage,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+                error: function (jqXHR, exception) {
+                    showError(jqXHR, exception);
+                },
+                complete: function () {
+                    $('#panel_body').unblock();
+                    if (!isPopState) {
+                        var requestUrl = this.url.replace("/Search", "/index")
+                        window.history.pushState(requestUrl, this.title, requestUrl)
+                    }
+
+            }
+        })
+
+    }
+</script>
+

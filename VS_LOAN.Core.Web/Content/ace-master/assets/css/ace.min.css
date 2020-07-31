@@ -14062,7 +14062,7 @@ li.item-default {
     background-color: transparent;
     border-top: 1px dotted #D5E4F1;
     display: table-cell;
-    width: 110px;
+    width: 130px;
     vertical-align: middle;
 }
 
@@ -15734,7 +15734,7 @@ div.ColVis_collectionBackground {
 
 .chosen-container, [class*=chosen-container] {
     vertical-align: middle;
-    width: 100px!important;
+    
 }
 
     .chosen-container > .chosen-single, [class*=chosen-container] > .chosen-single {

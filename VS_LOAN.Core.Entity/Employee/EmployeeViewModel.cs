@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Entity.Employee
 {
-    public class EmployeeViewModel
+    public class EmployeeViewModel : Pagination
     {
         public int Id { get; set; }
         public string UserName { get; set; }

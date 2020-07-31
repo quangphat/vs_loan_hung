@@ -11,6 +11,7 @@ namespace VS_LOAN.Core.Repository.Interfaces
 {
     public interface IEmployeeRepository
     {
+        Task<List<OptionSimple>> GetEmployeesByGroupId(int groupId, bool isLeader = false);
         Task<bool> ResetPassord(string userName, string password);
         Task<OptionSimple> GetEmployeeByCode(string code);
         Task<bool> CheckIsAdmin(int userId);
@@ -19,8 +20,8 @@ namespace VS_LOAN.Core.Repository.Interfaces
         Task<List<OptionSimple>> GetByProvinceId(int provinceId);
         Task<List<IDictionary<string, object>>> QuerySQLAsync(string sql);
         Task<List<OptionSimple>> GetByDistrictId(int districtId);
-        Task<Nhanvien> GetByUserName(string userName, int id = 0);
-        Task<Nhanvien> GetByCode(string code, int id = 0);
+        Task<Nhanvien> GetByUserName(string userName, int userId);
+        Task<Nhanvien> GetByCode(string code, int userId);
         Task<int> Count(
             DateTime workFromDate,
             DateTime workToDate,
@@ -32,10 +33,15 @@ namespace VS_LOAN.Core.Repository.Interfaces
             int roleId,
             string freeText,
             int page,
-            int limit);
-        Task<Nhanvien> GetById(int id);
-        Task<List<OptionSimple>> GetRoleList();
+            int limit,
+            int orgId);
+        Task<Nhanvien> GetByIdAsync(int id);
+        Task<List<OptionSimple>> GetRoleList(int userId);
         Task<bool> Update(EmployeeEditModel entity);
         Task<int> Create(UserCreateModel entity);
+        Task<List<OptionSimple>> GetAllEmployee(int orgId);
+        Task<List<OptionSimple>> GetAllEmployeePaging(int orgId, int page, string freeText);
+        bool CapNhat(int maNhanVien, List<int> lstIDNhom);
+        Task<List<OptionSimple>> LayDSThanhVienNhomCaConAsync(int groupId, int userId);
     }
 }

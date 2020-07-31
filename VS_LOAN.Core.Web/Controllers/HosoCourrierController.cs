@@ -54,7 +54,7 @@ namespace VS_LOAN.Core.Web.Controllers
 
         public ActionResult Index()
         {
-            var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
+            var isAdmin = GlobalData.User.UserType == (int)UserTypeEnum.Admin ? true : false;
             ViewBag.isAdmin = isAdmin ? 1 : 0;
             return View();
         }
@@ -123,15 +123,15 @@ namespace VS_LOAN.Core.Web.Controllers
                 await Task.WhenAll(tasks);
                 if (!string.IsNullOrWhiteSpace(model.LastNote))
                 {
-                    var bizNote = new NoteRepository();
+                    
                     var note = new GhichuModel
                     {
                         Noidung = model.LastNote,
                         HosoId = id,
                         UserId = hoso.CreatedBy,
-                        TypeId = NoteType.HosoCourrier
+                        TypeId = (int)NoteType.HosoCourrier
                     };
-                    bizNote.AddNoteAsync(note);
+                    await _rpNote.AddNoteAsync(note);
 
                 }
 
@@ -229,15 +229,15 @@ namespace VS_LOAN.Core.Web.Controllers
                 _rpCourierProfile.InsertCourierAssignee(model.Id, model.AssignId);
                 if (!string.IsNullOrWhiteSpace(model.LastNote))
                 {
-                    var bizNote = new NoteRepository();
+                    
                     var note = new GhichuModel
                     {
                         Noidung = model.LastNote,
                         HosoId = model.Id,
                         UserId = hoso.UpdatedBy,
-                        TypeId = NoteType.HosoCourrier
+                        TypeId = (int)NoteType.HosoCourrier
                     };
-                    bizNote.AddNoteAsync(note);
+                    await _rpNote.AddNoteAsync(note);
                 }
 
             }
@@ -335,7 +335,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     Noidung = hoso.LastNote,
                     HosoId = id,
                     UserId = GlobalData.User.IDUser,
-                    TypeId = NoteType.HosoCourrier
+                    TypeId = (int)NoteType.HosoCourrier
                 };
                 await _rpNote.AddNoteAsync(note);
 
@@ -355,13 +355,7 @@ namespace VS_LOAN.Core.Web.Controllers
 
             return true;
         }
-        public FileResult DownloadTemplateFile(string fileName)
-        {
-            byte[] fileBytes = System.IO.File.ReadAllBytes(AppDomain.CurrentDomain.BaseDirectory + "App_Data\\ImportSanPham\\" + fileName);
-            var response = new FileContentResult(fileBytes, "application/octet-stream");
-            response.FileDownloadName = fileName;
-            return response;
-        }
+       
         public async Task<JsonResult> GetEmployeesFromOne(int id)
         {
 

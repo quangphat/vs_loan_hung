@@ -25,10 +25,20 @@ namespace VS_LOAN.Core.Web.Controllers
     {
         protected readonly IMediaBusiness _bizMedia;
         protected readonly IPartnerRepository _rpPartner;
-        public DuyetHoSoController(IMediaBusiness mediaBusiness, IPartnerRepository partnerRepository)
+        protected readonly IGroupRepository _rpGroup;
+        protected readonly IEmployeeRepository _rpEmployee;
+        protected readonly INoteRepository _rpNote;
+        public DuyetHoSoController(IMediaBusiness mediaBusiness,
+            IPartnerRepository partnerRepository,
+            IGroupRepository groupRepository,
+            IEmployeeRepository employeeRepository,
+            INoteRepository noteRepository)
         {
             _bizMedia = mediaBusiness;
+            _rpEmployee = employeeRepository;
+            _rpGroup = groupRepository;
             _rpPartner = partnerRepository;
+            _rpNote = noteRepository;
         }
         public static Dictionary<string, ActionInfo> LstRole
         {
@@ -367,10 +377,10 @@ namespace VS_LOAN.Core.Web.Controllers
                             HosoId = hs.ID,
                             Noidung = ghiChu,
                             CommentTime = DateTime.Now,
-                            TypeId = NoteType.Hoso
+                            TypeId = (int)NoteType.Hoso
                         };
-                        var bizNote = new NoteRepository();
-                        await bizNote.AddNoteAsync(ghichu);
+                       
+                        await _rpNote.AddNoteAsync(ghichu);
                         return ToJsonResponse(true, Resources.Global.Message_Succ, hs.ID);
                     }
                     return ToJsonResponse(false, "Không thành công, xin thử lại sau");
@@ -440,11 +450,11 @@ namespace VS_LOAN.Core.Web.Controllers
             return ToJsonResponse(true, null, rs);
         }
 
-        public JsonResult LayDSThanhVienNhom(int maNhom)
+        public async Task<JsonResult> LayDSThanhVienNhom(int maNhom)
         {
-            List<NhanVienNhomDropDownModel> rs = new List<NhanVienNhomDropDownModel>();
+            var rs = new List<OptionSimple>();
             if (maNhom > 0)
-                rs = new NhanVienNhomBLL().LayDSThanhVienNhomCaCon(maNhom);
+                rs = await _rpEmployee.LayDSThanhVienNhomCaConAsync(maNhom, GlobalData.User.IDUser);
             else
             {
                 // Lấy ds nhóm của nv quản lý
@@ -453,12 +463,12 @@ namespace VS_LOAN.Core.Web.Controllers
                 {
                     for (int i = 0; i < lstNhom.Count; i++)
                     {
-                        List<NhanVienNhomDropDownModel> lstThanhVien = new NhanVienNhomBLL().LayDSThanhVienNhom(lstNhom[i].ID);
+                        var lstThanhVien = await _rpGroup.LayDSThanhVienNhomAsync(lstNhom[i].ID, GlobalData.User.IDUser);
                         if (lstThanhVien != null)
                         {
                             for (int j = 0; j < lstThanhVien.Count; j++)
                             {
-                                if (rs.Find(x => x.ID == lstThanhVien[j].ID) == null)
+                                if (rs.Find(x => x.Id == lstThanhVien[j].Id) == null)
                                     rs.Add(lstThanhVien[j]);
                             }
                         }
@@ -466,7 +476,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 }
             }
             if (rs == null)
-                rs = new List<NhanVienNhomDropDownModel>();
+                rs = new List<OptionSimple>();
             return ToJsonResponse(true, null, rs);
         }
         public JsonResult LayDSGhichu(int id)
@@ -478,13 +488,8 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public JsonResult LayDSTrangThai()
         {
-            var isTeamlead = new GroupRepository().CheckIsTeamlead(GlobalData.User.IDUser);
-            var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
-            bool isLimit = false;
-            if (isTeamlead && !isAdmin)
-                isLimit = true;
-            else
-                isLimit = false;
+            var isTeamlead = GlobalData.User.UserType == (int)UserTypeEnum.Teamlead ? true : false;
+            var isAdmin = GlobalData.User.UserType == (int)UserTypeEnum.Admin ? true : false;
             if (!isTeamlead && !isAdmin)
                 return Json(new { DSTrangThai = new List<TrangThaiHoSoModel>() });
             List<TrangThaiHoSoModel> rs = new TrangThaiHoSoBLL().LayDSTrangThai();

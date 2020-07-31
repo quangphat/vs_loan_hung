@@ -27,15 +27,21 @@ namespace VS_LOAN.Core.Web.Controllers
         protected readonly IMediaBusiness _bizMedia;
         protected readonly IEmployeeRepository _rpEmployee;
         protected readonly ITailieuRepository _rpTailieu;
+        protected readonly IGroupRepository _rpGroup;
+        protected readonly INoteRepository _rpNote;
         public QuanLyHoSoController(IPartnerRepository partnerRepository,
             ITailieuRepository tailieuRepository,
             IEmployeeRepository employeeRepository,
+            IGroupRepository groupRepository,
+            INoteRepository noteRepository,
             IMediaBusiness mediaBusiness)
         {
             _rpPartner = partnerRepository;
             _rpEmployee = employeeRepository;
             _bizMedia = mediaBusiness;
             _rpTailieu = tailieuRepository;
+            _rpGroup = groupRepository;
+            _rpNote = noteRepository;
         }
         public static Dictionary<string, ActionInfo> LstRole
         {
@@ -114,25 +120,25 @@ namespace VS_LOAN.Core.Web.Controllers
             return ToJsonResponse(true, null, rs);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public JsonResult LayDSThanhVienNhom(int maNhom)
+        public async Task<JsonResult> LayDSThanhVienNhom(int maNhom)
         {
-            List<NhanVienNhomDropDownModel> rs = new List<NhanVienNhomDropDownModel>();
+            var rs = new List<OptionSimple>();
             if (maNhom > 0)
-                rs = new NhanVienNhomBLL().LayDSThanhVienNhomCaCon(maNhom);
+                rs =await  _rpEmployee.LayDSThanhVienNhomCaConAsync(maNhom, GlobalData.User.IDUser);
             else
             {
                 // Lấy ds nhóm của nv quản lý
-                List<NhomDropDownModel> lstNhom = new GroupRepository().LayDSCuaNhanVien(GlobalData.User.IDUser);
+                List<NhomDropDownModel> lstNhom = _rpGroup.LayDSCuaNhanVien(GlobalData.User.IDUser);
                 if (lstNhom != null)
                 {
                     for (int i = 0; i < lstNhom.Count; i++)
                     {
-                        List<NhanVienNhomDropDownModel> lstThanhVien = new NhanVienNhomBLL().LayDSThanhVienNhom(lstNhom[i].ID);
+                        var lstThanhVien = await _rpGroup.LayDSThanhVienNhomAsync(lstNhom[i].ID, GlobalData.User.IDUser);
                         if (lstThanhVien != null)
                         {
                             for (int j = 0; j < lstThanhVien.Count; j++)
                             {
-                                if (rs.Find(x => x.ID == lstThanhVien[j].ID) == null)
+                                if (rs.Find(x => x.Id == lstThanhVien[j].Id) == null)
                                     rs.Add(lstThanhVien[j]);
                             }
                         }
@@ -140,7 +146,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 }
             }
             if (rs == null)
-                rs = new List<NhanVienNhomDropDownModel>();
+                rs = new List<OptionSimple>();
             return ToJsonResponse(true, null, rs);
         }
 
@@ -180,10 +186,10 @@ namespace VS_LOAN.Core.Web.Controllers
                 HosoId = hosoId,
                 Noidung = ghiChu,
                 CommentTime = DateTime.Now,
-                TypeId = NoteType.Hoso
+                TypeId = (int)NoteType.Hoso
             };
-            var bizNote = new NoteRepository();
-            await bizNote.AddNoteAsync(ghichu);
+            
+            await _rpNote.AddNoteAsync(ghichu);
             return true;
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]

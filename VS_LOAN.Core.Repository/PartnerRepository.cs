@@ -39,7 +39,7 @@ namespace VS_LOAN.Core.Repository
         {
             using (var con = GetConnection())
             {
-                var result = await _connection.QueryAsync<OptionSimple>("sp_getListPartnerForCustomerCheck", commandType: CommandType.StoredProcedure);
+                var result = await con.QueryAsync<OptionSimple>("sp_getListPartnerForCustomerCheck", commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
 

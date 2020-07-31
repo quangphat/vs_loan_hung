@@ -28,15 +28,18 @@ namespace VS_LOAN.Core.Web.Controllers
         protected readonly IPartnerRepository _rpPartner;
         protected readonly IEmployeeRepository _rpEmployee;
         protected readonly IMediaBusiness _bizMedia;
+        protected readonly INoteRepository _rpNote;
         public HoSoController(ITailieuRepository tailieuBusiness,
             IEmployeeRepository employeeRepository,
             IMediaBusiness mediaBusiness,
-            IPartnerRepository partnerRepository) : base()
+            IPartnerRepository partnerRepository,
+            INoteRepository noteRepository) : base()
         {
             _rpTailieu = tailieuBusiness;
             _rpPartner = partnerRepository;
             _bizMedia = mediaBusiness;
             _rpEmployee = employeeRepository;
+            _rpNote = noteRepository;
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
@@ -81,7 +84,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public JsonResult LayDSSale()
+        public async Task<JsonResult> LayDSSale()
         {
             List<UserPMModel> rs = new List<UserPMModel>();
             var lstNhom = new GroupRepository().LayDSCuaNhanVien(GlobalData.User.IDUser);
@@ -89,15 +92,15 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 foreach (var item in lstNhom)
                 {
-                    var lstNhanVien = new NhanVienNhomBLL().LayDSThanhVienNhomCaCon(item.ID);
+                    var lstNhanVien =await _rpEmployee.LayDSThanhVienNhomCaConAsync(item.ID, GlobalData.User.IDUser);
                     if (lstNhanVien != null)
                     {
                         foreach (var jtem in lstNhanVien)
                         {
                             var user = new UserPMModel();
-                            user.FullName = jtem.Ten;
+                            user.FullName = jtem.Name;
                             user.Code = jtem.Code;
-                            user.IDUser = jtem.ID;
+                            user.IDUser = jtem.Id;
                             rs.Add(user);
                         }
                     }
@@ -115,10 +118,10 @@ namespace VS_LOAN.Core.Web.Controllers
                 HosoId = hosoId,
                 Noidung = ghiChu,
                 CommentTime = DateTime.Now,
-                TypeId = NoteType.Hoso
+                TypeId = (int)NoteType.Hoso
             };
-            var bizNote = new NoteRepository();
-            await bizNote.AddNoteAsync(ghichu);
+            
+            await _rpNote.AddNoteAsync(ghichu);
             return true;
         }
         [System.Web.Http.HttpPost]

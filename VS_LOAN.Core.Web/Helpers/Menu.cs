@@ -7,6 +7,8 @@ using System.Text;
 using System.Web;
 using VS_LOAN.Core.Repository;
 using VS_LOAN.Core.Web.Infrastructures;
+using VS_LOAN.Core.Repository.Interfaces;
+using VS_LOAN.Core.Entity;
 
 namespace VS_LOAN.Core.Web.Helpers
 {
@@ -30,7 +32,11 @@ namespace VS_LOAN.Core.Web.Helpers
 
     public class Menu
     {
-
+        public IEmployeeRepository _rpEmployee;
+        public Menu(IEmployeeRepository employeeRepository)
+        {
+            _rpEmployee = employeeRepository;
+        }
         protected static bool checkMenuItem(int[] _mangChucNang)
         {
             List<string> lstQuyen = new List<string>();
@@ -82,6 +88,36 @@ namespace VS_LOAN.Core.Web.Helpers
         }
         public static string ReturnMenu()
         {
+            var orgId = GlobalData.User.OrgId;
+            if (orgId == (int)Organization.RevokeDebt)
+                return ReturnInvokeDebtMenu();
+            return ReturnVietbankMenu();
+        }
+        protected static string ReturnInvokeDebtMenu()
+        {
+            List<SiteMenuItem> _siteMenu = new List<SiteMenuItem>{
+
+                    new SiteMenuItem("Quản lý hồ sơ","menu-icon qlhs",IndexMenu.M_2,"#",new int[] { }),
+                        new SiteMenuItem("Danh sách hồ sơ","", IndexMenu.M_10_1,ControllerRoles.Roles["revoke_list"]._href, ControllerRoles.Roles["revoke_list"]._mangChucNang), // 1.3      
+            };
+            List<SiteMenuItem> siteMenuAdmin = new List<SiteMenuItem>
+            {
+                  new SiteMenuItem("Tổ nhóm","menu-icon group",IndexMenu.M_3,"#",new int[] { }),
+                        new SiteMenuItem("Tạo mới","", IndexMenu.M_3_1,ControllerRoles.Roles["team_addnew"]._href, ControllerRoles.Roles["team_addnew"]._mangChucNang), // 1.3     
+                        new SiteMenuItem("Quản lý tổ nhóm","", IndexMenu.M_3_2,ControllerRoles.Roles["team_list"]._href,ControllerRoles.Roles["team_list"]._mangChucNang), // 1.3     
+                        new SiteMenuItem("Cấu hình duyệt","", IndexMenu.M_3_3,ControllerRoles.Roles["team_config"]._href, ControllerRoles.Roles["team_config"]._mangChucNang), // 1.3     
+                    new SiteMenuItem("Nhân sự","menu-icon employee",IndexMenu.M_6,ControllerRoles.Roles["employee_list"]._href,new int[] { }),
+                        new SiteMenuItem("Thêm mới","", IndexMenu.M_6_1,ControllerRoles.Roles["employee_add"]._href,ControllerRoles.Roles["employee_add"]._mangChucNang) // 1.3  
+            };
+            
+            if (GlobalData.User.UserType == (int)UserTypeEnum.Admin)
+            {
+                _siteMenu = _siteMenu.Concat(siteMenuAdmin).ToList();
+            }
+            return GenerateMenu(_siteMenu);
+        }
+        protected static string ReturnVietbankMenu()
+        {
             List<SiteMenuItem> _siteMenu = new List<SiteMenuItem>{
                     new SiteMenuItem(Resources.Global.Menu_TC,"menu-icon home",IndexMenu.M_0,"#",new int[] { (int)QuyenIndex.Public }),
                         new SiteMenuItem("Giới thiệu","",IndexMenu.M_0_1,ControllerRoles.Roles["home_about"]._href,new int[] { (int)QuyenIndex.Public }),
@@ -124,12 +160,18 @@ namespace VS_LOAN.Core.Web.Helpers
                     new SiteMenuItem("Nhân sự","menu-icon employee",IndexMenu.M_6,ControllerRoles.Roles["employee_list"]._href,new int[] { }),
                         new SiteMenuItem("Thêm mới","", IndexMenu.M_6_1,ControllerRoles.Roles["employee_add"]._href,ControllerRoles.Roles["employee_add"]._mangChucNang) // 1.3  
             };
+
             //var isTeamLead = new NhomBLL().CheckIsTeamlead(GlobalData.User.IDUser);
-            var isAdmin = new GroupRepository().CheckIsAdmin(GlobalData.User.IDUser);
+            var isAdmin = GlobalData.User.UserType == (int)UserTypeEnum.Admin ? true : false;
             if (isAdmin)
             {
                 _siteMenu = _siteMenu.Concat(siteMenuAdmin).ToList();
             }
+            return GenerateMenu(_siteMenu);
+        }
+        protected static string GenerateMenu(List<SiteMenuItem> menus)
+        {
+
             StringBuilder menuHtml = new StringBuilder();
 
             menuHtml.Append("<ul class='nav nav-list'>");
@@ -141,9 +183,9 @@ namespace VS_LOAN.Core.Web.Helpers
             StringBuilder menuTreeLv2 = new StringBuilder();
             StringBuilder menuTreeLv3 = new StringBuilder();
             bool addMenuTree = false; bool addMenuTreev2 = false;
-            for (int i = 0; i < _siteMenu.Count; i++)
+            for (int i = 0; i < menus.Count; i++)
             {
-                string[] indexes = _siteMenu[i].Index.Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
+                string[] indexes = menus[i].Index.Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (indexes.Length == 1)
                 {
@@ -176,15 +218,15 @@ namespace VS_LOAN.Core.Web.Helpers
                         menuTree.Remove(0, menuTree.Length);
                     }
                     menuTree.Append("<li class=\"hover\">");
-                    if (_siteMenu[i].Href == "#")
-                        menuTree.Append("<a href='" + _siteMenu[i].Href + "' class='dropdown-toggle'>");// 
+                    if (menus[i].Href == "#")
+                        menuTree.Append("<a href='" + menus[i].Href + "' class='dropdown-toggle'>");// 
                     else
-                        menuTree.Append("<a href='/" + _siteMenu[i].Href + "' >");// 
+                        menuTree.Append("<a href='/" + menus[i].Href + "' >");// 
                     //menuTree.Append("<i style='margin: 1px 0 1px; display: inline-block;' class='"+ _siteMenu[i].Icon+"'></i>");//menu-icon fa fa fa-list-alt
-                    menuTree.Append("<i  class='" + _siteMenu[i].Icon + "'></i>");
+                    menuTree.Append("<i  class='" + menus[i].Icon + "'></i>");
                     menuTree.Append("<span  class='menu-text'>");
                     //menu-icon fa fa fa-list-alt
-                    menuTree.Append(_siteMenu[i].Text);
+                    menuTree.Append(menus[i].Text);
                     menuTree.Append("</span>");
                     menuTree.Append("<b class='arrow  fa fa-angle-down'></b>");
                     menuTree.Append("</a>");
@@ -203,14 +245,14 @@ namespace VS_LOAN.Core.Web.Helpers
                     else menuTreeLv3.Remove(0, menuTreeLv3.Length);
                     if (addMenuTree == false)
                         openMenuLv2 = false;
-                    if (Menu.checkMenuItem(_siteMenu[i].functionList) == true)
+                    if (Menu.checkMenuItem(menus[i].functionList) == true)
                     {
                         if (openMenuLv2 == false)
                             menuTreeLv2.Append("<b class=\"arrow\"></b><ul class='submenu'>");
-                        menuTreeLv2.Append("<li class='hover' id='" + _siteMenu[i].Index + "'>");
-                        menuTreeLv2.Append("<a  href='/" + _siteMenu[i].Href + "'>");
+                        menuTreeLv2.Append("<li class='hover' id='" + menus[i].Index + "'>");
+                        menuTreeLv2.Append("<a  href='/" + menus[i].Href + "'>");
                         menuTreeLv2.Append("<i class='menu-icon fa fa-caret-right'></i>");
-                        menuTreeLv2.Append(_siteMenu[i].Text);
+                        menuTreeLv2.Append(menus[i].Text);
                         menuTreeLv2.Append("</a>");
                         menuTreeLv2.Append("<b class='arrow'></b>");
                         menuTreeLv2.Append("</li>");
@@ -218,7 +260,7 @@ namespace VS_LOAN.Core.Web.Helpers
                         addMenuTree = true;
 
                     }
-                    else if (_siteMenu[i].Href == "#")
+                    else if (menus[i].Href == "#")
                     {
                         if (addMenuTreev2 == false)
                         {
@@ -227,10 +269,10 @@ namespace VS_LOAN.Core.Web.Helpers
                         }
                         if (openMenuLv2 == false)
                             menuTreeLv3.Append("<ul class='submenu'>");
-                        menuTreeLv3.Append("<li id='" + _siteMenu[i].Index + "'>");
-                        menuTreeLv3.Append("<a  href='" + _siteMenu[i].Href + "' class='dropdown-toggle'>");
+                        menuTreeLv3.Append("<li id='" + menus[i].Index + "'>");
+                        menuTreeLv3.Append("<a  href='" + menus[i].Href + "' class='dropdown-toggle'>");
                         menuTreeLv3.Append("<i class='menu-icon fa fa-caret-right'></i>");
-                        menuTreeLv3.Append(_siteMenu[i].Text);
+                        menuTreeLv3.Append(menus[i].Text);
                         menuTreeLv3.Append("<b class='arrow fa fa-angle-down'></b>");
                         menuTreeLv3.Append("</a>");
                         menuTreeLv3.Append("<b class='arrow '></b>");
@@ -240,14 +282,14 @@ namespace VS_LOAN.Core.Web.Helpers
                 }
                 else if (indexes.Length == 3)
                 {
-                    if (Menu.checkMenuItem(_siteMenu[i].functionList) == true)
+                    if (Menu.checkMenuItem(menus[i].functionList) == true)
                     {
                         if (openMenuLv3 == false)
                             menuTreeLv3.Append("<ul class='submenu'>");
-                        menuTreeLv3.Append("<li id='" + _siteMenu[i].Index + "'>");
-                        menuTreeLv3.Append("<a  href='/" + _siteMenu[i].Href + "'>");
+                        menuTreeLv3.Append("<li id='" + menus[i].Index + "'>");
+                        menuTreeLv3.Append("<a  href='/" + menus[i].Href + "'>");
                         menuTreeLv3.Append("<i class='menu-icon fa fa-leaf green'></i>");
-                        menuTreeLv3.Append(_siteMenu[i].Text);
+                        menuTreeLv3.Append(menus[i].Text);
                         menuTreeLv3.Append("</a>");
                         menuTreeLv3.Append("<b class='arrow'></b>");
                         menuTreeLv3.Append("</li>");

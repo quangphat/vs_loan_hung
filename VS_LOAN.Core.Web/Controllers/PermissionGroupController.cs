@@ -12,11 +12,17 @@ using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Utility.Exceptions;
 using VS_LOAN.Core.Web.Helpers;
+using VS_LOAN.Core.Repository.Interfaces;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class PermissionGroupController : LoanController
     {
+        protected readonly IGroupRepository _rpGroup;
+        public PermissionGroupController(IGroupRepository groupRepository) : base()
+        {
+            _rpGroup = groupRepository;
+        }
         public static Dictionary<string, ActionInfo> LstRole
         {
             get
@@ -35,47 +41,9 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.formindex = "";//LstRole[RouteData.Values["action"].ToString()]._formindex;
             return View();
         }
-        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLNHomQuyen })]
-        public ActionResult ThemMoi(string ten, string tenNgan, int maNguoiQuanLy, int maNhomCha, List<int> lstThanhVien)
-        {
-            
-            try
-            {
-
-                int result = 0;
-                NhomModel nhom = new NhomModel();
-                nhom.MaNguoiQL = maNguoiQuanLy;
-                nhom.MaNhomCha = maNhomCha;
-                if (maNhomCha != 0)
-                    nhom.ChuoiMaCha = new GroupRepository().LayChuoiMaCha(maNhomCha) + "." + maNhomCha;
-                else
-                    nhom.ChuoiMaCha = "0";
-                nhom.Ten = ten;
-                nhom.TenNgan = tenNgan;
-                result = new GroupRepository().Them(nhom, lstThanhVien);
-                if (result > 0)
-                {
-                    return ToResponse(true, Resources.Global.Message_Succ, result);
-                    
-                }
-                return ToResponse(false,"Không thành công", 0);
-            }
-            catch (BusinessException ex)
-            {
-                return ToResponse(false, ex.Message);
-            }
-            
-        }
         
-        public async Task<JsonResult> LayDSNhomCha()
-        {
-            var bizGroup = new GroupRepository();
-            List<NhomDropDownModel> rs = await bizGroup.GetAll();
-            if (rs == null)
-                rs = new List<NhomDropDownModel>();
-            return Json(new { DSNhom = rs });
-        }
-
+        
+       
 
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
@@ -85,24 +53,7 @@ namespace VS_LOAN.Core.Web.Controllers
             return View();
         }
 
-        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
-        public JsonResult LayDSToNhomCon(int maNhomCha)
-        {
-            
-            List<ThongTinToNhomModel> rs = new List<ThongTinToNhomModel>();
-            try
-            {
-                rs = new GroupRepository().LayDSNhomCon(maNhomCha);
-                if (rs == null)
-                    rs = new List<ThongTinToNhomModel>();
-                return ToJsonResponse(true,null, rs);
-            }
-            catch (BusinessException ex)
-            {
-                return ToJsonResponse(false, ex.Message);
-            }
-            
-        }
+        
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
         public ActionResult Sua()
@@ -111,7 +62,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if(Session["ToNhom_Sua_ID"] == null)
                 return RedirectToAction("QLToNhom");
             int idNhom = (int)Session["ToNhom_Sua_ID"];
-            ViewBag.ThongTinNhom = new GroupRepository().LayTheoMa(idNhom);
+            ViewBag.ThongTinNhom = new GroupRepository().LayTheoMaAsync(idNhom);
             return View();
         }
 
@@ -121,23 +72,8 @@ namespace VS_LOAN.Core.Web.Controllers
             return RedirectToAction("Sua");
         }
 
-        public JsonResult LayThongTinThanhVienSuaNhom(int maNhom)
-        {
-            List<NhanVienNhomDropDownModel> lstThanhVienNhom = new NhanVienNhomBLL().LayDSThanhVienNhom(maNhom);
-            List<NhanVienNhomDropDownModel> lstKhongThanhVienNhom = new NhanVienNhomBLL().LayDSKhongThanhVienNhom(maNhom);
-            return Json(new { DSThanhVien = lstThanhVienNhom, DSChuaThanhVien = lstKhongThanhVienNhom });
-        }
-        
-        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
-        public ActionResult ChiTiet()
-        {
-            ViewBag.formindex = LstRole["QLToNhom"]._formindex;
-            if(Session["ToNhom_ChiTiet_ID"] == null)
-                return RedirectToAction("QLToNhom");
-            int idNhom = (int)Session["ToNhom_ChiTiet_ID"];
-            ViewBag.ThongTinNhom = new GroupRepository().LayChiTietTheoMa(idNhom);
-            return View();
-        }
+      
+       
 
         public ActionResult XemToNhomByID(int id)
         {
@@ -176,22 +112,6 @@ namespace VS_LOAN.Core.Web.Controllers
             
         }
 
-        public JsonResult LayDSChiTietThanhVien(int maNhom)
-        {
-            
-            List<ThongTinNhanVienModel> rs = new List<ThongTinNhanVienModel>();
-            try
-            {
-                rs = new NhanVienNhomBLL().LayDSChiTietThanhVienNhom(maNhom);
-                if (rs == null)
-                    rs = new List<ThongTinNhanVienModel>();
-                return ToJsonResponse(true,null, rs);
-            }
-            catch (BusinessException ex)
-            {
-                return ToJsonResponse(false, ex.Message);
-            }
-        }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.CauHinhDuyet })]
         public ActionResult CauHinhDuyet()
@@ -200,20 +120,6 @@ namespace VS_LOAN.Core.Web.Controllers
             return View();
         }
 
-        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
-        public ActionResult LuuCauHinh(int maNhanVien, List<int> lstIDNhom)
-        {
-           
-            try
-            {
-                bool result = new NhanVienConfigBLL().CapNhat(maNhanVien, lstIDNhom);
-                return ToResponse(result);
-            }
-            catch (BusinessException ex)
-            {
-                return ToResponse(true, ex.Message);
-            }
-            
-        }
+       
     }
 }

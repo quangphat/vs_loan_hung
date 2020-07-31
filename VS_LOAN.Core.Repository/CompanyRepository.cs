@@ -49,7 +49,7 @@ namespace VS_LOAN.Core.Repository
             p.Add("updatedby", model.UpdatedBy);
             using (var con = GetConnection())
             {
-                await _connection.ExecuteAsync("sp_UpdateCompany", p, commandType: CommandType.StoredProcedure);
+                await con.ExecuteAsync("sp_UpdateCompany", p, commandType: CommandType.StoredProcedure);
                 return true;
             }
             
@@ -59,7 +59,7 @@ namespace VS_LOAN.Core.Repository
             string sql = $"select * from Company where Id = @id";
             using (var con = GetConnection())
             {
-                var customer = await _connection.QueryFirstOrDefaultAsync<Company>(sql, new
+                var customer = await con.QueryFirstOrDefaultAsync<Company>(sql, new
                 {
                     id = id
                 }, commandType: CommandType.Text);
@@ -75,9 +75,10 @@ namespace VS_LOAN.Core.Repository
             if (string.IsNullOrWhiteSpace(freeText))
                 freeText = "";
             p.Add("freeText", freeText);
+
             using (var con = GetConnection())
             {
-                var total = await _connection.ExecuteScalarAsync<int>("sp_CountCompany", p, commandType: CommandType.StoredProcedure);
+                var total = await con.ExecuteScalarAsync<int>("sp_CountCompany", p, commandType: CommandType.StoredProcedure);
                 return total;
             }
             
@@ -98,7 +99,7 @@ namespace VS_LOAN.Core.Repository
             p.Add("limit", limit);
             using (var con = GetConnection())
             {
-                var results = await _connection.QueryAsync<Company>("sp_GetCompnay", p, commandType: CommandType.StoredProcedure);
+                var results = await con.QueryAsync<Company>("sp_GetCompnay", p, commandType: CommandType.StoredProcedure);
                 return results.ToList();
             }
             

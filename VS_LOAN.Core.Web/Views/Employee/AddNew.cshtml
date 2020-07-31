@@ -48,7 +48,7 @@
                 <div class="hr hr16 dotted"></div>
             </div>
             <div class="col-sm-9" id="panel_body">
-                <form class="form-horizontal" role="form" autocomplete="off" id="frm_doimatkhau">
+                <form class="form-horizontal" role="form"  autocomplete="off" id="frm_doimatkhau">
                     <div class="tabbable">
                         <ul class="nav nav-tabs padding-16">
                             <li class="active">
@@ -86,30 +86,19 @@
                                                 <input type="text" id="txtPhone" placeholder="Số điện thoại" class="form-control">
                                             </div>
                                         </div>
+                                       
                                         <div class="profile-info-row">
-                                            <div class="profile-info-name"> Ngày vào làm: </div>
+                                            <div class="profile-info-name"> Tên đăng nhập: </div>
 
                                             <div class="profile-info-value col-sm-4">
-                                                <div class="input-group">
-                                                    <input class="form-control date-picker" id="txtWorkDate" />
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-calendar bigger-110"></i>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="profile-info-row">
-                                            <div class="profile-info-name"> @Global.NhanVien_UserProfile_UserName: </div>
-
-                                            <div class="profile-info-value col-sm-4">
-                                                <input type="text" id="txtUserName" placeholder="Nhập mã nhân viên" class="form-control">
+                                                <input type="text" id="txtUserName" value="" autocomplete="off" class="form-control">
                                             </div>
                                         </div>
                                         <div class="profile-info-row">
                                             <div class="profile-info-name">Mật khẩu: </div>
 
                                             <div class="profile-info-value col-sm-4">
-                                                <input type="password" id="txtPass" placeholder="Mật khẩu" class="form-control">
+                                                <input type="password" id="txtPass" autocomplete="off" value="" placeholder="Mật khẩu" class="form-control">
                                             </div>
                                         </div>
                                         <div class="profile-info-row">
@@ -126,25 +115,10 @@
                                                 <input type="text" id="txtCode" placeholder="Mã nhân viên" class="form-control">
                                             </div>
                                         </div>
+                                        
+                                       
                                         <div class="profile-info-row">
-                                            <div class="profile-info-name">Tỉnh/Thành phố: </div>
-
-                                            <div class="profile-info-value col-sm-4">
-                                                <select id="ddlProvince" class="chosen-select form-control" data-placeholder="Chọn tỉnh/thành phố">
-                                                    <option value="0"></option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="profile-info-row">
-                                            <div class="profile-info-name">Quận/Huyện: </div>
-                                            <div class="profile-info-value col-sm-4">
-                                                <select id="ddlDistrict" class="chosen-select form-control" data-placeholder="Chọn quận/huyện">
-                                                    <option value="0"></option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="profile-info-row">
-                                            <div class="profile-info-name">Loại nhân viên: </div>
+                                            <div class="profile-info-name">Vai trò trên trang: </div>
                                             <div class="profile-info-value col-sm-4">
                                                 <select id="ddlRole" class="chosen-select form-control" data-placeholder="Chọn loại"></select>
 
@@ -172,16 +146,8 @@
     </div>
 </div>
 <script>
-    var strLoading = '@Html.Raw(Global.Message_Loading)';
-</script>
-<script type="text/ecmascript">
-    $('#btn_reset_matkhau').click(function (evt) {
-        $('#newPassword').val('');
-        $('#oldPassword').val('');
-        $('#confirmPassword').val('');
-    });
-</script>
-<script>
+    var strLoading = 'Vui lòng chờ';
+
     var nhanvien = {
         UserName: '',
         Password: '',
@@ -203,21 +169,22 @@
         $('#btnSave').click(function (e) {
             createUser();
         })
-        getRoles("#ddlRole", true,"Chọn loại nhân viên");
+        
+        getRoles("#ddlRole", true, "Chọn loại nhân viên");
+        $('#txtPass').val('');
+        $('#txtUserName').val('');
+        $('#confirmPassword').val('');
     })
 
     function createUser() {
         nhanvien.FullName = $("#txtFullName").val();
         nhanvien.Email = $("#txtEmail").val();
         nhanvien.Phone = $("#txtPhone").val();
-        nhanvien.WorkDateStr = $("#txtWorkDate").val();
         nhanvien.UserName = $("#txtUserName").val();
         nhanvien.RoleId = $("#ddlRole").val();
         nhanvien.Password = $("#txtPass").val();
         nhanvien.Code = $("#txtCode").val();
         nhanvien.PasswordConfirm = $("#txtConfirmPass").val();
-        nhanvien.ProvinceId = (!isNullOrWhiteSpace($("#ddlProvince").val()) && !isNullOrUndefined($("#ddlProvince").val())) ? parseInt($("#ddlProvince").val()) : 0;
-        nhanvien.DistrictId = (!isNullOrWhiteSpace($("#ddlDistrict").val()) && !isNullOrUndefined($("#ddlDistrict").val())) ? parseInt($("#ddlDistrict").val()) : 0;
         if (isNullOrWhiteSpace(nhanvien.UserName)) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
@@ -228,26 +195,7 @@
             });
             return;
         }
-        if (isNullOrWhiteSpace(nhanvien.WorkDateStr) || isNullOrUndefined(nhanvien.WorkDateStr)) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn ngày vào làm",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        @*if (isNullOrWhiteSpace(nhanvien.Email)) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Email không được để trống",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }*@
+        
         if (isNullOrWhiteSpace(nhanvien.FullName)) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
@@ -268,28 +216,7 @@
             });
             return;
         }
-        if (nhanvien.ProvinceId <= 0) {
-            nhanvien.ProvinceId = 0;
-            @*swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn tỉnh/thành phố",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;*@
-        }
-        if (nhanvien.DistrictId <= 0) {
-            nhanvien.DistrictId =0
-            @*swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn quận/huyện",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;*@
-        }
+        
         $.ajax({
             traditional: true,
             url: '/employee/Create',

@@ -15,6 +15,26 @@ namespace VS_LOAN.Core.Repository
     {
 
         public TailieuRepository() : base(typeof(TailieuRepository)) { }
+        public async Task<List<ImportExcelFrameWorkModel>> GetImportTypes(int type)
+        {
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    var reader = await con.QueryAsync<ImportExcelFrameWorkModel>("sp_ImportExcel_GetByType", new { type}
+                        , commandType: CommandType.StoredProcedure);
+                    //DataTable table = new DataTable();
+                    //table.Load(reader);
+                    return reader.ToList();
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
         public async Task<List<LoaiTaiLieuModel>> LayDS()
         {
             try

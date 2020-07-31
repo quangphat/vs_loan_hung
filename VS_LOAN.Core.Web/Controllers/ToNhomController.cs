@@ -12,12 +12,19 @@ using VS_LOAN.Core.Entity.Model;
 using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Utility.Exceptions;
 using VS_LOAN.Core.Web.Helpers;
+using VS_LOAN.Core.Repository.Interfaces;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class ToNhomController : LoanController
     {
-        private readonly GroupRepository _bizGroup = new GroupRepository();
+        protected readonly IEmployeeRepository _rpEmployee;
+        protected readonly IGroupRepository _rpGroup;
+        public ToNhomController(IEmployeeRepository employeeRepository, IGroupRepository groupRepository) : base()
+        {
+            _rpEmployee = employeeRepository;
+            _rpGroup = groupRepository;
+        }
         public static Dictionary<string, ActionInfo> LstRole
         {
             get
@@ -37,17 +44,10 @@ namespace VS_LOAN.Core.Web.Controllers
             return View();
         }
 
-        public JsonResult LayDSNhanVien()
-        {
-            List<UserPMModel> rs = new NhanVienBLL().LayDSNhanVien();
-            if (rs == null)
-                rs = new List<UserPMModel>();
-            return ToJsonResponse(true, null, rs);
-        }
 
         public async Task<JsonResult> LayDSNhomCha(bool isAddAll = false)
         {
-            List<NhomDropDownModel> rs = await _bizGroup.GetAll();
+            List<NhomDropDownModel> rs = await _rpGroup.GetAll(GlobalData.User.IDUser);
 
             if (rs == null)
                 rs = new List<NhomDropDownModel>();
@@ -70,12 +70,16 @@ namespace VS_LOAN.Core.Web.Controllers
                 nhom.MaNguoiQL = maNguoiQuanLy;
                 nhom.MaNhomCha = maNhomCha;
                 if (maNhomCha != 0)
-                    nhom.ChuoiMaCha = new GroupRepository().LayChuoiMaCha(maNhomCha) + "." + maNhomCha;
+                {
+                    var parentCode = _rpGroup.LayChuoiMaCha(maNhomCha);
+                    nhom.ChuoiMaCha = parentCode + "." + maNhomCha;
+                }
+
                 else
                     nhom.ChuoiMaCha = "0";
                 nhom.Ten = ten;
                 nhom.TenNgan = tenNgan;
-                result = new GroupRepository().Them(nhom, lstThanhVien);
+                result = _rpGroup.Them(nhom, lstThanhVien, GlobalData.User.IDUser);
                 if (result > 0)
                 {
                     return ToResponse(true, null, result);
@@ -98,18 +102,18 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetEmployeesByGroupId(int groupId, bool isLeader = false)
         {
-            var results = await _bizGroup.GetEmployeesByGroupId(groupId,isLeader);
+            var results = await _rpEmployee.GetEmployeesByGroupId(groupId, isLeader);
             return ToJsonResponse(true, null, results);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
-        public JsonResult LayDSToNhomCon(int maNhomCha)
+        public async Task<JsonResult> LayDSToNhomCon(int maNhomCha)
         {
 
             RMessage message = new RMessage { code = Resources.Global.Message_Succ, success = true };
             List<ThongTinToNhomModel> rs = new List<ThongTinToNhomModel>();
             try
             {
-                rs = new GroupRepository().LayDSNhomCon(maNhomCha);
+                rs = await _rpGroup.LayDSNhomConAsync(maNhomCha, GlobalData.User.IDUser);
                 if (rs == null)
                     rs = new List<ThongTinToNhomModel>();
             }
@@ -122,45 +126,29 @@ namespace VS_LOAN.Core.Web.Controllers
         }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
-        public ActionResult Sua()
+        public async Task<ActionResult> Sua(int id)
         {
-            ViewBag.formindex = LstRole["QLToNhom"]._formindex;
-            if (Session["ToNhom_Sua_ID"] == null)
-                return RedirectToAction("QLToNhom");
-            int idNhom = (int)Session["ToNhom_Sua_ID"];
-            ViewBag.ThongTinNhom = new GroupRepository().LayTheoMa(idNhom);
+
+            ViewBag.model = await _rpGroup.LayTheoMaAsync(id);
             return View();
         }
 
-        public ActionResult SuaToNhomByID(int id)
+        public async Task<JsonResult> GetMember(int groupId)
         {
-            Session["ToNhom_Sua_ID"] = id;
-            return RedirectToAction("Sua");
+            var result = await _rpGroup.LayDSThanhVienNhomAsync(groupId, GlobalData.User.IDUser);
+            return ToJsonResponse(true, null, result);
         }
-
-        public JsonResult LayThongTinThanhVienSuaNhom(int maNhom)
-        {
-            List<NhanVienNhomDropDownModel> lstThanhVienNhom = new NhanVienNhomBLL().LayDSThanhVienNhom(maNhom);
-            List<NhanVienNhomDropDownModel> lstKhongThanhVienNhom = new NhanVienNhomBLL().LayDSKhongThanhVienNhom(maNhom);
-            return Json(new { DSThanhVien = lstThanhVienNhom, DSChuaThanhVien = lstKhongThanhVienNhom });
-        }
+      
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
-        public ActionResult ChiTiet()
+        public async Task<ActionResult> ChiTiet(int id)
         {
             ViewBag.formindex = LstRole["QLToNhom"]._formindex;
-            if (Session["ToNhom_ChiTiet_ID"] == null)
-                return RedirectToAction("QLToNhom");
-            int idNhom = (int)Session["ToNhom_ChiTiet_ID"];
-            ViewBag.ThongTinNhom = new GroupRepository().LayChiTietTheoMa(idNhom);
+
+            ViewBag.model = await _rpGroup.LayChiTietTheoMaAsync(id);
             return View();
         }
 
-        public ActionResult XemToNhomByID(int id)
-        {
-            Session["ToNhom_ChiTiet_ID"] = id;
-            return RedirectToAction("ChiTiet");
-        }
 
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
         public ActionResult LuuSua(int maNhom, string ten, string tenNgan, int maNguoiQuanLy, int maNhomCha, List<int> lstThanhVien)
@@ -174,12 +162,16 @@ namespace VS_LOAN.Core.Web.Controllers
                 nhom.MaNguoiQL = maNguoiQuanLy;
                 nhom.MaNhomCha = maNhomCha;
                 if (maNhomCha != 0)
-                    nhom.ChuoiMaCha = new GroupRepository().LayChuoiMaCha(maNhomCha) + "." + maNhomCha;
+                {
+                    var parentCode = _rpGroup.LayChuoiMaCha(maNhomCha);
+                    nhom.ChuoiMaCha = parentCode + "." + maNhomCha;
+                }
+
                 else
                     nhom.ChuoiMaCha = "0";
                 nhom.Ten = ten;
                 nhom.TenNgan = tenNgan;
-                result = new GroupRepository().Sua(nhom, lstThanhVien);
+                result = _rpGroup.Sua(nhom, lstThanhVien);
                 if (result)
                 {
                     return ToResponse(true, null, result);
@@ -200,7 +192,7 @@ namespace VS_LOAN.Core.Web.Controllers
             List<ThongTinNhanVienModel> rs = new List<ThongTinNhanVienModel>();
             try
             {
-                rs = new NhanVienNhomBLL().LayDSChiTietThanhVienNhom(maNhom);
+                rs = _rpGroup.LayDSChiTietThanhVienNhom(maNhom);
                 if (rs == null)
                     rs = new List<ThongTinNhanVienModel>();
             }
@@ -225,7 +217,7 @@ namespace VS_LOAN.Core.Web.Controllers
 
             try
             {
-                bool result = new NhanVienConfigBLL().CapNhat(maNhanVien, lstIDNhom);
+                bool result = _rpEmployee.CapNhat(maNhanVien, lstIDNhom);
                 return ToResponse(result);
             }
             catch (BusinessException ex)

@@ -17,54 +17,6 @@
             <div class="col-xs-12">
                 <form class="form-horizontal" role="form">
                     <div class="space-4"></div>
-
-                    <div class="form-group">
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ngày vào làm</label>
-                        <div class="col-sm-5 col-xs-12 ">
-                            <div class="col-xs-6 pl-0">
-                                <div class="input-group">
-                                    <input class="form-control date-picker" id="txtFromWorkDate" />
-                                    <span class="input-group-addon">
-                                        <i class="fa fa-calendar bigger-110"></i>
-                                    </span>
-                                </div>
-
-                            </div>
-
-                            <div class="col-xs-6 pr-0">
-                                <div class="input-group">
-                                    <input class="form-control date-picker" id="txtToWorkDate" />
-                                    <span class="input-group-addon">
-                                        <i class="fa fa-calendar bigger-110"></i>
-                                    </span>
-                                </div>
-
-                            </div>
-                        </div>
-                        @*<label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ngày tạo</label>
-        <div class="col-sm-5 col-xs-12 ">
-             <div class="col-xs-6 pl-0">
-                 <div class="input-group">
-                     <input class="form-control date-picker" id="txtFromCreatedDate" />
-                     <span class="input-group-addon">
-                         <i class="fa fa-calendar bigger-110"></i>
-                     </span>
-                 </div>
-
-             </div>
-
-             <div class="col-xs-6 pr-0">
-                 <div class="input-group">
-                     <input class="form-control date-picker" id="txtToCreatedDate" />
-                     <span class="input-group-addon">
-                         <i class="fa fa-calendar bigger-110"></i>
-                     </span>
-                 </div>
-
-             </div>
-         </div>*@
-
-                    </div>
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Vai trò trên trang</label>
                         <div class="col-sm-5 col-xs-12 ">
@@ -123,6 +75,7 @@
                                 <tr>
                                     <th class="center w-45">STT</th>
                                     <th class="m-w-120">Họ tên</th>
+                                    <th class="w-150">ID</th>
                                     <th class="w-150">Mã</th>
                                     <th class="w-150">Tên đăng nhập</th>
                                     <th style="width: 150px">Email</th>
@@ -130,7 +83,6 @@
                                     <th style="width: 150px">Vai trò trên trang</th>
                                     <th class="m-w-300">Khu vực</th>
                                     <th class="w-150">Ngày vào làm</th>
-                                    <th class="w-84">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -245,6 +197,7 @@
         limit = $("#ddlLimit").val()
         getData(1, limit)
     }
+
     function renderRow(index, rowData) {
         page = queries.get("page");
         if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
@@ -258,8 +211,9 @@
             limit = parseInt(limit)
         var stt = (page - 1) * limit + index + 1;
         return "<tr role='row' class = 'odd'>"
-            + renderTextCenter(stt, '','center w-45')
-            + renderTextLeft(rowData.FullName, '', "m-w-120")
+            + renderTextCenter(stt, '', 'center w-45')
+            + renderTextLink(rowData.FullName, `/employee/edit/${rowData.Id}`, '', "m-w-120")
+            + renderTextLeft(rowData.Id, '', "w-150")
             + renderTextLeft(rowData.Code, '', "w-150")
             + renderTextLeft(rowData.UserName, '', "w-150")
             + renderTextLeft(rowData.Email, '','w-150')
@@ -267,7 +221,6 @@
             + renderTextLeft(rowData.RoleName, '', "w-150")
             + renderTextLeft(rowData.Location, '', "m-w-300")
             + renderTextLeft(rowData.WorkDate, 'datetime', 'w-150')
-            + renderAction(rowData.Id)
             + "</tr>";
     }
     function renderTableBody(datas) {
