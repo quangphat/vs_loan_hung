@@ -22,12 +22,12 @@ Layout = "~/Views/Shared/_Layout.cshtml";
         <!--/. Page header-->
         <div class="user-profile row">
             <div class="col-xs-12 col-sm-3 center">
-                @if (ViewBag.ThongTin != null)
+                @if (ViewBag.model != null)
                 {
                 <div>
                     <span class="profile-picture">
                         <img id="avatar" class="editable img-responsive editable-click editable-empty" alt="Alex's Avatar" src="~/Content/ace-master/assets/avatars/profile-pic.jpg">
-                        @*@if (ViewBag.ThongTin.Gender == (int)VS_LOAN.Core.Utility.TypeUserGender.Male)
+                        @*@if (ViewBag.model.Gender == (int)VS_LOAN.Core.Utility.TypeUserGender.Male)
                         {
                         <img id="avatar" class="editable img-responsive editable-click editable-empty" alt="Alex's Avatar" src="~/Content/ace-master/assets/avatars/profile-pic.jpg">
                         }
@@ -45,7 +45,7 @@ Layout = "~/Views/Shared/_Layout.cshtml";
                                 <i class="ace-icon fa fa-circle light-green"></i>
                                 &nbsp;
 
-                                <span class="white">@ViewBag.ThongTin.UserName</span>
+                                <span class="white">@ViewBag.model.Ten_Dang_Nhap</span>
                             </a>
                         </div>
                     </div>
@@ -74,9 +74,9 @@ Layout = "~/Views/Shared/_Layout.cshtml";
                             <li class="">
                                 <a data-toggle="tab" href="#edit-password" aria-expanded="false">
                                     <i class="blue ace-icon fa fa-key bigger-125"></i>
-                                    @if (ViewBag.ThongTin != null)
+                                    @if (ViewBag.model != null)
                                     {
-                                        if (ViewBag.ThongTin.Password != "")
+                                        if (ViewBag.model.Mat_Khau != "")
                                         {
                                     <span>Mật khẩu</span> 
                                         }
@@ -96,21 +96,21 @@ Layout = "~/Views/Shared/_Layout.cshtml";
                                 <div class="space-10"></div>
                                 <div class="form-group">
 
-                                    @if (ViewBag.ThongTin != null)
+                                    @if (ViewBag.model != null)
                                     {
                                         <div class="profile-user-info profile-user-info-striped">
                                             <div class="profile-info-row">
                                                 <div class="profile-info-name">Mã nhân viên:</div>
 
                                                 <div class="profile-info-value">
-                                                    <span class="editable" id="code">@ViewBag.ThongTin.Code</span>
+                                                    <span class="editable" id="code">@ViewBag.model.Ma</span>
                                                 </div>
                                             </div>
                                             <div class="profile-info-row">
                                                 <div class="profile-info-name">@Global.NhanVien_UserProfile_Name: </div>
 
                                                 <div class="profile-info-value">
-                                                    <span class="editable" id="username">@ViewBag.ThongTin.FullName</span>
+                                                    <span class="editable" id="username">@ViewBag.model.Ho_Ten</span>
                                                 </div>
                                             </div>
 
@@ -118,7 +118,7 @@ Layout = "~/Views/Shared/_Layout.cshtml";
                                                 <div class="profile-info-name"> @Global.NhanVien_UserProfile_UserName: </div>
 
                                                 <div class="profile-info-value">
-                                                    <span class="editable" id="country">@ViewBag.ThongTin.UserName</span>
+                                                    <span class="editable" id="country">@ViewBag.model.Ten_Dang_Nhap</span>
                                                 </div>
                                             </div>
 
@@ -126,7 +126,7 @@ Layout = "~/Views/Shared/_Layout.cshtml";
                                                 <div class="profile-info-name"> @Global.NhanVien_UserProfile_Email: </div>
 
                                                 <div class="profile-info-value">
-                                                    <span class="editable" id="age">@ViewBag.ThongTin.Email</span>
+                                                    <span class="editable" id="age">@ViewBag.model.Email</span>
                                                 </div>
                                             </div>
 
@@ -134,7 +134,7 @@ Layout = "~/Views/Shared/_Layout.cshtml";
                                                 <div class="profile-info-name"> @Global.NhanVien_UserProfile_Phone: </div>
 
                                                 <div class="profile-info-value">
-                                                    <span class="editable" id="signup">@ViewBag.ThongTin.Phone</span>
+                                                    <span class="editable" id="signup">@ViewBag.model.Dien_Thoai</span>
                                                 </div>
                                             </div>
 
@@ -143,7 +143,7 @@ Layout = "~/Views/Shared/_Layout.cshtml";
 
                     <div class="profile-info-value">
                         @{
-                                if (ViewBag.ThongTin.TypeUser == ((int)KPMG_EI.Core.Utility.TypeUser.Employee))
+                                if (ViewBag.model.TypeUser == ((int)KPMG_EI.Core.Utility.TypeUser.Employee))
                                 {
                             <span class="editable">@Global.NhanVien_UserProfile_Type_Employee</span>
                                 }
@@ -159,7 +159,7 @@ Layout = "~/Views/Shared/_Layout.cshtml";
                     <div class="profile-info-name">@Global.NhanVien_UserProfile_Gender:</div>
                     <div class="profile-info-value">
                         @{
-                                if (ViewBag.ThongTin.Gender == ((int)VS_LOAN.Core.Utility.TypeUserGender.Male))
+                                if (ViewBag.model.Gender == ((int)VS_LOAN.Core.Utility.TypeUserGender.Male))
                                 {
                                     <span class="editable">@Global.NhanVien_UserProfile_Gender_Man</span>
                                 }
@@ -178,7 +178,7 @@ Layout = "~/Views/Shared/_Layout.cshtml";
 
                                             </div>
                                         </div>*@
-                                        @*<p><strong>Bộ phận:</strong>@ViewBag.ThongTin.BoPhan</p>*@
+                                        @*<p><strong>Bộ phận:</strong>@ViewBag.model.BoPhan</p>*@
                                     }
                                 </div>
 
@@ -226,9 +226,9 @@ Layout = "~/Views/Shared/_Layout.cshtml";
                                         </div>
                                     </div>
                                 </div>*@
-                            @if (ViewBag.ThongTin != null)
+                            @if (ViewBag.model != null)
                             {
-                                if (ViewBag.ThongTin.Password != "")
+                                if (ViewBag.model.Mat_Khau != "")
                                 {
                                     <div id="edit-password" class="tab-pane">
                                         <div class="space-10"></div>
@@ -338,7 +338,7 @@ Layout = "~/Views/Shared/_Layout.cshtml";
 </script>
 <script>
     function onClickEdit() {
-        let id = '@ViewBag.ThongTin.IDUser'
+        let id = '@ViewBag.model.ID'
             window.location = "/employee/edit/" + id
     }
     function ChangePass(e) {
