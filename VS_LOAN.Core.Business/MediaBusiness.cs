@@ -242,6 +242,37 @@ namespace VS_LOAN.Core.Business
 
             return $"{folder}/{fileName}.zip";
         }
-        
+
+        public async Task<BaseResponse<List<HosoTailieu>>> GetFilesUploadByProfile(int profileId, int profileType)
+        {
+            if (profileId <= 0 || profileType <= 0)
+                return new BaseResponse<List<HosoTailieu>>("Dữ liệu không hợp lệ", null, false);
+            var uploadedFiles =  await _rpTailieu.GetTailieuByHosoId(profileId, (int)HosoType.RevokeDebt);
+            if (uploadedFiles == null)
+                uploadedFiles = new List<FileUploadModel>();
+            var lstLoaiTailieu = await _rpTailieu.GetLoaiTailieuList((int)HosoType.RevokeDebt);
+            if (lstLoaiTailieu == null || !lstLoaiTailieu.Any())
+                return new BaseResponse<List<HosoTailieu>>("Không có hồ sơ cần upload", null, true);
+            var result = new List<HosoTailieu>();
+
+            foreach (var loai in lstLoaiTailieu)
+            {
+                var tailieus = uploadedFiles.Where(p => p.Key == loai.ID);
+
+                var item = new HosoTailieu
+                {
+                    ID = loai.ID,
+                    Ten = loai.Ten,
+                    BatBuoc = loai.BatBuoc,
+                    ProfileId = profileId,
+                    ProfileTypeId = profileType,
+                    FileKey = loai.ID,
+                    Tailieus = tailieus != null ? tailieus.ToList() : new List<FileUploadModel>()
+                };
+                result.Add(item);
+
+            }
+            return new BaseResponse<List<HosoTailieu>>(result);
+        }
     }
 }

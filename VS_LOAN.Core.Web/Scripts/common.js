@@ -170,6 +170,35 @@ function LayNhom(controlId, defaultValue = 0, subcontrolId = null, subControlVal
         }
     });
 }
+function LayDSNhomCha(controlId, defaultValue = 0, subcontrolId = null, subControlValue = 0) {
+    $(controlId).empty();
+    $.ajax({
+        type: "GET",
+        url: '/ToNhom/LayDSNhomCha',
+        data: {},
+        success: function (data) {
+            $(controlId).append("<option value='0'></option>");
+            if (data.data != null && data.success == true) {
+                $.each(data.data, function (index, item) {
+
+                    $(controlId).append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
+                });
+                if (defaultValue > 0) {
+                    $(controlId).val(defaultValue);
+                }
+                $(controlId).chosen().trigger("chosen:updated");
+            }
+        },
+        complete: function () {
+            if (subControlValue > 0) {
+                GetEmployeesByGroupId(subcontrolId, defaultValue, false, subControlValue)
+            }
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
 
 function GetEmployees(controlId, defaultValue = 0) {
     $(controlId).empty();

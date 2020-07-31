@@ -45,7 +45,7 @@
                         <div class="col-sm-4">
                             <input type="text" id="TotalPayableAmount" readonly class="form-control">
                         </div>
-                       
+
                     </div>
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Phí trả chậm ban đầu <span class="required">(*)</span> </label>
@@ -92,7 +92,7 @@
                             <input type="text" id="txtHometown" value="@ViewBag.model.Gender" readonly class="form-control">
                         </div>
 
-                       
+
 
                     </div>
                     <div class="form-group">
@@ -261,13 +261,61 @@
                         <div class="col-sm-4">
                             <input type="text" id="Relative" value="@ViewBag.model.Relative" readonly class="form-control">
                         </div>
-                       
+
                     </div>
-                   
-                    
-                   
+
+
+
                 </form>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">6.Phân công:</h3>
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Tỉnh/TP<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlTinh" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right">Quận/huyện<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlHuyen" class="chosen-select form-control" data-placeholder="Chọn quận huyện">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Nhóm<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlGroup" class="chosen-select form-control" data-placeholder="Chọn nhóm">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right">Courrier<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlCourier" class="chosen-select form-control" data-placeholder="Chọn Courrier">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">6.Hồ sơ đính kèm:</h3>
+                <div class="row">
+                    <div class="col-xs-12" style="overflow-y: scroll;max-height:400px;">
+                        <form class="form-horizontal" role="form" id="lstTailieu"></form>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
         <div class="row">
             <div class="col-xs-12">
@@ -282,7 +330,10 @@
                                 <option value="0"></option>
                             </select>
                         </div>
-
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái hiện tại</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <input type="text" id="StatusName" value="@ViewBag.model.StatusName" readonly class="form-control">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
@@ -318,7 +369,6 @@
         </div>
     </div>
 </div>
-
 <script>
     $(document).ready(function () {
         setTextForPTag('checkSaleResult');
@@ -341,21 +391,22 @@
         $("#TotalPaidAmount").val(formatCurrency('@ViewBag.model.TotalPaidAmount'));
         $("#FirstDueDate").val(reverseString('@ViewBag.model.FirstDueDate'));
         $("#FirstPaymentAmount").val(formatCurrency('@ViewBag.model.FirstPaymentAmount'));
-        $("#LastPaymentAmount").val(formatCurrency('@ViewBag.model.LastPaymentAmount')); 
+        $("#LastPaymentAmount").val(formatCurrency('@ViewBag.model.LastPaymentAmount'));
         $("#FinalDueDate").val(reverseString('@ViewBag.model.FinalDueDate'));
         $("#FinalPaymentAmount").val(formatCurrency('@ViewBag.model.FinalPaymentAmount'));
-        $("#CashPrice").val(formatCurrency('@ViewBag.model.CashPrice')); 
-        $("#TotalPayableAmount").val(formatCurrency('@ViewBag.model.TotalPayableAmount')); 
+        $("#CashPrice").val(formatCurrency('@ViewBag.model.CashPrice'));
+        $("#TotalPayableAmount").val(formatCurrency('@ViewBag.model.TotalPayableAmount'));
         renderStatusList('#ddlStatus',@ViewBag.model.Status);
         Getcomments();
-        @*GetLocSigns("#ddlLocSign",'@ViewBag.model.LocSignCode');
-        GetLoanPeriods("#ddlLoanPeriod", '@ViewBag.model.LoanPeriodCode');
-        GetLoanCities("#ddlProvince",'@ViewBag.model.ProvinceId');
-        GetLoanProducts("#ddlProduct",'@ViewBag.model.ProductCode');*@
-        //getFilesUpload();
-        //getCommentList(@ViewBag.model.Id, 3)
-
-        //$("#txtIdDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
+        getFilesUpload();
+         getProvinces('#ddlTinh', @ViewBag.model.ProvinceId, @ViewBag.model.DistrictId, '#ddlHuyen');
+        $('#ddlTinh').on('change', function () {
+            getDistricts('#ddlHuyen', this.value);
+        });
+        LayDSNhomCha('#ddlGroup', @ViewBag.model.GroupId, '#ddlCourier', @ViewBag.model.AssigneeId);
+        $('#ddlGroup').on('change', function () {
+            GetEmployeesByGroupId('#ddlCourier', this.value, false, hoso.AssignId);
+        });
     });
 
     jQuery.fn.ForceNumericOnly =function () {
@@ -428,10 +479,11 @@
     function getFilesUpload() {
         $.ajax({
             type: "POST",
-            url: `/MCredit/GetFileUpload?profileId=${@ViewBag.model.Id}&profileTypeId=3&mcId=${@ViewBag.model.Id}`,
+            url: `/Revoke/GetFileUpload?profileId=${@ViewBag.model.Id}&profileType=5`,
             data: {},
             success: function (data) {
-                if (data.data != null) {
+
+                if (data.data != null ) {
                     var i = 0;
                     var htmlContent = "";
                     let keys = [];
@@ -469,54 +521,40 @@
                                     className = 'mt-46'
                                 }
                                 // renderOneItemFile(tailieu.Key, tailieu.FileId, name, isrequire, className, true, _initialPreview, _initialPreviewConfig, true, true, onUploadFile, onDeleteFile)
-                                renderOneItemFile_MCredit(
+                                renderOneItemFile_Revoke(
                                     {
                                         key: tailieu.Key,
                                         fileId: tailieu.FileId,
                                         titleName: keyName,
                                         isRequire: isrequire,
-                                        profileId: item.ProfileId,
-                                        documentName: item.DocumentName,
-                                        documentCode: item.DocumentCode,
-                                        documentId: item.DocumentId,
-                                        groupId: item.GroupId,
-                                        mcId :'@ViewBag.model.Id'
+                                        profileId: item.ProfileId
                                     }
                                     , className, true, _initialPreview, _initialPreviewConfig, true, true, null, onDeleteFile, filesUpload);
                                 keys.push(item.ID)
                             })
                             if (item.Tailieus.length < 50) {
                                 //renderOneItemFile(item.ID, item.ID, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile)
-                                renderOneItemFile_MCredit(
+                                renderOneItemFile_Revoke(
                                     {
                                         key: item.ID,
                                         fileId: 0,
                                         titleName: '',
                                         isRequire: false,
-                                        profileId: item.ProfileId,
-                                        documentName: item.DocumentName,
-                                        documentCode: item.DocumentCode,
-                                        documentId: item.DocumentId,
-                                        groupId: item.GroupId,
-                                        mcId :'@ViewBag.model.Id'
+                                        profileId: item.ProfileId
                                     }
                                     , 'mt-46', true, [], [], true, false, null, onDeleteFile, filesUpload);
                             }
 
                         }
                         else {
-                            renderOneItemFile_MCredit(
+
+                            renderOneItemFile_Revoke(
                                 {
                                     key: item.ID,
                                     fileId: 0,
                                     titleName: item.Ten,
                                     isRequire: item.BatBuoc,
                                     profileId: item.ProfileId,
-                                    documentName: item.DocumentName,
-                                    documentCode: item.DocumentCode,
-                                    documentId: item.DocumentId,
-                                    groupId: item.GroupId,
-                                    mcId :'@ViewBag.model.Id'
                                 }
                                 , 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
                             //keys.push(item.ID);
@@ -567,7 +605,7 @@
             model.fileId = getNewGuid();
             model.isRequire = false
             //model.titleName = ''
-            renderOneItemFile_MCredit(model, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
+            renderOneItemFile_Revoke(model, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
         }
     }
     function removeFile(key, fileId) {
@@ -625,14 +663,22 @@
         });
     });
     $('#btnUpdate').click(function (e) {
-       
-        let status = $("#ddlStatus").val()
+
+        let model = JSON.stringify({
+            'Status': $("#ddlStatus").val(),
+            'DistrictId': $("#ddlHuyen").val(),
+            'ProvinceId': $("#ddlTinh").val(),
+            'AssigneeId': $("#ddlCourier").val(),
+            'GroupId': $("#ddlGroup").val()
+        })
         
+
         $.ajax({
             traditional: false,
-            url: `/Revoke/UpdateStatus?profileId=${@ViewBag.model.Id}&status=${status}`,
+            url: `/Revoke/Update?profileId=${@ViewBag.model.Id}`,
             type: "POST",
             contentType: "application/json; charset=utf-8",
+            data: model,
             success: function (data) {
                 if (data.success == true) {
                      swal({
@@ -644,7 +690,7 @@
                         }, function () {
                             window.location = window.location;
 
-                            
+
                         });
                 }
                 else {
@@ -666,11 +712,11 @@
         });
     });
     $('#btnAddNote').click(function (e) {
-       
+
         let objectSend = JSON.stringify({
             "Value": $("#txtNote").val()
         });
-        
+
         $.ajax({
             traditional: false,
             url: `/Revoke/AddNote?profileId=${@ViewBag.model.Id}`,
@@ -688,7 +734,7 @@
                         }, function () {
                             window.location = window.location;
 
-                            
+
                         });
                 }
                 else {
@@ -721,15 +767,15 @@
             closeOnConfirm: false
 
         }, function () {
-            
-            
+
+
             $.ajax({
                 url: `/Revoke/Delete?profileId=${@ViewBag.model.Id}`,
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
-               
+
                 success: function (data) {
-                    
+
                     if (data.success == true) {
                         swal({
                             title: "Thành công",
@@ -760,7 +806,7 @@
             });
         }
         );
-       
+
     });
 
          function uploadFiles(hosoId, reloadOnSuccess = false) {

@@ -12,6 +12,12 @@ namespace VS_LOAN.Core.Entity
         public int ID { get; set; }
         public string Ten { get; set; }
         public int BatBuoc { get; set; }
+        public int ProfileId { get; set; }
+        public int ProfileTypeId { get; set; }
+        public int FileKey { get; set; }
+        public string FilePath { get; set; }
+        public string Folder { get; set; }
+        public string FileName { get; set; }
     }
     public class TaiLieu
     {
@@ -39,8 +45,7 @@ namespace VS_LOAN.Core.Entity
     }
     public class MCFileUpload : HosoTailieu
     {
-        public int ProfileId { get; set; }
-        public int ProfileTypeId { get; set; }
+        
         public string DocumentName { get; set; }
         public string DocumentCode { get; set; }
         public int DocumentId { get; set; }

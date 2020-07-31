@@ -75,6 +75,7 @@
                                 <tr>
                                     <th class="center w-45">STT</th>
                                     <th class="m-w-120">Họ tên</th>
+                                    <th class="w-150">ID</th>
                                     <th class="w-150">Mã</th>
                                     <th class="w-150">Tên đăng nhập</th>
                                     <th style="width: 150px">Email</th>
@@ -212,6 +213,7 @@
         return "<tr role='row' class = 'odd'>"
             + renderTextCenter(stt, '', 'center w-45')
             + renderTextLink(rowData.FullName, `/employee/edit/${rowData.Id}`, '', "m-w-120")
+            + renderTextLeft(rowData.Id, '', "w-150")
             + renderTextLeft(rowData.Code, '', "w-150")
             + renderTextLeft(rowData.UserName, '', "w-150")
             + renderTextLeft(rowData.Email, '','w-150')
