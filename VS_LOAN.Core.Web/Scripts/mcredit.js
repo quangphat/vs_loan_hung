@@ -105,7 +105,35 @@ function GetLocSigns(controlId, defaultValue = 0) {
         }
     });
 }
-function GetLoanProducts(controlId, defaultValue = 0) {
+function CallForGetIsCheckCat(catNumber, checkatAreaId = null) {
+    let model = JSON.stringify({
+        "Value": catNumber
+    })
+    
+    $.ajax({
+        type: "POST",
+        url: '/MCredit/IsCheckCat',
+        data: model,
+        traditional: true,
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            
+            if (data != null && data.success == true) {
+                if (data.data == true)
+                    $(checkatAreaId).show();
+                else {
+                    $(checkatAreaId).hide();
+                }
+            }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+function GetLoanProducts(controlId, defaultValue = 0, checkatAreaId = null) {
     $(controlId).empty();
     $.ajax({
         type: "GET",
@@ -253,6 +281,7 @@ function checkCAT(controlId, value) {
             contentType: "application/json; charset=utf-8",
             data: objectSend,
             success: function (data) {
+                debugger
                 if (data.success == true) {
                     swal({
                         title: "Thành công",

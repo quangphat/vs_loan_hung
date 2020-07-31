@@ -19,7 +19,7 @@ namespace VS_LOAN.Core.Repository
                     IDbCommand command = new SqlCommand();
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_NHAN_VIEN_Login";
+                    command.CommandText = "sp_Employee_Login";
                     command.Parameters.Add(new SqlParameter("@UserName", user));
                     command.Parameters.Add(new SqlParameter("@Password", pass));
                     var dt = new DataTable();

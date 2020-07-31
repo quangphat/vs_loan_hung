@@ -20,7 +20,7 @@ namespace VS_LOAN.Core.Entity.MCreditModels
         public string id { get; set; }
         public string caseNumber { get; set; }
         public string name { get; set; }
-        public string cccdNumber { get; set; }
+        //public string cccdNumber { get; set; }
         public string idNumber { get; set; }
         public string moneyReceiveDate { get; set; }
         public string status { get; set; }

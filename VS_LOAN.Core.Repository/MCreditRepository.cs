@@ -267,6 +267,15 @@ namespace VS_LOAN.Core.Repository
                 return param.Get<int>("Id");
             }
         }
+        public async Task<bool> DeleteById(int profileId)
+        {
+           
+            using (var con = GetConnection())
+            {
+                await con.ExecuteAsync("sp_MCProfile_DeleteProfile", new { profileId }, commandType: CommandType.StoredProcedure);
+                return true;
+            }
+        }
         public async Task<bool> UpdateDraftProfile(MCredit_TempProfile model)
         {
             var param = GetParams(model, ignoreKey: new string[] 
@@ -284,7 +293,7 @@ namespace VS_LOAN.Core.Repository
                 return true;
             }
         }
-        public async Task<List<ProfileSearchSql>> GetTempProfiles(int page, int limit, string freeText, int userId)
+        public async Task<List<ProfileSearchSql>> GetTempProfiles(int page, int limit, string freeText, int userId, string status = null)
         {
             using (var con = GetConnection())
             {
@@ -292,21 +301,32 @@ namespace VS_LOAN.Core.Repository
                     freeText,
                     userId,
                     page,
-                    limit_tmp = limit
+                    limit_tmp = limit,
+                    status
                 }, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
         }
-        public async Task<int> CountTempProfiles(string freeText, int userId)
+        public async Task<int> CountTempProfiles(string freeText, int userId, string status =null)
         {
             using (var con = GetConnection())
             {
                 var result = await _connection.ExecuteScalarAsync<int>("sp_MCredit_TempProfile_Counts", new
                 {
                     freeText,
-                    userId
+                    userId,
+                    status
                 }, commandType: CommandType.StoredProcedure);
                 return result;
+            }
+        }
+        public async Task<bool> IsCheckCat(string productCode)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryFirstOrDefaultAsync<int>($"select   dbo.fn_MCProduct_ISCheckCat('{productCode.Trim()}')"
+                , commandType: CommandType.Text);
+                return result ==1 ? true:false;
             }
         }
     }

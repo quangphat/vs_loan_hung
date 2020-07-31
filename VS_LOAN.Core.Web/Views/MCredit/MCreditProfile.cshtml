@@ -25,19 +25,33 @@
                         <div class="col-sm-4">
                             <input type="text" id="txtCustomerName" value="@ViewBag.model.CaseNumber" readonly class="form-control">
                         </div>
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Lý do <span class="required">(*)</span> </label>
-                        <div class="col-sm-4">
-                            <input type="text" id="txtCustomerName" value="@ViewBag.model.Refuse" readonly class="form-control">
-                        </div>
                     </div>
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày giải ngân <span class="required">(*)</span> </label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtCustomerName"  value="@ViewBag.model.MoneyReceiveDate" readonly class="form-control">
+                            <input type="text" id="txtCustomerName" value="@ViewBag.model.MoneyReceiveDate" readonly class="form-control">
                         </div>
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Giải ngân<span class="required">(*)</span> </label>
                         <div class="col-sm-4">
                             <input type="text" id="txtHometown" value="@ViewBag.model.MoneyReceive" readonly class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <label class="col-sm-2 control-label no-padding-right">Lý do<span class="required">(*)</span></label>
+                        <div class="col-sm-10">
+                            <textarea type="text" value="" readonly class="form-control">
+                                @ViewBag.model.ReasonName
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <label class="col-sm-2 control-label no-padding-right">Lỗi bên Toàn Cầu<span class="required">(*)</span></label>
+                        <div class="col-sm-10">
+                            <textarea type="text" value="" readonly class="form-control">
+                                @ViewBag.model.Refuse
+                            </textarea>
                         </div>
                     </div>
                 </form>
@@ -255,8 +269,21 @@
                         <div class="col-md-11 col-sm-12 col-xs-12">
                             <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
                         </div>
+                        <div class="col-md-8">
+                            <div class="activity-log">
+                                <div class="timline-addNote only-new-note">
+                                    <div class="timeline-date-event timline-date-event--margin mt-0" id="dsGhichu">
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="pull-right">
+                        <a class="btn btn-sm btn-primary" id="btnAddNote">
+                            Thêm Note
+                        </a>
                         <a class="btn btn-sm btn-primary" id="btnUpdateFiles">
                             Cập Nhật và Chuyển Qua MC
                         </a>
@@ -285,6 +312,7 @@
         GetLoanCities("#ddlProvince",'@ViewBag.model.ProvinceId');
         GetLoanProducts("#ddlProduct",'@ViewBag.model.ProductCode');*@
         getFilesUpload();
+        getNoteList();
         //getCommentList(@ViewBag.model.Id, 3)
         
         //$("#txtIdDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
@@ -831,5 +859,77 @@
                 $('#panel_body').unblock();
             },
         });
-        }
+    }
+    function getNoteList(profileId) {
+        //$('#ddlTrangThai').empty();
+        $.ajax({
+            type: "POST",
+            url: '/MCredit/GetNotes?profileId=' +  @ViewBag.model.Id,
+            data: {},
+            success: function (data) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, item) {
+                        $('#dsGhichu').append(
+                            '<div class="timeline-event-content  active">' +
+                            '<div class="timeline-item">' +
+                            '<div class="timeline-body">' +
+                            '<div class="timeline__message-container">' +
+                            '<strong>' + item.CreateUserName + ' (' + item.CreateDated + '): </strong><span>' + item.Name + '</span>' +
+                            '</div></div></div></div>'
+
+                        )
+                    });
+                }
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+    $('#btnAddNote').click(function (e) {
+        
+       
+        var objectSend = JSON.stringify({
+            "Value": @ViewBag.model.Id,
+            "Value2": $("#txtGhiChu").val()
+        });
+        $.ajax({
+            traditional: true,
+            url: '@Url.Action("AddNoteNotes", "MCredit")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                if (data.success == true) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: "Thành công",
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                        uploadFiles(data.data, true);
+                    });
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+    });
 </script>

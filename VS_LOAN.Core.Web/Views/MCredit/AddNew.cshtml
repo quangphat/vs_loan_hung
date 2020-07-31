@@ -66,10 +66,10 @@
                                 </span>
                             </div>
                             <div style="margin-top:10px">
-                                <a class="btn btn-primary" id="btn_CheckCIC">
+                                <a class="btn btn-info" id="btn_CheckCIC">
                                     Check CIC
                                 </a>
-                                <a class="btn btn-primary" id="btn_CheckDup">
+                                <a class="btn btn-info" id="btn_CheckDup">
                                     Check Duplicate
                                 </a>
                             </div>
@@ -130,7 +130,7 @@
                             <input type="text" id="txtSaleCode" class="form-control">
 
                             <div style="margin-top:10px">
-                                <a class="btn btn-primary" id="btn_CheckSale">
+                                <a class="btn btn-info" id="btn_CheckSale">
                                     Check Sale
                                 </a>
 
@@ -158,7 +158,19 @@
                             <select id="ddlProduct" class="chosen-select form-control" data-placeholder="Chọn sản phẩm vay">
                                 <option value="0"></option>
                             </select>
+                            <div class="row">
+                                
+                            </div>
                         </div>
+                        <div id="checkcat-area" hidden>
+                            <label class="col-sm-2 control-label no-padding-right">Mã số thuế<span class="required">(*)</span></label>
+                            <div class="col-sm-4">
+                                <input type="text" id="txtCatNumber" placeholder="Nhập Mã số thuế" class="form-control">
+                                <label style="color:green" id="checkcat-result"></label>
+                                <input type="button" class="btn btn-info" id="btnCheckCat" style="margin-top:20px;float:right" value="Check CAT" />
+                            </div>
+                        </div>
+                        
                     </div>
 
                     <div class="form-group">
@@ -219,7 +231,7 @@
                         </div>
                     </div>
                     <div class="pull-right">
-                        <a class="btn btn-sm btn-primary" id="btn_Temp">
+                        <a class="btn btn btn-primary" id="btn_Temp">
                             Lưu hồ sơ
                         </a>
                         @*<a class="btn btn-sm btn-primary" id="btn_Save">
@@ -266,6 +278,9 @@
         GetLoanPeriods("#ddlLoanPeriod");
         GetLoanCities("#ddlProvince");
         GetLoanProducts("#ddlProduct");
+        $("#ddlProduct").on("change", function () {
+            CallForGetIsCheckCat(this.value, "#checkcat-area");
+        })
         //LayDSTaiLieu();
         //$("#txtIdDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
     });
@@ -308,6 +323,50 @@
     $('#btn_CheckDup').click(function (e) {
         let value = !isNullOrWhiteSpace($("#txtIdNumber").val()) ? $("#txtIdNumber").val() : $("#txtCCCDNumber").val();
         checkDup('checkdupResult', value);
+    });
+    let modelCat = { CatName:'',ComName:'',CatNumber:'' }
+    $('#btnCheckCat').click(function (e) {
+        let value = $("#txtCatNumber").val();
+        var objectSend = JSON.stringify({
+            'Value': value
+        });
+        $.ajax({
+            traditional: true,
+            url: '/MCredit/CheckCatApi',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                
+                if (data.success == true) {
+                    swal({
+                        title: "Thành công",
+                        text: data.code,
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                    $("#checkcat-result").text(`${data.data.name} - ${data.data.cat}`);
+                    modelCat = { CatName: data.data.cat, CatNumber : value, ComName: data.data.name }
+                }
+                else {
+                    swal({
+                        title: !isNullOrWhiteSpace(data.data.msg) ? data.data.msg : "Đã có lỗi xảy ra",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                    $("#checkcat-result").text(!isNullOrWhiteSpace(data.data.msg) ? data.data.msg : "");
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
     });
     function LayDSTaiLieu() {
         $.ajax({
@@ -484,7 +543,10 @@
             "LastNote": $("#txtNote").val(),
             "LoanMoney": $('#txtLoanMoney').val().replace(/\./g, ''),
             "IsInsurrance": getCheckboxValue('cbbaohiem'),
-            "Status": 0
+            "Status": 0,
+            "CatNumber": modelCat.CatNumber,
+            "ComName": modelCat.ComName,
+            "CatName": modelCat.CatName
         });
 
         $.ajax({
@@ -504,11 +566,8 @@
                             showConfirmButton: true,
                         }, function () {
                             window.location = "/MCredit/TempProfile/" + data.data;
-
-                            //uploadFiles(data.data, false);
                         });
                     
-                    
                 }
                 else {
                     swal({
@@ -529,141 +588,6 @@
         });
     });
 
-    $('#btn_Save').click(function (e) {
-
-                if ($('#txtCustomerName').val() == "" || $('#txtCustomerName').val() == undefined) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng nhập họ tên",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if (isNullOrWhiteSpace($('#txtBirthDay').val())) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn ngày sinh",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if (isNullOrWhiteSpace($('#ddlProvince').val()) || $('#ddlProvince').val() =="0") {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn tỉnh/thành",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if (isNullOrWhiteSpace($('#txtIdDay').val())) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn ngày cấp cmnd/cccd",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-
-        if ($('#ddlProduct').val() == "0" || $('#ddlProduct').val() == undefined) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn sản phẩm vay",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if (isNullOrWhiteSpace($('#ddlLocSign').val()) || $('#ddlLocSign').val() =="0") {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn địa điểm ký văn kiện",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if (isNullOrWhiteSpace($('#ddlLoanPeriod').val()) || $('#ddlLoanPeriod').val() =="0") {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn kỳ hạn vay",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-
-        let FileRequireIds = [];
-        var objectSend = JSON.stringify({
-            "Id": 0,
-            "CustomerName": $("#txtCustomerName").val(),
-            "Hometown": $("#txtHometown").val(),
-            "BirthDay": $('#txtBirthDay').val(),
-            "Phone": $('#txtPhone').val(),
-            "IdNumber": $('#txtIdNumber').val(),
-            "CCCDNumber": $('#txtCCCDNumber').val(),
-            "IssueDate": $('#txtIdDay').val(),
-            "IsAddr": getRadioButtonValue('radio-isAddr'),
-            "Gender": $("#ddlGender").val() == "1" ? true : false,
-            "ProvinceId": $("#ddlProvince").val(),
-            "DistrictId": 0,
-            "Address": $("#txtAddress").val(),
-            "SaleNumber": $("#txtSaleCode").val(),
-            "ProductCode": $("#ddlProduct").val(),
-            "LoanPeriodCode": $("#ddlLoanPeriod").val(),
-            "LocSignCode": $("#ddlLocSign").val(),
-            "LastNote": $("#txtNote").val(),
-            "LoanMoney": $('#txtLoanMoney').val().replace(/\./g, ''),
-            "IsInsurrance": getCheckboxValue('cbbaohiem'),
-            "Status": 0,
-            'FileRequireIds': filesUpload.map(p => FileRequireIds.push(p.key))
-        });
-        $.ajax({
-            traditional: true,
-            url: '@Url.Action("Save", "HoSo")',
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            data: objectSend,
-            success: function (data) {
-                if (data.success == true) {
-                    swal({
-                        title: "@Html.Raw(Global.Message_Title)",
-                        text: "Thành công",
-                        type: "success",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    }, function () {
-                        uploadFiles(data.data, true);
-                    });
-                }
-                else {
-                    swal({
-                        title: "@Html.Raw(Global.Message_Title)",
-                        text: data.code,
-                        type: "error",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    });
-                }
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            },
-            complete: function () {
-                $('#panel_body').unblock();
-            },
-        });
-    });
          function uploadFiles(hosoId, reloadOnSuccess = false) {
             if (isNullOrNoItem(filesUpload))
                 return;

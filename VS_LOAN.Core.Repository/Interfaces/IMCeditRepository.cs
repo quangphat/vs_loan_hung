@@ -11,13 +11,14 @@ namespace VS_LOAN.Core.Repository.Interfaces
 {
     public interface IMCeditRepository
     {
+        Task<bool> IsCheckCat(string productCode);
         Task<List<int>> GetPeopleCanViewMyProfile(int profileId);
         Task<bool> InsertPeopleWhoCanViewProfile(int profileId, string peopleIds);
         Task<MCredit_TempProfile> GetTemProfileByMcId(string id);
         Task<List<OptionSimple>> GetMCProfileStatusList();
         Task<bool> UpdateSale(UpdateSaleModel model, int profileId);
-        Task<int> CountTempProfiles(string freeText, int userId);
-        Task<List<ProfileSearchSql>> GetTempProfiles(int page, int limit, string freeText, int userId);
+        Task<int> CountTempProfiles(string freeText, int userId, string status = null);
+        Task<List<ProfileSearchSql>> GetTempProfiles(int page, int limit, string freeText, int userId, string status = null);
         Task<int> CreateDraftProfile(MCredit_TempProfile model);
         Task<bool> UpdateDraftProfile(MCredit_TempProfile model);
         Task<bool> DeleteMCTableDatas(int type);
@@ -33,5 +34,6 @@ namespace VS_LOAN.Core.Repository.Interfaces
         Task<List<OptionSimple>> GetMCLoanPerodSimpleList();
         Task<List<OptionSimple>> GetMCCitiesSimpleList();
         Task<MCredit_TempProfile> GetTemProfileById(int id);
+        Task<bool> DeleteById(int profileId);
     }
 }

@@ -13,6 +13,7 @@ using VS_LOAN.Core.Repository.Interfaces;
 using VS_LOAN.Core.Entity.HosoCourrier;
 using System.IO;
 using System.Net;
+using VS_LOAN.Core.Utility;
 
 namespace MCreditService
 {
@@ -93,13 +94,16 @@ namespace MCreditService
             {
                 Id = profileId
             };
+            await _rpLog.InsertLog("mcredit-GetNote-request", model.Dump());
+
             var result = await BeforeSendRequest<NoteResponseModel, NoteRequestModel>(_get_notes_Api, model, userId);
+            await _rpLog.InsertLog("mcredit-GetNote-result", result.Dump());
             return result;
         }
         public async Task<NoteAddResponseModel> AddNote(NoteAddRequestModel model, int userId)
         {
-            
             var result = await BeforeSendRequest<NoteAddResponseModel, NoteAddRequestModel>(_add_notes_Api, model, userId);
+            await _rpLog.InsertLog("mcredit-AddNote", result.Dump());
             return result;
         }
         public async Task<MCResponseModelBase> SendFiles(int userId, string fileName, string profileId)

@@ -14,24 +14,12 @@ namespace VS_LOAN.Core.Entity.MCreditModels
         public string MoneyReceiveDate { get; set; }
         public string McId { get; set; }
         public int Status { get; set; }
-        public string StatusName
-        {
-            get
-            {
-                if (Status != 0 && Status != 4 && !string.IsNullOrWhiteSpace(McId))
-                    return "Đã gửi qua MC";
-                if (Status == 0)
-                    return "Lưu tạm";
-                if (Status == 4)
-                    return "Bổ sung hồ sơ";
-                return string.Empty;
-            }
-        }
         public string CreatedUser { get; set; }
         public string LastNote { get; set; }
         public string SaleName { get; set; }
         public string ProductName { get; set; }
         public string LoanPeriodName { get; set; }
         public string Phone { get; set; }
+        public int TotalRecord { get; set; }
     }
 }
