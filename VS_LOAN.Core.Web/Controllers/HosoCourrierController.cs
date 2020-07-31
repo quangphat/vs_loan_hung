@@ -67,6 +67,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = DataPaging.Create(datas, totalRecord);
             return ToJsonResponse(true, null, result);
         }
+        //public async Task<ActionResult>
         public ActionResult AddNew()
         {
             ViewBag.formindex = "";//LstRole[RouteData.Values["action"].ToString()]._formindex;

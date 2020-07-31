@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr4.StringTemplate">
+      <HintPath>..\Lib\Antlr4.StringTemplate.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebHelpers.3.2.7\lib\net45\Microsoft.Web.Helpers.dll</HintPath>
     </Reference>
@@ -94,6 +97,7 @@
     <Compile Include="Exceptions\BaseRuntimeException.cs" />
     <Compile Include="Exceptions\BusinessException.cs" />
     <Compile Include="Exceptions\SystemException.cs" />
+    <Compile Include="ExportUtil.cs" />
     <Compile Include="FileNameProcessor.cs" />
     <Compile Include="MD5.cs" />
     <Compile Include="OfficeOpenXML\ExcelOOXML.cs" />
