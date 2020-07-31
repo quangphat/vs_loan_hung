@@ -180,10 +180,12 @@ namespace MCreditService
                 string userAgent = "vietbank";
                 postParameters.Add("token", token);
                 var response = await FormUpload.MultipartFormPost<T>(requestURL, userAgent, postParameters, "xdncode", _xdnCode, token);
+                await _rpLog.InsertLog($"BeforeSendRequestUploadFile - {apiPath}", response == null ? "response = null" : response.Dump());
                 return response.Data;
             }
             catch (Exception exp)
             {
+                await _rpLog.InsertLog($"BeforeSendRequestUploadFile - {apiPath}", exp.InnerException == null ? exp.Dump() : exp.InnerException.Dump());
                 return null;
             }
         }

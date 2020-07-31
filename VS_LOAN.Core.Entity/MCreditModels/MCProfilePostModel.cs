@@ -40,5 +40,8 @@ namespace VS_LOAN.Core.Entity.MCreditModels
         public bool IsInsurrance { get; set; }
 
         public int Status { get; set; }
+        public string CatNumber { get; set; }
+        public string ComName { get; set; }
+        public string CatName { get; set; }
     }
 }
