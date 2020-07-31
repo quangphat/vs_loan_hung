@@ -86,7 +86,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (model == null || string.IsNullOrWhiteSpace(model.Value))
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var result = await _svMCredit.CheckCat(GlobalData.User.IDUser, model.Value);
-            return ToJsonResponse(true, result.msg?.ToString(), result);
+            return ToJsonResponse(result.status =="error" ? false :true, result.msg?.ToString(), result);
         }
         public async Task<JsonResult> IsCheckCat(StringModel model)
         {

@@ -121,6 +121,9 @@ function CallForGetIsCheckCat(catNumber, checkatAreaId = null) {
             if (data != null && data.success == true) {
                 if (data.data == true)
                     $(checkatAreaId).show();
+                else {
+                    $(checkatAreaId).hide();
+                }
             }
         },
         complete: function () {
@@ -278,6 +281,7 @@ function checkCAT(controlId, value) {
             contentType: "application/json; charset=utf-8",
             data: objectSend,
             success: function (data) {
+                debugger
                 if (data.success == true) {
                     swal({
                         title: "Thành công",
