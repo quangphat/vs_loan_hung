@@ -150,7 +150,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return RedirectToAction("Index");
             }
-            var employee = await _rpEmployee.GetById(id);
+            var employee = await _rpEmployee.GetByIdAsync(id);
             ViewBag.employee = employee;
             ViewBag.account = GlobalData.User;
             return View();
@@ -244,11 +244,11 @@ namespace VS_LOAN.Core.Web.Controllers
             return ToJsonResponse(true, data: result);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public ActionResult UserProfile()
+        public async Task<ActionResult> UserProfile()
         {
             ViewBag.formindex = HomeController.LstRole["Index"]._formindex;
 
-            ViewBag.ThongTin = _rpEmployee.GetById(GlobalData.User.IDUser);
+            ViewBag.model = await _rpEmployee.GetByIdAsync(GlobalData.User.IDUser);
             return View();
         }
         public async Task<ActionResult> DangNhap(string userName, string password, string rememberMe)
