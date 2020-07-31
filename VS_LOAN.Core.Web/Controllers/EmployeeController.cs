@@ -221,7 +221,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "Mật khẩu không khớp");
             }
-            var employee = await _rpEmployee.GetById(model.Id);
+            var employee = await _rpEmployee.GetByIdAsync(model.Id);
             if (employee == null)
             {
                 return ToJsonResponse(false, "Người dùng không tồn tại");
