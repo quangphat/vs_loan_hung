@@ -19,15 +19,15 @@ namespace MCreditService
 {
     public abstract class MCreditServiceBase
     {
-        //protected static string _baseUrl = "http://hosoapi.taichinhtoancau.vn";
-        protected static string _baseUrl = "http://api.taichinhtoancau.vn";
+        protected static string _baseUrl = "http://hosoapi.taichinhtoancau.vn";
+        //protected static string _baseUrl = "http://api.taichinhtoancau.vn";
         protected static string _userName = "vietbankapi";
-        //protected static string _password = "@vietb@pi@123";//"api@123";
-        protected static string _password = "api@123";
-        //protected static string _authenToken = "$2y$10$Eeh8kYRifE6Es1NU7UIqNOg6XGgfclFz0xgCObo2L4du8t.5SJVx6";// "$2y$10$ne/8QwsCG10c.5cVSUW6NO7L3..lUEFItM4ccV0usJ3cAbqEjLywG";
-        protected static string _authenToken =  "$2y$10$ne/8QwsCG10c.5cVSUW6NO7L3..lUEFItM4ccV0usJ3cAbqEjLywG";
-        //protected static string _xdnCode = "TWpBeU1FUjFibWRBVG1Wdk1qQXlNQT09";//"TWpBeU1HUjFibWR1Wlc4eU1ESXc=";
-        protected static string _xdnCode = "TWpBeU1HUjFibWR1Wlc4eU1ESXc=";
+        protected static string _password = "@vietb@pi@123";;
+        //protected static string _password = "api@123";test
+        protected static string _authenToken = "$2y$10$Eeh8kYRifE6Es1NU7UIqNOg6XGgfclFz0xgCObo2L4du8t.5SJVx6";
+        //protected static string _authenToken =  "$2y$10$ne/8QwsCG10c.5cVSUW6NO7L3..lUEFItM4ccV0usJ3cAbqEjLywG"; test
+        protected static string _xdnCode = "TWpBeU1FUjFibWRBVG1Wdk1qQXlNQT09";//"TWpBeU1HUjFibWR1Wlc4eU1ESXc=";
+        //protected static string _xdnCode = "TWpBeU1HUjFibWR1Wlc4eU1ESXc="; //test
         protected static string _contentType = "application/json";
         protected static string _authenApi = "api/act/authen.html";
         protected static string _checkCATApi = "api/act/checkcat.html";
