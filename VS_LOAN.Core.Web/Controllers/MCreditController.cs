@@ -477,39 +477,48 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> SubmitToMCredit(MCredit_TempProfileAddModel model)
         {
-            var isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
-            if(!isAdmin)
+            try
             {
-                return ToJsonResponse(false, "Vui lòng liên hệ Admin");
+                var isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
+                if (!isAdmin)
+                {
+                    return ToJsonResponse(false, "Vui lòng liên hệ Admin");
+                }
+                if (model == null || model.Id <= 0)
+                    return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+                if (model.SaleId <= 0)
+                    return ToJsonResponse(false, "Vui lòng chọn Sale");
+                var profile = await _rpMCredit.GetTemProfileById(model.Id);
+                if (profile == null)
+                    return ToJsonResponse(false, "Hồ sơ không tồn tại");
+                var profileSql = _mapper.Map<MCredit_TempProfile>(model);
+                profileSql.UpdatedBy = GlobalData.User.IDUser;
+                var profileMC = _mapper.Map<MCProfilePostModel>(model);
+                var files = await _rpTailieu.GetTailieuByHosoId(model.Id, (int)HosoType.MCredit);
+                if (files == null || !files.Any())
+                    return ToJsonResponse(false, "Vui lòng upload hồ sơ");
+                var result = await _svMCredit.CreateProfile(profileMC, GlobalData.User.IDUser);
+                if (result == null || result.status == "error")
+                    return ToJsonResponse(false, "", result);
+                profileSql.MCId = result.id;
+                profile.Status = (int)MCreditProfileStatus.SentToMc;
+                await _rpMCredit.UpdateDraftProfile(profileSql);
+                await _rpTailieu.UpdateTailieuHosoMCId(model.Id, result.id);
+                var zipFile = await _bizMedia.ProcessFilesToSendToMC(model.Id, Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}"));
+                if (zipFile == "files_is_empty")
+                {
+                    return ToJsonResponse(false, "Vui lòng upload hồ sơ");
+                }
+                var sendFileResult = await _svMCredit.SendFiles(GlobalData.User.IDUser, zipFile, result.id);
+                return ToJsonResponse(sendFileResult.status == "success" ? true : false, "", sendFileResult);
+                //return ToJsonResponse(true, "", new { file = zipFile, id = result.id });
             }
-            if (model == null || model.Id <= 0)
-                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
-            if (model.SaleId <= 0)
-                return ToJsonResponse(false, "Vui lòng chọn Sale");
-            var profile = await _rpMCredit.GetTemProfileById(model.Id);
-            if (profile == null)
-                return ToJsonResponse(false, "Hồ sơ không tồn tại");
-            var profileSql = _mapper.Map<MCredit_TempProfile>(model);
-            profileSql.UpdatedBy = GlobalData.User.IDUser;
-            var profileMC = _mapper.Map<MCProfilePostModel>(model);
-            var files = await _rpTailieu.GetTailieuByHosoId(model.Id, (int)HosoType.MCredit);
-            if (files == null || !files.Any())
-                return ToJsonResponse(false, "Vui lòng upload hồ sơ");
-            var result = await _svMCredit.CreateProfile(profileMC, GlobalData.User.IDUser);
-            if (result == null || result.status == "error")
-                return ToJsonResponse(false, "", result);
-            profileSql.MCId = result.id;
-            profile.Status = (int)MCreditProfileStatus.SentToMc;
-            await _rpMCredit.UpdateDraftProfile(profileSql);
-           await  _rpTailieu.UpdateTailieuHosoMCId(model.Id, result.id);
-            var zipFile = await _bizMedia.ProcessFilesToSendToMC(model.Id, Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}"));
-            if (zipFile == "files_is_empty")
+            catch (Exception e)
             {
-                return ToJsonResponse(false, "Vui lòng upload hồ sơ");
+                await _rpLog.InsertLog("SubmitToMCredit", e.InnerException != null ? e.InnerException.Dump() : e.Dump());
+                return ToJsonResponse(false);
             }
-            var sendFileResult = await _svMCredit.SendFiles(GlobalData.User.IDUser, zipFile, result.id);
-            return ToJsonResponse(sendFileResult.status == "success" ? true : false, "", sendFileResult);
-            //return ToJsonResponse(true, "", new { file = zipFile, id = result.id });
+
         }
         public async Task<JsonResult> Copy(int profileId)
         {
