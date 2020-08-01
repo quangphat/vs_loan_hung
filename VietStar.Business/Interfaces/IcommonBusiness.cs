@@ -8,6 +8,7 @@ namespace VietStar.Business.Interfaces
 {
     public interface ICommonBusiness
     {
-        Task<List<OptionSimple>> GetStatusList();
+        Task<List<OptionSimple>> GetStatusList(string profileType);
+        
     }
 }

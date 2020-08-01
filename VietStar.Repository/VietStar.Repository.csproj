@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\VietStar.Entities\VietStar.Entities.csproj" />
+    <ProjectReference Include="..\VietStar.Utility\VietStar.Utility.csproj" />
   </ItemGroup>
 
   <ItemGroup>

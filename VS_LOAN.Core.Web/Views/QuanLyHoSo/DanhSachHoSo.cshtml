@@ -576,7 +576,7 @@
     function getData(page, limit, memberId = 0, isPopState = false)
     {
         if (isNaN(memberId) || memberId == 0) {
-            memberId =  dsNhom.length > 0 ? $('#ddlThanhVienNhom').val() : @VS_LOAN.Core.Web.Helpers.GlobalData.User.IDUser
+            memberId =  dsNhom.length > 0 ? $('#ddlThanhVienNhom').val() : @VS_LOAN.Core.Web.Helpers.GlobalData.User.IDUser;
         }
 
         showBlock($('#panel_body'), strLoading);

@@ -8,75 +8,87 @@
 
         <form class="form-horizontal">
             <div class="box-body">
-                <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-2 control-label">Ngày</label>
 
+                <div class="form-group">
+                    <label class="col-sm-1  col-xs-12 control-label no-padding-right">Từ ngày</label>
+                    <div class="col-sm-4  col-xs-12 ">
+                        <div class="input-group date">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            <input type="date" data-date-inline-picker="true" class="form-control pull-right" id="fromDate">
+                        </div>
+                    </div>
+                    <label class="col-sm-1  col-xs-12 control-label no-padding-right">Đến ngày</label>
                     <div class="col-sm-4">
                         <div class="input-group date">
                             <div class="input-group-addon">
                                 <i class="fa fa-calendar"></i>
                             </div>
-                            <input type="date" data-date-inline-picker="true" class="form-control pull-right" id="datepicker">
+                            <input type="date" class="form-control pull-right" id="toDate">
                         </div>
                     </div>
-                    <div class="col-sm-4">
-                        <div class="input-group date">
-                            <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
-                            </div>
-                            <input type="date" class="form-control pull-right">
-                        </div>
-                    </div>
-                    <div class="col-sm-offset-2 col-sm-10">
+                    <div class="col-sm-offset-1 col-sm-10 no-padding-right">
                         <div class="radio">
                             <label>
-                                <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
+                                <input type="radio" name="radio-ngay" id="optionsRadios1" value="option1" checked="">
                                 Ngày tạo
                             </label>
                             <label style="margin-left:20px">
-                                <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
+                                <input type="radio" name="radio-ngay" id="optionsRadios1" value="option1" checked="">
                                 Ngày cập nhật
                             </label>
                         </div>
 
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Nhóm</label>
+                    <div class="col-sm-4 col-xs-12 ">
+                        <select id="groupId" class="chosen-select form-control select2" data-placeholder="Chọn nhóm"></select>
+                    </div>
+                    <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Thành viên</label>
+                    <div class="col-sm-4 col-xs-12 ">
+                        <select id="memberId" class="form-control select2" data-placeholder="Chọn thành viên"></select>
+                    </div>
+                </div>
                 <div class="form-group" data-select2-id="25">
-                    <label class="col-sm-2 control-label">Multiple</label>
-                    <div class="col-sm-8">
-                        <select class="form-control select2 select2-hidden-accessible" id="ddlStatus" multiple="" data-placeholder="Select a State" style="width: 100%;" data-select2-id="7" tabindex="-1" aria-hidden="true">
-                            
+                    <label class="col-sm-1 control-label no-padding-right">Trạng thái</label>
+                    <div class="col-sm-9">
+                        <select class="form-control select2 select2-hidden-accessible" id="ddlStatus" multiple=""
+                                data-placeholder="Select a State" style="width: 100%;" data-select2-id="7" tabindex="-1" aria-hidden="true">
+                            <option value="0"></option>
                         </select>
                     </div>
-                   
+
                 </div>
                 <div class="form-group">
-                    <label for="inputPassword3" class="col-sm-2 control-label">Tìm kiếm</label>
+                    <label class="col-sm-1 control-label no-padding-right">Tìm kiếm</label>
 
-                    <div class="col-sm-8">
-                        <input type="search" class="form-control" id="txtSearch" placeholder="">
+                    <div class="col-sm-9">
+                        <input type="search" class="form-control"  id="freeText"  placeholder="">
                     </div>
                 </div>
 
             </div>
             <!-- /.box-body -->
-            <button type="submit" class="btn btn-info pull-right">Tìm kiếm</button>
+            <button type="button" id="btnSearch" class="btn btn-info pull-right">Tìm kiếm</button>
 
             <!-- /.box-footer -->
         </form>
         <div class="clearfix"></div>
         <div class="box" style="margin-top:50px;">
-            <div class="box-header">
-                <h3 class="box-title">Data Table With Full Features</h3>
+            <div class="box-header box-header-green">
+                <h3 class="box-title">Danh sách hồ sơ</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                <div id="dtSource_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
                     <div class="row">
                         <div class="col-sm-6">
-                            <div class="dataTables_length" id="example1_length">
+                            <div class="dataTables_length" id="dtSource_length">
                                 <label>
-                                    Hiển thị <select name="example1_length" aria-controls="example1" class="form-control input-sm">
+                                    Hiển thị <select name="dtSource_length" aria-controls="dtSource" class="form-control input-sm">
                                         <option value="10">10</option>
                                         <option value="25">25</option>
                                         <option value="50">50</option>
@@ -87,67 +99,47 @@
                         </div>
 
                     </div><div class="row">
-                        <div class="col-sm-12">
-                            <table id="example1" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+                        <div class="col-sm-12 horizontal-scroll">
+                            <table id="dtSource" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="dtSource_info">
                                 <thead>
                                     <tr role="row">
-                                        <th class="" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" style="width: 231px;">Rendering engine</th>
-                                        <th class="" aria-controls="example1" rowspan="1" colspan="1" style="width: 282px;">Browser</th>
-                                        <th class="" aria-controls="example1" rowspan="1" colspan="1" style="width: 251px;">Platform(s)</th>
-                                        <th class="" aria-controls="example1" rowspan="1" colspan="1" style="width: 198px;">Engine version</th>
-                                        <th class="" aria-controls="example1" rowspan="1" colspan="1" style="width: 145px;">CSS grade</th>
+                                        <th class="w-45">STT</th>
+                                        <th class="w-98">Mã</th>
+                                        <th class="min-150">Tên khách hàng</th>
+                                        <th class="w-105">CMND</th>
+                                        <th class="w-105">Phone</th>
+                                        <th style="width:150px">Trạng thái</th>
+                                        <th class="w-84">Đối tác</th>
+                                        <th class="w-150">Sản phẩm</th>
+                                        <th class="w-60">Bảo hiểm</th>
+                                        <th class="m-w-300">Ghi chú</th>
+                                        <th class="w-130">Khu vực</th>
+                                        <th class="w-130">Đội ngũ bán hàng</th>
+                                        <th class="m-w-150">Nhân viên bán hàng</th>
+                                        <th class="w-84">Người tạo</th>
+                                        <th class="w-94">Ngày tạo</th>
+                                        <th class="w-94">Người cập nhật</th>
+                                        <th class="w-94">Ngày cập nhật</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr role="row" class="odd">
-                                        <td class="sorting_1">Presto</td>
-                                        <td>Nintendo DS browser</td>
-                                        <td>Nintendo DS</td>
-                                        <td>8.5</td>
-                                        <td>C/A<sup>1</sup></td>
-                                    </tr>
-
-                                    <tr role="row" class="odd">
-                                        <td class="sorting_1">Trident</td>
-                                        <td>
-                                            Internet
-                                            Explorer 5.5
-                                        </td>
-                                        <td>Win 95+</td>
-                                        <td>5.5</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr role="row" class="even">
-                                        <td class="sorting_1">Trident</td>
-                                        <td>
-                                            Internet
-                                            Explorer 6
-                                        </td>
-                                        <td>Win 98+</td>
-                                        <td>6</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr role="row" class="odd">
-                                        <td class="sorting_1">Trident</td>
-                                        <td>Internet Explorer 7</td>
-                                        <td>Win XP SP2+</td>
-                                        <td>7</td>
-                                        <td>A</td>
-                                    </tr>
-                                    <tr role="row" class="even">
-                                        <td class="sorting_1">Trident</td>
-                                        <td>AOL browser (AOL desktop)</td>
-                                        <td>Win XP</td>
-                                        <td>6</td>
-                                        <td>A</td>
-                                    </tr>
-                                </tbody>
+                                <tbody></tbody>
                                 <tfoot>
-                                    <tr><th rowspan="1" colspan="1">Rendering engine</th><th rowspan="1" colspan="1">Browser</th><th rowspan="1" colspan="1">Platform(s)</th><th rowspan="1" colspan="1">Engine version</th><th rowspan="1" colspan="1">CSS grade</th></tr>
+
                                 </tfoot>
                             </table>
                         </div>
-                    </div><div class="row"><div class="col-sm-5"><div class="dataTables_info" id="example1_info" role="status" aria-live="polite">Showing 41 to 50 of 57 entries</div></div><div class="col-sm-7"><div class="dataTables_paginate paging_simple_numbers" id="example1_paginate"><ul class="pagination"><li class="paginate_button previous" id="example1_previous"><a href="#" aria-controls="example1" data-dt-idx="0" tabindex="0">Previous</a></li><li class="paginate_button "><a href="#" aria-controls="example1" data-dt-idx="1" tabindex="0">1</a></li><li class="paginate_button "><a href="#" aria-controls="example1" data-dt-idx="2" tabindex="0">2</a></li><li class="paginate_button "><a href="#" aria-controls="example1" data-dt-idx="3" tabindex="0">3</a></li><li class="paginate_button "><a href="#" aria-controls="example1" data-dt-idx="4" tabindex="0">4</a></li><li class="paginate_button active"><a href="#" aria-controls="example1" data-dt-idx="5" tabindex="0">5</a></li><li class="paginate_button "><a href="#" aria-controls="example1" data-dt-idx="6" tabindex="0">6</a></li><li class="paginate_button next" id="example1_next"><a href="#" aria-controls="example1" data-dt-idx="7" tabindex="0">Next</a></li></ul></div></div></div>
+                    </div><div class="row">
+                        <div class="col-sm-5">
+                            <div class="dataTables_info" id="dtSource_info" role="status" aria-live="polite">Showing 41 to 50 of 57 entries</div>
+                        </div>
+                        <div class="col-sm-7">
+                            <div class="dataTables_paginate paging_simple_numbers" id="dtSource_paginate">
+                                <ul class="pagination" id="pagination">
+                                   
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- /.box-body -->
@@ -173,34 +165,37 @@
         { value: "7", display: "Hủy" },
         { value: "8", display: "PCB" },
     ]
+    let model = { status:'', freeText :'', fromDate:'',toDate:'', groupId:0, memberId:0};
     $(document).ready(function e() {
-        renderStatusList();
-
-        ProfileSearch()
-        
-        //$('#datepicker').datepicker({
-
-        //    autoclose: true
-        //})
+        let input = document.getElementById("freeText");
+        input.addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                $("#btn_search").click();
+            }
+        });
+        $("#fromDate").val("2020-07-01")
+        model.fromDate = "2020-07-01";
+        GetGroupByUser()
         window.addEventListener('popstate', function (e) {
-
+            debugger
             queries = new URLSearchParams(window.location.search)
             bindQueries()
-            var maNhom = queries.get("maNhom");
-            $('#ddlNhom').val(maNhom)
-            $('#ddlNhom').chosen().trigger("chosen:updated").change();
+            var groupId = queries.get("groupId");
+            $('#groupId').val(groupId)
+            $('#groupId').chosen().trigger("chosen:updated").change();
 
 
-            var memberId = queries.get("maThanhVien");
-            if (isNullOrWhiteSpace(maNhom) || parseInt(maNhom) === 0 || isNullOrWhiteSpace(memberId) || parseInt(memberId) === 0) {
-                $('#ddlThanhVienNhom').empty();
-                $('#ddlThanhVienNhom').append("<option value='0'></option>");
-                $('#ddlThanhVienNhom').val('0');
-                $('#ddlThanhVienNhom').chosen().trigger("chosen:updated");
+            var memberId = queries.get("memberId");
+            if (isNullOrWhiteSpace(groupId) || parseInt(groupId) === 0 || isNullOrWhiteSpace(memberId) || parseInt(memberId) === 0) {
+                $('#memberId').empty();
+                $('#memberId').append("<option value='0'></option>");
+                $('#memberId').val('0');
+                $('#memberId').chosen().trigger("chosen:updated");
             }
             else {
-                $('#ddlThanhVienNhom').val(memberId)
-                $('#ddlThanhVienNhom').chosen().trigger("chosen:updated");
+                $('#memberId').val(memberId)
+                $('#memberId').chosen().trigger("chosen:updated");
             }
 
             page = queries.get("page");
@@ -213,18 +208,14 @@
                 limit = 10;
             else
                 limit = parseInt(limit)
-            getData(page, limit, memberId, true)
+            model.fromDate = queries.get("fromDate")
+            model.fromDate = queries.get("toDate")
+            getData(page, limit, model, true)
         });
-        //var input = document.getElementById("txtFreeText");
-        //input.addEventListener("keyup", function (event) {
-        //    if (event.keyCode === 13) {
-        //        event.preventDefault();
-        //        $("#btn_search").click();
-        //    }
-        //});
+        
 
-        //$('#ddlThanhVienNhom').chosen({ width: '100%', allow_single_deselect: true });
-        //$('#ddlNhom').chosen({ width: '100%', allow_single_deselect: true });
+        //$('#memberId').chosen({ width: '100%', allow_single_deselect: true });
+        //$('#groupId').chosen({ width: '100%', allow_single_deselect: true });
         //$('#ddllimit').chosen({ width: '100%', allow_single_deselect: true });
         //$('#txtFromDate').datepicker({
         //    dateFormat: 'dd-mm-yy'
@@ -237,430 +228,250 @@
         //    $(this).prev().focus();
         //});
 
-        //var status = decodeURI(queries.get("status"))
-        //if (!isNullOrWhiteSpace(status)) {
-        //    let arrStatus = status.split(',')
-        //    $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
-        //}
-
-        //bindQueries()
-    });
-    
-            function bindQueries() {
-
-            var fromDate = queries.get("fromDate");
-            if (isNullOrWhiteSpace(fromDate)) {
-                fromDate = new Date().getDay + -7;
-            }
-            $("#txtFromDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", fromDate);
-            var toDate = queries.get("toDate");
-            if (isNullOrWhiteSpace(toDate)) {
-                toDate = new Date().getDay + 1;
-            }
-            $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", toDate);
-            var dateType = queries.get("loaiNgay");
-            setCheckedValueOfRadioButtonGroup("radio-ngay", dateType)
-            var maHS = queries.get("maHS");
-            $('#txtMaHS').val(maHS)
-            $('#txtFreeText').val(queries.get("freetext"))
-            var cmnd = queries.get("cmnd");
-            $('#txtCMND').val(cmnd)
-            page = queries.get("page");
-            if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
-                page = 1;
-            else
-                page = parseInt(page)
-            limit = queries.get("limit")
-            if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
-                limit = 10;
-            else
-                limit = parseInt(limit)
-            $("#ddlLimit").val(limit)
+        let status = decodeURI(queries.get("status"))
+        if (!isNullOrWhiteSpace(status)) {
+            let arrStatus = status.split(',')
+            model.status = status;
+            renderStatusList('common', arrStatus)
         }
-    $('#btn_search').click(function (e) {
-        showBlock($('#panel_body'), strLoading);
-        getData(page, limit);
-        //$('#dtSource').DataTable().ajax.reload();
-        //$('#dtSource').DataTable().columns.adjust().draw();
-    });
-
-    function getTotalPage(totalRecord, limit) {
-        return totalRecord > limit ? Math.ceil(totalRecord / limit) : 1
-    }
-    function onClickPage(page) {
-        page = page;
-        getData(page, limit);
-    }
-    function renderGoPreviousPage(page) {
-        let newCurrentPage = page
-        if (page > 1) {
-            newCurrentPage = page - 1
-            return "<li class='paginate_button previous' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + newCurrentPage + ")'>"
-                + "<a href='javascript:;'>Trước</a>"
-                + "</li>"
-
-        } else {
-            return ""
-        }
-    }
-    function renderGoNextPage(page) {
-        if (page < totalPage) {
-            newCurrentPage = page + 1
-            return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + newCurrentPage + ")' >"
-                + "<a href='javascript:;'>Sau</a>"
-                + "</li>"
-
-        } else {
-            return ""
-        }
-    }
-    function renderGoLastPage(page) {
-
-        if (totalPage > page) {
-            return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + totalPage + ")' >"
-                + "<a href='javascript:;'>Trang cuối</a>"
-                + "</li>"
-        } else {
-            return ""
-        }
-    }
-    function renderGoFirstPage(page) {
-        if (totalPage > 1 && page > 1) {
-            return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + 1 + ")' >"
-                + "<a href='javascript:;'>Trang đầu</a>"
-                + "</li>"
-        } else {
-            return ""
-        }
-    }
-    function renderPageList(page, limit, totalRc) {
-        totalPage = getTotalPage(totalRc, limit)
-        var startPage = page > pageMargin ? page - pageMargin : 1;
-        var endPage = pageMargin + page > totalPage ? totalPage : pageMargin + page
-        var paging = $("#paging");
-        paging.empty();
-        var first = renderGoFirstPage(page)
-        var next = renderGoNextPage(page);
-        var prev = renderGoPreviousPage(page)
-        var last = renderGoLastPage(page)
-        paging.append(first)
-        paging.append(prev)
-        for (var i = startPage; i <= endPage; i++) {
-            var active = page == i ? ' active' : '';
-            var item = "<li class='paginate_button" + active + " aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + i + ")' >"
-                + "<a href='javascript:;'>" + i + "</a>"
-                + "</li>"
-            paging.append(item)
-        }
-        paging.append(next);
-        paging.append(last)
-    }
-    function getValueDisplay(value, type) {
-        if (isNullOrWhiteSpace(type))
-            return value
-        var display = null
-        switch (type) {
-            case 'datetime':
-                display = FormatDateTimeDMY(value);
-            default: break;
-        }
-        return display;
-    }
-    function onSelectLimit() {
-        limit = $("#ddlLimit").val()
-        getData(page, limit)
-        //alert(limit)
-    }
-    function renderTextLeft(value, type, className = '') {
-        return "<td class='text-left " + className + "'>" + getValueDisplay(value, type) + "</td>";
-    }
-    function renderTextCenter(value, type) {
-        return "<td class='text-center'>" + getValueDisplay(value, type) + "</td>";
-    }
-   function renderStatus(MaTrangThai, TrangThaiHS) {
-        var statusString = "";
-        if (MaTrangThai == '@((int)VietStar.Client.Models.Enums.ProfileStatus.Draft)')
-            statusString = "<span class='label label-sm label-light arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VietStar.Client.Models.Enums.ProfileStatus.Input)')
-            statusString = "<span class='label label-sm label-purple arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VietStar.Client.Models.Enums.ProfileStatus.Expertise)')
-            statusString = "<span class='label label-sm label-danger arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VietStar.Client.Models.Enums.ProfileStatus.Compared)')
-            statusString = "<span class='label label-sm label-dadoichieu arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VietStar.Client.Models.Enums.ProfileStatus.Deny)')
-            statusString = "<span class='label label-sm label-inverse arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VietStar.Client.Models.Enums.ProfileStatus.Cancel)')
-            statusString = "<span class='label label-sm label-cancel arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VietStar.Client.Models.Enums.ProfileStatus.PCB)')
-            statusString = "<span class='label label-sm label-pcb arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VietStar.Client.Models.Enums.ProfileStatus.Additional)')
-            statusString = "<span class='label label-sm label-info arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VietStar.Client.Models.Enums.ProfileStatus.Release)')
-           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        else if (MaTrangThai == '@((int)VietStar.Client.Models.Enums.ProfileStatus.Finish)')
-            statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-        return "<td class='text-left'>" + statusString + "</td>";;
-    }
-    function renderAction(id, MaTrangThai, MaNV) {
-        var thaoTac = "<div class='action-buttons'>"
-            + "<a title='' class=\"blue\" style='cursor: pointer' id='" + id+ "' onClick='XemHS(" + id +")'>"
-            + "<i class=\"ace-icon fa fa-eye bigger-130\">"
-            + "</i></a>"
-
-        thaoTac += "</div>";
-        return "<td class='text-center'>" + thaoTac + "</td>"
-    }
-    function renderCoBaoHiem(CoBaoHiem) {
-        var value = ""
-        if (CoBaoHiem == true)
-            value = "<td class='text-left'> <div class='orange bolder' title='Không có bảo hiểm' ><i class=\"ace-icon fa fa-ban bigger-130\"></i></div> </td>";
-        else
-            value = "<td class='text-left'> <div class='green bolder'title = 'Có bảo hiểm' > <i class=\"ace-icon glyphicon glyphicon-ok bigger-130\"></i></div> </td>";
-        return value;
-    }
-    function renderRow(index, rowData) {
-
-        page = queries.get("page");
-        if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
-            page = 1;
-        else
-            page = parseInt(page)
-        limit = queries.get("limit")
-        if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
-            limit = 10;
-        else
-            limit = parseInt(limit)
-        var stt = (page - 1) * limit + index + 1;
-        return "<tr role='row' class = 'odd'>"
-            + renderTextCenter(stt)
-            + renderTextLeft(rowData.MaHoSo)
-            + renderTextLeft(rowData.NgayTao, 'datetime')
-            + renderTextLeft(rowData.DoiTac)
-            + renderTextLeft(rowData.CMND)
-            + renderTextLeft(rowData.Phone)
-            + renderTextLeft(rowData.TenKH)
-            + renderStatus(rowData.MaTrangThai, rowData.TrangThaiHS)
-            + renderTextLeft(rowData.GhiChu, '', 'tb-row-breakword')
-            + renderTextLeft(rowData.DisbursementDate, 'datetime')
-            + renderTextLeft(rowData.NgayCapNhat, 'datetime')
-            + renderTextLeft(rowData.TenSanPham)
-            + renderTextLeft(rowData.MaNV)
-            + renderTextLeft(rowData.NhanVienBanHang)
-            + renderTextLeft(rowData.DoiNguBanHang)
-            + renderTextLeft(rowData.MaNVLayHS)
-            + renderCoBaoHiem(rowData.CoBaoHiem)
-            + renderTextLeft(rowData.KhuVucText)
-            + renderAction(rowData.ID, rowData.MaTrangThai, rowData.MaNV)
-            + "</tr>";
-    }
-    function renderTableBody(datas) {
-        var table = $("#dtSource")
-        var tableBody = $("#dtSource").find("tbody");
-        tableBody.empty();
-        if (isNullOrNoItem(datas))
-            return;
-        $.each(datas, function (index, item) {
-            tableBody.append(renderRow(index, item));
-        });
-
-    }
-    @*var dsNhom = @Html.Raw(Json.Serialize(@ViewBag.DSNhom));
-    $(document).ready(function () {
-        if (dsNhom.length > 0)
-            LayNhom();
         else {
-            page = queries.get("page");
-            if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
-                page = 1;
-            else
-                page = parseInt(page)
-            limit = queries.get("limit")
-            if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
-                limit = 10;
-            else
-                limit = parseInt(limit)
-            getData(page, limit)
-            //InitTable();
+            renderStatusList('common')
         }
 
-    });*@
+        bindQueries()
+        getData(page, limit, model)
+    });
+    $("#groupId").on("change", function () {
+        GetMemberByGroup(this.value)
+    })
 
-    function getData(page, limit, memberId = 0, isPopState = false)
-    {
-        if (isNaN(memberId) || memberId == 0) {
-            memberId =  dsNhom.length > 0 ? $('#ddlThanhVienNhom').val() : 0
-        }
+function bindQueries() {
 
-        showBlock($('#panel_body'), strLoading);
-        $.ajax( {
-                url: '@Url.Action("TimHSQL", "QuanLyHoSo")',
-                type: "GET",
-                contentType: "application/json",
-            data: {
-                'page': page,
-                'limit': limit,
-                'maNhom': dsNhom.length > 0 ? $('#ddlNhom').val() : 0,
-                'maThanhVien': memberId,
-                 'fromDate':$('#txtFromDate').val(),
-                'toDate': $('#txtToDate').val(),
-                'maHS': $('#txtMaHS').val(),
-                'cmnd': $('#txtCMND').val(),
-                'freetext': $("#txtFreeText").val(),
-                'loaiNgay': $('input[name="radio-ngay"]:checked').val(),
-                'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
-            },
-            success: function (response) {
-                if (response.success == true) {
-                    totalRecord = response.data.TotalRecord;
-                    var search = this.url.replace("/QuanLyHoSo/DanhSachHoSo", "");
-                    search = search.replace("/QuanLyHoSo/TimHSQL","")
-                    queries = new URLSearchParams(search)
-
-                    page = queries.get("page");
-                    if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
-                        page = 1;
-                    else
-                        page = parseInt(page)
-                    limit = queries.get("limit")
-
-                    if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
-                        limit = 10;
-                    else
-                        limit = parseInt(limit)
-                    renderTableBody(response.data.Datas)
-                    //renderGoPreviousPage(page);
-                    renderPageList(page, limit, totalRecord)
-                    $("#dtSource_info").text("Tổng: " + totalRecord + " items");
-                    $("#totalPage").text("Tổng: " + totalPage + " trang");
-                }
-                else {
-                    swal({
-                        title: "",
-                        text: response.code,
-                        type: "error",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    });
-                }
-
-            },
-                error: function (jqXHR, exception) {
-                    showError(jqXHR, exception);
-                },
-                complete: function () {
-                    $('#panel_body').unblock();
-                    if (!isPopState) {
-                        var requestUrl = this.url.replace("TimHSQL", "DanhSachHoSo")
-                        window.history.pushState(requestUrl, this.title, requestUrl)
-                    }
-
-            }
-        })
-
+    var fromDate = queries.get("fromDate");
+    if (isNullOrWhiteSpace(fromDate)) {
+        fromDate = new Date().getDay + -7;
     }
-
-</script>
-<script>
-    function LayNhom() {
-        $('#ddlNhom').empty();
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSNhom", "QuanLyHoSo")',
-            data: {},
-            success: function (data) {
-                $('#ddlNhom').append("<option value='0'></option>");
-                if (data.data != null && data.success == true) {
-                    $.each(data.data, function (index, item) {
-                        $('#ddlNhom').append("<option value='" + item.ID + "'>" + item.Ten + "(" + item.TenQL + ")</option>");
-                    });
-                    $('#ddlNhom').chosen().trigger("chosen:updated").change();
-                }
-                queries = new URLSearchParams(window.location.search)
-                var memberId = queries.get("maThanhVien");
-                getData(page, limit, memberId);
-            },
-            complete: function () {
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
+    var toDate = queries.get("toDate");
+    if (isNullOrWhiteSpace(toDate)) {
+        toDate = new Date().getDay + 1;
     }
+    var dateType = queries.get("dateType");
+    setCheckedValueOfRadioButtonGroup("radio-ngay", dateType)
+    var maHS = queries.get("maHS");
+    $('#txtMaHS').val(maHS)
+    $('#txtFreeText').val(queries.get("freetext"))
+    var cmnd = queries.get("cmnd");
+    $('#txtCMND').val(cmnd)
+    page = queries.get("page");
+    if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+        page = 1;
+    else
+        page = parseInt(page)
+    limit = queries.get("limit")
+    if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+        limit = 10;
+    else
+        limit = parseInt(limit)
+    $("#ddlLimit").val(limit)
+}
+$('#btn_search').click(function (e) {
+    showBlock($('#panel_body'), strLoading);
+    getData(page, limit, model);
+});
 
-    $('#ddlNhom').change(function () {
-        $('#ddlThanhVienNhom').empty();
-        $('#ddlThanhVienNhom').append("<option value='0'></option>");
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSThanhVienNhom", "QuanLyHoSo")',
-            data: { "maNhom": $('#ddlNhom').val() },
-            success: function (data) {
-                if (data.data != null && data.success == true) {
-                    $.each(data.data, function (index, item) {
-                        $('#ddlThanhVienNhom').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
-                    });
-                }
-            },
-            complete: function () {
-                $('#ddlThanhVienNhom').chosen().trigger("chosen:updated");
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
+function getTotalPage(totalRecord, limit) {
+    return totalRecord > limit ? Math.ceil(totalRecord / limit) : 1
+}
+function onClickPage(page) {
+    page = page;
+    getData(page, limit,model);
+}
+
+
+function onSelectLimit() {
+    limit = $("#ddlLimit").val()
+    getData(page, limit,model)
+    //alert(limit)
+}
+
+function renderRow(index, item) {
+
+    page = queries.get("page");
+    if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+        page = 1;
+    else
+        page = parseInt(page)
+    limit = queries.get("limit")
+    if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+        limit = 10;
+    else
+        limit = parseInt(limit)
+    var stt = (page - 1) * limit + index + 1;
+    return "<tr role='row' class = 'odd'>"
+        + renderTextLeft(stt)
+        + renderTextLink(item.ProfileCode, `/Profile/edit/${item.Id}`)
+        + renderTextLink(item.CustomerName,`/Profile/edit/${item.Id}`, '', 'min-150')
+        + renderTextLeft(item.CMND)
+        + renderTextLeft(item.Phone)
+        + renderStatusDisplay(item.StatusName)
+        + renderTextLeft(item.PartnerName, '', 'min-150')
+        + renderTextLeft(item.ProductName,'','min-150')
+        + renderCoBaoHiem(item.IsInsurrance)
+        + renderTextLeft(item.LastNote, '', 'tb-row-breakword m-w-300')
+        + renderTextLeft(item.ProvinceName, '','min-150')
+        + renderTextLeft(item.SellTeam,'','min-150')
+        + renderTextLeft(item.CourierCode,'','min-150')
+        + renderTextLeft(item.CreatedBy, '', 'min-150')
+        + renderTextLeft(item.CreatedTime, 'datetime', 'min-100')
+        + renderTextLeft(item.UpdatedBy, '', 'min-150')
+        + renderTextLeft(item.UpdatedTime, 'datetime', 'min-100')
+        + "</tr>";
+}
+function renderTableBody(datas) {
+    var table = $("#dtSource")
+    var tableBody = $("#dtSource").find("tbody");
+    tableBody.empty();
+    if (isNullOrNoItem(datas))
+        return;
+    $.each(datas, function (index, item) {
+        tableBody.append(renderRow(index, item));
     });
 
-</script>
-<script>
-    function XemHS(id) {
-        window.location = "/QuanLyHoSo/XemHSByID?id=" + id;
-    }
-    function SuaHS(id) {
-        window.location = "/QuanLyHoSo/SuaHSByID?id=" + id;
-    }
-</script>
-<script>
-    function DownloadReport(e) {
-        var maNhom = 0;
-        var maThanhVien = 0;
+}
+    $('#btnSearch').click(function (e) {
+        getData(page, limit,model);
 
-        if ($('#ddlNhom').val() != undefined) {
-            maNhom = $('#ddlNhom').val();
-        }
-        if ($('#ddlThanhVienNhom').val() != undefined) {
-            maThanhVien = $('#ddlThanhVienNhom').val();
-        }
-        else
-            maThanhVien = 0
-        var objectSend = JSON.stringify({ 'maNhom': maNhom, 'maThanhVien': maThanhVien, 'fromDate': $('#txtFromDate').val(), 'toDate': $('#txtToDate').val(), 'maHS': $('#txtMaHS').val(), 'cmnd': $('#txtCMND').val(), 'loaiNgay': $('input[name="radio-ngay"]:checked').val() });
-        $.ajax({
-            traditional: true,
-            url: '/QuanLyHoSo/DownloadReport',
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            data: objectSend,
-            success: function (data) {
-                if (data.success == true) {
-                    var link = document.createElement("a");
-                    link.href = data.code;
-                    link.click();
-                }
-                else {
-                    swal({
-                        title: "",
-                        text: data.Message.ErrorMessage,
-                        type: "error",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    });
-                }
-            },
+    });
+function getData(page, limit, model, isPopState = false)
+{
+    if (model == null) {
+        model = { status: '', freeText: '', fromDate: '', toDate: '', groupId: 0, memberId: 0 };
+    }
+    debugger
+    showBlock($('#panel_body'));
+    $.ajax( {
+            url: '@Url.Action("Search", "Profile")',
+            type: "GET",
+            contentType: "application/json",
+        data: {
+            'page': page,
+            'limit': limit,
+            'groupId': model.groupId,
+            'memberId': model.memberId,
+            'fromDate': model.fromDate,
+            'toDate': model.toDate,
+            'freeText': model.freeText,
+            'dateType': $('input[name="radio-ngay"]:checked').val(),
+            'status': model.status
+        },
+        success: function (response) {
+            if (response.success == true) {
+                totalRecord = response.data.TotalRecord;
+                var search = this.url.replace("/Profile/Index", "");
+                search = search.replace("/Profile/Search","")
+                queries = new URLSearchParams(search)
+
+                page = queries.get("page");
+                if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+                    page = 1;
+                else
+                    page = parseInt(page)
+                limit = queries.get("limit")
+                
+                
+                if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                    limit = 10;
+                else
+                    limit = parseInt(limit)
+                renderTableBody(response.data.Datas)
+                //renderGoPreviousPage(page);
+                renderPageList(page, limit, totalRecord)
+                $("#dtSource_info").text("Tổng: " + totalRecord + " items");
+                $("#totalPage").text("Tổng: " + totalPage + " trang");
+            }
+            else {
+                swal({
+                    title: "",
+                    text: response.code,
+                    type: "error",
+                    timer: 4000,
+                    showConfirmButton: true,
+                });
+            }
+
+        },
             error: function (jqXHR, exception) {
                 showError(jqXHR, exception);
             },
             complete: function () {
+                $('#panel_body').unblock();
+                if (!isPopState) {
+                    var requestUrl = this.url.replace("Search", "Index")
+                    window.history.pushState(requestUrl, this.title, requestUrl)
+                }
 
-            },
-        });
+        }
+    })
+
+}
+
+
+function XemHS(id) {
+    window.location = "/Profile/XemHSByID?id=" + id;
+}
+function SuaHS(id) {
+    window.location = "/Profile/SuaHSByID?id=" + id;
+}
+
+function DownloadReport(e) {
+    var groupId = 0;
+    var memberId = 0;
+
+    if ($('#groupId').val() != undefined) {
+        groupId = $('#groupId').val();
     }
+    if ($('#memberId').val() != undefined) {
+        memberId = $('#memberId').val();
+    }
+    else
+        memberId = 0
+    let objectSend = JSON.stringify({
+        'groupId': groupId,
+        'memberId': memberId,
+        'fromDate': $('#txtFromDate').val(),
+        'toDate': $('#txtToDate').val(),
+        'maHS': $('#txtMaHS').val(),
+        'cmnd': $('#txtCMND').val(),
+        'dateType': $('input[name="radio-ngay"]:checked').val()
+    });
+    $.ajax({
+        traditional: true,
+        url: '/Profile/DownloadReport',
+        type: "POST",
+        contentType: "application/json; charset=utf-8",
+        data: objectSend,
+        success: function (data) {
+            if (data.success == true) {
+                var link = document.createElement("a");
+                link.href = data.code;
+                link.click();
+            }
+            else {
+                swal({
+                    title: "",
+                    text: data.Message.ErrorMessage,
+                    type: "error",
+                    timer: 4000,
+                    showConfirmButton: true,
+                });
+            }
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        },
+        complete: function () {
+
+        },
+    });
+}
 </script>

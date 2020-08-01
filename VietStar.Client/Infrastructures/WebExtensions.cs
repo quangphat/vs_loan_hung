@@ -66,6 +66,7 @@ namespace KingOffice.Infrastructures
                     account.Id = id;
                     account.UserName = list.FirstOrDefault((Claim a) => a.Type == "UserName")?.Value;
                     account.Code = list.FirstOrDefault((Claim a) => a.Type == "Code")?.Value;
+                    account.OrgId = Convert.ToInt32(list.FirstOrDefault((Claim a) => a.Type == "Id")?.Value);
                     account.Id = Convert.ToInt32(list.FirstOrDefault((Claim a) => a.Type == "Id")?.Value);
                     account.Email = list.FirstOrDefault((Claim a) => a.Type == "Email")?.Value;
                     account.FullName = list.FirstOrDefault((Claim a) => a.Type == "FullName")?.Value;

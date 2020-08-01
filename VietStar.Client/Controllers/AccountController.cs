@@ -36,6 +36,7 @@ namespace VietStar.Client.Controllers
             List<Claim> claims = new List<Claim>();
             claims.Add(new Claim("Id", account.Id.ToString()));
             claims.Add(new Claim("UserName", account.UserName));
+            claims.Add(new Claim("OrgId", account.OrgId.ToString()));
             if (!string.IsNullOrWhiteSpace(account.FullName))
                 claims.Add(new Claim("FullName", account.FullName));
             if (!string.IsNullOrWhiteSpace(account.Email))

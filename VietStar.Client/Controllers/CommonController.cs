@@ -16,10 +16,10 @@ namespace VietStar.Client.Controllers
         {
             _bizCommon = commonBusiness;
         }
-        [HttpGet("GetStatusList")]
-        public async Task<IActionResult> GetStatusList()
+        [HttpGet("GetStatusList/{profileType}")]
+        public async Task<IActionResult> GetStatusList(string profileType)
         {
-            var result = await _bizCommon.GetStatusList();
+            var result = await _bizCommon.GetStatusList(profileType);
             return ToResponse(result);
         }
     }

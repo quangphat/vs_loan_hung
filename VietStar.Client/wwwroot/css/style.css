@@ -23,3 +23,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     top: 0;
     width: auto;
 }
+.label-orrange {
+    background-color: #e38008!important;
+}
+.label-temp {
+    background-color: #757575 !important;
+}
+.label-green {
+    background-color: #38b04a !important;
+}
+
+.label-cancel {
+    background-color: #455f73 !important;
+}
+/*select option, select.form-control option {
+    padding: 3px 4px 15px;
+}*/

@@ -1,6 +1,13 @@
 ﻿html, body, h1, h2, h3, h4, h5, h6 {
     font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
 }
+.horizontal-scroll {
+    overflow-x: auto;
+}
+.box-header-green {
+    background-color: #0D622F;
+    color: white;
+}
 .datepicker {
     position: absolute;
     width: 100%;
@@ -199,8 +206,10 @@ input:-moz-placeholder, textarea:-moz-placeholder {
 .m-w-140 {
     min-width: 140px !important;
 }
-
-.m-w-150 {
+.min-100{
+    min-width:100px;
+}
+.min-150 {
     min-width: 150px !important;
 }
 

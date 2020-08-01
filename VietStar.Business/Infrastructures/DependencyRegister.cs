@@ -12,7 +12,7 @@ namespace VietStar.Business.Infrastructures
         {
             services.AddScoped<IEmployeeBusiness, EmployeeBusiness>();
             services.AddScoped<ICommonBusiness, CommonBusiness>();
-
+            services.AddScoped<IGroupBusiness, GroupBusiness>();
             services.AddScoped<IProfileBusiness, ProfileBusiness>();
         }
     }

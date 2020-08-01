@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using VietStar.Business.Interfaces;
+using VietStar.Entities.Commons;
 using VietStar.Entities.Infrastructures;
 using VietStar.Entities.Messages;
 using VietStar.Entities.ViewModels;
@@ -15,19 +17,37 @@ namespace VietStar.Business
     public class EmployeeBusiness : BaseBusiness, IEmployeeBusiness
     {
         protected readonly IEmployeeRepository _rpEmployee;
-        public EmployeeBusiness(IEmployeeRepository employeeRepository,IMapper mapper, CurrentProcess process) : base(mapper, process)
+        protected readonly IGroupRepository _rpGroup;
+        public EmployeeBusiness(IEmployeeRepository employeeRepository, IGroupRepository groupRepository,IMapper mapper, CurrentProcess process) : base(mapper, process)
         {
             _rpEmployee = employeeRepository;
+            _rpGroup = groupRepository;
         }
+
+        public async Task<List<OptionSimple>> GetMemberByGroupId(int groupId)
+        {
+            if (groupId > 0)
+                return await _rpEmployee.GetMemberByGroupIdIncludeChild(groupId, _process.User.Id);
+            var result = new List<OptionSimple>();
+            var groups = await _rpGroup.GetGroupByUserId(_process.User.Id);
+            if (groups != null)
+            {
+                for (int i = 0; i < groups.Count; i++)
+                {
+                    var members = await _rpEmployee.GetMemberByGroupId(groups[i].Id, _process.User.Id);
+                    result.AddRange(members);
+                   
+                }
+                result.DistinctBy(p => p.Id);
+            }
+            return result;
+        }
+
         public async Task<bool> GetStatus(int userId)
         {
             return await _rpEmployee.GetStatus(userId);
         }
-        public async Task<List<string>> GetPermission(int userId)
-        {
-            var result = await _rpEmployee.GetPermissions(userId);
-            return result;
-        }
+        
 
         public async Task<Account> Login(LoginModel model)
         {
@@ -52,7 +72,7 @@ namespace VietStar.Business
                 AddError(Errors.invalid_username_or_pass);
                 return null;
             }
-            account.Permissions = await _rpEmployee.GetPermissions(account.Id);
+            account.Permissions = await _rpEmployee.GetPermissions(account.Rolecode);
             return account;
         }
     }

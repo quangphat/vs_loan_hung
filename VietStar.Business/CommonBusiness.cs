@@ -7,27 +7,23 @@ using AutoMapper;
 using VietStar.Business.Interfaces;
 using VietStar.Entities.Commons;
 using VietStar.Entities.Infrastructures;
+using VietStar.Repository.Interfaces;
 using static VietStar.Entities.Commons.Enums;
 
 namespace VietStar.Business
 {
     public class CommonBusiness : BaseBusiness, ICommonBusiness
     {
-        public CommonBusiness(IMapper mapper, CurrentProcess process) : base(mapper, process)
+        protected readonly ICommonRepository _rpCommon;
+        public CommonBusiness(ICommonRepository commonRepository,IMapper mapper, CurrentProcess process) : base(mapper, process)
         {
+            _rpCommon = commonRepository;
         }
 
-        public Task<List<OptionSimple>> GetStatusList()
+        public async Task<List<OptionSimple>> GetStatusList(string profileType)
         {
-            var result = new List<OptionSimple>() {
-                new OptionSimple{Id =1, Name = "Mới" },
-
-                new OptionSimple{ Id = 2,Name = "Nhập liệu" },
-                 new OptionSimple{ Id = 3,Name = "Thẩm định" },
-                 new OptionSimple{ Id = 4,Name = "Từ chối" },
-                
-            };
-            return Task.FromResult(result);
+            var result = await _rpCommon.GetProfileStatusByRoleCode(profileType, _process.User.OrgId, _process.User.Rolecode);
+            return result;
         }
     }
 }

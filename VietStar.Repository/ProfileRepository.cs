@@ -23,7 +23,7 @@ namespace VietStar.Repository
             ProcessInputPaging(page, ref limit, out offset);
             using (var con = GetConnection())
             {
-                var result = await con.QueryAsync<ProfileIndexModel>("sp_HO_SO_TimHoSoQuanLy", new
+                var result = await con.QueryAsync<ProfileIndexModel>("sp_Profile_Search", new
                 {
                     userId,
                     groupId,
