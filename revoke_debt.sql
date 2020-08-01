@@ -766,31 +766,7 @@ CREATE TABLE [dbo].[ProfileStatus](
 
 ---------------x
 
-alter function [dbo].[fn_GetUserIDCanViewMyProfile_v2]
-(@userIds varchar(50))
-returns @tempTable TABLE (userId int)
-as 
-BEGIN
-declare @parentCode varchar(20);
-declare @tempGroupIds table(ids int PRIMARY key)
-insert @tempGroupIds select Ma_Nhom from NHAN_VIEN_NHOM where Ma_Nhan_Vien in (select distinct value as UserId from dbo.fn_SplitStringToTable(@userIds, '.'))
-select @parentCode = g.Chuoi_Ma_Cha
-from NHOM g where g.id in  (select * from @tempGroupIds)
---(select Ma_Nhom from NHAN_VIEN_NHOM where Ma_Nhan_Vien = @userId)
-insert into @tempTable
-select Ma_Nguoi_QL as UserId from NHOM g where g.Id 
-in ( select * from dbo.fn_SplitStringToTable(@parentCode, '.'))
-union 
-select Ma_Nguoi_QL as UserId  from NHOM g where g.id in (select * from @tempGroupIds)
---(select Ma_Nhom from NHAN_VIEN_NHOM where Ma_Nhan_Vien = @userId)
-union select Ma_nhan_vien as UserId from NHAN_VIEN_CF where Ma_Nhom  in (select * from @tempGroupIds)
---(select Ma_nhom  as UserId from NHAN_VIEN_NHOM where Ma_Nhan_Vien = @userId)
-union
-select distinct value as UserId from dbo.fn_SplitStringToTable(@userIds, '.')
-union select Id  as UserId from Nhan_Vien where RoleId =1
-delete @tempGroupIds
-return
-END
+
 
 --------------x
 
