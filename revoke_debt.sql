@@ -5,7 +5,7 @@
 alter table Nhan_Vien 
 add OrgId int
 
-EXEC sp_rename 'Nhan_Vien.Trang_Thai', 'Status', 'COLUMN'
+--EXEC sp_rename 'Nhan_Vien.Trang_Thai', 'Status', 'COLUMN'
 -----------
 go
 alter PROCEDURE [dbo].[sp_Employee_Login]
@@ -355,9 +355,9 @@ alter PROCEDURE [dbo].[sp_Employee_Group_LayDSChonThanhVienNhomCaCon_v2]
 AS
 BEGIN
 	declare @orgId int = 0;
-  select @orgId = isnull(OrgId,0) from Employee where Id = @userId;
+  select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
 	Select e.ID, e.Ma + ' - ' + e.Ho_Ten as Name, e.Ma as Code 
-	From Employee e
+	From Nhan_Vien e
 	Where isnull(e.OrgId,0) = @orgId and e.ID in (
 		Select NHAN_VIEN_NHOM.Ma_Nhan_Vien From NHAN_VIEN_NHOM 
 		Where NHAN_VIEN_NHOM.Ma_Nhom in 
