@@ -35,7 +35,7 @@ namespace VS_LOAN.Core.Repository.Interfaces
             int page,
             int limit,
             int orgId);
-        Task<Nhanvien> GetById(int id);
+        Task<Nhanvien> GetByIdAsync(int id);
         Task<List<OptionSimple>> GetRoleList(int userId);
         Task<bool> Update(EmployeeEditModel entity);
         Task<int> Create(UserCreateModel entity);

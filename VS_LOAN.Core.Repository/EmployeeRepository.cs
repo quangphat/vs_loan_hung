@@ -191,7 +191,7 @@ namespace VS_LOAN.Core.Repository
             }
 
         }
-        public async Task<Nhanvien> GetById(int userId)
+        public async Task<Nhanvien> GetByIdAsync(int userId)
         {
             using (var con = GetConnection())
             {
