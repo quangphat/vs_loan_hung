@@ -56,7 +56,7 @@
                     <label class="col-sm-1 control-label no-padding-right">Trạng thái</label>
                     <div class="col-sm-9">
                         <select class="form-control select2 select2-hidden-accessible" id="ddlStatus" multiple=""
-                                data-placeholder="Select a State" style="width: 100%;" data-select2-id="7" tabindex="-1" aria-hidden="true">
+                                 style="width: 100%;" data-select2-id="7" tabindex="-1" aria-hidden="true">
                             <option value="0"></option>
                         </select>
                     </div>
@@ -234,11 +234,11 @@ function renderTableBody(datas) {
     $("#freeText").on("keyup", function (event) {
         if (event.keyCode === 13) {
             event.preventDefault();
-            getData(page, limit, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#memberId").val());
+            getData(1, limit, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#memberId").val());
         }
     });
     $('#btnSearch').click(function (e) {
-        getData(page, limit, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#memberId").val());
+        getData(1, limit, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#memberId").val());
 
     });
     function bindQueries(callBack = null, isPopState = false) {
@@ -303,6 +303,13 @@ function getData(page, limit, status ='', groupId=0, memberId=0, isPopState = fa
     //    model = { status: '', freeText: '', fromDate: '', toDate: '', groupId: 0, memberId: 0 };
     //}
     //debugger
+    if (isNullOrWhiteSpace(status)) {
+        status = getQueryStatus($("#ddlStatus"));
+    }
+    if (groupId==0)
+        groupId = $("#groupId").val();
+    if (memberId == 0)
+        memberId = $("#memberId").val()
     showBlock($('#panel_body'));
     debugger
     $.ajax( {
