@@ -149,18 +149,16 @@ function renderOneItemFile(key, fileId, titleName, isRequire = false, className 
     filesUploaded = [],
     type = 1
 ) {
-
-    let content = "<div class='col-sm-3'>";
-
+    let header =''
     if (!isNullOrUndefined(titleName)) {
         if (isRequire) {
-            content += '<h5  class="header green ' + className + '">' + titleName + '<span class="required">(*)</span></h5>';
+            header = '<h5  class="header green ' + className + '">' + titleName + '<span class="required">(*)</span></h5>';
         }
         else {
-            content += '<h5  class="header green ' + className + '">' + titleName + '<span > </span></h5>';
+            header = '<h5  class="header green ' + className + '">' + titleName + '<span > </span></h5>';
         }
-    }
-
+    } 
+    let content = header + "<div class='col-sm-3'> ";
     content += "<div class=\"file-loading\">";
     content += "<input class='attachFile' key=" + key + " id=\"attachFile-" + fileId + "\" type=\"file\">";
     content += "</div>";

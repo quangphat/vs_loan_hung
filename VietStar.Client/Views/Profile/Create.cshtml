@@ -365,15 +365,16 @@
                     var i = 0;
                     var htmlContent = "";
                     let keys = [];
+                    let groupName = '';
                     $.each(data.data, function (index, item) {
-                        $("#lstTailieu").append("<div class='form-group'><div id='tailieu-" + item.Id + "'></div></div > ");
+                        $("#lstTailieu").append(`<div class='form-group'><div class='col-sm-12' id='tailieu-${item.Id}'><h5>${groupName}</h5></div></div > `);
                         let name = '',
                             className = ''
                         if (keys.indexOf(item.FileKey) < 0) {
                             name = item.Name;
                         }
                         else {
-                            className = 'mt-46'
+                            className = ''
                         }
 
                         renderOneItemFile(item.FileKey, 0, name, item.IsRequire, className, true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
@@ -419,7 +420,7 @@
         }
         if (isReach5Files(filesUpload, key) === false) {
             let newAttachhFileId = getNewGuid();
-            renderOneItemFile(key, newAttachhFileId, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
+            renderOneItemFile(key, newAttachhFileId, '', false, '', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
         }
     }
     function removeFile(key, fileId) {
