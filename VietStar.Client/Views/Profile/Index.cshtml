@@ -158,12 +158,12 @@
     $(document).ready(function e() {
         
         window.addEventListener('popstate', function (e) {
-            debugger
+            
             queries = new URLSearchParams(window.location.search)
             bindQueries(getData, true)
             
         });
-        debugger
+        
         bindQueries(getData);
         //getData(page,limit);
 
@@ -189,7 +189,7 @@ function onSelectLimit() {
     //alert(limit)
     }
     function onSort(sortField) {
-        debugger
+        
         sortField = sortField;
         if (sort == 'desc')
             sort = 'asc'
@@ -294,7 +294,7 @@ function renderTableBody(datas) {
         sort = queries.get('sort');
         sortField = queries.get('sortField');
         if (callBack != null) {
-            debugger
+            
             callBack(page, limit, sort, sortField, status, groupId, memberId, isPopState);
         }
         
@@ -305,7 +305,7 @@ function getData(page, limit, sort = "desc", sortField = "updatedtime",status, g
     //if (model == null) {
     //    model = { status: '', freeText: '', fromDate: '', toDate: '', groupId: 0, memberId: 0 };
     //}
-    //debugger
+    //
     if (isNullOrWhiteSpace(status)) {
         status = getQueryStatus($("#ddlStatus"));
     }
@@ -314,7 +314,7 @@ function getData(page, limit, sort = "desc", sortField = "updatedtime",status, g
     if (memberId == 0)
         memberId = $("#memberId").val()
     showBlock($('#panel_body'));
-    debugger
+    
     $.ajax( {
             url: '@Url.Action("Search", "Profile")',
             type: "GET",
