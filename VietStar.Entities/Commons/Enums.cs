@@ -22,5 +22,13 @@ namespace VietStar.Entities.Commons
             Accept = 11,
             Finish = 12,
         }
+        public enum ProfileType
+        {
+            Common = 1,
+            Courier = 2,
+            MCredit = 3,
+            Company = 4,
+            RevokeDebt = 5
+        }
     }
 }

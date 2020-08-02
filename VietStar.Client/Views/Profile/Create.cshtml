@@ -213,31 +213,8 @@
 
 <script>
     $(document).ready(function () {
-        $('#ddlSanPhamVay').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddlCourier').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddlHuyen').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddlTinh').chosen({ width: '100%', allow_single_deselect: true });
-        $('#txtToDate').datepicker({
-            dateFormat: 'dd-mm-yy'
-
-        }).next().on(ace.click_event, function () {
-            $(this).prev().focus();
-        });
-        $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
-        $('#txtBirhDay').datepicker({
-            dateFormat: 'dd-mm-yy'
-
-        }).next().on(ace.click_event, function () {
-            $(this).prev().focus();
-        });
-        //$("#txtBirhDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
-        $('#txtCmndDay').datepicker({
-            dateFormat: 'dd-mm-yy'
-
-        }).next().on(ace.click_event, function () {
-            $(this).prev().focus();
-        });
-        //$("#txtCmndDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
+        
+        
     });
 
     jQuery.fn.ForceNumericOnly =function () {
@@ -284,11 +261,6 @@
         });
     });
 
-    $('#spnThoiHanVay').ace_spinner({ value: 0, min: 0, max: 36, step: 3, btn_up_class: 'btn-info', btn_down_class: 'btn-info' })
-				.closest('.ace-spinner')
-				.on('changed.fu.spinbox', function () {
-				    //alert($('#spinner1').val())
-				});
     function LayDSTinh() {
         $.ajax({
             type: "POST",
@@ -302,7 +274,7 @@
                         $('#ddlTinh').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
-                $('#ddlTinh').chosen().trigger("chosen:updated");
+                
             },
             complete: function () {
             },
@@ -325,7 +297,7 @@
                         $('#ddlCourier').append("<option value='" + optionData.ID + "'>" + optionData.FullText + "</option>");
                     });
                 }
-                $('#ddlCourier').chosen().trigger("chosen:updated");
+                
             },
             complete: function () {
             },
@@ -373,7 +345,7 @@
                         $('#ddlDoiTac').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
                     });
                 }
-                $('#ddlDoiTac').chosen().trigger("chosen:updated");
+                
             },
             complete: function () {
             },
@@ -385,8 +357,8 @@
 
     function LayDSTaiLieu() {
         $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSTaiLieu", "HoSo")',
+            type: "GET",
+            url: `/Common/GetFileType/common`,
             data: {},
             success: function (data) {
                 if (data.data != null) {
@@ -394,17 +366,17 @@
                     var htmlContent = "";
                     let keys = [];
                     $.each(data.data, function (index, item) {
-                        $("#lstTailieu").append("<div class='form-group'><div id='tailieu-" + item.ID + "'></div></div > ");
+                        $("#lstTailieu").append("<div class='form-group'><div id='tailieu-" + item.Id + "'></div></div > ");
                         let name = '',
                             className = ''
-                        if (keys.indexOf(item.ID) < 0) {
-                            name = item.Ten;
+                        if (keys.indexOf(item.FileKey) < 0) {
+                            name = item.Name;
                         }
                         else {
                             className = 'mt-46'
                         }
 
-                        renderOneItemFile(item.ID, item.ID, name, item.BatBuoc, className, true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
+                        renderOneItemFile(item.FileKey, 0, name, item.IsRequire, className, true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
                         keys.push(item.ID);
                     })
                 }
@@ -502,7 +474,7 @@
                 }
                 $('#ddlInternalCode').val(maNV);
                 $('#ddlInternalCode').trigger("change");
-                $('#ddlInternalCode').chosen().trigger("chosen:updated");
+              
 
             },
             complete: function () {

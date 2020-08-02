@@ -11,6 +11,7 @@ namespace VietStar.Repository.Infrastructures
         public static void RegisterRepository(this IServiceCollection services)
         {
             services.AddSingleton<ICommonRepository, CommonRepository>();
+            services.AddSingleton<IFileProfileRepository, FileProfileRepository>();
             services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
             services.AddSingleton<IGroupRepository, GroupRepository>();
             services.AddSingleton<ILogRepository, LogRepository>();

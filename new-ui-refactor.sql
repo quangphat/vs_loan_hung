@@ -427,3 +427,20 @@ end
 end
 
 ------------
+
+alter PROCEDURE [dbo].[sp_LOAI_TAI_LIEU_GetsByType]
+(@profileType int = 0)
+	-- Add the parameters for the stored procedure here
+
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	if(@profileType = 0)
+		select ID ,Ten as Name,Bat_Buoc as IsRequire ,ProfileTypeId, Id as FileKey from LOAI_TAI_LIEU
+	else
+		select ID ,Ten as Name,Bat_Buoc as IsRequire ,ProfileTypeId, Id as FileKey from LOAI_TAI_LIEU where ProfileTypeId = @profileType
+END
+  
+
+-----------
