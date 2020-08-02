@@ -156,7 +156,12 @@
     var sortField ='updatedtime'
     var model = { status:'', freeText :'', fromDate:'',toDate:'', groupId:0, memberId:0};
     $(document).ready(function e() {
-        
+        $('#groupId').select2({
+            allowClear: true
+        });
+        $('#memberId').select2({
+            allowClear: true
+        });
         window.addEventListener('popstate', function (e) {
             
             queries = new URLSearchParams(window.location.search)

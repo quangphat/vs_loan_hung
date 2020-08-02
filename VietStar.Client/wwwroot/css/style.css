@@ -36,6 +36,21 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .label-cancel {
     background-color: #455f73 !important;
 }
+.mt-50{
+    margin-top:50px!important;
+}
+.form-horizontal {
+    margin-top: 50px !important;
+}
+.command-bar{
+    position:fixed;
+    bottom:80px;
+    right:20px;
+    z-index:1000;
+}
+.content {
+    padding-bottom: 100px !important;
+}
 /*select option, select.form-control option {
     padding: 3px 4px 15px;
 }*/

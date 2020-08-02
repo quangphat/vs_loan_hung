@@ -158,8 +158,8 @@
                             <input type="text" id="txtTienDeNghiVay" placeholder="Nhập số tiền đề nghị vay" class="form-control">
                         </div>
                         <label class="col-sm-2 control-label no-padding-right">Thời hạn vay</label>
-                        <div class="col-sm-4">
-                            <input type="text" id="spnThoiHanVay" />
+                        <div class="col-sm-2">
+                            <input type="number" class="form-control" id="spnThoiHanVay" step="3" value="0" />
                         </div>
                     </div>
                 </form>
@@ -188,20 +188,25 @@
                             <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
                         </div>
                     </div>
-                    <div class="pull-right">
-                        <a class="btn btn-sm btn-primary" id="btn_Temp">
-                            Lưu tạm
-                        </a>
-                        <a class="btn btn-sm btn-primary" id="btn_Save">
-                            Nộp hồ sơ
-                        </a>
-                        @*<a class="btn btn-sm btn-primary" href="/HoSo/AddNew" id="btn_addNew">
-                                Tạo mới
-                            </a>*@
-                    </div>
+                    
                 </form>
             </div>
 
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="command-bar">
+                    <a class="btn btn-sm btn-primary" id="btn_Temp">
+                        Lưu tạm
+                    </a>
+                    <a class="btn btn-sm btn-primary" id="btn_Save">
+                        Nộp hồ sơ
+                    </a>
+                    @*<a class="btn btn-sm btn-primary" href="/HoSo/AddNew" id="btn_addNew">
+                Tạo mới
+            </a>*@
+                </div>
+            </div>
         </div>
     </div>
 </div>

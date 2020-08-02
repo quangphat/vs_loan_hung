@@ -28,6 +28,7 @@
 
     <link href="~/css/custom.css" rel="stylesheet" />
     <link href="~/css/style.css" rel="stylesheet" />
+    @*<link href="~/js/chosen.min.css" rel="stylesheet" />*@
     @*<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />*@
 
     <link href="~/css/dataTables.bootstrap.min.css" rel="stylesheet" />
@@ -36,12 +37,13 @@
     <script src="~/jquery/dist/jquery.js"></script>
     <script src="~/jquery-ui/jquery-ui.min.js"></script>
     <script src="~/js/jquery.blockUI.js"></script>
-
+    @*<script src="~/js/chosen.jquery.min.js"></script>*@
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     @*<script src="~/js/chosen.jquery.min.js"></script>*@
     <script src="~/lib/bootstrap/js/dropdown.js"></script>
     <script src="~/js/utils.js"></script>
     <script src="~/js/select2.full.min.js"></script>
+
     <script src="~/js/common.js"></script>
     <script src="~/js/apis/profile-api.js"></script>
 </head>
@@ -411,7 +413,7 @@
            
 
             <!-- Main content -->
-            <section class="content" id="panel_body">
+            <section class="content" id="panel_body" >
 
                 @RenderBody()
             </section>
