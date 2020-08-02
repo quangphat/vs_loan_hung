@@ -31,11 +31,11 @@
                     <div class="col-sm-offset-1 col-sm-10 no-padding-right">
                         <div class="radio">
                             <label>
-                                <input type="radio" name="radio-ngay" id="optionsRadios1" value="option1" checked="">
+                                <input type="radio" name="radio-ngay" id="optionsRadios1" value="1" checked="">
                                 Ngày tạo
                             </label>
                             <label style="margin-left:20px">
-                                <input type="radio" name="radio-ngay" id="optionsRadios1" value="option1" checked="">
+                                <input type="radio" name="radio-ngay" id="optionsRadios1" value="2" checked="">
                                 Ngày cập nhật
                             </label>
                         </div>
@@ -66,7 +66,7 @@
                     <label class="col-sm-1 control-label no-padding-right">Tìm kiếm</label>
 
                     <div class="col-sm-9">
-                        <input type="search" class="form-control"  id="freeText"  placeholder="">
+                        <input type="search" class="form-control" id="freeText" placeholder="">
                     </div>
                 </div>
 
@@ -134,9 +134,7 @@
                         </div>
                         <div class="col-sm-7">
                             <div class="dataTables_paginate paging_simple_numbers" id="dtSource_paginate">
-                                <ul class="pagination" id="pagination">
-                                   
-                                </ul>
+                                <ul class="pagination" id="pagination"></ul>
                             </div>
                         </div>
                     </div>
@@ -154,143 +152,38 @@
     var pageMargin = 2;
     var totalPage = 1;
     var totalRecord = 0;
-    var lstStatus = [
-        { value: "0", display: "Lưu tạm" },
-        { value: "1", display: "Nhập liệu" },
-        { value: "2", display: "Thẩm định" },
-        { value: "3", display: "Từ chối" },
-        { value: "4", display: "Bổ sung hồ sơ" },
-        { value: "5", display: "Giải ngân" },
-        { value: "6", display: "Đã đối chiếu" },
-        { value: "7", display: "Hủy" },
-        { value: "8", display: "PCB" },
-    ]
-    let model = { status:'', freeText :'', fromDate:'',toDate:'', groupId:0, memberId:0};
+    var model = { status:'', freeText :'', fromDate:'',toDate:'', groupId:0, memberId:0};
     $(document).ready(function e() {
-        let input = document.getElementById("freeText");
-        input.addEventListener("keyup", function (event) {
-            if (event.keyCode === 13) {
-                event.preventDefault();
-                $("#btn_search").click();
-            }
-        });
-        $("#fromDate").val("2020-07-01")
-        model.fromDate = "2020-07-01";
-        GetGroupByUser()
+        
         window.addEventListener('popstate', function (e) {
             debugger
             queries = new URLSearchParams(window.location.search)
-            bindQueries()
-            var groupId = queries.get("groupId");
-            $('#groupId').val(groupId)
-            $('#groupId').chosen().trigger("chosen:updated").change();
-
-
-            var memberId = queries.get("memberId");
-            if (isNullOrWhiteSpace(groupId) || parseInt(groupId) === 0 || isNullOrWhiteSpace(memberId) || parseInt(memberId) === 0) {
-                $('#memberId').empty();
-                $('#memberId').append("<option value='0'></option>");
-                $('#memberId').val('0');
-                $('#memberId').chosen().trigger("chosen:updated");
-            }
-            else {
-                $('#memberId').val(memberId)
-                $('#memberId').chosen().trigger("chosen:updated");
-            }
-
-            page = queries.get("page");
-            if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
-                page = 1;
-            else
-                page = parseInt(page)
-            limit = queries.get("limit")
-            if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
-                limit = 10;
-            else
-                limit = parseInt(limit)
-            model.fromDate = queries.get("fromDate")
-            model.fromDate = queries.get("toDate")
-            getData(page, limit, model, true)
+            bindQueries(getData, true)
+            
         });
-        
+        debugger
+        bindQueries(getData);
+        //getData(page,limit);
 
-        //$('#memberId').chosen({ width: '100%', allow_single_deselect: true });
-        //$('#groupId').chosen({ width: '100%', allow_single_deselect: true });
-        //$('#ddllimit').chosen({ width: '100%', allow_single_deselect: true });
-        //$('#txtFromDate').datepicker({
-        //    dateFormat: 'dd-mm-yy'
-        //}).next().on(ace.click_event, function () {
-        //    $(this).prev().focus();
-        //});
-        //$('#txtToDate').datepicker({
-        //    dateFormat: 'dd-mm-yy'
-        //}).next().on(ace.click_event, function () {
-        //    $(this).prev().focus();
-        //});
-
-        let status = decodeURI(queries.get("status"))
-        if (!isNullOrWhiteSpace(status)) {
-            let arrStatus = status.split(',')
-            model.status = status;
-            renderStatusList('common', arrStatus)
-        }
-        else {
-            renderStatusList('common')
-        }
-
-        bindQueries()
-        getData(page, limit, model)
     });
     $("#groupId").on("change", function () {
-        GetMemberByGroup(this.value)
+        GetMemberByGroup(this.value, null, queries.get("memberId"))
     })
 
-function bindQueries() {
 
-    var fromDate = queries.get("fromDate");
-    if (isNullOrWhiteSpace(fromDate)) {
-        fromDate = new Date().getDay + -7;
-    }
-    var toDate = queries.get("toDate");
-    if (isNullOrWhiteSpace(toDate)) {
-        toDate = new Date().getDay + 1;
-    }
-    var dateType = queries.get("dateType");
-    setCheckedValueOfRadioButtonGroup("radio-ngay", dateType)
-    var maHS = queries.get("maHS");
-    $('#txtMaHS').val(maHS)
-    $('#txtFreeText').val(queries.get("freetext"))
-    var cmnd = queries.get("cmnd");
-    $('#txtCMND').val(cmnd)
-    page = queries.get("page");
-    if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
-        page = 1;
-    else
-        page = parseInt(page)
-    limit = queries.get("limit")
-    if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
-        limit = 10;
-    else
-        limit = parseInt(limit)
-    $("#ddlLimit").val(limit)
-}
-$('#btn_search').click(function (e) {
-    showBlock($('#panel_body'), strLoading);
-    getData(page, limit, model);
-});
 
 function getTotalPage(totalRecord, limit) {
     return totalRecord > limit ? Math.ceil(totalRecord / limit) : 1
 }
 function onClickPage(page) {
     page = page;
-    getData(page, limit,model);
+    getData(page, limit);
 }
 
 
 function onSelectLimit() {
     limit = $("#ddlLimit").val()
-    getData(page, limit,model)
+    getData(page, limit)
     //alert(limit)
 }
 
@@ -337,18 +230,81 @@ function renderTableBody(datas) {
         tableBody.append(renderRow(index, item));
     });
 
-}
+    }
+    $("#freeText").on("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            getData(page, limit, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#memberId").val());
+        }
+    });
     $('#btnSearch').click(function (e) {
-        getData(page, limit,model);
+        getData(page, limit, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#memberId").val());
 
     });
-function getData(page, limit, model, isPopState = false)
-{
-    if (model == null) {
-        model = { status: '', freeText: '', fromDate: '', toDate: '', groupId: 0, memberId: 0 };
+    function bindQueries(callBack = null, isPopState = false) {
+        let fromDate = queries.get("fromDate");
+        if (isNullOrWhiteSpace(fromDate)) {
+            fromDate = getDateSpecific(14);
+        }
+        $("#fromDate").val(fromDate)
+        var toDate = queries.get("toDate");
+        if (isNullOrWhiteSpace(toDate)) {
+            toDate = new Date();
+            toDate = FormatDateTimeDMY(toDate, 'YYYY-MM-DD')
+        }
+        $("#toDate").val(toDate)
+        var dateType = queries.get("dateType");
+        setCheckedValueOfRadioButtonGroup("radio-ngay", dateType)
+
+        $("#freeText").val(queries.get("freeText"));
+        page = queries.get("page");
+        if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+            page = 1;
+        else
+            page = parseInt(page)
+        limit = queries.get("limit")
+        if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+            limit = 10;
+        else
+            limit = parseInt(limit)
+        $("#ddlLimit").val(limit)
+        var groupId = queries.get("groupId");
+        $('#groupId').val(groupId)
+        var memberId = queries.get("memberId");
+        $('#memberId').val(memberId);
+        let status = queries.get("status");
+        if (!isNullOrWhiteSpace(status)) {
+            let arrStatus = status.split(',')
+            renderStatusList('common', arrStatus);
+        }
+        else
+            renderStatusList('common');
+        GetGroupByUser(null, groupId)
+        GetMemberByGroup(groupId, null, memberId)
+        if (callBack != null) {
+            debugger
+            callBack(page, limit, status, groupId, memberId, isPopState);
+        }
+        //model.groupId = isNullOrWhiteSpace($("#groupId").val()) ? queries.get("groupId") : $("#groupId").val();
+        //model.memberId = isNullOrWhiteSpace($("#memberId").val()) ? queries.get("memberId") : $("#memberId").val() ;
+        //model.status = $("#ddlStatus").val()
+        //model.freeText = $('#freeText').val();
+        //model.fromDate = fromDate;
+        //model.dateType = dateType;
+        //model.toDate = toDate;
+        //$("#fromDate").val(fromDate);
+        //$("#toDate").val(toDate)
+       // return model;
     }
-    debugger
+function getData(page, limit, status ='', groupId=0, memberId=0, isPopState = false)
+{
+    //model = bindQueries();
+    //if (model == null) {
+    //    model = { status: '', freeText: '', fromDate: '', toDate: '', groupId: 0, memberId: 0 };
+    //}
+    //debugger
     showBlock($('#panel_body'));
+    debugger
     $.ajax( {
             url: '@Url.Action("Search", "Profile")',
             type: "GET",
@@ -356,13 +312,13 @@ function getData(page, limit, model, isPopState = false)
         data: {
             'page': page,
             'limit': limit,
-            'groupId': model.groupId,
-            'memberId': model.memberId,
-            'fromDate': model.fromDate,
-            'toDate': model.toDate,
-            'freeText': model.freeText,
+            'groupId': groupId,
+            'memberId': memberId,
+            'fromDate': $("#fromDate").val(),
+            'toDate': $("#toDate").val(),
+            'freeText': !isNullOrWhiteSpace($("#freeText").val()) ? $("#freeText").val():'',
             'dateType': $('input[name="radio-ngay"]:checked').val(),
-            'status': model.status
+            'status': removeDuplicate(status)
         },
         success: function (response) {
             if (response.success == true) {
@@ -377,8 +333,8 @@ function getData(page, limit, model, isPopState = false)
                 else
                     page = parseInt(page)
                 limit = queries.get("limit")
-                
-                
+
+
                 if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
                     limit = 10;
                 else

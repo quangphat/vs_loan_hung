@@ -137,10 +137,10 @@ function renderGoFirstPage(page) {
         return ""
     }
 }
-function FormatDateTimeDMY(datetime) {
+function FormatDateTimeDMY(datetime, outputFormat = 'DD-MM-YYYY') {
     
     let date = moment(datetime, 'YYYY-MM-DD')
-    return date.format('DD-MM-YYYY')
+    return date.format(outputFormat)
     //try {
     //    debugger
     //    var valueDate = parseInt(datetime.substr(6));
@@ -169,4 +169,32 @@ function setCheckedValueOfRadioButtonGroup(name, boolValue) {
 function renderTextLink(textValue, href, type, className = '') {
     let display = getValueDisplay(textValue, type);
     return "<td class='text-left " + className + "'><a href='" + href + "' >" + display + "</a></td>";
+}
+function setValueForDateInput(controlId, value) {
+    if (value === null)
+        value = new Date().getDay + 1;
+    controlId.val(value);
+}
+function getDateSpecific( backtoBefore = 0) {
+    let toDay = new Date();
+    let last = new Date((toDay).getTime() - (backtoBefore * 24 * 60 * 60 * 1000));
+    return FormatDateTimeDMY(last, 'YYYY-MM-DD')
+}
+function getQueryStatus(controlId = null) {
+    if (controlId == isNullOrWhiteSpace)
+        controlId = document.getElementById("ddlStatus");
+    let status = controlId.val()
+    if (!isNullOrWhiteSpace(status))
+        return status.toString();
+    return '';
+}
+function removeDuplicate(value = null) {
+    if (isNullOrWhiteSpace(value))
+        return '';
+    let arr = value.split(',');
+    if (arr == null)
+        return [];
+    let uniqueSet = new Set(arr);
+    let backToArray = [...uniqueSet]
+    return backToArray.toString();
 }

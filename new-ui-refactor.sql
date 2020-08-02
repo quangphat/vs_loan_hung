@@ -210,7 +210,7 @@ set @mainClause = 'Select count(*) over() as TotalRecord, p.ID, p.Ma_Ho_So as Pr
 		left join KHU_VUC as prov on prov.ID = dtrict.Ma_Cha
 		left join San_Pham_Vay sv on p.San_Pham_Vay = sv.Id
 		left join Doi_Tac dt on sv.Ma_Doi_Tac = dt.Id
-		left join ProfileStatus s on p.Ma_Trang_Thai = s.Value'
+		left join ProfileStatus s on p.Ma_Trang_Thai = s.Value and s.OrgId = 1'
 if(@freeText  is not null)
 begin
  set @where += ' and (p.Ten_Khach_Hang like  N''%' + @freeText +'%''';
@@ -221,14 +221,14 @@ if(@memberId > 0)
 begin
 	set @where += ' and p.CreatedBy = @memberId'
 end;
-else
-begin
-	if(@groupId > 0)
-	begin
-		set @where += ' and p.CreatedBy in (select Ma_Nhan_Vien from NHAN_VIEN_NHOM where MA_Nhom = @groupId)'
-	end;
-end;
-if(@status<>'')
+--else
+--begin
+--	if(@groupId > 0)
+--	begin
+--		set @where += ' and p.CreatedBy in (select Ma_Nhan_Vien from NHAN_VIEN_NHOM where MA_Nhom = @groupId)'
+--	end;
+--end;
+if(@status<>'' and @status is not null)
 begin
 	set @where += ' and p.Ma_Trang_Thai in (Select CONVERT(int,Value) From dbo.fn_SplitStringToTable(@status, '','')) and s.OrgId = 1'
 end;

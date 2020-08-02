@@ -12,12 +12,16 @@
                 $.each(data.data, function (index, item) {
                     $('#ddlStatus').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
-
+                if (value != null) {
+                    //let uniqueSet = new Set(value);
+                    //let backToArray = [...uniqueSet]
+                    $("#ddlStatus").val(value);
+                }
+                   
             }
         },
         complete: function () {
-            if (value != null)
-            $("#ddlStatus").val(value).change();
+            
         },
         error: function (jqXHR, exception) {
             //showError(jqXHR, exception);
@@ -58,12 +62,16 @@ function GetGroupByUser(control = null, defaultValue = 0) {
         url: '/Groups/GetGroupsByUserId',
         data: {},
         success: function (data) {
-            control.append("<option value='0'></option>");
+            control.append("<option value='0'>Chọn nhóm</option>");
             if (data.data != null && data.success == true) {
                 $.each(data.data, function (index, item) {
                     control.append("<option value='" + item.Id + "'>" + item.Name + "(" + item.ShortName + ")</option>");
                 });
-               //control.chosen().trigger("chosen:updated").change();
+                if (defaultValue != null) {
+                    control.val(defaultValue);
+                   // GetMemberByGroup(defaultValue, null,)
+                }
+                
             }
         },
         complete: function () {
@@ -75,7 +83,7 @@ function GetGroupByUser(control = null, defaultValue = 0) {
 }
 
 function GetMemberByGroup(groupId, control = null, defaultValue = 0) {
-    if (isNullOrUndefined(groupId))
+    if (isNullOrUndefined(groupId) || isNullOrWhiteSpace(groupId))
         return;
     if (control == null)
         control = $("#memberId");
@@ -91,6 +99,10 @@ function GetMemberByGroup(groupId, control = null, defaultValue = 0) {
                     
                     control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
+                if (defaultValue != null) {
+                    control.val(defaultValue);
+                }
+                
                 //control.chosen().trigger("chosen:updated").change();
             }
            
