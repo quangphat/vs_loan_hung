@@ -184,11 +184,17 @@ alter procedure [dbo].[sp_Profile_Search]
 	@toDate datetime,
 	@status varchar(50),
 	@freeText as nvarchar(50) = '',
-	@dateType int
+	@dateType int,
+	@sort varchar(10) = 'desc',
+	@sortField varchar(20) = 'updatedtime'
 )
 as
 begin
 if @freeText = '' begin set @freeText = null end;
+if(@sort is null)
+set @sort ='desc';
+if(@sortField is null)
+set @sortField ='updatedtime'
 declare @where  nvarchar(1000) = ' where isnull(p.IsDeleted,0) = 0';
 declare @mainClause nvarchar(max);
 declare @params nvarchar(300);
@@ -240,9 +246,11 @@ else
 begin
 	set @where += ' and p.UpdatedTime between @fromDate and @toDate'
 end
-set @where += ' and @userId in (select * from fn_GetUserIDCanViewMyProfile_v2(p.CreatedBy,0))
- order by p.UpdatedTime desc offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
-
+set @where += ' and @userId in (select * from fn_GetUserIDCanViewMyProfile_v2(p.CreatedBy,0))'
+if(@sortField = 'updatedtime')
+set @where+= ' order by p.UpdatedTime ' + @sort + ' offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
+else
+set @where +=' order by p.CreatedTime ' + @sort + ' offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
 set @mainClause = @mainClause +  @where
 set @params =N'@userId  int,@status varchar(20), @offset int, @limit int, @fromDate datetime, @toDate datetime, @dateType int,
 @memberId int, @groupId int';
@@ -251,7 +259,6 @@ EXECUTE sp_executesql @mainClause,@params, @userId = @userId, @status = @status
  @dateType = @dateType, @memberId = @memberId, @groupId = @groupId;
 print @mainClause;
 end
-
 
 
 

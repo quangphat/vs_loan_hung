@@ -17,7 +17,18 @@ namespace VietStar.Repository
         public ProfileRepository(IConfiguration configuration) : base(configuration)
         {
         }
-        public async Task<List<ProfileIndexModel>> Gets(int userId, DateTime fromDate, DateTime toDate,int dateType = 1 , int groupId = 0, int memberId =0,string status = null, string freeText = null, int page = 1, int limit = 20)
+        public async Task<List<ProfileIndexModel>> Gets(int userId
+            , DateTime fromDate
+            , DateTime toDate
+            ,int dateType = 1 
+            , int groupId = 0
+            , int memberId =0
+            ,string status = null
+            , string freeText = null
+            ,string sort = "desc"
+            ,string sortField ="updatedtime"
+            , int page = 1
+            , int limit = 20)
         
         {
             ProcessInputPaging(page, ref limit, out offset);
@@ -33,6 +44,8 @@ namespace VietStar.Repository
                     dateType,
                     status,
                     freeText,
+                    sort,
+                    sortField,
                     offset,
                     limit
                 },commandType:CommandType.StoredProcedure);

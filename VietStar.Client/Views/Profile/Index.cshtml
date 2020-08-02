@@ -117,9 +117,9 @@
                                         <th class="w-130">Đội ngũ bán hàng</th>
                                         <th class="m-w-150">Nhân viên bán hàng</th>
                                         <th class="w-84">Người tạo</th>
-                                        <th class="w-94">Ngày tạo</th>
+                                        <th class="w-94 sorting_asc"  onclick="onSort('createtime')">Ngày tạo</th>
                                         <th class="w-94">Người cập nhật</th>
-                                        <th class="w-94">Ngày cập nhật</th>
+                                        <th class="w-94 sorting_asc" onclick="onSort('updatedtime')">Ngày cập nhật</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -152,6 +152,8 @@
     var pageMargin = 2;
     var totalPage = 1;
     var totalRecord = 0;
+    var sort = 'desc'
+    var sortField ='updatedtime'
     var model = { status:'', freeText :'', fromDate:'',toDate:'', groupId:0, memberId:0};
     $(document).ready(function e() {
         
@@ -177,16 +179,24 @@ function getTotalPage(totalRecord, limit) {
 }
 function onClickPage(page) {
     page = page;
-    getData(page, limit);
+    getData(page, limit, null, null, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#memberId").val());
 }
 
 
 function onSelectLimit() {
     limit = $("#ddlLimit").val()
-    getData(page, limit)
+    getData(page, limit, null, null, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#memberId").val())
     //alert(limit)
-}
-
+    }
+    function onSort(sortField) {
+        debugger
+        sortField = sortField;
+        if (sort == 'desc')
+            sort = 'asc'
+        else
+            sort = 'desc'
+        getData(page, limit, sort, sortField, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#memberId").val())
+    }
 function renderRow(index, item) {
 
     page = queries.get("page");
@@ -217,7 +227,7 @@ function renderRow(index, item) {
         + renderTextLeft(item.CreatedBy, '', 'min-150')
         + renderTextLeft(item.CreatedTime, 'datetime', 'min-100')
         + renderTextLeft(item.UpdatedBy, '', 'min-150')
-        + renderTextLeft(item.UpdatedTime, 'datetime', 'min-100')
+        + renderTextLeft(item.UpdatedTime, 'datetime', 'min-150')
         + "</tr>";
 }
 function renderTableBody(datas) {
@@ -234,11 +244,11 @@ function renderTableBody(datas) {
     $("#freeText").on("keyup", function (event) {
         if (event.keyCode === 13) {
             event.preventDefault();
-            getData(1, limit, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#memberId").val());
+            getData(1, limit, null, null, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#memberId").val());
         }
     });
     $('#btnSearch').click(function (e) {
-        getData(1, limit, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#memberId").val());
+        getData(1, limit, null, null, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#memberId").val());
 
     });
     function bindQueries(callBack = null, isPopState = false) {
@@ -281,22 +291,15 @@ function renderTableBody(datas) {
             renderStatusList('common');
         GetGroupByUser(null, groupId)
         GetMemberByGroup(groupId, null, memberId)
+        sort = queries.get('sort');
+        sortField = queries.get('sortField');
         if (callBack != null) {
             debugger
-            callBack(page, limit, status, groupId, memberId, isPopState);
+            callBack(page, limit, sort, sortField, status, groupId, memberId, isPopState);
         }
-        //model.groupId = isNullOrWhiteSpace($("#groupId").val()) ? queries.get("groupId") : $("#groupId").val();
-        //model.memberId = isNullOrWhiteSpace($("#memberId").val()) ? queries.get("memberId") : $("#memberId").val() ;
-        //model.status = $("#ddlStatus").val()
-        //model.freeText = $('#freeText').val();
-        //model.fromDate = fromDate;
-        //model.dateType = dateType;
-        //model.toDate = toDate;
-        //$("#fromDate").val(fromDate);
-        //$("#toDate").val(toDate)
-       // return model;
+        
     }
-function getData(page, limit, status ='', groupId=0, memberId=0, isPopState = false)
+function getData(page, limit, sort = "desc", sortField = "updatedtime",status, groupId, memberId, isPopState = false)
 {
     //model = bindQueries();
     //if (model == null) {
@@ -325,7 +328,9 @@ function getData(page, limit, status ='', groupId=0, memberId=0, isPopState = fa
             'toDate': $("#toDate").val(),
             'freeText': !isNullOrWhiteSpace($("#freeText").val()) ? $("#freeText").val():'',
             'dateType': $('input[name="radio-ngay"]:checked').val(),
-            'status': removeDuplicate(status)
+            'status': removeDuplicate(status),
+            'sort': sort,
+            'sortField': sortField
         },
         success: function (response) {
             if (response.success == true) {

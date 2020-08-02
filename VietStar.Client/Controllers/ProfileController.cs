@@ -23,10 +23,20 @@ namespace VietStar.Client.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> Search(DateTime? fromDate, DateTime? toDate, int dateType = 1, int groupId = 0, int memberId = 0, string status = null, string freeText = null, int page = 1, int limit = 20)
+        public async Task<IActionResult> Search(DateTime? fromDate
+            , DateTime? toDate
+            , int dateType = 1
+            , int groupId = 0
+            , int memberId = 0
+            , string status = null
+            , string freeText = null
+            , int page = 1
+            , int limit = 20
+            , string sort ="desc"
+            , string sortField = "updatedTime")
         {
             //return ToResponse(new List<ProfileIndexModel> { new ProfileIndexModel { TotalRecord = 100 } });
-            var result = await _bizProfile.Gets(fromDate, toDate, dateType, groupId, memberId, status, freeText, page, limit);
+            var result = await _bizProfile.Gets(fromDate, toDate, dateType, groupId, memberId, status, freeText,sort, sortField, page, limit);
 
             return ToResponse(result);
         }
