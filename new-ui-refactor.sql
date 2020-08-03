@@ -511,4 +511,7 @@ END
 -------------
 
 update DOI_TAC set orgId = 1
-update SAN_PHAM_VAY set OrgId = 1
+update Nhan_Vien set OrgId = 1 where ISNULL(OrgId,0) = 0
+update NHOM set OrgId = 1 where ISNULL(OrgId,0) = 0
+
+
