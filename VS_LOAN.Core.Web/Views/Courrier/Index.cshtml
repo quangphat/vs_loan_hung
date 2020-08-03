@@ -551,20 +551,20 @@
             contentType: "application/json; charset=utf-8",
             data: data,
             success: function (data) {
-                //if (data.success == true) {
-                //    var link = document.createElement("a");
-                //    link.href = data.code;
-                //    link.click();
-                //}
-                //else {
-                //    swal({
-                //        title: "",
-                //        text: data.Message.ErrorMessage,
-                //        type: "error",
-                //        timer: 4000,
-                //        showConfirmButton: true,
-                //    });
-                //}
+                if (data.success == true) {
+                    var link = document.createElement("a");
+                    link.href = data.data;
+                    link.click();
+                }
+                else {
+                    swal({
+                        title: "",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
             },
             error: function (jqXHR, exception) {
                 showError(jqXHR, exception);
