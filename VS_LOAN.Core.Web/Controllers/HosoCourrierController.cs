@@ -133,7 +133,7 @@ namespace VS_LOAN.Core.Web.Controllers
                                     rowindex++;
                                 }
 
-                               rowindex++;
+                               //rowindex++;
                             }
                         }
 
