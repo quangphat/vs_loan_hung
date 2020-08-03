@@ -46,6 +46,7 @@ namespace VietStar.Entities.Messages
         public const string product_code_inuse = "Mã sản phẩm đang được sử dung bởi hồ sơ khác, vui lòng chọn sản phẩm khác";
         public const string username_has_exist = "Tên đăng nhập đã tồn tại";
         public const string username_or_password_must_not_be_empty = "Tên đăng nhập hoặc mật khẩu không được để trống";
+        public const string missing_diachi = "Vui lòng nhập địa chỉ";
 
     }
 }

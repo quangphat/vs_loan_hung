@@ -73,6 +73,24 @@ namespace VietStar.Repository
                 return null;
             }
         }
+        public async Task<List<OptionSimple>> GetCouriers(int orgId)
+        {
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    var result = await con.QueryAsync<OptionSimple>("sp_NHAN_VIEN_LayDSCourierCode_v2",
+                        new {orgId },
+                        commandType: CommandType.StoredProcedure);
+                    return result.ToList();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
         public async Task<List<OptionSimple>> GetMemberByGroupId(int groupId, int userId)
         {
             try

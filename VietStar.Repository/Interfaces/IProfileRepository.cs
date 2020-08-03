@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using VietStar.Entities;
+using VietStar.Entities.Profile;
 using VietStar.Entities.ViewModels;
 
 namespace VietStar.Repository.Interfaces
 {
     public interface IProfileRepository
     {
-        Task<List<ProfileIndexModel>> Gets(int userId
+        Task<List<ProfileIndexModel>> GetsAsync(int userId
             , DateTime fromDate
             , DateTime toDate
             , int dateType = 1
@@ -19,5 +21,6 @@ namespace VietStar.Repository.Interfaces
             , string sort = "desc"
             , string sortField = "updatedtime"
             , int page = 1, int limit = 20);
+        Task<RepoResponse<int>> CreateAsync(ProfileAddSql model, int createdBy);
     }
 }

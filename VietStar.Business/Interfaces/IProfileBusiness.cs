@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using VietStar.Entities.Profile;
 using VietStar.Entities.ViewModels;
 using VietStar.Utility;
 
@@ -9,7 +10,7 @@ namespace VietStar.Business.Interfaces
 {
     public interface IProfileBusiness
     {
-        Task<DataPaging<List<ProfileIndexModel>>> Gets(DateTime? fromDate
+        Task<DataPaging<List<ProfileIndexModel>>> GetsAsync(DateTime? fromDate
             , DateTime? toDate
             , int dateType = 1
             , int groupId = 0
@@ -19,5 +20,6 @@ namespace VietStar.Business.Interfaces
             , string sort = "desc"
             , string sortField = "updatedtime"
             , int page = 1, int limit = 20);
+        Task<int> CreateAsync(ProfileAdd model);
     }
 }

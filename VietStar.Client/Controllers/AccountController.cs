@@ -30,7 +30,7 @@ namespace VietStar.Client.Controllers
         }
         public async Task<IActionResult> LoginApi(LoginModel model)
         {
-            var account = await _bizEmployee.Login(model);
+            var account = await _bizEmployee.LoginAsync(model);
             if (account == null || !account.IsActive)
                 return ToResponse(false);
             List<Claim> claims = new List<Claim>();

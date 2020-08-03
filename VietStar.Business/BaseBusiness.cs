@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VietStar.Entities;
 using VietStar.Entities.Infrastructures;
 using VietStar.Entities.Messages;
+using VietStar.Entities.Profile;
 
 namespace VietStar.Business
 {
@@ -11,16 +13,41 @@ namespace VietStar.Business
     {
         public readonly CurrentProcess _process;
         protected IMapper _mapper;
-        public BaseBusiness(IMapper mapper, CurrentProcess process)
+        public BaseBusiness(IMapper mappr, CurrentProcess process)
         {
             _process = process;
-            _mapper = mapper;
+            //var config = new MapperConfiguration(x =>
+            //{
+            //    x.CreateMap<ProfileAdd, ProfileAddSql>()
+            //    .ForMember(a => a.ID, b => b.MapFrom(c => c.Id))
+            //    .ForMember(a => a.Ma_Ho_So, b => b.MapFrom(c => c.Code))
+            //    .ForMember(a => a.Ten_Khach_Hang, b => b.MapFrom(c => c.CustomerName))
+            //    .ForMember(a => a.CMND, b => b.MapFrom(c => c.Cmnd))
+            //    .ForMember(a => a.CMNDDay, b => b.MapFrom(c => c.CmndDay))
+            //    .ForMember(a => a.BirthDay, b => b.MapFrom(c => c.BirthDay))
+            //    .ForMember(a => a.Dia_Chi, b => b.MapFrom(c => c.Address))
+            //    .ForMember(a => a.Ma_Khu_Vuc, b => b.MapFrom(c => c.DistrictId))
+            //    .ForMember(a => a.SDT, b => b.MapFrom(c => c.Phone))
+            //    .ForMember(a => a.Gioi_Tinh, b => b.MapFrom(c => c.Gender))
+            //    .ForMember(a => a.SDT2, b => b.MapFrom(c => c.SalePhone))
+            //    .ForMember(a => a.Ngay_Nhan_Don, b => b.MapFrom(c => c.ReceiveDate))
+            //    .ForMember(a => a.San_Pham_Vay, b => b.MapFrom(c => c.ProductId))
+            //    .ForMember(a => a.Co_Bao_Hiem, b => b.MapFrom(c => c.IsInsurrance))
+            //    .ForMember(a => a.So_Tien_Vay, b => b.MapFrom(c => c.LoanAmount))
+            //    .ForMember(a => a.Ma_Trang_Thai, b => b.MapFrom(c => c.Status))
+            //    .ForMember(a => a.Han_Vay, b => b.MapFrom(c => c.Period))
+            //    .ForMember(a => a.Ghi_Chu, b => b.MapFrom(c => c.Comment))
+            //    .ForMember(a => a.Courier_Code, b => b.MapFrom(c => c.CourierId))
+            //    ;
+               
+            //});
+            _mapper = mappr;//config.CreateMapper();
         }
-        public void AddError(string errorMessage, params object[] traceKeys)
+        protected void AddError(string errorMessage, params object[] traceKeys)
         {
             _process.AddError(errorMessage, traceKeys);
         }
-        public bool CheckIsNotLogin()
+        protected bool CheckIsNotLogin()
         {
             if (string.IsNullOrWhiteSpace(_process.User.UserName))
             {
@@ -28,6 +55,15 @@ namespace VietStar.Business
                 return true;
             }
             return false;
+        }
+        protected T ToResponse<T>(RepoResponse<T> result)
+        {
+            if(!result.success)
+            {
+                AddError(result.error);
+                return result.data;
+            }
+            return result.data;
         }
     }
 }

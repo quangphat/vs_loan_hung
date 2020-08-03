@@ -1,4 +1,11 @@
-﻿function renderStatusList(profileType, value = null) {
+﻿function setLocalStorage(key, data) {
+    window.localStorage.removeItem(key);
+    window.localStorage.setItem(key, JSON.stringify(data));
+}
+function getLocalStorage(key) {
+    return JSON.parse(window.localStorage.getItem(key))
+}
+function renderStatusList(profileType, value = null) {
     if (isNullOrWhiteSpace(profileType))
         return
     $("#ddlStatus").empty();
@@ -52,6 +59,215 @@ function renderStatus(MaTrangThai, TrangThaiHS) {
     else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.Finish)')
         statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
     return "<td class='text-left'>" + statusString + "</td>";;
+}
+function GetSales(control = null, defaultValue = 0) {
+    if (control == null)
+        control = $("#saleId");
+    control.empty();
+    debugger
+    //window.localStorage.clear()
+    let data = getLocalStorage('sales');
+    if (data != null && !isNullOrNoItem(data)) {
+        $.each(data, function (index, item) {
+            control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+        });
+        if (defaultValue != null) {
+            control.val(defaultValue);
+
+        }
+        return;
+    }
+    $.ajax({
+        type: "GET",
+        url: '/common/sales',
+        data: {},
+        success: function (data) {
+            control.append("<option value='0'>Chọn sale</option>");
+            if (data.data != null && data.success == true) {
+                $.each(data.data, function (index, item) {
+                    setLocalStorage('sales', data.data)
+                    control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                });
+                if (defaultValue != null) {
+                    control.val(defaultValue);
+                    // GetMemberByGroup(defaultValue, null,)
+                }
+
+            }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+function GetCouriers(control = null, defaultValue = 0) {
+    if (control == null)
+        control = $("#courierId");
+    control.empty();
+    let data = getLocalStorage('couriers');
+    if (data != null && !isNullOrNoItem(data)) {
+        $.each(data, function (index, item) {
+            control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+        });
+        if (defaultValue != null) {
+            control.val(defaultValue);
+
+        }
+        return;
+    }
+    
+    $.ajax({
+        type: "GET",
+        url: '/common/couriers',
+        data: {},
+        success: function (data) {
+            control.append("<option value='0'>Chọn courier</option>");
+            if (data.data != null && data.success == true) {
+                setLocalStorage('couriers', data.data)
+                $.each(data.data, function (index, item) {
+                    control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                });
+                if (defaultValue != null) {
+                    control.val(defaultValue);
+                    // GetMemberByGroup(defaultValue, null,)
+                }
+
+            }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+function GetPartners(control = null, defaultValue = 0) {
+    if (control == null)
+        control = $("#partnerId");
+    control.empty();
+    $.ajax({
+        type: "GET",
+        url: '/common/partners',
+        data: {},
+        success: function (data) {
+            control.append("<option value='0'>Chọn đối tác</option>");
+            if (data.data != null && data.success == true) {
+                $.each(data.data, function (index, item) {
+                    control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                });
+                if (defaultValue != null) {
+                    control.val(defaultValue);
+                    // GetMemberByGroup(defaultValue, null,)
+                }
+
+            }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+function GetProducts(partnerId, control = null, defaultValue = 0) {
+    if (control == null)
+        control = $("#productId");
+    control.empty();
+    $.ajax({
+        type: "GET",
+        url: `/common/products/${partnerId}`,
+        data: {},
+        success: function (data) {
+            control.append("<option value='0'>Chọn sản phẩm</option>");
+            if (data.data != null && data.success == true) {
+                $.each(data.data, function (index, item) {
+                    control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                });
+                if (defaultValue != null) {
+                    control.val(defaultValue);
+                    // GetMemberByGroup(defaultValue, null,)
+                }
+
+            }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+function GetProvinces(control = null, defaultValue = 0) {
+    if (control == null)
+        control = $("#provinceId");
+    control.append("<option value='0'>Chọn tỉnh/thành</option>");
+    let data = JSON.parse(window.localStorage.getItem('provinces'));
+    if (data != null && !isNullOrNoItem(data)) {
+        $.each(data, function (index, item) {
+            control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+        });
+        if (defaultValue != null) {
+            control.val(defaultValue);
+            
+        }
+        return;
+    }
+    window.localStorage.removeItem('provinces')
+    control.empty();
+    $.ajax({
+        type: "GET",
+        url: '/common/provinces',
+        data: {},
+        success: function (data) {
+            
+            if (data.data != null && data.success == true) {
+                window.localStorage.setItem('provinces', JSON.stringify(data.data))
+                $.each(data.data, function (index, item) {
+                    control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                });
+                if (defaultValue != null) {
+                    control.val(defaultValue);
+                    // GetMemberByGroup(defaultValue, null,)
+                }
+
+            }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+function GetDistricts(provinceId,control = null, defaultValue = 0) {
+    if (control == null)
+        control = $("#districtId");
+    control.empty();
+    $.ajax({
+        type: "GET",
+        url: `/common/districts/${provinceId}`,
+        data: {},
+        success: function (data) {
+            control.append("<option value='0'>Chọn quận/huyện</option>");
+            if (data.data != null && data.success == true) {
+                $.each(data.data, function (index, item) {
+                    control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                });
+                if (defaultValue != null) {
+                    control.val(defaultValue);
+                    // GetMemberByGroup(defaultValue, null,)
+                }
+
+            }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
 }
 function GetGroupByUser(control = null, defaultValue = 0) {
     if (control == null)

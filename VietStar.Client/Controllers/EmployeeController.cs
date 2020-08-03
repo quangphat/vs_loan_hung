@@ -22,7 +22,7 @@ namespace VietStar.Client.Controllers
         [HttpGet("GetByGroupId/{groupId}")]
         public async Task<IActionResult> GetByGroupId(int groupId)
         {
-            var result = await _bizEmployee.GetMemberByGroupId(groupId);
+            var result = await _bizEmployee.GetMemberByGroupIdAsync(groupId);
             return ToResponse(result);
         }
     }

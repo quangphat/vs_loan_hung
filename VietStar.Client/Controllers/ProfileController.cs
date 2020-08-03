@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VietStar.Business.Interfaces;
 using VietStar.Entities.Infrastructures;
+using VietStar.Entities.Profile;
 using VietStar.Entities.ViewModels;
 
 namespace VietStar.Client.Controllers
@@ -36,7 +37,7 @@ namespace VietStar.Client.Controllers
             , string sortField = "updatedTime")
         {
             //return ToResponse(new List<ProfileIndexModel> { new ProfileIndexModel { TotalRecord = 100 } });
-            var result = await _bizProfile.Gets(fromDate, toDate, dateType, groupId, memberId, status, freeText,sort, sortField, page, limit);
+            var result = await _bizProfile.GetsAsync(fromDate, toDate, dateType, groupId, memberId, status, freeText,sort, sortField, page, limit);
 
             return ToResponse(result);
         }
@@ -44,6 +45,13 @@ namespace VietStar.Client.Controllers
         public IActionResult Create()
         {
             return View();
+        }
+        [Authorize]
+        [HttpPost("profile/CreateAsync")]
+        public async Task<IActionResult> CreateAsync(ProfileAdd model)
+        {
+            var result = await _bizProfile.CreateAsync(model);
+            return ToResponse(result);
         }
     }
 }

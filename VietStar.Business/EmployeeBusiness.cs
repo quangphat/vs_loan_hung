@@ -23,8 +23,24 @@ namespace VietStar.Business
             _rpEmployee = employeeRepository;
             _rpGroup = groupRepository;
         }
+        public async Task<List<OptionSimple>> GetSalesAsync()
+        {
+            var result = new List<OptionSimple>();
+            var groups = await _rpGroup.GetGroupByUserId(_process.User.Id);
+            if (groups != null)
+            {
+                for (int i = 0; i < groups.Count; i++)
+                {
+                    var members = await _rpEmployee.GetMemberByGroupIdIncludeChild(groups[i].Id, _process.User.Id);
+                    result.AddRange(members);
 
-        public async Task<List<OptionSimple>> GetMemberByGroupId(int groupId)
+                }
+                result.DistinctBy(p => p.Id);
+            }
+
+            return result;
+        }
+        public async Task<List<OptionSimple>> GetMemberByGroupIdAsync(int groupId)
         {
             if (groupId > 0)
                 return await _rpEmployee.GetMemberByGroupIdIncludeChild(groupId, _process.User.Id);
@@ -43,13 +59,13 @@ namespace VietStar.Business
             return result;
         }
 
-        public async Task<bool> GetStatus(int userId)
+        public async Task<bool> GetStatusAsync(int userId)
         {
             return await _rpEmployee.GetStatus(userId);
         }
         
 
-        public async Task<Account> Login(LoginModel model)
+        public async Task<Account> LoginAsync(LoginModel model)
         {
             if(model==null)
             {

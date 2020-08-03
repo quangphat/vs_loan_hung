@@ -38,5 +38,41 @@ namespace VietStar.Client.Controllers
             var result = await _bizCommon.UploadFile(file,key,fileId,fileType,_hosting.ContentRootPath);
             return Json(result);
         }
+        [HttpGet("partners")]
+        public async Task<IActionResult> GetPartners()
+        {
+            var result = await _bizCommon.GetPartnersAsync();
+            return ToResponse(result);
+        }
+        [HttpGet("products/{partnerId}")]
+        public async Task<IActionResult> GetProducts(int partnerId)
+        {
+            var result = await _bizCommon.GetProductsAsync(partnerId);
+            return ToResponse(result);
+        }
+        [HttpGet("provinces")]
+        public async Task<IActionResult> GetProvinces()
+        {
+            var result = await _bizCommon.GetProvincesAsync();
+            return ToResponse(result);
+        }
+        [HttpGet("districts/{provinceId}")]
+        public async Task<IActionResult> GetDistricts(int provinceId)
+        {
+            var result = await _bizCommon.GetDistrictsAsync(provinceId);
+            return ToResponse(result);
+        }
+        [HttpGet("sales")]
+        public async Task<IActionResult> GetSales()
+        {
+            var result = await _bizCommon.GetSalesAsync();
+            return ToResponse(result);
+        }
+        [HttpGet("couriers")]
+        public async Task<IActionResult> GetCouriers()
+        {
+            var result = await _bizCommon.GetCouriersAsync();
+            return ToResponse(result);
+        }
     }
 }

@@ -444,3 +444,71 @@ END
   
 
 -----------
+
+create PROCEDURE [dbo].[sp_DOI_TAC_LayDS_v2](@orgId int)
+  -- Add the parameters for the stored procedure here
+
+AS
+BEGIN
+  -- SET NOCOUNT ON added to prevent extra result sets from
+  -- interfering with SELECT statements.
+  select ID,Ten as Name from DOI_TAC where isnull(OrgId,0) = @orgId
+END
+
+
+--------------
+
+create PROCEDURE [dbo].[sp_KHU_VUC_LayDSTinh_v2]
+	-- Add the parameters for the stored procedure here
+
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	select ID,Ten as Name from KHU_VUC where Loai=1
+END
+
+---------
+
+create PROCEDURE [dbo].[sp_KHU_VUC_LayDSHuyen_v2]
+	-- Add the parameters for the stored procedure here
+	@provinceId int
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	select ID,Ten as Name from KHU_VUC where Ma_Cha=@provinceId and Ma_Cha <>0
+END
+
+-----------
+
+alter PROCEDURE [dbo].[sp_SAN_PHAM_VAY_LayDSByID_v2]
+	-- Add the parameters for the stored procedure here
+	@partnerId int,
+	@orgId int
+AS
+BEGIN
+	select ID,Ten as Name from SAN_PHAM_VAY 
+		where Ma_Doi_Tac=@partnerId 
+		--and Loai=1
+		and isnull(IsDeleted,0) = 0
+END
+
+
+-----------
+
+create PROCEDURE [dbo].[sp_NHAN_VIEN_LayDSCourierCode_v2]
+	-- Add the parameters for the stored procedure here
+	@orgId int
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	select ID,Ma+'-'+Ho_Ten as Name from NHAN_VIEN where Loai=10 and isnull(OrgId,0) = @orgId
+END
+
+
+-------------
+
+update DOI_TAC set orgId = 1
+update SAN_PHAM_VAY set OrgId = 1

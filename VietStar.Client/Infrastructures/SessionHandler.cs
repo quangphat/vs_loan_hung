@@ -32,7 +32,7 @@ namespace KingOffice.Infrastructures
                 httpContext.Session.Set(SESSION_KEY, raw);
             }
             var account = Utils.FromBinary(raw);
-            var isActive = await rpEmployee.GetStatus(account.Id);
+            var isActive = await rpEmployee.GetStatusAsync(account.Id);
             if(!isActive && httpContext.Request.Path.Value != "/Account/Login")
             {
                 

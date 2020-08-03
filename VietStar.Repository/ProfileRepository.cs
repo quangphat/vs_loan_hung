@@ -6,9 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using VietStar.Entities;
+using VietStar.Entities.Profile;
 using VietStar.Entities.ViewModels;
 using VietStar.Repository.Interfaces;
-
+using VietStar.Utility;
 
 namespace VietStar.Repository
 {
@@ -17,7 +19,7 @@ namespace VietStar.Repository
         public ProfileRepository(IConfiguration configuration) : base(configuration)
         {
         }
-        public async Task<List<ProfileIndexModel>> Gets(int userId
+        public async Task<List<ProfileIndexModel>> GetsAsync(int userId
             , DateTime fromDate
             , DateTime toDate
             ,int dateType = 1 
@@ -51,6 +53,32 @@ namespace VietStar.Repository
                 },commandType:CommandType.StoredProcedure);
                 return result.ToList();
             }
+        }
+        public async Task<RepoResponse<int>> CreateAsync(ProfileAddSql model, int createdBy)
+        {
+            var par = GetParams(model, new string[] {
+                nameof(model.UpdatedBy),
+                nameof(model.UpdatedTime),
+                nameof(model.CreatedTime),
+                nameof(model.Ho_So_Cua_Ai),
+                nameof(model.CreatedBy)
+            }, "id");
+            par.Add("CreatedBy", createdBy);
+            par.Add("Ho_So_Cua_Ai", createdBy);
+            try
+            {
+                using (var _con = GetConnection())
+                {
+                    await _con.ExecuteAsync("", par, commandType: CommandType.StoredProcedure);
+                    var id = par.Get<int>("id");
+                    return RepoResponse<int>.Create(id);
+                }
+            }
+            catch(Exception e)
+            {
+                return RepoResponse<int>.Create(0, GetException(e));
+            }
+
         }
     }
 }

@@ -9,8 +9,9 @@ namespace VietStar.Business.Interfaces
 {
     public interface IEmployeeBusiness
     {
-        Task<bool> GetStatus(int userId);
-        Task<Account> Login(LoginModel model);
-        Task<List<OptionSimple>> GetMemberByGroupId(int groupId);
+        Task<List<OptionSimple>> GetSalesAsync();
+        Task<bool> GetStatusAsync(int userId);
+        Task<Account> LoginAsync(LoginModel model);
+        Task<List<OptionSimple>> GetMemberByGroupIdAsync(int groupId);
     }
 }
