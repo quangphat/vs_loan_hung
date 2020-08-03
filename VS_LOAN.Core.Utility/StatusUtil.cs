@@ -11,35 +11,49 @@ namespace VS_LOAN.Core.Utility
     {
         public static string ReturnStatusString(int status)
         {
+            string result = "";
             switch (status)
             {
                 case (int)HosoCourierStatus.New:
-                    return "Mới";
+                    result = "Mới";
+                    break;
                 case (int)HosoCourierStatus.InProgress:
-                    return "Đang xử lý";
+                    result = "Đang xử lý";
+                    break;
                 case (int)HosoCourierStatus.Deny:
-                    return "Từ chối";
+                    result =  "Từ chối";
+                    break;
                 case (int)HosoCourierStatus.Accept:
-                    return "Chấp nhận";
+                    result = "Chấp nhận";
+                    break;
                 case (int)HosoCourierStatus.Giaingan:
-                    return "Giải ngân";
+                    result = "Giải ngân";
+                    break;
                 case (int)HosoCourierStatus.Finish:
-                    return "Hoàn thành";
+                    result = "Hoàn thành";
+                    break;
                 case (int)HosoCourierStatus.Cancel:
-                    return "Hủy";
+                    result = "Hủy";
+                    break;
                 case (int)HosoCourierStatus.Nhaplieu:
-                    return "Nhập liệu";
+                    result = "Nhập liệu";
+                    break;
                 case (int)HosoCourierStatus.Thamdinh:
-                    return "Thẩm định";
+                    result = "Thẩm định";
+                    break;
                 case (int)HosoCourierStatus.BosungHoso:
-                    return "Bổ sung hồ sơ";
+                    result = "Bổ sung hồ sơ";
+                    break;
                 case (int)HosoCourierStatus.DaDoichieu:
-                    return "Đã đối chiếu";
+                    result = "Đã đối chiếu";
+                    break;
                 case (int)HosoCourierStatus.PCB:
-                    return "PCB";
-                default: return "";
+                    result = "PCB";
+                    break;
+                default: result= "";
+                    break;
             }
-            
+            return result;
         }
     }
 }

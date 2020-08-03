@@ -388,9 +388,17 @@ namespace VS_LOAN.Core.Web.Controllers
 
             var datas = await _rpCourierProfile.GetHosoCourrier(request.freeText, request.courierId, GlobalData.User.IDUser, request.status, request.PageNumber, request.limit, request.groupId, request.provinceId, request.salecode);
             var totalRecord = (datas != null && datas.Any()) ? datas[0].TotalRecord : 0;
-            var profiles = _mapper.Map<List<CourierExportModel>>(datas);
-            var result = DataPaging.Create(profiles, totalRecord);
-            return result;
+            try
+            {
+                var profiles = _mapper.Map<List<CourierExportModel>>(datas);
+                var result = DataPaging.Create(profiles, totalRecord);
+                return result;
+            }
+            catch(Exception e)
+            {
+                return null;
+            }
+            
         }
     }
 }

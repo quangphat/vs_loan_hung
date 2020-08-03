@@ -16,7 +16,7 @@ namespace VS_LOAN.Core.Entity.HosoCourrier
         [Description("Cmnd")]
         public string Cmnd { get; set; }
         [Description("Trạng thái")]
-        public int Status { get; set; }
+        public string Status { get; set; }
         [Description("Ghi chú")]
         public string LastNote { get; set; }
         [Description("SaleCode")]

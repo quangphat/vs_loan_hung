@@ -41,7 +41,7 @@ namespace VS_LOAN.Core.Utility
             {
                 if (Response.IsClientConnected)
                 {
-                    request.PageNumber = 1;
+                    request.PageNumber = pageNumber;
                     var result = await func(request);
                     totalRecord = result.TotalRecord;
                     if (result != null && result.Datas.Count > 0)

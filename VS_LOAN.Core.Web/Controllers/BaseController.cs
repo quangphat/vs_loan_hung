@@ -97,6 +97,8 @@ namespace VS_LOAN.Core.Web.Controllers
              ;
                 x.CreateMap<HosoCourierViewModel, CourierExportModel>()
             .ForMember(a => a.Status, b => b.MapFrom(c => StatusUtil.ReturnStatusString(c.Status)))
+            .ForMember(a => a.CreatedTime, b => b.MapFrom(c =>c.CreatedTime !=null ? c.CreatedTime.ToShortDateString():""))
+            .IgnoreAllPropertiesWithAnInaccessibleSetter()
             ;
             });
 

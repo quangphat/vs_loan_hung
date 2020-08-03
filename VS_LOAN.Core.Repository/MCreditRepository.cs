@@ -252,8 +252,10 @@ namespace VS_LOAN.Core.Repository
         }
         public async Task<int> CreateDraftProfile(MCredit_TempProfile model)
         {
-            model.Id = 0;
-            var param = GetParams(model, "Id", ignoreKey: new string[] {
+            try
+            {
+                model.Id = 0;
+                var param = GetParams(model, "Id", ignoreKey: new string[] {
                 nameof(model.CreatedTime),
                 nameof(model.UpdatedTime),
                 nameof(model.isAddr),
@@ -261,10 +263,15 @@ namespace VS_LOAN.Core.Repository
                 nameof(model.MCId)
             });
 
-            using (var con = GetConnection())
+                using (var con = GetConnection())
+                {
+                    await con.ExecuteAsync("sp_insert_MCredit_TempProfile", param, commandType: CommandType.StoredProcedure);
+                    return param.Get<int>("Id");
+                }
+            }
+            catch(Exception e)
             {
-                await con.ExecuteAsync("sp_insert_MCredit_TempProfile", param, commandType: CommandType.StoredProcedure);
-                return param.Get<int>("Id");
+                return 0;
             }
         }
         public async Task<bool> DeleteById(int profileId)
