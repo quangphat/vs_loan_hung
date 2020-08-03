@@ -82,32 +82,38 @@ namespace VS_LOAN.Core.Web.Controllers
                 limit = limit,
                 salecode = salecode
             };
-            string destDirectory = VS_LOAN.Core.Utility.Path.DownloadBill + "/" + DateTime.Now.Year.ToString() + "/" + DateTime.Now.Month.ToString() + "/";
-            bool exists = System.IO.Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + destDirectory);
-            if (!exists)
-                System.IO.Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + destDirectory);
-            string fileName = "Report-DSHS" + DateTime.Now.ToString("ddMMyyyyHHmmssfff") + ".xlsx";
-            using (FileStream stream = new FileStream(Server.MapPath(destDirectory + fileName), FileMode.CreateNew))
+            try
             {
-                Byte[] info = System.IO.File.ReadAllBytes(Server.MapPath(VS_LOAN.Core.Utility.Path.ReportTemplate + "CourierExportTemplate.xlsx"));
-                stream.Write(info, 0, info.Length);
-                using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Update))
+
+
+                string destDirectory = VS_LOAN.Core.Utility.Path.DownloadBill + "/" + DateTime.Now.Year.ToString() + "/" + DateTime.Now.Month.ToString() + "/";
+                bool exists = System.IO.Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + destDirectory);
+                if (!exists)
+                    System.IO.Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + destDirectory);
+                string fileName = "Report-DSHS" + DateTime.Now.ToString("ddMMyyyyHHmmssfff") + ".xlsx";
+                using (FileStream stream = new FileStream(Server.MapPath(destDirectory + fileName), FileMode.CreateNew))
                 {
-                    string nameSheet = "DSHS";
-                    ExcelOOXML excelOOXML = new ExcelOOXML(archive);
-                    int rowindex = 2;
-                    long totalRecord = 100;
-                    decimal totalPage = 10;
-                    for(int p = 1; p <= totalPage; p++)
+                    Byte[] info = System.IO.File.ReadAllBytes(Server.MapPath(VS_LOAN.Core.Utility.Path.ReportTemplate + "CourierExportTemplate.xlsx"));
+                    stream.Write(info, 0, info.Length);
+                    using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Update))
                     {
-                        var result = await SearchByModel(request);
-                        totalPage = Math.Ceiling((decimal)result.TotalRecord / request.limit);
-                        if (result != null)
+                        string nameSheet = "DSHS";
+                        ExcelOOXML excelOOXML = new ExcelOOXML(archive);
+                        int rowindex = 2;
+                        long totalRecord = 100;
+                        decimal totalPage = 10;
+                       
+                        for (int p = 1; p <= totalPage; p++)
                         {
-                            totalRecord = result.TotalRecord;
-                            try
-                            {
+                         var result = await SearchByModel(request);
+                            if (p == 1)
                                 excelOOXML.InsertRow(nameSheet, rowindex, result.Datas.Count - 1, true);
+                            totalPage = Math.Ceiling((decimal)result.TotalRecord / request.limit);
+                            if (result != null)
+                            {
+                                totalRecord = result.TotalRecord;
+
+                                
                                 for (int i = 0; i < result.Datas.Count; i++)// dòng
                                 {
                                     excelOOXML.SetCellData(nameSheet, "A" + rowindex, (i + 1).ToString());
@@ -126,21 +132,24 @@ namespace VS_LOAN.Core.Web.Controllers
 
                                     rowindex++;
                                 }
-                            }
-                            catch(Exception e)
-                            {
 
+                               rowindex++;
                             }
-                            rowindex++;
                         }
+
+                        archive.Dispose();
                     }
-                   
-                    archive.Dispose();
+                    stream.Dispose();
                 }
-                stream.Dispose();
+                var file = "/File/GetFile?path=" + destDirectory + fileName;
+                return ToResponse(true, null, file);
+            }
+            catch(Exception e)
+            {
+                return ToResponse(false);
             }
             //var result = await ExportUtil.Export<CourierSearchRequestModel, CourierExportModel>(Response, SearchByModel, request, "CourierProfiles.csv", columns, filePath);
-            return ToResponse(true, null, result);
+            
         }
         public ActionResult AddNew()
         {
