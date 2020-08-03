@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Entity.HosoCourrier
 {
-    public class CourierExportModel : Pagination
+    public class CourierExportModel// : Pagination
     {
         [Description("Họ tên")]
         public string CustomerName { get; set; }
@@ -16,7 +16,7 @@ namespace VS_LOAN.Core.Entity.HosoCourrier
         [Description("Cmnd")]
         public string Cmnd { get; set; }
         [Description("Trạng thái")]
-        public int Status { get; set; }
+        public string Status { get; set; }
         [Description("Ghi chú")]
         public string LastNote { get; set; }
         [Description("SaleCode")]
@@ -33,6 +33,8 @@ namespace VS_LOAN.Core.Entity.HosoCourrier
         public string DistrictName { get; set; }
         [Description("Ngày tạo")]
         public string CreatedTime { get; set; }
-       
+        public string UpdatedTime { get; set; }
+        public string UpdatedBy { get; set; }
+
     }
 }

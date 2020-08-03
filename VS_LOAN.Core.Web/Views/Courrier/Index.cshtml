@@ -546,8 +546,8 @@
         });
         $.ajax({
             traditional: true,
-            url: '/Courrier/Export',
-            type: "POST",
+            url: '/Courrier/ExportFile',
+            type: "PUT",
             contentType: "application/json; charset=utf-8",
             data: data,
             success: function (data) {
