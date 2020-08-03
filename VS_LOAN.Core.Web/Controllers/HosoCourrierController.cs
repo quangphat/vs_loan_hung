@@ -16,6 +16,8 @@ using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Web.Helpers;
 using VS_LOAN.Core.Repository.Interfaces;
 using VS_LOAN.Core.Business.Interfaces;
+using System.IO.Compression;
+using VS_LOAN.Core.Utility.OfficeOpenXML;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
@@ -67,7 +69,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = DataPaging.Create(datas, totalRecord);
             return ToJsonResponse(true, null, result);
         }
-        public async Task<ActionResult> Export(string freeText = null, int provinceId = 0, int courierId = 0, string status = null, int groupId = 0, int page = 1, int limit = 10, string salecode = null)
+        public async Task<ActionResult> ExportFile(string freeText = null, int provinceId = 0, int courierId = 0, string status = null, int groupId = 0, int page = 1, int limit = 10, string salecode = null)
         {
             var request = new CourierSearchRequestModel
             {
@@ -80,8 +82,65 @@ namespace VS_LOAN.Core.Web.Controllers
                 limit = limit,
                 salecode = salecode
             };
-            var columns = ExportUtil.GetColumns(typeof(CourierExportModel).GetProperties()).Select(p => p.Value).ToArray();
-            return await ExportUtil.Export<CourierSearchRequestModel, CourierExportModel>(Response , SearchByModel, request, "CourierProfiles", columns);
+            string destDirectory = VS_LOAN.Core.Utility.Path.DownloadBill + "/" + DateTime.Now.Year.ToString() + "/" + DateTime.Now.Month.ToString() + "/";
+            bool exists = System.IO.Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + destDirectory);
+            if (!exists)
+                System.IO.Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + destDirectory);
+            string fileName = "Report-DSHS" + DateTime.Now.ToString("ddMMyyyyHHmmssfff") + ".xlsx";
+            using (FileStream stream = new FileStream(Server.MapPath(destDirectory + fileName), FileMode.CreateNew))
+            {
+                Byte[] info = System.IO.File.ReadAllBytes(Server.MapPath(VS_LOAN.Core.Utility.Path.ReportTemplate + "CourierExportTemplate.xlsx"));
+                stream.Write(info, 0, info.Length);
+                using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Update))
+                {
+                    string nameSheet = "DSHS";
+                    ExcelOOXML excelOOXML = new ExcelOOXML(archive);
+                    int rowindex = 2;
+                    long totalRecord = 100;
+                    decimal totalPage = 10;
+                    for(int p = 1; p <= totalPage; p++)
+                    {
+                        var result = await SearchByModel(request);
+                        totalPage = Math.Ceiling((decimal)result.TotalRecord / request.limit);
+                        if (result != null)
+                        {
+                            totalRecord = result.TotalRecord;
+                            try
+                            {
+                                excelOOXML.InsertRow(nameSheet, rowindex, result.Datas.Count - 1, true);
+                                for (int i = 0; i < result.Datas.Count; i++)// dòng
+                                {
+                                    excelOOXML.SetCellData(nameSheet, "A" + rowindex, (i + 1).ToString());
+                                    excelOOXML.SetCellData(nameSheet, "B" + rowindex, result.Datas[i].CustomerName.ToString());
+                                    excelOOXML.SetCellData(nameSheet, "C" + rowindex, result.Datas[i].Phone);
+                                    excelOOXML.SetCellData(nameSheet, "D" + rowindex, result.Datas[i].Cmnd);
+                                    excelOOXML.SetCellData(nameSheet, "E" + rowindex, result.Datas[i].Status);
+                                    excelOOXML.SetCellData(nameSheet, "F" + rowindex, result.Datas[i].DistrictName);
+                                    excelOOXML.SetCellData(nameSheet, "G" + rowindex, result.Datas[i].ProvinceName);
+                                    excelOOXML.SetCellData(nameSheet, "H" + rowindex, result.Datas[i].AssignUser);
+                                    excelOOXML.SetCellData(nameSheet, "I" + rowindex, result.Datas[i].LastNote);
+                                    excelOOXML.SetCellData(nameSheet, "J" + rowindex, result.Datas[i].CreatedTime);
+                                    excelOOXML.SetCellData(nameSheet, "K" + rowindex, result.Datas[i].CreatedUser);
+                                    excelOOXML.SetCellData(nameSheet, "L" + rowindex, result.Datas[i].UpdatedTime);
+                                    excelOOXML.SetCellData(nameSheet, "M" + rowindex, result.Datas[i].UpdatedBy);
+
+                                    rowindex++;
+                                }
+                            }
+                            catch(Exception e)
+                            {
+
+                            }
+                            rowindex++;
+                        }
+                    }
+                   
+                    archive.Dispose();
+                }
+                stream.Dispose();
+            }
+            //var result = await ExportUtil.Export<CourierSearchRequestModel, CourierExportModel>(Response, SearchByModel, request, "CourierProfiles.csv", columns, filePath);
+            return ToResponse(true, null, result);
         }
         public ActionResult AddNew()
         {

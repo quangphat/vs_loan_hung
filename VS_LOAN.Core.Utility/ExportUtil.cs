@@ -26,7 +26,7 @@ namespace VS_LOAN.Core.Utility
             var descriptionAttribute = column.GetCustomAttribute<DescriptionAttribute>();
             return descriptionAttribute?.Description ?? column.Name;
         }
-        public static async Task<ActionResult> Export<TRequest, TResult>(HttpResponseBase Response,Func<TRequest, Task<DataPaging<List<TResult>>>> func, TRequest request, string fileName, string[] columns)
+        public static async Task<string> Export<TRequest, TResult>(HttpResponseBase Response,Func<TRequest, Task<DataPaging<List<TResult>>>> func, TRequest request, string fileName, string[] columns, string filePath)
             where TRequest : BaseFindRequest
             where TResult : class
         {
@@ -35,9 +35,11 @@ namespace VS_LOAN.Core.Utility
             sw.Start();
             Response.ContentType = "text/comma-separated-values";
             Response.AddHeader("Content-Disposition", "attachment; filename=" + fileName);
+            
             long totalRecord = 100;
             var exportHelper = new CsvExportHelper<TResult>();
-            for (var pageNumber = 1; pageNumber <= totalRecord; pageNumber++)
+
+            for (var pageNumber = 1; pageNumber <= 1000; pageNumber++)
             {
                 if (Response.IsClientConnected)
                 {
@@ -46,12 +48,10 @@ namespace VS_LOAN.Core.Utility
                     totalRecord = result.TotalRecord;
                     if (result != null && result.Datas.Count > 0)
                     {
-                        using (var stream = new MemoryStream())
+                        using (var stream = new FileStream(filePath, FileMode.CreateNew))
                         {
                             await exportHelper.WriteDataAsync(stream, result.Datas, columns, pageNumber == 1);
-                            Response.OutputStream.Write(stream.GetBuffer(), 0, (int)stream.Length);
-                            Response.Flush();
-                            await stream.FlushAsync();
+                            return filePath;
                         }
                     }
                    
@@ -60,7 +60,7 @@ namespace VS_LOAN.Core.Utility
             }
             sw.Stop();
            
-            return new EmptyResult();
+            return string.Empty;
         }
     }
     
