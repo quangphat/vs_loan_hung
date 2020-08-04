@@ -559,8 +559,7 @@ end
 --------------------
 
 alter PROCEDURE sp_HO_SO_Them_v2
-@Id int out,
-@Ma_Khach_Hang int,
+@id int out,
 @Ten_Khach_Hang nvarchar(100),
 @CMND nvarchar(50),
 @Dia_Chi nvarchar(200),
@@ -585,10 +584,10 @@ AS
 BEGIN
 declare @code varchar(20);
 select @code = dbo.fn_generateProfileCode()
-	Insert into HO_SO (Ma_Ho_So,Ma_Khach_Hang,Ten_Khach_Hang,CMND,Dia_Chi,Ma_Khu_Vuc,SDT,SDT2,Gioi_Tinh,CreatedTime,CreatedBy,Ho_So_Cua_Ai,UpdatedTime,Ngay_Nhan_Don,Ma_Trang_Thai,San_Pham_Vay,Co_Bao_Hiem,So_Tien_Vay,Han_Vay,Ghi_Chu,Courier_Code,IsDeleted,BirthDay,CMNDDay)
-	values(@code,@Ma_Khach_Hang,@Ten_Khach_Hang,@CMND,@Dia_Chi,@Ma_Khu_Vuc,@SDT,@SDT2,@Gioi_Tinh,GETDATE(),@CreatedBy,@Ho_So_Cua_Ai,GETDATE(),@Ngay_Nhan_Don,@Ma_Trang_Thai,@San_Pham_Vay,@Co_Bao_Hiem,@So_Tien_Vay,@Han_Vay,@Ghi_Chu,@Courier_Code,@IsDeleted,@BirthDay,@CMNDDay)
+	Insert into HO_SO (Ma_Ho_So,Ten_Khach_Hang,CMND,Dia_Chi,Ma_Khu_Vuc,SDT,SDT2,Gioi_Tinh,CreatedTime,CreatedBy,Ho_So_Cua_Ai,UpdatedTime,Ngay_Nhan_Don,Ma_Trang_Thai,San_Pham_Vay,Co_Bao_Hiem,So_Tien_Vay,Han_Vay,Ghi_Chu,Courier_Code,IsDeleted,BirthDay,CMNDDay)
+	values(@code,@Ten_Khach_Hang,@CMND,@Dia_Chi,@Ma_Khu_Vuc,@SDT,@SDT2,@Gioi_Tinh,GETDATE(),@CreatedBy,@Ho_So_Cua_Ai,GETDATE(),@Ngay_Nhan_Don,@Ma_Trang_Thai,@San_Pham_Vay,@Co_Bao_Hiem,@So_Tien_Vay,@Han_Vay,@Ghi_Chu,@Courier_Code,@IsDeleted,@BirthDay,@CMNDDay)
 
-SET @ID=@@IDENTITY
+SET @id=@@IDENTITY
 END
 GO
 
