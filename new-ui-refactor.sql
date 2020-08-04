@@ -558,6 +558,46 @@ end
 
 --------------------
 
+GO
+create procedure [dbo].[sp_generateProfileCode]
+as
+begin
+declare @prefix varchar(2)
+declare @value int
+declare @suffixes varchar(10)
+declare @result varchar(20) = '000000' 
+declare @suffix_temp varchar(10) = concat('00', month(getdate()))
+declare @year varchar(4) = year(getdate())
+set @year = SUBSTRING(@year,1,2)
+select @prefix = isnull(Prefix,''), @suffixes = isnull(Suffixes,''),@value = isnull([Value],0) from AUTOID where ID=1
+set @suffix_temp = SUBSTRING(@suffix_temp,len(@suffix_temp) - 1,2)
+
+if(@prefix = @year)
+begin
+	if(@suffixes = @suffix_temp)
+		set @value+=1;
+	else
+		begin
+			set @suffixes = @suffix_temp;
+			set @value = 1;
+		end
+end
+else
+begin
+	set @prefix = @year;
+	set @suffixes = @suffix_temp;
+	set @value = 1;
+end
+set @result = concat(@result,@value)
+set @result = SUBSTRING(@result, len(@result) - 5, 6);
+set @result = @prefix + @suffixes + @result
+
+	update AUTOID set Prefix=@prefix,Suffixes=@suffixes,[Value]=@value where ID=1
+select @result
+end
+
+--------
+
 alter PROCEDURE sp_HO_SO_Them_v2
 @id int out,
 @Ten_Khach_Hang nvarchar(100),
@@ -583,10 +623,12 @@ alter PROCEDURE sp_HO_SO_Them_v2
 AS
 BEGIN
 declare @code varchar(20);
-select @code = dbo.fn_generateProfileCode()
+CREATE TABLE #AutoId (code varchar(20))
+insert into #AutoId exec sp_generateProfileCode
+set @code = (select top 1 code  from #AutoId) 
 	Insert into HO_SO (Ma_Ho_So,Ten_Khach_Hang,CMND,Dia_Chi,Ma_Khu_Vuc,SDT,SDT2,Gioi_Tinh,CreatedTime,CreatedBy,Ho_So_Cua_Ai,UpdatedTime,Ngay_Nhan_Don,Ma_Trang_Thai,San_Pham_Vay,Co_Bao_Hiem,So_Tien_Vay,Han_Vay,Ghi_Chu,Courier_Code,IsDeleted,BirthDay,CMNDDay)
 	values(@code,@Ten_Khach_Hang,@CMND,@Dia_Chi,@Ma_Khu_Vuc,@SDT,@SDT2,@Gioi_Tinh,GETDATE(),@CreatedBy,@Ho_So_Cua_Ai,GETDATE(),@Ngay_Nhan_Don,@Ma_Trang_Thai,@San_Pham_Vay,@Co_Bao_Hiem,@So_Tien_Vay,@Han_Vay,@Ghi_Chu,@Courier_Code,@IsDeleted,@BirthDay,@CMNDDay)
-
+	drop table #AutoId
 SET @id=@@IDENTITY
 END
 GO
