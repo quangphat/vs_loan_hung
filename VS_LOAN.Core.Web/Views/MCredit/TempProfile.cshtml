@@ -163,8 +163,7 @@
                             <label class="col-sm-2 control-label no-padding-right">Mã số thuế<span class="required">(*)</span></label>
                             <div class="col-sm-4">
                                 <input type="text" id="txtCatNumber" placeholder="Nhập Mã số thuế" value="@ViewBag.model.CatNumber" class="form-control">
-                                <label style="color:green" id="checkcat-comname">@ViewBag.model.ComName</label>
-                                <label style="color:green" id="checkcat-catname" hidden>@ViewBag.model.CatName</label>
+                                <label style="color:green" id="checkcat-result"></label>
                                 <input type="button" class="btn btn-info" id="btnCheckCat" style="margin-top:20px;float:right" value="Check CAT" />
                             </div>
                         </div>
@@ -322,10 +321,43 @@
     function displayCat() {
         if (!isNullOrWhiteSpace(@ViewBag.model.CatNumber)) {
             $("#checkcat-area").show();
-
+            let comname = '@Html.Raw(ViewBag.model.ComName)'
+            let catname = '@Html.Raw(ViewBag.model.CatName)'
+            let catNumber = '@Html.Raw(ViewBag.model.CatNumber)'
+            $("#checkcat-result").text(`${comname} - ${catname}`);
+            modelCat = { CatName: catname, ComName: comname, CatNumber: catNumber }
         }
     }
-    
+    function CallForGetIsCheckCat(catNumber, checkatAreaId = null) {
+        let model = JSON.stringify({
+            "Value": catNumber
+        })
+
+        $.ajax({
+            type: "POST",
+            url: '/MCredit/IsCheckCat',
+            data: model,
+            traditional: true,
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+                if (data != null && data.success == true) {
+                    if (data.data == true)
+                        $(checkatAreaId).show();
+                    else {
+                        $(checkatAreaId).hide();
+                        modelCat = { CatName: '', ComName: '', CatNumber: '' }
+                       
+                    }
+                }
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
     $('#btnCheckCat').click(function (e) {
         let value = $("#txtCatNumber").val();
         var objectSend = JSON.stringify({
@@ -347,6 +379,7 @@
                         timer: 4000,
                         showConfirmButton: true,
                     });
+                    debugger
                     $("#checkcat-result").text(`${data.data.name} - ${data.data.cat}`);
                     modelCat = { CatName: data.data.cat, CatNumber: value, ComName: data.data.name }
                 }

@@ -528,4 +528,45 @@
         })
 
     }
+    function DownloadReport(e) {
+        let data = JSON.stringify({
+            'page': page,
+            'limit': limit,
+            'provinceId':$('#ddlProvince').val() ,
+            'courierId':  $('#ddlCourier').val(),
+            'freetext': $("#txtFreeText").val(),
+            'salecode': $("#txtSaleCode").val(),
+            'groupId': $('#ddlNhomCha').val(),
+            'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
+        });
+        $.ajax({
+            traditional: true,
+            url: '/Courrier/ExportFile',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: data,
+            success: function (data) {
+                if (data.success == true) {
+                    var link = document.createElement("a");
+                    link.href = data.data;
+                    link.click();
+                }
+                else {
+                    swal({
+                        title: "",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+
+            },
+        });
+    }
 </script>
