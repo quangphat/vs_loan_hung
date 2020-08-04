@@ -24,21 +24,16 @@
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Mã số thuế <span class="required">(*)</span> </label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtTaxNumber" placeholder="Mã số thuế" class="form-control">
+                            <input type="text" id="txtCatNumber" placeholder="Mã số thuế" class="form-control">
+                            <input type="button" class="btn btn-info" id="btnCheckCat" style="margin-top:20px;float:right" value="Check CAT" />
                         </div>
-                        <div id="checkcat-area" hidden>
-                            <label class="col-sm-2 control-label no-padding-right">Mã số thuế<span class="required">(*)</span></label>
+                        <div id="checkcat-area">
                             <div class="col-sm-4">
-                                <input type="text" id="txtCatNumber" placeholder="Nhập Mã số thuế" class="form-control">
                                 <label style="color:green" id="checkcat-result"></label>
-                                <input type="button" class="btn btn-info" id="btnCheckCat" style="margin-top:20px;float:right" value="Check CAT" />
                             </div>
+                            
                         </div>
-                        <div class="">
-                            <a class="btn btn-sm btn-primary" id="btnCheckCat">
-                                Kiểm tra
-                            </a>
-                        </div>
+                        
                     </div>    
                 </form>
             </div>
@@ -78,6 +73,7 @@
    
     let modelCat = { CatName:'',ComName:'',CatNumber:'' }
     $('#btnCheckCat').click(function (e) {
+        debugger
         let value = $("#txtCatNumber").val();
         var objectSend = JSON.stringify({
             'Value': value
