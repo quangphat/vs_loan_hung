@@ -82,5 +82,20 @@ namespace VietStar.Repository
             }
 
         }
+        public async Task<RepoResponse<ProfileDetail>> GetByIdAsync(int profileId)
+        {
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    var result = await con.QueryFirstOrDefaultAsync<ProfileDetail>("sp_HO_SO_LayChiTiet_v2", new { profileId }, commandType: CommandType.StoredProcedure);
+                    return RepoResponse<ProfileDetail>.Create(result);
+                }
+            }
+            catch(Exception e)
+            {
+                return RepoResponse<ProfileDetail>.Create(null, GetException(e));
+            }
+        }
     }
 }

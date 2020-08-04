@@ -598,7 +598,7 @@ end
 
 --------
 
-alter PROCEDURE sp_HO_SO_Them_v2
+create PROCEDURE sp_HO_SO_Them_v2
 @id int out,
 @Ten_Khach_Hang nvarchar(100),
 @CMND nvarchar(50),
@@ -632,6 +632,51 @@ set @code = (select top 1 code  from #AutoId)
 SET @id=@@IDENTITY
 END
 GO
+
+
+
+
+--------------
+
+create PROCEDURE [dbo].[sp_HO_SO_LayChiTiet_v2]
+	-- Add the parameters for the stored procedure here
+	@ID int
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	select hs.ID
+	,Ma_Ho_So
+	,Ten_Khach_Hang
+	,CMND,Dia_Chi
+	,Courier_Code
+	,SDT,SDT2
+	,Gioi_Tinh
+	,hs.CreatedTime
+	,hs.CreatedBy 
+	,hs.DisbursementDate
+	,Ma_Khu_Vuc
+	,Ho_So_Cua_Ai
+	,UpdatedTime 
+	,UpdatedBy
+	,Ngay_Nhan_Don
+	,Ma_Trang_Thai
+	,Ma_Ket_Qua
+	,San_Pham_Vay
+	,Co_Bao_Hiem 
+	,So_Tien_Vay
+	,Han_Vay
+	,Ghi_Chu 
+	,BirthDay
+	,CmndDay
+	,dt.ID as PartnerId
+	,dbo.getProvinceIdFromDistrictId(hs.Ma_Khu_Vuc) as ProvinceId
+	from HO_SO hs
+	left join SAN_PHAM_VAY sv on hs.San_Pham_Vay = sv.id
+	left join DOI_TAC dt on sv.Ma_Doi_Tac = dt.ID
+	 where hs.ID=@ID
+END
+
 
 
 

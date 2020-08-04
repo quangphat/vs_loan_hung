@@ -23,20 +23,11 @@ namespace VietStar.Entities.Profile
         public string SDT2 { get; set; }
 
         public int Gioi_Tinh { get; set; }
-
-
-
         public int Ho_So_Cua_Ai { get; set; }
-
-
-
-
 
         public DateTime? Ngay_Nhan_Don { get; set; }
 
         public int Ma_Trang_Thai { get; set; }
-
-        
 
         public int San_Pham_Vay { get; set; }
 

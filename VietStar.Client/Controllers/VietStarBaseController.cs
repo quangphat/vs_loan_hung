@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -12,9 +13,11 @@ namespace VietStar.Client.Controllers
     public class VietStarBaseController : Controller
     {
         public readonly CurrentProcess _process;
-        public VietStarBaseController(CurrentProcess process)
+        public readonly IMapper _mapper;
+        public VietStarBaseController(CurrentProcess process, IMapper mapper = null)
         {
             _process = process;
+            _mapper = mapper;
             
         }
         private JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings

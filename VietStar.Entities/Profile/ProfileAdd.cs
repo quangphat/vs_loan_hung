@@ -15,6 +15,7 @@ namespace VietStar.Entities.Profile
         public string Cmnd { get; set; }
         public int Gender { get; set; }
         public int DistrictId { get; set; }
+        public int ProvinceId { get; set; }
         public string Address { get; set; }
         public int CourierId { get; set; }
         public bool IsInsurrance { get; set; }

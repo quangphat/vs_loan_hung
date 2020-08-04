@@ -22,5 +22,6 @@ namespace VietStar.Repository.Interfaces
             , string sortField = "updatedtime"
             , int page = 1, int limit = 20);
         Task<RepoResponse<int>> CreateAsync(ProfileAddSql model, int createdBy);
+        Task<RepoResponse<ProfileDetail>> GetByIdAsync(int profileId);
     }
 }

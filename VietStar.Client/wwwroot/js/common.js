@@ -10,7 +10,19 @@ function getLocalStorage(key) {
 function renderStatusList(profileType, value = null) {
     if (isNullOrWhiteSpace(profileType))
         return
-    $("#ddlStatus").empty();
+    let control = $('#ddlStatus')
+    control.empty();
+    let data = JSON.parse(window.localStorage.getItem('profile_statuses'));
+    if (data != null && !isNullOrNoItem(data)) {
+        $.each(data, function (index, item) {
+            control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+        });
+        if (value != null) {
+            control.val(value);
+
+        }
+        return;
+    }
     $.ajax({
         type: "GET",
         url: `/Common/GetStatusList/${profileType}`,
@@ -18,6 +30,7 @@ function renderStatusList(profileType, value = null) {
         success: function (data) {
             $('#ddlStatus').append("<option value='0'></option>");
             if (data.data != null && data.success == true) {
+                setLocalStorage('profile_statuses', data.data)
                 $.each(data.data, function (index, item) {
                     $('#ddlStatus').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });

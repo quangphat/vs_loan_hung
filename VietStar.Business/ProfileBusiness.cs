@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using VietStar.Business.Interfaces;
+using VietStar.Entities;
 using VietStar.Entities.Infrastructures;
 using VietStar.Entities.Messages;
 using VietStar.Entities.Profile;
@@ -127,6 +128,12 @@ namespace VietStar.Business
             return DataPaging.Create(result, result[0].TotalRecord);
             
         }
-       
+       public async Task<ProfileAdd> GetByIdAsync(int profileId)
+        {
+            var data = await _rpProfile.GetByIdAsync(profileId);
+            var profile = ToResponse<ProfileDetail>(data);
+            var result = _mapper.Map<ProfileAdd>(profile);
+            return result;
+        }
     }
 }

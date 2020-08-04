@@ -53,5 +53,12 @@ namespace VietStar.Client.Controllers
             var result = await _bizProfile.CreateAsync(model);
             return ToResponse(result);
         }
+        [Authorize]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var result = await _bizProfile.GetByIdAsync(id);
+            
+            return View(result ?? new ProfileAdd());
+        }
     }
 }
