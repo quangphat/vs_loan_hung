@@ -537,7 +537,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 await _rpTailieu.CopyFileFromProfile(profileId, (int)HosoType.MCredit, id);
                 await _rpMCredit.DeleteById(profileId);
             }
-            return ToJsonResponse(true, "", id);
+            return ToJsonResponse(id >0 ?  true :false, "", id);
         }
         public async Task<JsonResult> ReSendFileToEC(int profileId)
         {
