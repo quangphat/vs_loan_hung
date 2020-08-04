@@ -18,24 +18,14 @@
                         </div>
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày nhận đơn đề nghị<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <div class="input-group">
-                                <input class="form-control" type="date" id="receiveDate" />
-                                <span class="input-group-addon">
-                                    <i class="fa fa-calendar bigger-110"></i>
-                                </span>
-                            </div>
+                            <input class="form-control" type="date" id="receiveDate" />
                         </div>
 
                     </div>
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày tháng năm sinh<span class="required">(*)</span> </label>
                         <div class="col-sm-4">
-                            <div class="input-group">
-                                <input class="form-control " type="date" id="birthDay" />
-                                <span class="input-group-addon">
-                                    <i class="fa fa-calendar bigger-110"></i>
-                                </span>
-                            </div>
+                            <input class="form-control " type="date" id="birthDay" />
                         </div>
 
                         <div class="col-sm-4">
@@ -59,12 +49,7 @@
                         </div>
                         <label class="col-sm-2 control-label no-padding-right">Ngày cấp CMND/CCCD<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <div class="input-group">
-                                <input class="form-control " type="date" id="cmndDay" />
-                                <span class="input-group-addon">
-                                    <i class="fa fa-calendar bigger-110"></i>
-                                </span>
-                            </div>
+                            <input class="form-control " type="date" id="cmndDay" />
                         </div>
                     </div>
                     <div class="form-group">
@@ -193,7 +178,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="command-bar">
-                    <a class="btn btn-sm btn-primary" id="btn_Temp">
+                    <a class="btn btn-sm btn-primary" id="btn_Next">
                         Bước tiếp theo
                     </a>
                     
@@ -205,29 +190,11 @@
 
 <script>
 
-    jQuery.fn.ForceNumericOnly =function () {
-    return this.each(function () {
-        $(this).keydown(function (e) {
-            var key = e.charCode || e.keyCode || 0;
-            // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers ONLY
-            // home, end, period, and numpad decimal
-            return (
-                key == 8 ||
-                key == 9 ||
-                key == 13 ||
-                key == 46 ||
-                key == 110 ||
-                key == 190 ||
-                (key >= 35 && key <= 40) ||
-                (key >= 48 && key <= 57) ||
-                (key >= 96 && key <= 105));
-        });
-    });
-};
-    //$("#txtDienThoai").ForceNumericOnly();
-    //$("#txtDienThoai2").ForceNumericOnly();
-    //$("#txtTienDeNghiVay").ForceNumericOnly();
-    //$("#txtCMND").ForceNumericOnly();
+
+    $("#phone").ForceNumericOnlyv2();
+    $("#salePhone").ForceNumericOnlyv2();
+    $("#cmnd").ForceNumericOnlyv2();
+    $("#loanAmount").ForceNumericOnlyv2();
     $("#loanAmount").change(function () {
         $("#loanAmount").val(formatCurrency($("#loanAmount").val().replace(/\./g, '')));
     });
@@ -330,44 +297,22 @@
             }
         }
     }
-    function LayDSSanPham(maDoiTac) {
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSSanPham", "HoSo")',
-            data: { 'maDoiTac': maDoiTac },
-            success: function (data) {
-                $('#ddlSanPhamVay').empty();
-                $('#ddlSanPhamVay').append("<option value='0'></option>");
-                if (data != null) {
-                    $.each(data.data, function (index, optionData) {
-                        $('#ddlSanPhamVay').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
-                    });
-                }
-                $('#ddlSanPhamVay').chosen().trigger("chosen:updated");
-
-            },
-            complete: function () {
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    }
 
 
 
-    $('#btn_Temp').click(function (e) {
-        if ($('#txtHoTen').val() == "" || $('#txtHoTen').val() == undefined) {
+    $('#btn_Next').click(function (e) {
+
+        if (isNullOrWhiteSpace($('#customerName').val())) {
             swal({
                 title: "",
-                text: "Vui lòng nhập tên",
+                text: "Vui lòng nhập tên khách hàng",
                 type: "error",
                 timer: 4000,
                 showConfirmButton: true,
             });
             return;
         }
-        if ($('#ddlDoiTac').val() == "0" || $('#ddlDoiTac').val() == undefined) {
+        if ($('#partnerId').val() == "0" || $('#partnerId').val() == undefined ) {
             swal({
                 title: "",
                 text: "Vui lòng chọn đối tác",
@@ -377,80 +322,7 @@
             });
             return;
         }
-        if ($('#ddlSanPhamVay').val() == "0" || $('#ddlSanPhamVay').val() == undefined) {
-            swal({
-                title: "",
-                text: "Vui lòng chọn sản phẩm vay",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        var objectSend = JSON.stringify({
-            'hoten': $('#txtHoTen').val(), 'phone': $('#txtDienThoai').val(),
-            'phone2': $('#txtDienThoai2').val(), 'ngayNhanDon': $('#txtToDate').val(),
-            'hoSoCuaAi': $('#ddlInternalCode').val(), 'cmnd': $('#txtCMND').val(), 'gioiTinh': $('#ddlGioiTinh').val(),
-            'maKhuVuc': $('#ddlHuyen').val(), 'diaChi': $('#txtDiaChi').val(),'courier':$('#ddlCourier').val(),
-            'sanPhamVay': $('#ddlSanPhamVay').val(), 'tenCuaHang': $('#txtTenCuaHang').val(),
-            'baoHiem': $('#cbbaohiem').is(":checked"), 'thoiHanVay': $('#spnThoiHanVay').val(),
-            'ghiChu': $('#txtGhiChu').val(),
-            'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, ''),
-            'birthDayStr': $('#txtBirhDay').val(),
-            'cmndDayStr': $('#txtCmndDay').val()
-        });
-        $.ajax({
-            traditional: true,
-            url: '@Url.Action("SaveDaft", "HoSo")',
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            data: objectSend,
-            success: function (data) {
-                if (data.success == true) {
-                    swal({
-                        title: "",
-                        text: "Thành công",
-                        type: "success",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    }, function () {
-                        //window.location = window.location;
-
-                            uploadHoso2(data.data, false);
-                    });
-                }
-                else {
-                    swal({
-                        title: "",
-                        text: data.code,
-                        type: "error",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    });
-                }
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            },
-            complete: function () {
-                $('#panel_body').unblock();
-            },
-        });
-    });
-
-    $('#btn_Save').click(function (e) {
-
-        if ($('#ddlDoiTac').val() == "0" || $('#ddlDoiTac').val() == undefined ) {
-            swal({
-                title: "",
-                text: "Vui lòng chọn đối tác",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if ($('#ddlSanPhamVay').val() == "0" || $('#ddlSanPhamVay').val() == undefined) {
+        if ($('#productId').val() == "0" || $('#productId').val() == undefined) {
             swal({
                 title: "",
                 text: "Vui lòng chọn sản phẩm vay",
@@ -461,7 +333,7 @@
             return;
         }
 
-        if ($('#txtDienThoai').val().length != 10) {
+        if ($('#phone').val().length != 10) {
             swal({
                 title: "",
                 text: "Số điện thoại di động phải đúng 10 số!",
@@ -471,7 +343,7 @@
             });
             return;
         }
-        if ($('#txtDienThoai2').val().length > 0 && $('#txtDienThoai2').val().length != 10) {
+        if ($('#salePhone').val().length > 0 && $('#salePhone').val().length != 10) {
             swal({
                 title: "",
                 text: "Số điện thoại di động 2 phải đúng 10 số!",
@@ -481,15 +353,7 @@
             });
             return;
         }
-        let doitacF88Value = 0;
-        if (!isNullOrNoItem(lstDoitac)) {
-            let doitacId = !isNullOrUndefined($('#ddlDoiTac').val()) ? parseInt($('#ddlDoiTac').val()) : 0;
-            let doitac = lstDoitac.find(p => p.ID == doitacId);
-            if (!isNullOrUndefined(doitac)) {
-                doitacF88Value = doitac.F88Value;
-            }
-        }
-        if ($('#txtCMND').val().length != 9 && $('#txtCMND').val().length != 12) {
+        if ($('#cmnd').val().length != 9 && $('#cmnd').val().length != 12) {
             swal({
                 title: "",
                 text: "Số CMND chỉ 9 hoặc 12 số!",
@@ -499,26 +363,31 @@
             });
             return;
         }
-        let FileRequireIds = [];
         var objectSend = JSON.stringify({
-            'hoten': $('#txtHoTen').val(), 'phone': $('#txtDienThoai').val(),
-            'phone2': $('#txtDienThoai2').val(), 'ngayNhanDon': $('#txtToDate').val(),
-            'hoSoCuaAi': $('#ddlInternalCode').val(), 'cmnd': $('#txtCMND').val(), 'gioiTinh': $('#ddlGioiTinh').val(),
-            'maKhuVuc': $('#ddlHuyen').val(), 'diaChi': $('#txtDiaChi').val(),'courier':$('#ddlCourier').val(),
-            'sanPhamVay': $('#ddlSanPhamVay').val(), 'tenCuaHang': $('#txtTenCuaHang').val(),
-            'baoHiem': $('#cbbaohiem').is(":checked"), 'thoiHanVay': $('#spnThoiHanVay').val(),
-            'ghiChu': $('#txtGhiChu').val(),
-            'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, ''),
-            'link': window.location.href,
-            'provinceId': parseInt($('#ddlTinh').val()),
-            'doitacF88Value': doitacF88Value,
-            'birthDayStr': $('#txtBirhDay').val(),
-            'cmndDayStr': $('#txtCmndDay').val(),
-            'FileRequireIds': filesUpload.map(p => FileRequireIds.push(p.key))
+            "Id": 0,
+            "Code": '',
+            "CustomerName": $("#customerName").val(),
+            "Phone": $("#phone").val(),
+            "SalePhone": $("#salePhone").val(),
+            "ReceiveDate": $("#receiveDate").val(),
+            "Cmnd": $("#cmnd").val(),
+            "Gender": $('#gender').val(),
+            "DistrictId": parseInt($("#districtId").val()),
+            "Address": $("#address").val(),
+            "CourierId": parseInt($("#courierId").val()),
+            "IsInsurrance": $('#isInsurrance').is(":checked"), 'thoiHanVay': $('#spnThoiHanVay').val(),
+            "Period": parseInt($("#period").val()),
+            "LoanAmount": getDecimalValueFromMoneyInput($("#loanAmount").val()),
+            "Status":0,
+            "Comment": $("#comment").val(),
+            "BirthDay": $("#birthDay").val(),
+            "CmndDay": $("#cmndDay").val(),
+            "PartnerId": parseInt($("#partnerId").val()),
+            "ProductId": parseInt($("#productId").val())
         });
         $.ajax({
             traditional: true,
-            url: '@Url.Action("Save", "HoSo")',
+            url: '/profile/CreateAsync',
             type: "POST",
             contentType: "application/json; charset=utf-8",
             data: objectSend,
@@ -531,13 +400,14 @@
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-                        uploadHoso2(data.data, true);
+                        alert(data.data)
+                        //uploadHoso2(data.data, true);
                     });
                 }
                 else {
                     swal({
                         title: "",
-                        text: data.code,
+                        text: data.error.code,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,

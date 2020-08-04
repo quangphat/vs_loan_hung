@@ -265,7 +265,7 @@ end
 -----------------
 
 GO
-ALTER procedure [dbo].[sp_getPermissionByRoleCode]
+create procedure [dbo].[sp_getPermissionByRoleCode]
 
 (@rolecode varchar(50))
 
@@ -428,7 +428,7 @@ end
 
 ------------
 
-alter PROCEDURE [dbo].[sp_LOAI_TAI_LIEU_GetsByType]
+create PROCEDURE [dbo].[sp_LOAI_TAI_LIEU_GetsByType]
 (@profileType int = 0)
 	-- Add the parameters for the stored procedure here
 
@@ -444,6 +444,8 @@ END
   
 
 -----------
+alter table  DOI_TAC add OrgId int
+
 
 create PROCEDURE [dbo].[sp_DOI_TAC_LayDS_v2](@orgId int)
   -- Add the parameters for the stored procedure here
@@ -482,7 +484,7 @@ END
 
 -----------
 
-alter PROCEDURE [dbo].[sp_SAN_PHAM_VAY_LayDSByID_v2]
+create PROCEDURE [dbo].[sp_SAN_PHAM_VAY_LayDSByID_v2]
 	-- Add the parameters for the stored procedure here
 	@partnerId int,
 	@orgId int
@@ -515,3 +517,82 @@ update Nhan_Vien set OrgId = 1 where ISNULL(OrgId,0) = 0
 update NHOM set OrgId = 1 where ISNULL(OrgId,0) = 0
 
 
+--------------
+
+go
+alter function fn_generateProfileCode()
+returns varchar(20)
+as
+begin
+declare @prefix varchar(2)
+declare @value int
+declare @suffixes varchar(10)
+declare @result varchar(20) = '000000' 
+declare @suffix_temp varchar(10) = concat('00', month(getdate()))
+declare @year varchar(4) = year(getdate())
+set @year = SUBSTRING(@year,1,2)
+select @prefix = isnull(Prefix,''), @suffixes = isnull(Suffixes,''),@value = isnull([Value],0) from AUTOID where ID=1
+set @suffix_temp = SUBSTRING(@suffix_temp,len(@suffix_temp) - 1,2)
+
+if(@prefix = @year)
+begin
+	if(@suffixes = @suffix_temp)
+		set @value+=1;
+	else
+		begin
+			set @suffixes = @suffix_temp;
+			set @value = 1;
+		end
+end
+else
+begin
+	set @prefix = @year;
+	set @suffixes = @suffix_temp;
+	set @value = 1;
+end
+set @result = concat(@result,@value)
+set @result = SUBSTRING(@result, len(@result) - 5, 6);
+set @result = @prefix + @suffixes + @result
+return @result
+end
+
+--------------------
+
+alter PROCEDURE sp_HO_SO_Them_v2
+@Id int out,
+@Ma_Khach_Hang int,
+@Ten_Khach_Hang nvarchar(100),
+@CMND nvarchar(50),
+@Dia_Chi nvarchar(200),
+@Ma_Khu_Vuc int,
+@SDT nvarchar(50),
+@SDT2 nvarchar(50),
+@Gioi_Tinh int,
+@CreatedBy int,
+@Ho_So_Cua_Ai int,
+@Ngay_Nhan_Don datetime  = null,
+@Ma_Trang_Thai int,
+@San_Pham_Vay int,
+@Co_Bao_Hiem bit,
+@So_Tien_Vay decimal,
+@Han_Vay float,
+@Ghi_Chu nvarchar(500),
+@Courier_Code int,
+@IsDeleted bit,
+@BirthDay datetime  = null,
+@CMNDDay datetime  = null 
+AS
+BEGIN
+declare @code varchar(20);
+select @code = dbo.fn_generateProfileCode()
+	Insert into HO_SO (Ma_Ho_So,Ma_Khach_Hang,Ten_Khach_Hang,CMND,Dia_Chi,Ma_Khu_Vuc,SDT,SDT2,Gioi_Tinh,CreatedTime,CreatedBy,Ho_So_Cua_Ai,UpdatedTime,Ngay_Nhan_Don,Ma_Trang_Thai,San_Pham_Vay,Co_Bao_Hiem,So_Tien_Vay,Han_Vay,Ghi_Chu,Courier_Code,IsDeleted,BirthDay,CMNDDay)
+	values(@code,@Ma_Khach_Hang,@Ten_Khach_Hang,@CMND,@Dia_Chi,@Ma_Khu_Vuc,@SDT,@SDT2,@Gioi_Tinh,GETDATE(),@CreatedBy,@Ho_So_Cua_Ai,GETDATE(),@Ngay_Nhan_Don,@Ma_Trang_Thai,@San_Pham_Vay,@Co_Bao_Hiem,@So_Tien_Vay,@Han_Vay,@Ghi_Chu,@Courier_Code,@IsDeleted,@BirthDay,@CMNDDay)
+
+SET @ID=@@IDENTITY
+END
+GO
+
+
+
+
+--------------

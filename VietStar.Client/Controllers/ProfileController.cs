@@ -48,7 +48,7 @@ namespace VietStar.Client.Controllers
         }
         [Authorize]
         [HttpPost("profile/CreateAsync")]
-        public async Task<IActionResult> CreateAsync(ProfileAdd model)
+        public async Task<IActionResult> CreateAsync([FromBody]ProfileAdd model)
         {
             var result = await _bizProfile.CreateAsync(model);
             return ToResponse(result);

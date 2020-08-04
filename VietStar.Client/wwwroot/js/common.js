@@ -1,4 +1,6 @@
-﻿function setLocalStorage(key, data) {
+﻿
+
+function setLocalStorage(key, data) {
     window.localStorage.removeItem(key);
     window.localStorage.setItem(key, JSON.stringify(data));
 }
@@ -64,19 +66,6 @@ function GetSales(control = null, defaultValue = 0) {
     if (control == null)
         control = $("#saleId");
     control.empty();
-    debugger
-    //window.localStorage.clear()
-    let data = getLocalStorage('sales');
-    if (data != null && !isNullOrNoItem(data)) {
-        $.each(data, function (index, item) {
-            control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
-        });
-        if (defaultValue != null) {
-            control.val(defaultValue);
-
-        }
-        return;
-    }
     $.ajax({
         type: "GET",
         url: '/common/sales',
@@ -85,7 +74,6 @@ function GetSales(control = null, defaultValue = 0) {
             control.append("<option value='0'>Chọn sale</option>");
             if (data.data != null && data.success == true) {
                 $.each(data.data, function (index, item) {
-                    setLocalStorage('sales', data.data)
                     control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
                 if (defaultValue != null) {
@@ -106,17 +94,6 @@ function GetCouriers(control = null, defaultValue = 0) {
     if (control == null)
         control = $("#courierId");
     control.empty();
-    let data = getLocalStorage('couriers');
-    if (data != null && !isNullOrNoItem(data)) {
-        $.each(data, function (index, item) {
-            control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
-        });
-        if (defaultValue != null) {
-            control.val(defaultValue);
-
-        }
-        return;
-    }
     
     $.ajax({
         type: "GET",
@@ -125,7 +102,6 @@ function GetCouriers(control = null, defaultValue = 0) {
         success: function (data) {
             control.append("<option value='0'>Chọn courier</option>");
             if (data.data != null && data.success == true) {
-                setLocalStorage('couriers', data.data)
                 $.each(data.data, function (index, item) {
                     control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });

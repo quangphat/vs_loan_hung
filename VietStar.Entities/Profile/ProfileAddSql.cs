@@ -56,11 +56,5 @@ namespace VietStar.Entities.Profile
         public DateTime? BirthDay { get; set; }
 
         public DateTime? CMNDDay { get; set; }
-
-        public int F88Result { get; set; }
-
-        public string F88Reason { get; set; }
-
-        public DateTime? DisbursementDate { get; set; }
     }
 }

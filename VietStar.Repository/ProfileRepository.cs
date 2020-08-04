@@ -61,7 +61,9 @@ namespace VietStar.Repository
                 nameof(model.UpdatedTime),
                 nameof(model.CreatedTime),
                 nameof(model.Ho_So_Cua_Ai),
-                nameof(model.CreatedBy)
+                nameof(model.CreatedBy),
+                nameof(model.Ma_Ho_So)
+          
             }, "id");
             par.Add("CreatedBy", createdBy);
             par.Add("Ho_So_Cua_Ai", createdBy);
@@ -69,8 +71,8 @@ namespace VietStar.Repository
             {
                 using (var _con = GetConnection())
                 {
-                    await _con.ExecuteAsync("", par, commandType: CommandType.StoredProcedure);
-                    var id = par.Get<int>("id");
+                    await _con.ExecuteAsync("sp_HO_SO_Them_v2", par, commandType: CommandType.StoredProcedure);
+                    var id = par.Get<int>(nameof(model.ID));
                     return RepoResponse<int>.Create(id);
                 }
             }

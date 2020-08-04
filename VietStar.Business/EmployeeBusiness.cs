@@ -32,7 +32,8 @@ namespace VietStar.Business
                 for (int i = 0; i < groups.Count; i++)
                 {
                     var members = await _rpEmployee.GetMemberByGroupIdIncludeChild(groups[i].Id, _process.User.Id);
-                    result.AddRange(members);
+                    if(members!=null)
+                        result.AddRange(members);
 
                 }
                 result.DistinctBy(p => p.Id);
@@ -51,7 +52,8 @@ namespace VietStar.Business
                 for (int i = 0; i < groups.Count; i++)
                 {
                     var members = await _rpEmployee.GetMemberByGroupId(groups[i].Id, _process.User.Id);
-                    result.AddRange(members);
+                    if(members!=null)
+                        result.AddRange(members);
                    
                 }
                 result.DistinctBy(p => p.Id);

@@ -3,6 +3,43 @@
     //$('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
   
 });
+(function ($) {
+    $.fn.inputFilter = function (inputFilter) {
+        return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+            if (inputFilter(this.value)) {
+                this.oldValue = this.value;
+                this.oldSelectionStart = this.selectionStart;
+                this.oldSelectionEnd = this.selectionEnd;
+            } else if (this.hasOwnProperty("oldValue")) {
+                this.value = this.oldValue;
+                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+            } else {
+                this.value = "";
+            }
+        });
+    };
+}(jQuery));
+
+jQuery.fn.ForceNumericOnlyv2 = function () {
+    return this.inputFilter(function (value) {
+        return /^\d*$/.test(value);    // Allow digits only, using a RegExp
+    });
+}
+function getDecimalValueFromMoneyInput(value) {
+    if (isNullOrWhiteSpace(value))
+        return 0
+    return value.replace(/\./g, '');
+}
+function formatCurrencyVND(number) {
+    var n = number.toString().split('').reverse().join("");
+    var n2 = n.replace(/\d\d\d(?!$)/g, "$&.");
+    return n2.split('').reverse().join('') + 'VND';
+}
+function formatCurrency(number) {
+    var n = number.toString().split('').reverse().join("");
+    var n2 = n.replace(/\d\d\d(?!$)/g, "$&.");
+    return n2.split('').reverse().join('') + '';
+}
 function isNullOrNoItem(arr) {
     if (arr === null || arr === undefined || arr.length === 0)
         return true;
