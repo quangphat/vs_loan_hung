@@ -137,7 +137,7 @@
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số tiền đề nghị vay<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <input type="text" id="loanAmount" inputmode="numeric" value="@Model.LoanAmount.ToString("000.00")" placeholder="Nhập số tiền đề nghị vay" class="form-control">
+                            <input type="text" id="loanAmount" inputmode="numeric" value="@Model.LoanAmount" placeholder="Nhập số tiền đề nghị vay" class="form-control">
                         </div>
                         <label class="col-sm-2 control-label no-padding-right">Thời hạn vay</label>
                         <div class="col-sm-2">
@@ -210,11 +210,11 @@
 
     $(document).ready(function () {
         GetProfileFiles();
-        GetPartners();
+        GetPartners(null,'@Model.PartnerId', '@Model.ProductId');
         GetSales();
         GetCouriers();
-        GetProvinces();
-        debugger
+        GetProvinces(null, '@Model.ProvinceId','@Model.DistrictId');
+        
         $("#receiveDate").val(FormatDateTimeDMY('@Model.ReceiveDate.Value.ToString("yyyy-MM-dd")', 'YYYY-MM-DD'))
         //$("#receiveDate").val('2020-08-06')
         $("#birthDay").val(FormatDateTimeDMY('@Model.BirthDay.Value.ToString("yyyy-MM-dd")', 'YYYY-MM-DD'))

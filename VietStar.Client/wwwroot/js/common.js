@@ -132,10 +132,22 @@ function GetCouriers(control = null, defaultValue = 0) {
         }
     });
 }
-function GetPartners(control = null, defaultValue = 0) {
+function GetPartners(control = null, defaultValue = 0, productId =0) {
     if (control == null)
         control = $("#partnerId");
     control.empty();
+    control.append("<option value='0'>Chọn tỉnh/thành</option>");
+    let data = JSON.parse(window.localStorage.getItem('partners'));
+    if (data != null && !isNullOrNoItem(data)) {
+        $.each(data, function (index, item) {
+            control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+        });
+        if (defaultValue != null) {
+            control.val(defaultValue);
+            GetProducts(defaultValue, null, productId)
+        }
+        return;
+    }
     $.ajax({
         type: "GET",
         url: '/common/partners',
@@ -143,11 +155,13 @@ function GetPartners(control = null, defaultValue = 0) {
         success: function (data) {
             control.append("<option value='0'>Chọn đối tác</option>");
             if (data.data != null && data.success == true) {
+                setLocalStorage('partners', data.data)
                 $.each(data.data, function (index, item) {
                     control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
                 if (defaultValue != null) {
                     control.val(defaultValue);
+                    GetProducts(defaultValue, null, productId)
                     // GetMemberByGroup(defaultValue, null,)
                 }
 
@@ -188,7 +202,7 @@ function GetProducts(partnerId, control = null, defaultValue = 0) {
         }
     });
 }
-function GetProvinces(control = null, defaultValue = 0) {
+function GetProvinces(control = null, defaultValue = 0, districId =0) {
     if (control == null)
         control = $("#provinceId");
     control.append("<option value='0'>Chọn tỉnh/thành</option>");
@@ -199,11 +213,10 @@ function GetProvinces(control = null, defaultValue = 0) {
         });
         if (defaultValue != null) {
             control.val(defaultValue);
-            
+            GetDistricts(defaultValue, null, districId)
         }
         return;
     }
-    window.localStorage.removeItem('provinces')
     control.empty();
     $.ajax({
         type: "GET",
@@ -218,6 +231,7 @@ function GetProvinces(control = null, defaultValue = 0) {
                 });
                 if (defaultValue != null) {
                     control.val(defaultValue);
+                    GetDistricts(defaultValue, null, districId)
                     // GetMemberByGroup(defaultValue, null,)
                 }
 
