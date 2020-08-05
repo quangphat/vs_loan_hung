@@ -710,8 +710,12 @@ add GuidId varchar(50)
 
 ------------
 
+
+--exec sp_TAI_LIEU_HS_Them_v2 0, '8d704f62-abe3-9adf-54d1-470f287c2d88',0
+
 alter PROCEDURE [dbo].[sp_TAI_LIEU_HS_Them_v2]
-(@Id int out,
+(
+@Id int out,
 @FileKey int,
 @FileName nvarchar(200),
 @FilePath nvarchar(max),
@@ -731,8 +735,8 @@ alter PROCEDURE [dbo].[sp_TAI_LIEU_HS_Them_v2]
 ) 
 AS
 BEGIN
-select top 1 @Id = isnull(Id,0) from TAI_LIEU_HS where GuidId = @GuidId or ID = @FileId
-if (@Id > 0)
+select top 1 @Id = isnull(Id,0) from TAI_LIEU_HS where (GuidId = @GuidId or ID = @FileId) 
+if (@Id > 0 and @Id is not null)
 begin
 	update TAI_LIEU_HS set
 	[FileName] = @FileName,
@@ -746,7 +750,9 @@ begin
 	MC_GroupId = @MC_GroupId
 	where ID = @Id
 end
+else
 begin
+
 	Insert into TAI_LIEU_HS 
 	(FileKey,FileName,FilePath,ProfileId
 	,Deleted,ProfileTypeId,DocumentName
