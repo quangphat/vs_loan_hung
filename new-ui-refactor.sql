@@ -43,14 +43,14 @@ alter PROCEDURE [dbo].[sp_Employee_Login]
 AS
 BEGIN
 declare @roleId int = 1;
-select @roleId = isnull(RoleId, 0) from  Nhan_Vien where Ten_Dang_Nhap=@UserName and Mat_Khau=@Password and isnull(IsDeleted,0) =0
+select @roleId = isnull(RoleId, 0) from  Nhan_Vien where Ten_Dang_Nhap=@UserName and Mat_Khau=@Password and isnull(Xoa,0) =0
 if(@roleId =5)
 set @roleId = 1;
 	Select e.Id,e.Ten_Dang_Nhap as UserName, e.Email, e.Ho_Ten as FullName, e.Dien_Thoai as Phone,
 	e.Ma as Code, e.Status as IsActive, r.Code as RoleCode, @roleId as RoleId, e.OrgId,R.Code as Rolecode
 	 From Nhan_Vien e left join [Role] r
 	on e.RoleId = r.Id
-	 where Ten_Dang_Nhap=@UserName and Mat_Khau=@Password and isnull(e.IsDeleted,0) =0
+	 where Ten_Dang_Nhap=@UserName and Mat_Khau=@Password and isnull(e.Xoa,0) =0
 END
 
 
@@ -173,7 +173,7 @@ END
 
 --exec sp_Profile_Search 0,10,1,0,0,'2020-01-01','2020-07-30','','',1
 --exec sp_Profile_Search 0,10,4375,0,0,'2020-01-01','2020-07-30','','',1
-alter procedure [dbo].[sp_Profile_Search]
+create procedure [dbo].[sp_Profile_Search]
 (
 	@offset int,
 	@limit int,
@@ -297,7 +297,7 @@ END
 
 -----------------
 
-  create PROCEDURE [dbo].[sp_NHOM_LayDSChonTheoNhanVien_v3]
+  alter PROCEDURE [dbo].[sp_NHOM_LayDSChonTheoNhanVien_v3]
 	-- Add the parameters for the stored procedure here
 	@userId int
 AS
@@ -369,7 +369,7 @@ values
 ------------
 
 
-alter function [dbo].[fn_getStatusName](@profileType varchar(30), @orgId int, @value int)
+create function [dbo].[fn_getStatusName](@profileType varchar(30), @orgId int, @value int)
 returns nvarchar(500)
 as begin
 declare @noidung as nvarchar(500)
@@ -405,7 +405,7 @@ end
 
 ---------
 
-alter procedure [dbo].[sp_ProfileStatus_GetsByroleCode]
+create procedure [dbo].[sp_ProfileStatus_GetsByroleCode]
 (@orgId int = 0,
 @profileType varchar(50),
 @roleCode varchar(50)
@@ -637,8 +637,8 @@ GO
 
 
 --------------
-
-alter PROCEDURE [dbo].[sp_HO_SO_LayChiTiet_v2]
+go
+create PROCEDURE [dbo].[sp_HO_SO_LayChiTiet_v2]
 	-- Add the parameters for the stored procedure here
 	@profileId int
 AS
@@ -682,3 +682,25 @@ END
 
 
 --------------
+
+
+create 
+ procedure [dbo].[sp_GetGhichuByHosoId_v2] 
+
+@profileId as int,
+
+@profileTypeId int = 1
+
+as 
+
+begin
+
+select  g.HosoId as ProfileId, g.CommentTime ,g.Noidung as Content, g.TypeId as ProfileTypeId
+,g.UserId,  Concat(CONCAT(n.Ma, ' - '),n.Ho_Ten) as Commentator from Ghichu g left join NHAN_VIEN n
+on g.UserId = n.ID where g.HosoId= @profileId and TypeId = @profileTypeId
+
+order by g.CommentTime desc
+
+end
+
+---------------

@@ -40,6 +40,22 @@ function formatCurrency(number) {
     var n2 = n.replace(/\d\d\d(?!$)/g, "$&.");
     return n2.split('').reverse().join('') + '';
 }
+function SetFormatDateTimeDMY(datetime) {
+    try {
+        var valueDate = parseInt(datetime.replace("/Date(", "").replace(")/", ""));
+
+        if (valueDate < 0)
+            return "";
+        else {
+            var dateObj = new Date(valueDate);
+            var dateStr = ('00' + dateObj.getDate()).slice(-2) + "-" + ('00' + (dateObj.getMonth() + 1)).slice(-2) + "-" + dateObj.getFullYear();
+            return dateStr;
+        }
+        return dateStr;
+    } catch (e) {
+        return "";
+    }
+}
 function isNullOrNoItem(arr) {
     if (arr === null || arr === undefined || arr.length === 0)
         return true;

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace VietStar.Entities.Profile
 {
-    public class ProfileAdd
+    public class ProfileEditView
     {
         public int Id { get; set; }
         public string Code { get; set; }

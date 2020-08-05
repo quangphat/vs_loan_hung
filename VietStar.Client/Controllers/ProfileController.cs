@@ -58,7 +58,7 @@ namespace VietStar.Client.Controllers
         {
             var result = await _bizProfile.GetByIdAsync(id);
             
-            return View(result ?? new ProfileAdd());
+            return View(result ?? new ProfileEditView());
         }
     }
 }

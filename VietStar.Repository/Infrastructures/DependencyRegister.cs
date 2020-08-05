@@ -10,6 +10,7 @@ namespace VietStar.Repository.Infrastructures
     {
         public static void RegisterRepository(this IServiceCollection services)
         {
+            services.AddSingleton<INoteRepository, NoteRepository>();
             services.AddSingleton<ICommonRepository, CommonRepository>();
             services.AddSingleton<IPartnerRepository, PartnerRepository>();
             services.AddSingleton<IProductRepository, ProductRepository>();

@@ -1,11 +1,94 @@
 ﻿
-
 function setLocalStorage(key, data) {
     window.localStorage.removeItem(key);
     window.localStorage.setItem(key, JSON.stringify(data));
 }
 function getLocalStorage(key) {
     return JSON.parse(window.localStorage.getItem(key))
+}
+function getComments(profileId, profileType, commentDisplayControl) {
+    if (isNullOrUndefined(profileType) || isNullOrUndefined(profileId))
+        return
+    
+    $.ajax({
+        type: "GET",
+        url: `/comment/${profileId}/${profileType}`,
+        success: function (data) {
+           
+            if (data.data != null && data.success == true) {
+                commentDisplayControl.empty();
+                $.each(data.data, function (index, item) {
+                    appendComment(commentDisplayControl,item.Content,item.Commentator, item.CommentTime)
+                });
+            }
+        },
+        complete: function () {
+
+        },
+        error: function (jqXHR, exception) {
+            //showError(jqXHR, exception);
+        }
+    });
+
+}
+function appendComment(control, content, commenttator, commenttime) {
+    if (isNullOrWhiteSpace(content))
+        return
+    
+    control.append(
+        '<div class="timeline-event-content  active">' +
+        '<div class="timeline-item">' +
+        '<div class="timeline-body">' +
+        '<div class="timeline__message-container">' +
+        '<strong>' + commenttator + ' (' + commenttime + '): </strong><span>' + content + '</span>' +
+        '</div></div></div></div>'
+
+    )
+}
+function AddNote(profileId, profileType, content, commentBox, commentDisplayControl) {
+    if (isNullOrWhiteSpace(profileType) || isNullOrWhiteSpace(content))
+        return
+
+    let data = JSON.stringify({
+        'ProfileId': profileId,
+        'ProfileTypeId': profileType,
+        'Content': content
+    })
+    $.ajax({
+        type: "POST",
+        url: `/comment`,
+        data: data,
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            if (data.success == true) {
+                swal({
+                    title: "",
+                    text: "Thành công",
+                    type: "success",
+                    timer: 4000,
+                    showConfirmButton: true,
+                });
+                commentBox.val('')
+                getComments(profileId, profileType, commentDisplayControl)
+            }
+            else {
+                swal({
+                    title: "",
+                    text: data.error.code,
+                    type: "error",
+                    timer: 4000,
+                    showConfirmButton: true,
+                });
+            }
+        },
+        complete: function () {
+
+        },
+        error: function (jqXHR, exception) {
+            //showError(jqXHR, exception);
+        }
+    });
+
 }
 function renderStatusList(profileType, value = null) {
     if (isNullOrWhiteSpace(profileType))

@@ -21,6 +21,6 @@ namespace VietStar.Business.Interfaces
             , string sortField = "updatedtime"
             , int page = 1, int limit = 20);
         Task<int> CreateAsync(ProfileAdd model);
-        Task<ProfileAdd> GetByIdAsync(int profileId);
+        Task<ProfileEditView> GetByIdAsync(int profileId);
     }
 }

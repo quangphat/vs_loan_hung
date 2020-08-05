@@ -65,5 +65,13 @@ namespace VietStar.Business
             }
             return result.data;
         }
+        protected T ToResponse<T>(T data, string error)
+        {
+            if(!string.IsNullOrWhiteSpace(error))
+            {
+                AddError(error);
+            }
+            return data;
+        }
     }
 }

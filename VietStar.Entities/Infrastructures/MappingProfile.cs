@@ -29,9 +29,10 @@ namespace VietStar.Entities.Infrastructures
                .ForMember(a => a.Ma_Trang_Thai, b => b.MapFrom(c => c.Status))
                .ForMember(a => a.Han_Vay, b => b.MapFrom(c => c.Period))
                .ForMember(a => a.Ghi_Chu, b => b.MapFrom(c => c.Comment))
+               .ForMember(a => a.Ho_So_Cua_Ai, b => b.MapFrom(c => c.SaleId))
                .ForMember(a => a.Courier_Code, b => b.MapFrom(c => c.CourierId));
 
-            CreateMap<ProfileDetail, ProfileAdd>()
+            CreateMap<ProfileDetail, ProfileEditView>()
                .ForMember(a => a.Id, b => b.MapFrom(c => c.ID))
                .ForMember(a => a.Code, b => b.MapFrom(c => c.Ma_Ho_So))
                .ForMember(a => a.CustomerName, b => b.MapFrom(c => c.Ten_Khach_Hang))
@@ -52,7 +53,7 @@ namespace VietStar.Entities.Infrastructures
                .ForMember(a => a.Status, b => b.MapFrom(c => c.Ma_Trang_Thai))
                .ForMember(a => a.Period, b => b.MapFrom(c => c.Han_Vay))
                .ForMember(a => a.Comment, b => b.MapFrom(c => c.Ghi_Chu))
-               //.ForMember(a => a., b => b.MapFrom(c => c.Ghi_Chu))
+               .ForMember(a => a.SaleId, b => b.MapFrom(c => c.Ho_So_Cua_Ai))
                .ForMember(a => a.CourierId, b => b.MapFrom(c => c.Courier_Code));
 
         }

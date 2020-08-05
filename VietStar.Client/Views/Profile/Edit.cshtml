@@ -1,4 +1,4 @@
-﻿@model VietStar.Entities.Profile.ProfileAdd
+﻿@model VietStar.Entities.Profile.ProfileEditView
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -39,7 +39,7 @@
                         </div>
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại nhân viên</label>
                         <div class="col-sm-4">
-                            <input type="text" id="salePhone" value="@Model.SalePhone"  placeholder="Nhập số điện thoại nhân viên" class="form-control">
+                            <input type="text" id="salePhone" value="@Model.SalePhone" placeholder="Nhập số điện thoại nhân viên" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
@@ -78,7 +78,7 @@
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Địa chỉ<span class="required">(*)</span></label>
                         <div class="col-sm-10">
-                            <textarea type="text" id="address" placeholder="Nhập địa chỉ"  class="form-control">@Model.Address</textarea>
+                            <textarea type="text" id="address" placeholder="Nhập địa chỉ" class="form-control">@Model.Address</textarea>
                         </div>
                     </div>
                     <div class="form-group">
@@ -137,11 +137,11 @@
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số tiền đề nghị vay<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <input type="text" id="loanAmount" inputmode="numeric" value="@Model.LoanAmount" placeholder="Nhập số tiền đề nghị vay" class="form-control">
+                            <input type="text" id="loanAmount" inputmode="numeric" value="@Model.LoanAmount.ToString()" placeholder="Nhập số tiền đề nghị vay" class="form-control">
                         </div>
                         <label class="col-sm-2 control-label no-padding-right">Thời hạn vay</label>
                         <div class="col-sm-2">
-                            <input type="number" class="form-control"  id="period" step="3" value="@Model.Period" />
+                            <input type="number" class="form-control" id="period" step="3" value="@Model.Period" />
                         </div>
                     </div>
                 </form>
@@ -168,9 +168,24 @@
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
                         <div class="col-md-11 col-sm-12 col-xs-12">
                             <textarea class="form-control" id="comment" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
+                            <div class="pull-right mt-10">
+                                <a class="btn btn-sm btn-info" id="btnAddNote">
+                                    Thêm ghi chú
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-8 activity-log">
+                            <div class="timline-addNote only-new-note">
+                                <div class="timeline-date-event timline-date-event--margin mt-0" id="comments">
+
+
+                                </div>
+                            </div>
                         </div>
                     </div>
-
                 </form>
             </div>
 
@@ -214,7 +229,7 @@
         GetSales();
         GetCouriers();
         GetProvinces(null, '@Model.ProvinceId','@Model.DistrictId');
-        
+        getComments('@Model.Id', '@((int)VietStar.Entities.Commons.Enums.NoteType.Common)', $('#comments'))
         $("#receiveDate").val(FormatDateTimeDMY('@Model.ReceiveDate.Value.ToString("yyyy-MM-dd")', 'YYYY-MM-DD'))
         //$("#receiveDate").val('2020-08-06')
         $("#birthDay").val(FormatDateTimeDMY('@Model.BirthDay.Value.ToString("yyyy-MM-dd")', 'YYYY-MM-DD'))
@@ -226,12 +241,16 @@
             GetDistricts(this.value);
         });
         $('#saleId').on('change', function () {
-             $('#staffName').val($('option:selected', this).attr('ten'));
+            $('#staffName').val($('option:selected', this).attr('ten'));
         });
+        $('#saleId').val('@Model.SaleId').trigger('change')
+        $('#courierId').val('@Model.CourierId').trigger('change')
     });
 
 
-
+    $("#btnAddNote").click(function () {
+        AddNote('@Model.Id', '@((int)VietStar.Entities.Commons.Enums.NoteType.Common)', $('#comment').val(), $('#comment'), $('#comments'))
+    })
     function GetProfileFiles() {
         $.ajax({
             type: "GET",

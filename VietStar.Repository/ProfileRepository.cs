@@ -34,25 +34,33 @@ namespace VietStar.Repository
         
         {
             ProcessInputPaging(page, ref limit, out offset);
-            using (var con = GetConnection())
+            try
             {
-                var result = await con.QueryAsync<ProfileIndexModel>("sp_Profile_Search", new
+                using (var con = GetConnection())
                 {
-                    userId,
-                    groupId,
-                    memberId,
-                    fromDate,
-                    toDate,
-                    dateType,
-                    status,
-                    freeText,
-                    sort,
-                    sortField,
-                    offset,
-                    limit
-                },commandType:CommandType.StoredProcedure);
-                return result.ToList();
+                    var result = await con.QueryAsync<ProfileIndexModel>("sp_Profile_Search", new
+                    {
+                        userId,
+                        groupId,
+                        memberId,
+                        fromDate,
+                        toDate,
+                        dateType,
+                        status,
+                        freeText,
+                        sort,
+                        sortField,
+                        offset,
+                        limit
+                    }, commandType: CommandType.StoredProcedure);
+                    return result.ToList();
+                }
             }
+            catch(Exception e)
+            {
+                return null;
+            }
+           
         }
         public async Task<RepoResponse<int>> CreateAsync(ProfileAddSql model, int createdBy)
         {

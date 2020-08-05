@@ -12,6 +12,7 @@ using VietStar.Entities.Profile;
 using VietStar.Entities.ViewModels;
 using VietStar.Repository.Interfaces;
 using VietStar.Utility;
+using Microsoft.Extensions.DependencyInjection;
 using static VietStar.Entities.Commons.Enums;
 
 namespace VietStar.Business
@@ -19,10 +20,13 @@ namespace VietStar.Business
     public class ProfileBusiness : BaseBusiness, IProfileBusiness
     {
         protected readonly IProfileRepository _rpProfile;
+        protected readonly IServiceProvider _svProvider;
         public ProfileBusiness(IProfileRepository profileRepository,
-            IMapper mapper, CurrentProcess process) : base(mapper, process)
+           IServiceProvider svProvider,
+        IMapper mapper, CurrentProcess process) : base(mapper, process)
         {
             _rpProfile = profileRepository;
+            _svProvider = svProvider;
         }
 
         public async Task<int> CreateAsync(ProfileAdd model)
@@ -101,8 +105,22 @@ namespace VietStar.Business
                 return 0;  
             }
             model.Status = (int)ProfileStatus.Draft;
+            if(model.SaleId <=0)
+            {
+                model.SaleId = _process.User.Id;
+            }
             var sqlmodel = _mapper.Map<ProfileAddSql>(model);
             var result = await _rpProfile.CreateAsync(sqlmodel, _process.User.Id);
+            if(result.data>0 && !string.IsNullOrWhiteSpace(model.Comment))
+            {
+                var bzNot = _svProvider.GetService<INoteBusiness>();
+                await bzNot.AddNoteAsync(new Entities.Note.NoteAddRequest
+                {
+                    Content = model.Comment,
+                    ProfileId = result.data,
+                    ProfileTypeId = (int)NoteType.Common
+                });
+            }
             return ToResponse(result);
         }
 
@@ -128,11 +146,11 @@ namespace VietStar.Business
             return DataPaging.Create(result, result[0].TotalRecord);
             
         }
-       public async Task<ProfileAdd> GetByIdAsync(int profileId)
+       public async Task<ProfileEditView> GetByIdAsync(int profileId)
         {
             var data = await _rpProfile.GetByIdAsync(profileId);
-            var profile = ToResponse<ProfileDetail>(data);
-            var result = _mapper.Map<ProfileAdd>(profile);
+            var profile = ToResponse(data);
+            var result = _mapper.Map<ProfileEditView>(profile);
             return result;
         }
     }

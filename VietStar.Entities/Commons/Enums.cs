@@ -30,5 +30,13 @@ namespace VietStar.Entities.Commons
             Company = 4,
             RevokeDebt = 5
         }
+        public enum NoteType
+        {
+            Common = 1,
+            HosoCourrier = 2,
+            Company = 3,
+            MCreditTemp = 4,
+            RevokeDebt = 5
+        }
     }
 }

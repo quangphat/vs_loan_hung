@@ -374,7 +374,7 @@
             "Gender": $('#gender').val(),
             "DistrictId": parseInt($("#districtId").val()),
             "Address": $("#address").val(),
-            "CourierId": parseInt($("#courierId").val()),
+            "CourierId": isNullOrWhiteSpace($("#courierId").val() || isNullOrUndefined($("#courierId").val())) ? 0: parseInt($("#courierId").val()),
             "IsInsurrance": $('#isInsurrance').is(":checked"), 'thoiHanVay': $('#spnThoiHanVay').val(),
             "Period": parseInt($("#period").val()),
             "LoanAmount": getDecimalValueFromMoneyInput($("#loanAmount").val()),
@@ -382,6 +382,7 @@
             "Comment": $("#comment").val(),
             "BirthDay": $("#birthDay").val(),
             "CmndDay": $("#cmndDay").val(),
+            "SaleId": isNullOrWhiteSpace($("#saleId").val() || isNullOrUndefined($("#saleId").val())) ? 0: parseInt($("#saleId").val()),
             "PartnerId": parseInt($("#partnerId").val()),
             "ProductId": parseInt($("#productId").val())
         });
