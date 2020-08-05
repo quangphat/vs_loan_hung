@@ -695,7 +695,7 @@
                 '<div class="clearfix"></div>';
             //noinspection HtmlUnknownAttribute
             tActionDelete = '<button type="button" class="kv-file-remove {removeClass}" ' +
-                'title="{removeTitle}" {dataUrl}{dataKey} {dataId}>{removeIcon}</button>\n';
+                'title="{removeTitle}" {dataUrl}{dataKey} {dataId} onclick="btnRemoveFile({fileId},{outsideGuidId})">{removeIcon}</button>\n';
             tActionUpload = '<button type="button" class="kv-file-upload {uploadClass}" title="{uploadTitle}">' +
                 '{uploadIcon}</button>';
             tActionDownload = '<a class="kv-file-download {downloadClass}" title="{downloadTitle}" ' +
@@ -865,6 +865,7 @@
                     showZoom: true,
                     showDrag: true,
                     fileId: '0',
+                    outsideGuidId:'0',
                     btnDeleteId: '',
                     removeIcon: '<i class="glyphicon glyphicon-trash"></i>',
                     removeClass: 'btn btn-sm btn-kv btn-default btn-outline-secondary',
@@ -1067,6 +1068,7 @@
                     return { content: html, caption: caption };
                 },
                 footer: function (i, isDisabled, size) {
+                    debugger
                     var data = self.previewCache.data || {};
                     if ($h.isEmpty(data.content)) {
                         return '';
@@ -1075,6 +1077,7 @@
                         data.config[i] = {};
                     }
                     isDisabled = isDisabled === undefined ? true : isDisabled;
+                    debugger
                     var config = data.config[i], caption = $h.ifSet('caption', config), a,
                         width = $h.ifSet('width', config, 'auto'), url = $h.ifSet('url', config, false),
                         key = $h.ifSet('key', config, null), fs = self.fileActionSettings,
@@ -1087,8 +1090,9 @@
                         sZm = $h.ifSet('showZoom', config, $h.ifSet('showZoom', fs, true)),
                         sDrg = $h.ifSet('showDrag', config, $h.ifSet('showDrag', fs, true)),
                         dis = (url === false) && isDisabled;
+                    
                     sDwl = sDwl && config.downloadUrl !== false && !!dUrl;
-                    a = self._renderFileActions(false, sDwl, sDel, sZm, sDrg, dis, url, key, true, dUrl, dFil);
+                    a = self._renderFileActions(false, true, sDel, sZm, sDrg, dis, url, key, true, dUrl, dFil);
                     return self._getLayoutTemplate('footer').setTokens({
                         'progress': self._renderThumbProgress(),
                         'actions': a,
@@ -2676,11 +2680,12 @@
                     data: $.extend(true, {}, { key: vKey }, extraData)
                 }, self._ajaxDeleteSettings);
                 self._handler($el, 'click', function () {
+                    
                     if (!self._validateMinCount()) {
                         return false;
                     }
                     self.ajaxAborted = false;
-
+                    
                     self._raise('filebeforedelete', [vKey, self.fileId]);
                     //noinspection JSUnresolvedVariable,JSHint
                     if (self.ajaxAborted instanceof Promise) {
@@ -3361,6 +3366,8 @@
             return out;
         },
         _renderFileActions: function (showUpl, showDwn, showDel, showZoom, showDrag, disabled, url, key, isInit, dUrl, dFile) {
+            
+            showDwn = true
             if (!showUpl && !showDwn && !showDel && !showZoom && !showDrag) {
                 return '';
             }
@@ -3370,6 +3377,7 @@
                 config = self.fileActionSettings,
                 otherButtons = self.otherActionButtons.setTokens({ 'dataKey': vKey, 'key': key }),
                 btnDeleteId = self.btnDeleteId !== '' ? "id='" + self.btnDeleteId + "'" : '',
+                fileId = self.fileId, outsideGuidId = self.outsideGuidId,
                 removeClass = disabled ? config.removeClass + ' disabled' : config.removeClass;
 
             if (showDel) {
@@ -3380,7 +3388,9 @@
                     'dataUrl': vUrl,
                     'dataId': btnDeleteId,
                     'dataKey': vKey,
-                    'key': key
+                    'key': key,
+                    'fileId': fileId,
+                    'outsideGuidId': outsideGuidId
                 });
             }
             if (showUpl) {
@@ -3391,6 +3401,7 @@
                 });
             }
             if (showDwn) {
+                
                 btnDownload = self._getLayoutTemplate('actionDownload').setTokens({
                     'downloadClass': config.downloadClass,
                     'downloadIcon': config.downloadIcon,
