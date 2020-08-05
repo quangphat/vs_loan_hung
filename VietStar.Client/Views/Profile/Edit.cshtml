@@ -247,7 +247,6 @@
         $('#courierId').val('@Model.CourierId').trigger('change')
     });
 
-
     $("#btnAddNote").click(function () {
         AddNote('@Model.Id', '@((int)VietStar.Entities.Commons.Enums.NoteType.Common)', $('#comment').val(), $('#comment'), $('#comments'))
     })
@@ -263,6 +262,14 @@
                     let keys = [];
                     let groupName = '';
                     $.each(data.data, function (index, item) {
+                        let _initialPreview = [];
+                        let _initialPreviewConfig = [];
+                        _initialPreviewConfig.push({
+                            caption: "",
+                            url: "/media/delete/0/0",
+                            type: "jpg",
+                            width: "120px"
+                        });
                         $("#lstTailieu").append(`<div class='form-group'><div class='col-sm-12' id='tailieu-${item.Id}'><h5>${groupName}</h5></div></div > `);
                         let name = '',
                             className = ''
@@ -272,9 +279,16 @@
                         else {
                             className = ''
                         }
-
-                        renderOneItemFile(item.FileKey, 0, name, item.IsRequire, className, true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
-                        keys.push(item.ID);
+                        renderOneItemFile({
+                            key: item.FileKey,
+                            type: '@((int)VietStar.Entities.Commons.Enums.ProfileType.Common)',
+                            profileId: '@Model.Id',
+                            fileId:0,
+                            isRequire: item.IsRequire,
+                            titleName: name
+                        }, className, _initialPreview, _initialPreviewConfig, true, true);
+                        //renderOneItemFile(item.FileKey, 0, name, item.IsRequire, className, true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
+                        keys.push(item.FileKey);
                     })
                 }
 
@@ -286,53 +300,6 @@
             }
         });
     }
-    let filesUpload = [];
-    function onDeleteFile(key, fileId, isExist) {
-        removeFile(key, fileId);
-    }
-    function onUploadFile(key, fileId, data, isExist) {
-
-        if (isReach5Files(filesUpload, key))
-            return;
-        let response = data;
-        if (isNullOrNoItem(filesUpload)) {
-            filesUpload = []
-        }
-        let file = {
-            Key: parseInt(response.initialPreviewConfig[0].key),
-            FileName: response.initialPreviewConfig[0].caption,
-            FileUrl: response.initialPreview,
-            KeyName: "",
-            Id: fileId
-        }
-        let existKeyIndex = filesUpload.findIndex(p => p.key == key)
-        if (existKeyIndex < 0) {
-            filesUpload.push({ key: parseInt(key), files: [file] })
-        }
-        else {
-            if (filesUpload[existKeyIndex].files == null)
-                filesUpload[existKeyIndex].files = []
-            filesUpload[existKeyIndex].files.push(file);
-        }
-        if (isReach5Files(filesUpload, key) === false) {
-            let newAttachhFileId = getNewGuid();
-            renderOneItemFile(key, newAttachhFileId, '', false, '', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
-        }
-    }
-    function removeFile(key, fileId) {
-        if (isNullOrNoItem(filesUpload))
-            return;
-        let index = filesUpload.findIndex(p => p.key == key);
-        if (index >= 0) {
-            if (!isNullOrNoItem(filesUpload[index].files)) {
-                let indexOfFile = filesUpload[index].files.findIndex(p => p.Id == fileId);
-                if (indexOfFile >= 0)
-                    filesUpload[index].files.splice(indexOfFile, 1);
-            }
-        }
-    }
-
-
 
     $('#btn_Next').click(function (e) {
 

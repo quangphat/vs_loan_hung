@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using VietStar.Entities;
 using VietStar.Entities.FileProfile;
 using VietStar.Entities.ViewModels;
 using VietStar.Repository.Interfaces;
@@ -28,6 +29,62 @@ namespace VietStar.Repository
                 return result.ToList();
             }
         }
+        public async Task<RepoResponse<int>> Add(ProfileFileAddSql model)
+        {
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    var p = AddOutputParam("Id");
+                    p.Add("FileKey", model.FileKey);
+                    p.Add("FilePath", model.FilePath);
+                    p.Add("Folder", model.Folder);
+                    p.Add("FileName", model.FileName);
+                    p.Add("ProfileId", model.ProfileId);
+                    p.Add("ProfileTypeId", model.ProfileTypeId);
+                    p.Add("GuidId", model.ProfileTypeId);
+                    p.Add("FileId", model.FileId);
+                    await con.ExecuteAsync("sp_TAI_LIEU_HS_Them_v2", p,
+                        commandType: CommandType.StoredProcedure);
+                    var id = p.Get<int>("Id");
+                    return RepoResponse<int>.Create(id);
+                }
+            }
+            catch(Exception e)
+            {
+                return RepoResponse<int>.Create(0, GetException(e));
+            }
+            
+
+        }
+
+        public async Task<bool> DeleteByIdAsync(int fileId, string guidId)
+        {
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    await con.ExecuteAsync("sp_ProfileFileDeleteById", new { fileId, guidId }, commandType: CommandType.StoredProcedure);
+                    return true;
+                }
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+           
+        }
+        //public async Task<bool> UpdateExistingFile(FileUploadModel model, int fileId)
+        //{
+        //    var p = GetParams(model, ignoreKey: new string[] { nameof(model.FileKey), nameof(model.ProfileId) });
+        //    p.Add("fileId", fileId);
+        //    using (var con = GetConnection())
+        //    {
+        //        var result = await con.ExecuteAsync("updateExistingFile", p,
+        //            commandType: CommandType.StoredProcedure);
+        //        return true;
+        //    }
+        //}
     }
 }
 

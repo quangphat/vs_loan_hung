@@ -9,16 +9,16 @@ function getLocalStorage(key) {
 function getComments(profileId, profileType, commentDisplayControl) {
     if (isNullOrUndefined(profileType) || isNullOrUndefined(profileId))
         return
-    
+
     $.ajax({
         type: "GET",
         url: `/comment/${profileId}/${profileType}`,
         success: function (data) {
-           
+
             if (data.data != null && data.success == true) {
                 commentDisplayControl.empty();
                 $.each(data.data, function (index, item) {
-                    appendComment(commentDisplayControl,item.Content,item.Commentator, item.CommentTime)
+                    appendComment(commentDisplayControl, item.Content, item.Commentator, item.CommentTime)
                 });
             }
         },
@@ -34,7 +34,7 @@ function getComments(profileId, profileType, commentDisplayControl) {
 function appendComment(control, content, commenttator, commenttime) {
     if (isNullOrWhiteSpace(content))
         return
-    
+
     control.append(
         '<div class="timeline-event-content  active">' +
         '<div class="timeline-item">' +
@@ -122,11 +122,11 @@ function renderStatusList(profileType, value = null) {
                     //let backToArray = [...uniqueSet]
                     $("#ddlStatus").val(value);
                 }
-                   
+
             }
         },
         complete: function () {
-            
+
         },
         error: function (jqXHR, exception) {
             //showError(jqXHR, exception);
@@ -238,7 +238,7 @@ function GetCouriers(control = null, defaultValue = 0) {
         }
     });
 }
-function GetPartners(control = null, defaultValue = 0, productId =0) {
+function GetPartners(control = null, defaultValue = 0, productId = 0) {
     if (control == null)
         control = $("#partnerId");
     control.empty();
@@ -308,7 +308,7 @@ function GetProducts(partnerId, control = null, defaultValue = 0) {
         }
     });
 }
-function GetProvinces(control = null, defaultValue = 0, districId =0) {
+function GetProvinces(control = null, defaultValue = 0, districId = 0) {
     if (control == null)
         control = $("#provinceId");
     control.append("<option value='0'>Chọn tỉnh/thành</option>");
@@ -329,7 +329,7 @@ function GetProvinces(control = null, defaultValue = 0, districId =0) {
         url: '/common/provinces',
         data: {},
         success: function (data) {
-            
+
             if (data.data != null && data.success == true) {
                 window.localStorage.setItem('provinces', JSON.stringify(data.data))
                 $.each(data.data, function (index, item) {
@@ -350,7 +350,7 @@ function GetProvinces(control = null, defaultValue = 0, districId =0) {
         }
     });
 }
-function GetDistricts(provinceId,control = null, defaultValue = 0) {
+function GetDistricts(provinceId, control = null, defaultValue = 0) {
     if (control == null)
         control = $("#districtId");
     control.empty();
@@ -394,9 +394,9 @@ function GetGroupByUser(control = null, defaultValue = 0) {
                 });
                 if (defaultValue != null) {
                     control.val(defaultValue);
-                   // GetMemberByGroup(defaultValue, null,)
+                    // GetMemberByGroup(defaultValue, null,)
                 }
-                
+
             }
         },
         complete: function () {
@@ -421,16 +421,16 @@ function GetMemberByGroup(groupId, control = null, defaultValue = 0) {
             control.append("<option value='0'>Chọn thành viên</option>");
             if (data.data != null && data.success == true) {
                 $.each(data.data, function (index, item) {
-                    
+
                     control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
                 if (defaultValue != null) {
                     control.val(defaultValue);
                 }
-                
+
                 //control.chosen().trigger("chosen:updated").change();
             }
-           
+
         },
         complete: function () {
         },
@@ -440,14 +440,14 @@ function GetMemberByGroup(groupId, control = null, defaultValue = 0) {
     });
 }
 function renderStatusDisplay(statusName) {
-    
+
     if (isNullOrWhiteSpace(statusName))
         return "<td class='text-left'></td>";
     let firstChar = statusName[0].toLowerCase();
-    let greenGroup = ['a','b','c','d','đ'];
-    let danger = ['e','f','g','t'];
-    let succsess = ['i','k','m'];
-    let cancel = ['o','p','q'];
+    let greenGroup = ['a', 'b', 'c', 'd', 'đ'];
+    let danger = ['e', 'f', 'g', 't'];
+    let succsess = ['i', 'k', 'm'];
+    let cancel = ['o', 'p', 'q'];
     let inverse = ['j', 'z', 'w'];
     let colorClass = 'label-temp'
     if (greenGroup.indexOf(firstChar) >= 0)
@@ -464,94 +464,99 @@ function renderStatusDisplay(statusName) {
     var statusString = `<span class='label label-sm ${colorClass} arrowed arrowed-righ'>${statusName}</span>`;
     return "<td class='text-left'>" + statusString + "</td>";
 }
-function renderOneItemFile(key, fileId, titleName, isRequire = false, className = '', generateInput = false,
+function renderOneItemFile(model, className = '',
     _initialPreview = [],
     _initialPreviewConfig = [],
-    allowUpload = false,
-    isFileExist = false,
-    onUpload = null,
-    onDelete = null,
-    filesUploaded = [],
-    type = 1
+    allowUpload = true,
+    continueUpload = true
 ) {
-    let header =''
-    if (!isNullOrUndefined(titleName)) {
-        if (isRequire) {
-            header = '<h5  class="header green ' + className + '">' + titleName + '<span class="required">(*)</span></h5>';
+
+    let header = ''
+    if (!isNullOrUndefined(model.titleName)) {
+        if (model.isRequire) {
+            header = '<h5  class="header green ' + className + '">' + model.titleName + '<span class="required">(*)</span></h5>';
         }
         else {
-            header = '<h5  class="header green ' + className + '">' + titleName + '<span > </span></h5>';
+            header = '<h5  class="header green ' + className + '">' + model.titleName + '<span > </span></h5>';
         }
-    } 
+    }
+    let guidId = getNewGuid();
     let content = header + "<div class='col-sm-3'> ";
     content += "<div class=\"file-loading\">";
-    content += "<input class='attachFile' key=" + key + " id=\"attachFile-" + fileId + "\" type=\"file\">";
+    content += "<input class='attachFile' key=" + model.key + " id=\"attachFile-" + guidId + "\" type=\"file\">";
     content += "</div>";
     content += "</div>";
-    $('#tailieu-' + key).append(content);
-    if (generateInput === true) {
-        let item = $("#attachFile-" + fileId);
+    $('#tailieu-' + model.key).append(content);
+    let item = $("#attachFile-" + guidId);
 
-        fileId = (isFileExist === true) ? fileId : getNewGuid();
-        let uploadUrl = isFileExist === true ? `/Common/UploadFile/${key}/${type}/${fileId}` : `/Common/UploadFile/${key}/${0}/${type}`;
-        $(item).fileinput({
-            uploadUrl: allowUpload === true ? uploadUrl : null,
-            validateInitialCount: true,
-            maxFileSize: 25 * 1024,
-            msgSizeTooLarge: 'File "{name}" (<b>{size} KB</b>)'
-                + 'exceeds maximum allowed upload size of <b>{25} MB</b>. '
-                + 'Please retry your upload!',
-            allowedFileExtensions: ['png', 'jpg', 'pdf'],
-            initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
-            initialPreviewFileType: 'image',
-            overwriteInitial: false,
-            showUploadedThumbs: false,
-            uploadAsync: false,
-            showClose: false,
-            showCaption: false,
-            showBrowse: false,
-            showUpload: false, // hide upload button
-            showRemove: false, // hide remove button
-            browseOnZoneClick: true,
-            removeLabel: '',
-            fileId: fileId,
-            btnDeleteId: 'btn-remove-file-' + fileId,
-            dropZoneTitle: 'Kéo và thả tập tin vào đây',
-            dropZoneClickTitle: '<br>(hoặc nhấp để chọn)',
-            removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
-            removeTitle: 'Cancel or reset changes',
-            elErrorContainer: '#kv-avatar-errors-2',
-            msgErrorClass: 'alert alert-block alert-danger',
-            //layoutTemplates: { main2: '{preview} ' + btnCust + ' {remove} {browse}' },
-            //layoutTemplates: { footer: '' },
-            initialPreview: _initialPreview,
-            initialPreviewDownloadUrl: _initialPreview,
-            initialPreviewConfig: _initialPreviewConfig,
-            fileActionSettings: {
-                showDownload: true,
-                showRemove: true,
-                showUpload: true,
-                showZoom: true,
-                showDrag: false
-            },
-            append: true
 
-        }).on("filebatchselected", function (event, files) {
-            if (countFilesByKey(filesUploaded, parseInt(key)) >= 50)
-                return;
-            $(item).fileinput("upload");
-        }).on("filebeforedelete", function (event, key2, fileId) {
+    let uploadUrl = `/media/UploadFile/${model.key}/${model.type}/${model.profileId}/${model.fileId}/${guidId}`;
+    $(item).fileinput({
+        uploadUrl: allowUpload === true ? uploadUrl : null,
+        validateInitialCount: true,
+        maxFileSize: 25 * 1024,
+        msgSizeTooLarge: 'File "{name}" (<b>{size} KB</b>)'
+            + 'exceeds maximum allowed upload size of <b>{25} MB</b>. '
+            + 'Please retry your upload!',
+        allowedFileExtensions: ['png', 'jpg', 'pdf'],
+        initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+        initialPreviewFileType: 'image',
+        overwriteInitial: false,
+        showUploadedThumbs: false,
+        uploadAsync: false,
+        showClose: false,
+        showCaption: false,
+        showBrowse: false,
+        showUpload: false, // hide upload button
+        showRemove: false, // hide remove button
+        browseOnZoneClick: true,
+        removeLabel: '',
+        fileId: guidId,
+        btnDeleteId: 'btn-remove-file-' + guidId,
+        dropZoneTitle: 'Kéo và thả tập tin vào đây',
+        dropZoneClickTitle: '<br>(hoặc nhấp để chọn)',
+        removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+        removeTitle: 'Cancel or reset changes',
+        elErrorContainer: '#kv-avatar-errors-2',
+        msgErrorClass: 'alert alert-block alert-danger',
+        //layoutTemplates: { main2: '{preview} ' + btnCust + ' {remove} {browse}' },
+        //layoutTemplates: { footer: '' },
+        initialPreview: _initialPreview,
+        initialPreviewDownloadUrl: _initialPreview,
+        initialPreviewConfig: _initialPreviewConfig,
+        fileActionSettings: {
+            showDownload: true,
+            showRemove: true,
+            showUpload: true,
+            showZoom: true,
+            showDrag: false
+        },
+        append: true
 
-            if (onDelete !== null) {
-                onDelete(key, fileId, isFileExist);
-            }
-        }).on('filebatchuploadsuccess', function (event, data) {
-            if (onUpload !== null) {
-                onUpload(key, fileId, data.response, isFileExist);
-            }
-        });
+    }).on("filebatchselected", function (event, files) {
 
-    }
+        //if (countFilesByKey(filesUploaded, parseInt(model.key)) >= 50)
+        //    return;
+        $(item).fileinput("upload");
+    }).on("filebeforedelete", function (event, key2, fileId) {
+
+        if (onDelete !== null) {
+            onDelete(key, fileId, isFileExist);
+        }
+    }).on('filebatchuploadsuccess', function (event, data) {
+        
+        if (continueUpload === true) {
+            model.titleName = ''
+            renderOneItemFile(model, '', data.response.initialPreview, data.response.initialPreviewConfig, true, continueUpload);
+        }
+    });
+    $("#attachFile-" + guidId).on("filebeforedelete", function (event, key, data) {
+        debugger
+    })
+    $("#attachFile-" + guidId).on('filedeleted', function (event, key, jqXHR, data) {
+        console.log('Key = ' + key);
+    });
+
 
 }
 function isReach5Files(filesUpload, key) {

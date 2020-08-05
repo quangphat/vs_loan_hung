@@ -18,6 +18,6 @@ namespace VietStar.Business.Interfaces
         Task<List<OptionSimple>> GetDistrictsAsync(int provinceId);
         Task<List<OptionSimple>> GetStatusList(string profileType);
         Task<List<FileProfileType>> GetProfileFileTypeByType(string profileType);
-        Task<object> UploadFile(IFormFile file, int key, int fileId, int type, string rootPath);
+        
     }
 }

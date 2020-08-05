@@ -94,73 +94,7 @@ namespace VietStar.Business
             var result = await _rpFile.GetByType(type);
             return result;
         }
-        public async Task<object> UploadFile(IFormFile file, int key, int fileId, int type, string rootPath)
-        {
-            if (file == null)
-                return null;
-            string fileUrl = "";
-            var _type = string.Empty;
-            string deleteURL = string.Empty;
-            //string root = Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}");
-            IMediaBusiness bizMedia = _svProvider.GetService<IMediaBusiness>();
-            var result = new FileModel();
-            try
-            {
 
-                if (!BusinessExtensions.IsNotValidFileSize(file.Length))
-                {
-                    using (Stream stream = new MemoryStream())
-                    {
-                        await file.CopyToAsync(stream);
-                        result = await bizMedia.UploadAsync(stream, key.ToString(), file.FileName, rootPath);
-                    }
-                    deleteURL = fileId <= 0 ? $"/hoso/delete?key={key}" : $"/hoso/delete/0/{fileId}";
-                }
-
-
-                if (_type.IndexOf("pdf") > 0)
-                {
-                    var config = new
-                    {
-                        initialPreview = fileUrl,
-                        initialPreviewConfig = new[] {
-                                            new {
-                                                caption = result.Name,
-                                                url = deleteURL,
-                                                key =key,
-                                                type="pdf",
-                                                width ="120px"
-                                                }
-                                        },
-                        append = false
-                    };
-                    return config;
-                }
-                else
-                {
-                    var config = new
-                    {
-                        initialPreview = fileUrl,
-                        initialPreviewConfig = new[] {
-                                            new {
-                                                caption = result.Name,
-                                                url = deleteURL,
-                                                key =key,
-                                                width ="120px"
-                                            }
-                                        },
-                        append = false
-                    };
-                    return config;
-                }
-
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
-           ;
-        }
 
         public async Task<List<OptionSimple>> GetProductsAsync(int partnerId)
         {

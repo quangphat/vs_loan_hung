@@ -14,7 +14,7 @@ namespace VietStar.Client.Controllers
     {
         protected readonly ICommonBusiness _bizCommon;
         protected readonly IHostingEnvironment _hosting;
-        public CommonController(CurrentProcess process, ICommonBusiness commonBusiness,IHostingEnvironment hosting) : base(process)
+        public CommonController(CurrentProcess process, ICommonBusiness commonBusiness, IHostingEnvironment hosting) : base(process)
         {
             _bizCommon = commonBusiness;
             _hosting = hosting;
@@ -31,13 +31,7 @@ namespace VietStar.Client.Controllers
             var result = await _bizCommon.GetProfileFileTypeByType(profileType);
             return ToResponse(result);
         }
-        [HttpPost("UploadFile/{key}/{fileType}/{fileId}")]
-        public async Task<IActionResult> Upload(int key, int fileType,int fileId = 0)
-        {
-            var file = Request.Form.Files.FirstOrDefault();
-            var result = await _bizCommon.UploadFile(file,key,fileId,fileType,_hosting.ContentRootPath);
-            return Json(result);
-        }
+        
         [HttpGet("partners")]
         public async Task<IActionResult> GetPartners()
         {

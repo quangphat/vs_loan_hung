@@ -704,3 +704,68 @@ order by g.CommentTime desc
 end
 
 ---------------
+
+alter table Tai_lieu_HS
+add GuidId varchar(50)
+
+------------
+
+alter PROCEDURE [dbo].[sp_TAI_LIEU_HS_Them_v2]
+(@Id int out,
+@FileKey int,
+@FileName nvarchar(200),
+@FilePath nvarchar(max),
+@ProfileId int,
+@Deleted bit = 0,
+@ProfileTypeId int,
+@DocumentName nvarchar(500) = null,
+@DocumentCode varchar(400) =null,
+@MC_DocumentId int = 0,
+@MC_MapBpmVar varchar(400) = null,
+@MC_GroupId int  = 0,
+@OrderId int= 0,
+@Folder nvarchar(max) = null,
+@MCId varchar(20) = null,
+@GuidId varchar(50) = null,
+@FileId int =0
+) 
+AS
+BEGIN
+select top 1 @Id = isnull(Id,0) from TAI_LIEU_HS where GuidId = @GuidId or ID = @FileId
+if (@Id > 0)
+begin
+	update TAI_LIEU_HS set
+	[FileName] = @FileName,
+	FilePath = @FilePath,
+	Folder = @Folder,
+	MCId = @MCId,
+	DocumentName = @DocumentName,
+	DocumentCode = @DocumentCode,
+	MC_DocumentId = @MC_DocumentId,
+	MC_MapBpmVar = @MC_MapBpmVar,
+	MC_GroupId = @MC_GroupId
+	where ID = @Id
+end
+begin
+	Insert into TAI_LIEU_HS 
+	(FileKey,FileName,FilePath,ProfileId
+	,Deleted,ProfileTypeId,DocumentName
+	,DocumentCode,MC_DocumentId,MC_MapBpmVar,MC_GroupId, OrderId,Folder, MCId, GuidId)
+	values(@FileKey,@FileName,@FilePath
+	,@ProfileId,@Deleted,@ProfileTypeId
+	,@DocumentName,@DocumentCode,@MC_DocumentId
+	,@MC_MapBpmVar,@MC_GroupId,@OrderId,@Folder, @MCId, @GuidId)
+	SET @Id=@@IDENTITY
+end
+END
+
+---------------
+
+
+create procedure sp_ProfileFileDeleteById(@fileId int, @guidId varchar(50))
+as
+begin
+update TAI_LIEU_HS set Deleted = 1 where Id = @fileId or GuidId = @guidId;
+end
+
+-----------
