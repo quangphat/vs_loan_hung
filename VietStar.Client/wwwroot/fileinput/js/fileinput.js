@@ -1068,7 +1068,7 @@
                     return { content: html, caption: caption };
                 },
                 footer: function (i, isDisabled, size) {
-                    debugger
+                    
                     var data = self.previewCache.data || {};
                     if ($h.isEmpty(data.content)) {
                         return '';
@@ -1077,7 +1077,7 @@
                         data.config[i] = {};
                     }
                     isDisabled = isDisabled === undefined ? true : isDisabled;
-                    debugger
+                    
                     var config = data.config[i], caption = $h.ifSet('caption', config), a,
                         width = $h.ifSet('width', config, 'auto'), url = $h.ifSet('url', config, false),
                         key = $h.ifSet('key', config, null), fs = self.fileActionSettings,

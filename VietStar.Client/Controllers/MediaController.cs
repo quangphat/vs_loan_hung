@@ -23,21 +23,21 @@ namespace VietStar.Client.Controllers
             _bizMedia = mediaBusiness;
             _hosting = hosting;
         }
-        [HttpGet("GetFileType/{profileType}")]
-        public async Task<IActionResult> GetFileType(string profileType)
+        [HttpGet("GetFileType/{profileType}/{profileId}")]
+        public async Task<IActionResult> GetFileType(string profileType, int profileId = 0)
         {
-            var result = await _bizMedia.GetProfileFileTypeByType(profileType);
+            var result = await _bizMedia.GetProfileFileTypeByTypeAsync(profileType, profileId, _hosting.ContentRootPath);
             return ToResponse(result);
         }
         [HttpPost("UploadFile/{key}/{fileType}/{profileId}/{fileId}/{guidId}")]
         public async Task<IActionResult> Upload(int key, int fileType, int profileId,int fileId, string guidId)
         {
             var file = Request.Form.Files.FirstOrDefault();
-            var result = await _bizMedia.UploadFileAsync(file, fileId , key, guidId, profileId, fileType, _hosting.ContentRootPath);
+            var result = await _bizMedia.UploadFileAsync(file, key:key,fileId:fileId ,guildId: guidId,profileId: profileId,type: fileType,rootPath: _hosting.ContentRootPath);
             return Json(result);
         }
-        [HttpDelete("delete/{fileId}/{guidId}")]
-        public async Task<IActionResult> Upload(int fileId, string guidId)
+        [HttpPost("delete/{fileId}/{guidId}")]
+        public async Task<IActionResult> Delete(int fileId, string guidId)
         {
             
             var result = await _bizMedia.DeleteByIdAsync(fileId, guidId);

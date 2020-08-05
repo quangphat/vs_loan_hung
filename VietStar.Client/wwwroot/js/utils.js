@@ -257,3 +257,17 @@ function getNewGuid() {
     };
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
+function isExtension(ext, extnArray) {
+    var result = false;
+    var i;
+    if (ext) {
+        ext = ext.toLowerCase();
+        for (i = 0; i < extnArray.length; i++) {
+            if (extnArray[i].toLowerCase() === ext) {
+                result = true;
+                break;
+            }
+        }
+    }
+    return result;
+}

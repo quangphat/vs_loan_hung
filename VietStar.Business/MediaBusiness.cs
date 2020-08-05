@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -25,7 +26,7 @@ namespace VietStar.Business
         {
             _rpFile = fileProfileRepository;
         }
-        public async Task<List<FileProfileType>> GetProfileFileTypeByType(string profileType, int profileId = 0)
+        public async Task<List<FileProfile>> GetProfileFileTypeByTypeAsync(string profileType, int profileId = 0, string webRootPath = null)
         {
             if (string.IsNullOrWhiteSpace(profileType))
             {
@@ -52,7 +53,33 @@ namespace VietStar.Business
                     type = (int)ProfileType.RevokeDebt;
                     break;
             }
-            var result = await _rpFile.GetByType(type);
+            var fileTypes = await _rpFile.GetByType(type);
+            if (fileTypes == null || !fileTypes.Any())
+                return null;
+            var files = await _rpFile.GetFilesByProfileIdAsync(type, profileId);
+            var result = new List<FileProfile>();
+
+            foreach (var kind in fileTypes)
+            {
+                var filesByType = files.Where(p => p.Key == kind.FileKey);
+                //foreach (var f in filesByType)
+                //{
+                //    f.FileUrl = Path.Combine(webRootPath, f.FileUrl);
+                //}
+                var item = new FileProfile
+                {
+                    Id = kind.Id,
+                    RootPath = webRootPath,
+                    FileKey = kind.FileKey,
+                    IsRequire = kind.IsRequire,
+                    Name = kind.Name,
+                    ProfileTypeId = kind.ProfileTypeId,
+                    ProfileFiles = filesByType != null ? filesByType.ToList() : new List<FileUploadModel>()
+                };
+                result.Add(item);
+            }
+
+
             return result;
         }
         public async Task<bool> DeleteByIdAsync(int fileId, string guidId)
@@ -72,7 +99,7 @@ namespace VietStar.Business
                 return file;
             }
         }
-        public async Task<object> UploadFileAsync(IFormFile file, int key, int fileId, string guildId, int type, int profileId, string rootPath)
+        public async Task<object> UploadFileAsync(IFormFile file, int key, int fileId, string guildId, int profileId, int type, string rootPath)
         {
             if (file == null || string.IsNullOrWhiteSpace(guildId))
                 return null;
@@ -80,7 +107,7 @@ namespace VietStar.Business
             var _type = string.Empty;
             string deleteURL = string.Empty;
             //string root = Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}");
-           
+
             var result = null as FileModel;
             try
             {
@@ -92,7 +119,7 @@ namespace VietStar.Business
                         await file.CopyToAsync(stream);
                         result = await UploadAsync(stream, key.ToString(), file.FileName, rootPath);
                     }
-                   
+
                 }
                 if (result != null)
                 {

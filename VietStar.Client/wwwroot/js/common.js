@@ -480,7 +480,7 @@ function renderOneItemFile(model, className = '',
             header = '<h5  class="header green ' + className + '">' + model.titleName + '<span > </span></h5>';
         }
     }
-    let guidId = model.guidId;
+    let guidId = getNewGuid();
     let content = header + "<div class='col-sm-3'> ";
     content += "<div class=\"file-loading\">";
     content += "<input class='attachFile' key=" + model.key + " id=\"attachFile-" + model.itemId + "\" type=\"file\">";
@@ -490,7 +490,7 @@ function renderOneItemFile(model, className = '',
     
     let item = $("#attachFile-" + model.itemId);
 
-
+    
     let uploadUrl = `/media/UploadFile/${model.key}/${model.type}/${model.profileId}/${model.fileId}/${guidId}`;
     item.fileinput({
         uploadUrl: allowUpload === true ? uploadUrl : null,
@@ -543,9 +543,9 @@ function renderOneItemFile(model, className = '',
         $(item).fileinput("upload");
     }).on("filebeforedelete", function () {
 
-        if (onDelete !== null) {
-            onDelete(key, fileId, isFileExist);
-        }
+        //if (onDelete !== null) {
+        //    onDelete(key, fileId, isFileExist);
+        //}
     }).on('filebatchuploadsuccess', function (event, data) {
         
         if (continueUpload === true) {
@@ -582,12 +582,12 @@ function countFilesByKey(filesUpload, key) {
 }
 function onDeleteFile(fileId, guidId) {
     $.ajax({
-        type: "DELETE",
+        type: "POST",
         url: `/media/delete/${fileId}/${guidId}`,
         success: function (data) {
             
             if (data.data != null && data.success == true) {
-                alert(1)
+                
             }
 
         },

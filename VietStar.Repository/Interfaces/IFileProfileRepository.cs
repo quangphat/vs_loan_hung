@@ -10,6 +10,7 @@ namespace VietStar.Repository.Interfaces
 {
     public interface IFileProfileRepository
     {
+        Task<List<FileUploadModel>> GetFilesByProfileIdAsync(int profileType, int profileId);
         Task<bool> DeleteByIdAsync(int fileId, string guidId);
         Task<RepoResponse<int>> Add(ProfileFileAddSql model);
         Task<List<FileProfileType>> GetByType(int profileType);

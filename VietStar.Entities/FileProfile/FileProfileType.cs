@@ -15,5 +15,6 @@ namespace VietStar.Entities.FileProfile
         public string FilePath { get; set; }
         public string Folder { get; set; }
         public string FileName { get; set; }
+        public string RootPath { get; set; }
     }
 }

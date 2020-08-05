@@ -259,7 +259,7 @@
     function GetProfileFiles() {
         $.ajax({
             type: "GET",
-            url: `/Common/GetFileType/common`,
+            url: `/media/GetFileType/common/${'@Model.Id'}`,
             data: {},
             success: function (data) {
                 if (data.data != null) {
@@ -267,36 +267,66 @@
                     var htmlContent = "";
                     let keys = [];
                     let groupName = '';
+                    let _imgExts = ["jpg", "jpeg", "png", "pdf"];
                     $.each(data.data, function (index, item) {
-                        let _initialPreview = [];
-                        let _initialPreviewConfig = [];
-                        _initialPreviewConfig.push({
-                            caption: "",
-                            url: "/media/delete/0/0",
-                            type: "jpg",
-                            width: "120px"
-                        });
                         $("#lstTailieu").append(`<div class='form-group'><div class='col-sm-12' id='tailieu-${item.Id}'><h5>${groupName}</h5></div></div > `);
-                        let name = '',
-                            className = ''
-                        if (keys.indexOf(item.FileKey) < 0) {
-                            name = item.Name;
+                        if (!isNullOrNoItem(item.ProfileFiles)) {
+                            let _initialPreview = [];
+                            let _initialPreviewConfig = [];
+                            $.each(item.ProfileFiles, function (i, file) {
+                                _initialPreview = [];
+                                _initialPreviewConfig = [];
+                                var extn = file.FileUrl.split('.').pop();
+                                var isImg = isExtension(extn, _imgExts);
+                                if (isImg) {
+                                    
+                                    _initialPreview.push(file.FileUrl);
+                                    _initialPreviewConfig.push({
+                                        caption: file.FileName,
+                                        url: `/media/delete/${file.FileId}/0`,
+                                        type: extn.indexOf('pdf') > -1 ? "pdf" : "jpg",
+                                        width: "120px"
+                                    });
+                                }
+                                
+                                let titleName = keys.indexOf(file.Key) < 0 ? item.Name :''
+                                
+                                renderOneItemFile({
+                                    key: item.FileKey,
+                                    type: '@((int)VietStar.Entities.Commons.Enums.ProfileType.Common)',
+                                    profileId: '@Model.Id',
+                                    fileId: file.FileId,
+                                    isRequire: item.IsRequire,
+                                    titleName: titleName,
+                                    itemId: i,
+                                    guidId: getNewGuid()
+                                }, '', _initialPreview, _initialPreviewConfig, true, true);
+
+                                keys.push(item.FileKey);
+                            });
+                           renderOneItemFile({
+                                    key: item.FileKey,
+                                    type: '@((int)VietStar.Entities.Commons.Enums.ProfileType.Common)',
+                                    profileId: '@Model.Id',
+                               fileId: 0,
+                               isRequire: false,
+                                    titleName: '',
+                                    itemId: i,
+                                    guidId: getNewGuid()
+                                }, '', [], [], true, true);
                         }
                         else {
-                            className = ''
+                            renderOneItemFile({
+                                    key: item.FileKey,
+                                    type: '@((int)VietStar.Entities.Commons.Enums.ProfileType.Common)',
+                                    profileId: '@Model.Id',
+                                    fileId:0,
+                                    isRequire: item.IsRequire,
+                                    titleName: item.Name,
+                                    itemId: i,
+                                    guidId: getNewGuid()
+                                }, '', [], [], true, true);
                         }
-                        renderOneItemFile({
-                            key: item.FileKey,
-                            type: '@((int)VietStar.Entities.Commons.Enums.ProfileType.Common)',
-                            profileId: '@Model.Id',
-                            fileId:0,
-                            isRequire: item.IsRequire,
-                            titleName: name,
-                            itemId: index,
-                            guidId: getNewGuid()
-                        }, className, _initialPreview, _initialPreviewConfig, true, true);
-                        //renderOneItemFile(item.FileKey, 0, name, item.IsRequire, className, true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
-                        keys.push(item.FileKey);
                     })
                 }
 

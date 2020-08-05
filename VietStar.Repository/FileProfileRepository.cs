@@ -21,6 +21,18 @@ namespace VietStar.Repository
         {
             _rpLog = logRepository;
         }
+        public async Task<List<FileUploadModel>> GetFilesByProfileIdAsync(int profileType, int profileId)
+        {
+            using (var con = GetConnection())
+            {
+                var p = new DynamicParameters();
+                p.Add("profileId", profileId);
+                p.Add("profileTypeId", profileType);
+                var result = await con.QueryAsync<FileUploadModel>("getTailieuByHosoId", p,
+                    commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
         public async Task<List<FileProfileType>> GetByType(int profileType)
         {
             using (var con = GetConnection())
