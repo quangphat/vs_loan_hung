@@ -17,7 +17,6 @@ namespace VietStar.Business.Interfaces
         Task<List<OptionSimple>> GetProvincesAsync();
         Task<List<OptionSimple>> GetDistrictsAsync(int provinceId);
         Task<List<OptionSimple>> GetStatusList(string profileType);
-        Task<List<FileProfileType>> GetProfileFileTypeByType(string profileType);
         
     }
 }
