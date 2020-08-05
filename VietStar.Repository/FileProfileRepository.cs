@@ -42,7 +42,7 @@ namespace VietStar.Repository
                     p.Add("FileName", model.FileName);
                     p.Add("ProfileId", model.ProfileId);
                     p.Add("ProfileTypeId", model.ProfileTypeId);
-                    p.Add("GuidId", model.ProfileTypeId);
+                    p.Add("GuidId", model.GuildId);
                     p.Add("FileId", model.FileId);
                     await con.ExecuteAsync("sp_TAI_LIEU_HS_Them_v2", p,
                         commandType: CommandType.StoredProcedure);

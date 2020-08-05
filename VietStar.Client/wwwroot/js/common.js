@@ -480,18 +480,19 @@ function renderOneItemFile(model, className = '',
             header = '<h5  class="header green ' + className + '">' + model.titleName + '<span > </span></h5>';
         }
     }
-    let guidId = getNewGuid();
+    let guidId = model.guidId;
     let content = header + "<div class='col-sm-3'> ";
     content += "<div class=\"file-loading\">";
-    content += "<input class='attachFile' key=" + model.key + " id=\"attachFile-" + guidId + "\" type=\"file\">";
+    content += "<input class='attachFile' key=" + model.key + " id=\"attachFile-" + model.itemId + "\" type=\"file\">";
     content += "</div>";
     content += "</div>";
     $('#tailieu-' + model.key).append(content);
-    let item = $("#attachFile-" + guidId);
+    
+    let item = $("#attachFile-" + model.itemId);
 
 
     let uploadUrl = `/media/UploadFile/${model.key}/${model.type}/${model.profileId}/${model.fileId}/${guidId}`;
-    $(item).fileinput({
+    item.fileinput({
         uploadUrl: allowUpload === true ? uploadUrl : null,
         validateInitialCount: true,
         maxFileSize: 25 * 1024,
@@ -507,12 +508,14 @@ function renderOneItemFile(model, className = '',
         showClose: false,
         showCaption: false,
         showBrowse: false,
+        showDownload: true,
         showUpload: false, // hide upload button
         showRemove: false, // hide remove button
         browseOnZoneClick: true,
         removeLabel: '',
-        fileId: guidId,
-        btnDeleteId: 'btn-remove-file-' + guidId,
+        fileId: model.fileId,
+        outsideGuidId: `'${model.guidId}'`,
+        btnDeleteId: `btnRemoveFile-${model.guidId}`,
         dropZoneTitle: 'Kéo và thả tập tin vào đây',
         dropZoneClickTitle: '<br>(hoặc nhấp để chọn)',
         removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
@@ -538,7 +541,7 @@ function renderOneItemFile(model, className = '',
         //if (countFilesByKey(filesUploaded, parseInt(model.key)) >= 50)
         //    return;
         $(item).fileinput("upload");
-    }).on("filebeforedelete", function (event, key2, fileId) {
+    }).on("filebeforedelete", function () {
 
         if (onDelete !== null) {
             onDelete(key, fileId, isFileExist);
@@ -547,16 +550,10 @@ function renderOneItemFile(model, className = '',
         
         if (continueUpload === true) {
             model.titleName = ''
+            model.guidId = getNewGuid()
             renderOneItemFile(model, '', data.response.initialPreview, data.response.initialPreviewConfig, true, continueUpload);
         }
     });
-    $("#attachFile-" + guidId).on("filebeforedelete", function (event, key, data) {
-        debugger
-    })
-    $("#attachFile-" + guidId).on('filedeleted', function (event, key, jqXHR, data) {
-        console.log('Key = ' + key);
-    });
-
 
 }
 function isReach5Files(filesUpload, key) {
@@ -582,4 +579,22 @@ function countFilesByKey(filesUpload, key) {
     if (isNullOrNoItem(sameKeyFile.files))
         return 0;
     return sameKeyFile.files.length;
+}
+function onDeleteFile(fileId, guidId) {
+    $.ajax({
+        type: "DELETE",
+        url: `/media/delete/${fileId}/${guidId}`,
+        success: function (data) {
+            
+            if (data.data != null && data.success == true) {
+                alert(1)
+            }
+
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
 }

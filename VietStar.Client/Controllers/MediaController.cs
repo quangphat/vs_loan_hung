@@ -23,6 +23,12 @@ namespace VietStar.Client.Controllers
             _bizMedia = mediaBusiness;
             _hosting = hosting;
         }
+        [HttpGet("GetFileType/{profileType}")]
+        public async Task<IActionResult> GetFileType(string profileType)
+        {
+            var result = await _bizMedia.GetProfileFileTypeByType(profileType);
+            return ToResponse(result);
+        }
         [HttpPost("UploadFile/{key}/{fileType}/{profileId}/{fileId}/{guidId}")]
         public async Task<IActionResult> Upload(int key, int fileType, int profileId,int fileId, string guidId)
         {
@@ -30,12 +36,12 @@ namespace VietStar.Client.Controllers
             var result = await _bizMedia.UploadFileAsync(file, fileId , key, guidId, profileId, fileType, _hosting.ContentRootPath);
             return Json(result);
         }
-        [HttpPost("delete/{fileId}/{guidId}")]
+        [HttpDelete("delete/{fileId}/{guidId}")]
         public async Task<IActionResult> Upload(int fileId, string guidId)
         {
-            var file = Request.Form.Files.FirstOrDefault();
+            
             var result = await _bizMedia.DeleteByIdAsync(fileId, guidId);
-            return Json(result);
+            return ToResponse(result);
         }
     }
 }

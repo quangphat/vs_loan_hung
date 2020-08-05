@@ -64,36 +64,7 @@ namespace VietStar.Business
             var result = await _rpCommon.GetProfileStatusByRoleCode(profileType, _process.User.OrgId, _process.User.Rolecode);
             return result;
         }
-        public async Task<List<FileProfileType>> GetProfileFileTypeByType(string profileType)
-        {
-            if (string.IsNullOrWhiteSpace(profileType))
-            {
-                AddError("Dữ liệu không hợp lệ");
-                return null;
-            }
-            profileType = profileType.ToLower();
-            int type = 0;
-            switch (profileType)
-            {
-                case "common":
-                    type = (int)ProfileType.Common;
-                    break;
-                case "courier":
-                    type = (int)ProfileType.Courier;
-                    break;
-                case "mcredit":
-                    type = (int)ProfileType.MCredit;
-                    break;
-                case "company":
-                    type = (int)ProfileType.Company;
-                    break;
-                case "revoke":
-                    type = (int)ProfileType.RevokeDebt;
-                    break;
-            }
-            var result = await _rpFile.GetByType(type);
-            return result;
-        }
+        
 
 
         public async Task<List<OptionSimple>> GetProductsAsync(int partnerId)

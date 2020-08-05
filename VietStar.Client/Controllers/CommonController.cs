@@ -25,12 +25,7 @@ namespace VietStar.Client.Controllers
             var result = await _bizCommon.GetStatusList(profileType);
             return ToResponse(result);
         }
-        [HttpGet("GetFileType/{profileType}")]
-        public async Task<IActionResult> GetFileType(string profileType)
-        {
-            var result = await _bizCommon.GetProfileFileTypeByType(profileType);
-            return ToResponse(result);
-        }
+        
         
         [HttpGet("partners")]
         public async Task<IActionResult> GetPartners()

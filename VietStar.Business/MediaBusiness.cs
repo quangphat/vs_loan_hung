@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -13,6 +13,7 @@ using VietStar.Entities.Messages;
 using VietStar.Entities.ViewModels;
 using VietStar.Repository.Interfaces;
 using VietStar.Utility;
+using static VietStar.Entities.Commons.Enums;
 
 namespace VietStar.Business
 {
@@ -24,7 +25,36 @@ namespace VietStar.Business
         {
             _rpFile = fileProfileRepository;
         }
-
+        public async Task<List<FileProfileType>> GetProfileFileTypeByType(string profileType, int profileId = 0)
+        {
+            if (string.IsNullOrWhiteSpace(profileType))
+            {
+                AddError("Dữ liệu không hợp lệ");
+                return null;
+            }
+            profileType = profileType.ToLower();
+            int type = 0;
+            switch (profileType)
+            {
+                case "common":
+                    type = (int)ProfileType.Common;
+                    break;
+                case "courier":
+                    type = (int)ProfileType.Courier;
+                    break;
+                case "mcredit":
+                    type = (int)ProfileType.MCredit;
+                    break;
+                case "company":
+                    type = (int)ProfileType.Company;
+                    break;
+                case "revoke":
+                    type = (int)ProfileType.RevokeDebt;
+                    break;
+            }
+            var result = await _rpFile.GetByType(type);
+            return result;
+        }
         public async Task<bool> DeleteByIdAsync(int fileId, string guidId)
         {
             return await _rpFile.DeleteByIdAsync(fileId, guidId);
