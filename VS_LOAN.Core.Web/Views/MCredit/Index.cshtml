@@ -478,7 +478,7 @@
             success: function (response) {
                 
                 if (response.success == true) {
-                    totalRecord = response.data.total;
+                    totalRecord = response.data.totaler;
                     var search = this.url.replace("/MCredit/Index", "");
                     search = search.replace("/MCredit/Search","")
                     queries = new URLSearchParams(search)

@@ -772,7 +772,10 @@
             "LoanMoney": $('#txtLoanMoney').val().replace(/\./g, ''),
             "IsInsurrance": getCheckboxValue('cbbIsInsurrance'),
             "Status": 0,
-            "SaleId": $("#txtSaleId").val()
+            "SaleId": $("#txtSaleId").val(),
+            "CatNumber": modelCat.CatNumber,
+            "ComName": modelCat.ComName,
+            "CatName": modelCat.CatName
         });
         $.ajax({
             traditional: true,
