@@ -28,7 +28,7 @@ END
 
 --------------x
 go
-alter PROCEDURE [dbo].[sp_Profile_GetProfileHaveNotSeen] 
+create PROCEDURE [dbo].[sp_Profile_GetProfileHaveNotSeen] 
 	-- Add the parameters for the stored procedure here
 	@MaNVDangNhap int,
 	@MaNhom int,
@@ -71,11 +71,11 @@ BEGIN
 	and HO_SO_DUYET_XEM.Ma_Ho_So=HO_SO.ID
 	and HO_SO.San_Pham_Vay = SAN_PHAM_VAY.ID
 	and SAN_PHAM_VAY.Ma_Doi_Tac = DOI_TAC.ID
-	and ((@MaThanhVien > 0 and HO_SO.CreatedBy = @MaThanhVien) or (@MaNhom > 0 and @MaThanhVien = 0 and HO_SO.CreatedBy in (
+	and ((@MaThanhVien > 0 and HO_SO.Ma_Nguoi_Tao = @MaThanhVien) or (@MaNhom > 0 and @MaThanhVien = 0 and HO_SO.Ma_Nguoi_Tao in (
 		Select NHAN_VIEN_NHOM.Ma_Nhan_Vien From NHAN_VIEN_NHOM Where NHAN_VIEN_NHOM.Ma_Nhom in (Select NHOM.ID From NHOM 
 		Where((NHOM.Chuoi_Ma_Cha + '.' + Convert(nvarchar, NHOM.ID)) like '%.' + Convert(nvarchar, @MaNhom) + '.%') 
 		or ((NHOM.Chuoi_Ma_Cha + '.' + Convert(nvarchar, NHOM.ID)) like '%.' + Convert(nvarchar, @MaNhom)) or NHOM.ID = @MaNhom)))
-		or (@MaNhom = 0 and HO_SO.CreatedBy in (Select NVN1.Ma_Nhan_Vien From NHAN_VIEN_NHOM as NVN1 
+		or (@MaNhom = 0 and HO_SO.Ma_Nguoi_Tao in (Select NVN1.Ma_Nhan_Vien From NHAN_VIEN_NHOM as NVN1 
 		Where NVN1.Ma_Nhom in (Select * From @DSNhomQL)))
 		)
 	and HO_SO.Ma_Trang_Thai = TRANG_THAI_HS.ID
@@ -92,7 +92,7 @@ END
 -----------------------xx
 
 go
-alter PROCEDURE [dbo].[sp_Profile_GetMyProfilesNotSeen] 
+create PROCEDURE [dbo].[sp_Profile_GetMyProfilesNotSeen] 
 	-- Add the parameters for the stored procedure here
 	@MaNhanVien int,
 	@TuNgay datetime,
@@ -119,13 +119,13 @@ BEGIN
 	Where 
 	HO_SO_XEM.Xem=0
 	and HO_SO_XEM.Ma_Ho_So=HO_SO.ID
-	and HO_SO.CreatedBy = @MaNhanVien
+	and HO_SO.Ma_Nguoi_Tao = @MaNhanVien
 	and HO_SO.Ma_Ho_So like '%'+@MaHS+'%'
 	and HO_SO.SDT like '%'+@SDT+'%'
 	and (HO_SO.CreatedTime between CONVERT(date, @TuNgay) and CONVERT(date, @DenNgay))
 	and HO_SO.IsDeleted = 0 
 	--and HO_SO.Ma_Trang_Thai in  (Select CONVERT(int,Value) From dbo.fn_SplitStringToTable(@TrangThai, ','))
-	order by HO_SO.CreatedTime desc
+	order by HO_SO.Ngay_Tao desc
 END
 
 
@@ -1364,3 +1364,87 @@ insert into ImportExcel (Name,Position,ImportType,ValueType)
 values ('Deleted', 45, 5,'int')
 
 --------x
+
+alter table RevokeDebt 
+add PartnerName nvarchar(200)
+
+insert into ImportExcel (Name,Position,ImportType,ValueType)
+values ('PartnerName', 46, 5,'string')
+
+go
+alter PROCEDURE sp_insert_RevokeDebt
+@AgreementNo varchar(50),
+@CustomerName nvarchar(200),
+@LastestPaymentDate varchar(20),
+@PaymentStore nvarchar(50),
+@OSPri varchar(20),
+@TotalCurros varchar(20),
+@LateFee varchar(20),
+@LiquidationFee varchar(20),
+@LateDate varchar(10),
+@InterestrateScheme varchar(20),
+@InstallmentPeriod varchar(10),
+@InstallmentNo varchar(10),
+@BillAmountOfCurrentMonth varchar(20),
+@ProductName nvarchar(100),
+@ProductBrand nvarchar(100),
+@CashPrice varchar(20),
+@DepositAmount varchar(20),
+@FinancePrice varchar(20),
+@FirstDueDate varchar(20),
+@AgentCode varchar(20),
+@Gender nvarchar(10),
+@Age varchar(5),
+@AgreementDate varchar(20),
+@MobilePhone varchar(12),
+@HomePhone varchar(12),
+@CompanyPhone varchar(12),
+@TotalPayableAmount varchar(20),
+@LastPaymentAmount varchar(20),
+@TotalPaidAmount varchar(20),
+@FirstPaymentAmount varchar(20),
+@FinalDueDate varchar(20),
+@FinalPaymentAmount varchar(20),
+@ReferenceName nvarchar(200),
+@RefPhone varchar(12),
+@Relative nvarchar(200),
+@IdCardNumber varchar(12),
+@Bod varchar(20),
+@PermanentAddress nvarchar(300),
+@CompanyName nvarchar(300),
+@Department nvarchar(200),
+@WorkAddress nvarchar(300)  ,
+@CreatedBy int,
+@AssigneeIds varchar(20),
+@AssigneeId int =0,
+@DistrictId int =0,
+@ProvinceId int = 0,
+@Deleted int =0,
+@PartnerName nvarchar(200) = null
+AS
+BEGIN
+if(@Deleted > 0)
+begin
+ update RevokeDebt set IsDeleted = 1 where AgreementNo = @AgreementNo;
+end
+else
+begin
+	Insert into RevokeDebt (AgreementNo,CustomerName,LastestPaymentDate
+	,PaymentStore,OSPri,TotalCurros,LateFee,LiquidationFee,LateDate
+	,InterestrateScheme,InstallmentPeriod,InstallmentNo,BillAmountOfCurrentMonth
+	,ProductName,ProductBrand,CashPrice,DepositAmount,FinancePrice,FirstDueDate,AgentCode
+	,Gender,Age,AgreementDate,MobilePhone,HomePhone,CompanyPhone,TotalPayableAmount
+	,LastPaymentAmount,TotalPaidAmount,FirstPaymentAmount,FinalDueDate,FinalPaymentAmount,ReferenceName
+	,RefPhone,[Relative],IdCardNumber,Bod,PermanentAddress,CompanyName,Department,WorkAddress
+	,CreatedTime,CreatedBy,UpdatedTime,AssigneeIds,Status, AssigneeId,DistrictId, ProvinceId,PartnerName)
+	values(@AgreementNo,@CustomerName,@LastestPaymentDate
+	,@PaymentStore,@OSPri,@TotalCurros,@LateFee,@LiquidationFee,@LateDate
+	,@InterestrateScheme,@InstallmentPeriod,@InstallmentNo,@BillAmountOfCurrentMonth
+	,@ProductName,@ProductBrand,@CashPrice,@DepositAmount,@FinancePrice,@FirstDueDate,@AgentCode
+	,@Gender,@Age,@AgreementDate,@MobilePhone,@HomePhone,@CompanyPhone,@TotalPayableAmount
+	,@LastPaymentAmount,@TotalPaidAmount,@FirstPaymentAmount,@FinalDueDate,@FinalPaymentAmount,@ReferenceName
+	,@RefPhone,@Relative,@IdCardNumber,@Bod,@PermanentAddress,@CompanyName,@Department,@WorkAddress
+	,GETDATE(),@CreatedBy, GETDATE(),@AssigneeIds, 0, @AssigneeId, @DistrictId, @ProvinceId, @PartnerName)
+end
+END
+----------
