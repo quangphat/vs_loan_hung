@@ -245,7 +245,7 @@ namespace VS_LOAN.Core.Web.Controllers
             int status = 0;
             try
             {
-                status = Convert.ToInt32(mcProfile.status);
+                status = Convert.ToInt32(mcProfile.obj.Status);
             }
             catch
             {
