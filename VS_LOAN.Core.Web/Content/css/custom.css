@@ -8,13 +8,21 @@
 /*.form-group input, .form-group label, .form-group select, .form-group textarea {
   font-size: 11px !important;
 }*/
-.label-green, label.label-green {
-    background-color: #006600;
-}
-.label-orrange, label.label-orrange {
-    background-color: #e38008;
+.label-orrange {
+    background-color: #e38008 !important;
 }
 
+.label-temp {
+    background-color: #757575 !important;
+}
+
+.label-green {
+    background-color: #38b04a !important;
+}
+
+.label-cancel {
+    background-color: #455f73 !important;
+}
 #ddlLimit_chosen{
     width:100px!important;
 }

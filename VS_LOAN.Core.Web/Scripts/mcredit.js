@@ -1,11 +1,12 @@
-﻿function GetLoanProfileStatuses(controlId, defaultValue = 0) {
-    $(controlId).empty();
+﻿function GetLoanProfileStatuses(controlId, defaultValue = 0, isAppend = false) {
+    if (!isAppend)
+        $(controlId).empty();
     $.ajax({
         type: "GET",
         url: '/MCredit/GetMCSimpleList?type=5',
         data: {},
         success: function (data) {
-            $(controlId).append("<option value='0'></option>");
+            //$(controlId).append("<option value='0'></option>");
             if (data.data != null && data.success == true) {
                 $.each(data.data, function (index, item) {
                     $(controlId).append("<option value='" + item.Code + "'>" + item.Name + "</option>");
