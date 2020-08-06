@@ -220,6 +220,13 @@
                 <h3 class="header smaller lighter blue">4.Thông tin sản phẩm:</h3>
                 <form class="form-horizontal" role="form">
                     <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Đối tac<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" id="PartnerName" value="@ViewBag.model.PartnerName" readonly class="form-control" />
+                        </div>
+                       
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Sản phẩm vay<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <input type="text" id="ProductName" value="@ViewBag.model.ProductName" readonly class="form-control" />
