@@ -14,14 +14,14 @@
 //}\
 
 function renderStatusDisplay(statusName, btnRefresh = null) {
-
+    debugger
     if (isNullOrWhiteSpace(statusName))
         return "<td class='text-left'></td>";
     let firstChar = statusName[0].toLowerCase();
-    let greenGroup = ['a', 'b', 'c', 'd', 'đ'];
+    let greenGroup = ['a', 'b', 'c', 'đ'];
     let danger = ['e', 'f', 'g', 't'];
     let succsess = ['i', 'k', 'm'];
-    let cancel = ['o', 'p', 'q'];
+    let cancel = ['o', 'p', 'q', 'd'];
     let inverse = ['j', 'z', 'w'];
     let colorClass = 'label-temp'
     if (greenGroup.indexOf(firstChar) >= 0)

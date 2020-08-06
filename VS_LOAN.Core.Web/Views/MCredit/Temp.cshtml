@@ -29,10 +29,7 @@
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Loại</label>
                         <div class="col-sm-5 col-xs-12 ">
                             <select id="ddlStatus" class="chosen-select form-control" multiple data-placeholder="Chọn trạng thái">
-                                <option value="0">Lưu Tạm</option>
-                                <option value="1">Đã gửi MC</option>
-                                <option value="3">Nộp hồ sơ</option>
-                                <option value="4">Bổ sung hồ sơ</option>
+                                
                             </select>
                         </div>
                     </div>
@@ -142,20 +139,9 @@
     var pageMargin = 2;
     var totalPage = 1;
     var totalRecord = 0;
-    var lstStatus = [
-        { value: "0", display: "Lưu tạm" },
-        { value: "1", display: "Nhập liệu" },
-        { value: "2", display: "Thẩm định" },
-        { value: "3", display: "Từ chối" },
-        { value: "4", display: "Bổ sung hồ sơ" },
-        { value: "5", display: "Giải ngân" },
-        { value: "6", display: "Đã đối chiếu" },
-        { value: "7", display: "Hủy" },
-        { value: "8", display: "PCB" },
-    ]
     $(document).ready(function e() {
         //renderStatusList();
-
+        GetLoanProfileStatuses("#ddlStatus")
         window.addEventListener('popstate', function (e) {
 
             queries = new URLSearchParams(window.location.search)
