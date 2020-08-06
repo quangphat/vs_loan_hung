@@ -346,7 +346,7 @@
             + renderTextLeft(rowData.Phone)
             + renderTextLeft(rowData.IdNumber)
             + renderTextLeft(rowData.SaleName)
-            + renderStatus(rowData.Status, rowData.McId)
+            + renderStatus(rowData.StatusName, rowData.Id)
             + renderTextLeft(rowData.LastNote, '', 'tb-row-breakword')
             + renderTextLeft(rowData.ProductName)
             + renderTextLeft(rowData.LoanPeriodName)
@@ -382,58 +382,24 @@
         return "<td class='text-center'>" + getValueDisplay(value, type) + "</td>";
     }
 
-   function renderStatus(status, mcId) {
+    function renderStatus(status, profileId) {
+       
        var statusString = "";
-       if (mcId > 0) {
-           statusString = "<span class='label label-sm  arrowed arrowed-righ'>Đã đẩy qua MC</span>";
-           return "<td class='text-left'>" + statusString + "</td>";
-       }
-       if (status == 0)
-           statusString = "<span class='label label-sm  arrowed arrowed-righ'>Lưu tạm</span>";
-       else if (status == 1)
-           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Đã gửi qua MC</span>";
-       else if (status == 3)
-           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Nộp hồ sơ</span>";
-       else if (status == 4)
-           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Bổ sung hồ sơ</span>";
-       return "<td class='text-left'>" + statusString + "</td>";
-    }
-    function renderAction(id, MaTrangThai, MaNV) {
-        var thaoTac = "<div class='action-buttons'>"
-            + "<a title='@Global.Button_View' class=\"blue\" style='cursor: pointer' id='" + id+ "' onClick='XemHS(" + id +")'>"
-            + "<i class=\"ace-icon fa fa-eye bigger-130\">"
-            + "</i></a>"
-        if ((MaTrangThai == @((int)VS_LOAN.Core.Entity.TrangThaiHoSo.TuChoi)
-            || MaTrangThai == @((int)VS_LOAN.Core.Entity.TrangThaiHoSo.BoSungHoSo)
-            || MaTrangThai == @((int)VS_LOAN.Core.Entity.TrangThaiHoSo.Nhap))
-            && MaNV == '@VS_LOAN.Core.Web.Helpers.GlobalData.User.Code')
-        {
-            thaoTac += "<a title='@Global.Button_Edit' class=\"green\" style='cursor: pointer' ID=" + id + " onclick='SuaHS(" + id + ")' >";
-                thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
-                thaoTac += "</i>";
-                thaoTac += "</a>";
-                thaoTac += "</a>";
-        }
-        else if ((MaTrangThai == @((int)VS_LOAN.Core.Entity.TrangThaiHoSo.NhapLieu)
-                 || MaTrangThai == @((int)VS_LOAN.Core.Entity.TrangThaiHoSo.BoSungHoSo))
-                 && '@VS_LOAN.Core.Web.Helpers.GlobalData.User.UserType' == '@((int)VS_LOAN.Core.Entity.UserTypeEnum.Teamlead)') {
-            thaoTac += "<a title='@Global.Button_Edit' class=\"green\" style='cursor: pointer' ID=" + id + " onclick='SuaHS(" + id +")' >";
-            thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
-            thaoTac += "</i>";
-            thaoTac += "</a>";
-            thaoTac += "</span>";
-        }
-        else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.BoSungHoSo)'
-
-            && '@VS_LOAN.Core.Web.Helpers.GlobalData.User.UserType' == '@((int)VS_LOAN.Core.Entity.UserTypeEnum.Sale)') {
-            thaoTac += "<a title='@Global.Button_Edit' >";
-            thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
-            thaoTac += "</i>";
-            thaoTac += "</a>";
-            thaoTac += "</span>";
-        }
-        thaoTac += "</div>";
-        return "<td class='text-center'>" + thaoTac + "</td>"
+        let btnRefresh = "<a class='pull-right' onclick='updateStatus(" + profileId + ")' style='cursor: pointer;'><i class='fa fa-refresh bigger - 110'></i></a>"
+        return renderStatusDisplay(status, btnRefresh)
+       //if (mcId > 0) {
+       //    statusString = "<span class='label label-sm  arrowed arrowed-righ'>Đã đẩy qua MC</span>";
+       //    return "<td class='text-left min-150'>" + statusString + btnRefresh  + "</td>";
+       //}
+       //if (status == 0)
+       //    statusString = "<span class='label label-sm  arrowed arrowed-righ'>Lưu tạm</span>";
+       //else if (status == 1)
+       //    statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Đã gửi qua MC</span>";
+       //else if (status == 3)
+       //    statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Nộp hồ sơ</span>";
+       //else if (status == 4)
+       //    statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Bổ sung hồ sơ</span>";
+       //return "<td class='text-left min-150'>" + statusString + btnRefresh + "</td>";
     }
     function renderCoBaoHiem(CoBaoHiem) {
         var value = ""
@@ -443,7 +409,44 @@
             value = "<td class='text-left'> <div class='green bolder'title = 'Có bảo hiểm' > <i class=\"ace-icon glyphicon glyphicon-ok bigger-130\"></i></div> </td>";
         return value;
     }
+    function updateStatus(profileId) {
+        showBlock($('#panel_body'), strLoading);
+        
+        $.ajax({
+            traditional: true,
+            url: `/MCredit/UpdateTempProfileStatus?profileId=${profileId}`,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                if (data.success == true) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: `Thành công`,
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
 
+                    });
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+    }
     function renderTableBody(datas) {
         var table = $("#dtSource")
         var tableBody = $("#dtSource").find("tbody");

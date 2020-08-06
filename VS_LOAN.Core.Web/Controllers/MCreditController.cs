@@ -86,7 +86,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (model == null || string.IsNullOrWhiteSpace(model.Value))
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var result = await _svMCredit.CheckCat(GlobalData.User.IDUser, model.Value);
-            return ToJsonResponse(result.status =="error" ? false :true, result.msg?.ToString(), result);
+            return ToJsonResponse(result.status == "error" ? false : true, result.msg?.ToString(), result);
         }
         public async Task<JsonResult> IsCheckCat(StringModel model)
         {
@@ -104,7 +104,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (model == null || string.IsNullOrWhiteSpace(model.Value))
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var result = await _svMCredit.CheckCIC(model.Value, model.Value2, GlobalData.User.IDUser);
-            return ToJsonResponse(result.status=="error" ? false:true, result.msg?.ToString(), result);
+            return ToJsonResponse(result.status == "error" ? false : true, result.msg?.ToString(), result);
         }
         public ActionResult CheckDuplicate()
         {
@@ -135,10 +135,10 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<JsonResult> SearchTemps(string freeText, string status, int page = 1, int limit = 20)
         {
             page = page <= 0 ? 1 : page;
-            
-            
+
+
             var profiles = await _rpMCredit.GetTempProfiles(page, limit, freeText, GlobalData.User.IDUser, status);
-            if(profiles==null || !profiles.Any())
+            if (profiles == null || !profiles.Any())
             {
                 return ToJsonResponse(true, "", DataPaging.Create(null as List<ProfileSearchSql>, 0));
             }
@@ -179,18 +179,84 @@ namespace VS_LOAN.Core.Web.Controllers
                         CommentTime = DateTime.Now,
                         TypeId = (int)NoteType.MCreditTemp
                     };
-                   await _rpNote.AddNoteAsync(note);
+                    await _rpNote.AddNoteAsync(note);
                 }
                 var peopleCanView = await _rpEmployee.GetPeopleIdCanViewMyProfile(GlobalData.User.IDUser);
-                if(peopleCanView!=null && peopleCanView.Any())
+                if (peopleCanView != null && peopleCanView.Any())
                 {
                     peopleCanView.Add(GlobalData.User.IDUser);
                     peopleCanView.Add(1); //admin
-                    var ids = string.Join(".",peopleCanView);
+                    var ids = string.Join(".", peopleCanView);
                     await _rpMCredit.InsertPeopleWhoCanViewProfile(id, ids);
                 }
             }
             return ToJsonResponse(true, "", id);
+        }
+        public async Task<JsonResult> AddRefuseReasonToNote(StringModel model, int profileId)
+        {
+            if (model == null || profileId <=0)
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            if(!string.IsNullOrWhiteSpace(model.Value))
+            {
+                await _rpNote.AddNoteAsync(new GhichuModel
+                {
+                    HosoId = profileId,
+                    CommentTime = DateTime.Now,
+                    Noidung = model.Value,
+                    TypeId = (int)NoteType.MCreditTemp,
+                    UserId = GlobalData.User.IDUser
+                });
+            }
+           
+            if(!string.IsNullOrWhiteSpace(model.Value2))
+            {
+                await _rpNote.AddNoteAsync(new GhichuModel
+                {
+                    HosoId = profileId,
+                    CommentTime = DateTime.Now,
+                    Noidung = model.Value,
+                    TypeId = (int)NoteType.MCreditTemp,
+                    UserId = GlobalData.User.IDUser
+                });
+            }
+            return ToJsonResponse(true);
+            
+        }
+        public async Task<JsonResult> UpdateTempProfileStatus(int profileId)
+        {
+            var temp = await _rpMCredit.GetTemProfileById(profileId);
+            if (temp == null)
+            {
+                return ToJsonResponse(false, "Không tìm thây hồ sơ trong portal");
+            }
+            if (string.IsNullOrWhiteSpace(temp.MCId))
+            {
+                return ToJsonResponse(false, "Hồ sơ chưa được đẩy qua mc");
+            }
+            var mcProfile = await _svMCredit.GetProfileById(temp.MCId, GlobalData.User.IDUser);
+            if (mcProfile == null)
+            {
+                return ToJsonResponse(false, "Không tìm thấy hồ sơ phía MC");
+            }
+            if (mcProfile.obj== null || mcProfile.status =="error")
+            {
+                return ToJsonResponse(false, mcProfile.message);
+            }
+            int status = 0;
+            try
+            {
+                status = Convert.ToInt32(mcProfile.status);
+            }
+            catch
+            {
+                status = temp.Status;
+            }
+            if(temp.Status!= status)
+            {
+                var result = await _rpMCredit.UpdateTempProfileStatusAsync(temp.Id, status);
+                return ToJsonResponse(result);
+            }
+            return ToJsonResponse(false);
         }
         public async Task<JsonResult> UpdateDraft(MCredit_TempProfileAddModel model)
         {
@@ -199,7 +265,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var profile = _mapper.Map<MCredit_TempProfile>(model);
             profile.UpdatedBy = GlobalData.User.IDUser;
             var isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
-            profile.Status = isAdmin ?  model.Status : (int)MCreditProfileStatus.Submit;
+            profile.Status = isAdmin ? model.Status : (int)MCreditProfileStatus.Submit;
             await _rpLog.InsertLog("mcredit-UpdateDraft", model.Dump());
             var result = await _rpMCredit.UpdateDraftProfile(profile);
             if (!result)
@@ -252,15 +318,19 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             result.obj.IsAddrSame = "1";
             result.obj.IsInsurrance = "1";
-            var profile = await _rpMCredit.GetTemProfileByMcId(result.obj.Id);
-            result.obj.LocalProfileId = profile != null ? profile.Id : 0;
-            var peopleCanView = await _rpMCredit.GetPeopleCanViewMyProfile(profile.Id);
-            if (peopleCanView != null && peopleCanView.Any())
-            {
-                if (!peopleCanView.Contains(GlobalData.User.IDUser))
-                    return RedirectToAction("Index");
-            }
-            if(result.obj!=null && result.obj.Reason!=null)
+            //var profile = await _rpMCredit.GetTemProfileByMcId(result.obj.Id);
+            //if(profile==null)
+            //{
+            //    return ToResponse(false, "Không tìm thấy hồ sơ tương ứng trong portal");
+            //}
+            //result.obj.LocalProfileId = profile != null ? profile.Id : 0;
+            //var peopleCanView = await _rpMCredit.GetPeopleCanViewMyProfile(profile.Id);
+            //if (peopleCanView != null && peopleCanView.Any())
+            //{
+            //    if (!peopleCanView.Contains(GlobalData.User.IDUser))
+            //        return RedirectToAction("Index");
+            //}
+            if (result.obj != null && result.obj.Reason != null)
             {
                 result.obj.ReasonName = JsonConvert.SerializeObject(result.obj.Reason);
             }
@@ -329,7 +399,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var uploadedFiles = new List<FileUploadModel>();
             if (profileId > 0)
             {
-                uploadedFiles =  await _rpTailieu.GetTailieuByHosoId(profile.Id, (int)HosoType.MCredit);
+                uploadedFiles = await _rpTailieu.GetTailieuByHosoId(profile.Id, (int)HosoType.MCredit);
             }
             if (uploadedFiles == null)
                 uploadedFiles = new List<FileUploadModel>();
@@ -537,7 +607,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 await _rpTailieu.CopyFileFromProfile(profileId, (int)HosoType.MCredit, id);
                 await _rpMCredit.DeleteById(profileId);
             }
-            return ToJsonResponse(id >0 ?  true :false, "", id);
+            return ToJsonResponse(id > 0 ? true : false, "", id);
         }
         public async Task<JsonResult> ReSendFileToEC(int profileId)
         {
@@ -566,11 +636,12 @@ namespace VS_LOAN.Core.Web.Controllers
             var profile = await _rpMCredit.GetTemProfileById(Convert.ToInt32(model.Value));
             if (profile == null)
                 return ToJsonResponse(true);
-            await _svMCredit.AddNote(new NoteAddRequestModel {
+            await _svMCredit.AddNote(new NoteAddRequestModel
+            {
                 Content = model.Value2,
                 Id = profile.MCId
             }, GlobalData.User.IDUser);
-            
+
             return ToJsonResponse(true);
         }
     }

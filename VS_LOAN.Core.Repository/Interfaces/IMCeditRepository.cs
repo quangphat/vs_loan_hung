@@ -11,6 +11,7 @@ namespace VS_LOAN.Core.Repository.Interfaces
 {
     public interface IMCeditRepository
     {
+        Task<bool> UpdateTempProfileStatusAsync(int profileId, int status);
         Task<bool> IsCheckCat(string productCode);
         Task<List<int>> GetPeopleCanViewMyProfile(int profileId);
         Task<bool> InsertPeopleWhoCanViewProfile(int profileId, string peopleIds);
