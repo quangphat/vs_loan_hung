@@ -21,5 +21,6 @@ namespace VS_LOAN.Core.Entity.MCreditModels
         public string LoanPeriodName { get; set; }
         public string Phone { get; set; }
         public int TotalRecord { get; set; }
+        public string StatusName { get; set; }
     }
 }

@@ -53,6 +53,9 @@
                                 @ViewBag.model.Refuse
                             </textarea>
                         </div>
+                        <a class="btn btn-sm btn-primary pull-right" id="btnAddNoteFromReason" >
+                            Thêm ghi chú
+                        </a>
                     </div>
                 </form>
             </div>
@@ -336,7 +339,8 @@
                 (key >= 96 && key <= 105));
         });
     });
-};
+    };
+
     $("#txtPhone").ForceNumericOnly();
     $("#txtPhone2").ForceNumericOnly();
     $("#txtLoanMoney").ForceNumericOnly();
@@ -357,6 +361,52 @@
         let value = !isNullOrWhiteSpace($("#txtIdNumber").val()) ? $("#txtIdNumber").val() : $("#txtCCCDNumber").val();
         checkDup('checkdupResult', value);
     });
+    $("#btnAddNoteFromReason").click(function () {
+        AddNoteFromReason()
+    })
+        function AddNoteFromReason() {
+        let profileId = '@ViewBag.model.Id'
+        showBlock($('#panel_body'), "Vui lòng chờ");
+            let objectSend = JSON.stringify({
+                'Value': '@Html.Raw(ViewBag.model.ReasonName)',
+                'Value2': '@Html.Raw(ViewBag.model.Refuse)'
+            });
+        $.ajax({
+            traditional: true,
+            url: `/MCredit/AddRefuseReasonToNote?profileId=${profileId}`,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                if (data.success == true) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: `Thành công`,
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+
+                    });
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+    }
     function getFilesUpload() {
         $.ajax({
             type: "POST",

@@ -22,25 +22,25 @@ namespace VS_LOAN.Core.Repository
         {
             using (var con = GetConnection())
             {
-                var result = await con.QueryAsync<int>("sp_MCProfilePeople_GetPeopleCanViewProfile", new { profileId}, commandType: CommandType.StoredProcedure);
+                var result = await con.QueryAsync<int>("sp_MCProfilePeople_GetPeopleCanViewProfile", new { profileId }, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
         }
         public async Task<bool> UpdateSale(UpdateSaleModel model, int profileId)
         {
 
-                using (var con = GetConnection())
-                {
+            using (var con = GetConnection())
+            {
 
-                    await con.ExecuteAsync("sp_MCredit_TempProfile_update_Sale", new
-                    {
-                        profileId,
-                        model.SaleId,
-                        model.SaleNumber,
-                        model.SaleName
-                    }, commandType: CommandType.StoredProcedure);
-                }
-            
+                await con.ExecuteAsync("sp_MCredit_TempProfile_update_Sale", new
+                {
+                    profileId,
+                    model.SaleId,
+                    model.SaleNumber,
+                    model.SaleName
+                }, commandType: CommandType.StoredProcedure);
+            }
+
             // await Task.WhenAll(tasks);
             return true;
         }
@@ -52,6 +52,23 @@ namespace VS_LOAN.Core.Repository
                 return true;
             }
 
+        }
+
+        public async Task<bool> UpdateTempProfileStatusAsync(int profileId,int status)
+        {
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    await con.ExecuteAsync("sp_MCredit_UpdateStatusFromMC", new { profileId, status }, commandType: CommandType.StoredProcedure);
+                    return true;
+                }
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+            
         }
         public async Task<MCredit_TempProfile> GetTemProfileById(int id)
         {
@@ -269,14 +286,14 @@ namespace VS_LOAN.Core.Repository
                     return param.Get<int>("Id");
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return 0;
             }
         }
         public async Task<bool> DeleteById(int profileId)
         {
-           
+
             using (var con = GetConnection())
             {
                 await con.ExecuteAsync("sp_MCProfile_DeleteProfile", new { profileId }, commandType: CommandType.StoredProcedure);
@@ -285,7 +302,7 @@ namespace VS_LOAN.Core.Repository
         }
         public async Task<bool> UpdateDraftProfile(MCredit_TempProfile model)
         {
-            var param = GetParams(model, ignoreKey: new string[] 
+            var param = GetParams(model, ignoreKey: new string[]
             {
                 nameof(model.CreatedTime),
                 nameof(model.UpdatedTime),
@@ -304,7 +321,8 @@ namespace VS_LOAN.Core.Repository
         {
             using (var con = GetConnection())
             {
-                var result = await con.QueryAsync<ProfileSearchSql>("sp_MCredit_TempProfile_Gets", new {
+                var result = await con.QueryAsync<ProfileSearchSql>("sp_MCredit_TempProfile_Gets", new
+                {
                     freeText,
                     userId,
                     page,
@@ -314,7 +332,7 @@ namespace VS_LOAN.Core.Repository
                 return result.ToList();
             }
         }
-        public async Task<int> CountTempProfiles(string freeText, int userId, string status =null)
+        public async Task<int> CountTempProfiles(string freeText, int userId, string status = null)
         {
             using (var con = GetConnection())
             {
@@ -333,7 +351,7 @@ namespace VS_LOAN.Core.Repository
             {
                 var result = await con.QueryFirstOrDefaultAsync<int>($"select   dbo.fn_MCProduct_ISCheckCat('{productCode.Trim()}')"
                 , commandType: CommandType.Text);
-                return result ==1 ? true:false;
+                return result == 1 ? true : false;
             }
         }
     }
