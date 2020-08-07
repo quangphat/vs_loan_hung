@@ -424,7 +424,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     continue;
                 foreach (var doc in group.Documents)
                 {
-                    var files = uploadedFiles.Where(p => p.Key == doc.Id);
+                    var files = uploadedFiles.Where(p => p.Key == doc.Id && p.MC_GroupId == group.GroupId);
                     result.Add(new MCFileUpload
                     {
                         ID = doc.Id,
