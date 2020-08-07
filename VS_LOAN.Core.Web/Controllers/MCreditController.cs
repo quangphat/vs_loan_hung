@@ -395,7 +395,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<JsonResult> GetFileUpload(int profileId, int profileType = 3, string mcId = null)
         {
             var profile = null as MCredit_TempProfile;
-            profile = await _rpMCredit.GetTemProfileByMcId(mcId);
+            profile = await _rpMCredit.GetTemProfileById(profileId);
             if (profile == null)
                 return ToJsonResponse(false, "Hồ sơ không tồn tại", new List<LoaiTaiLieuModel>());
 
@@ -407,7 +407,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 Issl = profile.IsAddr ? "1" : "0",
                 Money = profile.LoanMoney.ToString().Replace(",0000", "")
             }, GlobalData.User.IDUser);
-            await _rpLog.InsertLog("mcredit-GetFileUpload", data.Dump());
+            await _rpLog.InsertLog($"mcredit-GetFileUpload-{mcId}", data.Dump());
             if (data == null || data.Groups == null)
                 return ToJsonResponse(false, "Không thể lấy file", new List<LoaiTaiLieuModel>());
             var uploadedFiles = new List<FileUploadModel>();
