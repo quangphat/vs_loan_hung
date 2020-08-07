@@ -332,18 +332,18 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             result.obj.IsAddrSame = "1";
             result.obj.IsInsurrance = "1";
-            //var profile = await _rpMCredit.GetTemProfileByMcId(result.obj.Id);
-            //if(profile==null)
-            //{
-            //    return ToResponse(false, "Không tìm thấy hồ sơ tương ứng trong portal");
-            //}
-            //result.obj.LocalProfileId = profile != null ? profile.Id : 0;
-            //var peopleCanView = await _rpMCredit.GetPeopleCanViewMyProfile(profile.Id);
-            //if (peopleCanView != null && peopleCanView.Any())
-            //{
-            //    if (!peopleCanView.Contains(GlobalData.User.IDUser))
-            //        return RedirectToAction("Index");
-            //}
+            var profile = await _rpMCredit.GetTemProfileByMcId(result.obj.Id);
+            if (profile == null)
+            {
+                return ToResponse(false, "Không tìm thấy hồ sơ tương ứng trong portal");
+            }
+            result.obj.LocalProfileId = profile != null ? profile.Id : 0;
+            var peopleCanView = await _rpMCredit.GetPeopleCanViewMyProfile(profile.Id);
+            if (peopleCanView != null && peopleCanView.Any())
+            {
+                if (!peopleCanView.Contains(GlobalData.User.IDUser))
+                    return RedirectToAction("Index");
+            }
             if (result.obj != null && result.obj.Reason != null)
             {
                 result.obj.ReasonName = JsonConvert.SerializeObject(result.obj.Reason);
@@ -395,7 +395,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<JsonResult> GetFileUpload(int profileId, int profileType = 3, string mcId = null)
         {
             var profile = null as MCredit_TempProfile;
-            profile = await _rpMCredit.GetTemProfileById(profileId);
+            profile = await _rpMCredit.GetTemProfileByMcId(mcId);
             if (profile == null)
                 return ToJsonResponse(false, "Hồ sơ không tồn tại", new List<LoaiTaiLieuModel>());
 
