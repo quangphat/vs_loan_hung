@@ -192,29 +192,43 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             return ToJsonResponse(true, "", id);
         }
-        public async Task<JsonResult> AddRefuseReasonToNote(StringModel model, int profileId)
+        public async Task<JsonResult> AddRefuseReasonToNote(int profileId)
         {
-            if (model == null || profileId <=0)
+            if (profileId <=0)
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
-            if(!string.IsNullOrWhiteSpace(model.Value))
+            var profile = await _svMCredit.GetProfileById(profileId.ToString(), GlobalData.User.IDUser);
+            if (profile.status == "error")
             {
-                await _rpNote.AddNoteAsync(new GhichuModel
-                {
-                    HosoId = profileId,
-                    CommentTime = DateTime.Now,
-                    Noidung = model.Value,
-                    TypeId = (int)NoteType.MCreditTemp,
-                    UserId = GlobalData.User.IDUser
-                });
+                return ToJsonResponse(false, profile.message);
             }
+            if(profile.obj==null)
+            {
+                return ToJsonResponse(false,"Không tìm thấy hồ sơ");
+            }
+            if (profile.obj != null && profile.obj.Reason != null)
+            {
+                var reasonName = JsonConvert.SerializeObject(profile.obj.Reason);
+                if (!string.IsNullOrWhiteSpace(reasonName))
+                {
+                    await _rpNote.AddNoteAsync(new GhichuModel
+                    {
+                        HosoId = profileId,
+                        CommentTime = DateTime.Now,
+                        Noidung = reasonName,
+                        TypeId = (int)NoteType.MCreditTemp,
+                        UserId = GlobalData.User.IDUser
+                    });
+                }
+            }
+            
            
-            if(!string.IsNullOrWhiteSpace(model.Value2))
+            if(!string.IsNullOrWhiteSpace(profile.obj.Refuse))
             {
                 await _rpNote.AddNoteAsync(new GhichuModel
                 {
                     HosoId = profileId,
                     CommentTime = DateTime.Now,
-                    Noidung = model.Value,
+                    Noidung = profile.obj.Refuse,
                     TypeId = (int)NoteType.MCreditTemp,
                     UserId = GlobalData.User.IDUser
                 });

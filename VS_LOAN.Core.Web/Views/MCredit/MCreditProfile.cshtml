@@ -367,16 +367,16 @@
         function AddNoteFromReason() {
         let profileId = '@ViewBag.model.Id'
         showBlock($('#panel_body'), "Vui lòng chờ");
-            let objectSend = JSON.stringify({
+            @*let objectSend = JSON.stringify({
                 'Value': '@Html.Raw(ViewBag.model.ReasonName)',
                 'Value2': '@Html.Raw(ViewBag.model.Refuse)'
-            });
+            });*@
         $.ajax({
             traditional: true,
             url: `/MCredit/AddRefuseReasonToNote?profileId=${profileId}`,
             type: "POST",
             contentType: "application/json; charset=utf-8",
-            data: objectSend,
+           
             success: function (data) {
                 if (data.success == true) {
                     swal({
