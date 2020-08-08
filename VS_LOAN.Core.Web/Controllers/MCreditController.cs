@@ -197,6 +197,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (profileId <= 0 || string.IsNullOrWhiteSpace(type))
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var profile = await _svMCredit.GetProfileById(profileId.ToString(), GlobalData.User.IDUser);
+           
             if (profile.status == "error")
             {
                 return ToJsonResponse(false, profile.message);
@@ -205,13 +206,18 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "Không tìm thấy hồ sơ");
             }
-            if(type=="refuse")
+            var profileInPortal = await _rpMCredit.GetTemProfileByMcId(profile.obj.Id);
+            if(profileInPortal==null)
             {
-                return await AddRefuseToNote(profileId, profile.obj);
+                return ToJsonResponse(false, "Không tìm thấy hồ sơ trong portal");
+            }
+            if (type=="refuse")
+            {
+                return await AddRefuseToNote(profileInPortal.Id, profile.obj);
             }
             if (type == "reason")
             {
-                return await AddReasonToNote(profileId, profile.obj);
+                return await AddReasonToNote(profileInPortal.Id, profile.obj);
             }
             return ToJsonResponse(true);
 

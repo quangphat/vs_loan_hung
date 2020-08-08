@@ -366,10 +366,10 @@
     });
     
     $("#btnAddNoteFromReason").click(function () {
-        AddNoteFromRefuseOrReason("refuse")
+        AddNoteFromRefuseOrReason("reason")
     })
     $("#btnAddNoteFromRefuse").click(function () {
-        AddNoteFromRefuseOrReason("reason")
+        AddNoteFromRefuseOrReason("refuse")
     })
     function AddNoteFromRefuseOrReason(type) {
         let profileId = '@ViewBag.model.Id'
@@ -380,7 +380,7 @@
             });*@
         $.ajax({
             traditional: true,
-            url: `/MCredit/AddRefuseReasonToNote?profileId=${profileId}?type=${type}`,
+            url: `/MCredit/AddRefuseReasonToNote?profileId=${profileId}&type=${type}`,
             type: "POST",
             contentType: "application/json; charset=utf-8",
            
