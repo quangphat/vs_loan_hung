@@ -44,6 +44,9 @@
                                 @ViewBag.model.ReasonName
                             </textarea>
                         </div>
+                        <a class="btn btn-sm btn-primary pull-right" id="btnAddNoteFromReason">
+                            Thêm ghi chú
+                        </a>
                     </div>
                     <div class="form-group">
 
@@ -53,7 +56,7 @@
                                 @ViewBag.model.Refuse
                             </textarea>
                         </div>
-                        <a class="btn btn-sm btn-primary pull-right" id="btnAddNoteFromReason" >
+                        <a class="btn btn-sm btn-primary pull-right" id="btnAddNoteFromRefuse" >
                             Thêm ghi chú
                         </a>
                     </div>
@@ -361,10 +364,14 @@
         let value = !isNullOrWhiteSpace($("#txtIdNumber").val()) ? $("#txtIdNumber").val() : $("#txtCCCDNumber").val();
         checkDup('checkdupResult', value);
     });
+    
     $("#btnAddNoteFromReason").click(function () {
-        AddNoteFromReason()
+        AddNoteFromRefuseOrReason("refuse")
     })
-        function AddNoteFromReason() {
+    $("#btnAddNoteFromRefuse").click(function () {
+        AddNoteFromRefuseOrReason("reason")
+    })
+    function AddNoteFromRefuseOrReason(type) {
         let profileId = '@ViewBag.model.Id'
         showBlock($('#panel_body'), "Vui lòng chờ");
             @*let objectSend = JSON.stringify({
@@ -373,7 +380,7 @@
             });*@
         $.ajax({
             traditional: true,
-            url: `/MCredit/AddRefuseReasonToNote?profileId=${profileId}`,
+            url: `/MCredit/AddRefuseReasonToNote?profileId=${profileId}?type=${type}`,
             type: "POST",
             contentType: "application/json; charset=utf-8",
            

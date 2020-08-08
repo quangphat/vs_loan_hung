@@ -224,7 +224,6 @@
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
                         <div class="col-sm-5 col-xs-12 ">
                             <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
-                                <option value="0">Lưu Tạm</option>
                                 <option value="3">Nộp hồ sơ</option>
                                 <option value="4">Bổ sung hồ sơ</option>
                             </select>
@@ -280,7 +279,8 @@
     $(document).ready(function () {
         setTextForPTag('checkSaleResult');
         setTextForPTag('checkdupResult');
-        $("ddlStatus").val('@ViewBag.model.Status')
+        GetLoanProfileStatuses("#ddlStatus",'@ViewBag.model.Status')
+        
         $('#ddlProduct').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlProvince').chosen({ width: '100%', allow_single_deselect: true });
         $('#txtToDate').datepicker({
