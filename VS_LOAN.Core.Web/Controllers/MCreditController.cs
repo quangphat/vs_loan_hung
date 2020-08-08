@@ -147,6 +147,8 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public ActionResult Index()
         {
+            if (GlobalData.User.IDUser != (int)UserTypeEnum.Admin)
+                return RedirectToAction("Index", "NoAuthorities");
             return View();
         }
         public async Task<JsonResult> Search(string freeText, string status, string type, int page)
@@ -197,7 +199,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (profileId <= 0 || string.IsNullOrWhiteSpace(type))
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var profile = await _svMCredit.GetProfileById(profileId.ToString(), GlobalData.User.IDUser);
-           
+
             if (profile.status == "error")
             {
                 return ToJsonResponse(false, profile.message);
@@ -207,11 +209,11 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToJsonResponse(false, "Không tìm thấy hồ sơ");
             }
             var profileInPortal = await _rpMCredit.GetTemProfileByMcId(profile.obj.Id);
-            if(profileInPortal==null)
+            if (profileInPortal == null)
             {
                 return ToJsonResponse(false, "Không tìm thấy hồ sơ trong portal");
             }
-            if (type=="refuse")
+            if (type == "refuse")
             {
                 return await AddRefuseToNote(profileInPortal.Id, profile.obj);
             }
@@ -224,7 +226,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         protected async Task<JsonResult> AddRefuseToNote(int profileId, ProfileGetByIdResponseObj profile)
         {
-            
+
             if (profile != null && !string.IsNullOrWhiteSpace(profile.Refuse))
             {
                 await _rpNote.AddNoteAsync(new GhichuModel
@@ -242,7 +244,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         protected async Task<JsonResult> AddReasonToNote(int profileId, ProfileGetByIdResponseObj profile)
         {
-           
+
             if (profile != null && profile.Reason != null)
             {
                 var reasonName = JsonConvert.SerializeObject(profile.Reason);
@@ -259,10 +261,10 @@ namespace VS_LOAN.Core.Web.Controllers
                 }
                 await _rpLog.InsertLog($"AddReasonToNote-{profileId}", reasonName);
             }
-            
-           
+
+
             return ToJsonResponse(true);
-            
+
         }
         public async Task<JsonResult> UpdateTempProfileStatus(int profileId)
         {
@@ -280,7 +282,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "Không tìm thấy hồ sơ phía MC");
             }
-            if (mcProfile.obj== null || mcProfile.status =="error")
+            if (mcProfile.obj == null || mcProfile.status == "error")
             {
                 return ToJsonResponse(false, mcProfile.message);
             }
@@ -293,7 +295,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 status = temp.Status;
             }
-            if(temp.Status!= status)
+            if (temp.Status != status)
             {
                 var result = await _rpMCredit.UpdateTempProfileStatusAsync(temp.Id, status);
                 return ToJsonResponse(result);
