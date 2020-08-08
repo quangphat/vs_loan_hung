@@ -173,18 +173,18 @@ END
 
 --exec sp_Profile_Search 0,10,1,0,0,'2020-01-01','2020-07-30','','',1
 --exec sp_Profile_Search 0,10,4375,0,0,'2020-01-01','2020-07-30','','',1
-create procedure [dbo].[sp_Profile_Search]
+alter procedure [dbo].[sp_Profile_Search]
 (
-	@offset int,
-	@limit int,
 	@userId int,
 	@groupId int =0,
 	@memberId int = 0,
 	@fromDate datetime,
 	@toDate datetime,
-	@status varchar(50),
-	@freeText as nvarchar(50) = '',
 	@dateType int,
+	@status varchar(50),
+	@offset int,
+	@limit int,
+	@freeText as nvarchar(50) = '',
 	@sort varchar(10) = 'desc',
 	@sortField varchar(20) = 'updatedtime'
 )
@@ -775,3 +775,143 @@ update TAI_LIEU_HS set Deleted = 1 where Id = @fileId or GuidId = @guidId;
 end
 
 -----------
+
+ALTER PROCEDURE [dbo].[sp_TAI_LIEU_HS_Them_v2]
+(
+@Id int out,
+@FileKey int,
+@FileName nvarchar(200),
+@FilePath nvarchar(max),
+@ProfileId int,
+@Deleted bit = 0,
+@ProfileTypeId int,
+@DocumentName nvarchar(500) = null,
+@DocumentCode varchar(400) =null,
+@MC_DocumentId int = 0,
+@MC_MapBpmVar varchar(400) = null,
+@MC_GroupId int  = 0,
+@OrderId int= 0,
+@Folder nvarchar(max) = null,
+@MCId varchar(20) = null,
+@GuidId varchar(50) = null,
+@FileId int =0
+) 
+AS
+BEGIN
+select top 1 @Id = isnull(Id,0) from TAI_LIEU_HS where (GuidId = @GuidId or ID = @FileId) 
+if (@Id > 0 and @Id is not null)
+begin
+delete TAI_LIEU_HS where ID = @Id
+	--update TAI_LIEU_HS set
+	--[FileName] = @FileName,
+	--FilePath = @FilePath,
+	--Folder = @Folder,
+	--MCId = @MCId,
+	--DocumentName = @DocumentName,
+	--DocumentCode = @DocumentCode,
+	--MC_DocumentId = @MC_DocumentId,
+	--MC_MapBpmVar = @MC_MapBpmVar,
+	--MC_GroupId = @MC_GroupId
+	--where ID = @Id
+end
+
+	Insert into TAI_LIEU_HS 
+	(FileKey,FileName,FilePath,ProfileId
+	,Deleted,ProfileTypeId,DocumentName
+	,DocumentCode,MC_DocumentId,MC_MapBpmVar,MC_GroupId, OrderId,Folder, MCId, GuidId)
+	values(@FileKey,@FileName,@FilePath
+	,@ProfileId,@Deleted,@ProfileTypeId
+	,@DocumentName,@DocumentCode,@MC_DocumentId
+	,@MC_MapBpmVar,@MC_GroupId,@OrderId,@Folder, @MCId, @GuidId)
+	SET @Id=@@IDENTITY
+END
+
+-----------
+
+
+ALTER procedure [dbo].[getTailieuByHosoId](@profileId int, @profileTypeId int =1)
+
+as
+
+begin
+--3 is mcredit
+if(@profileTypeId =3)
+begin
+	select tl.ID as FileId,
+	tl.FileKey as [Key] 
+	, tl.FileName 
+		, tl.FilePath as FileUrl
+		,tl.DocumentName as KeyName
+		,tl.ProfileId
+		,tl.ProfileTypeId
+		,tl.Folder,
+		tl.DocumentName ,
+		tl.DocumentCode ,
+		tl.MC_DocumentId,
+		tl.MC_MapBpmVar,
+		tl.MC_GroupId
+	from TAI_LIEU_HS tl where ProfileId = @profileId 
+	and ProfileTypeId = 3
+	and ISNULL(tl.Deleted,0) = 0
+end
+else
+begin
+	select tl.Id as FileId
+		, tl.FileKey as [Key]
+		, tl.FileName 
+		, tl.FilePath as FileUrl
+		,isnull(ltl.Ten,tl.DocumentName) as KeyName
+		, ltl.Bat_Buoc as IsRequire
+		,tl.ProfileId
+		,tl.ProfileTypeId
+		,tl.Folder,
+		tl.DocumentName ,
+		tl.DocumentCode ,
+		tl.MC_DocumentId,
+		tl.MC_MapBpmVar,
+		tl.MC_GroupId,
+		tl.GuidId
+		from TAI_LIEU_HS tl
+		left join LOAI_TAI_LIEU ltl on tl.FileKey = ltl.ID
+		where tl.ProfileId = @profileId and ISNULL(tl.Deleted,0) = 0
+		and tl.ProfileTypeId = @profileTypeId
+		order by ltl.Bat_Buoc desc
+end;
+end
+
+
+
+------------------
+
+alter PROCEDURE sp_update_HO_SO_v2
+@Ten_Khach_Hang nvarchar(100),
+@CMND nvarchar(50),
+@Dia_Chi nvarchar(200),
+@Ma_Khu_Vuc int,
+@SDT nvarchar(50),
+@SDT2 nvarchar(50),
+@Gioi_Tinh int,
+@Ho_So_Cua_Ai int,
+@Ngay_Nhan_Don datetime,
+@Ma_Trang_Thai int,
+@San_Pham_Vay int,
+@Co_Bao_Hiem bit,
+@So_Tien_Vay decimal,
+@Han_Vay float,
+@Courier_Code int,
+@BirthDay datetime,
+@CMNDDay datetime,
+@UpdatedBy int,
+@ID int 
+AS
+BEGIN
+	UPDATE [dbo].HO_SO SET Ten_Khach_Hang=@Ten_Khach_Hang,CMND=@CMND,Dia_Chi=@Dia_Chi,Ma_Khu_Vuc=@Ma_Khu_Vuc,SDT=@SDT,SDT2=@SDT2
+	,Gioi_Tinh=@Gioi_Tinh,Ho_So_Cua_Ai=@Ho_So_Cua_Ai,UpdatedTime=GETDATE()
+	,UpdatedBy=@UpdatedBy,Ngay_Nhan_Don=@Ngay_Nhan_Don,Ma_Trang_Thai=@Ma_Trang_Thai
+	,San_Pham_Vay=@San_Pham_Vay,Co_Bao_Hiem=@Co_Bao_Hiem,So_Tien_Vay=@So_Tien_Vay,Han_Vay=@Han_Vay
+	,Courier_Code=@Courier_Code,IsDeleted=0,BirthDay=@BirthDay,CMNDDay=@CMNDDay
+	WHERE ID=@ID 
+end
+GO
+
+-------------

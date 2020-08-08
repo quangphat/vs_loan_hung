@@ -68,13 +68,12 @@ namespace VietStar.Repository
                 nameof(model.UpdatedBy),
                 nameof(model.UpdatedTime),
                 nameof(model.CreatedTime),
-                nameof(model.Ho_So_Cua_Ai),
+               
                 nameof(model.CreatedBy),
                 nameof(model.Ma_Ho_So)
           
             }, "id");
             par.Add("CreatedBy", createdBy);
-            par.Add("Ho_So_Cua_Ai", createdBy);
             try
             {
                 using (var _con = GetConnection())
@@ -87,6 +86,35 @@ namespace VietStar.Repository
             catch(Exception e)
             {
                 return RepoResponse<int>.Create(0, GetException(e));
+            }
+
+        }
+        public async Task<RepoResponse<bool>> UpdateAsync(ProfileAddSql model,int profileId, int updatedBy)
+        {
+            model.ID = profileId;
+            var par = GetParams(model, new string[] {
+                nameof(model.CreatedBy),
+                nameof(model.Ma_Ho_So),
+                nameof(model.UpdatedBy),
+                nameof(model.Ghi_Chu),
+                 nameof(model.CreatedTime),
+                  nameof(model.UpdatedTime),
+                nameof(model.IsDeleted)
+
+            });
+            par.Add("UpdatedBy", updatedBy); 
+            try
+            {
+                using (var _con = GetConnection())
+                {
+                    await _con.ExecuteAsync("sp_update_HO_SO_v2", par, commandType: CommandType.StoredProcedure);
+                    
+                    return RepoResponse<bool>.Create(true);
+                }
+            }
+            catch (Exception e)
+            {
+                return RepoResponse<bool>.Create(false, GetException(e));
             }
 
         }

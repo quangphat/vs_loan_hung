@@ -163,6 +163,15 @@
             <div class="col-xs-12">
                 <hr />
                 <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
+                                <option value="0" selected>Lưu tạm</option>
+                            </select>
+                        </div>
+
+                    </div>
                     <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Ghi chú hồ sơ</h4>
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
@@ -195,13 +204,13 @@
                 <div class="command-bar">
                     @if (Model.Status == (int)VietStar.Entities.Commons.Enums.ProfileStatus.Draft)
                     {
-                        <a class="btn btn-sm btn-primary" id="btn_Next">
+                        <a class="btn btn-sm btn-primary" id="btnSave">
                             Nộp hồ sơ
                         </a>
                     }
                     else
                     {
-                        <a class="btn btn-sm btn-primary" id="btn_Next">
+                        <a class="btn btn-sm btn-primary" id="btnSave">
                             Cập nhật
                         </a>
                     }
@@ -225,8 +234,12 @@
 
     $(document).ready(function () {
         GetProfileFiles();
-        GetPartners(null,'@Model.PartnerId', '@Model.ProductId');
-        GetSales();
+        GetPartners(null, '@Model.PartnerId', '@Model.ProductId');
+        if ('@Model.Status' != '@((int)VietStar.Entities.Commons.Enums.ProfileStatus.Draft)') {
+            renderStatusList('common', ['@Model.Status']);
+        }
+        
+        GetSales(null,'@Model.SaleId');
         GetCouriers();
         GetProvinces(null, '@Model.ProvinceId','@Model.DistrictId');
         getComments('@Model.Id', '@((int)VietStar.Entities.Commons.Enums.NoteType.Common)', $('#comments'))
@@ -250,7 +263,7 @@
     //    console.log('Key = ' + key);
     //});
     function btnRemoveFile(id, guidId) {
-        debugger
+        
         onDeleteFile(id, guidId)
     }
     $("#btnAddNote").click(function () {
@@ -341,7 +354,7 @@
         });
     }
 
-    $('#btn_Next').click(function (e) {
+    $('#btnSave').click(function (e) {
 
         if (isNullOrWhiteSpace($('#customerName').val())) {
             swal({
@@ -405,7 +418,7 @@
             return;
         }
         var objectSend = JSON.stringify({
-            "Id": 0,
+            "Id": '@Model.Id',
             "Code": '',
             "CustomerName": $("#customerName").val(),
             "Phone": $("#phone").val(),
@@ -419,16 +432,17 @@
             "IsInsurrance": $('#isInsurrance').is(":checked"), 'thoiHanVay': $('#spnThoiHanVay').val(),
             "Period": parseInt($("#period").val()),
             "LoanAmount": getDecimalValueFromMoneyInput($("#loanAmount").val()),
-            "Status":0,
+            "Status": $("#ddlStatus").val().toString(),
             "Comment": $("#comment").val(),
             "BirthDay": $("#birthDay").val(),
             "CmndDay": $("#cmndDay").val(),
             "PartnerId": parseInt($("#partnerId").val()),
-            "ProductId": parseInt($("#productId").val())
+            "ProductId": parseInt($("#productId").val()),
+             "SaleId": parseInt($("#saleId").val())
         });
         $.ajax({
             traditional: true,
-            url: '/profile/CreateAsync',
+            url: '/profile/update',
             type: "POST",
             contentType: "application/json; charset=utf-8",
             data: objectSend,
@@ -441,8 +455,7 @@
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-                        alert(data.data)
-                        //uploadHoso2(data.data, true);
+                        //window.location = window.location
                     });
                 }
                 else {
@@ -463,38 +476,5 @@
             },
         });
     });
-         function uploadHoso2(hosoId, reloadOnSuccess = false) {
-            if (isNullOrNoItem(filesUpload))
-                return;
-            $.ajax({
-                traditional: true,
-                url: `/HoSo/UploadToHoso?hosoId=${hosoId}&isReset=true`,
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                //dataType: 'json',
-                data: JSON.stringify(filesUpload),
-                success: function (data) {
-                    if (data.success == true) {
-                        if (reloadOnSuccess == true) {
-                            window.location = window.location;
-                        }
-                }
-                else {
-                    swal({
-                        title: "",
-                        text: data.code,
-                        type: "error",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    });
-                }
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            },
-            complete: function () {
-                $('#panel_body').unblock();
-            },
-        });
-        }
+
 </script>

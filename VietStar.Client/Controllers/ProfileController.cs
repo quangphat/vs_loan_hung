@@ -60,5 +60,12 @@ namespace VietStar.Client.Controllers
             
             return View(result ?? new ProfileEditView());
         }
+        [Authorize]
+        [HttpPost("profile/update")]
+        public async Task<IActionResult> UpdateAsync([FromBody]ProfileAdd model)
+        {
+            var result = await _bizProfile.UpdateProfile(model);
+            return ToResponse(result);
+        }
     }
 }

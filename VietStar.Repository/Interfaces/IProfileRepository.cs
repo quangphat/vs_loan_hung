@@ -10,6 +10,7 @@ namespace VietStar.Repository.Interfaces
 {
     public interface IProfileRepository
     {
+        Task<RepoResponse<bool>> UpdateAsync(ProfileAddSql model, int profileId, int updatedBy);
         Task<List<ProfileIndexModel>> GetsAsync(int userId
             , DateTime fromDate
             , DateTime toDate

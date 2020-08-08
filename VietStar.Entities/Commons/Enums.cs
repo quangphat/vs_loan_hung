@@ -9,18 +9,18 @@ namespace VietStar.Entities.Commons
         public enum ProfileStatus
         {
             Draft = 0,
-            New = 1,
-            Input = 2,
+            Input = 1,
+            Deny = 2,
             Expertise = 3,
-            Deny = 4,
-            Additional = 5,
-            Release = 6,
-            Compared = 7,
-            Cancel = 8,
-            PCB = 9,
+            Additional = 4,
+            Release = 5,
+            Compared = 6,
+            Cancel = 7,
+            PCB = 8,
+            New = 9,
             Processing = 10,
-            Accept = 11,
-            Finish = 12,
+            Accept = 12,
+            Finish = 14,
         }
         public enum ProfileType
         {

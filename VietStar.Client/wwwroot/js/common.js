@@ -102,7 +102,6 @@ function renderStatusList(profileType, value = null) {
         });
         if (value != null) {
             control.val(value);
-
         }
         return;
     }

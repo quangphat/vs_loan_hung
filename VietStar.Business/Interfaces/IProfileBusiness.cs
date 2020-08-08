@@ -10,6 +10,7 @@ namespace VietStar.Business.Interfaces
 {
     public interface IProfileBusiness
     {
+        Task<bool> UpdateProfile(ProfileAdd model);
         Task<DataPaging<List<ProfileIndexModel>>> GetsAsync(DateTime? fromDate
             , DateTime? toDate
             , int dateType = 1
