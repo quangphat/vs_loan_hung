@@ -21,12 +21,15 @@ namespace VietStar.Business
     {
         protected readonly IProfileRepository _rpProfile;
         protected readonly IServiceProvider _svProvider;
+        protected readonly IProfileNotificationRepository _rpProfileNoti;
         public ProfileBusiness(IProfileRepository profileRepository,
+            IProfileNotificationRepository profileNotificationRepository,
            IServiceProvider svProvider,
         IMapper mapper, CurrentProcess process) : base(mapper, process)
         {
             _rpProfile = profileRepository;
             _svProvider = svProvider;
+            _rpProfileNoti = profileNotificationRepository;
         }
 
         public async Task<int> CreateAsync(ProfileAdd model)
@@ -62,11 +65,11 @@ namespace VietStar.Business
                 return false;
             }
             var profile = await _rpProfile.GetByIdAsync(model.Id);
-            if (profile == null)
+            if (!profile.success)
             {
                 return ToResponse(false, Errors.profile_could_not_found_in_portal);
             }
-            
+
             if (model.SaleId <= 0)
             {
                 model.SaleId = _process.User.Id;
@@ -74,7 +77,10 @@ namespace VietStar.Business
             model.Status = model.Status == (int)ProfileStatus.Draft ? (int)ProfileStatus.New : model.Status;
             var sqlmodel = _mapper.Map<ProfileAddSql>(model);
             var result = await _rpProfile.UpdateAsync(sqlmodel, model.Id, _process.User.Id);
-           
+            if (result.data == true)
+            {
+                await _rpProfileNoti.CreateAsync(model.Id);
+            }
             return ToResponse<bool>(result.data, result.error);
         }
 
