@@ -141,7 +141,7 @@ namespace VietStar.Business
                 {
                     var config = new
                     {
-                        initialPreview = fileUrl,
+                        initialPreview = result.FileUrl,
                         initialPreviewConfig = new[] {
                                             new {
                                                 caption = result.Name,
@@ -159,7 +159,7 @@ namespace VietStar.Business
                 {
                     var config = new
                     {
-                        initialPreview = fileUrl,
+                        initialPreview = result.FileUrl,
                         initialPreviewConfig = new[] {
                                             new {
                                                 caption = result.Name,

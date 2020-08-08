@@ -480,7 +480,8 @@ function renderOneItemFile(model, className = '',
             header = '<h5  class="header green ' + className + '">' + model.titleName + '<span > </span></h5>';
         }
     }
-    let guidId = getNewGuid();
+    
+    let guidId = isNullOrWhiteSpace(model.guidId) ? getNewGuid() : model.guidId;
     let content = header + "<div class='col-sm-3'> ";
     content += "<div class=\"file-loading\">";
     content += "<input class='attachFile' key=" + model.key + " id=\"attachFile-" + model.itemId + "\" type=\"file\">";
@@ -514,8 +515,8 @@ function renderOneItemFile(model, className = '',
         browseOnZoneClick: true,
         removeLabel: '',
         fileId: model.fileId,
-        outsideGuidId: `'${model.guidId}'`,
-        btnDeleteId: `btnRemoveFile-${model.guidId}`,
+        outsideGuidId: `'${guidId}'`,
+        btnDeleteId: `btnRemoveFile-${guidId}`,
         dropZoneTitle: 'Kéo và thả tập tin vào đây',
         dropZoneClickTitle: '<br>(hoặc nhấp để chọn)',
         removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
@@ -548,10 +549,20 @@ function renderOneItemFile(model, className = '',
         //}
     }).on('filebatchuploadsuccess', function (event, data) {
         
-        if (continueUpload === true) {
-            model.titleName = ''
-            model.guidId = getNewGuid()
-            renderOneItemFile(model, '', data.response.initialPreview, data.response.initialPreviewConfig, true, continueUpload);
+        if (continueUpload === true && model.fileId<=0) {
+            let newItem = { ...model }
+            newItem.guidId = getNewGuid
+            newItem.fileId = 0
+            newItem.titleName =''
+            renderOneItemFile({
+                key: model.key,
+                type: model.type,
+                profileId: model.profileId,
+                fileId: 0,
+                isRequire: model.isRequire,
+                titleName: model.titleName,
+                guidId: ''
+            }, '', [], [], true, continueUpload);
         }
     });
 

@@ -245,12 +245,12 @@
         });
         $('#saleId').val('@Model.SaleId').trigger('change')
         $('#courierId').val('@Model.CourierId').trigger('change')
-    });
-    //$("#btn-remove-file-1").on('click', function (event, key, jqXHR, data) {
+    });    //$("#btn-remove-file-1").on('click', function (event, key, jqXHR, data) {
     //    debugger
     //    console.log('Key = ' + key);
     //});
     function btnRemoveFile(id, guidId) {
+        debugger
         onDeleteFile(id, guidId)
     }
     $("#btnAddNote").click(function () {
@@ -289,7 +289,7 @@
                                     });
                                 }
                                 
-                                let titleName = keys.indexOf(file.Key) < 0 ? item.Name :''
+                                let titleName = keys.indexOf(file.Key) < 0 ? item.Name : ''
                                 
                                 renderOneItemFile({
                                     key: item.FileKey,
@@ -299,11 +299,12 @@
                                     isRequire: item.IsRequire,
                                     titleName: titleName,
                                     itemId: i,
-                                    guidId: getNewGuid()
+                                    guidId: file.GuidId
                                 }, '', _initialPreview, _initialPreviewConfig, true, true);
 
                                 keys.push(item.FileKey);
                             });
+                            
                            renderOneItemFile({
                                     key: item.FileKey,
                                     type: '@((int)VietStar.Entities.Commons.Enums.ProfileType.Common)',
@@ -312,10 +313,11 @@
                                isRequire: false,
                                     titleName: '',
                                     itemId: i,
-                                    guidId: getNewGuid()
+                                    guidId: ''
                                 }, '', [], [], true, true);
                         }
                         else {
+                            
                             renderOneItemFile({
                                     key: item.FileKey,
                                     type: '@((int)VietStar.Entities.Commons.Enums.ProfileType.Common)',
@@ -324,7 +326,7 @@
                                     isRequire: item.IsRequire,
                                     titleName: item.Name,
                                     itemId: i,
-                                    guidId: getNewGuid()
+                                    guidId: ''
                                 }, '', [], [], true, true);
                         }
                     })

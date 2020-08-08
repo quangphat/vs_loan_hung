@@ -22,5 +22,6 @@ namespace VietStar.Entities.FileProfile
         public int MC_GroupId { get; set; }
         public string FullPath { get; set; }
         public string Folder { get; set; }
+        public string GuidId { get; set; }
     }
 }
