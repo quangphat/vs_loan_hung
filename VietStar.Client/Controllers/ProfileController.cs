@@ -41,6 +41,10 @@ namespace VietStar.Client.Controllers
 
             return ToResponse(result);
         }
+        public IActionResult Approve()
+        {
+            return View();
+        }
         [Authorize]
         public IActionResult Create()
         {

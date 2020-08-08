@@ -9,6 +9,7 @@ namespace VietStar.Business.Interfaces
 {
     public interface IGroupBusiness
     {
+        Task<List<GroupModel>> GetApproveGroupByUserId();
         Task<List<GroupModel>> GetGroupByUserId();
     }
 }

@@ -19,10 +19,17 @@ namespace VietStar.Client.Controllers
             _bizGroup = groupBusiness;
         }
         [Authorize]
-        [HttpGet("GetGroupsByUserId")]
+        [HttpGet("GroupsByUserId")]
         public async Task<IActionResult> GetGroupsByUserId()
         {
             var result = await _bizGroup.GetGroupByUserId();
+            return ToResponse(result);
+        }
+        [Authorize]
+        [HttpGet("ApproveGroupsByUserId")]
+        public async Task<IActionResult> GetApproveGroupsByUserId()
+        {
+            var result = await _bizGroup.GetApproveGroupByUserId();
             return ToResponse(result);
         }
     }

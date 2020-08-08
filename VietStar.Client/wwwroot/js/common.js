@@ -377,17 +377,71 @@ function GetDistricts(provinceId, control = null, defaultValue = 0) {
         }
     });
 }
-function GetGroupByUser(control = null, defaultValue = 0) {
+function GetApproveGroupByUser(control = null, defaultValue = 0) {
     if (control == null)
         control = $("#groupId");
+    debugger
     control.empty();
+    control.append("<option value='0'>Chọn nhóm</option>");
+    let data = getLocalStorage('approvegroups')
+    if (data != null) {
+        $.each(data, function (index, item) {
+            control.append("<option value='" + item.Id + "'>" + item.Name + "(" + item.ShortName + ")</option>");
+        });
+        if (defaultValue != null) {
+            control.val(defaultValue);
+            // GetMemberByGroup(defaultValue, null,)
+        }
+        return
+    }
     $.ajax({
         type: "GET",
-        url: '/Groups/GetGroupsByUserId',
+        url: '/Groups/ApproveGroupsByUserId',
         data: {},
         success: function (data) {
             control.append("<option value='0'>Chọn nhóm</option>");
             if (data.data != null && data.success == true) {
+                setLocalStorage('approvegroups', data.data)
+                $.each(data.data, function (index, item) {
+                    control.append("<option value='" + item.Id + "'>" + item.Name + "(" + item.ShortName + ")</option>");
+                });
+                if (defaultValue != null) {
+                    control.val(defaultValue);
+                    // GetMemberByGroup(defaultValue, null,)
+                }
+
+            }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+function GetGroupByUser(control = null, defaultValue = 0) {
+    if (control == null)
+        control = $("#groupId");
+    control.empty();
+    control.append("<option value='0'>Chọn nhóm</option>");
+    let data = getLocalStorage('groups')
+    if (data != null ) {
+        $.each(data, function (index, item) {
+            control.append("<option value='" + item.Id + "'>" + item.Name + "(" + item.ShortName + ")</option>");
+        });
+        if (defaultValue != null) {
+            control.val(defaultValue);
+            // GetMemberByGroup(defaultValue, null,)
+        }
+        return
+    }
+    $.ajax({
+        type: "GET",
+        url: '/Groups/GroupsByUserId',
+        data: {},
+        success: function (data) {
+            if (data.data != null && data.success == true) {
+                setLocalStorage('groups', data.data)
                 $.each(data.data, function (index, item) {
                     control.append("<option value='" + item.Id + "'>" + item.Name + "(" + item.ShortName + ")</option>");
                 });
@@ -407,7 +461,7 @@ function GetGroupByUser(control = null, defaultValue = 0) {
 }
 
 function GetMemberByGroup(groupId, control = null, defaultValue = 0) {
-    if (isNullOrUndefined(groupId) || isNullOrWhiteSpace(groupId))
+    if (isNullOrUndefined(groupId) || isNullOrWhiteSpace(groupId) || groupId==0)
         return;
     if (control == null)
         control = $("#memberId");
@@ -454,7 +508,7 @@ function renderStatusDisplay(statusName) {
     if (danger.indexOf(firstChar) >= 0)
         colorClass = 'label-orrange'
     if (succsess.indexOf(firstChar) >= 0)
-        colorClass = 'label-success'
+        colorClass = 'label-primary'
     if (inverse.indexOf(firstChar) >= 0)
         colorClass = 'label-inverse'
     if (cancel.indexOf(firstChar) >= 0)

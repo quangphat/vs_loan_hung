@@ -23,30 +23,41 @@ namespace VietStar.Business
         {
             _rpGroup = groupRepository;
         }
+
+        public async Task<List<GroupModel>> GetApproveGroupByUserId()
+        {
+            var groups = await _rpGroup.GetApproveGroupByUserId(_process.User.Id);
+            return await GetGroupByUserId(groups);
+        }
         public async Task<List<GroupModel>> GetGroupByUserId()
         {
             var groups = await _rpGroup.GetGroupByUserId(_process.User.Id);
+            return await GetGroupByUserId(groups);
+        }
+        private async Task<List<GroupModel>> GetGroupByUserId(List<GroupModel> groups)
+        {
+
             if (groups == null || !groups.Any())
                 return null;
             var result = new List<GroupModel>();
             var temp = new List<GroupModel>();
-            foreach(var group in groups)
+            foreach (var group in groups)
             {
                 if (temp.FirstOrDefault(p => group.ParentSequenceCode.Contains($".{p.Id}.") || group.ParentSequenceCode.EndsWith($".{p.Id.ToString()}")) != null)
                     continue;
                 temp.RemoveAll(p => group.ParentSequenceCode.Contains($".{p.Id}.") || group.ParentSequenceCode.EndsWith($".{p.Id.ToString()}"));
                 temp.Add(group);
-                if(temp.Count >0)
+                if (temp.Count > 0)
                 {
-                    foreach(var item in temp)
+                    foreach (var item in temp)
                     {
                         var children = await _rpGroup.GetChildGroupByParentId(item.Id);
-                        if(children!=null || children.Any())
+                        if (children != null || children.Any())
                         {
                             result.AddRange(GenerateChildList(children, $"{item.ParentSequenceCode}.{item.Id}", _process.User.Id));
                         }
                     }
-                    
+
                 }
             }
             return result;
@@ -93,6 +104,6 @@ namespace VietStar.Business
             } while (stack.Count > 0);
             return lstResult;
         }
-       
+
     }
 }

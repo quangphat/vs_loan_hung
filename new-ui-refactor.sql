@@ -915,3 +915,23 @@ end
 GO
 
 -------------
+
+
+create PROCEDURE [dbo].[sp_NHOM_LayDSNhomDuyetChonTheoNhanVien_v3]
+	-- Add the parameters for the stored procedure here
+	@userId int
+AS
+BEGIN
+declare @orgId int = 0;
+  select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
+	Select NHOM.ID , NHOM.Ten Name, NHOM.Chuoi_Ma_Cha as ParentSequenceCode, NHOM.Ma_Nhom_Cha as ParentCode, NHOM.Ten_Viet_Tat 
+	as ShortName From NHOM
+	Where isnull(NHOM.OrgId,0) = @orgId and NHOM.ID in 
+	(Select NHAN_VIEN_CF.Ma_Nhom 
+	From NHAN_VIEN_CF 
+	--Where NHAN_VIEN_CF.Ma_Nhan_Vien = @UserID
+	)
+END
+
+
+--------------

@@ -8,6 +8,7 @@ namespace VietStar.Repository.Interfaces
 {
     public interface IGroupRepository
     {
+        Task<List<GroupModel>> GetApproveGroupByUserId(int userId);
         Task<List<GroupModel>> GetGroupByUserId(int userId);
         Task<List<GroupModel>> GetChildGroupByParentId(int parentGroupId);
     }
