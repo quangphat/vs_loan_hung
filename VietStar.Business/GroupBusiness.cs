@@ -32,9 +32,9 @@ namespace VietStar.Business
             var temp = new List<GroupModel>();
             foreach(var group in groups)
             {
-                if (temp.FirstOrDefault(p => group.ParentCode.Contains($".{p.Id}.") || group.ParentCode.EndsWith($".{p.Id.ToString()}")) != null)
+                if (temp.FirstOrDefault(p => group.ParentSequenceCode.Contains($".{p.Id}.") || group.ParentSequenceCode.EndsWith($".{p.Id.ToString()}")) != null)
                     continue;
-                temp.RemoveAll(p => group.ParentCode.Contains($".{p.Id}.") || group.ParentCode.EndsWith($".{p.Id.ToString()}"));
+                temp.RemoveAll(p => group.ParentSequenceCode.Contains($".{p.Id}.") || group.ParentSequenceCode.EndsWith($".{p.Id.ToString()}"));
                 temp.Add(group);
                 if(temp.Count >0)
                 {
@@ -43,7 +43,7 @@ namespace VietStar.Business
                         var children = await _rpGroup.GetChildGroupByParentId(item.Id);
                         if(children!=null || children.Any())
                         {
-                            result.AddRange(GenerateChildList(children, $"{item.ParentCode}.{item.Id}", _process.User.Id));
+                            result.AddRange(GenerateChildList(children, $"{item.ParentSequenceCode}.{item.Id}", _process.User.Id));
                         }
                     }
                     
@@ -67,7 +67,7 @@ namespace VietStar.Business
                     var nhom = stack.Pop();
                     if (nhom != null)
                     {
-                        string[] tempArray = nhom.ParentCode.Split('.');
+                        string[] tempArray = nhom.ParentSequenceCode.Split('.');
                         if (tempArray.Length > 1)
                         {
                             for (int i = 0; i < tempArray.Length - 1; i++)
@@ -76,15 +76,15 @@ namespace VietStar.Business
                             }
                         }
                         lstResult.Add(nhom);
-                        parentCodeTemp = nhom.ParentCode + "." + nhom.Id;
+                        parentCodeTemp = nhom.ParentSequenceCode + "." + nhom.Id;
                     }
                 }
-                lstFind = groups.FindAll(x => x.ParentCode.Equals(parentCodeTemp));
+                lstFind = groups.FindAll(x => x.ParentSequenceCode.Equals(parentCodeTemp));
                 if (lstFind != null)
                 {
                     for (int i = lstFind.Count - 1; i >= 0; i--)
                     {
-                        if (lstFind[i].ParentCode == parentSequenceCode && lstFind[i].LeaderId != leaderId)
+                        if (lstFind[i].ParentSequenceCode == parentSequenceCode && lstFind[i].LeaderId != leaderId)
                             continue;
                         stack.Push(lstFind[i]);
                         groups.Remove(lstFind[i]);

@@ -304,7 +304,7 @@ AS
 BEGIN
 declare @orgId int =0;
 select @orgId = isnull(OrgId,0) from Nhan_Vien where id = @userId;
-	Select g.Id, g.Ten as Name, g.Chuoi_Ma_Cha as ParentCode, g.Ma_Nhom_Cha as Code, g.Ten_Viet_Tat as ShortName 
+	Select g.Id, g.Ten as Name, g.Chuoi_Ma_Cha as ParentSequenceCode, g.Ma_Nhom_Cha as ParentCode, g.Ten_Viet_Tat as ShortName 
 	From NHOM  g
 	Where isnull(g.OrgId,0) = @orgId and
 	g.ID in (Select NHAN_VIEN_NHOM.Ma_Nhom From NHAN_VIEN_NHOM Where NHAN_VIEN_NHOM.Ma_Nhan_Vien = @userId)
