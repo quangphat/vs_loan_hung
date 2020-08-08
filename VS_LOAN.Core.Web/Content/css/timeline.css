@@ -208,7 +208,8 @@ time[class='timeline__time'] span {
 .activity-log {
     /* max-width: 800px; */
     margin: 0 auto;
-    margin-bottom:100px;
+    margin-bottom: 100px;
+    margin-top: 125px;
 }
 
 .timeline-body {
