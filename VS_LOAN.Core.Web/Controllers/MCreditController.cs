@@ -192,22 +192,54 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             return ToJsonResponse(true, "", id);
         }
-        public async Task<JsonResult> AddRefuseReasonToNote(int profileId)
+        public async Task<JsonResult> AddRefuseReasonToNote(int profileId, string type)
         {
-            if (profileId <=0)
+            if (profileId <= 0 || string.IsNullOrWhiteSpace(type))
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var profile = await _svMCredit.GetProfileById(profileId.ToString(), GlobalData.User.IDUser);
             if (profile.status == "error")
             {
                 return ToJsonResponse(false, profile.message);
             }
-            if(profile.obj==null)
+            if (profile.obj == null)
             {
-                return ToJsonResponse(false,"Không tìm thấy hồ sơ");
+                return ToJsonResponse(false, "Không tìm thấy hồ sơ");
             }
-            if (profile.obj != null && profile.obj.Reason != null)
+            if(type=="refuse")
             {
-                var reasonName = JsonConvert.SerializeObject(profile.obj.Reason);
+                return await AddRefuseToNote(profileId, profile.obj);
+            }
+            if (type == "reason")
+            {
+                return await AddReasonToNote(profileId, profile.obj);
+            }
+            return ToJsonResponse(true);
+
+        }
+        protected async Task<JsonResult> AddRefuseToNote(int profileId, ProfileGetByIdResponseObj profile)
+        {
+            
+            if (profile != null && !string.IsNullOrWhiteSpace(profile.Refuse))
+            {
+                await _rpNote.AddNoteAsync(new GhichuModel
+                {
+                    HosoId = profileId,
+                    CommentTime = DateTime.Now,
+                    Noidung = profile.Refuse,
+                    TypeId = (int)NoteType.MCreditTemp,
+                    UserId = GlobalData.User.IDUser
+                });
+                await _rpLog.InsertLog($"AddRefuseToNote-{profileId}", profile.Refuse);
+            }
+            return ToJsonResponse(true);
+
+        }
+        protected async Task<JsonResult> AddReasonToNote(int profileId, ProfileGetByIdResponseObj profile)
+        {
+           
+            if (profile != null && profile.Reason != null)
+            {
+                var reasonName = JsonConvert.SerializeObject(profile.Reason);
                 if (!string.IsNullOrWhiteSpace(reasonName))
                 {
                     await _rpNote.AddNoteAsync(new GhichuModel
@@ -219,20 +251,10 @@ namespace VS_LOAN.Core.Web.Controllers
                         UserId = GlobalData.User.IDUser
                     });
                 }
+                await _rpLog.InsertLog($"AddReasonToNote-{profileId}", reasonName);
             }
             
            
-            if(!string.IsNullOrWhiteSpace(profile.obj.Refuse))
-            {
-                await _rpNote.AddNoteAsync(new GhichuModel
-                {
-                    HosoId = profileId,
-                    CommentTime = DateTime.Now,
-                    Noidung = profile.obj.Refuse,
-                    TypeId = (int)NoteType.MCreditTemp,
-                    UserId = GlobalData.User.IDUser
-                });
-            }
             return ToJsonResponse(true);
             
         }
@@ -279,7 +301,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var profile = _mapper.Map<MCredit_TempProfile>(model);
             profile.UpdatedBy = GlobalData.User.IDUser;
             var isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
-            profile.Status = isAdmin ? model.Status : (int)MCreditProfileStatus.Submit;
+            profile.Status = (int)MCreditProfileStatus.Submit;
             await _rpLog.InsertLog("mcredit-UpdateDraft", model.Dump());
             var result = await _rpMCredit.UpdateDraftProfile(profile);
             if (!result)
