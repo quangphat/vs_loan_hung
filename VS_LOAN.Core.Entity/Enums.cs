@@ -113,8 +113,8 @@ namespace VS_LOAN.Core.Entity
     public enum MCreditProfileStatus
     {
         Draft = 0,
-        SentToMc = 1,
-        Submit = 3,
-        Addinional = 4
+        SentToMc = -1,
+        Submit = -3,
+        Addinional = -4
     }
 }
