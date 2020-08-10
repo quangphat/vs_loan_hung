@@ -309,7 +309,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var profile = _mapper.Map<MCredit_TempProfile>(model);
             profile.UpdatedBy = GlobalData.User.IDUser;
             var isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
-            profile.Status = model.Status;
+            profile.Status = isAdmin ? model.Status: (int)MCreditProfileStatus.Submit;
             await _rpLog.InsertLog("mcredit-UpdateDraft", model.Dump());
             var result = await _rpMCredit.UpdateDraftProfile(profile);
             if (!result)
