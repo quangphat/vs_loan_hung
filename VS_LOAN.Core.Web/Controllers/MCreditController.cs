@@ -147,8 +147,8 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public ActionResult Index()
         {
-            if (GlobalData.User.IDUser != (int)UserTypeEnum.Admin)
-                return RedirectToAction("Index", "NoAuthorities");
+            //if (GlobalData.User.IDUser != (int)UserTypeEnum.Admin)
+            //    return RedirectToAction("Index", "NoAuthorities");
             return View();
         }
         public async Task<JsonResult> Search(string freeText, string status, string type, int page)
