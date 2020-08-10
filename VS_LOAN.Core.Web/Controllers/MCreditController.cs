@@ -147,8 +147,8 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public ActionResult Index()
         {
-            if (GlobalData.User.IDUser != (int)UserTypeEnum.Admin)
-                return RedirectToAction("Index", "NoAuthorities");
+            //if (GlobalData.User.IDUser != (int)UserTypeEnum.Admin)
+            //    return RedirectToAction("Index", "NoAuthorities");
             return View();
         }
         public async Task<JsonResult> Search(string freeText, string status, string type, int page)
@@ -452,24 +452,29 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 if (group.Documents == null)
                     continue;
+                
                 foreach (var doc in group.Documents)
                 {
-                    var files = uploadedFiles.Where(p => p.Key == doc.Id && p.MC_GroupId == group.GroupId);
-                    result.Add(new MCFileUpload
+                    if(group.GroupId!=24 && doc.DocumentCode != "ElectricBill")
                     {
-                        ID = doc.Id,
-                        BatBuoc = group.Mandatory ? 1 : 0,
-                        Ten = doc.DocumentName,
-                        DocumentId = doc.Id,
-                        GroupId = group.GroupId,
-                        DocumentCode = doc.DocumentCode,
-                        MapBpmVar = doc.MapBpmVar,
-                        ProfileId = profileId,
-                        ProfileTypeId = profileType,
-                        DocumentName = doc.DocumentName,
-                        Tailieus = files.ToList(),
-                        AllowUpload = string.IsNullOrWhiteSpace(profile.MCId)
-                    });
+                        var files = uploadedFiles.Where(p => p.Key == doc.Id && p.MC_GroupId == group.GroupId);
+                        result.Add(new MCFileUpload
+                        {
+                            ID = doc.Id,
+                            BatBuoc = group.Mandatory ? 1 : 0,
+                            Ten = doc.DocumentName,
+                            DocumentId = doc.Id,
+                            GroupId = group.GroupId,
+                            DocumentCode = doc.DocumentCode,
+                            MapBpmVar = doc.MapBpmVar,
+                            ProfileId = profileId,
+                            ProfileTypeId = profileType,
+                            DocumentName = doc.DocumentName,
+                            Tailieus = files.ToList(),
+                            AllowUpload = string.IsNullOrWhiteSpace(profile.MCId)
+                        });
+                    }
+                    
                 }
 
             }
