@@ -334,8 +334,8 @@ function checkSale(controlId, value, controlToSetId = null, profileId = 0) {
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-                        //document.getElementById(con)
-                            $(controlToSetId).val(data.data.obj.id)
+                            //document.getElementById(con)
+                            $(controlToSetId).val(data.data.obj.id + " : " + data.data.obj.name);
                     });
                 }
                 else {
