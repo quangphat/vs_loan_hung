@@ -335,7 +335,8 @@ function checkSale(controlId, value, controlToSetId = null, profileId = 0) {
                         showConfirmButton: true,
                     }, function () {
                             //document.getElementById(con)
-                            $(controlToSetId).val(data.data.obj.id + " : " + data.data.obj.name);
+                            $(controlToSetId).val(data.data.obj.id );
+                            $("#nameSale").text("Tên sale: " + data.data.obj.name);
                     });
                 }
                 else {

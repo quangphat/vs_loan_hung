@@ -464,9 +464,11 @@ namespace VS_LOAN.Core.Web.Controllers
                 
                 foreach (var doc in group.Documents)
                 {
-                    if(group.GroupId!=24 && doc.DocumentCode != "ElectricBill")
+                    if(group.GroupId==24 && doc.DocumentCode == "ElectricBill")
                     {
-                        var files = uploadedFiles.Where(p => p.Key == doc.Id && p.MC_GroupId == group.GroupId);
+                        continue;
+                    }
+                    var files = uploadedFiles.Where(p => p.Key == doc.Id && p.MC_GroupId == group.GroupId);
                         result.Add(new MCFileUpload
                         {
                             ID = doc.Id,
@@ -481,8 +483,8 @@ namespace VS_LOAN.Core.Web.Controllers
                             DocumentName = doc.DocumentName,
                             Tailieus = files.ToList(),
                             AllowUpload = string.IsNullOrWhiteSpace(profile.MCId)
-                        });
-                    }
+                       });
+                    
                     
                 }
 
