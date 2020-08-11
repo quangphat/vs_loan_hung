@@ -145,11 +145,20 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = DataPaging.Create(profiles, profiles[0].TotalRecord);
             return ToJsonResponse(true, "", result);
         }
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             //if (GlobalData.User.IDUser != (int)UserTypeEnum.Admin)
             //    return RedirectToAction("Index", "NoAuthorities");
-            return View();
+            var isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
+            if (isAdmin == true)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "NoAuthorities");
+            }
+
         }
         public async Task<JsonResult> Search(string freeText, string status, string type, int page)
         {
