@@ -105,13 +105,10 @@
                                 <tr>
                                     <th class="center w-45">STT</th>
                                     <th class="m-w-120">Khách hàng</th>
-                                    <th class="w-84">Điên thoại</th>
+                                    <th class="m-w-120">Số hợp đồng</th>
                                     <th class="w-84">Số CMND</th>
                                     <th style="width: 150px">Trạng thái</th>
-                                    <th style="width: 150px">Ngày sinh</th>
                                     <th style="width: 150px">Tổng nợ còn lại</th>
-                                    <th style="width: 150px">Địa chỉ thường chú</th>
-                                    <th class="m-w-120">Ghi chú</th>
                                     <th class="m-w-120">Nhân viên xử lý</th>
                                     <th class="m-w-120">Người tạo</th>
                                     <th class="w-150">Ngày tạo</th>
@@ -356,17 +353,14 @@
         else
             limit = parseInt(limit)
         var stt = (page - 1) * limit + index + 1;
-
+       
         let result = "<tr role='row' class = 'odd'>"
             + renderTextCenter(stt, '','center w-45')
             + renderTextLink(rowData.CustomerName, `/Revoke/Edit/${rowData.Id}`, '', "m-w-120")
-            + renderTextLeft(rowData.MobilePhone, '', 'w-84')
+            + renderTextLeft(rowData.AgreementNo, '', 'm-w-120')
             + renderTextLeft(rowData.IdCardNumber, '', 'w-84')
             + renderStatusOnIndexPage(rowData.Status, rowData.StatusName)
-            + renderTextLeft(reverseString(rowData.Bod), '', 'w-150')
             + renderTextLeft(formatCurrencyVND(rowData.TotalCurros,''), '', 'w-150')
-            + renderTextLeft(rowData.PermanentAddress, '', 'tb-row-breakword w-150')
-            + renderTextLeft(rowData.LastNote, '', "tb-row-breakword m-w-120")
             + renderTextLeft(rowData.AssigneeName, '', "m-w-120")
             + renderTextLeft(rowData.CreatedUser, '', "m-w-120")
             + renderTextLeft(rowData.CreatedTime, 'datetime', 'w-150')

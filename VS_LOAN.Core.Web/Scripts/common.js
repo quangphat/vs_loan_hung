@@ -58,7 +58,7 @@ function renderStatusOnIndexPage(statusId, statusName) {
         colorClass = 'label-cancel'
 
     var statusString = `<span class='label label-sm ${colorClass} arrowed arrowed-righ'>${statusName}</span>`;
-    return "<td class='text-left'>" + statusString + "</td>";
+    return "<td class='text-left tb-row-breakword'>" + statusString + "</td>";
 }
 function renderStatusList(controlId = '#ddlStatus',defaulValue = null) {
     $.ajax({
