@@ -44,6 +44,10 @@ namespace VietStar.Business
             _rpProduct = productRepository;
             _rpEmployee = employeeRepository;
         }
+        public async Task<List<OptionSimple>> GetPartnerscheckDupAsync()
+        {
+            return await _rpCommon.GetListForCheckCustomerDuplicateAsync();
+        }
         public async Task<List<OptionSimple>> GetPartnersAsync()
         {
             var result = await _rpPartner.GetsAync(_process.User.OrgId);

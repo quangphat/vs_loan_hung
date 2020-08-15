@@ -10,6 +10,7 @@ namespace VietStar.Business.Interfaces
 {
     public interface ICommonBusiness
     {
+        Task<List<OptionSimple>> GetPartnerscheckDupAsync();
         Task<List<OptionSimple>> GetPartnersAsync();
         Task<List<OptionSimple>> GetProductsAsync(int partnerId);
         Task<List<OptionSimple>> GetSalesAsync();

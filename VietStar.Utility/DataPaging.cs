@@ -7,12 +7,12 @@ namespace VietStar.Utility
 {
     public class DataPaging
     {
-        public static DataPaging<T> Create<T>(T data, long totalRecords) where T : class
+        public static DataPaging<T> Create<T>(T data, long totalRecord) where T : class
         {
             DataPaging<T> d = new DataPaging<T>
             {
                 Datas = data,
-                TotalRecord = totalRecords
+                TotalRecord = data==null ? 0: totalRecord
             };
             return d;
         }

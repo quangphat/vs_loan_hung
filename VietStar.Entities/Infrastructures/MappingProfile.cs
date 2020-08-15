@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VietStar.Entities.CheckDup;
 using VietStar.Entities.Profile;
 
 namespace VietStar.Entities.Infrastructures
@@ -55,6 +56,8 @@ namespace VietStar.Entities.Infrastructures
                .ForMember(a => a.Comment, b => b.MapFrom(c => c.Ghi_Chu))
                .ForMember(a => a.SaleId, b => b.MapFrom(c => c.Ho_So_Cua_Ai))
                .ForMember(a => a.CourierId, b => b.MapFrom(c => c.Courier_Code));
+            CreateMap<CheckDupAddModel, CheckDupAddSql>();
+
 
         }
     }

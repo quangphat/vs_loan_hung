@@ -1,0 +1,329 @@
+﻿@model VietStar.Entities.CheckDup.CheckDupAddSql
+@{
+    ViewData["Title"] = "Cập nhật khách hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-caret-right"></i>
+                <a href="#">Chi tiết checkdup</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">1.Thông tin chi tiết:</h3>
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Họ và tên <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="FullName" placeholder="Nhập họ tên" value="@Model.FullName" class="form-control">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày Check<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input class="form-control date-picker" type="date"  id="CheckDate" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CMND<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" id="Cmnd" placeholder="Nhập số CMND" value="@Model.Cmnd" class="form-control" />
+                        </div>
+
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="Phone" placeholder="Điện thoại khách hàng " value="@Model.Phone" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tính thành<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ProvinceId" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Địa chỉ<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <textarea type="text" id="Address" placeholder="Nhập địa chỉ" class="form-control">@Model.Address</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Thu nhập hàng tháng</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="Salary" value="@Model.Salary" placeholder="Thu nhập hàng tháng" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">CIC<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="CICStatus" class="chosen-select form-control" data-placeholder="">
+                                <option value="0">Không nợ xấu</option>
+                                <option value="1">Nợ chú ý</option>
+                                <option value="2">Nợ xấu</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Tên ngân hàng<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="partnerId" class="chosen-select form-control" data-placeholder="Chọn đối tác">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-4">
+                            <label class="control-label no-padding-right">
+                                <input name="radio-check" id="rdChecked" type="radio" checked="checked" value="1" class="ace">
+                                <span class="lbl">Đủ điều kiện</span>
+                            </label>
+                            <label class="control-label no-padding-right">
+                                <input name="radio-check" id="rdUnChecked" type="radio" value="0" class="ace">
+                                <span class="lbl">Không đủ điều kiện</span>
+                            </label>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <hr />
+                <form class="form-horizontal">
+                    <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Ghi chú</h4>
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
+                        <div class="col-md-11 col-sm-12 col-xs-12">
+                            <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <div class="col-md-8 activity-log">
+                                <div class="timline-addNote only-new-note">
+                                    <div class="timeline-date-event timline-date-event--margin mt-0" id="dsGhichu">
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pull-right">
+
+                                <a class="btn btn-sm btn-primary" id="btnSave">
+                                    Lưu
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+   
+    var partners = null
+    $(document).ready(function () {
+        if ('@Model.Status' == '0') {
+            $("#rdChecked").prop("checked", true);
+            $("#rdUnChecked").prop("checked", false);
+        }
+        else {
+            let isMatch = '@Model.IsMatch' == 'TRUE' ? true : false
+            $("#rdChecked").prop("checked", isMatch);
+            $("#rdUnChecked").prop("checked", !isMatch);
+        }
+        debugger
+        GetCheckDupPartners(null, parseInt('@Model.PartnerId'))
+        //GetNotes('@Model.Id')
+        GetProvinces($("#ProvinceId"), '@Model.ProvinceId');
+    })
+    function getCustomer() {
+        $.ajax({
+            type: "GET",
+            url: '/Customer/GetCustomerById?id=' + customer.Id,
+            success: function (data) {
+                customer = data.data
+                $('#ddlDoiTac').empty();
+                if (data != null) {
+
+
+                }
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+    function onPartnerCheck(id) {
+        var checked = $("#partner_" + id).is(':checked');
+        var index = partners.findIndex(p => p.Id == id)
+        if (index < 0)
+            return;
+        partners[index].IsSelect = checked
+
+    }
+    jQuery.fn.ForceNumericOnly = function () {
+    return this.each(function () {
+        $(this).keydown(function (e) {
+            var key = e.charCode || e.keyCode || 0;
+            // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers ONLY
+            // home, end, period, and numpad decimal
+            return (
+                key == 8 ||
+                key == 9 ||
+                key == 13 ||
+                key == 46 ||
+                key == 110 ||
+                key == 190 ||
+                (key >= 35 && key <= 40) ||
+                (key >= 48 && key <= 57) ||
+                (key >= 96 && key <= 105));
+        });
+    });
+};
+    $("#txtDienThoai").ForceNumericOnly();
+    $("#Cmnd").ForceNumericOnly();
+    $("#Phone").ForceNumericOnly();
+    $("#Salary").ForceNumericOnly();
+    $('#btnSave').click(function (e) {
+        if (isNullOrWhiteSpace($('#fullName').val())) {
+            swal({
+                title: "Không thành công",
+                text: "Vui lòng nhập họ tên",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        if (isNullOrWhiteSpace($('#CheckDate').val())) {
+            swal({
+                title: "Không thành công",
+                text: "Ngày check không hợp lệ",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+
+        if ($('#Cmnd').val().length != 9 && $('#Cmnd').val().length != 12) {
+            swal({
+                title: "Không thành cồng",
+                text: "Số CMND chỉ 9 hoặc 12 số!",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+            }
+            customer.FullName = $('#FullName').val()
+            customer.CheckDate = $('#CheckDate').val()
+            customer.Note = $('#txtGhiChu').val()
+            customer.Cmnd = $('#Cmnd').val()
+            customer.Gender = 0
+            customer.CICStatus = $("#CICStatus").val()
+            customer.ProvinceId = $("#ProvinceId").val(),
+            customer.Address = $('#Address').val(),
+            customer.Phone = $('#Phone').val(),
+            customer.Salary = $('#Salary').val()
+            model.Customer = customer;
+        model.Partners = [{ Id: $("#ddlDoiTac").val(), Name: $("#ddlDoiTac option:selected").text(), IsSelect: $('input[name="radio-check"]:checked').val() == "1" ? true : false }];
+            var objectSend = JSON.stringify(model);
+        $.ajax({
+            traditional: true,
+            url: '@Url.Action("Update", "Customer")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                if (data.success == true) {
+                    swal({
+                        title: "Thành công",
+                        text: "Cập nhật thành công",
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                        window.location = "/Customer/Index";
+                    });
+                }
+                else {
+                    swal({
+                        title: "Lỗi",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+        });
+    function GetNotes(id) {
+        //$('#ddlTrangThai').empty();
+        if (isNullOrUndefined(id))
+            return;
+        $.ajax({
+            type: "GET",
+            url: '/Customer/GetNotes?customerId=' + id,
+            data: {},
+            success: function (data) {
+
+                if (data.data != null) {
+                    $.each(data.data, function (index, item) {
+                        $('#dsGhichu').append(
+                            '<div class="timeline-event-content  active">' +
+                            '<div class="timeline-item">'+
+                            '<div class="timeline-body">' +
+                            '<div class="timeline__message-container">' +
+                            '<strong>' + item.Commentator + ' (' + SetFormatDateTimeDMY(item.CreatedTime) + '): </strong><span>' + item.Note + '</span>' +
+                            '</div></div></div></div>'
+
+                        )
+                    });
+                }
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+</script>
+

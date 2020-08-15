@@ -20,6 +20,15 @@ namespace VietStar.Repository
         {
             _rpLog = logRepository;
         }
+        public async Task<List<OptionSimple>> GetListForCheckCustomerDuplicateAsync()
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryAsync<OptionSimple>("sp_getListPartnerForCustomerCheck", commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+
+        }
         public async Task<List<OptionSimple>> GetProfileStatusByRoleId(string profileType, int orgId, int roleId = 0)
         {
             using (var con = GetConnection())

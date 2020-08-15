@@ -25,8 +25,13 @@ namespace VietStar.Client.Controllers
             var result = await _bizCommon.GetStatusList(profileType);
             return ToResponse(result);
         }
-        
-        
+        [HttpGet("checkdup-partners")]
+        public async Task<IActionResult> GetPartnerCheckDup()
+        {
+            var result = await _bizCommon.GetPartnerscheckDupAsync();
+            return ToResponse(result);
+        }
+
         [HttpGet("partners")]
         public async Task<IActionResult> GetPartners()
         {

@@ -352,8 +352,7 @@ END
 
 ----------------
 
-insert into ProfileStatus(Name, Value, OrgId,Code)
-values
+insert into ProfileStatus(Name, Value, OrgId,Code) values
 (N'Thẩm định',0,1,'common'),
 (N'Từ chối',0,1,'common'),
 (N'Bồ sung hồ sơ',0,1,'common'),
@@ -365,6 +364,11 @@ values
 (N'Đang xử lý',0,1,'common'),
 (N'Chấp nhận',0,1,'common'),
 (N'Hoàn thành',0,1,'common')
+
+insert into ProfileStatus(Name, Value, OrgId,Code) values
+(N'Không nợ xấu',0,1,'duplicate'),
+(N'Nợ chú ý',1,1,'duplicate'),
+(N'Nợ xấu',2,1,'duplicate')
 
 ------------
 
@@ -935,3 +939,46 @@ END
 
 
 --------------
+
+alter procedure [dbo].[sp_GetCustomer_v2]
+(
+@freeText nvarchar(30),
+@offset int,
+@limit int,
+@userId int = 0
+)
+as
+begin
+if(@userId>0)
+begin
+declare @isAdmin int = 0;
+select @isAdmin = dbo.fn_CheckIsAdmin(@userId);
+declare @query  nvarchar(max);
+declare @wherequery nvarchar(500) = ' where s.ProfileType =''duplicate'' and Createdby is not null';
+declare @param nvarchar(max) = '@freetext_tmp nvarchar(30), @userId_tmp int,@offset_tmp int = 0,@limit_tmp int  =10 '
+if @freeText = '' begin set @freeText = null end;
+if(@userId >0 and @isAdmin = 0)
+begin
+	set @wherequery += ' and n.CreatedBy = @userId_tmp'
+end
+if(@freeText is not null)
+begin
+	set @wherequery += N' and (@freetext_tmp is null 
+		or n.FullName like N''%'' +' + ' @freetext_tmp' + '+''%'' 
+		or n.Cmnd like ''%'' + ' + '@freetext_tmp' + '+''%''
+		)'
+end
+
+	set @query = N'Select count(*) over() as TotalRecord, n.*, s.Name as StatusName from Customer n left join ProfileStatus s on n.CICStatus = s.Value ' + @wherequery 
+	+ ' order by n.Id desc 
+	offset @offset_tmp ROWS FETCH NEXT @limit_tmp ROWS ONLY';
+	print @query;
+	execute sp_executesql @query, @param,@freetext_tmp = @freeText, @userId_tmp = @userId, @offset_tmp = @offset,@limit_tmp = @limit;
+end
+
+end
+
+
+
+
+------------
