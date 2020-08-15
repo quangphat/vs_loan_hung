@@ -133,30 +133,6 @@ function renderStatusList(profileType, value = null) {
     });
 
 }
-function renderStatus(MaTrangThai, TrangThaiHS) {
-    var statusString = "";
-    if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.Nhap)')
-        statusString = "<span class='label label-sm label-light arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-    else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.NhapLieu)')
-        statusString = "<span class='label label-sm label-purple arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-    else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.ThamDinh)')
-        statusString = "<span class='label label-sm label-danger arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-    else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.DaDoiChieu)')
-        statusString = "<span class='label label-sm label-dadoichieu arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-    else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.TuChoi)')
-        statusString = "<span class='label label-sm label-inverse arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-    else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.Cancel)')
-        statusString = "<span class='label label-sm label-cancel arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-    else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.PCB)')
-        statusString = "<span class='label label-sm label-pcb arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-    else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.BoSungHoSo)')
-        statusString = "<span class='label label-sm label-info arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-    else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.GiaiNgan)')
-        statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-    else if (MaTrangThai == '@((int)VS_LOAN.Core.Entity.TrangThaiHoSo.Finish)')
-        statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>" + TrangThaiHS + "</span>";
-    return "<td class='text-left'>" + statusString + "</td>";;
-}
 function GetSales(control = null, defaultValue = 0) {
     if (control == null)
         control = $("#saleId");
@@ -237,17 +213,59 @@ function GetCouriers(control = null, defaultValue = 0) {
         }
     });
 }
+function GetCheckDupPartners(control = null, defaultValue = 0) {
+    if (control == null)
+        control = $("#partnerId");
+    control.empty();
+    control.append("<option value='0'>Chọn đối tác</option>");
+    let data = JSON.parse(window.localStorage.getItem('checkdup-partners'));
+    if (data != null && !isNullOrNoItem(data)) {
+        $.each(data, function (index, item) {
+            control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+        });
+        if (defaultValue > 0) {
+            debugger
+            control.val(defaultValue);
+            
+        }
+        return;
+    }
+    $.ajax({
+        type: "GET",
+        url: '/common/checkdup-partners',
+        data: {},
+        success: function (data) {
+            control.append("<option value='0'>Chọn đối tác</option>");
+            if (data.data != null && data.success == true) {
+                setLocalStorage('checkdup-partners', data.data)
+                $.each(data.data, function (index, item) {
+                    control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                });
+                if (defaultValue != null && defaultValue > 0) {
+                    control.val(defaultValue);
+                   
+                }
+
+            }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
 function GetPartners(control = null, defaultValue = 0, productId = 0) {
     if (control == null)
         control = $("#partnerId");
     control.empty();
-    control.append("<option value='0'>Chọn tỉnh/thành</option>");
+    control.append("<option value='0'>Chọn đối tác</option>");
     let data = JSON.parse(window.localStorage.getItem('partners'));
     if (data != null && !isNullOrNoItem(data)) {
         $.each(data, function (index, item) {
             control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
         });
-        if (defaultValue != null) {
+        if (defaultValue != null && defaultValue > 0) {
             control.val(defaultValue);
             GetProducts(defaultValue, null, productId)
         }
@@ -264,7 +282,7 @@ function GetPartners(control = null, defaultValue = 0, productId = 0) {
                 $.each(data.data, function (index, item) {
                     control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
-                if (defaultValue != null) {
+                if (defaultValue != null && defaultValue > 0) {
                     control.val(defaultValue);
                     GetProducts(defaultValue, null, productId)
                     // GetMemberByGroup(defaultValue, null,)
@@ -316,7 +334,7 @@ function GetProvinces(control = null, defaultValue = 0, districId = 0) {
         $.each(data, function (index, item) {
             control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
         });
-        if (defaultValue != null) {
+        if (defaultValue != null && defaultValue >0) {
             control.val(defaultValue);
             GetDistricts(defaultValue, null, districId)
         }
@@ -334,7 +352,7 @@ function GetProvinces(control = null, defaultValue = 0, districId = 0) {
                 $.each(data.data, function (index, item) {
                     control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
-                if (defaultValue != null) {
+                if (defaultValue != null && defaultValue > 0) {
                     control.val(defaultValue);
                     GetDistricts(defaultValue, null, districId)
                     // GetMemberByGroup(defaultValue, null,)
@@ -363,7 +381,7 @@ function GetDistricts(provinceId, control = null, defaultValue = 0) {
                 $.each(data.data, function (index, item) {
                     control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
-                if (defaultValue != null) {
+                if (defaultValue != null && defaultValue > 0) {
                     control.val(defaultValue);
                     // GetMemberByGroup(defaultValue, null,)
                 }
@@ -388,7 +406,7 @@ function GetApproveGroupByUser(control = null, defaultValue = 0) {
         $.each(data, function (index, item) {
             control.append("<option value='" + item.Id + "'>" + item.Name + "(" + item.ShortName + ")</option>");
         });
-        if (defaultValue != null) {
+        if (defaultValue != null && defaultValue > 0) {
             control.val(defaultValue);
             // GetMemberByGroup(defaultValue, null,)
         }
@@ -429,7 +447,7 @@ function GetGroupByUser(control = null, defaultValue = 0) {
         $.each(data, function (index, item) {
             control.append("<option value='" + item.Id + "'>" + item.Name + "(" + item.ShortName + ")</option>");
         });
-        if (defaultValue != null) {
+        if (defaultValue != null && defaultValue > 0) {
             control.val(defaultValue);
             // GetMemberByGroup(defaultValue, null,)
         }
@@ -445,7 +463,7 @@ function GetGroupByUser(control = null, defaultValue = 0) {
                 $.each(data.data, function (index, item) {
                     control.append("<option value='" + item.Id + "'>" + item.Name + "(" + item.ShortName + ")</option>");
                 });
-                if (defaultValue != null) {
+                if (defaultValue != null && defaultValue > 0) {
                     control.val(defaultValue);
                     // GetMemberByGroup(defaultValue, null,)
                 }
@@ -477,7 +495,7 @@ function GetMemberByGroup(groupId, control = null, defaultValue = 0) {
 
                     control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
-                if (defaultValue != null) {
+                if (defaultValue != null && defaultValue > 0) {
                     control.val(defaultValue);
                 }
 
@@ -492,31 +510,7 @@ function GetMemberByGroup(groupId, control = null, defaultValue = 0) {
         }
     });
 }
-function renderStatusDisplay(statusName) {
 
-    if (isNullOrWhiteSpace(statusName))
-        return "<td class='text-left'></td>";
-    let firstChar = statusName[0].toLowerCase();
-    let greenGroup = ['a', 'b', 'c', 'd', 'đ'];
-    let danger = ['e', 'f', 'g', 't'];
-    let succsess = ['i', 'k', 'm'];
-    let cancel = ['o', 'p', 'q'];
-    let inverse = ['j', 'z', 'w'];
-    let colorClass = 'label-temp'
-    if (greenGroup.indexOf(firstChar) >= 0)
-        colorClass = 'label-green';
-    if (danger.indexOf(firstChar) >= 0)
-        colorClass = 'label-orrange'
-    if (succsess.indexOf(firstChar) >= 0)
-        colorClass = 'label-primary'
-    if (inverse.indexOf(firstChar) >= 0)
-        colorClass = 'label-inverse'
-    if (cancel.indexOf(firstChar) >= 0)
-        colorClass = 'label-cancel'
-
-    var statusString = `<span class='label label-sm ${colorClass} arrowed arrowed-righ'>${statusName}</span>`;
-    return "<td class='text-left'>" + statusString + "</td>";
-}
 function renderOneItemFile(model, className = '',
     _initialPreview = [],
     _initialPreviewConfig = [],

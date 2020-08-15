@@ -1,7 +1,7 @@
 ﻿$(document).ready(function e() {
     $('.select2').select2();
     //$('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
-  
+
 });
 (function ($) {
     $.fn.inputFilter = function (inputFilter) {
@@ -102,7 +102,7 @@ function getValueDisplay(value, type) {
             return '';
         return value
     }
-        
+
     var display = null
     switch (type) {
         case 'datetime':
@@ -111,16 +111,20 @@ function getValueDisplay(value, type) {
     }
     return display;
 }
+function getTotalPage(totalRecord, limit) {
+    debugger
+    return totalRecord > limit ? Math.ceil(totalRecord / limit) : 1
+}
 function renderPageList(page, limit, totalRc) {
-    totalPage = getTotalPage(totalRc, limit)
+    let totalPage = getTotalPage(totalRc, limit)
     var startPage = page > pageMargin ? page - pageMargin : 1;
     var endPage = pageMargin + page > totalPage ? totalPage : pageMargin + page
     var paging = $("#pagination");
     paging.empty();
-    var first = renderGoFirstPage(page)
-    var next = renderGoNextPage(page);
-    var prev = renderGoPreviousPage(page)
-    var last = renderGoLastPage(page)
+    var first = renderGoFirstPage(page, totalPage)
+    var next = renderGoNextPage(page, totalPage);
+    var prev = renderGoPreviousPage(page, totalPage)
+    var last = renderGoLastPage(page, totalPage)
     paging.append(first)
     paging.append(prev)
     for (var i = startPage; i <= endPage; i++) {
@@ -132,6 +136,8 @@ function renderPageList(page, limit, totalRc) {
     }
     paging.append(next);
     paging.append(last)
+    $("#dtSource_info").text("Tổng: " + totalRecord + " items");
+    $("#totalPage").text("Tổng: " + totalPage + " trang");
 }
 function renderTextLeft(value, type, className = '') {
     return "<td class='text-left " + className + "'>" + getValueDisplay(value, type) + "</td>";
@@ -153,14 +159,14 @@ function renderGoPreviousPage(page) {
 }
 function renderCoBaoHiem(CoBaoHiem) {
     var value = ""
-    
+
     if (CoBaoHiem == true)
         value = "<td class='text-left'> <div class='orange bolder' title='Không có bảo hiểm' ><i class=\"ace-icon fa fa-ban bigger-130\"></i></div> </td>";
     else
         value = "<td class='text-left'> <div class='green bolder'title = 'Có bảo hiểm' > <i class=\"ace-icon glyphicon glyphicon-ok bigger-130\"></i></div> </td>";
     return value;
 }
-function renderGoNextPage(page) {
+function renderGoNextPage(page, totalPage) {
     if (page < totalPage) {
         newCurrentPage = page + 1
         return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + newCurrentPage + ")' >"
@@ -171,7 +177,7 @@ function renderGoNextPage(page) {
         return ""
     }
 }
-function renderGoLastPage(page) {
+function renderGoLastPage(pag, totalPage) {
 
     if (totalPage > page) {
         return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + totalPage + ")' >"
@@ -181,7 +187,8 @@ function renderGoLastPage(page) {
         return ""
     }
 }
-function renderGoFirstPage(page) {
+function renderGoFirstPage(page, totalPage) {
+    
     if (totalPage > 1 && page > 1) {
         return "<li class='paginate_button previous' onclick='onClickPage(" + 1 + ")' >"
             + "<a href='javascript:;'>Trang đầu</a>"
@@ -191,7 +198,7 @@ function renderGoFirstPage(page) {
     }
 }
 function FormatDateTimeDMY(datetime, outputFormat = 'DD-MM-YYYY') {
-    
+
     let date = moment(datetime, 'YYYY-MM-DD')
     return date.format(outputFormat)
     //try {
@@ -228,7 +235,7 @@ function setValueForDateInput(controlId, value) {
         value = new Date().getDay + 1;
     controlId.val(value);
 }
-function getDateSpecific( backtoBefore = 0) {
+function getDateSpecific(backtoBefore = 0) {
     let toDay = new Date();
     let last = new Date((toDay).getTime() - (backtoBefore * 24 * 60 * 60 * 1000));
     return FormatDateTimeDMY(last, 'YYYY-MM-DD')
@@ -270,4 +277,30 @@ function isExtension(ext, extnArray) {
         }
     }
     return result;
+}
+function renderStatus(statusName) {
+
+    
+    if (isNullOrWhiteSpace(statusName))
+        return "<td class='text-left'></td>";
+    let firstChar = statusName[0].toLowerCase();
+    let greenGroup = ['a', 'b', 'c', 'd', 'đ'];
+    let danger = ['e', 'f', 'g', 't'];
+    let succsess = ['i', 'k', 'm'];
+    let cancel = ['o', 'p', 'q'];
+    let inverse = ['j', 'z', 'w'];
+    let colorClass = 'label-temp'
+    if (greenGroup.indexOf(firstChar) >= 0)
+        colorClass = 'label-green';
+    if (danger.indexOf(firstChar) >= 0)
+        colorClass = 'label-orrange'
+    if (succsess.indexOf(firstChar) >= 0)
+        colorClass = 'label-primary'
+    if (inverse.indexOf(firstChar) >= 0)
+        colorClass = 'label-inverse'
+    if (cancel.indexOf(firstChar) >= 0)
+        colorClass = 'label-cancel'
+
+    var statusString = `<span class='label label-sm ${colorClass} arrowed arrowed-righ'>${statusName}</span>`;
+    return "<td class='text-left'>" + statusString + "</td>";
 }
