@@ -3,9 +3,15 @@
     ViewBag.Title = "Danh sách hồ sơ";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div class="row">
-    <div class="col-xs-12">
-
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <a href="#" class="active">Danh sách checkdup</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="panel_body">
         <form class="form-horizontal">
             <div class="box-body">
 
@@ -56,7 +62,7 @@
                     <label class="col-sm-1 control-label no-padding-right">Trạng thái</label>
                     <div class="col-sm-9">
                         <select class="form-control select2 select2-hidden-accessible" id="ddlStatus" multiple=""
-                                 style="width: 100%;" data-select2-id="7" tabindex="-1" aria-hidden="true">
+                                style="width: 100%;" data-select2-id="7" tabindex="-1" aria-hidden="true">
                             <option value="0"></option>
                         </select>
                     </div>
@@ -77,73 +83,85 @@
             <!-- /.box-footer -->
         </form>
         <div class="clearfix"></div>
-        <div class="box" style="margin-top:50px;">
-            <div class="box-header box-header-green">
-                <h3 class="box-title">Danh sách hồ sơ</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-                <div id="dtSource_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="clearfix">
+                    <div class="pull-right tableTools-container"></div>
+                </div>
+                <div class="box-header box-header-green">
+                    <h3 class="box-title">Danh sách hồ sơ</h3>
+                </div>
+                <!-- /.box-header -->
+
+                <div class="dataTables_wrapper form-inline no-footer">
                     <div class="row">
                         <div class="col-sm-6">
-                            <div class="dataTables_length" id="dtSource_length">
-                                <label>
-                                    Hiển thị <select name="dtSource_length" aria-controls="dtSource" class="form-control input-sm">
-                                        <option value="10">10</option>
-                                        <option value="25">25</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                    </select> dòng
-                                </label>
+                            <label>
+                                Hiển thị 
+                                <select name="dtSource_length" id="ddlLimit" aria-controls="dtSource" class="form-control input-sm"  onchange="onSelectLimit()">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select> dòng
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="report-table-custom--overflow">
+                        <table id="dtSource" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="dtSource_info">
+                            <thead class="table-header">
+                                <tr role="row">
+                                    <th class="w-45">STT</th>
+                                    <th class="w-98">Mã</th>
+                                    <th class="min-150">Tên khách hàng</th>
+                                    <th class="w-105">CMND</th>
+                                    <th class="w-105">Phone</th>
+                                    <th style="width:150px">Trạng thái</th>
+                                    <th class="w-84">Đối tác</th>
+                                    <th class="w-150">Sản phẩm</th>
+                                    <th class="w-60">Bảo hiểm</th>
+                                    <th class="m-w-300">Ghi chú</th>
+                                    <th class="w-130">Khu vực</th>
+                                    <th class="w-130">Đội ngũ bán hàng</th>
+                                    <th class="m-w-150">Nhân viên bán hàng</th>
+                                    <th class="w-84">Người tạo</th>
+                                    <th class="w-94 sorting_asc" onclick="onSort('createtime')">Ngày tạo</th>
+                                    <th class="w-94">Người cập nhật</th>
+                                    <th class="w-94 sorting_asc" onclick="onSort('updatedtime')">Ngày cập nhật</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot>
+
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class="clearfix" />
+                <div class="one-row no-gutters justify-content-between paginate">
+                    <div class="col-auto">
+                        <div class="dataTables_info" id="dtSource_info" role="status" aria-live="polite"></div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="one-row no-gutters align-items-center">
+                            <div class="col-auto">
+                                <span id="totalPage"></span>
                             </div>
-                        </div>
-
-                    </div><div class="row">
-                        <div class="col-sm-12 horizontal-scroll">
-                            <table id="dtSource" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="dtSource_info">
-                                <thead>
-                                    <tr role="row">
-                                        <th class="w-45">STT</th>
-                                        <th class="w-98">Mã</th>
-                                        <th class="min-150">Tên khách hàng</th>
-                                        <th class="w-105">CMND</th>
-                                        <th class="w-105">Phone</th>
-                                        <th style="width:150px">Trạng thái</th>
-                                        <th class="w-84">Đối tác</th>
-                                        <th class="w-150">Sản phẩm</th>
-                                        <th class="w-60">Bảo hiểm</th>
-                                        <th class="m-w-300">Ghi chú</th>
-                                        <th class="w-130">Khu vực</th>
-                                        <th class="w-130">Đội ngũ bán hàng</th>
-                                        <th class="m-w-150">Nhân viên bán hàng</th>
-                                        <th class="w-84">Người tạo</th>
-                                        <th class="w-94 sorting_asc"  onclick="onSort('createtime')">Ngày tạo</th>
-                                        <th class="w-94">Người cập nhật</th>
-                                        <th class="w-94 sorting_asc" onclick="onSort('updatedtime')">Ngày cập nhật</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                                <tfoot>
-
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div><div class="row">
-                        <div class="col-sm-5">
-                            <div class="dataTables_info" id="dtSource_info" role="status" aria-live="polite">Showing 41 to 50 of 57 entries</div>
-                        </div>
-                        <div class="col-sm-7">
-                            <div class="dataTables_paginate paging_simple_numbers" id="dtSource_paginate">
-                                <ul class="pagination" id="pagination"></ul>
+                            <div class="col ml-20">
+                                <div class="dataTables_paginate paging_simple_numbers" id="dtSource_paginate">
+                                    <ul class="pagination" id="pagination"></ul>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- /.box-body -->
             </div>
-            <!-- /.box-body -->
         </div>
     </div>
-
 </div>
 <script>
     var queries = new URLSearchParams(window.location.search);
@@ -163,12 +181,12 @@
             allowClear: true
         });
         window.addEventListener('popstate', function (e) {
-            
+
             queries = new URLSearchParams(window.location.search)
             bindQueries(getData, true)
-            
+
         });
-        
+
         bindQueries(getData);
         //getData(page,limit);
 
@@ -179,22 +197,20 @@
 
 
 
-function getTotalPage(totalRecord, limit) {
-    return totalRecord > limit ? Math.ceil(totalRecord / limit) : 1
-}
+
 function onClickPage(page) {
     page = page;
     getData(page, limit, null, null, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#memberId").val());
 }
 
 
-function onSelectLimit() {
+    function onSelectLimit() {
     limit = $("#ddlLimit").val()
     getData(page, limit, null, null, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#memberId").val())
     //alert(limit)
     }
     function onSort(sortField) {
-        
+
         sortField = sortField;
         if (sort == 'desc')
             sort = 'asc'
@@ -221,7 +237,7 @@ function renderRow(index, item) {
         + renderTextLink(item.CustomerName,`/Profile/edit/${item.Id}`, '', 'min-150')
         + renderTextLeft(item.CMND)
         + renderTextLeft(item.Phone)
-        + renderStatusDisplay(item.StatusName)
+        + renderStatus(item.StatusName)
         + renderTextLeft(item.PartnerName, '', 'min-150')
         + renderTextLeft(item.ProductName,'','min-150')
         + renderCoBaoHiem(item.IsInsurrance)
@@ -235,7 +251,8 @@ function renderRow(index, item) {
         + renderTextLeft(item.UpdatedTime, 'datetime', 'min-150')
         + "</tr>";
 }
-function renderTableBody(datas) {
+    function renderTableBody(datas) {
+        
     var table = $("#dtSource")
     var tableBody = $("#dtSource").find("tbody");
     tableBody.empty();
@@ -299,10 +316,10 @@ function renderTableBody(datas) {
         sort = queries.get('sort');
         sortField = queries.get('sortField');
         if (callBack != null) {
-            
+
             callBack(page, limit, sort, sortField, status, groupId, memberId, isPopState);
         }
-        
+
     }
 function getData(page, limit, sort = "desc", sortField = "updatedtime",status, groupId, memberId, isPopState = false)
 {
@@ -319,7 +336,7 @@ function getData(page, limit, sort = "desc", sortField = "updatedtime",status, g
     if (memberId == 0)
         memberId = $("#memberId").val()
     showBlock($('#panel_body'));
-    
+
     $.ajax( {
             url: '@Url.Action("Search", "Profile")',
             type: "GET",
@@ -339,6 +356,7 @@ function getData(page, limit, sort = "desc", sortField = "updatedtime",status, g
         },
         success: function (response) {
             if (response.success == true) {
+                debugger
                 totalRecord = response.data.TotalRecord;
                 var search = this.url.replace("/Profile/Index", "");
                 search = search.replace("/Profile/Search","")
@@ -359,8 +377,7 @@ function getData(page, limit, sort = "desc", sortField = "updatedtime",status, g
                 renderTableBody(response.data.Datas)
                 //renderGoPreviousPage(page);
                 renderPageList(page, limit, totalRecord)
-                $("#dtSource_info").text("Tổng: " + totalRecord + " items");
-                $("#totalPage").text("Tổng: " + totalPage + " trang");
+               
             }
             else {
                 swal({
