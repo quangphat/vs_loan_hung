@@ -57,8 +57,19 @@ function renderStatusOnIndexPage(statusId, statusName) {
     if (cancel.indexOf(statusId) >= 0)
         colorClass = 'label-cancel'
 
-    var statusString = `<span class='label label-sm ${colorClass} arrowed arrowed-righ'>${statusName}</span>`;
-    return "<td class='text-left tb-row-breakword'>" + statusString + "</td>";
+    if (colorClass == 'label-orrange') {
+
+        var statusString = `<td class='text-left tb-row-breakword  arrowed arrowed-righ'>${statusName}</td>`;
+        return statusString;
+    }
+    else {
+        var statusString = `<td class='text-left tb-row-breakword ${colorClass} arrowed arrowed-righ'>${statusName}</td>`;
+        return statusString;
+    }
+   
+    
+  
+   
 }
 function renderStatusList(controlId = '#ddlStatus',defaulValue = null) {
     $.ajax({

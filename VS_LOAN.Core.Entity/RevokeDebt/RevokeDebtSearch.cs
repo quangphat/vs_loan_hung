@@ -133,5 +133,7 @@ namespace VS_LOAN.Core.Entity.RevokeDebt
             }
         }
         public string AssigneeName { get; set; }
+
+        public string AssigneeCode { get; set; }
     }
 }

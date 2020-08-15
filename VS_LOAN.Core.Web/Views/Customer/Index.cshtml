@@ -82,6 +82,8 @@
                                     <th class="m-w-150">Không đủ điều kiện</th>
                                     <th class="m-w-300">Ghi chú</th>
                                     <th class="w-84">Thao tác</th>
+                                    <th class="w-90">Mã nhân viên</th>
+                                    <th class="m-w-150">Nhân viên xử lý</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -301,6 +303,7 @@
         return renderTextLeft(item.NotMatch, '', "m-w-150")
     }
     function renderRow(index, item) {
+        console.log(item);
         page = queries.get("page");
         if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
             page = 1;
@@ -323,6 +326,10 @@
             + renderMatchCondition(item, false)
             + renderTextLeft(item.LastNote, '', 'tb-row-breakword')
             + renderAction(item.Id)
+            + renderTextLeft(item.MaVBF, '', "w-90")
+             + renderTextLeft(item.NameVBF, '', "m-w-150 tb-row-breakword")
+           
+
             + "</tr>";
     }
     function renderTableBody(datas) {

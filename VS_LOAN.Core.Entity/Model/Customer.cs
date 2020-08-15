@@ -24,6 +24,9 @@ namespace VS_LOAN.Core.Entity.Model
         public string Address { get; set; }
         public DateTime? BirthDay { get; set; }
         public string Phone { get; set; }
-        public decimal Salary { get; set; }
+        public decimal Salary { get; set; } 
+        public string MaVBF { get; set; }
+
+        public string NameVBF { get; set; }
     }
 }
