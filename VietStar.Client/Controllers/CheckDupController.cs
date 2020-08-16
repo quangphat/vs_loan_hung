@@ -44,5 +44,15 @@ namespace VietStar.Client.Controllers
             var result = await _bizCheckDup.GetByIdAsync(id);
             return View(result);
         }
+        public async Task<IActionResult> UpdateAsync([FromBody] CheckDupEditModel model)
+        {
+            var result = await _bizCheckDup.UpdateAsync(model);
+            return ToResponse(result);
+        }
+        public async Task<IActionResult> GetNotes(int id)
+        {
+            var result = await _bizCheckDup.GetNotesAsync(id);
+            return ToResponse(result);
+        }
     }
 }

@@ -22,6 +22,42 @@ namespace VietStar.Business
         {
             _rpCheckDup = checkdupRepository;
         }
+        public async Task<bool> UpdateAsync(CheckDupEditModel model)
+        {
+            if (model == null || model.CheckDup == null)
+            {
+                return ToResponse(false, "Dữ liệu không hợp lệ");
+            }
+            if (model.Partners == null || !model.Partners.Any())
+                return ToResponse(false, "Vui lòng chọn đối tác");
+            var partner = model.Partners[0];
+            bool isMatch = partner.IsSelect;
+
+
+            var checkDup = _mapper.Map<CheckDupAddSql>(model.CheckDup);
+            checkDup.IsMatch = isMatch;
+            checkDup.MatchCondition = isMatch ? partner.Name : string.Empty;
+            checkDup.NotMatch = isMatch == false ? partner.Name : string.Empty;
+            var result = await _rpCheckDup.UpdateAsync(checkDup);
+            if (!result.success)
+                return ToResponse(result);
+            if (!string.IsNullOrWhiteSpace(model.CheckDup.Note))
+            {
+                var note = new CheckDupNote
+                {
+                    Note = model.CheckDup.Note,
+                    CustomerId = checkDup.Id,
+                    CreatedBy = _process.User.Id
+                };
+                _rpCheckDup.AddNoteAsync(note);
+            }
+
+            return true;
+        }
+        public async Task<List<CheckDupNoteViewModel>> GetNotesAsync(int checkDupId)
+        {
+            return await _rpCheckDup.GetNoteByIdAsync(checkDupId);
+        }
         public async Task<DataPaging<List<CheckDupIndexModel>>> GetsAsync(
             string freeText,
             int page,

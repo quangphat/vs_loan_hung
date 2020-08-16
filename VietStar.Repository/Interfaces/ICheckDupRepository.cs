@@ -10,6 +10,8 @@ namespace VietStar.Repository.Interfaces
 {
     public interface ICheckDupRepository
     {
+        Task<RepoResponse<bool>> UpdateAsync(CheckDupAddSql model);
+        Task<List<CheckDupNoteViewModel>> GetNoteByIdAsync(int id);
         Task<List<CheckDupIndexModel>> GetsAsync(
             string freeText,
             int page,

@@ -112,7 +112,7 @@ function getValueDisplay(value, type) {
     return display;
 }
 function getTotalPage(totalRecord, limit) {
-    debugger
+    
     return totalRecord > limit ? Math.ceil(totalRecord / limit) : 1
 }
 function renderPageList(page, limit, totalRc) {
@@ -301,6 +301,6 @@ function renderStatus(statusName) {
     if (cancel.indexOf(firstChar) >= 0)
         colorClass = 'label-cancel'
 
-    var statusString = `<span class='label label-sm ${colorClass} arrowed arrowed-righ'>${statusName}</span>`;
+    let statusString = `<span class='label label-sm ${colorClass} arrowed arrowed-righ'>${statusName}</span>`;
     return "<td class='text-left'>" + statusString + "</td>";
 }

@@ -10,6 +10,8 @@ namespace VietStar.Business.Interfaces
 {
     public interface ICheckDupBusiness
     {
+        Task<bool> UpdateAsync(CheckDupEditModel model);
+        Task<List<CheckDupNoteViewModel>> GetNotesAsync(int checkDupId);
         Task<DataPaging<List<CheckDupIndexModel>>> GetsAsync(
             string freeText,
             int page,

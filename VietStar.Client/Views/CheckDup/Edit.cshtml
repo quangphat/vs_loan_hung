@@ -8,6 +8,9 @@
         <ul class="breadcrumb">
             <li>
                 <i class="fa fa-caret-right"></i>
+                <a href="/CheckDup/Index">Danh sách checkdup</a>
+            </li>
+            <li>
                 <a href="#">Chi tiết checkdup</a>
             </li>
         </ul>
@@ -146,6 +149,8 @@
    
     var partners = null
     $(document).ready(function () {
+        $("#CheckDate").val(FormatDateTimeDMY('@Model.CheckDate.ToString("yyyy/MM/dd")', 'YYYY-MM-DD'))
+        debugger
         if ('@Model.Status' == '0') {
             $("#rdChecked").prop("checked", true);
             $("#rdUnChecked").prop("checked", false);
@@ -155,9 +160,9 @@
             $("#rdChecked").prop("checked", isMatch);
             $("#rdUnChecked").prop("checked", !isMatch);
         }
-        debugger
+        $("#CICStatus").val('@Model.CICStatus')
         GetCheckDupPartners(null, parseInt('@Model.PartnerId'))
-        //GetNotes('@Model.Id')
+        GetNotes('@Model.Id')
         GetProvinces($("#ProvinceId"), '@Model.ProvinceId');
     })
     function getCustomer() {
@@ -213,7 +218,7 @@
     $("#Phone").ForceNumericOnly();
     $("#Salary").ForceNumericOnly();
     $('#btnSave').click(function (e) {
-        if (isNullOrWhiteSpace($('#fullName').val())) {
+        if (isNullOrWhiteSpace($('#FullName').val())) {
             swal({
                 title: "Không thành công",
                 text: "Vui lòng nhập họ tên",
@@ -243,23 +248,26 @@
                 showConfirmButton: true,
             });
             return;
-            }
-            customer.FullName = $('#FullName').val()
-            customer.CheckDate = $('#CheckDate').val()
-            customer.Note = $('#txtGhiChu').val()
-            customer.Cmnd = $('#Cmnd').val()
-            customer.Gender = 0
-            customer.CICStatus = $("#CICStatus").val()
-            customer.ProvinceId = $("#ProvinceId").val(),
-            customer.Address = $('#Address').val(),
-            customer.Phone = $('#Phone').val(),
-            customer.Salary = $('#Salary').val()
-            model.Customer = customer;
-        model.Partners = [{ Id: $("#ddlDoiTac").val(), Name: $("#ddlDoiTac option:selected").text(), IsSelect: $('input[name="radio-check"]:checked').val() == "1" ? true : false }];
-            var objectSend = JSON.stringify(model);
+        }
+        let customer = {
+            'Id':'@Model.Id',
+            'FullName': $('#FullName').val(),
+            'CheckDate': $('#CheckDate').val(),
+            'Note': $('#txtGhiChu').val(),
+            'Cmnd': $('#Cmnd').val(),
+            'Gender': 0,
+            'CICStatus':$("#CICStatus").val(),
+            'ProvinceId': $("#ProvinceId").val(),
+            'Address': $('#Address').val(),
+            'Phone': $('#Phone').val(),
+            'Salary': getDecimalValueFromMoneyInput($("#Salary").val())
+
+        }
+        let partners = [{ Id: $("#partnerId").val(), Name: $("#partnerId option:selected").text(), IsSelect: $('input[name="radio-check"]:checked').val() == "1" ? true : false }];
+        var objectSend = JSON.stringify({ 'CheckDup': customer, 'Partners': partners });
         $.ajax({
             traditional: true,
-            url: '@Url.Action("Update", "Customer")',
+            url: '@Url.Action("UpdateAsync", "CheckDup")',
             type: "POST",
             contentType: "application/json; charset=utf-8",
             data: objectSend,
@@ -272,13 +280,13 @@
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-                        window.location = "/Customer/Index";
+                            window.location = "/CheckDup/Index";
                     });
                 }
                 else {
                     swal({
                         title: "Lỗi",
-                        text: data.code,
+                        text: data.error.code,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,
@@ -299,7 +307,7 @@
             return;
         $.ajax({
             type: "GET",
-            url: '/Customer/GetNotes?customerId=' + id,
+            url: '/CheckDup/GetNotes?id=' + id,
             data: {},
             success: function (data) {
 

@@ -22,6 +22,51 @@ namespace VietStar.Repository
         {
             _rpLog = logRepository;
         }
+        public async Task<RepoResponse<bool>> UpdateAsync(CheckDupAddSql model)
+        {
+            var p = new DynamicParameters();
+            p.Add("id", model.Id);
+            p.Add("fullname", model.FullName);
+            p.Add("checkdate", model.CheckDate);
+            p.Add("cmnd", model.Cmnd);
+            p.Add("status", model.CICStatus);
+            p.Add("note", string.IsNullOrWhiteSpace(model.LastNote) ? null : model.LastNote);
+            p.Add("gender", model.Gender);
+            p.Add("match", model.MatchCondition);
+            p.Add("notmatch", model.NotMatch);
+            p.Add("updatedtime", DateTime.Now);
+            p.Add("updatedby", model.UpdatedBy);
+            p.Add("ProvinceId", model.ProvinceId);
+            p.Add("Address", model.Address);
+            p.Add("BirthDay", model.BirthDay);
+            p.Add("Phone", model.Phone);
+            p.Add("Salary", model.Salary);
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    await con.ExecuteAsync("sp_UpdateCustomer", p, commandType: CommandType.StoredProcedure);
+                    return RepoResponse<bool>.Create(true);
+                }
+            }
+            catch(Exception e)
+            {
+                return RepoResponse<bool>.Create(false, GetException(e));
+            }
+            
+
+        }
+        public async Task<List<CheckDupNoteViewModel>> GetNoteByIdAsync(int customerId)
+        {
+            var p = new DynamicParameters();
+            p.Add("customerId", customerId);
+            using (var con = GetConnection())
+            {
+                var results = await con.QueryAsync<CheckDupNoteViewModel>("sp_GetNotesByCustomerId", p, commandType: CommandType.StoredProcedure);
+                return results.ToList();
+            }
+
+        }
         public async Task<List<CheckDupIndexModel>> GetsAsync(
             string freeText,
             int page,

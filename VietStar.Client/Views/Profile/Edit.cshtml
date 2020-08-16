@@ -18,7 +18,7 @@
                         </div>
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày nhận đơn đề nghị<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <input class="form-control" type="date" value="@Model.ReceiveDate.Value.ToString("dd/MM/yyyy")" id="receiveDate" />
+                            <input class="form-control" type="date" value="@(Model.ReceiveDate.HasValue ? Model.ReceiveDate.Value.ToString("dd/MM/yyyy") :DateTime.Now.ToString("dd/MM/yyyy")) Date" id="receiveDate" />
                         </div>
 
                     </div>
