@@ -359,7 +359,7 @@
             + renderTextLink(rowData.CustomerName, `/Revoke/Edit/${rowData.Id}`, '', "m-w-120")
             + renderTextLeft(rowData.AgreementNo, '', 'm-w-120')
             + renderTextLeft(rowData.IdCardNumber, '', 'w-84')
-            + renderStatusOnIndexPage(rowData.Status, rowData.StatusName)
+            + renderStatusRewrite( rowData.StatusName)
             + renderTextLeft(formatCurrencyVND(rowData.TotalCurros,''), '', 'w-150')
             + renderTextLeft(rowData.AssigneeName, '', "m-w-120")
             + renderTextLeft(rowData.CreatedUser, '', "m-w-120")

@@ -38,6 +38,36 @@ function renderStatusDisplay(statusName, btnRefresh = null) {
     var statusString = `<span class='label label-sm ${colorClass} arrowed arrowed-righ '>${statusName}</span>`;
     return "<td class='text-left min-150'>" + statusString + btnRefresh + "</td>";
 }
+
+function renderStatusRewrite(statusName) {
+
+
+    if (isNullOrWhiteSpace(statusName))
+        return "<td class='text-left'></td>";
+    let firstChar = statusName[0].toLowerCase();
+    let greenGroup = ['a', 'b', 'c', 'd', 'đ'];
+    let danger = ['e', 'f', 'g', 't'];
+    let succsess = ['i', 'k', 'm'];
+    let cancel = ['o', 'p', 'q'];
+    let inverse = ['j', 'z', 'w'];
+    let colorClass = 'label-temp'
+    if (greenGroup.indexOf(firstChar) >= 0)
+        colorClass = 'label-green';
+    if (danger.indexOf(firstChar) >= 0)
+        colorClass = 'label-orrange'
+    if (succsess.indexOf(firstChar) >= 0)
+        colorClass = 'label-primary'
+    if (inverse.indexOf(firstChar) >= 0)
+        colorClass = 'label-inverse'
+    if (cancel.indexOf(firstChar) >= 0)
+        colorClass = 'label-cancel'
+    //let statusString = `<span class='label label-sm ${colorClass} arrowed arrowed-righ'>${statusName}</span>`;
+    //return "<td class='text-left'>" + statusString + "</td>";
+
+    var statusString = `<td class='text-left tb-row-breakword  arrowed arrowed-righ ${colorClass}'  style="color:#fff" >${statusName}</td>`;
+    return statusString;
+
+}
 function renderStatusOnIndexPage(statusId, statusName) {
     let greenGroup = [1, 5, 9];
     let danger = [2, 6, 10];
@@ -63,12 +93,9 @@ function renderStatusOnIndexPage(statusId, statusName) {
         return statusString;
     }
     else {
-        var statusString = `<td class='text-left tb-row-breakword ${colorClass} arrowed arrowed-righ'>${statusName}</td>`;
+        var statusString = `<td class='text-left tb-row-breakword  arrowed arrowed-righ'>${statusName}</td>`;
         return statusString;
     }
-   
-    
-  
    
 }
 function renderStatusList(controlId = '#ddlStatus',defaulValue = null) {
