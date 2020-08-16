@@ -150,6 +150,7 @@
             }
         });
     }
+    let firstLoad = true;
     function GetNotMembers(page) {
         showBlock($('#panel_body'), 'Vui lòng chờ');
         $('#duallistNhanVien').empty();
@@ -169,13 +170,21 @@
 
                     }
                 }
-                
-                var lstRightSelect = $('select[name="duallistbox_demo1[]_helper2"]')[0];
-                for (var i = 0; i < lstRightSelect.length; i++) {
+
+                if (!firstLoad) {
+                    var lstRightSelect = $('select[name="duallistbox_demo1[]_helper2"]')[0];
+                    for (var i = 0; i < lstRightSelect.length; i++) {
                     $('#duallistNhanVien').append("<option value='" + lstRightSelect[i].attributes[0].value + "' selected='selected'>" + lstRightSelect[i].innerText + "</option>");
                     
+                    }
                 }
-                $('#duallistNhanVien').bootstrapDualListbox('refresh', true);
+                else {
+
+                    firstLoad = false;
+                }
+                  $('#duallistNhanVien').bootstrapDualListbox('refresh', true);
+               
+                
             },
             complete: function () {
                 $('#panel_body').unblock();
