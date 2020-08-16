@@ -8,6 +8,9 @@
 /*.form-group input, .form-group label, .form-group select, .form-group textarea {
   font-size: 11px !important;
 }*/
+.height-max {
+    height: max-content;
+}
 .label-orrange {
     background-color: #e38008 !important;
 }

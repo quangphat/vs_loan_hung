@@ -61,11 +61,11 @@ function renderStatusRewrite(statusName) {
         colorClass = 'label-inverse'
     if (cancel.indexOf(firstChar) >= 0)
         colorClass = 'label-cancel'
-    //let statusString = `<span class='label label-sm ${colorClass} arrowed arrowed-righ'>${statusName}</span>`;
-    //return "<td class='text-left'>" + statusString + "</td>";
+    let statusString = `<span class='label label-sm ${colorClass} arrowed arrowed-righ tb-row-breakword height-max'>${statusName}</span>`;
+    return "<td class='text-left m-w-120'>" + statusString + "</td>";
 
-    var statusString = `<td class='text-left tb-row-breakword  arrowed arrowed-righ ${colorClass}'  style="color:#fff" >${statusName}</td>`;
-    return statusString;
+    //var statusString = `<td class='text-left tb-row-breakword  arrowed arrowed-righ ${colorClass}'  style="color:#fff" >${statusName}</td>`;
+    //return statusString;
 
 }
 function renderStatusOnIndexPage(statusId, statusName) {
