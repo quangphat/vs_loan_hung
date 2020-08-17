@@ -11,6 +11,7 @@ using VietStar.Entities.Messages;
 using VietStar.Entities.ViewModels;
 using VietStar.Repository.Interfaces;
 using VietStar.Utility;
+using static VietStar.Entities.Commons.Enums;
 
 namespace VietStar.Business
 {
@@ -24,28 +25,22 @@ namespace VietStar.Business
         }
         public async Task<bool> UpdateAsync(CheckDupEditModel model)
         {
-            if (model == null || model.CheckDup == null)
+            if (model == null)
             {
                 return ToResponse(false, "Dữ liệu không hợp lệ");
             }
-            if (model.Partners == null || !model.Partners.Any())
+            if (model.PartnerId <= 0)
                 return ToResponse(false, "Vui lòng chọn đối tác");
-            var partner = model.Partners[0];
-            bool isMatch = partner.IsSelect;
+            var checkDup = _mapper.Map<CheckDupAddSql>(model);
 
-
-            var checkDup = _mapper.Map<CheckDupAddSql>(model.CheckDup);
-            checkDup.IsMatch = isMatch;
-            checkDup.MatchCondition = isMatch ? partner.Name : string.Empty;
-            checkDup.NotMatch = isMatch == false ? partner.Name : string.Empty;
-            var result = await _rpCheckDup.UpdateAsync(checkDup);
+            var result = await _rpCheckDup.UpdateAsync(checkDup, _process.User.Id);
             if (!result.success)
                 return ToResponse(result);
-            if (!string.IsNullOrWhiteSpace(model.CheckDup.Note))
+            if (!string.IsNullOrWhiteSpace(model.Note))
             {
                 var note = new CheckDupNote
                 {
-                    Note = model.CheckDup.Note,
+                    Note = model.Note,
                     CustomerId = checkDup.Id,
                     CreatedBy = _process.User.Id
                 };
@@ -75,11 +70,11 @@ namespace VietStar.Business
         }
         public async Task<int> CreateAsync(CheckDupAddModel model)
         {
-            if (model.Partners == null || !model.Partners.Any())
+            if (model.PartnerId <= 0)
                 return ToResponse(0, "Vui lòng chọn đối tác");
-            var partner = model.Partners[0];
-            bool isMatch = partner.IsSelect;
             var obj = _mapper.Map<CheckDupAddSql>(model);
+            obj.CICStatus = (int)CheckDupCICStatus.NotDebt;
+            obj.PartnerStatus = (int)CheckDupPartnerStatus.NotCheck;
             var response = await _rpCheckDup.CreateAsync(obj, _process.User.Id);
             if (response.data > 0)
             {
@@ -95,7 +90,7 @@ namespace VietStar.Business
                 }
                 return response.data;
             }
-            return ToResponse(0,response.error);
+            return ToResponse(0, response.error);
         }
     }
 }

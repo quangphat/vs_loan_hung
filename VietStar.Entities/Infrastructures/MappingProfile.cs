@@ -57,6 +57,7 @@ namespace VietStar.Entities.Infrastructures
                .ForMember(a => a.SaleId, b => b.MapFrom(c => c.Ho_So_Cua_Ai))
                .ForMember(a => a.CourierId, b => b.MapFrom(c => c.Courier_Code));
             CreateMap<CheckDupAddModel, CheckDupAddSql>();
+            CreateMap<CheckDupEditModel, CheckDupAddSql>();
 
 
         }

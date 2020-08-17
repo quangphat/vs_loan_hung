@@ -22,38 +22,29 @@ namespace VietStar.Repository
         {
             _rpLog = logRepository;
         }
-        public async Task<RepoResponse<bool>> UpdateAsync(CheckDupAddSql model)
+        public async Task<RepoResponse<bool>> UpdateAsync(CheckDupAddSql model, int updateBy)
         {
-            var p = new DynamicParameters();
-            p.Add("id", model.Id);
-            p.Add("fullname", model.FullName);
-            p.Add("checkdate", model.CheckDate);
-            p.Add("cmnd", model.Cmnd);
-            p.Add("status", model.CICStatus);
-            p.Add("note", string.IsNullOrWhiteSpace(model.LastNote) ? null : model.LastNote);
-            p.Add("gender", model.Gender);
-            p.Add("match", model.MatchCondition);
-            p.Add("notmatch", model.NotMatch);
-            p.Add("updatedtime", DateTime.Now);
-            p.Add("updatedby", model.UpdatedBy);
-            p.Add("ProvinceId", model.ProvinceId);
-            p.Add("Address", model.Address);
-            p.Add("BirthDay", model.BirthDay);
-            p.Add("Phone", model.Phone);
-            p.Add("Salary", model.Salary);
+            var pars = GetParams(model, new string[]
+                        {
+                            nameof(model.CreatedBy),
+                            nameof(model.CreatedTime),
+                            nameof(model.UpdatedTime),
+                            nameof(model.UpdatedBy),
+                        });
+            pars.Add(nameof(model.UpdatedBy), updateBy);
             try
             {
                 using (var con = GetConnection())
                 {
-                    await con.ExecuteAsync("sp_UpdateCustomer", p, commandType: CommandType.StoredProcedure);
+                    await con.ExecuteAsync("sp_UpdateCustomer_v2", pars, commandType: CommandType.StoredProcedure);
                     return RepoResponse<bool>.Create(true);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return RepoResponse<bool>.Create(false, GetException(e));
             }
-            
+
 
         }
         public async Task<List<CheckDupNoteViewModel>> GetNoteByIdAsync(int customerId)
@@ -74,7 +65,7 @@ namespace VietStar.Repository
             int userId)
         {
             page = page <= 0 ? 1 : page;
-            limit = (limit <= 0 || limit >= Constansts.Limit_Max_Page) ? Constansts.Limit_Max_Page : limit;
+            limit = (limit <= 0 || limit >= Constants.Limit_Max_Page) ? Constants.Limit_Max_Page : limit;
             int offset = (page - 1) * limit;
             if (string.IsNullOrWhiteSpace(freeText))
                 freeText = "";
@@ -117,31 +108,20 @@ namespace VietStar.Repository
             {
                 using (var con = GetConnection())
                 {
-                    var p = AddOutputParam("id");
-                    p.Add("fullname", model.FullName);
-                    p.Add("checkdate", model.CheckDate);
-                    p.Add("cmnd", model.Cmnd);
-                    p.Add("createdtime", DateTime.Now);
-                    p.Add("status", model.CICStatus);
-                    p.Add("note", model.LastNote);
-                    p.Add("createdby", model.CreatedBy);
-                    p.Add("gender", model.Gender);
-                    p.Add("IsMatch", model.IsMatch);
-                    p.Add("PartnerId", model.PartnerId);
-                    p.Add("match", model.MatchCondition);
-                    p.Add("notMatch", model.NotMatch);
-                    p.Add("ProvinceId", model.ProvinceId);
-                    p.Add("Address", model.Address);
-                    p.Add("BirthDay", model.BirthDay);
-                    p.Add("Phone", model.Phone);
-                    p.Add("Salary", model.Salary);
+                    var pars = GetParams(model, new string[] {
+                        nameof(model.CreatedTime),
+                        nameof(model.UpdatedTime),
+                        nameof(model.UpdatedBy),
+                        nameof(model.CreatedBy)
+                    }, nameof(model.Id));
+                    pars.Add("CreatedBy", createdBy);
 
-                    await con.ExecuteAsync("sp_InsertCustomer", p, commandType: CommandType.StoredProcedure);
-                    return RepoResponse<int>.Create(p.Get<int>("id"));
+                    await con.ExecuteAsync("sp_InsertCustomer_v2", pars, commandType: CommandType.StoredProcedure);
+                    return RepoResponse<int>.Create(pars.Get<int>(nameof(model.Id)));
 
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return RepoResponse<int>.Create(0, GetException(e));
             }

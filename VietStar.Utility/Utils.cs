@@ -3,6 +3,7 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using VietStar.Entities.Commons;
 
 namespace VietStar.Utility
 {
@@ -10,6 +11,10 @@ namespace VietStar.Utility
     {
         static string start = "KPMG_EV";
         static string end = "KPMG_PM";
+        public static string FormatCurrentCy(decimal value)
+        {
+            return String.Format(Constants.CurrentCyFormat, value);
+        }
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {
             HashSet<TKey> seenKeys = new HashSet<TKey>();

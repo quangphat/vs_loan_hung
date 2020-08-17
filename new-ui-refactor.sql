@@ -938,6 +938,30 @@ declare @orgId int = 0;
 END
 
 
+------------
+
+create function [dbo].[getProvinceName](@provinceId int)
+returns nvarchar(200)
+as
+begin
+declare @name nvarchar(200)
+ select @name = Ten from KHU_VUC 
+where Id = @provinceId and Loai = 1
+return @name;
+end
+
+---------
+
+create function [dbo].[getPartnerName](@partnerId int)
+returns nvarchar(200)
+as
+begin
+declare @name nvarchar(200)
+ select @name = Ten from DOI_TAC 
+where Id = @partnerId
+return @name;
+end
+
 --------------
 
 alter procedure [dbo].[sp_GetCustomer_v2]
@@ -954,7 +978,7 @@ begin
 declare @isAdmin int = 0;
 select @isAdmin = dbo.fn_CheckIsAdmin(@userId);
 declare @query  nvarchar(max);
-declare @wherequery nvarchar(500) = ' where s.ProfileType =''duplicate'' and Createdby is not null';
+declare @wherequery nvarchar(500) = ' where dt.AllowCheckDup =1 and Createdby is not null';
 declare @param nvarchar(max) = '@freetext_tmp nvarchar(30), @userId_tmp int,@offset_tmp int = 0,@limit_tmp int  =10 '
 if @freeText = '' begin set @freeText = null end;
 if(@userId >0 and @isAdmin = 0)
@@ -969,7 +993,10 @@ begin
 		)'
 end
 
-	set @query = N'Select count(*) over() as TotalRecord, n.*, s.Name as StatusName from Customer n left join ProfileStatus s on n.CICStatus = s.Value ' + @wherequery 
+	set @query = N'Select count(*) over() as TotalRecord, n.*,  dbo.fn_getStatusName(''duplicate'',1, n.CICStatus) as CICStatusName ,
+	 dbo.fn_getStatusName(''checkdup-partner-status'',1, n.PartnerStatus) as PartnerStatusName,
+	 dbo.getProvinceName(n.ProvinceId) as ProvinceName, dbo.getPartnerName(n.PartnerId) as PartnerName
+	from Customer n left join Doi_tac dt on n.PartnerId = dt.Id ' + @wherequery 
 	+ ' order by n.Id desc 
 	offset @offset_tmp ROWS FETCH NEXT @limit_tmp ROWS ONLY';
 	print @query;
@@ -982,3 +1009,104 @@ end
 
 
 ------------
+
+
+  alter table customer
+  add PartnerStatus int
+
+  ---------
+
+  alter procedure [dbo].[sp_InsertCustomer_v2]
+  (
+  @id int out,
+  @fullname nvarchar(200),
+  @checkdate datetime,
+  @cmnd varchar(15),
+  @CICStatus int,
+  @LastNote nvarchar(200),
+  @partnerId int,
+  @partnerStatus int,
+  @createdby int,
+  @ProvinceId int,
+  @Address nvarchar(200),
+  @Phone varchar(12),
+  @Salary decimal(18,2)
+  )
+  as
+  begin
+	insert into Customer(
+	FullName
+	,CheckDate
+	,Cmnd
+	,CICStatus
+	,LastNote
+	,PartnerId
+	,PartnerStatus
+	,[Status]
+	,UpdatedTime
+	,CreatedTime
+	,CreatedBy
+	,ProvinceId
+	,Address
+	,Phone
+	,Salary)
+	values
+	(@fullname
+	,@checkdate
+	,@cmnd
+	,@CICStatus
+	,@LastNote
+	,@partnerId
+	,@partnerStatus
+	,1
+	,GETDATE()
+	,GETDATE()
+	,@createdby
+	,@ProvinceId
+	,@Address
+	,@Phone
+	,@Salary);
+	SET @id=@@IDENTITY;
+
+  end
+
+  ----------
+
+    alter procedure [dbo].[sp_UpdateCustomer_v2]
+  (
+  @id int,
+  @fullname nvarchar(200),
+  @checkdate datetime,
+  @cmnd varchar(15),
+  @updatedby int,
+  @LastNote nvarchar(200) = null,
+  @ProvinceId int,
+  @Address nvarchar(200),
+  @Phone varchar(12),
+  @Salary decimal(18,2),
+  @PartnerId int,
+  @PartnerStatus int,
+  @CICStatus int
+  )
+  as
+  begin
+	update Customer 
+		set FullName = @fullname,
+		CheckDate = @checkdate,
+		Cmnd = @cmnd,
+		UpdatedTime = GETDATE(),
+		UpdatedBy = @updatedby,
+		[Status] = 1,
+		ProvinceId = @ProvinceId,
+		Address = @Address,
+		Phone = @Phone,
+		Salary = @Salary,
+		PartnerId = @PartnerId,
+		PartnerStatus = @PArtnerStatus,
+		CICStatus = @CICStatus
+		where Id = @id
+	  if(@LastNote is not null)
+		update Customer set LastNote = @LastNote where Id = @id
+  end
+
+  ----------

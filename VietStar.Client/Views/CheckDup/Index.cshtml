@@ -45,8 +45,8 @@
                 <div class="clearfix">
                     <div class="pull-right tableTools-container"></div>
                 </div>
-                <div class="table-header">
-                    Danh sách hồ sơ
+                <div class="box-header box-header-green">
+                    <h3 class="box-title">Danh sách check dup</h3>
                 </div>
                 <div class="dataTables_wrapper form-inline no-footer">
                     <div class="row">
@@ -75,12 +75,12 @@
                                     <th class="w-105">CMND</th>
                                     <th class="w-105">Ngày check</th>
                                     <th style="width: 150px">CIC</th>
-                                    <th class="m-w-150">Chưa check</th>
-                                    <th class="m-w-150">Đủ điều kiện</th>
-                                    <th class="m-w-150">Không đủ điều kiện</th>
+                                    <th class="m-w-150">Đối tác</th>
+                                    <th class="m-w-150">Trạng thái</th>
+                                    <th class="m-w-150">Tỉnh</th>
                                     <th class="m-w-300">Ghi chú</th>
                                     @*<th class="w-90">Mã nhân viên</th>
-                                        <th class="m-w-150">Nhân viên xử lý</th>*@
+        <th class="m-w-150">Nhân viên xử lý</th>*@
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -164,7 +164,7 @@
     var strLoading = 'Vui lòng chờ trong giây lát';
     $('#btnSearch').click(function (e) {
         showBlock($('#panel_body'), strLoading);
-        getData(page, limit);
+        getData(1, limit);
     });
     function onClickPage(page) {
         page = page;
@@ -203,10 +203,10 @@
             + renderTextLink(item.FullName,`/CheckDup/Edit/${item.Id}`, '', "m-w-150")
             + renderTextLeft(item.Cmnd, '', "w-105")
             + renderTextLeft(item.CheckDate, 'datetime')
-            + renderStatus(item.StatusName)
-            + renderTextLeft(item.NotMatch, '', "m-w-150")
-            + renderMatchCondition(item)
-            + renderMatchCondition(item, false)
+            + renderStatus(item.CICStatusName)
+            + renderTextLeft(item.PartnerName, '', "m-w-150")
+            + renderStatus(item.PartnerStatusName)
+            + renderTextLeft(item.ProvinceName, '', "m-w-150")
             + renderTextLeft(item.LastNote, '', 'tb-row-breakword')
             //+ renderTextLeft(item.MaVBF, '', "w-90")
             //+ renderTextLeft(item.NameVBF, '', "m-w-150 tb-row-breakword")

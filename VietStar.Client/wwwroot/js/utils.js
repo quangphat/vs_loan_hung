@@ -36,6 +36,7 @@ function formatCurrencyVND(number) {
     return n2.split('').reverse().join('') + 'VND';
 }
 function formatCurrency(number) {
+    debugger
     var n = number.toString().split('').reverse().join("");
     var n2 = n.replace(/\d\d\d(?!$)/g, "$&.");
     return n2.split('').reverse().join('') + '';

@@ -38,5 +38,17 @@ namespace VietStar.Entities.Commons
             MCreditTemp = 4,
             RevokeDebt = 5
         }
+        public enum CheckDupPartnerStatus
+        {
+            NotCheck = 0,
+            MatchCondition = 1,
+            NotMatch = 2
+        }
+        public enum CheckDupCICStatus
+        {
+            NotDebt = 0,
+            Warning = 1,
+            Debt = 2
+        }
     }
 }

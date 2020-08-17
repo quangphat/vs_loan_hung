@@ -31,7 +31,7 @@ namespace VietStar.Business.Infrastructures
         }
         public static bool IsNotValidFileSize(long fileLength)
         {
-            if (fileLength > Constansts.MaxFileSize * 1024 * 1024)
+            if (fileLength > Constants.MaxFileSize * 1024 * 1024)
                 return true;
             return false;
         }

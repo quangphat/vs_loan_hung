@@ -223,9 +223,9 @@ function GetCheckDupPartners(control = null, defaultValue = 0) {
         $.each(data, function (index, item) {
             control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
         });
-        debugger
+        
         if (defaultValue > 0) {
-            debugger
+            
             control.val(defaultValue);
             
         }
