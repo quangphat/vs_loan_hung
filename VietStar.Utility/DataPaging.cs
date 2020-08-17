@@ -12,7 +12,7 @@ namespace VietStar.Utility
             DataPaging<T> d = new DataPaging<T>
             {
                 Datas = data,
-                TotalRecord = data==null ? 0: totalRecord
+                TotalRecord = data == null ? 0 : totalRecord
             };
             return d;
         }

@@ -303,5 +303,5 @@ function renderStatus(statusName) {
         colorClass = 'label-cancel'
 
     let statusString = `<span class='label label-sm ${colorClass} arrowed arrowed-righ'>${statusName}</span>`;
-    return "<td class='text-left'>" + statusString + "</td>";
+    return "<td class='text-left min-w-150'>" + statusString + "</td>";
 }

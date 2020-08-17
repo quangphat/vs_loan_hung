@@ -201,12 +201,15 @@ input:-moz-placeholder, textarea:-moz-placeholder {
     word-break: break-word;
 }
 
-.m-w-300 {
+.min-w-300 {
     min-width: 300px !important;
 }
+.max-w-300 {
+    max-width: 300px !important;
+}
 
-.m-w-140 {
-    min-width: 140px !important;
+.min-w-150 {
+    min-width: 150px !important;
 }
 .min-100{
     min-width:100px;

@@ -1,14 +1,12 @@
-﻿
-@{
-    ViewData["Title"] = "Danh sách checkdup";
+﻿@{
+    ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <div class="main-content-inner">
     <div class="breadcrumbs" id="breadcrumbs">
         <ul class="breadcrumb">
             <li>
-                <a href="#" class="active">Danh sách checkdup</a>
+                <a href="#" class="active">Danh sách công ty</a>
             </li>
         </ul>
     </div>
@@ -29,7 +27,7 @@
                                 <a class="btn btn-primary" id="btnSearch">
                                     Tìm kiếm
                                 </a>
-                                <a class="btn btn-primary" href="/CheckDup/Create">
+                                <a class="btn btn-primary" href="/Company/Create">
                                     Thêm mới
                                 </a>
                             </div>
@@ -45,9 +43,9 @@
                     <div class="pull-right tableTools-container"></div>
                 </div>
                 <div class="box-header box-header-green">
-                    <h3 class="box-title">Danh sách check dup</h3>
+                    <h3 class="box-title">Danh sách công ty</h3>
                 </div>
-                <div class="dataTables_wrapper form-inline no-footer">
+                <div class="dataTables_wrapper form-inline no-footer mg-10">
                     <div class="row">
                         <div class="col-xs-6">
                             <label>
@@ -70,20 +68,17 @@
                             <thead class="table-header">
                                 <tr>
                                     <th class="center w-45">STT</th>
-                                    <th class="m-w-150">Tên khách hàng</th>
-                                    <th class="w-105">CMND</th>
-                                    <th class="w-105">Ngày check</th>
-                                    <th style="width: 150px">CIC</th>
-                                    <th class="m-w-150">Đối tác</th>
-                                    <th class="m-w-150">Trạng thái</th>
-                                    <th class="m-w-150">Tỉnh</th>
+                                    <th class="m-w-150">Tên công ty</th>
+                                    <th class="w-105">MST</th>
+                                    <th style="width: 150px">Cat</th>
                                     <th class="m-w-300">Ghi chú</th>
-                                    @*<th class="w-90">Mã nhân viên</th>
-                                        <th class="m-w-150">Nhân viên xử lý</th>*@
+                                    <th class="m-w-150">Ngày tạo</th>
+                                    <th class="m-w-150">Ngày check</th>
+                                    <th class="m-w-150">Ngày cập nhật</th>
+
                                 </tr>
                             </thead>
                             <tbody></tbody>
-                            <tfoot></tfoot>
                         </table>
                     </div>
                 </div>
@@ -158,6 +153,7 @@
                 limit = parseInt(limit)
             $("#ddlLimit").val(limit)
         }
+
         bindQueries()
     });
     var strLoading = 'Vui lòng chờ trong giây lát';
@@ -165,27 +161,49 @@
         showBlock($('#panel_body'), strLoading);
         getData(1, limit);
     });
+
     function onClickPage(page) {
         page = page;
         getData(page, limit);
     }
 
+    function getValueDisplay(value, type) {
+        if (isNullOrWhiteSpace(type)) {
+            if (isNullOrWhiteSpace(value))
+                return "";
+            return value
+        }
+
+        var display = null
+        switch (type)
+        {
+            case 'datetime':
+                display = FormatDateTimeDMY(value);
+            default: break;
+        }
+        return display;
+    }
     function onSelectLimit() {
         limit = $("#ddlLimit").val()
         getData(page,limit)
+        //alert(limit)
     }
-    function renderMatchCondition(item, isMatchColumn = true) {
-
-        if (item == null || item.Status == 0)
-            return renderTextLeft('', '', "m-w-150")
-
-        if (isMatchColumn) {
-            return renderTextLeft(item.MatchCondition, '', "m-w-150")
+    function renderCat(item) {
+        if (item == null || item.CatType == 0)
+            return renderTextLeft('', '', '')
+        let value = '';
+        switch (item.CatType) {
+            case 1: value = 'CatA'
+                break;
+            case 2: value = 'CatB'
+                break;
+            case 3: value = 'CatC'
+                break;
+            default: break;
         }
-        return renderTextLeft(item.NotMatch, '', "m-w-150")
+        return renderTextLeft(value, '', '')
     }
     function renderRow(index, item) {
-        console.log(item);
         page = queries.get("page");
         if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
             page = 1;
@@ -199,16 +217,14 @@
         var stt = (page - 1) * limit + index + 1;
         return "<tr role='row' class = 'odd'>"
             + renderTextCenter(stt)
-            + renderTextLink(item.FullName,`/CheckDup/Edit/${item.Id}`, '', "m-w-150")
-            + renderTextLeft(item.Cmnd, '', "w-105")
+            + renderTextLink(item.FullName, `/Company/Edit/${item.Id}`, '', "tb-row-breakword min-w-150 max-w-300")
+            + renderTextLeft(item.TaxNumber, '', "w-105")
+            + renderCat(item)
+            + renderTextLeft(item.LastNote, '', 'tb-row-breakword min-w-150')
+            + renderTextLeft(item.CreatedTime, 'datetime')
             + renderTextLeft(item.CheckDate, 'datetime')
-            + renderStatus(item.CICStatusName)
-            + renderTextLeft(item.PartnerName, '', "m-w-150")
-            + renderStatus(item.PartnerStatusName)
-            + renderTextLeft(item.ProvinceName, '', "m-w-150")
-            + renderTextLeft(item.LastNote, '', 'tb-row-breakword')
-            //+ renderTextLeft(item.MaVBF, '', "w-90")
-            //+ renderTextLeft(item.NameVBF, '', "m-w-150 tb-row-breakword")
+            + renderTextLeft(item.UpdatedTime, 'datetime')
+
             + "</tr>";
     }
     function renderTableBody(datas) {
@@ -254,7 +270,7 @@
         showBlock($('#panel_body'), strLoading);
 
         $.ajax( {
-                url: '@Url.Action("Search", "CheckDup")',
+                url: '@Url.Action("Search", "Company")',
                 type: "GET",
                 contentType: "application/json",
             data: {
@@ -267,7 +283,7 @@
 
                 if (response.success == true) {
                     totalRecord = response.data.TotalRecord;
-                    var search = this.url.replace("/CheckDup/Search", "");
+                    var search = this.url.replace("/Company/Search", "");
                     queries = new URLSearchParams(search)
                     page = queries.get("page");
                     if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
@@ -282,7 +298,8 @@
                     renderTableBody(response.data.Datas)
                     //renderGoPreviousPage(page);
                     renderPageList(page, limit, totalRecord)
-
+                    $("#dtSource_info").text("Tổng: " + totalRecord + " items");
+                    $("#totalPage").text("Tổng: " + totalPage + " trang");
                 }
                 else {
                     swal({
@@ -309,6 +326,4 @@
 
     }
 </script>
-
-
 

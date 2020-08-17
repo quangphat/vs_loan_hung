@@ -1110,3 +1110,35 @@ end
   end
 
   ----------
+
+  
+alter table Company
+add IsDeleted bit
+
+--------
+
+create procedure [dbo].[sp_GetCompany_v2]
+(
+@freeText nvarchar(30),
+@offset int,
+@limit int
+)
+as
+begin
+declare @query  nvarchar(max);
+declare @where nvarchar(500) ='where isnull(c.IsDeleted,0) = 0 '
+if @freeText = '' begin set @freeText = null end;
+set @query ='Select count(*) over() as TotalRecord,c.* from Company c '
+if(@freeText is not null)
+begin
+	set @where += N' and (c.FullName like N''%'' +' + ' @freetext' + '+''%'' 
+			or c.Cmnd like ''%'' + ' + '@freetext' + '+''%'')'
+end
+set @where += ' order by c.Id desc offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
+set @query+=@where
+declare @param nvarchar(max) = '@freetext nvarchar(30), @offset int = 0,@limit int  =10 '
+print @query;
+execute sp_executesql @query, @param,@freetext = @freeText,  @offset = @offset,@limit = @limit;
+end
+
+---------

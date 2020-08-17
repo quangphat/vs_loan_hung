@@ -75,10 +75,10 @@
                         <input type="search" class="form-control" id="freeText" placeholder="">
                     </div>
                 </div>
-
+                <button type="button" id="btnSearch" class="btn btn-info pull-right">Tìm kiếm</button>
             </div>
             <!-- /.box-body -->
-            <button type="button" id="btnSearch" class="btn btn-info pull-right">Tìm kiếm</button>
+            
 
             <!-- /.box-footer -->
         </form>
@@ -93,7 +93,7 @@
                 </div>
                 <!-- /.box-header -->
 
-                <div class="dataTables_wrapper form-inline no-footer">
+                <div class="dataTables_wrapper form-inline no-footer mg-10">
                     <div class="row">
                         <div class="col-sm-6">
                             <label>
@@ -126,7 +126,7 @@
                                     <th class="m-w-300">Ghi chú</th>
                                     <th class="w-130">Khu vực</th>
                                     <th class="w-130">Đội ngũ bán hàng</th>
-                                    <th class="m-w-150">Nhân viên bán hàng</th>
+                                    <th class="min-w-150">Nhân viên bán hàng</th>
                                     <th class="w-84">Người tạo</th>
                                     <th class="w-94 sorting_asc" onclick="onSort('createtime')">Ngày tạo</th>
                                     <th class="w-94">Người cập nhật</th>
@@ -241,7 +241,7 @@ function renderRow(index, item) {
         + renderTextLeft(item.PartnerName, '', 'min-150')
         + renderTextLeft(item.ProductName,'','min-150')
         + renderCoBaoHiem(item.IsInsurrance)
-        + renderTextLeft(item.LastNote, '', 'tb-row-breakword m-w-300')
+        + renderTextLeft(item.LastNote, '', 'tb-row-breakword min-w-300')
         + renderTextLeft(item.ProvinceName, '','min-150')
         + renderTextLeft(item.SellTeam,'','min-150')
         + renderTextLeft(item.CourierCode,'','min-150')
