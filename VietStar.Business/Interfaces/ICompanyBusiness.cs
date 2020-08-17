@@ -10,6 +10,9 @@ namespace VietStar.Business.Interfaces
 {
     public interface ICompanyBusiness
     {
+        Task<bool> UpdateAsync(CompanyEditModel model);
+        Task<CompanySql> GetByIdAsync(int id);
         Task<DataPaging<List<CompanyIndexModel>>> SearchsAsync(string freeText, int page, int limit);
+        Task<int> CreateAsync(CompanyAddModel model);
     }
 }

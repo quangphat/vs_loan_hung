@@ -1,0 +1,154 @@
+﻿
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-caret-right"></i>
+                <a href="#">Tạo công ty</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">1.Thông tin công ty:</h3>
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên công ty <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtHoTen" placeholder="Tên công ty" class="form-control">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày Check<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input class="form-control date-picker" type="date" id="txtCheckDate" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Mã số thuế<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtTaxNumber" placeholder="Mã số thuế" class="form-control" />
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Tên ngân hàng<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="partnerId" class="chosen-select form-control" data-placeholder="Chọn đối tác">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <hr />
+                <form class="form-horizontal">
+                    <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Ghi chú</h4>
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
+                        <div class="col-md-11 col-sm-12 col-xs-12">
+                            <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
+                        </div>
+                    </div>
+                    <div class="pull-right">
+
+                        <a class="btn btn-sm btn-primary" id="btnSave">
+                            Lưu
+                        </a>
+
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        GetCheckDupPartners();
+    });
+        $('#btnSave').click(function (e) {
+         if (isNullOrWhiteSpace($('#txtCheckDate').val())) {
+            swal({
+                title: "Không thành công",
+                text: "Ngày check không hợp lệ",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+
+            if (isNullOrWhiteSpace($('#txtTaxNumber').val())) {
+            swal({
+                title: "Không thành công",
+                text: "Vui lòng nhập mã số thuế",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        var objectSend = JSON.stringify({
+            'FullName': $('#txtHoTen').val(),
+            'CheckDate': $('#txtCheckDate').val(),
+            'Note': $('#txtGhiChu').val(),
+            'TaxNumber': $('#txtTaxNumber').val(),
+            'PartnerId': $("#partnerId").val(),
+            'LastNote': $("#txtGhiChu").val()
+
+        });
+        $.ajax({
+            traditional: true,
+            url: '@Url.Action("CreateAsync", "Company")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                if (data.success == true) {
+                    swal({
+                        title: "Thành công",
+                        text: "Tạo công ty thành công",
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                        window.location = window.location;
+                    });
+                }
+                else {
+                    swal({
+                        title: "Lỗi",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+        });
+</script>
+
