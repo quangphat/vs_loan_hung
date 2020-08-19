@@ -11,5 +11,6 @@ namespace VietStar.Business.Interfaces
     {
         Task<List<GroupModel>> GetApproveGroupByUserId();
         Task<List<GroupModel>> GetGroupByUserId();
+        Task<List<GroupModel>> GetParentGroups();
     }
 }

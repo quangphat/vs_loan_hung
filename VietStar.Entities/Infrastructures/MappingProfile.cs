@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using VietStar.Entities.CheckDup;
 using VietStar.Entities.Company;
+using VietStar.Entities.Courier;
 using VietStar.Entities.Profile;
 
 namespace VietStar.Entities.Infrastructures
@@ -61,7 +62,8 @@ namespace VietStar.Entities.Infrastructures
             CreateMap<CheckDupEditModel, CheckDupAddSql>();
             CreateMap<CompanyAddModel, CompanySql>();
             CreateMap<CompanyEditModel, CompanySql>();
-
+            CreateMap<CourierAddModel, CourierSql>();
+               
         }
     }
 }

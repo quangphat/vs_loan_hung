@@ -9,6 +9,8 @@ namespace VietStar.Repository.Interfaces
 {
     public interface IEmployeeRepository
     {
+        Task<OptionSimple> GetEmployeeByCode(string code, int userId);
+        Task<List<OptionSimple>> GetByProvinceId(int provinceId);
         Task<List<OptionSimple>> GetCouriers(int orgId);
         Task<bool> GetStatus(int userId);
         Task<Account> Login(string userName, string password);

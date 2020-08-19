@@ -23,6 +23,12 @@ namespace VietStar.Business
             _rpEmployee = employeeRepository;
             _rpGroup = groupRepository;
         }
+
+        public async Task<List<OptionSimple>> GetByProvinceIdAsync(int provinceId)
+        {
+            var result = await _rpEmployee.GetByProvinceId(provinceId);
+            return result;
+        }
         public async Task<List<OptionSimple>> GetSalesAsync()
         {
             var result = new List<OptionSimple>();

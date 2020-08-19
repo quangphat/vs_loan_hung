@@ -11,6 +11,7 @@ using VietStar.Entities.Infrastructures;
 namespace VietStar.Client.Controllers
 {
     [Route("employees")]
+    [Authorize]
     public class EmployeeController : VietStarBaseController
     {
         protected readonly IEmployeeBusiness _bizEmployee;
@@ -18,11 +19,18 @@ namespace VietStar.Client.Controllers
         {
             _bizEmployee = employeeBusiness;
         }
-        [Authorize]
+        
         [HttpGet("GetByGroupId/{groupId}")]
         public async Task<IActionResult> GetByGroupId(int groupId)
         {
             var result = await _bizEmployee.GetMemberByGroupIdAsync(groupId);
+            return ToResponse(result);
+        }
+
+        [HttpGet("GetByProvinceId/{provinceId}")]
+        public async Task<IActionResult> GetByProvinceId(int provinceId)
+        {
+            var result = await _bizEmployee.GetByProvinceIdAsync(provinceId);
             return ToResponse(result);
         }
     }

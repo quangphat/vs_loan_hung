@@ -17,6 +17,27 @@ namespace VietStar.Repository
         public EmployeeRepository(IConfiguration configuration) : base(configuration)
         {
         }
+
+        public async Task<OptionSimple> GetEmployeeByCode(string code, int userId)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryFirstOrDefaultAsync<OptionSimple>("sp_Employee_GetByCode", new { code, userId }, commandType: CommandType.StoredProcedure);
+                return result;
+            }
+        }
+
+        public async Task<List<OptionSimple>> GetByProvinceId(int provinceId)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryAsync<OptionSimple>("spGetAllUserByProvinceId", new { provinceId }, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+
+
+        }
+
         public async Task<bool> GetStatus(int userId)
         {
             using (var con = GetConnection())

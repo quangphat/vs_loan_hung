@@ -33,7 +33,7 @@ namespace VietStar.Repository
             , int limit = 20)
         
         {
-            ProcessInputPaging(page, ref limit, out offset);
+            ProcessInputPaging(ref page, ref limit, out offset);
             try
             {
                 using (var con = GetConnection())

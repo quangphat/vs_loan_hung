@@ -200,7 +200,9 @@ input:-moz-placeholder, textarea:-moz-placeholder {
     word-break: break-all;
     word-break: break-word;
 }
-
+.min-w-120 {
+    min-width: 120px !important;
+}
 .min-w-300 {
     min-width: 300px !important;
 }

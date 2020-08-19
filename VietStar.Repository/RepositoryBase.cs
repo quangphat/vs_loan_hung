@@ -55,7 +55,7 @@ namespace VietStar.Repository
             }
             return p;
         }
-        protected void ProcessInputPaging(int page, ref int limit, out int offset)
+        protected void ProcessInputPaging(ref int page, ref int limit, out int offset)
         {
             page = page <= 0 ? 1 : page;
             if (limit <= 0)

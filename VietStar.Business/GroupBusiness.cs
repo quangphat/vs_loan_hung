@@ -26,7 +26,7 @@ namespace VietStar.Business
 
         public async Task<List<GroupModel>> GetApproveGroupByUserId()
         {
-            var groups = await _rpGroup.GetApproveGroupByUserId(_process.User.Id);
+            var groups = await _rpGroup.GetParentGroupsByUserIdAsync(_process.User.Id);
             return await GetGroupByUserId(groups);
         }
         public async Task<List<GroupModel>> GetGroupByUserId()
@@ -105,5 +105,10 @@ namespace VietStar.Business
             return lstResult;
         }
 
+        public async Task<List<GroupModel>> GetParentGroups()
+        {
+            var result = await _rpGroup.GetParentGroupsAsync(_process.User.Id);
+            return result;
+        }
     }
 }

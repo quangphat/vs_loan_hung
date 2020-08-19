@@ -94,8 +94,8 @@ function renderStatusList(profileType, value = null) {
     if (isNullOrWhiteSpace(profileType))
         return
     let control = $('#ddlStatus')
-    control.empty();
-    let data = JSON.parse(window.localStorage.getItem('profile_statuses'));
+    control.empty(); debugger
+    let data = JSON.parse(window.localStorage.getItem(`profile_statuses-${profileType}`));
     if (data != null && !isNullOrNoItem(data)) {
         $.each(data, function (index, item) {
             control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
@@ -112,7 +112,7 @@ function renderStatusList(profileType, value = null) {
         success: function (data) {
             $('#ddlStatus').append("<option value='0'></option>");
             if (data.data != null && data.success == true) {
-                setLocalStorage('profile_statuses', data.data)
+                setLocalStorage(`profile_statuses-${profileType}`, data.data)
                 $.each(data.data, function (index, item) {
                     $('#ddlStatus').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
@@ -479,6 +479,47 @@ function GetGroupByUser(control = null, defaultValue = 0) {
     });
 }
 
+function GetParentGroups(control = null, defaultValue = 0) {
+    if (control == null)
+        control = $("#groupId");
+    control.empty();
+    control.append("<option value='0'>Chọn nhóm</option>");
+    let data = getLocalStorage('parent-groups')
+    if (data != null) {
+        $.each(data, function (index, item) {
+            control.append("<option value='" + item.Id + "'>" + item.Name + "(" + item.ShortName + ")</option>");
+        });
+        if (defaultValue != null && defaultValue > 0) {
+            control.val(defaultValue);
+            // GetMemberByGroup(defaultValue, null,)
+        }
+        return
+    }
+    $.ajax({
+        type: "GET",
+        url: '/Groups/GroupsByUserId',
+        data: {},
+        success: function (data) {
+            if (data.data != null && data.success == true) {
+                setLocalStorage('parent-groups', data.data)
+                $.each(data.data, function (index, item) {
+                    control.append("<option value='" + item.Id + "'>" + item.Name + "(" + item.ShortName + ")</option>");
+                });
+                if (defaultValue != null && defaultValue > 0) {
+                    control.val(defaultValue);
+                    // GetMemberByGroup(defaultValue, null,)
+                }
+
+            }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+
 function GetMemberByGroup(groupId, control = null, defaultValue = 0) {
     if (isNullOrUndefined(groupId) || isNullOrWhiteSpace(groupId) || groupId==0)
         return;
@@ -491,6 +532,40 @@ function GetMemberByGroup(groupId, control = null, defaultValue = 0) {
         data: {},
         success: function (data) {
             control.append("<option value='0'>Chọn thành viên</option>");
+            if (data.data != null && data.success == true) {
+                $.each(data.data, function (index, item) {
+
+                    control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                });
+                if (defaultValue != null && defaultValue > 0) {
+                    control.val(defaultValue);
+                }
+
+                //control.chosen().trigger("chosen:updated").change();
+            }
+
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+
+function GetEmployeeByProvinceId(provinceId, control = null, defaultValue = 0) {
+    if (isNullOrUndefined(provinceId) || isNullOrWhiteSpace(provinceId) || provinceId == 0)
+        return;
+    if (control == null)
+        control = $("#courierId");
+    control.empty();
+    $.ajax({
+        type: "GET",
+        url: `/Employees/GetByProvinceId/${provinceId}`,
+        data: {},
+        success: function (data) {
+            control.append("<option value='0'>Chọn courier</option>");
+            debugger
             if (data.data != null && data.success == true) {
                 $.each(data.data, function (index, item) {
 

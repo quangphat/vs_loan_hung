@@ -11,6 +11,7 @@ using VietStar.Entities.Infrastructures;
 namespace VietStar.Client.Controllers
 {
     [Route("Groups")]
+    [Authorize]
     public class GroupController : VietStarBaseController
     {
         protected readonly IGroupBusiness _bizGroup;
@@ -18,18 +19,25 @@ namespace VietStar.Client.Controllers
         {
             _bizGroup = groupBusiness;
         }
-        [Authorize]
+        
         [HttpGet("GroupsByUserId")]
         public async Task<IActionResult> GetGroupsByUserId()
         {
             var result = await _bizGroup.GetGroupByUserId();
             return ToResponse(result);
         }
-        [Authorize]
+        
         [HttpGet("ApproveGroupsByUserId")]
         public async Task<IActionResult> GetApproveGroupsByUserId()
         {
             var result = await _bizGroup.GetApproveGroupByUserId();
+            return ToResponse(result);
+        }
+
+        [HttpGet("ParentGroups")]
+        public async Task<IActionResult> GetParentGroups()
+        {
+            var result = await _bizGroup.GetParentGroups();
             return ToResponse(result);
         }
     }

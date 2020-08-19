@@ -54,13 +54,29 @@ namespace VietStar.Repository
                 return null;
             }
         }
-        public async Task<List<GroupModel>> GetApproveGroupByUserId(int userId)
+        public async Task<List<GroupModel>> GetParentGroupsByUserIdAsync(int userId)
         {
             try
             {
                 using (var _con = GetConnection())
                 {
                     var result = await _con.QueryAsync<GroupModel>("sp_NHOM_LayDSNhomDuyetChonTheoNhanVien_v3", new { userId }, commandType: CommandType.StoredProcedure);
+                    return result.ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                await _rpLog.InsertLogFromException(nameof(GetGroupByUserId), e);
+                return null;
+            }
+        }
+        public async Task<List<GroupModel>> GetParentGroupsAsync(int userId)
+        {
+            try
+            {
+                using (var _con = GetConnection())
+                {
+                    var result = await _con.QueryAsync<GroupModel>("sp_NHOM_LayDSNhom_v2", new { userId }, commandType: CommandType.StoredProcedure);
                     return result.ToList();
                 }
             }
