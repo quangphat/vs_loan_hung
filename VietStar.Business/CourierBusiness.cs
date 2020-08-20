@@ -51,6 +51,7 @@ namespace VietStar.Business
         {
             var profile = _mapper.Map<CourierSql>(model);
             profile.CreatedBy = _process.User.Id;
+            profile.Status = (int)ProfileStatus.New;
             var response = await _rpCourier.CreateAsync(profile);
             if (!response.success)
                 return ToResponse(response);
@@ -82,7 +83,7 @@ namespace VietStar.Business
                     Content = model.LastNote,
                     ProfileId = response.data,
                     UserId = _process.User.Id,
-                    ProfileTypeId = (int)NoteType.HosoCourrier
+                    ProfileTypeId = (int)NoteType.Courier
                 };
                 await _rpNote.AddNoteAsync(note);
 
@@ -90,8 +91,33 @@ namespace VietStar.Business
             return ToResponse(response);
         }
 
-        public async Task<bool> UpdateAsync(CourierAddModel model)
+        public async Task<bool> UpdateAsync(CourierUpdateModel model)
         {
+            if (model == null || model.Id <= 0)
+            {
+                return ToResponse(false, "Dữ liệu không hợp lệ");
+            }
+            if (string.IsNullOrWhiteSpace(model.CustomerName))
+            {
+                return ToResponse(false, "Tên khách hàng không được để trống");
+            }
+            if (model.AssignId <= 0)
+            {
+                return ToResponse(false, "Vui lòng chọn courier");
+            }
+            var existProfile = await _rpCourier.GetByIdAsync(model.Id);
+            if (existProfile == null)
+            {
+                return ToResponse(false, "Hồ sơ không tồn tại");
+            }
+            bool isAdmin = _process.User.Rolecode =="admin" ? true :false;
+            if (existProfile.Status == (int)ProfileStatus.Cancel)
+            {
+                if (!isAdmin)
+                {
+                    return ToResponse(false, "Bạn không có quyền, vui lòng liên hệ Admin");
+                }
+            }
             var profile = _mapper.Map<CourierSql>(model);
             profile.UpdatedBy = _process.User.Id;
             var response = await _rpCourier.UpdateAsync(profile);

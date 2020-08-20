@@ -132,11 +132,6 @@
         });
     });
 
-
-
-
-    
-
     $('#btnNext').click(function (e) {
         if ($('#CustomerName').val() == "" || $('#CustomerName').val() == undefined) {
             swal({
@@ -184,6 +179,7 @@
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
+                        window.location = `/Courier/Edit/${data.data}`
                     });
                 }
                 else {

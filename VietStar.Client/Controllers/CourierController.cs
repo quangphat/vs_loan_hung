@@ -15,7 +15,7 @@ namespace VietStar.Client.Controllers
     public class CourierController : VietStarBaseController
     {
         protected readonly ICourierBusiness _bizCourier;
-        public CourierController(ICourierBusiness courierBusiness,CurrentProcess process) : base(process)
+        public CourierController(ICourierBusiness courierBusiness, CurrentProcess process) : base(process)
         {
             _bizCourier = courierBusiness;
         }
@@ -53,8 +53,14 @@ namespace VietStar.Client.Controllers
         public async Task<ActionResult> Edit(int id)
         {
             var model = await _bizCourier.GetByIdAsync(id);
-            ViewBag.isAdmin = _process.User.Rolecode =="admin" ? true :false;
+            ViewBag.isAdmin = _process.User.Rolecode == "admin" ? true : false;
             return View(model);
+        }
+
+        public async Task<IActionResult> UpdateAsync([FromBody] CourierUpdateModel model)
+        {
+            var result = await _bizCourier.UpdateAsync(model);
+            return ToResponse(result);
         }
     }
 }

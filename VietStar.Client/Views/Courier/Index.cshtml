@@ -212,10 +212,10 @@
         var status = decodeURI(queries.get("status"))
         if (!isNullOrWhiteSpace(status)) {
             let arrStatus = status.split(',')
-            renderStatusList('courier', arrStatus);
+            renderStatusList('common', arrStatus);
         }
         else
-            renderStatusList('courier');
+            renderStatusList('common');
         bindQueries()
         let courierId = queries.get("courierId");
         provinceId = queries.get("provinceId");

@@ -19,7 +19,7 @@ namespace VietStar.Business.Interfaces
             , int provinceId = 0
             , string saleCode = null);
         Task<int> CreateAsync(CourierAddModel model);
-        Task<bool> UpdateAsync(CourierAddModel model);
+        Task<bool> UpdateAsync(CourierUpdateModel model);
         Task<CourierIndexModel> GetByIdAsync(int id);
     }
 }

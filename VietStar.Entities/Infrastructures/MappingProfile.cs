@@ -63,7 +63,8 @@ namespace VietStar.Entities.Infrastructures
             CreateMap<CompanyAddModel, CompanySql>();
             CreateMap<CompanyEditModel, CompanySql>();
             CreateMap<CourierAddModel, CourierSql>();
-               
+            CreateMap<CourierUpdateModel, CourierSql>();
+
         }
     }
 }

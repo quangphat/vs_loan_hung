@@ -1156,16 +1156,18 @@ END
 
 -----------
 
-insert into ProfileStatus 
-(Name, Value, OrgId, ProfileType) values
-(N'Mới', 1, 1, 'courier'),
-(N'Đang xử lý', 2, 1, 'courier'),
-(N'Từ chối', 3, 1, 'courier'),
-(N'Chấp nhận', 4, 1, 'courier'),
-(N'Giải ngân', 5, 1, 'courier'),
-(N'Hoàn thành', 6, 1, 'courier')
+--insert into ProfileStatus 
+--(Name, Value, OrgId, ProfileType) values
+--(N'Mới', 1, 1, 'courier'),
+--(N'Đang xử lý', 2, 1, 'courier'),
+--(N'Từ chối', 3, 1, 'courier'),
+--(N'Chấp nhận', 4, 1, 'courier'),
+--(N'Giải ngân', 5, 1, 'courier'),
+--(N'Hoàn thành', 6, 1, 'courier')
 
-
+--insert into ProfileStatus 
+--(Name, Value, OrgId, ProfileType) values
+--(N'Huỷ', 7, 1, 'courier')
 -------------
 
 ALTER procedure [dbo].[sp_GetHosoCourier]
@@ -1187,7 +1189,7 @@ if @freeText = '' begin set @freeText = null end;
 if @saleCode = '' begin set @saleCode = null end;
 declare @offset int = 0;
 set @offset = (@page-1)*@limit_tmp;
-set @mainClause = 'select count(*) over() as TotalRecord, hc.Id, dbo.fn_getStatusName(''courier'',1, hc.Status) as StatusName,
+set @mainClause = 'select count(*) over() as TotalRecord, hc.Id, dbo.fn_getStatusName(''common'',1, hc.Status) as StatusName,
 hc.CustomerName,hc.Cmnd,hc.Status,hc.SaleCode, hc.Phone, hc.AssignUserId, hc.CreatedBy, hc.UpdatedBy,
  hc.CreatedTime, hc.UpdatedTime,fintechcom_vn_PortalNew.fn_getGhichuByHosoId(hc.Id,2) as LastNote, nv2.Ho_Ten as AssignUser,
  nv1.Ho_Ten as CreatedUser,
@@ -1256,3 +1258,8 @@ end
 
 ---------------
 
+
+  insert into LOAI_TAI_LIEU (Ten, Bat_Buoc, ProfileTypeId)
+  select Ten, Bat_Buoc, 2 from LOAI_TAI_LIEU
+
+  ------------

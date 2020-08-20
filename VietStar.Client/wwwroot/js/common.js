@@ -46,6 +46,7 @@ function appendComment(control, content, commenttator, commenttime) {
     )
 }
 function AddNote(profileId, profileType, content, commentBox, commentDisplayControl) {
+    debugger
     if (isNullOrWhiteSpace(profileType) || isNullOrWhiteSpace(content))
         return
 
@@ -94,7 +95,7 @@ function renderStatusList(profileType, value = null) {
     if (isNullOrWhiteSpace(profileType))
         return
     let control = $('#ddlStatus')
-    control.empty(); debugger
+    control.empty(); 
     let data = JSON.parse(window.localStorage.getItem(`profile_statuses-${profileType}`));
     if (data != null && !isNullOrNoItem(data)) {
         $.each(data, function (index, item) {
@@ -396,10 +397,10 @@ function GetDistricts(provinceId, control = null, defaultValue = 0) {
         }
     });
 }
-function GetApproveGroupByUser(control = null, defaultValue = 0) {
+function GetApproveGroupByUser(control = null, defaultValue = 0, followControl = null, followValue = 0) {
     if (control == null)
         control = $("#groupId");
-    debugger
+    
     control.empty();
     control.append("<option value='0'>Chọn nhóm</option>");
     let data = getLocalStorage('approvegroups')
@@ -409,7 +410,10 @@ function GetApproveGroupByUser(control = null, defaultValue = 0) {
         });
         if (defaultValue != null && defaultValue > 0) {
             control.val(defaultValue);
-            // GetMemberByGroup(defaultValue, null,)
+            if (followControl != null) {
+                GetMemberByGroup(defaultValue, followControl, followValue)
+            }
+            
         }
         return
     }
@@ -565,7 +569,7 @@ function GetEmployeeByProvinceId(provinceId, control = null, defaultValue = 0) {
         data: {},
         success: function (data) {
             control.append("<option value='0'>Chọn courier</option>");
-            debugger
+            
             if (data.data != null && data.success == true) {
                 $.each(data.data, function (index, item) {
 
@@ -683,7 +687,7 @@ function renderOneItemFile(model, className = '',
                 profileId: model.profileId,
                 fileId: 0,
                 isRequire: model.isRequire,
-                titleName: model.titleName,
+                titleName: '',
                 guidId: ''
             }, '', [], [], true, continueUpload);
         }

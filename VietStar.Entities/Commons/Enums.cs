@@ -33,7 +33,7 @@ namespace VietStar.Entities.Commons
         public enum NoteType
         {
             Common = 1,
-            HosoCourrier = 2,
+            Courier = 2,
             Company = 3,
             MCreditTemp = 4,
             RevokeDebt = 5
