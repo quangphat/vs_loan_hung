@@ -35,11 +35,10 @@ namespace KingOffice.Infrastructures
             var isActive = await rpEmployee.GetStatusAsync(account.Id);
             if(!isActive && httpContext.Request.Path.Value != "/Account/Login")
             {
-                
                 httpContext.Response.Redirect("/Account/Login");
                 return;
             }
-           
+            account.IsActive = isActive;
             process.User = account;
             await _next(httpContext);
         }

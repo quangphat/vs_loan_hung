@@ -96,7 +96,7 @@ namespace VietStar.Business
                 AddError(Errors.invalid_username_or_pass);
                 return null;
             }
-            account.Permissions = await _rpEmployee.GetPermissions(account.Rolecode);
+            account.Permissions = await _rpEmployee.GetPermissions(account.RoleCode);
             return account;
         }
     }

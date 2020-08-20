@@ -43,8 +43,8 @@ namespace VietStar.Client.Controllers
                 claims.Add(new Claim("Email", account.Email));
             if (!string.IsNullOrWhiteSpace(account.Code))
                 claims.Add(new Claim("Code", account.Code));
-            if (!string.IsNullOrWhiteSpace(account.Rolecode))
-                claims.Add(new Claim("RoleCode", account.Rolecode));
+            if (!string.IsNullOrWhiteSpace(account.RoleCode))
+                claims.Add(new Claim("RoleCode", account.RoleCode));
             if (account.Permissions.Any())
             {
                 claims.Add(new Claim("Scopes", string.Join(",", account.Permissions.ToArray())));

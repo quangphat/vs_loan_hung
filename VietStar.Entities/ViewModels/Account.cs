@@ -9,7 +9,7 @@ namespace VietStar.Entities.ViewModels
         public int Id { get; set; }
         public string UserName { get; set; }
         public string Code { get; set; }
-        public string Rolecode { get; set; }
+        public string RoleCode { get; set; }
         public string Token { get; set; }
         public string Email { get; set; }
         public string FullName { get; set; }
