@@ -110,7 +110,7 @@ namespace VietStar.Business
             {
                 return ToResponse(false, "Hồ sơ không tồn tại");
             }
-            bool isAdmin = _process.User.Rolecode =="admin" ? true :false;
+            bool isAdmin = _process.User.RoleCode =="admin" ? true :false;
             if (existProfile.Status == (int)ProfileStatus.Cancel)
             {
                 if (!isAdmin)

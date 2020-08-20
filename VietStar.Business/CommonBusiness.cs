@@ -65,7 +65,7 @@ namespace VietStar.Business
         }
         public async Task<List<OptionSimple>> GetStatusList(string profileType)
         {
-            var result = await _rpCommon.GetProfileStatusByRoleCode(profileType, _process.User.OrgId, _process.User.Rolecode);
+            var result = await _rpCommon.GetProfileStatusByRoleCode(profileType, _process.User.OrgId, _process.User.RoleCode);
             return result;
         }
         

@@ -53,7 +53,7 @@ namespace VietStar.Client.Controllers
         public async Task<ActionResult> Edit(int id)
         {
             var model = await _bizCourier.GetByIdAsync(id);
-            ViewBag.isAdmin = _process.User.Rolecode == "admin" ? true : false;
+            ViewBag.isAdmin = _process.User.RoleCode == "admin" ? true : false;
             return View(model);
         }
 

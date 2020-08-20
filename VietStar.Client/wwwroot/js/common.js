@@ -491,27 +491,27 @@ function GetParentGroups(control = null, defaultValue = 0) {
     let data = getLocalStorage('parent-groups')
     if (data != null) {
         $.each(data, function (index, item) {
-            control.append("<option value='" + item.Id + "'>" + item.Name + "(" + item.ShortName + ")</option>");
+            control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
         });
         if (defaultValue != null && defaultValue > 0) {
             control.val(defaultValue);
-            // GetMemberByGroup(defaultValue, null,)
+            GetMemberByGroup(defaultValue, null, defaultValue)
         }
         return
     }
     $.ajax({
         type: "GET",
-        url: '/Groups/GroupsByUserId',
+        url: '/Groups/ParentGroups',
         data: {},
         success: function (data) {
             if (data.data != null && data.success == true) {
                 setLocalStorage('parent-groups', data.data)
                 $.each(data.data, function (index, item) {
-                    control.append("<option value='" + item.Id + "'>" + item.Name + "(" + item.ShortName + ")</option>");
+                    control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
                 if (defaultValue != null && defaultValue > 0) {
                     control.val(defaultValue);
-                    // GetMemberByGroup(defaultValue, null,)
+                    GetMemberByGroup(defaultValue, null, defaultValue)
                 }
 
             }

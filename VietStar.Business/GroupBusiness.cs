@@ -34,6 +34,11 @@ namespace VietStar.Business
             var groups = await _rpGroup.GetGroupByUserId(_process.User.Id);
             return await GetGroupByUserId(groups);
         }
+        public async Task<List<GroupModel>> GetParentGroups()
+        {
+            var result = await _rpGroup.GetParentGroupsAsync(_process.User.Id);
+            return GenerateChildList(result, "0");
+        }
         private async Task<List<GroupModel>> GetGroupByUserId(List<GroupModel> groups)
         {
 
@@ -63,7 +68,7 @@ namespace VietStar.Business
             return result;
         }
 
-        private List<GroupModel> GenerateChildList(List<GroupModel> groups, string parentSequenceCode, int leaderId)
+        private List<GroupModel> GenerateChildList(List<GroupModel> groups, string parentSequenceCode, int leaderId = 0)
         {
             if (groups == null || !groups.Any())
                 return null;
@@ -95,8 +100,12 @@ namespace VietStar.Business
                 {
                     for (int i = lstFind.Count - 1; i >= 0; i--)
                     {
-                        if (lstFind[i].ParentSequenceCode == parentSequenceCode && lstFind[i].LeaderId != leaderId)
-                            continue;
+                        if(leaderId>0)
+                        {
+                            if (lstFind[i].ParentSequenceCode == parentSequenceCode && lstFind[i].LeaderId != leaderId)
+                                continue;
+                        }
+                        
                         stack.Push(lstFind[i]);
                         groups.Remove(lstFind[i]);
                     }
@@ -105,10 +114,6 @@ namespace VietStar.Business
             return lstResult;
         }
 
-        public async Task<List<GroupModel>> GetParentGroups()
-        {
-            var result = await _rpGroup.GetParentGroupsAsync(_process.User.Id);
-            return result;
-        }
+       
     }
 }
