@@ -1,7 +1,17 @@
 ﻿@using VS_LOAN.Core.Web.Resources;
+@using VS_LOAN.Core.Web.Helpers;
 @{
+
     ViewBag.Title = Global.Home_Index_Title;
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    if(GlobalData.User.OrgId !=2)
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
 }
 <script type="text/javascript">
     SetActiveMenu('@ViewBag.formindex', 2);
@@ -38,26 +48,48 @@
                 <!-- /.row -->
                 <div class="space"></div>
                 <div class="row">
-                    <div class="col-xs-12">
-                        <div class="wrapper">
-                            <img class="img-responsive center-block" src="~/Content/images/banner.png">
-                            <p>
-                                <span style="color: #008446;"><strong>Địa chỉ liên hệ</strong></span><br>
-                                <strong>
-                                    Việt Bank - Công ty Cổ Phần Dịch Vụ Tài Chính Việt Bank<br>
-                                </strong>     
-                                Địa chỉ trụ sở: Số 17 Quách Văn Tuấn, P.12, Q. Tân Bình, TP.HCM<br/>
-                                Số điện thoại: 0938 068 726 (Từ 7:00-19:00, thứ 2 đến Chủ Nhật và các ngày lễ)<br/>
-                                Website: www.vietbankfc.vn
-                            </p>
+
+                    @if (GlobalData.User.OrgId != 2)
+                    {
+						<div class="col-xs-12">
+                            <div class="wrapper">
+                                <img class="img-responsive center-block" src="~/Content/images/banner.png">
+                                <p>
+                                    <span style="color: #008446;"><strong>Địa chỉ liên hệ</strong></span><br>
+                                    <strong>
+                                        Công ty Cổ Phần Dịch Vụ Tài Chính Việt Bank<br>
+                                    </strong>
+                                    Địa chỉ trụ sở: Số 126 Nguyễn Minh Hoàng, P.12, Q. Tân Bình, TP.HCM<br />
+                                    Số điện thoại: 0938 068 726 (Từ 7:00-19:00, thứ 2 đến Chủ Nhật và các ngày lễ)<br />
+                                    Website: <a target="_blank" href="https://vietstargroup.vn">https://vietstargroup.vn</a>
+                                </p>
+                            </div>
                         </div>
-                    </div>
+                    }
+                    else
+                    {
+                        <div class="col-xs-12">
+                            <div class="wrapper">
+                                <img class="img-responsive center-block" src="~/Content/images/banner.png">
+                                <p>
+                                    <span style="color: #008446;"><strong>Địa chỉ liên hệ</strong></span><br>
+                                    <strong>
+                                        Công ty Cổ Phần Thu Hồi Nợ Vietstar<br>
+                                    </strong>
+                                    Địa chỉ trụ sở: Số 126 Nguyễn Minh Hoàng P.12, Q. Tân Bình, TP.HCM<br />
+                                    Số điện thoại: 0901 252 252 (Từ 7:00-19:00, thứ 2 đến Chủ Nhật và các ngày lễ)<br />
+                                    Website: <a target="_blank" href="https://vietstargroup.vn">https://vietstargroup.vn</a>
+                                </p>
+                            </div>
+                        </div>
+                    }
+
                     <!-- /.col -->
 
                     <div class="vspace-6-sm"></div>
 
                     <div class="col-sm-6">
-                        
+
                     </div>
                     <!-- /.col -->
                 </div>

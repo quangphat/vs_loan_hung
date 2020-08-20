@@ -1,16 +1,16 @@
 ﻿
 @{
     ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+      Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="main-content-inner">
-    <div class="breadcrumbs" id="breadcrumbs">
+   @*<div class="breadcrumbs" id="breadcrumbs">
         <ul class="breadcrumb">
             <li>
                 <a href="#" class="active">Hồ sơ courier</a>
             </li>
         </ul>
-    </div>
+    </div>*@
     <div class="page-content" id="panel_body">
         <div class="row">
             <div class="col-xs-12">
@@ -175,7 +175,7 @@
                 limit = parseInt(limit)
             getData(page, limit,true)
         });
-        //renderStatusList();
+        renderStatusList();
         setTableLimit("#ddlLimit");
         var status = decodeURI(queries.get("status"))
         if (!isNullOrWhiteSpace(status)) {

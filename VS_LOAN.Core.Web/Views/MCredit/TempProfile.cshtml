@@ -1,4 +1,5 @@
-﻿@using VS_LOAN.Core.Web.Resources;
+﻿@using VS_LOAN.Core.Web.Helpers;
+@using VS_LOAN.Core.Web.Resources;
 @{
     ViewBag.Title = "Cập nhật hồ sơ tạm";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -221,16 +222,35 @@
                 <hr />
                 <form class="form-horizontal">
                     <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Ghi chú hồ sơ</h4>
-                    <div class="form-group">
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
-                        <div class="col-sm-5 col-xs-12 ">
-                            <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
-                                <option value="3">Nộp hồ sơ</option>
-                                <option value="4">Bổ sung hồ sơ</option>
-                            </select>
+                    @if (GlobalData.User.UserType == 3)
+                    {
+
+                        <div class="form-group" style="display:none">
+                            <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
+                            <div class="col-sm-5 col-xs-12 ">
+                                <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
+                                    <option value="3">Nộp hồ sơ</option>
+                                    <option value="4">Bổ sung hồ sơ</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
+                            <div class="col-sm-5 col-xs-12 ">
+                                <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
+                                    <option value="3">Nộp hồ sơ</option>
+                                    <option value="4">Bổ sung hồ sơ</option>
+                                </select>
+                            </div>
+
                         </div>
 
-                    </div>
+                    }
+
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
                         <div class="col-md-11 col-sm-12 col-xs-12">
@@ -255,7 +275,7 @@
                             <a class="btn btn-sm btn-primary" id="btn_Temp">
                                 Cập nhật
                             </a>
-                            
+
                             <a class="btn btn-sm btn-primary" id="btn_Save">
                                 Nộp hồ sơ qua MCredit
                             </a>
@@ -281,7 +301,7 @@
         setTextForPTag('checkSaleResult');
         setTextForPTag('checkdupResult');
         GetLoanProfileStatuses("#ddlStatus",'@ViewBag.model.Status')
-        
+
         $('#ddlProduct').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlProvince').chosen({ width: '100%', allow_single_deselect: true });
         $('#txtToDate').datepicker({
@@ -348,7 +368,7 @@
                     else {
                         $(checkatAreaId).hide();
                         modelCat = { CatName: '', ComName: '', CatNumber: '' }
-                       
+
                     }
                 }
             },
@@ -485,7 +505,7 @@
                                 else {
                                     className = 'mt-46'
                                 }
-                                
+
                                 renderOneItemFile_MCredit(
                                     {
                                         key: tailieu.Key,
@@ -631,7 +651,7 @@
             return;
         }
         if ((isNullOrWhiteSpace($('#txtIdNumber').val()) && isNullOrWhiteSpace($('#txtCCCDNumber').val()))) {
-            
+
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
                 text: "Vui lòng nhập số cmnd hoặc cccd",
@@ -642,7 +662,7 @@
             return;
         }
 
-        
+
         var objectSend = JSON.stringify({
             "Id": @ViewBag.model.Id,
             "CustomerName": $("#txtCustomerName").val(),
@@ -711,7 +731,7 @@
     });
 
     $('#btn_Save').click(function (e) {
-        
+
          if ($('#txtCustomerName').val() == "" || $('#txtCustomerName').val() == undefined) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
@@ -854,7 +874,7 @@
         if (isNullOrUndefined(data.data) || isNullOrUndefined(data.data.message))
             return data.code
         return data.data.message
-       
+
     }
     $('#btn_CreateNew').click(function (e) {
 
