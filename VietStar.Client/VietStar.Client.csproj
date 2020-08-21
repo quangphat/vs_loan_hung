@@ -21,9 +21,4 @@
     <ProjectReference Include="..\VietStar.Repository\VietStar.Repository.csproj" />
   </ItemGroup>
 
-
-  <ItemGroup>
-    <Folder Include="Views\Shared\Partials\" />
-  </ItemGroup>
-
 </Project>

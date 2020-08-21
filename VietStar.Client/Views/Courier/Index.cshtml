@@ -6,11 +6,8 @@
 
 <div class="main-content-inner">
     <div class="breadcrumbs" id="breadcrumbs">
-        <ul class="breadcrumb">
-            <li>
-                <a href="#" class="active">Hồ sơ courier</a>
-            </li>
-        </ul>
+        @await Html.PartialAsync("../Shared/Partials/Breadcrumb",
+      new VietStar.Entities.ViewModels.BreadcrumbModel { FirstPath= "/Courier/Index", FirstName= "Hồ sơ Courier"})
     </div>
     <div class="page-content" id="panel_body">
         <div class="row">

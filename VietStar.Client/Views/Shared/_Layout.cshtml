@@ -58,10 +58,10 @@
             <!-- Logo -->
             <a href="index2.html" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini"><img src="~/img/logo.png" style="width:50px;"/></span>
+                <span class="logo-mini"><img src="~/img/logo.png" style="width:50px;" /></span>
                 <!-- logo for regular state and mobile devices -->
-                
-                <span class="logo-lg"><img src="~/img//logo.png"style="width:72px;"></span>
+
+                <span class="logo-lg"><img src="~/img//logo.png" style="width:72px;"></span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top">
@@ -82,7 +82,7 @@
                                 <li class="header">You have 4 messages</li>
                                 <li>
                                     <!-- inner menu: contains the actual data -->
-                                    
+
                                 </li>
                                 <li class="footer"><a href="#">See All Messages</a></li>
                             </ul>
@@ -214,7 +214,7 @@
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                @await Html.PartialAsync("HeaderAvatar", VietStar.Entities.Infrastructures.CurrentProcess.CurrentUser,new ViewDataDictionary(ViewData) { {"type","small" } })
+                                @await Html.PartialAsync("HeaderAvatar", VietStar.Entities.Infrastructures.CurrentProcess.CurrentUser, new ViewDataDictionary(ViewData) { { "type", "small" } })
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
@@ -225,7 +225,7 @@
                                         <div class="col-xs-6 text-center">
                                             <a id="btnSignOut" href="javascript:void(0);" onclick="doLogout()">Thông tin của tôi</a>
                                         </div>
-                                        
+
                                         <div class="col-xs-6 text-center">
                                             <a id="btnSignOut" href="javascript:void(0);" onclick="doLogout()">Đăng xuất</a>
                                         </div>
@@ -233,11 +233,11 @@
                                     <!-- /.row -->
                                 </li>
                                 <!-- Menu Footer-->
-                                
+
                             </ul>
                         </li>
                         <!-- Control Sidebar Toggle Button -->
-                        
+
                     </ul>
                 </div>
             </nav>
@@ -247,12 +247,10 @@
             <!-- sidebar: style can be found in sidebar.less -->
             <section class="sidebar">
                 <!-- Sidebar user panel -->
-                
                 <!-- search form -->
-               
                 <!-- /.search form -->
                 <!-- sidebar menu: : style can be found in sidebar.less -->
-                <ul class="sidebar-menu" data-widget="tree">
+                <ul class="sidebar-menu" data-widget="tree" id="left-menu">
                     <li class="header ">HỆ THỐNG KIỂM DUYỆT HỒ SƠ</li>
                     <li class="treeview">
                         <a href="/Home">
@@ -267,7 +265,7 @@
 
                         </ul>
                     </li>
-                    <li class="active treeview">
+                    <li class="treeview" id="profile">
                         <a href="#">
                             <i class="fa fa-file"></i> <span>Hồ sơ</span>
                             <span class="pull-right-container">
@@ -275,12 +273,12 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="active"><a href="/Profile/Create"><i class="fa fa-circle-o"></i> Tạo hồ sơ</a></li>
-                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Danh sách</a></li>
-                            <li><a href="/Profile/Approve"><i class="fa fa-circle-o"></i> Xét duyệt</a></li>
+                            <li id="Profile/Create"><a href="/Profile/Create"><i class="fa fa-circle-o"></i> Tạo hồ sơ</a></li>
+                            <li id="Profile/Index"><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Danh sách</a></li>
+                            <li id="Profile/Approve"><a href="/Profile/Approve"><i class="fa fa-circle-o"></i> Xét duyệt</a></li>
                         </ul>
                     </li>
-                    <li class="treeview">
+                    <li class="treeview" id="checkdup">
                         <a href="#">
                             <i class="fa fa-files-o"></i> <span>Check duplicate</span>
                             <span class="pull-right-container">
@@ -288,12 +286,12 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="active"><a href="/CheckDup/Create"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
-                            <li><a href="/CheckDup/Index"><i class="fa fa-circle-o"></i> Danh sách</a></li>
+                            <li id="CheckDup/Create"><a href="/CheckDup/Create"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
+                            <li id="CheckDup/Index"><a href="/CheckDup/Index"><i class="fa fa-circle-o"></i> Danh sách</a></li>
 
                         </ul>
                     </li>
-                    <li class="treeview">
+                    <li class="treeview" id="company">
                         <a href="#">
                             <i class="fa fa-bank"></i> <span>Công ty</span>
                             <span class="pull-right-container">
@@ -301,12 +299,12 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="active"><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
-                            <li><a href="/Company/Index"><i class="fa fa-circle-o"></i> Danh sách</a></li>
+                            <li id="Company/Create"><a href="/Company/Create"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
+                            <li id="Company/Index"><a href="/Company/Index"><i class="fa fa-circle-o"></i> Danh sách</a></li>
 
                         </ul>
                     </li>
-                    <li class="treeview">
+                    <li class="treeview" id="courier">
                         <a href="#">
                             <i class="fa fa-dashboard"></i> <span>Courier</span>
                             <span class="pull-right-container">
@@ -314,8 +312,8 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="active"><a href="/Courier/Create"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
-                            <li><a href="/Courier/Index"><i class="fa fa-circle-o"></i> Danh sách</a></li>
+                            <li id="Courier/Create"><a href="/Courier/Create"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
+                            <li class="" id="Courier/Index"><a href="/Courier/Index"><i class="fa fa-circle-o"></i> Danh sách</a></li>
 
                         </ul>
                     </li>
@@ -327,11 +325,11 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="active"><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Check CAT</a></li>
-                            <li class="active"><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Check CIC</a></li>
-                            <li class="active"><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Check Duplicate</a></li>
-                            <li class="active"><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Check Status</a></li>
-                            <li class="active"><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
+                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Check CAT</a></li>
+                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Check CIC</a></li>
+                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Check Duplicate</a></li>
+                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Check Status</a></li>
+                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
                             <li><a href="/Profile/list"><i class="fa fa-circle-o"></i>Đã gửi MC</a></li>
 
                         </ul>
@@ -344,9 +342,9 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="active"><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
-                            <li class="active"><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Quản lý</a></li>
-                            <li class="active"><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Cấu hình duyệt</a></li>
+                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
+                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Quản lý</a></li>
+                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Cấu hình duyệt</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -357,8 +355,8 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="active"><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Quản lý mã</a></li>
-                            <li class="active"><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Import</a></li>
+                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Quản lý mã</a></li>
+                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Import</a></li>
 
                         </ul>
                     </li>
@@ -370,13 +368,13 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="active"><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
-                            <li class="active"><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Danh sách</a></li>
+                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
+                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Danh sách</a></li>
 
                         </ul>
                     </li>
-                    
-                   
+
+
                 </ul>
             </section>
             <!-- /.sidebar -->
@@ -385,10 +383,8 @@
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
-           
-
             <!-- Main content -->
-            <section class="content" id="panel_body" >
+            <section class="content" id="panel_body">
 
                 @RenderBody()
             </section>
@@ -396,11 +392,11 @@
         </div>
         <!-- /.content-wrapper -->
         @*<footer class="main-footer">
-            <div class="pull-right hidden-xs">
-                <b>Version</b> 2.4.0
-            </div>
-            <strong>quangphat - quangphatitu@gmail.com </strong>
-        </footer>*@
+                <div class="pull-right hidden-xs">
+                    <b>Version</b> 2.4.0
+                </div>
+                <strong>quangphat - quangphatitu@gmail.com </strong>
+            </footer>*@
 
         <!-- Control Sidebar -->
         <aside class="control-sidebar control-sidebar-dark">
@@ -614,7 +610,57 @@
     <script src="~/js/bootstrap-timepicker.min.js"></script>
     <!-- AdminLTE App -->
     <script src="~/js/adminlte.min.js"></script>
-   <script type="text/javascript">
+    <script type="text/javascript">
+       $(document).ready(function e() {
+           $('#left-menu li').each(function (i, item) {
+               let name = this.innerHTML
+               let aElement = null;
+               aElement = $(item).children("a")[0]
+               if (!isNullOrWhiteSpace(item.id) && window.location.href.toLocaleLowerCase().indexOf(`/${item.id.toLocaleLowerCase()}`) > -1) {
+                   $(item).addClass('menu-open active')
+                   aElement = null
+                   //if ($(this).children("ul").length > 0) {
+                       
+                   //    let ul = $(this).children("ul")[0]
+                       
+                   //    $(ul).children("li").each(function (index, subItem) {
+                   //        let aElement = $(this).children("a")[0]
+                   //        if (!isNullOrUndefined(aElement)) {
+                   //            if (!isNullOrWhiteSpace(aElement.href) && window.location.href.toLocaleLowerCase().indexOf(aElement.pathname.toLocaleLowerCase()) > -1) {
+                   //                $(subItem).addClass("active")
+                   //            }
+                   //            else {
+                   //                $(subItem).removeClass('active')
+                   //            }
+                   //        }
+                   //        else {
+                   //            $(subItem).removeClass('active')
+                   //        }
+                           
+                   //    })
+                   //}
+               }
+               //else if (!isNullOrUndefined(aElement))
+               //{
+               //    debugger
+               //    if (!isNullOrWhiteSpace(aElement.href) && window.location.href.toLocaleLowerCase().indexOf(aElement.pathname.toLocaleLowerCase()) > -1) {
+               //        if (!isNullOrWhiteSpace(item.id) && window.location.href.toLocaleLowerCase().indexOf(`/${item.id}`) > -1) {
+               //            $(item).addClass("active")
+               //        }
+                       
+               //        aElement = null;
+               //    }
+               //}
+               else {
+                   if (item.innerHTML.indexOf("Courier")>-1)
+                    console.log(item.innerHTML)
+                   $(item).removeClass('menu-open')
+                   $(item).removeClass('active')
+                   aElement = null;
+               }
+           });
+
+       });
        function doLogout() {
         $.ajax({
             type: "POST",
@@ -626,7 +672,7 @@
             error: function (jqXHR, exception) { if (jqXHR.status != 0) alert('Error'); }
         });
     };
-   </script>
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

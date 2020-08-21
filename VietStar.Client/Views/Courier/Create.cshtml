@@ -5,15 +5,9 @@
 }
 <div class="main-content-inner">
     <div class="breadcrumbs" id="breadcrumbs">
-        <ul class="breadcrumb">
-            <li>
-                <i class="fa fa-caret-right"></i><a href="/Courier/Index" class="active">Danh sách Courier</a>
-            </li>
-            <li>
-                
-                <a href="#">Hồ sơ courier</a>
-            </li>
-        </ul>
+        @await Html.PartialAsync("../Shared/Partials/Breadcrumb",
+      new VietStar.Entities.ViewModels.BreadcrumbModel { FirstPath= "/Courier/Index", FirstName= "Courier", SecondName="Cập nhật" })
+
     </div>
     <div class="page-content" id="panel_body">
         <div class="row">
@@ -102,16 +96,14 @@
             </div>
 
         </div>
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="command-bar">
-                    <a class="btn btn-sm btn-primary" id="btnNext">
-                        Bước tiếp theo
-                    </a>
-
-                </div>
-            </div>
-        </div>
+        @await Html.PartialAsync("../Shared/Partials/CommandBar",
+    new VietStar.Entities.ViewModels.CommandBar
+    {
+        Buttons = new List<VietStar.Entities.ViewModels.CommandBarButton>{
+            new VietStar.Entities.ViewModels.CommandBarButton { Id="btnNext", ClassName="btn btn-sm btn-primary", Name="Bước tiếp theo" }
+    }
+    })
+       
     </div>
 </div>
 
