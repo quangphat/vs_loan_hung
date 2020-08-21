@@ -53,6 +53,7 @@ namespace VietStar.Entities.Infrastructures
         {
             return Items.ContainsKey(key) ? (T)Items[key] : TypeExtensions.GetDefaultValue<T>();
         }
+        public static Account CurrentUser { get; set; }
     }
 
     public class ErrorMessage

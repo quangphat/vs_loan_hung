@@ -11,6 +11,23 @@ namespace VietStar.Utility
     {
         static string start = "KPMG_EV";
         static string end = "KPMG_PM";
+        private static readonly char[] ShortName1 = { 'A', 'B', 'C', 'D', 'E', 'F', 'Y' };
+        private static readonly char[] ShortName2 = { 'G', 'H', 'I', 'J', 'K', 'L', 'Q' };
+        private static readonly char[] ShortName3 = { 'M', 'N', 'O', 'P', 'R', 'Z' };
+        private static readonly char[] ShortName4 = { 'S', 'T', 'U', 'V', 'W', 'X' };
+        public static string GetAvatarColor(this char inputChar)
+        {
+            if (ShortName1.Contains(inputChar))
+                return "#fd7e14";
+            if (ShortName2.Contains(inputChar))
+                return "#31a8d2";
+            if (ShortName3.Contains(inputChar))
+                return "#20c997";
+            if (ShortName4.Contains(inputChar))
+                return "#2e7d32";
+            return "#2e7d32";
+        }
+
         public static string FormatCurrentCy(decimal value)
         {
             return String.Format(Constants.CurrentCyFormat, value);

@@ -40,6 +40,7 @@ namespace KingOffice.Infrastructures
             }
             account.IsActive = isActive;
             process.User = account;
+            CurrentProcess.CurrentUser = account;
             await _next(httpContext);
         }
     }
