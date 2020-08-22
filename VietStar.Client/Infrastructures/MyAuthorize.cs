@@ -20,20 +20,24 @@ namespace KingOffice.Infrastructures
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             base.OnActionExecuting(context);
-            var result = AuthorizeCore(context.HttpContext);
+            var result = AuthorizeCore(context);
             if (result)
                 return;
-            context.Result = new RedirectToRouteResult(
+            if(context.Result==null)
+            {
+                context.Result = new RedirectToRouteResult(
                         new RouteValueDictionary { { "Controller", "Account" }, { "Action", "Login" } });
+            }
+            
         }
 
-        protected bool AuthorizeCore(HttpContext httpContext)
+        protected bool AuthorizeCore(ActionExecutingContext context)
         {
-            if (httpContext == null)
+            if (context.HttpContext == null)
             {
                 throw new ArgumentNullException("httpContext");
             }
-            var user = httpContext.User;
+            var user = context.HttpContext.User;
             if (user == null || !user.Identity.IsAuthenticated)
             {
                 return false;
@@ -47,6 +51,8 @@ namespace KingOffice.Infrastructures
             {
                 if (string.IsNullOrWhiteSpace(Permissions))
                     return true;
+                context.Result = new RedirectToRouteResult(
+                        new RouteValueDictionary { { "Controller", "UnAuthorize" }, { "Action", "UnAuthorize" } });
                 return false;
             }
             if (string.IsNullOrWhiteSpace(Permissions))
@@ -55,7 +61,12 @@ namespace KingOffice.Infrastructures
             var allowPermission = Permissions.Split(',').ToList();
             var isInRole = userScopes.Any(x => allowPermission.Contains(x));
             if (!isInRole)
+            {
+                context.Result = new RedirectToRouteResult(
+                        new RouteValueDictionary { { "Controller", "UnAuthorize" }, { "Action", "UnAuthorize" } });
                 return false;
+            }
+                
 
             return true;
         }
