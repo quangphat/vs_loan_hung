@@ -22,7 +22,7 @@ function renderStatusDisplay(statusName, btnRefresh = null) {
     if (isNullOrWhiteSpace(statusName))
         return "<td class='text-left'></td>";
     let firstChar = statusName[0].toLowerCase();
-    let greenGroup = ['a', 'b', 'c', 'đ'];
+    let greenGroup = ['a', 'b', 'c'];
     let danger = ['e', 'f', 'g', 't'];
     let succsess = ['i', 'k', 'm'];
     let cancel = ['o', 'p', 'q', 'd'];
