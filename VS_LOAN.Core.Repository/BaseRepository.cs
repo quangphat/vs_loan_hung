@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VS_LOAN.Core.Nhibernate;
+using VS_LOAN.Core.Utility;
 
 namespace VS_LOAN.Core.Repository
 {
@@ -66,6 +67,11 @@ namespace VS_LOAN.Core.Repository
             con.Open();
             return con;
         }
-
+        protected string GetException(Exception e)
+        {
+            if (e == null)
+                return string.Empty;
+            return e.InnerException == null ? e.Dump() : e.InnerException.Dump();
+        }
     }
 }

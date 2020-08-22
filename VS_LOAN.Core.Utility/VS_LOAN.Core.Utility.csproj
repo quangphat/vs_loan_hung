@@ -95,6 +95,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Utility.cs" />
     <Compile Include="CoreApiClient.cs" />
     <Compile Include="DateTimeFormat.cs" />
     <Compile Include="Exceptions\BaseRuntimeException.cs" />
@@ -112,7 +113,7 @@
     <Compile Include="StatusUtil.cs" />
     <Compile Include="Supports.cs" />
     <Compile Include="UserTypeEnum.cs" />
-    <Compile Include="Utility.cs" />
+    <Compile Include="FileUtils.cs" />
     <Compile Include="WebAPIUtility.cs" />
   </ItemGroup>
   <ItemGroup>
