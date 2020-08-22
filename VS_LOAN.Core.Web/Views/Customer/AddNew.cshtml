@@ -46,19 +46,6 @@
 
                     </div>
                     <div class="form-group">
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày sinh</label>
-                        <div class="col-sm-4">
-                            <div class="input-group">
-                                <input class="form-control date-picker" id="txtBirthDay" />
-                                <span class="input-group-addon">
-                                    <i class="fa fa-calendar bigger-110"></i>
-                                </span>
-                            </div>
-
-                        </div>
-
-                    </div>
-                    <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại</label>
                         <div class="col-sm-4">
                             <input type="text" id="txtPhone" placeholder="Điện thoại khách hàng " class="form-control">
@@ -87,26 +74,12 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Tên ngân hàng<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlDoiTac" class="chosen-select form-control" data-placeholder="Chọn đối tác">
+                            <select id="partnerId" class="chosen-select form-control" data-placeholder="Chọn đối tác">
                                 <option value="0"></option>
                             </select>
                         </div>
 
                     </div>
-                    @*<div class="form-group">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-4">
-                <label class="control-label no-padding-right">
-                    <input name="radio-check" id="rdChecked" type="radio" checked="checked" value="1" class="ace">
-                    <span class="lbl">Đủ điều kiện</span>
-                </label>
-                <label class="control-label no-padding-right">
-                    <input name="radio-check" id="rdUnChecked" type="radio" value="0" class="ace">
-                    <span class="lbl">Không đủ điều kiện</span>
-                </label>
-            </div>
-
-        </div>*@
                 </form>
             </div>
         </div>
@@ -175,6 +148,8 @@
     $("#txtCMND").ForceNumericOnly();
     $("#txtPhone").ForceNumericOnly();
     $("#txtSalary").ForceNumericOnly();
+    var successMsg = "Thành công";
+    var errorMsg = "Không thành công"
         $('#btnSave').click(function (e) {
          if (isNullOrWhiteSpace($('#txtCheckDate').val())) {
             swal({
@@ -212,17 +187,16 @@
                 'Note': $('#txtGhiChu').val(),
                 'Cmnd': $('#txtCMND').val(),
                 'Gender': 0,
-                'Partners': [{ Id: $("#ddlDoiTac").val(), Name: $("#ddlDoiTac option:selected").text(), IsSelect: false }],
+                'PartnerId': $("#partnerId").val(),
                 'ProvinceId': $("#ddlProvince").val(),
                 'Address': $('#txtAddress').val(),
-                'BirthDay': $('#txtBirthDay').val(),
                 'Phone': $('#txtPhone').val(),
                 'Salary': $('#txtSalary').val()
 
         });
         $.ajax({
             traditional: true,
-            url: '@Url.Action("Create", "Customer")',
+            url: '@Url.Action("CreateAsync", "Customer")',
             type: "POST",
             contentType: "application/json; charset=utf-8",
             data: objectSend,
@@ -262,14 +236,14 @@
             url: '@Url.Action("GetAllPartner", "Customer")',
             data: {},
             success: function (data) {
-                $('#ddlDoiTac').empty();
-                $('#ddlDoiTac').append("<option value='0'></option>");
+                $('#partnerId').empty();
+                $('#partnerId').append("<option value='0'></option>");
                 if (data.data != null && data.success == true) {
                     $.each(data.data, function (index, optionData) {
-                        $('#ddlDoiTac').append("<option value='" + optionData.Id + "'>" + optionData.Name + "</option>");
+                        $('#partnerId').append("<option value='" + optionData.Id + "'>" + optionData.Name + "</option>");
                     });
                 }
-                $('#ddlDoiTac').chosen().trigger("chosen:updated");
+                $('#partnerId').chosen().trigger("chosen:updated");
             },
             complete: function () {
             },
