@@ -88,58 +88,9 @@
                 </form>
             </div>
         </div>
-        <div class="row">
-            <div class="col-xs-12">
-                <h3 class="header smaller lighter blue">3.Hồ sơ đính kèm:</h3>
-                <div class="row">
-                    <div class="col-xs-12" style="overflow-y: scroll;max-height:400px;">
-                        <form class="form-horizontal" role="form" id="lstTailieu"></form>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-        <div class="row">
-            <div class="col-xs-12">
-                <hr />
-                <form class="form-horizontal">
-                    <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Tình trạng hồ sơ</h4>
-                    <div class="form-group">
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
-                        <div class="col-sm-5 col-xs-12 ">
-                            <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
-                                <option value="0"></option>
-                            </select>
-                        </div>
-
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
-                        <div class="col-md-11 col-sm-12 col-xs-12">
-                            <textarea class="form-control" id="comment" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
-                            <div class="pull-right mt-10">
-                                <a class="btn btn-sm btn-info" id="btnAddNote">
-                                    Thêm ghi chú
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="activity-log" style="margin-top:125px!important">
-                                <div class="timline-addNote only-new-note">
-                                    <div class="timeline-date-event timline-date-event--margin mt-0" id="comments">
-
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </form>
-            </div>
-
-        </div>
+        <partial name="../Shared/Partials/UploadArea" />
+        <partial name="../Shared/Partials/ProfileStatus" />
+        <partial name="../Shared/Partials/CommentArea" model="true" />
         @await Html.PartialAsync("../Shared/Partials/CommandBar",
     new VietStar.Entities.ViewModels.CommandBar
     {
@@ -147,7 +98,7 @@
             new VietStar.Entities.ViewModels.CommandBarButton { Id="btn_Save", ClassName="btn btn-sm btn-primary", Name="Cập nhật" }
     }
     })
-        
+
     </div>
 </div>
 
@@ -183,7 +134,7 @@
                     let groupName = '';
                     let _imgExts = ["jpg", "jpeg", "png", "pdf"];
                     $.each(data.data, function (index, item) {
-                        $("#lstTailieu").append(`<div class='form-group'><div class='col-sm-12' id='tailieu-${item.Id}'><h5>${groupName}</h5></div></div > `);
+                        $("#uploadArea").append(`<div class='form-group'><div class='col-sm-12' id='tailieu-${item.Id}'><h5>${groupName}</h5></div></div > `);
                         if (!isNullOrNoItem(item.ProfileFiles)) {
                             let _initialPreview = [];
                             let _initialPreviewConfig = [];

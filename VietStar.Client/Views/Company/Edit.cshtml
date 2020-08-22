@@ -63,51 +63,27 @@
                 </form>
             </div>
         </div>
-        <div class="row">
-            <div class="col-xs-12">
-                <hr />
-                <form class="form-horizontal">
-                    <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Ghi chú</h4>
-                    <div class="form-group">
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
-                        <div class="col-md-11 col-sm-12 col-xs-12">
-                            <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <div class="col-md-8 activity-log">
-                                <div class="timline-addNote only-new-note">
-                                    <div class="timeline-date-event timline-date-event--margin mt-0" id="dsGhichu">
-
-
-                                    </div>
-                                </div>
-                            </div>
-                           
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-        </div>
+        <partial name="../Shared/Partials/CommentArea" model="true" />
         @await Html.PartialAsync("../Shared/Partials/CommandBar",
-    new VietStar.Entities.ViewModels.CommandBar
-    {
-        Buttons = new List<VietStar.Entities.ViewModels.CommandBarButton>{
-            new VietStar.Entities.ViewModels.CommandBarButton { Id="btnSave", ClassName="btn btn-sm btn-primary", Name="Cập nhật" }
-    }
-    })
+        new VietStar.Entities.ViewModels.CommandBar
+        {
+            Buttons = new List<VietStar.Entities.ViewModels.CommandBarButton>
+                 {
+                 new VietStar.Entities.ViewModels.CommandBarButton { Id="btnSave", ClassName="btn btn-sm btn-primary", Name="Cập nhật" }
+                 }
+        })
     </div>
 </div>
 <script>
     $(document).ready(function () {
         GetCheckDupPartners(null,'@Model.PartnerId')
-        //GetNotes(@Model.Id)
+        getComments(@Model.Id, @((int)VietStar.Entities.Commons.Enums.NoteType.Company), $('#comments'))
         $("#CheckDate").val(FormatDateTimeDMY('@Model.CheckDate.ToString("yyyy/MM/dd")', 'YYYY-MM-DD'))
         $("#ddlCat").val('@Model.CatType')
     })
-
+    $("#btnAddNote").click(function () {
+        AddNote('@Model.Id', '@((int)VietStar.Entities.Commons.Enums.NoteType.Company)', $('#comment').val(), $('#comment'), $('#comments'))
+    })
     $('#btnSave').click(function (e) {
 
         if (isNullOrWhiteSpace($('#CheckDate').val())) {
@@ -178,35 +154,5 @@
                 },
             })
         });
-    function GetNotes(id) {
-        //$('#ddlTrangThai').empty();
-        if (isNullOrUndefined(id))
-            return;
-        $.ajax({
-            type: "GET",
-            url: '/company/GetNotes?companyId=' + id,
-            data: {},
-            success: function (data) {
 
-                if (data.data != null) {
-                    $.each(data.data, function (index, item) {
-                        $('#dsGhichu').append(
-                            '<div class="timeline-event-content  active">' +
-                            '<div class="timeline-item">' +
-                            '<div class="timeline-body">' +
-                            '<div class="timeline__message-container">' +
-                            '<strong>' + item.Commentator + ' (' + SetFormatDateTimeDMY(item.CommentTime) + '): </strong><span>' + item.Noidung + '</span>' +
-                            '</div></div></div></div>'
-                        )
-                    });
-                }
-
-            },
-            complete: function () {
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    }
 </script>

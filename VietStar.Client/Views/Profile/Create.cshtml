@@ -156,39 +156,13 @@
                 </form>
             </div>
         </div>
-        <div class="row">
-            <div class="col-xs-12">
-                <h3 class="header smaller lighter blue">3.Hồ sơ đính kèm:</h3>
-                <div class="row">
-                    <div class="col-xs-12" style="overflow-y: scroll;max-height:400px;">
-                        <form class="form-horizontal" role="form" id="lstTailieu"></form>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-        <div class="row">
-            <div class="col-xs-12">
-                <hr />
-                <form class="form-horizontal">
-                    <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Ghi chú hồ sơ</h4>
-                    <div class="form-group">
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
-                        <div class="col-md-11 col-sm-12 col-xs-12">
-                            <textarea class="form-control" id="comment" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
-                        </div>
-                    </div>
-
-                </form>
-            </div>
-
-        </div>
+        
+        <partial name="../Shared/Partials/CommentArea" model="false" />
         @await Html.PartialAsync("../Shared/Partials/CommandBar",
      new VietStar.Entities.ViewModels.CommandBar
      {
          Buttons = new List<VietStar.Entities.ViewModels.CommandBarButton>{
-             new VietStar.Entities.ViewModels.CommandBarButton { Id="btn_Next", ClassName="btn btn-sm btn-primary", Name="Bước tiếp theo" }
+             new VietStar.Entities.ViewModels.CommandBarButton { Id="btnNext", ClassName="btn btn-sm btn-primary", Name="Bước tiếp theo" }
      }
      })
 
@@ -308,7 +282,7 @@
 
 
 
-    $('#btn_Next').click(function (e) {
+    $('#btnNext').click(function (e) {
 
         if (isNullOrWhiteSpace($('#customerName').val())) {
             swal({

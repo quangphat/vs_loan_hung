@@ -22,9 +22,7 @@
     position: relative;
     margin: 20px auto;
 }
-.ml-20{
-    margin-left:20px !important;
-}
+
 time[class='timeline__time'] span {
     color: #808080;
 }
@@ -112,7 +110,7 @@ time[class='timeline__time'] span {
     margin-top: 0 !important;
 }
 .timline-date-event--margin {
-    margin: 0px 0px 0px 23.5px;
+    margin: 0px 0px 0px 10px;
     border-left: solid 4px #E3E9ED;
 }
 
@@ -206,11 +204,14 @@ time[class='timeline__time'] span {
 }
 
 .activity-log {
-    /* max-width: 800px; */
-    margin-top: 125px;
+    margin-top: 50px;
     margin-bottom: 100px;
-    margin: 0 auto;
 }
+
+    .activity-log .timeline-readonly {
+        /*background-color: white;*/
+        padding: 20px;
+    }
 
 .timeline-body {
     display: flex;
