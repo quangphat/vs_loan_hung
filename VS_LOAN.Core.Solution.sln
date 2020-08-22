@@ -38,11 +38,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietStar.Client", "VietStar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietStar.Entities", "VietStar.Entities\VietStar.Entities.csproj", "{C4DFF79A-ACDA-4647-BDB0-C316DD3BE61D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VietStar.Repository", "VietStar.Repository\VietStar.Repository.csproj", "{EA92D24E-2D40-496C-A969-1277E4D59691}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietStar.Repository", "VietStar.Repository\VietStar.Repository.csproj", "{EA92D24E-2D40-496C-A969-1277E4D59691}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VietStar.Business", "VietStar.Business\VietStar.Business.csproj", "{DACAEDF8-70DF-49F9-8BEF-8C13AE91F876}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietStar.Business", "VietStar.Business\VietStar.Business.csproj", "{DACAEDF8-70DF-49F9-8BEF-8C13AE91F876}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VietStar.Utility", "VietStar.Utility\VietStar.Utility.csproj", "{D5EA1A0A-FCD5-4F89-85E7-81507EBBAB65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietStar.Utility", "VietStar.Utility\VietStar.Utility.csproj", "{D5EA1A0A-FCD5-4F89-85E7-81507EBBAB65}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpService", "HttpService\HttpService.csproj", "{4E4A9D89-2322-4CAF-A973-E786B66DD746}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -106,6 +108,10 @@ Global
 		{D5EA1A0A-FCD5-4F89-85E7-81507EBBAB65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5EA1A0A-FCD5-4F89-85E7-81507EBBAB65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5EA1A0A-FCD5-4F89-85E7-81507EBBAB65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E4A9D89-2322-4CAF-A973-E786B66DD746}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E4A9D89-2322-4CAF-A973-E786B66DD746}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E4A9D89-2322-4CAF-A973-E786B66DD746}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E4A9D89-2322-4CAF-A973-E786B66DD746}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
