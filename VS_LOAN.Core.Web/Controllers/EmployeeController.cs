@@ -1,4 +1,5 @@
 ﻿using MCreditService;
+using MCreditService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,7 +66,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var toDate = string.IsNullOrWhiteSpace(workToDate) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(workToDate);
             BusinessExtension.ProcessPaging(ref page, ref limit);
             freetext = string.IsNullOrWhiteSpace(freetext) ? string.Empty : freetext.Trim();
-            var datas = await _rpEmployee.Gets(fromDate, toDate, roleId, freetext, page, limit, GlobalData.User.OrgId);
+            var datas = await _rpEmployee.Gets(fromDate, toDate, roleId, freetext, page, limit, GlobalData.User.OrgId, GlobalData.User.IDUser);
             if (datas == null || !datas.Any())
             {
                 return ToJsonResponse(true, null, DataPaging.Create(null as List<EmployeeViewModel>, 0));
@@ -151,6 +152,10 @@ namespace VS_LOAN.Core.Web.Controllers
                 return RedirectToAction("Index");
             }
             var employee = await _rpEmployee.GetByIdAsync(id);
+            if(employee.Xoa ==1)
+            {
+                return RedirectToAction("Index");
+            }
             ViewBag.employee = employee;
             ViewBag.account = GlobalData.User;
             return View();
@@ -167,9 +172,29 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             }
-           
+                
             model.UpdatedBy = GlobalData.User.IDUser;
             var result = await _rpEmployee.Update(model);
+            return ToJsonResponse(result);
+        }
+
+
+          public async Task<JsonResult> Delete([FromBody] EmployeeEditModel model)
+        {
+
+        if (model == null || model.Id <= 0)
+            {
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            }
+            var isAdmin = GlobalData.User.UserType == (int)UserTypeEnum.Admin ? true : false;
+            if (!isAdmin)
+            {
+                return ToJsonResponse(false, "Bạn không có quyền xóa nhan viên");
+            }
+            model.UpdatedBy = GlobalData.User.IDUser;
+            model.DeletedBy = GlobalData.User.IDUser;
+            model.Xoa = 1;
+            var result = await _rpEmployee.Delete(model);
             return ToJsonResponse(result);
         }
         public async Task<JsonResult> GetPartner(int customerId)

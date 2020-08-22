@@ -1,4 +1,5 @@
-﻿@using VS_LOAN.Core.Web.Resources;
+﻿@using VS_LOAN.Core.Web.Helpers;
+@using VS_LOAN.Core.Web.Resources;
 @{
     ViewBag.Title = "Cập nhật nhân viên";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -117,6 +118,22 @@
                                     </div>
                                     <div class="clearfix form-actions">
                                         <div class="col-md-offset-3 col-md-9">
+
+                                   
+
+                                                            @if (GlobalData.User.UserType == 3)
+                                    {
+
+
+                                    }
+                                    else
+                                    {
+                                                        <button class="btn btn-danger" type="button" id="btnDeleted">
+                                                            <i class="ace-icon fa fa-check bigger-110"></i>
+                                                            Xóa
+                                                        </button>
+
+                                    }
                                             <button class="btn btn-info" type="button" id="btnSave">
                                                 <i class="ace-icon fa fa-check bigger-110"></i>
                                                 Lưu
@@ -201,6 +218,10 @@
         $('#btnSave').click(function (e) {
             updateUser();
         })
+
+        $('#btnDeleted').click(function (e) {
+            deleteUser();
+        })
         getRoles("#ddlRole", true, "Vui lòng chọn", employee.RoleId);
     })
     function setThisActive(id) {
@@ -216,6 +237,80 @@
         $("#txtCode").val(employee.Ma);
         setValueForDateInput("#txtWorkDate",SetFormatDateTimeDMY(employee.WorkDate));
         $("#txtUserName").val(employee.Ten_Dang_Nhap);
+    }
+
+
+
+ function deleteUser() {
+        employee.FullName = $("#txtFullName").val();
+        employee.Email = $("#txtEmail").val();
+        employee.Phone = $("#txtPhone").val();
+       
+        employee.RoleId = (!isNullOrWhiteSpace($("#ddlRole").val()) && !isNullOrUndefined($("#ddlRole").val())) ? parseInt($("#ddlRole").val()) : 0;
+       
+
+        if (isNullOrWhiteSpace(employee.WorkDate) || isNullOrUndefined(employee.WorkDate)) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn ngày vào làm",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+
+
+        
+        if (employee.RoleId <= 0) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui lòng chọn vai trò",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+   
+        $.ajax({
+            traditional: true,
+            url: '/employee/delete',
+            type: "POST",
+            contentType: "application/json;",
+            dataType: 'json',
+            data: JSON.stringify(employee),
+            success: function (data) {
+                if (data.success == true ) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: 'Đã xóa thành công',
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                        window.location = window.location
+                    });
+
+                }
+                else {
+                    swal({
+                        title: "Lỗi",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
     }
     function updateUser() {
         employee.FullName = $("#txtFullName").val();

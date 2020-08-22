@@ -694,12 +694,11 @@ namespace VS_LOAN.Core.Web.Controllers
             if (model == null || string.IsNullOrWhiteSpace(model.Value) || string.IsNullOrWhiteSpace(model.Value2))
                 return ToJsonResponse(false);
             var profile = await _rpMCredit.GetTemProfileById(Convert.ToInt32(model.Value));
-            if (profile == null)
-                return ToJsonResponse(true);
-            await _svMCredit.AddNote(new NoteAddRequestModel
+         
+           var x = await _svMCredit.AddNote(new NoteAddRequestModel
             {
                 Content = model.Value2,
-                Id = profile.MCId
+                Id =model.Value
             }, GlobalData.User.IDUser);
 
             return ToJsonResponse(true);

@@ -18,5 +18,15 @@ namespace VS_LOAN.Core.Entity.Employee
        
         public int? UpdatedBy { get; set; }
         public string Code { get; set; }
+
+        public int? DeletedBy { get; set; }
+
+        public int Xoa { get; set; }
+
+        public EmployeeEditModel()
+        {
+           
+            Xoa = 0;
+        }
     }
 }
