@@ -10,7 +10,7 @@ namespace VietStar.Repository.Interfaces
 {
     public interface ICheckDupRepository
     {
-        Task<RepoResponse<bool>> UpdateAsync(CheckDupAddSql model, int updateBy);
+        Task<BaseResponse<bool>> UpdateAsync(CheckDupAddSql model, int updateBy);
         Task<List<CheckDupNoteViewModel>> GetNoteByIdAsync(int id);
         Task<List<CheckDupIndexModel>> GetsAsync(
             string freeText,
@@ -18,7 +18,7 @@ namespace VietStar.Repository.Interfaces
             int limit,
             int userId);
         Task<CheckDupAddSql> GetByIdAsync(int id);
-        Task<RepoResponse<int>> CreateAsync(CheckDupAddSql model, int createdBy);
+        Task<BaseResponse<int>> CreateAsync(CheckDupAddSql model, int createdBy);
         Task<bool> AddNoteAsync(CheckDupNote note);
     }
 }

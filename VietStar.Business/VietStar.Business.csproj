@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\McreditServiceCore\McreditServiceCore.csproj" />
     <ProjectReference Include="..\VietStar.Entities\VietStar.Entities.csproj" />
     <ProjectReference Include="..\VietStar.Repository\VietStar.Repository.csproj" />
     <ProjectReference Include="..\VietStar.Utility\VietStar.Utility.csproj" />

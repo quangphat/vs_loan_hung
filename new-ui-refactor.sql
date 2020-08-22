@@ -1263,3 +1263,80 @@ end
   select Ten, Bat_Buoc, 2 from LOAI_TAI_LIEU
 
   ------------
+
+
+    insert into ProfileStatus(Code,Name,Value,IsDeleted,OrgId,ProfileType)
+  select Code, Name, Code,0,1,'mcredit' from MCreditProfileStatus
+
+  -----------
+
+
+  create function [dbo].[fn_getUserNameById](@orgId int, @userId int)
+returns nvarchar(500)
+as begin
+declare @fullName as nvarchar(500)
+select @fullName = Ho_Ten from Nhan_Vien where id = @userId and isnull(OrgId,0) = @orgId
+return @fullName;
+end
+
+-----------
+
+ALTER procedure [dbo].[sp_MCredit_TempProfile_Gets]
+(
+@freeText nvarchar(30),
+@userId int,
+@status varchar(20),
+@page int =1,
+@limit_tmp int = 10
+)
+as
+begin
+declare @where  nvarchar(500) = 'where  isnull(mc.IsDeleted,0) = 0';
+declare @mainClause nvarchar(max);
+declare @params nvarchar(300);
+
+if @freeText = '' begin set @freeText = null end;
+declare @offset int = 0;
+set @offset = (@page-1)*@limit_tmp;
+set @mainClause = 'select count(*) over() as TotalRecord, mc.Id,mc.McId, mc.CustomerName,isnull(mc.IdNumber,mc.CCCDNumber) as IDNumber
+,s.Name as StatusName, mc.Phone, mc.CreatedBy, mc.UpdatedBy,mc.LoanMoney,mc.CreatedTime, mc.UpdatedTime,
+isnull(fintechcom_vn_PortalNew.fn_getGhichuByHosoId(mc.Id,4),'''') as LastNote,
+mc.SaleNumber +'' '' + isnull(mc.SaleName,'''') as SaleName,
+dbo.fn_getUserNameById(1,mc.CreatedBy) as CreatedUser,dbo.fn_getUserNameById(1,mc.UpdatedBy) as UpdatedUser, mcl.Name as LoanPeriodName, p.Name  as ProductName
+from MCredit_TempProfile mc
+left join MCreditProduct p on mc.ProductCode = p.Code
+left join MCreditLoanPeriod mcl on mc.LoanPeriodCode = mcl.Code
+left join MCreditProfileStatus s on s.Code = mc.Status
+'
+if(@freeText  is not null)
+begin
+ set @where += 'and (mc.CustomerName like  N''%' + @freeText +'%''';
+ set @where += ' or mc.IdNumber like  N''%' + @freeText +'%''';
+ set @where += ' or mc.Phone like  N''%' + @freeText +'%'')';
+ --set @where = @where + ' or nv2.CCCDNumber like  N''%' + @freeText +'%'' )';
+end;
+
+--if(@courierId > 0)
+--begin
+--if(@where <> '')
+--set @where = @where + ' and';
+--set @where = @where + ' mc.Id in (
+--select CourierId from CourierAssignee 
+--where AssigneeId = @CourierId)'; 
+--end;
+if(@status <> '')
+begin
+set @where += ' and mc.Status in ('+ @status +')'; 
+end
+set @where +=  ' and @userId in (select * from fn_GetUserIDCanViewMyProfile (mc.CreatedBy)) '
+
+
+set @where +=' order by mc.UpdatedTime desc'; 
+set @where += ' offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
+set @mainClause = @mainClause +  @where
+set @params =N' @offset int, @limit int, @userId int';
+EXECUTE sp_executesql @mainClause,@params,  @offset = @offset, @limit = @limit_tmp, @userId = @userId
+print @mainClause;
+end
+
+--------------

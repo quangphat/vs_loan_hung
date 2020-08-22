@@ -56,7 +56,7 @@ namespace VietStar.Business
             }
             return false;
         }
-        protected T ToResponse<T>(RepoResponse<T> result)
+        protected T ToResponse<T>(BaseResponse<T> result)
         {
             if(!result.success)
             {

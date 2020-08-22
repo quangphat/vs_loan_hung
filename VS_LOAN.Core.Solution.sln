@@ -44,7 +44,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietStar.Business", "VietSt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VietStar.Utility", "VietStar.Utility\VietStar.Utility.csproj", "{D5EA1A0A-FCD5-4F89-85E7-81507EBBAB65}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpService", "HttpService\HttpService.csproj", "{4E4A9D89-2322-4CAF-A973-E786B66DD746}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpService", "HttpService\HttpService.csproj", "{4E4A9D89-2322-4CAF-A973-E786B66DD746}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "McreditServiceCore", "McreditServiceCore\McreditServiceCore.csproj", "{9EF86CEA-76CC-4256-86B9-29263EDF6CE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -112,6 +114,10 @@ Global
 		{4E4A9D89-2322-4CAF-A973-E786B66DD746}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E4A9D89-2322-4CAF-A973-E786B66DD746}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E4A9D89-2322-4CAF-A973-E786B66DD746}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EF86CEA-76CC-4256-86B9-29263EDF6CE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EF86CEA-76CC-4256-86B9-29263EDF6CE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EF86CEA-76CC-4256-86B9-29263EDF6CE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EF86CEA-76CC-4256-86B9-29263EDF6CE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

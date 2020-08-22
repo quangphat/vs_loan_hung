@@ -4,11 +4,11 @@ using System.Text;
 
 namespace VietStar.Entities
 {
-    public class RepoResponse<T>
+    public class BaseResponse<T>
     {
-        public static RepoResponse<T> Create(T dat, string err  =null)
+        public static BaseResponse<T> Create(T dat, string err  =null)
         {
-            return new RepoResponse<T>
+            return new BaseResponse<T>
             {
                 data = dat,
                 error = err,

@@ -10,7 +10,7 @@ namespace VietStar.Repository.Interfaces
 {
     public interface IProfileRepository
     {
-        Task<RepoResponse<bool>> UpdateAsync(ProfileAddSql model, int profileId, int updatedBy);
+        Task<BaseResponse<bool>> UpdateAsync(ProfileAddSql model, int profileId, int updatedBy);
         Task<List<ProfileIndexModel>> GetsAsync(int userId
             , DateTime fromDate
             , DateTime toDate
@@ -22,7 +22,7 @@ namespace VietStar.Repository.Interfaces
             , string sort = "desc"
             , string sortField = "updatedtime"
             , int page = 1, int limit = 20);
-        Task<RepoResponse<int>> CreateAsync(ProfileAddSql model, int createdBy);
-        Task<RepoResponse<ProfileDetail>> GetByIdAsync(int profileId);
+        Task<BaseResponse<int>> CreateAsync(ProfileAddSql model, int createdBy);
+        Task<BaseResponse<ProfileDetail>> GetByIdAsync(int profileId);
     }
 }

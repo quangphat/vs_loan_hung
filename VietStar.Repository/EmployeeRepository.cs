@@ -18,6 +18,15 @@ namespace VietStar.Repository
         {
         }
 
+        public async Task<List<int>> GetPeopleCanViewMyProfile(int profileId)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryAsync<int>("sp_MCProfilePeople_GetPeopleCanViewProfile", new { profileId }, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+
         public async Task<OptionSimple> GetEmployeeByCode(string code, int userId)
         {
             using (var con = GetConnection())

@@ -12,7 +12,7 @@ namespace VietStar.Repository.Interfaces
     {
         Task<List<FileUploadModel>> GetFilesByProfileIdAsync(int profileType, int profileId);
         Task<bool> DeleteByIdAsync(int fileId, string guidId);
-        Task<RepoResponse<int>> Add(ProfileFileAddSql model);
+        Task<BaseResponse<int>> Add(ProfileFileAddSql model);
         Task<List<FileProfileType>> GetByType(int profileType);
     }
 }

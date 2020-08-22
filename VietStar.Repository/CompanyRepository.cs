@@ -37,7 +37,7 @@ namespace VietStar.Repository
 
         }
 
-        public async Task<RepoResponse<bool>> UpdateAsync(CompanySql model, int updateBy)
+        public async Task<BaseResponse<bool>> UpdateAsync(CompanySql model, int updateBy)
         {
             var p = new DynamicParameters();
             p.Add("id", model.Id);
@@ -54,17 +54,17 @@ namespace VietStar.Repository
                 using (var con = GetConnection())
                 {
                     await con.ExecuteAsync("sp_UpdateCompany", p, commandType: CommandType.StoredProcedure);
-                    return RepoResponse<bool>.Create(true);
+                    return BaseResponse<bool>.Create(true);
                 }
             }
             catch(Exception e)
             {
-                return RepoResponse<bool>.Create(false, GetException(e));
+                return BaseResponse<bool>.Create(false, GetException(e));
             }
 
         }
 
-        public async Task<RepoResponse<int>> CreateAsync(CompanySql model, int createBy)
+        public async Task<BaseResponse<int>> CreateAsync(CompanySql model, int createBy)
         {
             try
             {
@@ -80,12 +80,12 @@ namespace VietStar.Repository
                     p.Add("PartnerId", model.PartnerId);
                     p.Add("CatType", model.CatType);
                     await con.ExecuteAsync("sp_InsertCompany", p, commandType: CommandType.StoredProcedure);
-                    return RepoResponse<int>.Create(p.Get<int>("id"));
+                    return BaseResponse<int>.Create(p.Get<int>("id"));
                 }
             }
             catch(Exception e)
             {
-                return RepoResponse<int>.Create(0, GetException(e));
+                return BaseResponse<int>.Create(0, GetException(e));
             }
         }
 

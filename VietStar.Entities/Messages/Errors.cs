@@ -48,5 +48,6 @@ namespace VietStar.Entities.Messages
         public const string username_or_password_must_not_be_empty = "Tên đăng nhập hoặc mật khẩu không được để trống";
         public const string missing_diachi = "Vui lòng nhập địa chỉ";
         public const string profile_could_not_found_in_portal = "Không thể tìm thấy hồ sơ trong portal";
+        public const string NoData = "Không có dữ liệu";
     }
 }

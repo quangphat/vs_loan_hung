@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using KingOffice.Infrastructures;
+using McreditServiceCore.Infrastructures;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -53,6 +54,7 @@ namespace VietStar.Client
             services.AddSingleton(mapper);
             services.RegisterRepository();
             services.RegisterBusiness();
+            services.RegisterMCService();
             services.AddDistributedMemoryCache();
             services.AddSession(options=>{
                 options.IdleTimeout = TimeSpan.FromMinutes(1);

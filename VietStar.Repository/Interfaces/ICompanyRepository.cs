@@ -15,8 +15,8 @@ namespace VietStar.Repository.Interfaces
             string freeText,
             int page,
             int limit);
-        Task<RepoResponse<int>> CreateAsync(CompanySql model, int createBy);
-        Task<RepoResponse<bool>> UpdateAsync(CompanySql model, int updateBy);
+        Task<BaseResponse<int>> CreateAsync(CompanySql model, int createBy);
+        Task<BaseResponse<bool>> UpdateAsync(CompanySql model, int updateBy);
     }
 }
 

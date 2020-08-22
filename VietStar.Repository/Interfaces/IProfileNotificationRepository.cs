@@ -9,7 +9,7 @@ namespace VietStar.Repository.Interfaces
 {
     public interface IProfileNotificationRepository
     {
-        Task<RepoResponse<bool>> CreateAsync(int profileId);
+        Task<BaseResponse<bool>> CreateAsync(int profileId);
     }
 }
 

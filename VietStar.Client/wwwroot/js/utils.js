@@ -279,7 +279,7 @@ function isExtension(ext, extnArray) {
     }
     return result;
 }
-function renderStatus(statusName) {
+function renderStatus(statusName, btnRefresh = null) {
 
     
     if (isNullOrWhiteSpace(statusName))
@@ -301,7 +301,8 @@ function renderStatus(statusName) {
         colorClass = 'label-inverse'
     if (cancel.indexOf(firstChar) >= 0)
         colorClass = 'label-cancel'
-
+    if (btnRefresh == null)
+        btnRefresh = ''
     let statusString = `<span class='label label-sm ${colorClass} arrowed arrowed-righ'>${statusName}</span>`;
-    return "<td class='text-left min-w-150'>" + statusString + "</td>";
+    return "<td class='text-left min-w-150'>" + statusString + btnRefresh + "</td>";
 }

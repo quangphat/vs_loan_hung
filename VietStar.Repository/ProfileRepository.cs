@@ -62,7 +62,7 @@ namespace VietStar.Repository
             }
            
         }
-        public async Task<RepoResponse<int>> CreateAsync(ProfileAddSql model, int createdBy)
+        public async Task<BaseResponse<int>> CreateAsync(ProfileAddSql model, int createdBy)
         {
             var par = GetParams(model, new string[] {
                 nameof(model.UpdatedBy),
@@ -80,16 +80,16 @@ namespace VietStar.Repository
                 {
                     await _con.ExecuteAsync("sp_HO_SO_Them_v2", par, commandType: CommandType.StoredProcedure);
                     var id = par.Get<int>(nameof(model.ID));
-                    return RepoResponse<int>.Create(id);
+                    return BaseResponse<int>.Create(id);
                 }
             }
             catch(Exception e)
             {
-                return RepoResponse<int>.Create(0, GetException(e));
+                return BaseResponse<int>.Create(0, GetException(e));
             }
 
         }
-        public async Task<RepoResponse<bool>> UpdateAsync(ProfileAddSql model,int profileId, int updatedBy)
+        public async Task<BaseResponse<bool>> UpdateAsync(ProfileAddSql model,int profileId, int updatedBy)
         {
             model.ID = profileId;
             var par = GetParams(model, new string[] {
@@ -109,28 +109,28 @@ namespace VietStar.Repository
                 {
                     await _con.ExecuteAsync("sp_update_HO_SO_v2", par, commandType: CommandType.StoredProcedure);
                     
-                    return RepoResponse<bool>.Create(true);
+                    return BaseResponse<bool>.Create(true);
                 }
             }
             catch (Exception e)
             {
-                return RepoResponse<bool>.Create(false, GetException(e));
+                return BaseResponse<bool>.Create(false, GetException(e));
             }
 
         }
-        public async Task<RepoResponse<ProfileDetail>> GetByIdAsync(int profileId)
+        public async Task<BaseResponse<ProfileDetail>> GetByIdAsync(int profileId)
         {
             try
             {
                 using (var con = GetConnection())
                 {
                     var result = await con.QueryFirstOrDefaultAsync<ProfileDetail>("sp_HO_SO_LayChiTiet_v2", new { profileId }, commandType: CommandType.StoredProcedure);
-                    return RepoResponse<ProfileDetail>.Create(result);
+                    return BaseResponse<ProfileDetail>.Create(result);
                 }
             }
             catch(Exception e)
             {
-                return RepoResponse<ProfileDetail>.Create(null, GetException(e));
+                return BaseResponse<ProfileDetail>.Create(null, GetException(e));
             }
         }
     }

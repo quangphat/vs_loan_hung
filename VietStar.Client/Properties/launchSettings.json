@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "VietStar.Home": {
+    "VietStar.Dev": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
@@ -23,11 +23,11 @@
       },
       "applicationUrl": "http://vietstar.vn:53323"
     },
-    "VietStar.Company": {
+    "VietStar.Production": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Company"
+        "ASPNETCORE_ENVIRONMENT": "Production"
       },
       "applicationUrl": "http://vietstar.vn:53323"
     }

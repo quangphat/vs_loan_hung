@@ -22,7 +22,7 @@ namespace VietStar.Repository
         {
             _rpLog = logRepository;
         }
-        public async Task<RepoResponse<bool>> UpdateAsync(CheckDupAddSql model, int updateBy)
+        public async Task<BaseResponse<bool>> UpdateAsync(CheckDupAddSql model, int updateBy)
         {
             var pars = GetParams(model, new string[]
                         {
@@ -37,12 +37,12 @@ namespace VietStar.Repository
                 using (var con = GetConnection())
                 {
                     await con.ExecuteAsync("sp_UpdateCustomer_v2", pars, commandType: CommandType.StoredProcedure);
-                    return RepoResponse<bool>.Create(true);
+                    return BaseResponse<bool>.Create(true);
                 }
             }
             catch (Exception e)
             {
-                return RepoResponse<bool>.Create(false, GetException(e));
+                return BaseResponse<bool>.Create(false, GetException(e));
             }
 
 
@@ -94,7 +94,7 @@ namespace VietStar.Repository
                 return result;
             }
         }
-        public async Task<RepoResponse<int>> CreateAsync(CheckDupAddSql model, int createdBy)
+        public async Task<BaseResponse<int>> CreateAsync(CheckDupAddSql model, int createdBy)
         {
             //var par = GetParams(model, new string[] {
             //    nameof(model.UpdatedBy),
@@ -117,13 +117,13 @@ namespace VietStar.Repository
                     pars.Add("CreatedBy", createdBy);
 
                     await con.ExecuteAsync("sp_InsertCustomer_v2", pars, commandType: CommandType.StoredProcedure);
-                    return RepoResponse<int>.Create(pars.Get<int>(nameof(model.Id)));
+                    return BaseResponse<int>.Create(pars.Get<int>(nameof(model.Id)));
 
                 }
             }
             catch (Exception e)
             {
-                return RepoResponse<int>.Create(0, GetException(e));
+                return BaseResponse<int>.Create(0, GetException(e));
             }
         }
         public async Task<bool> AddNoteAsync(CheckDupNote note)

@@ -41,7 +41,7 @@ namespace VietStar.Repository
                 return result.ToList();
             }
         }
-        public async Task<RepoResponse<int>> Add(ProfileFileAddSql model)
+        public async Task<BaseResponse<int>> Add(ProfileFileAddSql model)
         {
             try
             {
@@ -59,12 +59,12 @@ namespace VietStar.Repository
                     await con.ExecuteAsync("sp_TAI_LIEU_HS_Them_v2", p,
                         commandType: CommandType.StoredProcedure);
                     var id = p.Get<int>("Id");
-                    return RepoResponse<int>.Create(id);
+                    return BaseResponse<int>.Create(id);
                 }
             }
             catch(Exception e)
             {
-                return RepoResponse<int>.Create(0, GetException(e));
+                return BaseResponse<int>.Create(0, GetException(e));
             }
             
 

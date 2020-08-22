@@ -19,9 +19,9 @@ namespace VietStar.Repository.Interfaces
             , int groupId = 0
             , int provinceId = 0
             , string saleCode = null);
-        Task<RepoResponse<bool>> UpdateAsync(CourierSql model);
+        Task<BaseResponse<bool>> UpdateAsync(CourierSql model);
         Task<CourierIndexModel> GetByIdAsync(int id);
-        Task<RepoResponse<int>> CreateAsync(CourierSql model, int groupId = 0);
+        Task<BaseResponse<int>> CreateAsync(CourierSql model, int groupId = 0);
         Task<bool> InsertCourierAssigneeAsync(int courierId, int assigneeId);
     }
 }

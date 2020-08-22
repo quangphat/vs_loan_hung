@@ -20,20 +20,20 @@ namespace VietStar.Repository
         {
             _rpLog = logRepository;
         }
-        public async Task<RepoResponse<bool>> CreateAsync(int profileId)
+        public async Task<BaseResponse<bool>> CreateAsync(int profileId)
         {
             try
             {
                 using (var con = GetConnection())
                 {
                     await con.ExecuteAsync("sp_HO_SO_DUYET_XEM_Them", new { ID = profileId }, commandType: CommandType.StoredProcedure);
-                    return RepoResponse<bool>.Create(true);
+                    return BaseResponse<bool>.Create(true);
                 }
             }
             catch(Exception e)
             {
                 await _rpLog.InsertLogFromException($"CreateAsync-ProfileNotification-{profileId}", e);
-                return RepoResponse<bool>.Create(false);
+                return BaseResponse<bool>.Create(false);
             }
         }
     }

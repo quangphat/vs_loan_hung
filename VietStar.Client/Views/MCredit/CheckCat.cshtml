@@ -1,0 +1,97 @@
+﻿
+@{
+    ViewData["Title"] = "Check CAT";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-caret-right"></i>
+                <a href="#">Check CAT</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Mã số thuế <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtCatNumber" placeholder="Mã số thuế" class="form-control">
+                            <input type="button" class="btn btn-info" id="btnCheckCat" style="margin-top:20px;float:right" value="Check CAT" />
+                        </div>
+                        <div id="checkcat-area">
+                            <div class="col-sm-4">
+                                <label style="color:green" id="checkcat-result"></label>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
+<script>
+
+
+
+    $("#txtTaxNumber").ForceNumericOnlyv2();
+
+    let modelCat = { CatName:'',ComName:'',CatNumber:'' }
+    $('#btnCheckCat').click(function (e) {
+        debugger
+        let value = $("#txtCatNumber").val();
+        var objectSend = JSON.stringify({
+            'Value': value
+        });
+        $.ajax({
+            traditional: true,
+            url: '/MCredit/CheckCatApi',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+
+                if (data.success == true) {
+                    swal({
+                        title: "Thành công",
+                        text: data.code,
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                    $("#checkcat-result").text(`${data.data.name} - ${data.data.cat}`);
+                    modelCat = { CatName: data.data.cat, CatNumber : value, ComName: data.data.name }
+                }
+                else {
+                    swal({
+                        title: !isNullOrWhiteSpace(data.data.msg) ? data.data.msg : "Đã có lỗi xảy ra",
+                        text: data.error.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                    $("#checkcat-result").text(!isNullOrWhiteSpace(data.data.msg) ? data.data.msg : "");
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+    });
+
+</script>
+

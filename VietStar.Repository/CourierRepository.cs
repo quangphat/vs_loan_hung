@@ -53,7 +53,7 @@ namespace VietStar.Repository
             }
         }
 
-        public async Task<RepoResponse<int>> CreateAsync(CourierSql model, int groupId = 0)
+        public async Task<BaseResponse<int>> CreateAsync(CourierSql model, int groupId = 0)
         {
             try
             {
@@ -67,17 +67,17 @@ namespace VietStar.Repository
 
                 }, outputParam: "Id");
                     await con.ExecuteAsync("sp_InsertHosoCourrier", param, commandType: CommandType.StoredProcedure);
-                    return RepoResponse<int>.Create(param.Get<int>("Id"));
+                    return BaseResponse<int>.Create(param.Get<int>("Id"));
                 }
             }
             catch (Exception e)
             {
-                return RepoResponse<int>.Create(0, GetException(e));
+                return BaseResponse<int>.Create(0, GetException(e));
             }
 
         }
 
-        public async Task<RepoResponse<bool>> UpdateAsync(CourierSql model)
+        public async Task<BaseResponse<bool>> UpdateAsync(CourierSql model)
         {
             try
             {
@@ -91,12 +91,12 @@ namespace VietStar.Repository
                 });
 
                     await con.ExecuteAsync("sp_UpdateHosoCourier", param, commandType: CommandType.StoredProcedure);
-                    return RepoResponse<bool>.Create(true);
+                    return BaseResponse<bool>.Create(true);
                 }
             }
             catch(Exception e)
             {
-                return RepoResponse<bool>.Create(false, GetException(e));
+                return BaseResponse<bool>.Create(false, GetException(e));
             }
             
 

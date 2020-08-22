@@ -1,0 +1,105 @@
+﻿
+@{
+    ViewData["Title"] = "Check CIC";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-caret-right"></i>
+                <a href="#">Check CIC</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CMND/CCCD <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtValue" placeholder="" class="form-control">
+                        </div>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên <span class="required">(*)</span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="txtName" placeholder="" class="form-control">
+                        </div>
+                        <div class="">
+                            <a class="btn btn-sm btn-primary" id="btn_Save">
+                                Kiểm tra
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
+<script>
+
+
+    $("#txtValue").ForceNumericOnlyv2();
+    function getMessage(data) {
+        let relate = ''
+        let result =''
+        if (data == null || isNullOrUndefined(data))
+            return ''
+        if (!isNullOrWhiteSpace(data.Relate))
+            relate = data.Relate;
+        if (!isNullOrWhiteSpace(data.Result))
+            result = data.Result
+        return `${relate} - ${result}`;
+    }
+    $('#btn_Save').click(function (e) {
+
+        var objectSend = JSON.stringify({
+            'IdNumber': $('#txtValue').val(),
+            'Name': $('#txtName').val(),
+        });
+        $.ajax({
+            traditional: true,
+            url: '@Url.Action("CheckCICApi", "MCredit")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                if (data.success == true) {
+                    swal({
+                        title: successMsg,
+                        text: `${getMessage(data.data)}`,
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+
+                    });
+                }
+                else {
+                    swal({
+                        title: errorMsg,
+                        text: data.error.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+    });
+
+</script>
+

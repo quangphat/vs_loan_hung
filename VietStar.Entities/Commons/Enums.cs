@@ -51,5 +51,14 @@ namespace VietStar.Entities.Commons
             Warning = 1,
             Debt = 2
         }
+
+        public enum MCTableType
+        {
+            MCreditCity = 1,
+            MCreditLoanPeriod = 2,
+            MCreditlocations = 3,
+            MCreditProduct = 4,
+            MCreditProfileStatus = 5
+        }
     }
 }
