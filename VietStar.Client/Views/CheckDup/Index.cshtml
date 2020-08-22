@@ -174,16 +174,6 @@
         limit = $("#ddlLimit").val()
         getData(page,limit)
     }
-    function renderMatchCondition(item, isMatchColumn = true) {
-
-        if (item == null || item.Status == 0)
-            return renderTextLeft('', '', "m-w-150")
-
-        if (isMatchColumn) {
-            return renderTextLeft(item.MatchCondition, '', "m-w-150")
-        }
-        return renderTextLeft(item.NotMatch, '', "m-w-150")
-    }
     function renderRow(index, item) {
         console.log(item);
         page = queries.get("page");

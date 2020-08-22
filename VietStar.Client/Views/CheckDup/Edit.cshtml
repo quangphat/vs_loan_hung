@@ -173,58 +173,11 @@
         GetNotes('@Model.Id')
         GetProvinces($("#ProvinceId"), '@Model.ProvinceId');
     })
-    function getCustomer() {
-        $.ajax({
-            type: "GET",
-            url: '/Customer/GetCustomerById?id=' + customer.Id,
-            success: function (data) {
-                customer = data.data
-                $('#ddlDoiTac').empty();
-                if (data != null) {
 
 
-                }
-
-            },
-            complete: function () {
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    }
-
-    function onPartnerCheck(id) {
-        var checked = $("#partner_" + id).is(':checked');
-        var index = partners.findIndex(p => p.Id == id)
-        if (index < 0)
-            return;
-        partners[index].IsSelect = checked
-
-    }
-    jQuery.fn.ForceNumericOnly = function () {
-    return this.each(function () {
-        $(this).keydown(function (e) {
-            var key = e.charCode || e.keyCode || 0;
-            // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers ONLY
-            // home, end, period, and numpad decimal
-            return (
-                key == 8 ||
-                key == 9 ||
-                key == 13 ||
-                key == 46 ||
-                key == 110 ||
-                key == 190 ||
-                (key >= 35 && key <= 40) ||
-                (key >= 48 && key <= 57) ||
-                (key >= 96 && key <= 105));
-        });
-    });
-};
-    $("#txtDienThoai").ForceNumericOnly();
-    $("#Cmnd").ForceNumericOnly();
-    $("#Phone").ForceNumericOnly();
-    $("#Salary").ForceNumericOnly();
+    $("#Cmnd").ForceNumericOnlyv2();
+    $("#Phone").ForceNumericOnlyv2();
+    $("#Salary").ForceNumericOnlyv2();
     $('#btnSave').click(function (e) {
         if (isNullOrWhiteSpace($('#FullName').val())) {
             swal({
