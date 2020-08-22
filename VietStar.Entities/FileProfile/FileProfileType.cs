@@ -16,5 +16,13 @@ namespace VietStar.Entities.FileProfile
         public string Folder { get; set; }
         public string FileName { get; set; }
         public string RootPath { get; set; }
+
+        //for mcredit
+        public string DocumentName { get; set; }
+        public string DocumentCode { get; set; }
+        public int DocumentId { get; set; }
+        public string MapBpmVar { get; set; }
+        public int GroupId { get; set; }
+        public bool AllowUpload { get; set; }
     }
 }

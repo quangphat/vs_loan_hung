@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using McreditServiceCore.Models;
+using VietStar.Entities.Mcredit;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -176,7 +176,8 @@ namespace McreditServiceCore
             {
                 var data = (T)result.Data;
                 data.message = JsonConvert.SerializeObject(data.msg);
-                return ToResponse<T>(data);
+
+                return ToResponse<T>(data, data.status =="success" ?null : data.msg.ToString());
             }
             return ToResponse<T>(result.Data);
         }
@@ -248,6 +249,7 @@ namespace McreditServiceCore
             if (!string.IsNullOrWhiteSpace(error))
             {
                 AddError(error);
+                return BaseResponse<T>.Create(data, error);
             }
             return BaseResponse<T>.Create(data);
         }

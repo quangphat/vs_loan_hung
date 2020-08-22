@@ -159,12 +159,11 @@
         
         <partial name="../Shared/Partials/CommentArea" model="false" />
         @await Html.PartialAsync("../Shared/Partials/CommandBar",
-     new VietStar.Entities.ViewModels.CommandBar
-     {
-         Buttons = new List<VietStar.Entities.ViewModels.CommandBarButton>{
-             new VietStar.Entities.ViewModels.CommandBarButton { Id="btnNext", ClassName="btn btn-sm btn-primary", Name="Bước tiếp theo" }
-     }
-     })
+             new VietStar.Entities.ViewModels.CommandBar
+             {
+                 Buttons = new List<VietStar.Entities.ViewModels.CommandBarButton>{
+                     new VietStar.Entities.ViewModels.CommandBarButton { Id="btnNext", ClassName="btn btn-sm btn-primary", Name="Bước tiếp theo" }
+             }})
 
         
     </div>

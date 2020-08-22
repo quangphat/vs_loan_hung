@@ -107,5 +107,53 @@ namespace VietStar.Client.Controllers
         {
             return View();
         }
+
+        [MyAuthorize(Permissions = "mcredit-profile")]
+        public async Task<IActionResult> Search(string freeText, string status, string type, int page = 1)
+        {
+            var result = await _bizMCredit.SearchsAsync(freeText, status, type, page);
+            return ToResponse(result);
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> CreateDraft([FromBody]MCredit_TempProfileAddModel model)
+        {
+            var result = await _bizMCredit.CreateDraftAsync(model);
+            return ToResponse(result);
+        }
+
+        public async Task<IActionResult> AddRefuseReasonToNote(int profileId, string type)
+        {
+            var result = await _bizMCredit.AddRefuseReasonToNoteAsync(profileId, type);
+            return ToResponse(result);
+
+        }
+
+        public async Task<IActionResult> UpdateTempProfileStatus(int profileId)
+        {
+            var result = await _bizMCredit.UpdateTempProfileStatusAsync(profileId);
+            return ToResponse(result);
+        }
+
+        public async Task<IActionResult> UpdateDraft([FromBody]MCredit_TempProfileAddModel model)
+        {
+            var result = await _bizMCredit.UpdateDraftAsync(model);
+            return ToResponse(result);
+        }
+
+        public async Task<IActionResult> TempProfile(int id)
+        {
+            var result = await _bizMCredit.GetTempProfileByIdAsync(id);
+            return View(result);
+        }
+        public async Task<IActionResult> GetMCSimpleList(string type)
+        {
+            var result = await _bizMCredit.GetSimpleListByTypeAsync(type);
+            return ToResponse(result);
+        }
     }
 }

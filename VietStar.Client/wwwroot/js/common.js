@@ -618,8 +618,13 @@ function renderOneItemFile(model, className = '',
     
     let item = $("#attachFile-" + model.itemId);
 
-    
-    let uploadUrl = `/media/UploadFile/${model.key}/${model.type}/${model.profileId}/${model.fileId}/${guidId}`;
+    let uploadUrl = '';
+    if (model.isMCredit) {
+        uploadUrl = `/media/UploadMCredit/${model.key}/${model.profileId}/${model.fileId}/${guidId}/${model.documentCode}/${model.documentName}/${model.documentId}/${model.groupId}/${model.mcId}`;
+    }
+    else {
+        uploadUrl = `/media/UploadFile/${model.key}/${model.type}/${model.profileId}/${model.fileId}/${guidId}`;
+    }
     item.fileinput({
         uploadUrl: allowUpload === true ? uploadUrl : null,
         validateInitialCount: true,
@@ -728,6 +733,166 @@ function onDeleteFile(fileId, guidId) {
                 
             }
 
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+
+function GetLocSigns(controlId, defaultValue = 0) {
+
+    if (controlId == null)
+        return;
+    $(controlId).empty(); 
+    let data = getLocalStorage('mcredit-location')
+    if (data != null) {
+        $.each(data, function (index, item) {
+            $(controlId).append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+        });
+        if (!isNullOrWhiteSpace(defaultValue) && defaultValue >0) {
+            $(controlId).val(defaultValue);
+        }
+        return
+    }
+    $.ajax({
+        type: "GET",
+        url: '/MCredit/GetMCSimpleList?type=location',
+        data: {},
+        success: function (data) {
+            $(controlId).append("<option value='0'></option>");
+            if (data.data != null && data.success == true) {
+                setLocalStorage('mcredit-location', data.data)
+                $.each(data.data, function (index, item) {
+                    $(controlId).append("<option value='" + item.Code + "'>" + item.Name + "</option>");
+                });
+                if (!isNullOrWhiteSpace(defaultValue)) {
+                    $(controlId).val(defaultValue);
+                }
+
+            }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+
+function GetLoanPeriods(controlId, defaultValue = 0) {
+
+    if (controlId == null)
+        return;
+    $(controlId).empty();
+    let data = getLocalStorage('mcredit-period')
+    if (data != null) {
+        $.each(data, function (index, item) {
+            $(controlId).append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+        });
+        if (!isNullOrWhiteSpace(defaultValue) && defaultValue > 0) {
+            $(controlId).val(defaultValue);
+        }
+        return
+    }
+    $.ajax({
+        type: "GET",
+        url: '/MCredit/GetMCSimpleList?type=period',
+        data: {},
+        success: function (data) {
+            $(controlId).append("<option value='0'></option>");
+            if (data.data != null && data.success == true) {
+                setLocalStorage('mcredit-period', data.data)
+                $.each(data.data, function (index, item) {
+                    $(controlId).append("<option value='" + item.Code + "'>" + item.Name + "</option>");
+                });
+                if (!isNullOrWhiteSpace(defaultValue)) {
+                    $(controlId).val(defaultValue);
+                }
+                
+            }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+
+function GetLoanCities(controlId, defaultValue = 0) {
+
+    if (controlId == null)
+        return;
+    $(controlId).empty();
+    let data = getLocalStorage('mcredit-city')
+    if (data != null) {
+        $.each(data, function (index, item) {
+            $(controlId).append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+        });
+        if (!isNullOrWhiteSpace(defaultValue) && defaultValue > 0) {
+            $(controlId).val(defaultValue);
+        }
+        return
+    }
+    $.ajax({
+        type: "GET",
+        url: '/MCredit/GetMCSimpleList?type=city',
+        data: {},
+        success: function (data) {
+            $(controlId).append("<option value='0'></option>");
+            if (data.data != null && data.success == true) {
+                setLocalStorage('mcredit-city', data.data)
+                $.each(data.data, function (index, item) {
+                    $(controlId).append("<option value='" + item.Code + "'>" + item.Name + "</option>");
+                });
+                if (!isNullOrWhiteSpace(defaultValue)) {
+                    $(controlId).val(defaultValue);
+                }
+
+            }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+
+function GetLoanProducts(controlId, defaultValue = 0) {
+
+    if (controlId == null)
+        return;
+    $(controlId).empty();
+    let data = getLocalStorage('mcredit-product')
+    if (data != null) {
+        $.each(data, function (index, item) {
+            $(controlId).append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+        });
+        if (!isNullOrWhiteSpace(defaultValue) && defaultValue > 0) {
+            $(controlId).val(defaultValue);
+        }
+        return
+    }
+    $.ajax({
+        type: "GET",
+        url: '/MCredit/GetMCSimpleList?type=product',
+        data: {},
+        success: function (data) {
+            $(controlId).append("<option value='0'></option>");
+            if (data.data != null && data.success == true) {
+                setLocalStorage('mcredit-product', data.data)
+                $.each(data.data, function (index, item) {
+                    $(controlId).append("<option value='" + item.Code + "'>" + item.Name + "</option>");
+                });
+                if (!isNullOrWhiteSpace(defaultValue)) {
+                    $(controlId).val(defaultValue);
+                }
+
+            }
         },
         complete: function () {
         },

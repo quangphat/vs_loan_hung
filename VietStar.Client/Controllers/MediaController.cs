@@ -29,6 +29,7 @@ namespace VietStar.Client.Controllers
             var result = await _bizMedia.GetProfileFileTypeByTypeAsync(profileType, profileId, _hosting.ContentRootPath);
             return ToResponse(result);
         }
+
         [HttpPost("UploadFile/{key}/{fileType}/{profileId}/{fileId}/{guidId}")]
         public async Task<IActionResult> Upload(int key, int fileType, int profileId,int fileId, string guidId)
         {
@@ -36,6 +37,24 @@ namespace VietStar.Client.Controllers
             var result = await _bizMedia.UploadFileAsync(file, key:key,fileId:fileId ,guildId: guidId,profileId: profileId,type: fileType,rootPath: _hosting.ContentRootPath);
             return Json(result);
         }
+
+        [HttpPost("UploadMCredit/{key}/{profileId}/{fileId}/{guidId}/{documentCode}/{documentName}/{documentId}/{groupId}/{mcId}")]
+        public async Task<IActionResult> UploadMCredit(int key, 
+            int profileId,
+            int fileId,
+            string guidId,
+            string documentCode,
+            string documentName,
+            int documentId, 
+            int groupId,
+            string mcId = null)
+        {
+            var file = Request.Form.Files.FirstOrDefault();
+            var result = await _bizMedia.UploadFileMcreditAsync(file, rootPath: _hosting.ContentRootPath, key: key, fileId: fileId, guildId: guidId, profileId: profileId, 
+                documentName:documentName, documentCode: documentCode,documentId:documentId, groupId:groupId, mcId:mcId);
+            return Json(result);
+        }
+
         [HttpPost("delete/{fileId}/{guidId}")]
         public async Task<IActionResult> Delete(int fileId, string guidId)
         {

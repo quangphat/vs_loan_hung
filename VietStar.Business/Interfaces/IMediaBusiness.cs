@@ -11,10 +11,22 @@ namespace VietStar.Business.Interfaces
 {
     public interface IMediaBusiness
     {
-        Task<List<FileProfile>> GetProfileFileTypeByTypeAsync(string profileType, int profileId = 0, string webRootPath = null);
+        Task<List<FileProfile>> GetProfileFileTypeByTypeAsync(string profileType, int profileId = 0, string webRootPath = null, string mcId = null);
         Task<bool> DeleteByIdAsync(int fileId, string guidId);
         Task<object> UploadFileAsync(IFormFile file, int key, int fileId, string guildId, int profileId, int type, string rootPath);
-        Task<FileModel> UploadAsync(Stream stream, string key, string name, string webRootPath);
+        Task<object> UploadFileMcreditAsync(IFormFile file,
+            string rootPath,
+            int key,
+            int fileId,
+            string guildId,
+            int profileId,
+            string documentName,
+            string documentCode,
+            int documentId,
+            int groupId,
+            string mcId = null);
+        Task<FileModel> UploadAsync(Stream stream, string key, string name, string webRootPath, string folder);
+        
     }
 
 }

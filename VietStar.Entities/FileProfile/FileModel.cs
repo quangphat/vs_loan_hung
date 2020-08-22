@@ -10,5 +10,6 @@ namespace VietStar.Entities.FileProfile
         public string Name { get; set; }
         public string FullPath { get; set; }
         public string Folder { get; set; }
+        public string Extension { get; set; }
     }
 }

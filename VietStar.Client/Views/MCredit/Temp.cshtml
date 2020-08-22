@@ -32,7 +32,17 @@
                         <input type="search" class="form-control" id="freeText" placeholder="">
                     </div>
                 </div>
-                <button type="button" id="btnSearch" class="btn btn-info pull-right">Tìm kiếm</button>
+                <div class="form-group text-right">
+                    <div class="col-xs-12 ">
+                        <a class="btn btn-primary" id="btnSearch">
+                            Tìm kiếm
+                        </a>
+                        <a class="btn btn-primary" href="/MCredit/Create">
+                            Tạo mới
+                        </a>
+                    </div>
+                </div>
+               
             </div>
             <!-- /.box-body -->
             <!-- /.box-footer -->
@@ -266,7 +276,7 @@
                 else {
                     swal({
                         title: errorMsg,
-                        text: data.code,
+                        text: data.error.code,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,
@@ -299,8 +309,8 @@ function getData(page, limit, sort = "desc", sortField = "updatedtime",status, i
     if (isNullOrWhiteSpace(status)) {
         status = getQueryStatus($("#ddlStatus"));
     }
-    
-    showBlock($('#panel_body'));
+
+    showBlock($('#panel_body'), loadingMsg);
 
     $.ajax( {
             url: '/MCredit/SearchTemps',

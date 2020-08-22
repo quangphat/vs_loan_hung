@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using VietStar.Entities.Mcredit;
 
-namespace McreditServiceCore.Models
+namespace VietStar.Entities.Mcredit
 {
     public class ProfileAddRequest : MCreditRequestModelBase
     {

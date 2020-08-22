@@ -60,5 +60,13 @@ namespace VietStar.Entities.Commons
             MCreditProduct = 4,
             MCreditProfileStatus = 5
         }
+
+        public enum MCreditProfileStatus
+        {
+            Draft = 0,
+            SentToMc = -1,
+            Submit = -3,
+            Addinional = -4
+        }
     }
 }

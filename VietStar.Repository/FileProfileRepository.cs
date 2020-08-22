@@ -8,6 +8,7 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using VietStar.Entities;
 using VietStar.Entities.FileProfile;
+using VietStar.Entities.Mcredit;
 using VietStar.Entities.ViewModels;
 using VietStar.Repository.Interfaces;
 
@@ -41,6 +42,18 @@ namespace VietStar.Repository
                 return result.ToList();
             }
         }
+
+        public async Task<bool> AddMCredit(MCProfileFileSqlModel model)
+        {
+            using (var con = GetConnection())
+            {
+                var p = GetParams(model);
+                await con.ExecuteAsync("sp_TAI_LIEU_HS_Them", p,
+                    commandType: CommandType.StoredProcedure);
+                return true;
+            }
+        }
+
         public async Task<BaseResponse<int>> Add(ProfileFileAddSql model)
         {
             try

@@ -1,6 +1,6 @@
 ﻿using HttpService;
 using McreditServiceCore.Interfaces;
-using McreditServiceCore.Models;
+using VietStar.Entities.Mcredit;
 using System;
 using System.Collections.Generic;
 using System.IO;

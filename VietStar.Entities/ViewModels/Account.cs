@@ -17,5 +17,13 @@ namespace VietStar.Entities.ViewModels
         public string Phone { get; set; }
         public bool IsActive { get; set; }
         public int OrgId { get; set; }
+
+        public bool isAdmin
+        {
+            get
+            {
+                return RoleCode == "admin" ? true : false;
+            }
+        }
     }
 }

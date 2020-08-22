@@ -306,3 +306,22 @@ function renderStatus(statusName, btnRefresh = null) {
     let statusString = `<span class='label label-sm ${colorClass} arrowed arrowed-righ'>${statusName}</span>`;
     return "<td class='text-left min-w-150'>" + statusString + btnRefresh + "</td>";
 }
+
+function setTextForPTag(controlId, value = '') {
+    if (isNullOrWhiteSpace(value))
+        return;
+    document.getElementById(controlId).innerHTML = value;
+}
+function setCheckboxValue(controlId, boolValue = false) {
+    return $('#' + controlId).prop('checked', boolValue);
+}
+function setCheckedValueOfRadioButtonGroup(name, boolValue) {
+    var radios = document.getElementsByName(name);
+
+    for (var j = 0; j < radios.length; j++) {
+        if (radios[j].value === boolValue) {
+            radios[j].checked = true;
+            break;
+        }
+    }
+}

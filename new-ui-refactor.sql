@@ -65,6 +65,7 @@ begin
 
 	select Permission from RolePermission 
 	where roleId in (select RoleId from Nhan_Vien where Id =@userId) 
+	and isnull(IsDeleted,0) = 0
 
 end
 
@@ -265,7 +266,7 @@ end
 -----------------
 
 GO
-create procedure [dbo].[sp_getPermissionByRoleCode]
+alter procedure [dbo].[sp_getPermissionByRoleCode]
 
 (@rolecode varchar(50))
 
@@ -274,7 +275,7 @@ as
 begin
 
 	select Permission from RolePermission where RoleCode  = @rolecode
-
+	and isnull(IsDeleted,0) = 0
 	--in (select RoleId from userrole where userId =@userId) 
 
 end
@@ -1340,3 +1341,6 @@ print @mainClause;
 end
 
 --------------
+
+alter table RolePermission
+add IsDeleted bit

@@ -5,6 +5,7 @@ using System.Text;
 using VietStar.Entities.CheckDup;
 using VietStar.Entities.Company;
 using VietStar.Entities.Courier;
+using VietStar.Entities.Mcredit;
 using VietStar.Entities.Profile;
 
 namespace VietStar.Entities.Infrastructures
@@ -65,6 +66,65 @@ namespace VietStar.Entities.Infrastructures
             CreateMap<CourierAddModel, CourierSql>();
             CreateMap<CourierUpdateModel, CourierSql>();
 
+            #region mcredit
+            CreateMap<ProfileGetByIdResponseObj, MCredit_TempProfile>()
+             .ForMember(a => a.CustomerName, b => b.MapFrom(c => c.Name))
+             .ForMember(a => a.MCId, b => b.MapFrom(c => c.Id))
+             .ForMember(a => a.Hometown, b => b.MapFrom(c => c.HomeTown))
+             .ForMember(a => a.BirthDay, b => b.MapFrom(c => c.Bod))
+             .ForMember(a => a.Phone, b => b.MapFrom(c => c.Phone))
+             .ForMember(a => a.IdNumber, b => b.MapFrom(c => c.IdNumber))
+             .ForMember(a => a.CCCDNumber, b => b.MapFrom(c => c.CccdNumber))
+             .ForMember(a => a.IssueDate, b => b.MapFrom(c => c.IdDate))
+             .ForMember(a => a.IsAddr, b => b.MapFrom(c => c.IsAddrSame))
+             .ForMember(a => a.ProvinceId, b => b.MapFrom(c => c.CityId))
+             .ForMember(a => a.Address, b => b.MapFrom(c => c.LocSignAddr))
+             .ForMember(a => a.Hometown, b => b.MapFrom(c => c.HomeTown));
+
+            CreateMap<MCredit_TempProfileAddModel, MCredit_TempProfile>();
+            CreateMap<MCredit_TempProfile, MCProfilePostModel>()
+                .ForMember(a => a.Name, b => b.MapFrom(c => c.CustomerName))
+                .ForMember(a => a.HomeTown, b => b.MapFrom(c => c.Hometown))
+                .ForMember(a => a.Bod, b => b.MapFrom(c => c.BirthDay.ToShortDateString()))
+                .ForMember(a => a.Phone, b => b.MapFrom(c => c.Phone))
+                .ForMember(a => a.IdNumber, b => b.MapFrom(c => c.IdNumber))
+                .ForMember(a => a.CCCDNumber, b => b.MapFrom(c => c.CCCDNumber))
+                .ForMember(a => a.IdNumberDate, b => b.MapFrom(c => c.IssueDate.ToShortDateString()))
+                .ForMember(a => a.IsAddr, b => b.MapFrom(c => c.IsAddr))
+                .ForMember(a => a.CityId, b => b.MapFrom(c => c.ProvinceId))
+                .ForMember(a => a.ProductCode, b => b.MapFrom(c => c.ProductCode))
+                .ForMember(a => a.LoanPeriodCode, b => b.MapFrom(c => c.LoanPeriodCode))
+                .ForMember(a => a.LoanMoney, b => b.MapFrom(c => c.LoanMoney.ToString()))
+                .ForMember(a => a.LocSignCode, b => b.MapFrom(c => c.LocSignCode))
+                .ForMember(a => a.IsInsurrance, b => b.MapFrom(c => c.IsInsurrance))
+                .ForMember(a => a.SaleId, b => b.MapFrom(c => c.SaleId))
+                .ForMember(a => a.Status, b => b.MapFrom(c => c.Status))
+                ;
+
+            CreateMap<MCredit_TempProfileAddModel, MCProfilePostModel>()
+              .ForMember(a => a.Name, b => b.MapFrom(c => c.CustomerName))
+              .ForMember(a => a.HomeTown, b => b.MapFrom(c => c.Hometown))
+              .ForMember(a => a.Bod, b => b.MapFrom(c => c.BirthDay.ToShortDateString()))
+              .ForMember(a => a.Phone, b => b.MapFrom(c => c.Phone))
+              .ForMember(a => a.IdNumber, b => b.MapFrom(c => c.IdNumber))
+              .ForMember(a => a.CCCDNumber, b => b.MapFrom(c => c.CCCDNumber))
+              .ForMember(a => a.IdNumberDate, b => b.MapFrom(c => c.IssueDate.ToShortDateString()))
+              .ForMember(a => a.IsAddr, b => b.MapFrom(c => c.IsAddr))
+              .ForMember(a => a.CityId, b => b.MapFrom(c => c.ProvinceId))
+              .ForMember(a => a.ProductCode, b => b.MapFrom(c => c.ProductCode))
+              .ForMember(a => a.LoanPeriodCode, b => b.MapFrom(c => c.LoanPeriodCode))
+              .ForMember(a => a.LoanMoney, b => b.MapFrom(c => c.LoanMoney.ToString()))
+              .ForMember(a => a.LocSignCode, b => b.MapFrom(c => c.LocSignCode))
+              .ForMember(a => a.IsInsurrance, b => b.MapFrom(c => c.IsInsurrance))
+              .ForMember(a => a.SaleId, b => b.MapFrom(c => c.SaleId))
+              .ForMember(a => a.Status, b => b.MapFrom(c => c.Status));
+            CreateMap<CheckSaleObj, UpdateSaleModel>()
+               .ForMember(a => a.SaleName, b => b.MapFrom(c => c.name))
+               .ForMember(a => a.SaleNumber, b => b.MapFrom(c => c.idNumber))
+               .ForMember(a => a.SaleId, b => b.MapFrom(c => c.id));
+
+
+            #endregion
         }
     }
 }

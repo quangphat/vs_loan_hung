@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace McreditServiceCore.Models
+namespace VietStar.Entities.Mcredit
 {
     public class NoteAddRequestModel : MCreditRequestModelBase
     {

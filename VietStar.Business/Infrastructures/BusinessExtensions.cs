@@ -9,13 +9,13 @@ namespace VietStar.Business.Infrastructures
 {
     public static class BusinessExtensions
     {
-        public static FileModel GetFileUploadUrl(string fileInputName, string webRootPath, string folder, bool isKeepFileName = false)
+        public static FileModel GetFileUploadUrl(string fileInputName, string webRootPath, string folder, int userId, bool isKeepFileName = false)
         {
             if (string.IsNullOrWhiteSpace(folder))
             {
                 folder = Utility.FileUtils.GenerateProfileFolder();
             }
-            string fileName = isKeepFileName ? fileInputName : DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + fileInputName.Trim().Replace(" ", "_");
+            string fileName = isKeepFileName ? fileInputName : $"{DateTime.Now.ToString("yyyyMMddHHmmssfff")}_{Guid.NewGuid().ToString()}_{userId}";
             string fullFolder = $"{webRootPath}/{Utility.FileUtils._profile_parent_folder}{folder}";
             if (!Directory.Exists(fullFolder))
                 Directory.CreateDirectory(fullFolder);
@@ -25,7 +25,8 @@ namespace VietStar.Business.Infrastructures
                 FileUrl = $"{Utility.FileUtils._profile_parent_folder}{folder}/{fileName}",
                 Name = fileName,
                 FullPath = $"{webRootPath}/{Utility.FileUtils._profile_parent_folder}{folder}/{fileName}",
-                Folder = fullFolder
+                Folder = fullFolder,
+                Extension = System.IO.Path.GetExtension(fileInputName)
             };
 
         }
