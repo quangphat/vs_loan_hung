@@ -29,6 +29,9 @@
 #ddlLimit_chosen{
     width:100px!important;
 }
+.pt-50px{
+    padding-top:50px!important;
+}
 .pt-0 {
     padding-top: 0px;
 }
