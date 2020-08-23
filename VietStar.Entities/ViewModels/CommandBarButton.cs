@@ -9,6 +9,14 @@ namespace VietStar.Entities.ViewModels
         public string Id { get; set; }
         public string Name { get; set; }
         public string ClassName { get; set; }
+        public string Href { get; set; }
+        public bool isButton
+        {
+            get
+            {
+                return string.IsNullOrWhiteSpace(Href);
+            }
+        }
     }
     public class CommandBar
     {

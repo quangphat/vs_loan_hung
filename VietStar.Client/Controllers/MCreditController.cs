@@ -62,7 +62,7 @@ namespace VietStar.Client.Controllers
         [HttpPost]
         public async Task<IActionResult> CheckCICApi([FromBody]CheckCICModel model)
         {
-           
+
             var result = await _bizMCredit.CheckCICAsync(model);
             return ToResponse(result);
         }
@@ -75,7 +75,7 @@ namespace VietStar.Client.Controllers
         [HttpPost]
         public async Task<IActionResult> CheckDupApi([FromBody]StringModel model)
         {
-            
+
             var result = await _bizMCredit.CheckDupAsync(model);
             return ToResponse(result);
         }
@@ -154,6 +154,37 @@ namespace VietStar.Client.Controllers
         {
             var result = await _bizMCredit.GetSimpleListByTypeAsync(type);
             return ToResponse(result);
+        }
+
+        public async Task<IActionResult> ReSendFileToEC(int mcProfileId)
+        {
+            var result = await _bizMCredit.ReSendFileToECAsync(mcProfileId);
+            return ToResponse(result);
+        }
+
+        public async Task<IActionResult> GetNotes(int mcProfileId)
+        {
+            var result = await _bizMCredit.GetNotesAsync(mcProfileId);
+            return ToResponse(result);
+        }
+        public async Task<IActionResult> AddNoteNotes(string mcId, [FromBody]StringModel model)
+        {
+            var result = await _bizMCredit.AddNoteToMcAsync(mcId, model);
+            return ToResponse(result);
+        }
+
+        [MyAuthorize(Permissions = "mcredit-submit")]
+        public async Task<IActionResult> SubmitToMCredit([FromBody]MCredit_TempProfileAddModel model)
+        {
+            var result = await _bizMCredit.SubmitToMCreditAsync(model);
+            return ToResponse(result);
+        }
+
+        [MyAuthorize(Permissions = "mcredit-profile")]
+        public async Task<ActionResult> MCreditProfile(int id)
+        {
+            var result = await _bizMCredit.GetMCreditProfileByIdAsync(id);
+            return View(result);
         }
     }
 }

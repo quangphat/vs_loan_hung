@@ -16,6 +16,7 @@ using VietStar.Utility;
 using VietStar.Entities.Note;
 using static VietStar.Entities.Commons.Enums;
 using Newtonsoft.Json;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace VietStar.Business
 {
@@ -25,16 +26,22 @@ namespace VietStar.Business
         protected readonly IMCreditService _svMcredit;
         protected readonly INoteRepository _rpNote;
         protected readonly ILogRepository _rpLog;
+        protected readonly IFileProfileRepository _rpFile;
+        protected readonly IServiceProvider _serviceProvider;
         public MCreditBusiness(IMCreditRepository mcreditRepository,
             IMCreditService mCreditService,
             INoteRepository noteRepository,
             ILogRepository logRepository,
+            IServiceProvider serviceProvider,
+            IFileProfileRepository fileProfileRepository,
             IMapper mapper, CurrentProcess process) : base(mapper, process)
         {
             _rpMCredit = mcreditRepository;
             _svMcredit = mCreditService;
             _rpNote = noteRepository;
             _rpLog = logRepository;
+            _serviceProvider = serviceProvider;
+            _rpFile = fileProfileRepository;
         }
 
 
@@ -223,7 +230,7 @@ namespace VietStar.Business
                 return ToResponse(false, Errors.invalid_data);
             var profile = _mapper.Map<MCredit_TempProfile>(model);
             profile.UpdatedBy = _process.User.Id;
-            
+
             profile.Status = _process.User.isAdmin ? model.Status : (int)MCreditProfileStatus.Submit;
             await _rpLog.InsertLog("mcredit-UpdateDraft", model.Dump());
             var result = await _rpMCredit.UpdateDraftProfile(profile);
@@ -244,7 +251,7 @@ namespace VietStar.Business
                 };
                 await _rpNote.AddNoteAsync(note);
             }
-            
+
             return true;
         }
 
@@ -317,11 +324,136 @@ namespace VietStar.Business
                 case "product":
                     result = await _rpMCredit.GetMCProductSimpleList();
                     break;
-                default:break;
+                default: break;
             }
             return result;
         }
 
+        public async Task<MCResponseModelBase> ReSendFileToECAsync(int mcProfileId)
+        {
+            var profile = await _rpMCredit.GetTemProfileByMcId(mcProfileId.ToString());
+            if (!profile.success)
+            {
+                return ToResponse<MCResponseModelBase>(null, profile.error);
+            }
+            if(profile.data == null)
+            {
+                return ToResponse<MCResponseModelBase>(null, "Không tìm thấy hồ sơ portal");
+            }
+            if (profile == null || string.IsNullOrWhiteSpace(profile.data.MCId))
+                return ToResponse<MCResponseModelBase>(null, "Hồ sơ không tồn tại hoặc chưa được gửi qua MCredit");
+            var bizMedia = _serviceProvider.GetService<IMediaBusiness>();
 
+            var zipFile = await bizMedia.ProcessFilesToSendToMC(profile.data.Id, Utility.FileUtils._profile_parent_folder);
+            var sendFileResult = await _svMcredit.SendFiles(zipFile, profile.data.MCId);
+            await _rpLog.InsertLog("ReSendFileToEC", sendFileResult != null ? sendFileResult.Dump() : "ReSendFileToEC = null");
+            return ToResponse(sendFileResult);
+        }
+
+        public async Task<List<NoteObj>> GetNotesAsync(int mcProfileId)
+        {
+            var note = await _svMcredit.GetNotes(mcProfileId.ToString());
+            if (!note.success)
+            {
+                return ToResponse<List<NoteObj>>(null, note.error);
+            }
+            return note.data.objs;
+        }
+
+        public async Task<bool> AddNoteToMcAsync(string mcId, StringModel model)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(model.Value) || string.IsNullOrWhiteSpace(mcId))
+                return ToResponse(false, Errors.invalid_data);
+            await _svMcredit.AddNote(new NoteAddRequestModel
+            {
+                Content = model.Value,
+                Id = mcId.Trim()
+            });
+
+            return true;
+        }
+
+        public async Task<MCResponseModelBase> SubmitToMCreditAsync(MCredit_TempProfileAddModel model)
+        {
+            try
+            {
+                if (model == null || model.Id <= 0)
+                    return ToResponse<MCResponseModelBase>(null, Errors.invalid_data);
+                if (model.SaleId <= 0)
+                    return ToResponse<MCResponseModelBase>(null, "Vui lòng chọn Sale");
+                var profile = await _rpMCredit.GetTemProfileById(model.Id);
+                if (!profile.success)
+                    return ToResponse<MCResponseModelBase>(null, profile.error);
+                if (profile.data == null)
+                    return ToResponse<MCResponseModelBase>(null, "Hồ sơ không tồn tại");
+
+                var profileSql = _mapper.Map<MCredit_TempProfile>(model);
+                profileSql.UpdatedBy = _process.User.Id;
+
+                var profileMC = _mapper.Map<MCProfilePostModel>(model);
+
+                var files = await _rpFile.GetFilesByProfileIdAsync(model.Id, (int)ProfileType.MCredit);
+
+                if (files == null || !files.Any())
+                    return ToResponse<MCResponseModelBase>(null, "Vui lòng upload hồ sơ");
+
+                var result = await _svMcredit.CreateProfile(profileMC);
+
+                if (!result.success)
+                    return ToResponse<MCResponseModelBase>(null, result.error);
+
+                profileSql.MCId = result.data.id;
+                profile.data.Status = (int)MCreditProfileStatus.SentToMc;
+
+                await _rpMCredit.UpdateDraftProfile(profileSql);
+
+                await _rpFile.UpdateFileMCProfileByIdAsync(model.Id, result.data.id);
+
+                var bizMedia = _serviceProvider.GetService<IMediaBusiness>();
+
+                var zipFile = await bizMedia.ProcessFilesToSendToMC(profile.data.Id, Utility.FileUtils._profile_parent_folder);
+
+                if (zipFile == "files_is_empty")
+                {
+                    return ToResponse<MCResponseModelBase>(null, "Vui lòng upload hồ sơ");
+                }
+                var sendFileResult = await _svMcredit.SendFiles(zipFile, result.data.id);
+                if (!sendFileResult.success)
+                {
+                    return ToResponse<MCResponseModelBase>(null, sendFileResult.error);
+                }
+                return sendFileResult.data;
+            }
+            catch (Exception e)
+            {
+                var error = e.InnerException != null ? e.InnerException.Dump() : e.Dump();
+                await _rpLog.InsertLog("SubmitToMCredit", error);
+                return ToResponse<MCResponseModelBase>(null, error);
+            }
+
+        }
+
+        public async Task<ProfileGetByIdResponseObj> GetMCreditProfileByIdAsync(int id)
+        {
+            var result = await _svMcredit.GetProfileById(id.ToString());
+            if (!result.success)
+            {
+                return null;
+            }
+            //result.data.obj.IsAddrSame = "1";
+            //result.data.obj.IsInsurrance = "1";
+            var profile = await _rpMCredit.GetTemProfileByMcId(result.data.obj.Id);
+            //if (profile == null)
+            //{
+            //    return ToResponse(false, "Không tìm thấy hồ sơ tương ứng trong portal");
+            //}
+            result.data.obj.LocalProfileId = profile.success && profile.data!=null ? profile.data.Id : 0;
+            
+            if (result.data.obj != null && result.data.obj.Reason != null)
+            {
+                result.data.obj.ReasonName = JsonConvert.SerializeObject(result.data.obj.Reason);
+            }
+            return result.data.obj;
+        }
     }
 }

@@ -16,6 +16,8 @@ namespace VietStar.Repository.Interfaces
         Task<BaseResponse<int>> Add(ProfileFileAddSql model);
         Task<BaseResponse<int>> AddMCredit(MCProfileFileSqlModel model);
         Task<List<FileProfileType>> GetByType(int profileType);
+
+        Task<bool> UpdateFileMCProfileByIdAsync(int profileId, string mcId);
     }
 }
 

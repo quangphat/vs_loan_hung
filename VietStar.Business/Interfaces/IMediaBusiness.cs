@@ -26,7 +26,10 @@ namespace VietStar.Business.Interfaces
             int groupId,
             string mcId = null);
         Task<FileModel> UploadAsync(Stream stream, string key, string name, string webRootPath, string folder);
-        
+
+        Task<string> ProcessFilesToSendToMC(int portalProfileId, string rootPath);
+
+
     }
 
 }

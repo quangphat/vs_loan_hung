@@ -25,5 +25,12 @@ namespace VietStar.Business.Interfaces
         Task<bool> UpdateDraftAsync(MCredit_TempProfileAddModel model);
         Task<MCredit_TempProfile> GetTempProfileByIdAsync(int id);
         Task<List<OptionSimple>> GetSimpleListByTypeAsync(string type);
+
+        Task<MCResponseModelBase> ReSendFileToECAsync(int mcProfileId);
+        Task<List<NoteObj>> GetNotesAsync(int mcProfileId);
+        Task<bool> AddNoteToMcAsync(string mcId, StringModel model);
+        Task<MCResponseModelBase> SubmitToMCreditAsync(MCredit_TempProfileAddModel model);
+
+        Task<ProfileGetByIdResponseObj> GetMCreditProfileByIdAsync(int id);
     }
 }

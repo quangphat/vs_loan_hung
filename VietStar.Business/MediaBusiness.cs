@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Ionic.Zip;
 using McreditServiceCore.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using VietStar.Business.Infrastructures;
 using VietStar.Business.Interfaces;
 using VietStar.Entities.FileProfile;
@@ -98,7 +100,7 @@ namespace VietStar.Business
         protected async Task<List<FileProfile>> GetFileUploadMcreditAsync(int profileId, string mcId = null, string webRootPath = null)
         {
             var profile = await _rpMCredit.GetTemProfileById(profileId);
-            if (!profile.success)
+            if (!profile.success || profile.data == null)
                 return ToResponse<List<FileProfile>>(null, "Hồ sơ không tồn tại");
 
             var data = await _svMcredit.GetFileUpload(new GetFileUploadRequest
@@ -166,11 +168,11 @@ namespace VietStar.Business
             return await _rpFile.DeleteByIdAsync(fileId, guidId);
         }
 
-        public async Task<FileModel> UploadAsync(Stream stream, string key, string name, string webRootPath,string folder)
+        public async Task<FileModel> UploadAsync(Stream stream, string key, string name, string webRootPath, string folder)
         {
             stream.Position = 0;
             string fileUrl = string.Empty;
-            var file = BusinessExtensions.GetFileUploadUrl(name, webRootPath, folder,_process.User.Id);
+            var file = BusinessExtensions.GetFileUploadUrl(name, webRootPath, folder, _process.User.Id);
             using (var fileStream = System.IO.File.Create(file.FullPath))
             {
                 await stream.CopyToAsync(fileStream);
@@ -226,15 +228,15 @@ namespace VietStar.Business
         }
 
         public async Task<object> UploadFileMcreditAsync(IFormFile file,
-            string rootPath, 
-            int key, 
-            int fileId, 
-            string guildId, 
-            int profileId, 
-            string documentName, 
-            string documentCode, 
-            int documentId, 
-            int groupId, 
+            string rootPath,
+            int key,
+            int fileId,
+            string guildId,
+            int profileId,
+            string documentName,
+            string documentCode,
+            int documentId,
+            int groupId,
             string mcId = null)
         {
             if (file == null || string.IsNullOrWhiteSpace(guildId))
@@ -323,6 +325,101 @@ namespace VietStar.Business
                                         },
                 append = false
             };
+        }
+
+        public async Task<string> ProcessFilesToSendToMC(int portalProfileId, string rootPath)
+        {
+            var profile = await _rpMCredit.GetTemProfileById(portalProfileId);
+            if (!profile.success)
+            {
+                return ToResponse(string.Empty, profile.error);
+            }
+            if (string.IsNullOrWhiteSpace(profile.data.MCId))
+            {
+                return ToResponse(string.Empty, "Không tìm thấy McId");
+            }
+            var files = await _rpFile.GetFilesByProfileIdAsync(portalProfileId, (int)ProfileType.MCredit);
+            if (files == null || !files.Any())
+            {
+                return "files_is_empty";
+            }
+            var jsonFile = new McJsonFile();
+            var filePaths = new List<string>();
+            foreach (var f in files)
+            {
+                var group = jsonFile.groups.FirstOrDefault(p => p.id == f.MC_GroupId);
+                if (group == null)
+                {
+                    group = new McJsonFileGroup { id = f.MC_GroupId, docs = new List<MCJsonFileGroupDoc>() };
+                    jsonFile.groups.Add(group);
+                }
+                var doc = group.docs.FirstOrDefault(p => p.code == f.DocumentCode);
+                if (doc == null)
+                {
+                    doc = new MCJsonFileGroupDoc { code = f.DocumentCode, files = new List<MCJsonFileGroupDocFile>() };
+                    group.docs.Add(doc);
+                }
+
+                doc.files.Add(new MCJsonFileGroupDocFile { name = f.FileName });
+
+                filePaths.Add(System.IO.Path.Combine(f.Folder, f.FileName));
+            }
+            var jsonFileInfo = CreateJsonFile(jsonFile, profile.data.MCId, rootPath);
+            filePaths.Add(jsonFileInfo.FullPath);
+            var result = await CreateZipFile(filePaths, jsonFileInfo.Folder, profile.data.MCId);
+            return result;
+        }
+
+        protected FileModel CreateJsonFile(McJsonFile model, string profileId, string rootPath)
+        {
+            if (model == null)
+                return null;
+            var fileInfo = GetFileUploadUrl("info", rootPath, Utility.FileUtils.GenerateProfileFolderForMc(), true);
+            if (fileInfo == null)
+                return null;
+            var content = JsonConvert.SerializeObject(model, Formatting.None);
+            fileInfo.FullPath = $"{fileInfo.FullPath}.txt";
+            Utility.FileUtils.WriteToFile(fileInfo.FullPath, content);
+            return fileInfo;
+        }
+        protected Task<string> CreateZipFile(IEnumerable<string> filePaths, string folder, string fileName)
+        {
+            if (filePaths == null || !filePaths.Any())
+                return Task.FromResult(string.Empty);
+            try
+            {
+                using (ZipFile zip = new ZipFile())
+                {
+                    zip.AddFiles(filePaths, "");
+                    zip.Save(System.IO.Path.Combine(folder, $"{fileName}.zip"));
+                }
+            }
+            catch (Exception e)
+            {
+                return Task.FromResult(string.Empty);
+            }
+
+            return Task.FromResult($"{folder}/{fileName}.zip");
+        }
+        public FileModel GetFileUploadUrl(string fileInputName, string webRootPath, string folder, bool isKeepFileName = false)
+        {
+            if (string.IsNullOrWhiteSpace(folder))
+            {
+                folder = Utility.FileUtils.GenerateProfileFolder();
+            }
+            string fileName = isKeepFileName ? fileInputName : DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + fileInputName.Trim().Replace(" ", "_");
+            string fullFolder = $"{webRootPath}/{folder}";
+            if (!Directory.Exists(fullFolder))
+                Directory.CreateDirectory(fullFolder);
+            string fullPath = System.IO.Path.Combine(webRootPath, $"{folder}/{fileName}");
+            return new FileModel
+            {
+                FileUrl = $"{Utility.FileUtils._profile_parent_folder}{folder}/{fileName}",
+                Name = fileName,
+                FullPath = $"{webRootPath}/{folder}/{fileName}",
+                Folder = fullFolder
+            };
+
         }
     }
 }

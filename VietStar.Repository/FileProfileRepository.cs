@@ -107,6 +107,20 @@ namespace VietStar.Repository
             }
            
         }
+
+        public async Task<bool> UpdateFileMCProfileByIdAsync(int profileId, string mcId)
+        {
+            using (var con = GetConnection())
+            {
+                await con.ExecuteAsync("sp_TaiLieuHoso_UpdateMCId", new
+                {
+                    profileId,
+                    mcId
+                },
+                    commandType: CommandType.StoredProcedure);
+                return true;
+            }
+        }
         //public async Task<bool> UpdateExistingFile(FileUploadModel model, int fileId)
         //{
         //    var p = GetParams(model, ignoreKey: new string[] { nameof(model.FileKey), nameof(model.ProfileId) });
