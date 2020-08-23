@@ -14,7 +14,7 @@ namespace VietStar.Repository.Interfaces
         Task<List<FileUploadModel>> GetFilesByProfileIdAsync(int profileType, int profileId);
         Task<bool> DeleteByIdAsync(int fileId, string guidId);
         Task<BaseResponse<int>> Add(ProfileFileAddSql model);
-        Task<bool> AddMCredit(MCProfileFileSqlModel model);
+        Task<BaseResponse<int>> AddMCredit(MCProfileFileSqlModel model);
         Task<List<FileProfileType>> GetByType(int profileType);
     }
 }

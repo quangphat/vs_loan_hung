@@ -136,11 +136,14 @@ namespace VietStar.Business
                     result.Add(new FileProfile
                     {
                         Id = doc.Id,
+                        FileKey = doc.Id,
                         RootPath = webRootPath,
                         IsRequire = group.Mandatory ? 1 : 0,
                         Name = doc.DocumentName,
                         DocumentId = doc.Id,
                         GroupId = group.GroupId,
+                        GroupName = group.GroupName,
+                        IsRequireGroup = group.Mandatory,
                         DocumentCode = doc.DocumentCode,
                         MapBpmVar = doc.MapBpmVar,
                         ProfileId = profileId,
@@ -175,7 +178,7 @@ namespace VietStar.Business
                 return file;
             }
         }
-        public async Task<object> UploadFileAsync(IFormFile file, int key, int fileId, string guildId, int profileId, int type, string rootPath)
+        public async Task<object> UploadFileAsync(IFormFile file, int key, int fileId, string guildId, int profileId, int profileType, string rootPath)
         {
             if (file == null || string.IsNullOrWhiteSpace(guildId))
                 return null;
@@ -205,8 +208,8 @@ namespace VietStar.Business
                         FilePath = result.FileUrl,
                         Folder = result.Folder,
                         ProfileId = profileId,
-                        ProfileTypeId = type,
-                        GuildId = guildId,
+                        ProfileTypeId = profileType,
+                        GuidId = guildId,
                         FileId = fileId
                     });
                     deleteURL = $"/media/delete/{id.data}/{guildId}";
@@ -253,7 +256,7 @@ namespace VietStar.Business
                 }
                 if (result != null)
                 {
-                    var id = await _rpFile.Add(new MCProfileFileSqlModel
+                    var response = await _rpFile.AddMCredit(new MCProfileFileSqlModel
                     {
                         FileKey = key,
                         FileName = result.Name,
@@ -261,7 +264,7 @@ namespace VietStar.Business
                         Folder = result.Folder,
                         ProfileId = profileId,
                         ProfileTypeId = (int)ProfileType.MCredit,
-                        GuildId = guildId,
+                        GuidId = guildId,
                         FileId = fileId,
                         DocumentCode = documentCode,
                         DocumentName = documentName,
@@ -271,7 +274,7 @@ namespace VietStar.Business
                         MC_MapBpmVar = string.Empty,
                         McId = mcId
                     });
-                    deleteURL = $"/media/delete/{id.data}/{guildId}";
+                    deleteURL = $"/media/delete/{response.data}/{guildId}";
                 }
 
                 return CreateConfig(result, key, deleteURL);

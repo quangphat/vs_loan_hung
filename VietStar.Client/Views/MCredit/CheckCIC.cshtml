@@ -1,4 +1,4 @@
-﻿
+﻿@model VietStar.Entities.Mcredit.CheckCICModel
 @{
     ViewData["Title"] = "Check CIC";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -17,29 +17,21 @@
     <div class="page-content" id="panel_body">
         <div class="row">
             <div class="col-xs-12">
-
-                <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CMND/CCCD <span class="required">(*)</span> </label>
-                        <div class="col-sm-4">
-                            <input type="text" id="txtValue" placeholder="" class="form-control">
+                <div class="col-xs-4">
+                    <form>
+                        <div class="form-group">
+                            <label for="inputEmail3">Số Cmnd/CCCD</label>
+                            <input type="text" class="form-control" id="IdNumber" asp-for="IdNumber" />
                         </div>
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên <span class="required">(*)</span> </label>
-                        <div class="col-sm-4">
-                            <input type="text" id="txtName" placeholder="" class="form-control">
+                        <div class="form-group">
+                            <label for="inputPassword3">Tên</label>
+                            <input type="text" class="form-control" name="" asp-for="Name" />
                         </div>
-                        <div class="">
-                            <a class="btn btn-sm btn-primary" id="btn_Save">
-                                Kiểm tra
-                            </a>
-                        </div>
-                    </div>
-                </form>
+                        <button type="button" id="btnSave" class="btn btn-info pull-right">Kiểm tra</button>
+                    </form>
+                </div>
             </div>
         </div>
-
-
-
     </div>
 </div>
 
@@ -58,11 +50,11 @@
             result = data.Result
         return `${relate} - ${result}`;
     }
-    $('#btn_Save').click(function (e) {
+    $('#btnSave').click(function (e) {
 
         var objectSend = JSON.stringify({
-            'IdNumber': $('#txtValue').val(),
-            'Name': $('#txtName').val(),
+            'IdNumber': $("#IdNumber").val(),
+            'Name': $("#Name").val(),
         });
         $.ajax({
             traditional: true,

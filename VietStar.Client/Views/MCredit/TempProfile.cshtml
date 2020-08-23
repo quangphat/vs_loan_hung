@@ -115,7 +115,7 @@
 
                         <label class="col-sm-2 control-label no-padding-right">Tỉnh/TP<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlProvince" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
+                            <select id="ddlProvince" class="chosen-select form-control select2" data-placeholder="Chọn tỉnh thành phố">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -165,7 +165,7 @@
 
                         <label class="col-sm-2 control-label no-padding-right">Sản phẩm vay<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlProduct" class="chosen-select form-control" data-placeholder="Chọn sản phẩm vay">
+                            <select id="ddlProduct" class="chosen-select form-control select2" data-placeholder="Chọn sản phẩm vay">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -205,7 +205,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Địa điểm ký văn kiện tín dụng *<span class="required">(*)</span></label>
                         <div class="col-sm-10">
-                            <select id="ddlLocSign" class="chosen-select form-control">
+                            <select id="ddlLocSign" class="chosen-select form-control select2">
                                 <option value="0">Chọn một địa điểm</option>
                             </select>
                         </div>
@@ -240,7 +240,7 @@
         GetLoanProducts("#ddlProduct",'@Model.ProductCode');
         GetProfileFiles();
         $("#ddlGender").val(('@Model' != null && '@Model.Gender' == 'True') ? "1" : "0")
-        getComments('@Model.Id', '@((int)VietStar.Entities.Commons.Enums.NoteType.MCreditTemp)',$("comments"))
+        getComments('@Model.Id', '@((int)VietStar.Entities.Commons.Enums.NoteType.MCreditTemp)',$("#comments"))
         setCheckboxValue('cbbIsInsurrance', '@Model' != null ? @Model.isInsur: false)
         setCheckedValueOfRadioButtonGroup('radio-isAddr', ('@Model' != null && '@Model.isAddr' == 'true') ? "1" : "0");
         displayCat();
@@ -249,10 +249,16 @@
         })
 
     });
-
+    function btnRemoveFile(id, guidId) {
+        
+        onDeleteFile(id, guidId)
+    }
+    $("#btnAddNote").click(function () {
+        AddNote('@Model.Id', '@((int)VietStar.Entities.Commons.Enums.NoteType.Common)', $('#comment').val(), $('#comment'), $('#comments'))
+    })
     function GetProfileFiles() {
         let url = '';
-        debugger
+        
         let mcId = '@Model.MCId'
         if (isNullOrWhiteSpace(mcId)) {
             url = `/media/GetFileType/mcredit/${'@Model.Id'}`
@@ -269,10 +275,21 @@
                     var i = 0;
                     var htmlContent = "";
                     let keys = [];
+                    let groupIds = [];
                     let groupName = '';
                     let _imgExts = ["jpg", "jpeg", "png", "pdf"];
+                    let groupRequire =''
                     $.each(data.data, function (index, item) {
-                        $("#uploadArea").append(`<div class='form-group'><div class='col-sm-12' id='tailieu-${item.Id}'><h5>${groupName}</h5></div></div > `);
+                        if (groupIds.indexOf(item.GroupId) >= 0) {
+                            groupName = ''
+                            groupRequire =''
+                        }
+                        else {
+                            groupName = item.GroupName;
+                            groupRequire = item.IsRequireGroup ? '<span class="required">(*)</span>' : ''
+                        }
+                        $("#uploadArea").append(`<div class='form-group'><div class='col-sm-12' id='tailieu-${item.Id}'><h5>${groupName} ${groupRequire}</h5></div></div > `);
+                        groupIds.push(item.GroupId)
                         if (!isNullOrNoItem(item.ProfileFiles)) {
                             let _initialPreview = [];
                             let _initialPreviewConfig = [];
@@ -293,13 +310,12 @@
                                 }
                                 
                                 let titleName = keys.indexOf(file.Key) < 0 ? item.Name : ''
-                                
                                 renderOneItemFile({
                                     key: item.FileKey,
                                     type: '@((int)VietStar.Entities.Commons.Enums.ProfileType.MCredit)',
                                     profileId: '@Model.Id',
                                     fileId: file.FileId,
-                                    isRequire: item.IsRequire,
+                                    isRequire: false,
                                     titleName: titleName,
                                     itemId: i,
                                     guidId: file.GuidId,
@@ -307,6 +323,7 @@
                                     documentCode: item.DocumentCode,
                                     documentId: item.DocumentId,
                                     groupId: item.GroupId,
+                                    isMCredit: true,
                                     mcId: '@Model.MCId'
                                 }, '', _initialPreview, _initialPreviewConfig, true, true);
 
@@ -325,7 +342,8 @@
                                     documentName: item.DocumentName,
                                     documentCode: item.DocumentCode,
                                     documentId: item.DocumentId,
-                                    groupId: item.GroupId,
+                               groupId: item.GroupId,
+                               isMCredit: true,
                                     mcId: '@Model.MCId'
                                 }, '', [], [], true, true);
                         }
@@ -336,14 +354,15 @@
                                     type: '@((int)VietStar.Entities.Commons.Enums.ProfileType.MCredit)',
                                     profileId: '@Model.Id',
                                     fileId:0,
-                                    isRequire: item.IsRequire,
+                                    isRequire: false,
                                     titleName: item.Name,
                                     itemId: i,
                                     guidId: '',
                                     documentName: item.DocumentName,
                                     documentCode: item.DocumentCode,
                                     documentId: item.DocumentId,
-                                    groupId: item.GroupId,
+                                groupId: item.GroupId,
+                                isMCredit:true,
                                     mcId: '@Model.MCId'
                                 }, '', [], [], true, true);
                         }

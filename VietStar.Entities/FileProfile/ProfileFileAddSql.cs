@@ -13,6 +13,6 @@ namespace VietStar.Entities.FileProfile
         public string FileName { get; set; }
         public int ProfileId { get; set; }
         public int ProfileTypeId { get; set; }
-        public string GuildId { get; set; }
+        public string GuidId { get; set; }
     }
 }

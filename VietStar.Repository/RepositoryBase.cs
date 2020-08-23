@@ -36,6 +36,7 @@ namespace VietStar.Repository
         protected DynamicParameters GetParams<T>(T model, string[] ignoreKey = null, string outputParam = "", DbType type = DbType.Int32)
         {
             var p = new DynamicParameters();
+            p.Add(outputParam, dbType: type, direction: ParameterDirection.Output);
             var properties = model.GetType().GetProperties();
             foreach (var prop in properties)
             {
@@ -47,7 +48,6 @@ namespace VietStar.Repository
                 {
                     if (key.ToLower() == outputParam.ToLower())
                     {
-                        p.Add(key, value, dbType: type, direction: ParameterDirection.Output);
                         continue;
                     }
                 }

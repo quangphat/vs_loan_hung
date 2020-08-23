@@ -22,6 +22,8 @@ namespace VietStar.Entities.FileProfile
         public string DocumentCode { get; set; }
         public int DocumentId { get; set; }
         public string MapBpmVar { get; set; }
+        public string GroupName { get; set; }
+        public bool IsRequireGroup { get; set; }
         public int GroupId { get; set; }
         public bool AllowUpload { get; set; }
     }

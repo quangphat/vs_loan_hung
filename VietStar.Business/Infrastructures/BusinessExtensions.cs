@@ -15,7 +15,8 @@ namespace VietStar.Business.Infrastructures
             {
                 folder = Utility.FileUtils.GenerateProfileFolder();
             }
-            string fileName = isKeepFileName ? fileInputName : $"{DateTime.Now.ToString("yyyyMMddHHmmssfff")}_{Guid.NewGuid().ToString()}_{userId}";
+            string extension = System.IO.Path.GetExtension(fileInputName);
+            string fileName = isKeepFileName ? fileInputName : $"{DateTime.Now.ToString("yyyyMMddHHmmssfff")}_{Guid.NewGuid().ToString()}_{userId}{extension}";
             string fullFolder = $"{webRootPath}/{Utility.FileUtils._profile_parent_folder}{folder}";
             if (!Directory.Exists(fullFolder))
                 Directory.CreateDirectory(fullFolder);
@@ -26,7 +27,7 @@ namespace VietStar.Business.Infrastructures
                 Name = fileName,
                 FullPath = $"{webRootPath}/{Utility.FileUtils._profile_parent_folder}{folder}/{fileName}",
                 Folder = fullFolder,
-                Extension = System.IO.Path.GetExtension(fileInputName)
+                Extension = extension
             };
 
         }

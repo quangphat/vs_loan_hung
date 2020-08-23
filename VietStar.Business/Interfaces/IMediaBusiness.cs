@@ -13,7 +13,7 @@ namespace VietStar.Business.Interfaces
     {
         Task<List<FileProfile>> GetProfileFileTypeByTypeAsync(string profileType, int profileId = 0, string webRootPath = null, string mcId = null);
         Task<bool> DeleteByIdAsync(int fileId, string guidId);
-        Task<object> UploadFileAsync(IFormFile file, int key, int fileId, string guildId, int profileId, int type, string rootPath);
+        Task<object> UploadFileAsync(IFormFile file, int key, int fileId, string guildId, int profileId, int profileType, string rootPath);
         Task<object> UploadFileMcreditAsync(IFormFile file,
             string rootPath,
             int key,

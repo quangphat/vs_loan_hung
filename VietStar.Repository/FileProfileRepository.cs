@@ -43,15 +43,23 @@ namespace VietStar.Repository
             }
         }
 
-        public async Task<bool> AddMCredit(MCProfileFileSqlModel model)
+        public async Task<BaseResponse<int>> AddMCredit(MCProfileFileSqlModel model)
         {
-            using (var con = GetConnection())
+            try
             {
-                var p = GetParams(model);
-                await con.ExecuteAsync("sp_TAI_LIEU_HS_Them", p,
-                    commandType: CommandType.StoredProcedure);
-                return true;
+                using (var con = GetConnection())
+                {
+                    var p = GetParams(model, outputParam: "Id");
+                    await con.ExecuteAsync("sp_TAI_LIEU_HS_Them_v2", p,
+                        commandType: CommandType.StoredProcedure);
+                    return BaseResponse<int>.Create(p.Get<int>("Id"));
+                }
             }
+            catch (Exception e)
+            {
+                return BaseResponse<int>.Create(0, GetException(e));
+            }
+
         }
 
         public async Task<BaseResponse<int>> Add(ProfileFileAddSql model)
@@ -67,7 +75,7 @@ namespace VietStar.Repository
                     p.Add("FileName", model.FileName);
                     p.Add("ProfileId", model.ProfileId);
                     p.Add("ProfileTypeId", model.ProfileTypeId);
-                    p.Add("GuidId", model.GuildId);
+                    p.Add("GuidId", model.GuidId);
                     p.Add("FileId", model.FileId);
                     await con.ExecuteAsync("sp_TAI_LIEU_HS_Them_v2", p,
                         commandType: CommandType.StoredProcedure);

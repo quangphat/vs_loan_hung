@@ -34,7 +34,6 @@ function getComments(profileId, profileType, commentDisplayControl) {
 function appendComment(control, content, commenttator, commenttime) {
     if (isNullOrWhiteSpace(content))
         return
-
     control.append(
         '<div class="timeline-event-content  active">' +
         '<div class="timeline-item">' +
@@ -46,7 +45,7 @@ function appendComment(control, content, commenttator, commenttime) {
     )
 }
 function AddNote(profileId, profileType, content, commentBox, commentDisplayControl) {
-    debugger
+    
     if (isNullOrWhiteSpace(profileType) || isNullOrWhiteSpace(content))
         return
 
@@ -597,7 +596,7 @@ function renderOneItemFile(model, className = '',
     allowUpload = true,
     continueUpload = true
 ) {
-
+    
     let header = ''
     if (!isNullOrUndefined(model.titleName)) {
         if (model.isRequire) {
@@ -620,10 +619,14 @@ function renderOneItemFile(model, className = '',
 
     let uploadUrl = '';
     if (model.isMCredit) {
-        uploadUrl = `/media/UploadMCredit/${model.key}/${model.profileId}/${model.fileId}/${guidId}/${model.documentCode}/${model.documentName}/${model.documentId}/${model.groupId}/${model.mcId}`;
+        
+        let params = `key=${model.key}&profileId=${model.profileId}&fileId=${model.fileId}&guidId=${guidId}&docCode=${model.documentCode}&docId=${model.documentId}&groupId=${model.groupId}&mcId=${model.mcId}`;
+        uploadUrl = `/media/UploadMCredit?${params}`
     }
     else {
-        uploadUrl = `/media/UploadFile/${model.key}/${model.type}/${model.profileId}/${model.fileId}/${guidId}`;
+        debugger
+        let params = `key=${model.key}&profileType=${model.profileType}&profileId=${model.profileId}&fileId=${model.fileId}&guidId=${guidId}`;
+        uploadUrl = `/media/UploadFile?${params}`
     }
     item.fileinput({
         uploadUrl: allowUpload === true ? uploadUrl : null,
@@ -680,7 +683,7 @@ function renderOneItemFile(model, className = '',
         //    onDelete(key, fileId, isFileExist);
         //}
     }).on('filebatchuploadsuccess', function (event, data) {
-        
+
         if (continueUpload === true && model.fileId<=0) {
             let newItem = { ...model }
             newItem.guidId = getNewGuid
@@ -691,9 +694,15 @@ function renderOneItemFile(model, className = '',
                 type: model.type,
                 profileId: model.profileId,
                 fileId: 0,
-                isRequire: model.isRequire,
+                isRequire: false,
                 titleName: '',
-                guidId: ''
+                guidId: '',
+                documentName: model.documentName,
+                documentCode: model.documentCode,
+                documentId: model.documentId,
+                groupId: model.groupId,
+                isMCredit: model.isMCredit,
+                mcId: model.mcId
             }, '', [], [], true, continueUpload);
         }
     });
@@ -750,7 +759,7 @@ function GetLocSigns(controlId, defaultValue = 0) {
     let data = getLocalStorage('mcredit-location')
     if (data != null) {
         $.each(data, function (index, item) {
-            $(controlId).append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+            $(controlId).append("<option value='" + item.Code + "'>" + item.Name + "</option>");
         });
         if (!isNullOrWhiteSpace(defaultValue) && defaultValue >0) {
             $(controlId).val(defaultValue);
@@ -783,14 +792,15 @@ function GetLocSigns(controlId, defaultValue = 0) {
 }
 
 function GetLoanPeriods(controlId, defaultValue = 0) {
-
+    
     if (controlId == null)
         return;
     $(controlId).empty();
     let data = getLocalStorage('mcredit-period')
-    if (data != null) {
+    if (!isNullOrNoItem(data)) {
+        $(controlId).append("<option value='0'>Vui lòng chọn kỳ hạn vay</option>");
         $.each(data, function (index, item) {
-            $(controlId).append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+            $(controlId).append("<option value='" + item.Code + "'>" + item.Name + "</option>");
         });
         if (!isNullOrWhiteSpace(defaultValue) && defaultValue > 0) {
             $(controlId).val(defaultValue);
@@ -799,10 +809,10 @@ function GetLoanPeriods(controlId, defaultValue = 0) {
     }
     $.ajax({
         type: "GET",
-        url: '/MCredit/GetMCSimpleList?type=period',
+        url: '/MCredit/GetMCSimpleList?type=loanperiod',
         data: {},
         success: function (data) {
-            $(controlId).append("<option value='0'></option>");
+            
             if (data.data != null && data.success == true) {
                 setLocalStorage('mcredit-period', data.data)
                 $.each(data.data, function (index, item) {
@@ -823,14 +833,15 @@ function GetLoanPeriods(controlId, defaultValue = 0) {
 }
 
 function GetLoanCities(controlId, defaultValue = 0) {
-
+    
     if (controlId == null)
         return;
     $(controlId).empty();
     let data = getLocalStorage('mcredit-city')
-    if (data != null) {
+    if (!isNullOrNoItem(data)) {
         $.each(data, function (index, item) {
-            $(controlId).append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+            console.log(item.Id)
+            $(controlId).append("<option value='" + item.Code + "'>" + item.Name + "</option>");
         });
         if (!isNullOrWhiteSpace(defaultValue) && defaultValue > 0) {
             $(controlId).val(defaultValue);
@@ -870,7 +881,7 @@ function GetLoanProducts(controlId, defaultValue = 0) {
     let data = getLocalStorage('mcredit-product')
     if (data != null) {
         $.each(data, function (index, item) {
-            $(controlId).append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+            $(controlId).append("<option value='" + item.Code + "'>" + item.Name + "</option>");
         });
         if (!isNullOrWhiteSpace(defaultValue) && defaultValue > 0) {
             $(controlId).val(defaultValue);

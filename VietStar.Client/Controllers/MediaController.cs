@@ -30,28 +30,27 @@ namespace VietStar.Client.Controllers
             return ToResponse(result);
         }
 
-        [HttpPost("UploadFile/{key}/{fileType}/{profileId}/{fileId}/{guidId}")]
-        public async Task<IActionResult> Upload(int key, int fileType, int profileId,int fileId, string guidId)
+        [HttpPost("UploadFile")]
+        public async Task<IActionResult> Upload(int key, int profileType, int profileId,int fileId, string guidId)
         {
             var file = Request.Form.Files.FirstOrDefault();
-            var result = await _bizMedia.UploadFileAsync(file, key:key,fileId:fileId ,guildId: guidId,profileId: profileId,type: fileType,rootPath: _hosting.ContentRootPath);
+            var result = await _bizMedia.UploadFileAsync(file, key:key,fileId:fileId ,guildId: guidId,profileId: profileId,profileType: profileType,rootPath: _hosting.ContentRootPath);
             return Json(result);
         }
 
-        [HttpPost("UploadMCredit/{key}/{profileId}/{fileId}/{guidId}/{documentCode}/{documentName}/{documentId}/{groupId}/{mcId}")]
+        [HttpPost("UploadMCredit")]
         public async Task<IActionResult> UploadMCredit(int key, 
             int profileId,
             int fileId,
             string guidId,
-            string documentCode,
-            string documentName,
-            int documentId, 
+            string docCode,
+            int docId, 
             int groupId,
             string mcId = null)
         {
             var file = Request.Form.Files.FirstOrDefault();
             var result = await _bizMedia.UploadFileMcreditAsync(file, rootPath: _hosting.ContentRootPath, key: key, fileId: fileId, guildId: guidId, profileId: profileId, 
-                documentName:documentName, documentCode: documentCode,documentId:documentId, groupId:groupId, mcId:mcId);
+                documentName:string.Empty, documentCode: docCode,documentId:docId, groupId:groupId, mcId:mcId);
             return Json(result);
         }
 
