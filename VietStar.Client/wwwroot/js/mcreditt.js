@@ -45,7 +45,7 @@ function checkDup(controlId, value) {
             else {
                 swal({
                     title: "Đã có lỗi xảy ra",
-                    text: data.code,
+                    text: data.error.code,
                     type: "error",
                     timer: 4000,
                     showConfirmButton: true,
@@ -66,8 +66,8 @@ function checkCIC(controlId, value, name) {
     if (isNullOrWhiteSpace(value))
         return;
     var objectSend = JSON.stringify({
-        'Value': value,
-        'Value2': name
+        'IdNumber': value,
+        'Name': name
     });
     $.ajax({
         traditional: true,
@@ -90,7 +90,7 @@ function checkCIC(controlId, value, name) {
             else {
                 swal({
                     title: "Đã có lỗi xảy ra",
-                    text: data.code,
+                    text: data.error.code,
                     type: "error",
                     timer: 4000,
                     showConfirmButton: true,
@@ -119,7 +119,7 @@ function checkCAT(controlId, value) {
         contentType: "application/json; charset=utf-8",
         data: objectSend,
         success: function (data) {
-            debugger
+            
             if (data.success == true) {
                 swal({
                     title: "Thành công",
@@ -134,7 +134,7 @@ function checkCAT(controlId, value) {
             else {
                 swal({
                     title: "Đã có lỗi xảy ra",
-                    text: data.code,
+                    text: data.error.code,
                     type: "error",
                     timer: 4000,
                     showConfirmButton: true,
@@ -152,8 +152,8 @@ function checkCAT(controlId, value) {
 function checkSale(controlId, value, controlToSetId = null, profileId = 0) {
 
     var objectSend = JSON.stringify({
-        'Value': value,
-        'Value2': profileId
+        'SaleCode': value,
+        'ProfileId': profileId
     });
     $.ajax({
         traditional: true,
@@ -163,40 +163,29 @@ function checkSale(controlId, value, controlToSetId = null, profileId = 0) {
         data: objectSend,
         success: function (data) {
             if (data.success == true) {
-                if (data.data.status == "success") {
-                    swal({
-                        title: "Thành công",
-                        text: data.code,
-                        type: "success",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    }, function () {
-                        //document.getElementById(con)
-                        $(controlToSetId).val(data.data.obj.id);
-                        $("#nameSale").text("Tên sale: " + data.data.obj.name);
-                    });
-                }
-                else {
-                    swal({
-                        title: "Không thành công",
-                        text: data.error.code,
-                        type: "error",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    }, function () {
-
-                    });
-                }
-                document.getElementById(controlId).innerHTML = data.code;
+                swal({
+                    title: "Thành công",
+                    text: data.code,
+                    type: "success",
+                    timer: 4000,
+                    showConfirmButton: true,
+                }, function () {
+                    //document.getElementById(con)
+                    document.getElementById(controlId).innerHTML ='Thành công'
+                    $(controlToSetId).val(data.data.obj.id);
+                    $("#nameSale").text("Tên sale: " + data.data.obj.name);
+                });
+                
             }
             else {
                 swal({
                     title: "Đã có lỗi xảy ra",
-                    text: data.code,
+                    text: data.error.code,
                     type: "error",
                     timer: 4000,
                     showConfirmButton: true,
                 });
+                document.getElementById(controlId).innerHTML = data.error.code;
             }
         },
         error: function (jqXHR, exception) {

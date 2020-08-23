@@ -39,58 +39,8 @@
 
 
     $("#txtValue").ForceNumericOnlyv2();
-    function getMessage(data) {
-        let relate = ''
-        let result =''
-        if (data == null || isNullOrUndefined(data))
-            return ''
-        if (!isNullOrWhiteSpace(data.Relate))
-            relate = data.Relate;
-        if (!isNullOrWhiteSpace(data.Result))
-            result = data.Result
-        return `${relate} - ${result}`;
-    }
     $('#btnSave').click(function (e) {
-
-        var objectSend = JSON.stringify({
-            'IdNumber': $("#IdNumber").val(),
-            'Name': $("#Name").val(),
-        });
-        $.ajax({
-            traditional: true,
-            url: '@Url.Action("CheckCICApi", "MCredit")',
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            data: objectSend,
-            success: function (data) {
-                if (data.success == true) {
-                    swal({
-                        title: successMsg,
-                        text: `${getMessage(data.data)}`,
-                        type: "success",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    }, function () {
-
-                    });
-                }
-                else {
-                    swal({
-                        title: errorMsg,
-                        text: data.error.code,
-                        type: "error",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    });
-                }
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            },
-            complete: function () {
-                $('#panel_body').unblock();
-            },
-        });
+        checkCIC('', $("#IdNumber").val(), $("#Name").val())
     });
 
 </script>

@@ -45,13 +45,13 @@ namespace VietStar.Business
         }
 
 
-        public async Task<string> CheckSaleAsync(CheckSaleModel model)
+        public async Task<CheckSaleResponseModel> CheckSaleAsync(CheckSaleModel model)
         {
             if (model == null || string.IsNullOrWhiteSpace(model.SaleCode))
-                return ToResponse<string>(null, "Dữ liệu không hợp lệ");
+                return ToResponse<CheckSaleResponseModel>(null,Errors.invalid_data);
             var result = await _svMcredit.CheckSale(model.SaleCode);
             if (!result.success)
-                return null;
+                return ToResponse<CheckSaleResponseModel>(null, result.error);
             if (model.ProfileId > 0)
             {
 
@@ -60,9 +60,10 @@ namespace VietStar.Business
                     var sale = _mapper.Map<UpdateSaleModel>(result.data.obj);
                     await _rpMCredit.UpdateSaleAsyncAsync(sale, model.ProfileId);
                 }
+                return result.data;
             }
 
-            return result.data.msg.ToString();
+            return ToResponse<CheckSaleResponseModel>(null, result.data.msg.ToString());
         }
 
         public async Task<CheckCatResponseModel> CheckCatAsync(StringModel model)

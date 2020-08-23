@@ -85,7 +85,7 @@ namespace VietStar.Client.Controllers
             return View();
         }
 
-        public async Task<IActionResult> CheckStatusApi(StringModel model)
+        public async Task<IActionResult> CheckStatusApi([FromBody]StringModel model)
         {
             var result = await _bizMCredit.CheckStatusAsync(model);
             return ToResponse(result);
