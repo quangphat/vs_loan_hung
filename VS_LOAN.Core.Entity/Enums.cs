@@ -33,8 +33,9 @@ namespace VS_LOAN.Core.Entity
         Hoso = 1,
         HosoCourrier = 2,
         Company = 3,
-        MCreditTemp = 4
-
+        MCreditTemp = 4,
+        RevokeDebt = 5,
+        CheckDup = 6
     }
     public enum CatType
     {
@@ -116,5 +117,18 @@ namespace VS_LOAN.Core.Entity
         SentToMc = -1,
         Submit = -3,
         Addinional = -4
+    }
+
+    public enum CheckDupPartnerStatus
+    {
+        NotCheck = 0,
+        MatchCondition = 1,
+        NotMatch = 2
+    }
+    public enum CheckDupCICStatus
+    {
+        NotDebt = 0,
+        Warning = 1,
+        Debt = 2
     }
 }

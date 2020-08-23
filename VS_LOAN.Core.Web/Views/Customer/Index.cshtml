@@ -10,7 +10,7 @@
     <div class="breadcrumbs" id="breadcrumbs">
         <ul class="breadcrumb">
             <li>
-                <a href="#" class="active">Danh sách khách hàng</a>
+                <a href="#" class="active">Danh sách checkdup</a>
             </li>
         </ul>
     </div>
@@ -77,11 +77,10 @@
                                     <th class="w-105">CMND</th>
                                     <th class="w-105">Ngày check</th>
                                     <th style="width: 150px">CIC</th>
-                                    <th class="m-w-150">Chưa check</th>
-                                    <th class="m-w-150">Đủ điều kiện</th>
-                                    <th class="m-w-150">Không đủ điều kiện</th>
+                                    <th class="m-w-150">Đối tác</th>
+                                    <th class="m-w-150">Trạng thái</th>
+                                    <th class="m-w-150">Tỉnh</th>
                                     <th class="m-w-300">Ghi chú</th>
-                                    <th class="w-84">Thao tác</th>
                                     <th class="w-90">Mã nhân viên</th>
                                     <th class="m-w-150">Nhân viên xử lý</th>
                                 </tr>
@@ -91,7 +90,7 @@
                     </div>
                 </div>
                 <div class="clearfix" />
-                <div class="one-row no-gutters justify-content-between paginate">
+                <div class="one-row no-gutters justify-content-between paginate mb-50px">
                     <div class="col-auto">
                         <div class="dataTables_info" id="dtSource_info" role="status" aria-live="polite"></div>
                     </div>
@@ -131,7 +130,7 @@
 
             queries = new URLSearchParams(window.location.search)
             bindQueries()
-           
+
             page = queries.get("page");
             if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
                 page = 1;
@@ -144,7 +143,7 @@
                 limit = parseInt(limit)
             getData(page, limit, memberId, true)
         });
-        
+
         function bindQueries() {
 
             $('#txtFreeText').val(queries.get("freetext"))
@@ -166,10 +165,10 @@
 
         bindQueries()
     });
-    var strLoading = '@Global.Message_Loading';
+    var strLoading = 'Vui lòng chờ trong giây lát';
     $('#btn_search').click(function (e) {
         showBlock($('#panel_body'), strLoading);
-        getData(page, limit);
+        getData(1, limit);
     });
     function getTotalPage(totalRecord, limit) {
         return totalRecord > limit ? Math.ceil(totalRecord / limit) : 1
@@ -277,7 +276,7 @@
                 thaoTac += "</a></div>";
         return "<td class='text-center'>" + thaoTac + "</td>"
     }
-     function renderStatus(statusId) {
+     @*function renderStatus(statusId) {
         var statusString = "";
          if (statusId == '@((int)VS_LOAN.Core.Entity.CICStatus.NotDebt)')
             statusString = "<span class='label label-sm label-light arrowed arrowed-righ'>Không nợ xấu</span>";
@@ -286,7 +285,7 @@
          else if (statusId == '@((int)VS_LOAN.Core.Entity.CICStatus.Debt)')
             statusString = "<span class='label label-sm label-danger arrowed arrowed-righ'>Nợ xấu</span>";
         return "<td class='text-left'>" + statusString + "</td>";;
-    }
+    }*@
     function onSelectLimit() {
         limit = $("#ddlLimit").val()
         getData(page,limit)
@@ -317,20 +316,29 @@
         var stt = (page - 1) * limit + index + 1;
         return "<tr role='row' class = 'odd'>"
             + renderTextCenter(stt)
-            + renderTextLeft(item.FullName, '', "m-w-150")
+            + renderTextLink(item.FullName, `/Customer/Edit/${item.Id}`, '', "m-w-150")
             + renderTextLeft(item.Cmnd, '', "w-105")
             + renderTextLeft(item.CheckDate, 'datetime')
-            + renderStatus(item.CICStatus)
-            + renderTextLeft(item.NotMatch, '', "m-w-150")
-            + renderMatchCondition(item)
-            + renderMatchCondition(item, false)
+            + renderStatusDisplay(item.CICStatusName, null)
+            + renderTextLeft(item.PartnerName, '', "m-w-150")
+            + renderPartnerStatus(item.IsMatch, item.PartnerStatus, item.MatchCondition, item.NotMatchCondition)
+            + renderTextLeft(item.ProvinceName, '', "m-w-150")
             + renderTextLeft(item.LastNote, '', 'tb-row-breakword')
-            + renderAction(item.Id)
             + renderTextLeft(item.MaVBF, '', "w-90")
-             + renderTextLeft(item.NameVBF, '', "m-w-150 tb-row-breakword")
-           
-
+            + renderTextLeft(item.NameVBF, '', "m-w-150 tb-row-breakword")
             + "</tr>";
+    }
+    function renderPartnerStatus(isMatch, partnerStatus, matchCondition, notmatch) {
+        debugger
+        if (!isNullOrWhiteSpace(matchCondition))
+            return renderStatusDisplay('Đủ điều kiện')
+        if (isMatch)
+            return renderStatusDisplay('Đủ điều kiện')
+        if (!isNullOrWhiteSpace(notmatch))
+            return renderStatusDisplay('Không đủ điều kiện')
+        if (partnerStatus == 0)
+            return renderStatusDisplay('Chưa check')
+        return renderStatusDisplay('Không đủ điều kiện')
     }
     function renderTableBody(datas) {
         var table = $("#dtSource")
@@ -348,7 +356,7 @@
         input.addEventListener("keydown", function (event) {
             if (event.keyCode === 13) {
                 event.preventDefault();
-                
+
             }
         });
         input.addEventListener("keyup", function (event) {
@@ -357,7 +365,7 @@
                 $("#btn_search").click();
             }
         });
-        
+
             page = queries.get("page");
             if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
                 page = 1;

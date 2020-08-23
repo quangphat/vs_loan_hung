@@ -1,4 +1,4 @@
-﻿@using VS_LOAN.Core.Web.Resources;
+﻿@model VS_LOAN.Core.Entity.CheckDup.CheckDupAddSql
 @{
     ViewBag.Title = "Cập nhật khách hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -20,7 +20,7 @@
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Họ và tên <span class="required">(*)</span> </label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtHoTen" placeholder="Nhập họ tên" class="form-control">
+                            <input type="text" id="FullName" placeholder="Nhập họ tên" value="@Model.FullName" class="form-control">
                         </div>
 
                     </div>
@@ -28,7 +28,7 @@
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày Check<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <div class="input-group">
-                                <input class="form-control date-picker" id="txtCheckDate" />
+                                <input class="form-control date-picker" type="date" id="CheckDate" />
                                 <span class="input-group-addon">
                                     <i class="fa fa-calendar bigger-110"></i>
                                 </span>
@@ -38,33 +38,21 @@
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CMND<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtCMND" placeholder="Nhập số CMND" class="form-control" />
+                            <input type="text" id="Cmnd" placeholder="Nhập số CMND" value="@Model.Cmnd" class="form-control" />
                         </div>
 
                     </div>
-                    <div class="form-group">
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày sinh</label>
-                        <div class="col-sm-4">
-                            <div class="input-group">
-                                <input class="form-control date-picker" id="txtBirthDay" />
-                                <span class="input-group-addon">
-                                    <i class="fa fa-calendar bigger-110"></i>
-                                </span>
-                            </div>
-
-                        </div>
-
-                    </div>
+                    
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại</label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtPhone" placeholder="Điện thoại khách hàng " class="form-control">
+                            <input type="text" id="Phone" placeholder="Điện thoại khách hàng " value="@Model.Phone" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tính thành<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlProvince" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
+                            <select id="ProvinceId" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -72,19 +60,19 @@
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Địa chỉ<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <textarea type="text" id="txtAddress" placeholder="Nhập địa chỉ" class="form-control"></textarea>
+                            <textarea type="text" id="Address" placeholder="Nhập địa chỉ" class="form-control">@Model.Address</textarea>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Thu nhập hàng tháng</label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtSalary" placeholder="Thu nhập hàng tháng" class="form-control">
+                            <input type="text" id="Salary" value="@VS_LOAN.Core.Utility.Utility.FormatCurrentCy(Model.Salary)" placeholder="Thu nhập hàng tháng" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">CIC<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlCIC" class="chosen-select form-control" data-placeholder="">
+                            <select id="CICStatus" class="chosen-select form-control" data-placeholder="">
                                 <option value="0">Không nợ xấu</option>
                                 <option value="1">Nợ chú ý</option>
                                 <option value="2">Nợ xấu</option>
@@ -95,7 +83,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Tên ngân hàng<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlDoiTac" class="chosen-select form-control" data-placeholder="Chọn đối tác">
+                            <select id="partnerId" class="chosen-select form-control" data-placeholder="Chọn đối tác">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -155,94 +143,51 @@
     </div>
 </div>
 <script>
-    var customer = @Html.Raw(Json.Encode(ViewBag.Customer));
-    var model = {
-        Customer: customer,
-        Partners:[]
-    }
-    var partners = null
     $(document).ready(function () {
         getPartner()
-        GetNotes(customer.Id)
-        let gender = customer.Gender == false ? "0" :"1"
-        $("#txtHoTen").val(customer.FullName)
-        setDateTimeInput('#txtCheckDate', 'dd/mm/yyyy')
-        
-        setValueForDateInput("#txtCheckDate", customer.CheckDate)
-        //setDateTimeInput('#txtBirthDay')
-        //setValueForDateInput("#txtBirthDay", customer.BirthDay)
-        $('#txtBirthDay').datepicker({
-            dateFormat: 'dd-mm-yy'
+        GetNotes('@Model.Id')
+        setDateTimeInput('#CheckDate', 'dd/mm/yyyy')
 
-        }).next().on(ace.click_event, function () {
-            $(this).prev().focus();
-        });
-        console.log(SetFormatDateTimeDMY(customer.BirthDay))
-        $('#txtBirthDay').val(SetFormatDateTimeDMY(customer.BirthDay));
-        //$("#txtCheckDate").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker("setDate", new Date().getDay + 0);
-        //let checkDate = isNullOrUndefined(customer.CheckDate) ? new Date().getDay + 0 : customer.CheckDate
-        //$('#txtToDate').val(SetFormatDateTimeDMY(checkDate));
-        $("#txtCMND").val(customer.Cmnd)
+        $("#CheckDate").val(FormatDateTimeDMYv2('@Model.CheckDate.ToString("yyyy/MM/dd")', 'YYYY-MM-DD'))
+        if ('@Model.PartnerStatus' == '0') {
+            $("#rdChecked").prop("checked", true);
+            $("#rdUnChecked").prop("checked", false);
+        }
+        else if('@Model.PartnerStatus' == '1'){
+           $("#rdChecked").prop("checked", true);
+            $("#rdUnChecked").prop("checked", false);
+        }
+        else if ('@Model.PartnerStatus' == '2') {
+            $("#rdChecked").prop("checked", false);
+            $("#rdUnChecked").prop("checked", true);
+        }
+        debugger
+        if ('@Model.IsMatch' =='True') {
+            $("#rdChecked").prop("checked", true);
+            $("#rdUnChecked").prop("checked", false);
+        }
+        else {
+            $("#rdChecked").prop("checked", false);
+            $("#rdUnChecked").prop("checked", true);
+        }
 
-        $("#ddlCIC").val(customer.CICStatus)
-        //$('#txtBirthDay').datepicker({
-        //    dateFormat: 'dd/mm/yy'
-        //}).next().on(ace.click_event, function () {
-        //    $(this).prev().focus();
-        //});
-        //$("#txtBirthDay").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker("setDate", new Date().getDay + 0);
-        $('#ddlProvince').chosen({ width: '100%', allow_single_deselect: true });
-        getPartner();
-        getProvinces("#ddlProvince", customer.ProvinceId);
-        //$('#txtBirthDay').val(SetFormatDateTimeDMY(customer.BirthDay));
-        $('#txtSalary').val(customer.Salary);
-        $('#txtPhone').val(customer.Phone);
-        $('#txtAddress').val(customer.Address);
-        //getCustomer();
+        $("#CICStatus").val('@Model.CICStatus')
+        $('#ProvinceId').chosen({ width: '100%', allow_single_deselect: true });
+        getProvinces("#ProvinceId", '@Model.ProvinceId');
     })
-    function getCustomer() {
-        $.ajax({
-            type: "GET",
-            url: '/Customer/GetCustomerById?id=' + customer.Id,
-            success: function (data) {
-                customer = data.data
-                $('#ddlDoiTac').empty();
-                if (data != null) {
-                   
 
-                }
-
-            },
-            complete: function () {
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    }
     function getPartner() {
          $.ajax({
              type: "GET",
-             url: '/Customer/GetPartner?customerId=' + customer.Id,
+             url: '/Customer/GetPartner?customerId=0',
              success: function (data) {
                  partners = data.data
-                 $('#ddlDoiTac').empty();
+                 $('#partnerId').empty();
                  if (data != null) {
-                     var checked = data.data.find(p=>p.IsSelect==true);
                      $.each(data.data, function (index, item) {
-                        $('#ddlDoiTac').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                        $('#partnerId').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                      });
-                     if (customer.Status == 0) {
-                         $("#rdChecked").prop("checked", true);
-                         $("#rdUnChecked").prop("checked", false);
-                     }
-                     else {
-                         debugger;
-                         $("#ddlDoiTac").val(customer.PartnerId);
-                         $("#rdChecked").prop("checked", customer.IsMatch);
-                         $("#rdUnChecked").prop("checked", !customer.IsMatch);
-                     }
-
+                     $('#partnerId').val('@Model.PartnerId')
                 }
 
             },
@@ -252,14 +197,6 @@
                 showError(jqXHR, exception);
             }
         });
-    }
-    function onPartnerCheck(id) {
-        var checked = $("#partner_" + id).is(':checked');
-        var index = partners.findIndex(p => p.Id == id)
-        if (index < 0)
-            return;
-        partners[index].IsSelect = checked
-
     }
     jQuery.fn.ForceNumericOnly = function () {
     return this.each(function () {
@@ -280,15 +217,14 @@
         });
     });
 };
-    $("#txtDienThoai").ForceNumericOnly();
-    $("#txtCMND").ForceNumericOnly();
-    $("#txtPhone").ForceNumericOnly();
-    $("#txtSalary").ForceNumericOnly();
+    $("#Phone").ForceNumericOnly();
+    $("#Cmnd").ForceNumericOnly();
+    $("#Salary").ForceNumericOnly();
     $('#btnSave').click(function (e) {
 
-        if (isNullOrWhiteSpace($('#txtCheckDate').val())) {
+        if (isNullOrWhiteSpace($('#CheckDate').val())) {
             swal({
-                title: "@Html.Raw(Global.Message_Title)",
+                title: "Không thành công",
                 text: "Ngày check không hợp lệ",
                 type: "error",
                 timer: 4000,
@@ -297,9 +233,9 @@
             return;
         }
 
-        if ($('#txtCMND').val().length != 9 && $('#txtCMND').val().length != 12) {
+        if ($('#Cmnd').val().length != 9 && $('#Cmnd').val().length != 12) {
             swal({
-                title: "@Html.Raw(Global.Message_Title)",
+                title: "Không thành công",
                 text: "Số CMND chỉ 9 hoặc 12 số!",
                 type: "error",
                 timer: 4000,
@@ -307,27 +243,30 @@
             });
             return;
             }
-            customer.FullName = $('#txtHoTen').val()
-            customer.CheckDate = $('#txtCheckDate').val()
-            customer.Note = $('#txtGhiChu').val()
-            customer.Cmnd = $('#txtCMND').val()
-            customer.Gender = 0
-            customer.CICStatus = $("#ddlCIC").val()
-            customer.ProvinceId = $("#ddlProvince").val(),
-            customer.Address = $('#txtAddress').val(),
-            customer.BirthDay = $('#txtBirthDay').val(),
-            customer.Phone = $('#txtPhone').val(),
-            customer.Salary = $('#txtSalary').val()
-            model.Customer = customer;
-        model.Partners = [{ Id: $("#ddlDoiTac").val(), Name: $("#ddlDoiTac option:selected").text(), IsSelect: $('input[name="radio-check"]:checked').val() == "1" ? true : false }];
+        let model = {
+            'Id':'@Model.Id',
+            'FullName': $('#FullName').val(),
+            'CheckDate': $('#CheckDate').val(),
+            'Note': $('#txtGhiChu').val(),
+            'Cmnd': $('#Cmnd').val(),
+            'CICStatus':$("#CICStatus").val(),
+            'ProvinceId': $("#ProvinceId").val(),
+            'PartnerId': $("#partnerId").val(),
+            'PartnerStatus':$('input[name="radio-check"]:checked').val() == "1"  ? 1 : 2,
+            'Address': $('#Address').val(),
+            'Phone': $('#Phone').val(),
+            'Salary': getDecimalValueFromMoneyInput($("#Salary").val())
+
+        }
             var objectSend = JSON.stringify(model);
         $.ajax({
             traditional: true,
-            url: '@Url.Action("Update", "Customer")',
+            url: '@Url.Action("UpdateAsync", "Customer")',
             type: "POST",
             contentType: "application/json; charset=utf-8",
             data: objectSend,
             success: function (data) {
+                debugger
                 if (data.success == true) {
                     swal({
                         title: "Thành công",
@@ -374,7 +313,7 @@
                             '<div class="timeline-item">'+
                             '<div class="timeline-body">' +
                             '<div class="timeline__message-container">' +
-                            '<strong>' + item.Commentator + ' (' + SetFormatDateTimeDMY(item.CreatedTime) + '): </strong><span>' + item.Note + '</span>' +
+                            '<strong>' + item.Commentator + ' (' + SetFormatDateTimeDMY(item.CommentTime) + '): </strong><span>' + item.Noidung + '</span>' +
                             '</div></div></div></div>'
 
                         )

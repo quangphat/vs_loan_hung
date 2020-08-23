@@ -29,11 +29,17 @@
 #ddlLimit_chosen{
     width:100px!important;
 }
+.pt-50px{
+    padding-top:50px!important;
+}
 .pt-0 {
     padding-top: 0px;
 }
 .min-150{
     min-width:150px;
+}
+.mb-50px{
+    margin-bottom:50px!important;
 }
 .mt-46 {
     margin-top: 46px;

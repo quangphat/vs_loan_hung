@@ -12,13 +12,17 @@
 //        message: '<h2 style="color:#fff">' + text + ' ...</h2>'
 //    });
 //}\
-
+function getDecimalValueFromMoneyInput(value) {
+    if (isNullOrWhiteSpace(value))
+        return 0
+    return value.replace(/\./g, '');
+}
 function renderStatusDisplay(statusName, btnRefresh = null) {
-    debugger
+    
     if (isNullOrWhiteSpace(statusName))
         return "<td class='text-left'></td>";
     let firstChar = statusName[0].toLowerCase();
-    let greenGroup = ['a', 'b', 'c', 'đ'];
+    let greenGroup = ['a', 'b', 'c'];
     let danger = ['e', 'f', 'g', 't'];
     let succsess = ['i', 'k', 'm'];
     let cancel = ['o', 'p', 'q', 'd'];
@@ -34,7 +38,8 @@ function renderStatusDisplay(statusName, btnRefresh = null) {
         colorClass = 'label-inverse'
     if (cancel.indexOf(firstChar) >= 0)
         colorClass = 'label-cancel'
-
+    if (btnRefresh == null)
+        btnRefresh =''
     var statusString = `<span class='label label-sm ${colorClass} arrowed arrowed-righ '>${statusName}</span>`;
     return "<td class='text-left min-150'>" + statusString + btnRefresh + "</td>";
 }
@@ -870,6 +875,25 @@ function FormatDateTimeDMY(datetime) {
     } catch (e) {
         return "";
     }
+}
+function FormatDateTimeDMYv2(datetime, outputFormat = 'DD-MM-YYYY') {
+
+    let date = moment(datetime, 'YYYY-MM-DD')
+    return date.format(outputFormat)
+    //try {
+    //    debugger
+    //    var valueDate = parseInt(datetime.substr(6));
+    //    if (valueDate < 0)
+    //        return "";
+    //    else {
+    //        var dateObj = new Date(valueDate);
+    //        var dateStr = ('00' + dateObj.getDate()).slice(-2) + "/" + ('00' + (dateObj.getMonth() + 1)).slice(-2) + "/" + dateObj.getFullYear();
+    //        return dateStr;
+    //    }
+    //    return dateStr;
+    //} catch (e) {
+    //    return "";
+    //}
 }
 function SetFormatDateTime(datetime) {
     try {
