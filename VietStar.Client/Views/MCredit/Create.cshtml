@@ -219,28 +219,7 @@
     $(document).ready(function () {
         setTextForPTag('checkSaleResult');
         setTextForPTag('checkdupResult');
-        $('#ddlProduct').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddlProvince').chosen({ width: '100%', allow_single_deselect: true });
-        $('#txtToDate').datepicker({
-            dateFormat: 'dd-mm-yy'
-
-        }).next().on(ace.click_event, function () {
-            $(this).prev().focus();
-        });
-        $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
-        $('#txtBirthDay').datepicker({
-            dateFormat: 'dd-mm-yy'
-
-        }).next().on(ace.click_event, function () {
-            $(this).prev().focus();
-        });
-        //$("#txtBirthDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
-        $('#txtIdDay').datepicker({
-            dateFormat: 'dd-mm-yy'
-
-        }).next().on(ace.click_event, function () {
-            $(this).prev().focus();
-        });
+       
         GetLocSigns("#ddlLocSign");
         GetLoanPeriods("#ddlLoanPeriod");
         GetLoanCities("#ddlProvince");
@@ -248,34 +227,12 @@
         $("#ddlProduct").on("change", function () {
             CallForGetIsCheckCat(this.value, "#checkcat-area");
         })
-        //LayDSTaiLieu();
-        //$("#txtIdDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
     });
 
-    jQuery.fn.ForceNumericOnly =function () {
-    return this.each(function () {
-        $(this).keydown(function (e) {
-            var key = e.charCode || e.keyCode || 0;
-            // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers ONLY
-            // home, end, period, and numpad decimal
-            return (
-                key == 8 ||
-                key == 9 ||
-                key == 13 ||
-                key == 46 ||
-                key == 110 ||
-                key == 190 ||
-                (key >= 35 && key <= 40) ||
-                (key >= 48 && key <= 57) ||
-                (key >= 96 && key <= 105));
-        });
-    });
-    };
-
-    $("#txtPhone").ForceNumericOnly();
-    $("#txtPhone2").ForceNumericOnly();
-    $("#txtLoanMoney").ForceNumericOnly();
-    $("#txtIdNumber").ForceNumericOnly();
+    $("#txtPhone").ForceNumericOnlyv2();
+    $("#txtPhone2").ForceNumericOnlyv2();
+    $("#txtLoanMoney").ForceNumericOnlyv2();
+    $("#txtIdNumber").ForceNumericOnlyv2();
     $("#txtLoanMoney").change(function () {
         $("#txtLoanMoney").val(formatCurrency($("#txtLoanMoney").val().replace(/\./g, '')));
     });

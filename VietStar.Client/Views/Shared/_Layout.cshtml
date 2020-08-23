@@ -326,10 +326,10 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Check CAT</a></li>
-                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Check CIC</a></li>
-                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Check Duplicate</a></li>
-                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Check Status</a></li>
+                            <li id="MCredit/CheckCat"><a href="/MCredit/CheckCat"><i class="fa fa-circle-o"></i> Check CAT</a></li>
+                            <li id="MCredit/CheckCIC"><a href="/MCredit/CheckCIC"><i class="fa fa-circle-o"></i> Check CIC</a></li>
+                            <li id="MCredit/CheckDuplicate"><a href="/MCredit/CheckDuplicate"><i class="fa fa-circle-o"></i> Check Duplicate</a></li>
+                            <li id="MCredit/CheckStatus"><a href="/MCredit/CheckStatus"><i class="fa fa-circle-o"></i> Check Status</a></li>
                             <li id="MCredit/Temp"><a href="/MCredit/Temp"><i class="fa fa-circle-o"></i>Danh sách tạo mới</a></li>
                             <li id="MCredit/Index"><a href="/MCredit/Index"><i class="fa fa-circle-o"></i>Danh sách MCredit</a></li>
 
@@ -614,50 +614,12 @@
     <script type="text/javascript">
        $(document).ready(function e() {
            $('#left-menu li').each(function (i, item) {
-               let name = this.innerHTML
-               let aElement = null;
-               aElement = $(item).children("a")[0]
                if (!isNullOrWhiteSpace(item.id) && window.location.href.toLocaleLowerCase().indexOf(`/${item.id.toLocaleLowerCase()}`) > -1) {
                    $(item).addClass('menu-open active')
-                   aElement = null
-                   //if ($(this).children("ul").length > 0) {
-                       
-                   //    let ul = $(this).children("ul")[0]
-                       
-                   //    $(ul).children("li").each(function (index, subItem) {
-                   //        let aElement = $(this).children("a")[0]
-                   //        if (!isNullOrUndefined(aElement)) {
-                   //            if (!isNullOrWhiteSpace(aElement.href) && window.location.href.toLocaleLowerCase().indexOf(aElement.pathname.toLocaleLowerCase()) > -1) {
-                   //                $(subItem).addClass("active")
-                   //            }
-                   //            else {
-                   //                $(subItem).removeClass('active')
-                   //            }
-                   //        }
-                   //        else {
-                   //            $(subItem).removeClass('active')
-                   //        }
-                           
-                   //    })
-                   //}
                }
-               //else if (!isNullOrUndefined(aElement))
-               //{
-               //    debugger
-               //    if (!isNullOrWhiteSpace(aElement.href) && window.location.href.toLocaleLowerCase().indexOf(aElement.pathname.toLocaleLowerCase()) > -1) {
-               //        if (!isNullOrWhiteSpace(item.id) && window.location.href.toLocaleLowerCase().indexOf(`/${item.id}`) > -1) {
-               //            $(item).addClass("active")
-               //        }
-                       
-               //        aElement = null;
-               //    }
-               //}
                else {
-                   if (item.innerHTML.indexOf("Courier")>-1)
-                    console.log(item.innerHTML)
                    $(item).removeClass('menu-open')
                    $(item).removeClass('active')
-                   aElement = null;
                }
            });
 
