@@ -24,11 +24,11 @@ namespace VietStar.Client
     {
         public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
-           // var builder = new ConfigurationBuilder()
-           //.SetBasePath(env.ContentRootPath)
-           //.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-           //.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-           //.AddEnvironmentVariables();
+            // var builder = new ConfigurationBuilder()
+            //.SetBasePath(env.ContentRootPath)
+            //.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            //.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+            //.AddEnvironmentVariables();
 
             Configuration = configuration;
         }
@@ -56,12 +56,14 @@ namespace VietStar.Client
             services.RegisterBusiness();
             services.RegisterMCService();
             services.AddDistributedMemoryCache();
-            services.AddSession(options=>{
+            services.Configure<McreditApi>(Configuration.GetSection("McreditApi"));
+            services.AddSession(options =>
+            {
                 options.IdleTimeout = TimeSpan.FromMinutes(1);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
-            services.AddMyAuthentication(Configuration,applicationName: "vietstar");
+            services.AddMyAuthentication(Configuration, applicationName: "vietstar");
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -78,7 +80,7 @@ namespace VietStar.Client
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             //app.UseStaticFiles(new StaticFileOptions
@@ -95,7 +97,7 @@ namespace VietStar.Client
             app.UseAuthentication();
             app.UseSession();
             app.UseMiddleware<SessionHandler>();
-            
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

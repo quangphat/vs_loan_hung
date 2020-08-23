@@ -11,14 +11,16 @@ using VietStar.Entities.Infrastructures;
 using VietStar.Entities.Mcredit;
 using VietStar.Repository.Interfaces;
 using VietStar.Utility;
+using Microsoft.Extensions.Options;
 
 namespace McreditServiceCore
 {
     public class MCreditLoanService : MCreditServiceBase, IMCreditService
     {
-        public MCreditLoanService(IMCreditRepository mCreditRepository, 
+        public MCreditLoanService(IMCreditRepository mCreditRepository,
             ILogRepository logRepository,
-            CurrentProcess currentProcess) : base(mCreditRepository, logRepository, currentProcess)
+            IOptions<McreditApi> option,
+            CurrentProcess currentProcess) : base(mCreditRepository, logRepository, option, currentProcess)
         {
 
         }
@@ -26,31 +28,31 @@ namespace McreditServiceCore
         public async Task<BaseResponse<CheckCatResponseModel>> CheckCat(string taxNumber)
         {
             var model = new CheckCatRequestModel { taxNumber = taxNumber };
-            var result = await BeforeSendRequest<CheckCatResponseModel, CheckCatRequestModel>(_checkCATApi, model);
+            var result = await BeforeSendRequest<CheckCatResponseModel, CheckCatRequestModel>(_mcApiconfig.CheckCATApi, model);
             return result;
         }
         public async Task<BaseResponse<CheckSaleResponseModel>> CheckSale(string salecode)
         {
-            var model = new CheckSaleRequestModel { idCode = salecode};
-            var result = await BeforeSendRequest<CheckSaleResponseModel, CheckSaleRequestModel>(_checkSaleApi, model);
+            var model = new CheckSaleRequestModel { idCode = salecode };
+            var result = await BeforeSendRequest<CheckSaleResponseModel, CheckSaleRequestModel>(_mcApiconfig.CheckSaleAPI, model);
             return result;
         }
         public async Task<BaseResponse<CheckDupResponseModel>> CheckDup(string value)
         {
             var model = new CheckDupRequestModel { IdNumber = value };
-            var result = await BeforeSendRequest<CheckDupResponseModel, CheckDupRequestModel>(_checkDupApi, model);
+            var result = await BeforeSendRequest<CheckDupResponseModel, CheckDupRequestModel>(_mcApiconfig.CheckDupApi, model);
             return result;
         }
         public async Task<BaseResponse<CheckCICResponseModel>> CheckCIC(string idNumber, string name)
         {
             var model = new CheckCICRequestModel { IdNumber = idNumber, name = name };
-            var result = await BeforeSendRequest<CheckCICResponseModel, CheckCICRequestModel>(_checkCICApi, model);
+            var result = await BeforeSendRequest<CheckCICResponseModel, CheckCICRequestModel>(_mcApiconfig.CheckCICApi, model);
             return result;
         }
         public async Task<BaseResponse<CheckStatusResponseModel>> CheckStatus(string value)
         {
             var model = new CheckStatusRequestModel { IdNumber = value };
-            var result = await BeforeSendRequest<CheckStatusResponseModel, CheckStatusRequestModel>(_checkStatusApi, model);
+            var result = await BeforeSendRequest<CheckStatusResponseModel, CheckStatusRequestModel>(_mcApiconfig.CheckStatusApi, model);
             return result;
         }
         public async Task<BaseResponse<ProfileSearchResponse>> SearchProfiles(string freetext, string status, string type, int page)
@@ -62,7 +64,7 @@ namespace McreditServiceCore
                 status = status,
                 type = type
             };
-            var result = await BeforeSendRequest<ProfileSearchResponse, ProfileSearchRequestModel>(_searchProfilesApi, model);
+            var result = await BeforeSendRequest<ProfileSearchResponse, ProfileSearchRequestModel>(_mcApiconfig.SearchProfileApi, model);
             return result;
         }
         public async Task<BaseResponse<ProfileGetByIdResponse>> GetProfileById(string profileId)
@@ -71,7 +73,7 @@ namespace McreditServiceCore
             {
                 Id = profileId
             };
-            var result = await BeforeSendRequest<ProfileGetByIdResponse, ProfileGetByIdRequest>(_getProfileByIdApi, model);
+            var result = await BeforeSendRequest<ProfileGetByIdResponse, ProfileGetByIdRequest>(_mcApiconfig.GetProfileByIdApi, model);
             return result;
         }
         public async Task<BaseResponse<ProfileAddResponse>> CreateProfile(MCProfilePostModel obj)
@@ -80,12 +82,12 @@ namespace McreditServiceCore
             {
                 Obj = obj
             };
-            var result = await BeforeSendRequest<ProfileAddResponse, ProfileAddRequest>(_create_profile_Api, model);
+            var result = await BeforeSendRequest<ProfileAddResponse, ProfileAddRequest>(_mcApiconfig.CreateProfileApi, model);
             return result;
         }
         public async Task<BaseResponse<GetFileUploadResponse>> GetFileUpload(GetFileUploadRequest model)
         {
-            var result = await BeforeSendRequest<GetFileUploadResponse, GetFileUploadRequest>(_get_file_upload_Api, model);
+            var result = await BeforeSendRequest<GetFileUploadResponse, GetFileUploadRequest>(_mcApiconfig.GetFileToUploadApi, model);
             return result;
         }
         public async Task<BaseResponse<NoteResponseModel>> GetNotes(string profileId)
@@ -96,17 +98,17 @@ namespace McreditServiceCore
             };
             await _rpLog.InsertLog("mcredit-GetNote-request", model.Dump());
 
-            var result = await BeforeSendRequest<NoteResponseModel, NoteRequestModel>(_get_notes_Api, model);
+            var result = await BeforeSendRequest<NoteResponseModel, NoteRequestModel>(_mcApiconfig.GetNotesApi, model);
             await _rpLog.InsertLog("mcredit-GetNote-result", result.Dump());
             return result;
         }
         public async Task<BaseResponse<NoteAddResponseModel>> AddNote(NoteAddRequestModel model)
         {
-            var result = await BeforeSendRequest<NoteAddResponseModel, NoteAddRequestModel>(_add_notes_Api, model);
+            var result = await BeforeSendRequest<NoteAddResponseModel, NoteAddRequestModel>(_mcApiconfig.AddNoteApi, model);
             await _rpLog.InsertLog("mcredit-AddNote", result.Dump());
             return result;
         }
-        public async Task<BaseResponse<MCResponseModelBase>> SendFiles( string fileName, string profileId)
+        public async Task<BaseResponse<MCResponseModelBase>> SendFiles(string fileName, string profileId)
         {
             // You need to do this download if your file is on any other server otherwise you can convert that file directly to bytes  
             //WebClient wc = new WebClient();
@@ -119,7 +121,7 @@ namespace McreditServiceCore
             Dictionary<string, object> postParameters = new Dictionary<string, object>();
             postParameters.Add("file", new FileParameter(data, "18.zip", "application/zip"));
             postParameters.Add("id", profileId);
-            return await BeforeSendRequestUploadFile<MCResponseModelBase, MCreditRequestModelBase>(_upload_file_Api, postParameters);
+            return await BeforeSendRequestUploadFile<MCResponseModelBase, MCreditRequestModelBase>(_mcApiconfig.UploadFileApi, postParameters);
         }
     }
 }
