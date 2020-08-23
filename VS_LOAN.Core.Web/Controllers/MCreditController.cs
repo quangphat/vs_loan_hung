@@ -1,4 +1,5 @@
 ﻿using MCreditService.Interfaces;
+using MCreditService.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -132,12 +133,22 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             return View();
         }
-        public async Task<JsonResult> SearchTemps(string freeText, string status, int page = 1, int limit = 20)
+     
+            public async Task<JsonResult> SearchTemps(string freeText, string status, int page = 1, int limit = 20, string fromDate = null, string toDate = null, int loaiNgay = 0, int manhom = 0,
+
+              int mathanhvien = 0)
         {
             page = page <= 0 ? 1 : page;
 
 
-            var profiles = await _rpMCredit.GetTempProfiles(page, limit, freeText, GlobalData.User.IDUser, status);
+
+            DateTime dtFromDate = DateTime.MinValue, dtToDate = DateTime.Now.AddDays(3);
+            if (fromDate != "")
+                dtFromDate = DateTimeFormat.ConvertddMMyyyyToDateTimeNew(fromDate);
+            if (toDate != "")
+                dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTimeNew(toDate);
+
+            var profiles = await _rpMCredit.GetTempProfiles(page, limit, freeText, GlobalData.User.IDUser, status, dtFromDate, dtToDate, loaiNgay, manhom, mathanhvien = 0);
             if (profiles == null || !profiles.Any())
             {
                 return ToJsonResponse(true, "", DataPaging.Create(null as List<ProfileSearchSql>, 0));

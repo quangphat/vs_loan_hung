@@ -39,6 +39,37 @@
                         </div>
 
                     </div>
+
+
+                    <div class="form-group">
+                        <div class="col-sm-2 col-xs-12">
+                            <label class="control-label no-padding-right">
+                                <input name="radio-ngay" type="radio" checked="checked" value="1" class="ace">
+                                <span class="lbl"> Ngày tạo</span>
+                            </label>
+                            <label class="control-label no-padding-right">
+                                <input name="radio-ngay" type="radio" value="2" class="ace">
+                                <span class="lbl"> Ngày cập nhật</span>
+                            </label>
+                        </div>
+                        <div class="col-sm-2 col-xs-12 ">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtFromDate" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-xs-12 ">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtToDate" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
                     <div class="form-group">
 
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Tìm kiếm</label>
@@ -307,6 +338,18 @@
         getData(page, limit);
     }
     function bindQueries() {
+          var fromDate = queries.get("fromDate");
+            if (isNullOrWhiteSpace(fromDate)) {
+                fromDate = new Date().getDay + -7;
+            }
+ $("#txtFromDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", fromDate);
+            var toDate = queries.get("toDate");
+            if (isNullOrWhiteSpace(toDate)) {
+                toDate = new Date().getDay + 1;
+            }
+            $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", toDate);
+        var dateType = queries.get("loaiNgay");
+
 
         $('#txtFreeText').val(queries.get("freetext"))
         $('#txtSaleCode').val(queries.get("salecode"))
@@ -403,6 +446,9 @@
             contentType: "application/json",
 
             data: {
+                'fromDate':$('#txtFromDate').val(),
+				'toDate': $('#txtToDate').val(),
+			    'loaiNgay': $('input[name="radio-ngay"]:checked').val(),
                 'page': page,
                 'limit': limit,
                 'assigneeId': (isNaN(assigneeId) || assigneeId == 0 || isNullOrUndefined(assigneeId)) ? $('#ddlAssignee').val() : assigneeId,

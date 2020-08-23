@@ -31,9 +31,9 @@ namespace VS_LOAN.Core.Business
             _rpConfig = systemconfigRepository;
             _rpNote = noteRepository;
         }
-        public async Task<DataPaging<List<RevokeDebtSearch>>> SearchAsync(int userId, string freeText, string status, int page, int limit, int groupId = 0, int assigneeId = 0)
+        public async Task<DataPaging<List<RevokeDebtSearch>>> SearchAsync(int userId, string freeText, string status, int page, int limit, int groupId = 0, int assigneeId = 0, DateTime? fromDate = null, DateTime? toDate = null, int loaiNgay = 1)
         {
-            var data = await _rpRevokeDebt.SearchAsync(userId, freeText, status, page, limit, groupId,assigneeId);
+            var data = await _rpRevokeDebt.SearchAsync(userId, freeText, status, page, limit, groupId,assigneeId,fromDate,toDate,loaiNgay);
             if (data == null || !data.Any())
             {
                 return DataPaging.Create(null as List<RevokeDebtSearch>, 0);

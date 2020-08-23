@@ -34,6 +34,7 @@
                             <select id="ddlThanhVienNhom" class="chosen-select form-control" data-placeholder="Chọn thành viên nhóm">
                                 <option value="0"></option>
                             </select>
+
                         </div>
                     </div>
                     <div class="form-group">
@@ -241,7 +242,6 @@
                 $("#btn_search").click();
             }
         });
-        function bindQueries() {
             
             var fromDate = queries.get("fromDate");
             if (isNullOrWhiteSpace(fromDate)) {
@@ -254,6 +254,8 @@
             }
             $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", toDate);
             var dateType = queries.get("loaiNgay");
+
+
             setCheckedValueOfRadioButtonGroup("radio-ngay", dateType)
             var maHS = queries.get("maHS");
             $('#txtMaHS').val(maHS)
