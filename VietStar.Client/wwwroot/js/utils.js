@@ -36,7 +36,6 @@ function formatCurrencyVND(number) {
     return n2.split('').reverse().join('') + 'VND';
 }
 function formatCurrency(number) {
-    debugger
     var n = number.toString().split('').reverse().join("");
     var n2 = n.replace(/\d\d\d(?!$)/g, "$&.");
     return n2.split('').reverse().join('') + '';
@@ -56,6 +55,15 @@ function SetFormatDateTimeDMY(datetime) {
     } catch (e) {
         return "";
     }
+}
+function convertStringToDMY(input) {
+    debugger
+    if (isNullOrWhiteSpace(input))
+        return
+    let mydate = new Date(input)
+    console.log(mydate.toLocaleDateString())
+    return mydate.toLocaleDateString()
+    //return mydate.toDateString()
 }
 function isNullOrNoItem(arr) {
     if (arr === null || arr === undefined || arr.length === 0)
@@ -200,22 +208,8 @@ function renderGoFirstPage(page, totalPage) {
 }
 function FormatDateTimeDMY(datetime, outputFormat = 'DD-MM-YYYY') {
     debugger
-    let date = moment(datetime, 'YYYY-MM-DD')
+    let date = moment(datetime)
     return date.format(outputFormat)
-    //try {
-    //    debugger
-    //    var valueDate = parseInt(datetime.substr(6));
-    //    if (valueDate < 0)
-    //        return "";
-    //    else {
-    //        var dateObj = new Date(valueDate);
-    //        var dateStr = ('00' + dateObj.getDate()).slice(-2) + "/" + ('00' + (dateObj.getMonth() + 1)).slice(-2) + "/" + dateObj.getFullYear();
-    //        return dateStr;
-    //    }
-    //    return dateStr;
-    //} catch (e) {
-    //    return "";
-    //}
 }
 function setCheckedValueOfRadioButtonGroup(name, boolValue) {
     var radios = document.getElementsByName(name);

@@ -79,7 +79,7 @@
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày sinh<span class="required">(*)</span> </label>
                         <div class="col-sm-4">
                             <div class="input-group">
-                                <input class="form-control date-picker"   readonly value="@Model.Bod" id="txtBirthDay" />
+                                <input class="form-control date-picker" readonly id="txtBirthDay" />
                                 <span class="input-group-addon">
                                     <i class="fa fa-calendar bigger-110"></i>
                                 </span>
@@ -105,7 +105,7 @@
                         <label class="col-sm-2 control-label no-padding-right">Ngày cấp CMND/CCCD<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <div class="input-group">
-                                <input class="form-control date-picker" value="@Model.IdDate" readonly id="txtIdDay" />
+                                <input class="form-control date-picker"  readonly id="txtIdDay" />
                                 <span class="input-group-addon">
                                     <i class="fa fa-calendar bigger-110"></i>
                                 </span>
@@ -275,11 +275,13 @@
         setCheckboxValue('cbbIsInsurrance', '@Model.IsInsurrance' =='0' ? false : true)
         getFilesUpload();
         getNoteList();
-        
+
     });
 
 
-    //$("#txtBirthDay").val(FormatDateTimeDMY('@Model.Bod', 'YYYY-MM-DD'))
+    $("#txtBirthDay").val(convertStringToDMY('@Model.Bod'))
+    $("#txtIdDay").val(convertStringToDMY('@Model.IdDate'))
+
     $("#txtPhone").ForceNumericOnlyv2();
     $("#txtPhone2").ForceNumericOnlyv2();
     $("#txtLoanMoney").ForceNumericOnlyv2();
@@ -379,7 +381,7 @@
                                 var extn = file.FileUrl.split('.').pop();
                                 var isImg = isExtension(extn, _imgExts);
                                 if (isImg) {
-                                    
+
                                     _initialPreview.push(file.FileUrl);
                                     _initialPreviewConfig.push({
                                         caption: file.FileName,
@@ -388,7 +390,7 @@
                                         width: "120px"
                                     });
                                 }
-                                
+
                                 let titleName = keys.indexOf(file.Key) < 0 ? item.Name : ''
                                 renderOneItemFile({
                                     key: item.FileKey,
@@ -409,7 +411,7 @@
 
                                 keys.push(item.FileKey);
                             });
-                            
+
                            renderOneItemFile({
                                     key: item.FileKey,
                                     type: '@((int)VietStar.Entities.Commons.Enums.ProfileType.MCredit)',
@@ -428,7 +430,7 @@
                                 }, '', [], [], true, true);
                         }
                         else {
-                            
+
                             renderOneItemFile({
                                     key: item.FileKey,
                                     type: '@((int)VietStar.Entities.Commons.Enums.ProfileType.MCredit)',
@@ -457,7 +459,7 @@
             }
         });
     }
-    
+
 
     $('#btnUpdateFiles').click(function (e) {
 
@@ -548,7 +550,7 @@
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-                        
+
                     });
                 }
                 else {

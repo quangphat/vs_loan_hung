@@ -399,14 +399,13 @@ namespace VietStar.Business
                     return ToResponse<MCResponseModelBase>(null, Errors.invalid_data);
                 if (model.SaleId <= 0)
                     return ToResponse<MCResponseModelBase>(null, "Vui lòng chọn Sale");
+
                 var profile = await _rpMCredit.GetTemProfileByIdAsync(model.Id);
+
                 if (!profile.success)
                     return ToResponse<MCResponseModelBase>(null, profile.error);
                 if (profile.data == null)
                     return ToResponse<MCResponseModelBase>(null, "Hồ sơ không tồn tại");
-
-                var profileSql = _mapper.Map<MCredit_TempProfile>(model);
-                profileSql.UpdatedBy = _process.User.Id;
 
                 var profileMC = _mapper.Map<MCProfilePostModel>(model);
 
@@ -420,10 +419,12 @@ namespace VietStar.Business
                 if (!result.success)
                     return ToResponse<MCResponseModelBase>(null, result.error);
 
-                profileSql.MCId = result.data.id;
-                profile.data.Status = (int)MCreditProfileStatus.SentToMc;
+                if(result.data == null || string.IsNullOrWhiteSpace(result.data.id))
+                {
+                    return ToResponse<MCResponseModelBase>(null, "Không thể gửi qua MC");
+                }
 
-                await _rpMCredit.UpdateDraftProfileAsync(profileSql);
+                await _rpMCredit.UpdateMCIdAsync(model.Id, result.data.id.Trim(), _process.User.Id);
 
                 await _rpFile.UpdateFileMCProfileByIdAsync(model.Id, result.data.id);
 

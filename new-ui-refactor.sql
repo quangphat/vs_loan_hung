@@ -1361,3 +1361,12 @@ where ProfileType ='mcredit' and id = 127
 
 ---------
 
+alter procedure sp_MCProfile_UpdateMcId(@id int ,@mcId varchar(20), @updatedBy int)
+as begin
+update MCredit_TempProfile set McId = @MCId, UpdatedBy = @UpdatedBy, Status = -1
+where Id  =@Id
+end
+
+
+
+----------

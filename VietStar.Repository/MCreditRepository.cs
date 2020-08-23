@@ -321,6 +321,27 @@ namespace VietStar.Repository
                 return true;
             }
         }
+
+        public async Task<BaseResponse<bool>> UpdateMCIdAsync(int id, string mcId, int updatedBy)
+        { 
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    await con.ExecuteAsync("sp_MCProfile_UpdateMcId", new {
+                        id,
+                        mcId,
+                        updatedBy
+                    }, commandType: CommandType.StoredProcedure);
+                    return BaseResponse<bool>.Create(true);
+                }
+            }
+            catch (Exception e)
+            {
+                return BaseResponse<bool>.Create(false, GetException(e));
+            }
+        }
+
         public async Task<BaseResponse<bool>> UpdateDraftProfileAsync(MCredit_TempProfile model)
         {
             var param = GetParams(model, ignoreKey: new string[]

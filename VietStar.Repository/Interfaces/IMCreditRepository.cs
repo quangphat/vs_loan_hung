@@ -22,6 +22,7 @@ namespace VietStar.Repository.Interfaces
         Task<List<ProfileSearchSql>> GetTempProfilesAsync(int page, int limit, string freeText, int userId, string status = null);
         Task<BaseResponse<int>> CreateDraftProfileAsync(MCredit_TempProfile model);
         Task<BaseResponse<bool>> UpdateDraftProfileAsync(MCredit_TempProfile model);
+        Task<BaseResponse<bool>> UpdateMCIdAsync(int id, string mcId, int updatedBy);
         Task<bool> DeleteMCTableDatasAsync(int type);
         Task<MCreditUserToken> GetUserTokenByIdAsyncAsync(int userId);
         Task<bool> InsertUserTokenAsync(MCreditUserToken model);
