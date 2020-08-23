@@ -61,5 +61,6 @@ namespace VietStar.Client.Controllers
             var result = await _bizMedia.DeleteByIdAsync(fileId, guidId);
             return ToResponse(result);
         }
+
     }
 }
