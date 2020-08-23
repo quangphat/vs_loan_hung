@@ -99,7 +99,7 @@ namespace VietStar.Business
 
         protected async Task<List<FileProfile>> GetFileUploadMcreditAsync(int profileId, string mcId = null, string webRootPath = null)
         {
-            var profile = await _rpMCredit.GetTemProfileById(profileId);
+            var profile = await _rpMCredit.GetTemProfileByIdAsync(profileId);
             if (!profile.success || profile.data == null)
                 return ToResponse<List<FileProfile>>(null, "Hồ sơ không tồn tại");
 
@@ -329,7 +329,7 @@ namespace VietStar.Business
 
         public async Task<string> ProcessFilesToSendToMC(int portalProfileId, string rootPath)
         {
-            var profile = await _rpMCredit.GetTemProfileById(portalProfileId);
+            var profile = await _rpMCredit.GetTemProfileByIdAsync(portalProfileId);
             if (!profile.success)
             {
                 return ToResponse(string.Empty, profile.error);

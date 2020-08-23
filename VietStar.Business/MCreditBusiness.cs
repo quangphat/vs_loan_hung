@@ -58,7 +58,7 @@ namespace VietStar.Business
                 if (result.success && result.data.obj != null)
                 {
                     var sale = _mapper.Map<UpdateSaleModel>(result.data.obj);
-                    await _rpMCredit.UpdateSale(sale, model.ProfileId);
+                    await _rpMCredit.UpdateSaleAsyncAsync(sale, model.ProfileId);
                 }
             }
 
@@ -79,7 +79,7 @@ namespace VietStar.Business
         {
             if (model == null || string.IsNullOrWhiteSpace(model.Value))
                 return ToResponse(false, Errors.invalid_data);
-            var result = await _rpMCredit.IsCheckCat(model.Value);
+            var result = await _rpMCredit.IsCheckCatAsync(model.Value);
             return result;
         }
 
@@ -116,7 +116,7 @@ namespace VietStar.Business
         public async Task<DataPaging<List<ProfileSearchSql>>> SearchsTemsAsync(string freeText, string status, int page = 1, int limit = 20)
         {
             page = page <= 0 ? 1 : page;
-            var profiles = await _rpMCredit.GetTempProfiles(page, limit, freeText, _process.User.Id, status);
+            var profiles = await _rpMCredit.GetTempProfilesAsync(page, limit, freeText, _process.User.Id, status);
             if (profiles == null || !profiles.Any())
             {
                 return DataPaging.Create(null as List<ProfileSearchSql>, 0);
@@ -136,9 +136,27 @@ namespace VietStar.Business
         {
             if (model == null)
                 return ToResponse(0, Errors.invalid_data);
+            var profileExist = 0;
+            if(!string.IsNullOrWhiteSpace(model.IdNumber))
+            {
+                profileExist = await _rpMCredit.GetProfileIdByIdNumberAsync(model.IdNumber.Trim());
+            }
+            else if(!string.IsNullOrWhiteSpace(model.CCCDNumber))
+            {
+                profileExist = await _rpMCredit.GetProfileIdByIdNumberAsync(model.CCCDNumber.Trim());
+            }
+            else
+            {
+                return ToResponse(0, Errors.missing_cmnd);
+            }
+
+            if(profileExist > 0)
+            {
+                return ToResponse(0, Errors.id_number_has_exist);
+            }
             var profile = _mapper.Map<MCredit_TempProfile>(model);
             profile.CreatedBy = _process.User.Id;
-            var response = await _rpMCredit.CreateDraftProfile(profile);
+            var response = await _rpMCredit.CreateDraftProfileAsync(profile);
             if (!response.success)
                 return ToResponse(response);
             if (response.data > 0)
@@ -174,7 +192,7 @@ namespace VietStar.Business
             {
                 return ToResponse(false, "Không tìm thấy hồ sơ");
             }
-            var profileInPortal = await _rpMCredit.GetTemProfileByMcId(response.data.obj.Id);
+            var profileInPortal = await _rpMCredit.GetTemProfileByMcIdAsync(response.data.obj.Id);
             if (!profileInPortal.success)
             {
                 return ToResponse(false, "Không tìm thấy hồ sơ trong portal");
@@ -193,7 +211,7 @@ namespace VietStar.Business
 
         public async Task<bool> UpdateTempProfileStatusAsync(int profileId)
         {
-            var temp = await _rpMCredit.GetTemProfileById(profileId);
+            var temp = await _rpMCredit.GetTemProfileByIdAsync(profileId);
             if (!temp.success)
             {
                 return ToResponse(false, "Không tìm thây hồ sơ trong portal");
@@ -233,7 +251,7 @@ namespace VietStar.Business
 
             profile.Status = _process.User.isAdmin ? model.Status : (int)MCreditProfileStatus.Submit;
             await _rpLog.InsertLog("mcredit-UpdateDraft", model.Dump());
-            var result = await _rpMCredit.UpdateDraftProfile(profile);
+            var result = await _rpMCredit.UpdateDraftProfileAsync(profile);
             if (!result.success)
             {
                 return ToResponse(result);
@@ -257,7 +275,7 @@ namespace VietStar.Business
 
         public async Task<MCredit_TempProfile> GetTempProfileByIdAsync(int id)
         {
-            var result = await _rpMCredit.GetTemProfileById(id);
+            var result = await _rpMCredit.GetTemProfileByIdAsync(id);
             return ToResponse(result);
         }
 
@@ -313,16 +331,16 @@ namespace VietStar.Business
             switch (type)
             {
                 case "city":
-                    result = await _rpMCredit.GetMCCitiesSimpleList();
+                    result = await _rpMCredit.GetMCCitiesSimpleListAsync();
                     break;
                 case "loanperiod":
-                    result = await _rpMCredit.GetMCLoanPerodSimpleList();
+                    result = await _rpMCredit.GetMCLoanPerodSimpleListAsync();
                     break;
                 case "location":
-                    result = await _rpMCredit.GetMCLocationSimpleList();
+                    result = await _rpMCredit.GetMCLocationSimpleListAsync();
                     break;
                 case "product":
-                    result = await _rpMCredit.GetMCProductSimpleList();
+                    result = await _rpMCredit.GetMCProductSimpleListAsync();
                     break;
                 default: break;
             }
@@ -331,7 +349,7 @@ namespace VietStar.Business
 
         public async Task<MCResponseModelBase> ReSendFileToECAsync(int mcProfileId)
         {
-            var profile = await _rpMCredit.GetTemProfileByMcId(mcProfileId.ToString());
+            var profile = await _rpMCredit.GetTemProfileByMcIdAsync(mcProfileId.ToString());
             if (!profile.success)
             {
                 return ToResponse<MCResponseModelBase>(null, profile.error);
@@ -381,7 +399,7 @@ namespace VietStar.Business
                     return ToResponse<MCResponseModelBase>(null, Errors.invalid_data);
                 if (model.SaleId <= 0)
                     return ToResponse<MCResponseModelBase>(null, "Vui lòng chọn Sale");
-                var profile = await _rpMCredit.GetTemProfileById(model.Id);
+                var profile = await _rpMCredit.GetTemProfileByIdAsync(model.Id);
                 if (!profile.success)
                     return ToResponse<MCResponseModelBase>(null, profile.error);
                 if (profile.data == null)
@@ -405,7 +423,7 @@ namespace VietStar.Business
                 profileSql.MCId = result.data.id;
                 profile.data.Status = (int)MCreditProfileStatus.SentToMc;
 
-                await _rpMCredit.UpdateDraftProfile(profileSql);
+                await _rpMCredit.UpdateDraftProfileAsync(profileSql);
 
                 await _rpFile.UpdateFileMCProfileByIdAsync(model.Id, result.data.id);
 
@@ -442,7 +460,7 @@ namespace VietStar.Business
             }
             //result.data.obj.IsAddrSame = "1";
             //result.data.obj.IsInsurrance = "1";
-            var profile = await _rpMCredit.GetTemProfileByMcId(result.data.obj.Id);
+            var profile = await _rpMCredit.GetTemProfileByMcIdAsync(result.data.obj.Id);
             //if (profile == null)
             //{
             //    return ToResponse(false, "Không tìm thấy hồ sơ tương ứng trong portal");

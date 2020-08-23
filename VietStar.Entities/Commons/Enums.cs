@@ -66,7 +66,8 @@ namespace VietStar.Entities.Commons
             Draft = 0,
             SentToMc = -1,
             Submit = -3,
-            Addinional = -4
+            Addinional = -4,
+            Updated = -5
         }
     }
 }

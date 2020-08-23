@@ -6,13 +6,13 @@
     var buttons = new List<VietStar.Entities.ViewModels.CommandBarButton>();
     if(string.IsNullOrWhiteSpace(Model.MCId))
     {
-        buttons.Add(new VietStar.Entities.ViewModels.CommandBarButton { ClassName = "btn btn-sm btn-primary", Id = "btn_Temp", Name = "Cập nhật" });
-        buttons.Add(new VietStar.Entities.ViewModels.CommandBarButton { ClassName = "btn btn-sm btn-primary", Id = "btn_Save", Name = "Nộp hồ sơ qua MCredit" });
+        buttons.Add(new VietStar.Entities.ViewModels.CommandBarButton { ClassName = "btn btn-sm btn-primary", Id = "btnUpdate", Name = "Cập nhật" });
+        buttons.Add(new VietStar.Entities.ViewModels.CommandBarButton { ClassName = "btn btn-sm btn-primary", Id = "btnSubmit", Name = "Nộp hồ sơ qua MCredit" });
     }
-    else
-    {
-        buttons.Add(new VietStar.Entities.ViewModels.CommandBarButton { ClassName = "btn btn-sm btn-primary", Id = "btn_CreateNew", Name = "Tạo hồ sơ mới từ hồ sơ này" });
-    }
+    //else
+    //{
+    //    buttons.Add(new VietStar.Entities.ViewModels.CommandBarButton { ClassName = "btn btn-sm btn-primary", Id = "btnCreate", Name = "Tạo hồ sơ mới từ hồ sơ này" });
+    //}
 }
 
 <div class="main-content-inner">
@@ -487,7 +487,7 @@
 
 
 
-    $('#btn_Temp').click(function (e) {
+    $('#btnUpdate').click(function (e) {
         if ($('#txtCustomerName').val() == "" || $('#txtCustomerName').val() == undefined) {
             swal({
                 title: errorMsg,
@@ -598,7 +598,7 @@
         });
     });
 
-    $('#btn_Save').click(function (e) {
+    $('#btnSubmit').click(function (e) {
 
          if ($('#txtCustomerName').val() == "" || $('#txtCustomerName').val() == undefined) {
             swal({
@@ -743,7 +743,7 @@
         return data.data.message
 
     }
-    $('#btn_CreateNew').click(function (e) {
+    $('#btnCreate').click(function (e) {
 
         if ($('#txtCustomerName').val() == "" || $('#txtCustomerName').val() == undefined) {
             swal({

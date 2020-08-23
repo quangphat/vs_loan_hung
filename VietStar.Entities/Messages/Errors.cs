@@ -49,5 +49,6 @@ namespace VietStar.Entities.Messages
         public const string missing_diachi = "Vui lòng nhập địa chỉ";
         public const string profile_could_not_found_in_portal = "Không thể tìm thấy hồ sơ trong portal";
         public const string NoData = "Không có dữ liệu";
+        public const string id_number_has_exist = "Số Cmnd/cccd này đã được tạo ở một hồ sơ khác";
     }
 }

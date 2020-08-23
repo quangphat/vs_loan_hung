@@ -23,8 +23,16 @@ namespace VietStar.Repository
             _rpLog = logRepository;
         }
 
+        public async Task<int> GetProfileIdByIdNumberAsync(string idNumber)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryFirstOrDefaultAsync<int>("sp_MCProfile_CheckIsExist", new { IDNumber = idNumber }, commandType: CommandType.StoredProcedure);
+                return result;
+            }
+        }
 
-        public async Task<bool> UpdateSale(UpdateSaleModel model, int profileId)
+        public async Task<bool> UpdateSaleAsyncAsync(UpdateSaleModel model, int profileId)
         {
 
             using (var con = GetConnection())
@@ -40,7 +48,7 @@ namespace VietStar.Repository
             }
             return true;
         }
-        public async Task<bool> DeleteMCTableDatas(int type)
+        public async Task<bool> DeleteMCTableDatasAsync(int type)
         {
             using (var con = GetConnection())
             {
@@ -66,7 +74,7 @@ namespace VietStar.Repository
             }
 
         }
-        public async Task<BaseResponse<MCredit_TempProfile>> GetTemProfileById(int id)
+        public async Task<BaseResponse<MCredit_TempProfile>> GetTemProfileByIdAsync(int id)
         {
             try
             {
@@ -82,7 +90,7 @@ namespace VietStar.Repository
             }
 
         }
-        public async Task<BaseResponse<MCredit_TempProfile>> GetTemProfileByMcId(string id)
+        public async Task<BaseResponse<MCredit_TempProfile>> GetTemProfileByMcIdAsync(string id)
         {
 
             try
@@ -98,7 +106,7 @@ namespace VietStar.Repository
                 return BaseResponse<MCredit_TempProfile>.Create(null, GetException(e));
             }
         }
-        public async Task<MCreditUserToken> GetUserTokenByIdAsync(int userId)
+        public async Task<MCreditUserToken> GetUserTokenByIdAsyncAsync(int userId)
         {
             string sql = $"sp_MCreditUserToken_GetTokenByUserId";
             using (var con = GetConnection())
@@ -112,7 +120,7 @@ namespace VietStar.Repository
 
         }
 
-        public async Task<bool> InsertLocations(List<MCreditlocations> locations)
+        public async Task<bool> InsertLocationsAsync(List<MCreditlocations> locations)
         {
             List<Task> tasks = new List<Task>();
             foreach (var p in locations)
@@ -132,7 +140,7 @@ namespace VietStar.Repository
             //await Task.WhenAll(tasks);
             return true;
         }
-        public async Task<bool> InsertProfileStatus(List<OptionSimple> status)
+        public async Task<bool> InsertProfileStatusAsync(List<OptionSimple> status)
         {
             foreach (var p in status)
             {
@@ -148,7 +156,7 @@ namespace VietStar.Repository
             }
             return true;
         }
-        public async Task<bool> InsertCities(List<MCreditCity> cities)
+        public async Task<bool> InsertCitiesAsync(List<MCreditCity> cities)
         {
             List<Task> tasks = new List<Task>();
             foreach (var p in cities)
@@ -167,7 +175,7 @@ namespace VietStar.Repository
             // await Task.WhenAll(tasks);
             return true;
         }
-        public async Task<bool> InsertLoanPeriods(List<MCreditLoanPeriod> loanPeriods)
+        public async Task<bool> InsertLoanPeriodsAsync(List<MCreditLoanPeriod> loanPeriods)
         {
             List<Task> tasks = new List<Task>();
             foreach (var p in loanPeriods)
@@ -186,7 +194,7 @@ namespace VietStar.Repository
             //await Task.WhenAll(tasks);
             return true;
         }
-        public async Task<bool> InsertProducts(List<MCreditProduct> products)
+        public async Task<bool> InsertProductsAsync(List<MCreditProduct> products)
         {
             List<Task> tasks = new List<Task>();
             foreach (var p in products)
@@ -211,7 +219,7 @@ namespace VietStar.Repository
             return true;
         }
 
-        public async Task<bool> InsertUserToken(MCreditUserToken model)
+        public async Task<bool> InsertUserTokenAsync(MCreditUserToken model)
         {
             using (var con = GetConnection())
             {
@@ -225,7 +233,7 @@ namespace VietStar.Repository
             }
 
         }
-        public async Task<bool> InsertPeopleWhoCanViewProfile(int profileId, string peopleIds)
+        public async Task<bool> InsertPeopleWhoCanViewProfileAsync(int profileId, string peopleIds)
         {
             using (var con = GetConnection())
             {
@@ -239,7 +247,7 @@ namespace VietStar.Repository
             }
 
         }
-        public async Task<List<OptionSimple>> GetMCProfileStatusList()
+        public async Task<List<OptionSimple>> GetMCProfileStatusListAsync()
         {
             using (var con = GetConnection())
             {
@@ -247,7 +255,7 @@ namespace VietStar.Repository
                 return result.ToList();
             }
         }
-        public async Task<List<OptionSimple>> GetMCLocationSimpleList()
+        public async Task<List<OptionSimple>> GetMCLocationSimpleListAsync()
         {
             using (var con = GetConnection())
             {
@@ -255,7 +263,7 @@ namespace VietStar.Repository
                 return result.ToList();
             }
         }
-        public async Task<List<OptionSimple>> GetMCProductSimpleList()
+        public async Task<List<OptionSimple>> GetMCProductSimpleListAsync()
         {
             using (var con = GetConnection())
             {
@@ -263,7 +271,7 @@ namespace VietStar.Repository
                 return result.ToList();
             }
         }
-        public async Task<List<OptionSimple>> GetMCLoanPerodSimpleList()
+        public async Task<List<OptionSimple>> GetMCLoanPerodSimpleListAsync()
         {
             using (var con = GetConnection())
             {
@@ -271,7 +279,7 @@ namespace VietStar.Repository
                 return result.ToList();
             }
         }
-        public async Task<List<OptionSimple>> GetMCCitiesSimpleList()
+        public async Task<List<OptionSimple>> GetMCCitiesSimpleListAsync()
         {
             using (var con = GetConnection())
             {
@@ -279,7 +287,7 @@ namespace VietStar.Repository
                 return result.ToList();
             }
         }
-        public async Task<BaseResponse<int>> CreateDraftProfile(MCredit_TempProfile model)
+        public async Task<BaseResponse<int>> CreateDraftProfileAsync(MCredit_TempProfile model)
         {
             try
             {
@@ -304,7 +312,7 @@ namespace VietStar.Repository
                 return BaseResponse<int>.Create(0, GetException(e));
             }
         }
-        public async Task<bool> DeleteById(int profileId)
+        public async Task<bool> DeleteByIdAsync(int profileId)
         {
 
             using (var con = GetConnection())
@@ -313,7 +321,7 @@ namespace VietStar.Repository
                 return true;
             }
         }
-        public async Task<BaseResponse<bool>> UpdateDraftProfile(MCredit_TempProfile model)
+        public async Task<BaseResponse<bool>> UpdateDraftProfileAsync(MCredit_TempProfile model)
         {
             var param = GetParams(model, ignoreKey: new string[]
             {
@@ -338,7 +346,7 @@ namespace VietStar.Repository
                 return BaseResponse<bool>.Create(false, GetException(e));
             }
         }
-        public async Task<List<ProfileSearchSql>> GetTempProfiles(int page, int limit, string freeText, int userId, string status = null)
+        public async Task<List<ProfileSearchSql>> GetTempProfilesAsync(int page, int limit, string freeText, int userId, string status = null)
         {
             using (var con = GetConnection())
             {
@@ -353,7 +361,7 @@ namespace VietStar.Repository
                 return result.ToList();
             }
         }
-        public async Task<int> CountTempProfiles(string freeText, int userId, string status = null)
+        public async Task<int> CountTempProfilesAsync(string freeText, int userId, string status = null)
         {
             using (var con = GetConnection())
             {
@@ -366,7 +374,7 @@ namespace VietStar.Repository
                 return result;
             }
         }
-        public async Task<bool> IsCheckCat(string productCode)
+        public async Task<bool> IsCheckCatAsync(string productCode)
         {
             using (var con = GetConnection())
             {

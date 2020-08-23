@@ -12,30 +12,30 @@ namespace VietStar.Repository.Interfaces
     public interface IMCreditRepository
     {
         Task<BaseResponse<bool>> UpdateTempProfileStatusAsync(int profileId, int status);
-        Task<bool> IsCheckCat(string productCode);
-        
-        Task<bool> InsertPeopleWhoCanViewProfile(int profileId, string peopleIds);
-        Task<BaseResponse<MCredit_TempProfile>> GetTemProfileByMcId(string id);
-        Task<List<OptionSimple>> GetMCProfileStatusList();
-        Task<bool> UpdateSale(UpdateSaleModel model, int profileId);
-        Task<int> CountTempProfiles(string freeText, int userId, string status = null);
-        Task<List<ProfileSearchSql>> GetTempProfiles(int page, int limit, string freeText, int userId, string status = null);
-        Task<BaseResponse<int>> CreateDraftProfile(MCredit_TempProfile model);
-        Task<BaseResponse<bool>> UpdateDraftProfile(MCredit_TempProfile model);
-        Task<bool> DeleteMCTableDatas(int type);
-        Task<MCreditUserToken> GetUserTokenByIdAsync(int userId);
-        Task<bool> InsertUserToken(MCreditUserToken model);
-        Task<bool> InsertLocations(List<MCreditlocations> locations);
-        Task<bool> InsertProducts(List<MCreditProduct> products);
-        Task<bool> InsertLoanPeriods(List<MCreditLoanPeriod> loanPeriods);
-        Task<bool> InsertProfileStatus(List<OptionSimple> status);
-        Task<bool> InsertCities(List<MCreditCity> cities);
-        Task<List<OptionSimple>> GetMCProductSimpleList();
-        Task<List<OptionSimple>> GetMCLocationSimpleList();
-        Task<List<OptionSimple>> GetMCLoanPerodSimpleList();
-        Task<List<OptionSimple>> GetMCCitiesSimpleList();
-        Task<BaseResponse<MCredit_TempProfile>> GetTemProfileById(int id);
-        Task<bool> DeleteById(int profileId);
+        Task<bool> IsCheckCatAsync(string productCode);
+        Task<int> GetProfileIdByIdNumberAsync(string idNumber);
+        Task<bool> InsertPeopleWhoCanViewProfileAsync(int profileId, string peopleIds);
+        Task<BaseResponse<MCredit_TempProfile>> GetTemProfileByMcIdAsync(string id);
+        Task<List<OptionSimple>> GetMCProfileStatusListAsync();
+        Task<bool> UpdateSaleAsyncAsync(UpdateSaleModel model, int profileId);
+        Task<int> CountTempProfilesAsync(string freeText, int userId, string status = null);
+        Task<List<ProfileSearchSql>> GetTempProfilesAsync(int page, int limit, string freeText, int userId, string status = null);
+        Task<BaseResponse<int>> CreateDraftProfileAsync(MCredit_TempProfile model);
+        Task<BaseResponse<bool>> UpdateDraftProfileAsync(MCredit_TempProfile model);
+        Task<bool> DeleteMCTableDatasAsync(int type);
+        Task<MCreditUserToken> GetUserTokenByIdAsyncAsync(int userId);
+        Task<bool> InsertUserTokenAsync(MCreditUserToken model);
+        Task<bool> InsertLocationsAsync(List<MCreditlocations> locations);
+        Task<bool> InsertProductsAsync(List<MCreditProduct> products);
+        Task<bool> InsertLoanPeriodsAsync(List<MCreditLoanPeriod> loanPeriods);
+        Task<bool> InsertProfileStatusAsync(List<OptionSimple> status);
+        Task<bool> InsertCitiesAsync(List<MCreditCity> cities);
+        Task<List<OptionSimple>> GetMCProductSimpleListAsync();
+        Task<List<OptionSimple>> GetMCLocationSimpleListAsync();
+        Task<List<OptionSimple>> GetMCLoanPerodSimpleListAsync();
+        Task<List<OptionSimple>> GetMCCitiesSimpleListAsync();
+        Task<BaseResponse<MCredit_TempProfile>> GetTemProfileByIdAsync(int id);
+        Task<bool> DeleteByIdAsync(int profileId);
     }
 }
 

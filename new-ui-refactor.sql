@@ -1344,3 +1344,20 @@ end
 
 alter table RolePermission
 add IsDeleted bit
+
+
+------------
+create procedure sp_MCProfile_CheckIsExist(@IdNumber varchar(10))
+as begin
+select top(1) Id from MCredit_TempProfile 
+where IdNumber like '%' + @IdNumber + '%'
+or CCCDNumber like '%' + @IdNumber + '%'
+end
+
+-------------
+
+update ProfileStatus set Name =N'Sale Cập nhật hồ sơ'
+where ProfileType ='mcredit' and id = 127
+
+---------
+

@@ -58,36 +58,36 @@ namespace McreditServiceCore
                 return ToResponse<string>(null, "Không thể authen");
             string token = authen.Obj.Token;
 
-            await _rpMcredit.InsertUserToken(new MCreditUserToken { Token = token, UserId = userId });
+            await _rpMcredit.InsertUserTokenAsync(new MCreditUserToken { Token = token, UserId = userId });
 
             if (tableToUpdateIds == null || !tableToUpdateIds.Any())
                 return ToResponse(token);
 
             if (tableToUpdateIds.Contains((int)MCTableType.MCreditProduct) && authen.Products != null && authen.Products.Any())
             {
-                await _rpMcredit.DeleteMCTableDatas((int)MCTableType.MCreditProduct);
-                await _rpMcredit.InsertProducts(authen.Products);
+                await _rpMcredit.DeleteMCTableDatasAsync((int)MCTableType.MCreditProduct);
+                await _rpMcredit.InsertProductsAsync(authen.Products);
                 await _rpLog.InsertLog("mcredit-update-product", authen.Products.Dump());
             }
 
             if (tableToUpdateIds.Contains((int)MCTableType.MCreditCity) && authen.Cities != null && authen.Cities.Any())
             {
-                await _rpMcredit.DeleteMCTableDatas((int)MCTableType.MCreditCity);
-                await _rpMcredit.InsertCities(authen.Cities);
+                await _rpMcredit.DeleteMCTableDatasAsync((int)MCTableType.MCreditCity);
+                await _rpMcredit.InsertCitiesAsync(authen.Cities);
                 await _rpLog.InsertLog("mcredit-update-cities", authen.Cities.Dump());
             }
 
             if (tableToUpdateIds.Contains((int)MCTableType.MCreditLoanPeriod) && authen.LoanPeriods != null && authen.LoanPeriods.Any())
             {
-                await _rpMcredit.DeleteMCTableDatas((int)MCTableType.MCreditLoanPeriod);
-                await _rpMcredit.InsertLoanPeriods(authen.LoanPeriods);
+                await _rpMcredit.DeleteMCTableDatasAsync((int)MCTableType.MCreditLoanPeriod);
+                await _rpMcredit.InsertLoanPeriodsAsync(authen.LoanPeriods);
                 await _rpLog.InsertLog("mcredit-update-loanperiod", authen.LoanPeriods.Dump());
             }
 
             if (tableToUpdateIds.Contains((int)MCTableType.MCreditlocations) && authen.Locations != null && authen.Locations.Any())
             {
-                await _rpMcredit.DeleteMCTableDatas((int)MCTableType.MCreditlocations);
-                await _rpMcredit.InsertLocations(authen.Locations);
+                await _rpMcredit.DeleteMCTableDatasAsync((int)MCTableType.MCreditlocations);
+                await _rpMcredit.InsertLocationsAsync(authen.Locations);
                 await _rpLog.InsertLog("mcredit-update-locations", authen.Locations.Dump());
             }
 
@@ -98,8 +98,8 @@ namespace McreditServiceCore
                 {
                     list.Add(new OptionSimple { Code = item.Key, Name = item.Value });
                 }
-                await _rpMcredit.DeleteMCTableDatas((int)MCTableType.MCreditProfileStatus);
-                await _rpMcredit.InsertProfileStatus(list);
+                await _rpMcredit.DeleteMCTableDatasAsync((int)MCTableType.MCreditProfileStatus);
+                await _rpMcredit.InsertProfileStatusAsync(list);
             }
 
             return ToResponse(token);
@@ -168,7 +168,7 @@ namespace McreditServiceCore
             {
                 return _userToken;
             }
-            var tokenFromDb = await _rpMcredit.GetUserTokenByIdAsync(_userId);
+            var tokenFromDb = await _rpMcredit.GetUserTokenByIdAsyncAsync(_userId);
             //tokenFromDb = null;
             if (tokenFromDb != null)
             {
@@ -180,7 +180,7 @@ namespace McreditServiceCore
                 if (tokenFromMCApi == null)
                     return null;
                 _userToken = tokenFromMCApi.Obj.Token;
-                await _rpMcredit.InsertUserToken(new MCreditUserToken { UserId = _userId, Token = _userToken });
+                await _rpMcredit.InsertUserTokenAsync(new MCreditUserToken { UserId = _userId, Token = _userToken });
             }
             return _userToken;
         }
