@@ -12,7 +12,7 @@
 	[ProfileType] [varchar](30) NULL
 ) ON [PRIMARY]
 
-insert into ProfileStatus(Name, Value, OrgId,Code) values
+insert into ProfileStatus(Name, Value, OrgId,ProfileType) values
 (N'Không nợ xấu',0,1,'duplicate'),
 (N'Nợ chú ý',1,1,'duplicate'),
 (N'Nợ xấu',2,1,'duplicate'),
@@ -36,7 +36,8 @@ insert into ProfileStatus(Name, Value, OrgId,Code) values
   @ProvinceId int,
   @Address nvarchar(200),
   @Phone varchar(12),
-  @Salary decimal(18,2)
+  @Salary decimal(18,2),
+  @IsMatch bit =0
   )
   as
   begin
@@ -55,7 +56,8 @@ insert into ProfileStatus(Name, Value, OrgId,Code) values
 	,ProvinceId
 	,Address
 	,Phone
-	,Salary)
+	,Salary
+	,IsMatch)
 	values
 	(@fullname
 	,@checkdate
@@ -71,7 +73,8 @@ insert into ProfileStatus(Name, Value, OrgId,Code) values
 	,@ProvinceId
 	,@Address
 	,@Phone
-	,@Salary);
+	,@Salary
+	,@IsMatch);
 	SET @id=@@IDENTITY;
 
   end
@@ -91,7 +94,8 @@ insert into ProfileStatus(Name, Value, OrgId,Code) values
   @Salary decimal(18,2),
   @PartnerId int,
   @PartnerStatus int,
-  @CICStatus int
+  @CICStatus int,
+  @IsMatch bit =0
   )
   as
   begin
@@ -108,7 +112,8 @@ insert into ProfileStatus(Name, Value, OrgId,Code) values
 		Salary = @Salary,
 		PartnerId = @PartnerId,
 		PartnerStatus = @PArtnerStatus,
-		CICStatus = @CICStatus
+		CICStatus = @CICStatus,
+		IsMatch = @IsMatch
 		where Id = @id
 	  if(@LastNote is not null)
 		update Customer set LastNote = @LastNote where Id = @id
@@ -158,7 +163,10 @@ end
 
 
 -----------
+alter table Customer 
+add IsDeleted bit
 
+---------
 alter procedure [dbo].[sp_GetCustomer_v2]
 (
 @freeText nvarchar(30),
