@@ -37,7 +37,8 @@ insert into ProfileStatus(Name, Value, OrgId,ProfileType) values
   @Address nvarchar(200),
   @Phone varchar(12),
   @Salary decimal(18,2),
-  @IsMatch bit =0
+  @IsMatch bit =0,
+  @BirthDay datetime
   )
   as
   begin
@@ -57,7 +58,8 @@ insert into ProfileStatus(Name, Value, OrgId,ProfileType) values
 	,Address
 	,Phone
 	,Salary
-	,IsMatch)
+	,IsMatch
+	,BirthDay)
 	values
 	(@fullname
 	,@checkdate
@@ -74,7 +76,8 @@ insert into ProfileStatus(Name, Value, OrgId,ProfileType) values
 	,@Address
 	,@Phone
 	,@Salary
-	,@IsMatch);
+	,@IsMatch
+	,@BirthDay);
 	SET @id=@@IDENTITY;
 
   end
@@ -95,7 +98,8 @@ insert into ProfileStatus(Name, Value, OrgId,ProfileType) values
   @PartnerId int,
   @PartnerStatus int,
   @CICStatus int,
-  @IsMatch bit =0
+  @IsMatch bit =0,
+  @BirthDay datetime
   )
   as
   begin
@@ -113,7 +117,8 @@ insert into ProfileStatus(Name, Value, OrgId,ProfileType) values
 		PartnerId = @PartnerId,
 		PartnerStatus = @PArtnerStatus,
 		CICStatus = @CICStatus,
-		IsMatch = @IsMatch
+		IsMatch = @IsMatch,
+		BirthDay = @BirthDay
 		where Id = @id
 	  if(@LastNote is not null)
 		update Customer set LastNote = @LastNote where Id = @id
