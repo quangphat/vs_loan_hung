@@ -42,7 +42,19 @@
                         </div>
 
                     </div>
-                    
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày sinh</label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtBirthDay" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </div>
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại</label>
                         <div class="col-sm-4">
@@ -147,8 +159,10 @@
         getPartner()
         GetNotes('@Model.Id')
         setDateTimeInput('#CheckDate', 'dd/mm/yyyy')
+        setDateTimeInput('#txtBirthDay', 'dd/mm/yyyy')
 
         $("#CheckDate").val(FormatDateTimeDMYv2('@Model.CheckDate.ToString("yyyy/MM/dd")', 'YYYY-MM-DD'))
+        $("#txtBirthDay").val(FormatDateTimeDMYv2('@Model.BirthDay.ToString("yyyy/MM/dd")', 'YYYY-MM-DD'))
         if ('@Model.PartnerStatus' == '0') {
             $("#rdChecked").prop("checked", true);
             $("#rdUnChecked").prop("checked", false);
@@ -249,7 +263,8 @@
             'CheckDate': $('#CheckDate').val(),
             'Note': $('#txtGhiChu').val(),
             'Cmnd': $('#Cmnd').val(),
-            'CICStatus':$("#CICStatus").val(),
+            'CICStatus': $("#CICStatus").val(),
+            'BirthDay': $('#txtBirthDay').val(),
             'ProvinceId': $("#ProvinceId").val(),
             'PartnerId': $("#partnerId").val(),
             'PartnerStatus':$('input[name="radio-check"]:checked').val() == "1"  ? 1 : 2,
