@@ -57,7 +57,7 @@ namespace VietStar.Business
             {
                 for (int i = 0; i < groups.Count; i++)
                 {
-                    var members = await _rpEmployee.GetMemberByGroupId(groups[i].Id, _process.User.Id);
+                    var members = await _rpEmployee.GetMemberByGroupIdAsync(groups[i].Id, _process.User.Id);
                     if(members!=null)
                         result.AddRange(members);
                    
@@ -98,6 +98,18 @@ namespace VietStar.Business
             }
             account.Permissions = await _rpEmployee.GetPermissions(account.RoleCode);
             return account;
+        }
+
+        public async Task<List<OptionSimple>> GetAllEmployeePagingAsync(int page, string freeText)
+        {
+            var result = await _rpEmployee.GetAllEmployeePagingAsync(_process.User.OrgId, page, freeText);
+            return result;
+        }
+
+        public async Task<List<OptionSimple>> GetAllEmployeeAsync()
+        {
+            var result = await _rpEmployee.GetAllEmployee(_process.User.OrgId);
+            return result;
         }
     }
 }

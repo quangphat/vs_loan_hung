@@ -18,10 +18,13 @@ namespace VietStar.Business
     public class GroupBusiness : BaseBusiness, IGroupBusiness
     {
         protected readonly IGroupRepository _rpGroup;
+        protected readonly IEmployeeRepository _rpEmployee;
         public GroupBusiness(IGroupRepository groupRepository,
+            IEmployeeRepository employeeRepository,
             IMapper mapper, CurrentProcess process) : base(mapper, process)
         {
             _rpGroup = groupRepository;
+            _rpEmployee = employeeRepository;
         }
 
         public async Task<List<GroupModel>> GetApproveGroupByUserId()
@@ -100,12 +103,12 @@ namespace VietStar.Business
                 {
                     for (int i = lstFind.Count - 1; i >= 0; i--)
                     {
-                        if(leaderId>0)
+                        if (leaderId > 0)
                         {
                             if (lstFind[i].ParentSequenceCode == parentSequenceCode && lstFind[i].LeaderId != leaderId)
                                 continue;
                         }
-                        
+
                         stack.Push(lstFind[i]);
                         groups.Remove(lstFind[i]);
                     }
@@ -119,12 +122,27 @@ namespace VietStar.Business
             var result = await _rpGroup.GetChildGroupByParentIdAsync(parentId, _process.User.Id);
             return result;
         }
-         public  async Task<DataPaging<List<GroupIndexModel>>> SearchAsync(int parentId, int page = 1, int limit =10)
+        public async Task<DataPaging<List<GroupIndexModel>>> SearchAsync(int parentId, int page = 1, int limit = 10)
         {
             var data = await _rpGroup.GetChildGroupByParentIdForPagingAsync(page, limit, parentId, _process.User.Id);
             if (data == null || !data.Any())
                 return DataPaging.Create<List<GroupIndexModel>>(null, 0);
             return DataPaging.Create<List<GroupIndexModel>>(data, data.FirstOrDefault().TotalRecord);
         }
+
+        public async Task<GroupModel> GetGroupByIdAsync(int groupId)
+        {
+            var result = await _rpGroup.GetGroupByIdAsync(groupId);
+            return result;
+        }
+
+        public async Task<List<OptionSimple>> GetMemberByGroupIdAsync(int groupId)
+        {
+            var result = await _rpEmployee.GetMemberByGroupIdAsync(groupId, _process.User.Id);
+            return result;
+        }
+
+        
+
     }
 }

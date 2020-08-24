@@ -1397,3 +1397,91 @@ BEGIN
 END
 
 ----------
+alter table Nhom
+add IsDeleted bit
+
+-------
+
+alter PROCEDURE [dbo].[sp_Group_GetChildGroupForPaging] 
+	-- Add the parameters for the stored procedure here
+	@parentGroupId int,
+	@userId int =0,
+	@page int  =1,
+	@limit int =10
+AS
+BEGIN
+
+declare @offset int = 0;
+set @offset = (@page-1)*@limit;
+declare @where  nvarchar(500) = ' where isnull(g.IsDeleted,0) = 0';
+declare @mainClause nvarchar(max);
+declare @params nvarchar(300);
+	declare @orgId int = 0;
+  select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
+
+  set @mainClause = 'Select count(*) over() as TotalRecord, g.ID, g.Ten as Name, 
+	g.Ten_Viet_Tat as ShortName, 
+	e.Ho_Ten as LeaderName, 
+	g.Chuoi_Ma_Cha as ParentSequenceCode 
+	From NHOM g left join Nhan_Vien e on g.Ma_Nguoi_QL = e.ID'
+set @where += ' and g.Ma_Nhom_Cha = @parentGroupId and isnull(g.OrgId, 0) = @orgId order by g.UpdatedTime desc offset @offset ROWS FETCH NEXT @limit ROWS ONLY'; 
+set @mainClause = @mainClause +  @where	
+set @params =N' @offset int, @limit int, @userId int, @orgId int, @parentGroupId int';
+EXECUTE sp_executesql @mainClause, @params,  @offset = @offset, @limit = @limit, @userId = @userId, @orgId = @orgId, @parentGroupId = @parentGroupId;
+print @mainClause;
+END
+
+
+---------
+
+create PROCEDURE [dbo].[sp_NHOM_LayThongTinTheoMa_v2] 
+	-- Add the parameters for the stored procedure here
+	@groupId int
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	Select NHOM.ID, NHOM.Ten as Name, NHOM.Ten_Viet_Tat as ShortName, NHOM.Ma_Nhom_Cha as ParentCode, NHOM.Ma_Nguoi_QL as LeaderId 
+	From NHOM Where NHOM.ID = @groupId
+END
+
+----------
+
+
+ALTER PROCEDURE [dbo].[sp_Employee_GetPaging] 
+(@orgId int =0, 
+@freetext nvarchar(50) ='',
+ @page int = 1,
+  @limit int= 20)
+AS
+BEGIN
+declare @offset int = 0;
+set @offset = (@page-1)*@limit;
+declare @where  nvarchar(1000) = '';
+declare @mainClause nvarchar(max);
+declare @params nvarchar(300);
+if @freetext = '' begin set @freetext = null end;
+set @mainClause = 'Select count(*) over() as TotalRecord, Id, Ma + '' - '' + Ho_Ten as Name From Nhan_Vien where isnull(OrgId,0) = @orgId and isnull(IsDeleted,0) = 0 ';
+if(@freetext  is not null)
+	begin
+	set @where +=' and (Ma like  N''%' + @freetext +'%''';
+	set @where +=' or Ho_Ten like  N''%' + @freetext +'%'' )';
+end;
+set @where += ' order by createdTime desc offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
+set @mainClause = @mainClause +  @where
+set @params =N' @offset int, @limit int, @orgId int';
+EXECUTE sp_executesql @mainClause, @params, @offset = @offset, @limit = @limit,@orgId = @orgId;
+print @mainClause;
+END
+
+----------
+
+ALTER PROCEDURE [dbo].[sp_Employee_GetFull] 
+(@orgId int =0)
+AS
+BEGIN
+Select  Id, Ma + ' - ' + Ho_Ten as Name From Nhan_Vien where isnull(OrgId,0) = @orgId and isnull(IsDeleted,0) = 0 
+ order by ID desc
+END
+
+-----------

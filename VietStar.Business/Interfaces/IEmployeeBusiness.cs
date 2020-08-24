@@ -14,5 +14,7 @@ namespace VietStar.Business.Interfaces
         Task<bool> GetStatusAsync(int userId);
         Task<Account> LoginAsync(LoginModel model);
         Task<List<OptionSimple>> GetMemberByGroupIdAsync(int groupId);
+        Task<List<OptionSimple>> GetAllEmployeePagingAsync(int page, string freeText);
+        Task<List<OptionSimple>> GetAllEmployeeAsync();
     }
 }

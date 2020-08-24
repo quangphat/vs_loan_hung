@@ -121,7 +121,7 @@ namespace VietStar.Repository
                 return null;
             }
         }
-        public async Task<List<OptionSimple>> GetMemberByGroupId(int groupId, int userId)
+        public async Task<List<OptionSimple>> GetMemberByGroupIdAsync(int groupId, int userId)
         {
             try
             {
@@ -137,6 +137,24 @@ namespace VietStar.Repository
             catch (Exception ex)
             {
                 return null;
+            }
+        }
+
+        public async Task<List<OptionSimple>> GetAllEmployee(int orgId)
+        {
+            using (var con = GetConnection())
+            {
+                var rs = await con.QueryAsync<OptionSimple>("sp_Employee_GetFull", new { orgId }, commandType: CommandType.StoredProcedure);
+                return rs.ToList();
+            }
+        }
+
+        public async Task<List<OptionSimple>> GetAllEmployeePagingAsync(int orgId, int page, string freeText)
+        {
+            using (var con = GetConnection())
+            {
+                var rs = await con.QueryAsync<OptionSimple>("sp_Employee_GetPaging", new { orgId, page, freeText }, commandType: CommandType.StoredProcedure);
+                return rs.ToList();
             }
         }
     }

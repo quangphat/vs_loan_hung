@@ -15,7 +15,7 @@ namespace VietStar.Client.Controllers
     public class GroupController : VietStarBaseController
     {
         protected readonly IGroupBusiness _bizGroup;
-        public GroupController(IGroupBusiness groupBusiness,CurrentProcess process) : base(process)
+        public GroupController(IGroupBusiness groupBusiness, CurrentProcess process) : base(process)
         {
             _bizGroup = groupBusiness;
         }
@@ -26,15 +26,15 @@ namespace VietStar.Client.Controllers
         {
             return View();
         }
-        
-        
+
+
         [HttpGet("GroupsByUserId")]
         public async Task<IActionResult> GetGroupsByUserId()
         {
             var result = await _bizGroup.GetGroupByUserId();
             return ToResponse(result);
         }
-        
+
         [HttpGet("ApproveGroupsByUserId")]
         public async Task<IActionResult> GetApproveGroupsByUserId()
         {
@@ -54,7 +54,20 @@ namespace VietStar.Client.Controllers
         {
             var result = await _bizGroup.SearchAsync(parentId, page, limit);
             return ToResponse(result);
+        }
 
+        [HttpGet("Edit/{id}")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var result = await _bizGroup.GetGroupByIdAsync(id);
+            return View(result);
+        }
+
+        [HttpGet("members/{groupId}")]
+        public async Task<IActionResult> GetMembers(int groupId)
+        {
+            var result = await _bizGroup.GetMemberByGroupIdAsync(groupId);
+            return ToResponse(result);
         }
     }
 }

@@ -486,6 +486,7 @@ function GetParentGroups(control = null, defaultValue = 0) {
     if (control == null)
         control = $("#groupId");
     control.empty();
+    
     control.append("<option value='0'>Chọn nhóm</option>");
     let data = getLocalStorage('parent-groups')
     if (data != null) {

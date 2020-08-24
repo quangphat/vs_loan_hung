@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using VietStar.Entities.Commons;
 using VietStar.Entities.GroupModels;
 using VietStar.Entities.ViewModels;
 using VietStar.Repository.Interfaces;
@@ -122,6 +123,25 @@ namespace VietStar.Repository
                 return null;
             }
         }
+
+        public async Task<GroupModel> GetGroupByIdAsync(int groupId)
+        {
+            try
+            {
+                using (var _con = GetConnection())
+                {
+                    var result = await _con.QueryFirstOrDefaultAsync<GroupModel>("sp_NHOM_LayThongTinTheoMa_v2", new { groupId }, commandType: CommandType.StoredProcedure);
+                    return result;
+                }
+            }
+            catch (Exception e)
+            {
+                await _rpLog.InsertLogFromException(nameof(GetGroupByUserId), e);
+                return null;
+            }
+        }
+
+        
     }
 }
 

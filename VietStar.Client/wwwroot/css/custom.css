@@ -1,6 +1,9 @@
 ﻿html, body, h1, h2, h3, h4, h5, h6 {
     font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
 }
+select option, select.form-control option {
+    padding: 3px 4px 5px;
+}
 .horizontal-scroll {
     overflow-x: auto;
 }

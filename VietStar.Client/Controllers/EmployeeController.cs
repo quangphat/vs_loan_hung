@@ -33,5 +33,19 @@ namespace VietStar.Client.Controllers
             var result = await _bizEmployee.GetByProvinceIdAsync(provinceId);
             return ToResponse(result);
         }
+
+        [HttpGet("paging")]
+        public async Task<IActionResult> GetAllEmployeePaging(string freeText, int page = 1)
+        {
+            var result = await _bizEmployee.GetAllEmployeePagingAsync( page, freeText);
+            return ToResponse(result);
+        }
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllEmployeePaging()
+        {
+            var result = await _bizEmployee.GetAllEmployeeAsync();
+            return ToResponse(result);
+        }
     }
 }

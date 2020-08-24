@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using VietStar.Entities.Commons;
 using VietStar.Entities.GroupModels;
 
 namespace VietStar.Repository.Interfaces
@@ -14,5 +15,6 @@ namespace VietStar.Repository.Interfaces
         Task<List<GroupModel>> GetParentGroupsAsync(int userId);
         Task<List<GroupModel>> GetChildGroupByParentIdAsync(int parentGroupId, int userId);
         Task<List<GroupIndexModel>> GetChildGroupByParentIdForPagingAsync(int page, int limit, int parentGroupId, int userId);
+        Task<GroupModel> GetGroupByIdAsync(int groupId);
     }
 }

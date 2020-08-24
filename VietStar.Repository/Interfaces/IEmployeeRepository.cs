@@ -16,7 +16,9 @@ namespace VietStar.Repository.Interfaces
         Task<Account> Login(string userName, string password);
         Task<List<string>> GetPermissions(string  roleCode);
         Task<List<OptionSimple>> GetMemberByGroupIdIncludeChild(int groupId, int userId);
-        Task<List<OptionSimple>> GetMemberByGroupId(int groupId, int userId);
+        Task<List<OptionSimple>> GetMemberByGroupIdAsync(int groupId, int userId);
         Task<List<int>> GetPeopleCanViewMyProfile(int profileId);
+        Task<List<OptionSimple>> GetAllEmployee(int orgId);
+        Task<List<OptionSimple>> GetAllEmployeePagingAsync(int orgId, int page, string freeText);
     }
 }

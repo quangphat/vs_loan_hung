@@ -81,6 +81,7 @@ function isNullOrWhiteSpace(text) {
     return false;
 }
 function showBlock(div, text = 'Vui lòng chờ trong giây lát') {
+    debugger
     div.block({
         css: {
             border: 'none',
@@ -91,7 +92,7 @@ function showBlock(div, text = 'Vui lòng chờ trong giây lát') {
             opacity: 1,
             //color: '#fff'
         },
-        message: '<img src="../img/busy.gif" /> ' + text
+        message: '<img src="../../img/busy.gif" /> ' + text
     });
 }
 function showError(jqXHR, exception) {
