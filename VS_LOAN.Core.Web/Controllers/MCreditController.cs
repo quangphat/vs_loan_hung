@@ -448,12 +448,14 @@ namespace VS_LOAN.Core.Web.Controllers
             profile = await _rpMCredit.GetTemProfileById(profileId);
             if (profile == null)
                 return ToJsonResponse(false, "Hồ sơ không tồn tại", new List<LoaiTaiLieuModel>());
+            var code = profile.ProductCode != null ? profile.ProductCode.Trim() : null;
+            var Loccode = profile.LocSignCode != null ? profile.LocSignCode.Trim() : null;
 
             var data = await _svMCredit.GetFileUpload(new GetFileUploadRequest
             {
-                Code = profile.ProductCode.Trim(),
+                Code = code,
                 Id = "0",
-                Loccode = profile.LocSignCode.Trim(),
+                Loccode = Loccode,
                 Issl = profile.IsAddr ? "1" : "0",
                 Money = profile.LoanMoney.ToString().Replace(",0000", "")
             }, GlobalData.User.IDUser);
