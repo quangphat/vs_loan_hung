@@ -78,8 +78,6 @@
                 <button type="button" id="btnSearch" class="btn btn-info pull-right">Tìm kiếm</button>
             </div>
             <!-- /.box-body -->
-            
-
             <!-- /.box-footer -->
         </form>
         <div class="clearfix"></div>
@@ -97,8 +95,8 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label>
-                                Hiển thị 
-                                <select name="dtSource_length" id="ddlLimit" aria-controls="dtSource" class="form-control input-sm"  onchange="onSelectLimit()">
+                                Hiển thị
+                                <select name="dtSource_length" id="ddlLimit" aria-controls="dtSource" class="form-control input-sm" onchange="onSelectLimit()">
                                     <option value="10">10</option>
                                     <option value="25">25</option>
                                     <option value="50">50</option>
@@ -252,7 +250,7 @@ function renderRow(index, item) {
         + "</tr>";
 }
     function renderTableBody(datas) {
-        
+
     var table = $("#dtSource")
     var tableBody = $("#dtSource").find("tbody");
     tableBody.empty();
@@ -377,7 +375,7 @@ function getData(page, limit, sort = "desc", sortField = "updatedtime",status, g
                 renderTableBody(response.data.Datas)
                 //renderGoPreviousPage(page);
                 renderPageList(page, limit, totalRecord)
-               
+
             }
             else {
                 swal({

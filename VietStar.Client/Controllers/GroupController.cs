@@ -19,6 +19,14 @@ namespace VietStar.Client.Controllers
         {
             _bizGroup = groupBusiness;
         }
+
+        [Route("Index")]
+        [HttpGet]
+        public IActionResult Index()
+        {
+            return View();
+        }
+        
         
         [HttpGet("GroupsByUserId")]
         public async Task<IActionResult> GetGroupsByUserId()
@@ -39,6 +47,14 @@ namespace VietStar.Client.Controllers
         {
             var result = await _bizGroup.GetParentGroups();
             return ToResponse(result);
+        }
+
+        [HttpGet("Childrens")]
+        public async Task<IActionResult> GetChildByParentGroupId(int parentId, int page = 1, int limit = 10)
+        {
+            var result = await _bizGroup.SearchAsync(parentId, page, limit);
+            return ToResponse(result);
+
         }
     }
 }

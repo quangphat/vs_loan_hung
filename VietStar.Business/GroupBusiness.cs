@@ -56,7 +56,7 @@ namespace VietStar.Business
                 {
                     foreach (var item in temp)
                     {
-                        var children = await _rpGroup.GetChildGroupByParentId(item.Id);
+                        var children = await _rpGroup.GetChildGroupBaseParentSequenceCodeByParentId(item.Id, _process.User.Id);
                         if (children != null || children.Any())
                         {
                             result.AddRange(GenerateChildList(children, $"{item.ParentSequenceCode}.{item.Id}", _process.User.Id));
@@ -114,6 +114,17 @@ namespace VietStar.Business
             return lstResult;
         }
 
-       
+        public async Task<List<GroupModel>> GetChildByParentIdAsync(int parentId)
+        {
+            var result = await _rpGroup.GetChildGroupByParentIdAsync(parentId, _process.User.Id);
+            return result;
+        }
+         public  async Task<DataPaging<List<GroupIndexModel>>> SearchAsync(int parentId, int page = 1, int limit =10)
+        {
+            var data = await _rpGroup.GetChildGroupByParentIdForPagingAsync(page, limit, parentId, _process.User.Id);
+            if (data == null || !data.Any())
+                return DataPaging.Create<List<GroupIndexModel>>(null, 0);
+            return DataPaging.Create<List<GroupIndexModel>>(data, data.FirstOrDefault().TotalRecord);
+        }
     }
 }

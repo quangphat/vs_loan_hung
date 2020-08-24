@@ -21,19 +21,55 @@ namespace VietStar.Repository
             _rpLog = logRepository;
         }
 
-        public async Task<List<GroupModel>> GetChildGroupByParentId(int parentGroupId)
+        public async Task<List<GroupModel>> GetChildGroupBaseParentSequenceCodeByParentId(int parentGroupId , int userId)
         {
             try
             {
                 using (var _con = GetConnection())
                 {
-                    var result = await _con.QueryAsync<GroupModel>("sp_NHOM_LayCayNhomCon_v3", new { parentGroupId }, commandType: CommandType.StoredProcedure);
+                    //old name: sp_NHOM_LayCayNhomCon_v3
+                    var result = await _con.QueryAsync<GroupModel>("sp_Gorup_GetChildByParentSequenceCode", new { parentGroupId, userId }, commandType: CommandType.StoredProcedure);
                     return result.ToList();
                 }
             }
             catch (Exception e)
             {
-                await _rpLog.InsertLogFromException(nameof(GetChildGroupByParentId), e);
+                await _rpLog.InsertLogFromException(nameof(GetChildGroupBaseParentSequenceCodeByParentId), e);
+                return null;
+            }
+        }
+
+        public async Task<List<GroupIndexModel>> GetChildGroupByParentIdForPagingAsync(int page, int limit, int parentGroupId, int userId)
+        {
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    ProcessInputPaging(ref page, ref limit, out int offset);
+                    var result = await con.QueryAsync<GroupIndexModel>("sp_Group_GetChildGroupForPaging", new { parentGroupId, userId , page, limit}, commandType: CommandType.StoredProcedure);
+                    return result.ToList();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<GroupModel>> GetChildGroupByParentIdAsync(int parentGroupId, int userId)
+        {
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    var result = await con.QueryAsync<GroupModel>("sp_Group_GetChildGroup_v2", new { parentGroupId, userId }, commandType: CommandType.StoredProcedure);
+                    return result.ToList();
+                }
+
+            }
+            catch (Exception ex)
+            {
                 return null;
             }
         }

@@ -283,16 +283,24 @@ end
 
 -------------
 
-create PROCEDURE [dbo].[sp_NHOM_LayCayNhomCon_v3] 
+go
+alter PROCEDURE [dbo].[sp_Gorup_GetChildByParentSequenceCode] 
 	-- Add the parameters for the stored procedure here
-	@parentGroupId int
+	@parentGroupId int,
+	@userId int
 AS
 BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	Select g.ID as Id, g.Ten as Name, g.Chuoi_Ma_Cha as ParentCode, g.Ma_Nguoi_QL as LeaderId , g.Ten_Viet_Tat as ShortName From NHOM g
+--old name: sp_NHOM_LayCayNhomCon_v3
+	declare @orgId int = 0;
+	select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
+	Select g.ID as Id, 
+	g.Ten as Name, 
+	g.Chuoi_Ma_Cha as ParentSequenceCode, 
+	g.Ma_Nguoi_QL as LeaderId , 
+	g.Ten_Viet_Tat as ShortName From NHOM g
 	Where 
-	((g.Chuoi_Ma_Cha + '.' + Convert(nvarchar, g.ID)) like '%.' + Convert(nvarchar, @parentGroupId) + '.%')
+	isnull(g.OrgId,0) = @orgId 
+	and ((g.Chuoi_Ma_Cha + '.' + Convert(nvarchar, g.ID)) like '%.' + Convert(nvarchar, @parentGroupId) + '.%')
 	 or ((g.Chuoi_Ma_Cha + '.' + Convert(nvarchar, g.ID)) like '%.' + Convert(nvarchar, @parentGroupId))
 END
 
@@ -1368,5 +1376,24 @@ where Id  =@Id
 end
 
 
+
+----------
+
+create PROCEDURE [dbo].[sp_Group_GetChildGroup_v2] 
+	-- Add the parameters for the stored procedure here
+	@parentGroupId int,
+	@userId int =0
+AS
+BEGIN
+	declare @orgId int = 0;
+  select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
+	Select g.ID, g.Ten as Name, 
+	g.Ten_Viet_Tat as ShortName, 
+	e.Ho_Ten as LeaderName, 
+	g.Chuoi_Ma_Cha as ParentSequenceCode 
+	From NHOM g left join Nhan_Vien e on g.Ma_Nguoi_QL = e.ID
+	Where g.Ma_Nhom_Cha = @parentGroupId
+	and isnull(g.OrgId, 0) = @orgId
+END
 
 ----------

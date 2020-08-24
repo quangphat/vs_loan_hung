@@ -12,5 +12,6 @@ namespace VietStar.Entities.GroupModels
         public string ParentSequenceCode { get; set; }
         public string ShortName { get; set; }
         public int LeaderId { get; set; }
+        public string LeaderName { get; set; }
     }
 }

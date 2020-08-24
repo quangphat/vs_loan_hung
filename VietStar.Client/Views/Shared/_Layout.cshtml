@@ -336,7 +336,7 @@
 
                         </ul>
                     </li>
-                    <li class="treeview">
+                    <li class="treeview" id="groups">
                         <a href="#">
                             <i class="fa fa-group"></i> <span>Tổ nhóm</span>
                             <span class="pull-right-container">
@@ -344,9 +344,9 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
-                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Quản lý</a></li>
-                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Cấu hình duyệt</a></li>
+                            <li id="Groups/Create"><a href="/Groups/Create"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
+                            <li id="Groups/Index"><a href="/Groups/Index"><i class="fa fa-circle-o"></i> Quản lý</a></li>
+                            <li id="Groups/Config"><a href="/Groups/Config"><i class="fa fa-circle-o"></i> Cấu hình duyệt</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -631,6 +631,7 @@
             datatype: "JSON",
             url: '@Url.Action("Logout", "Account")',
             success: function (data) {
+                localStorage.clear();
                  window.location = "/Account/Login";
             },
             error: function (jqXHR, exception) { if (jqXHR.status != 0) alert('Error'); }

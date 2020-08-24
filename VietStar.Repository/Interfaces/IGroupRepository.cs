@@ -10,7 +10,9 @@ namespace VietStar.Repository.Interfaces
     {
         Task<List<GroupModel>> GetParentGroupsByUserIdAsync(int userId);
         Task<List<GroupModel>> GetGroupByUserId(int userId);
-        Task<List<GroupModel>> GetChildGroupByParentId(int parentGroupId);
+        Task<List<GroupModel>> GetChildGroupBaseParentSequenceCodeByParentId(int parentGroupId, int userId);
         Task<List<GroupModel>> GetParentGroupsAsync(int userId);
+        Task<List<GroupModel>> GetChildGroupByParentIdAsync(int parentGroupId, int userId);
+        Task<List<GroupIndexModel>> GetChildGroupByParentIdForPagingAsync(int page, int limit, int parentGroupId, int userId);
     }
 }
