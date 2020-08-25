@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using VietStar.Entities;
 using VietStar.Entities.Commons;
 using VietStar.Entities.GroupModels;
 using VietStar.Entities.ViewModels;
@@ -140,8 +141,59 @@ namespace VietStar.Repository
                 return null;
             }
         }
+        public async Task<BaseResponse<bool>> UpdateAsync(GroupEditModel model, string parentSequenceCode, int orgId)
+        {
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    var result = await con.ExecuteAsync("sp_Group_Update",
+                        new
+                        {
+                            Id = model.Id,
+                            parentId = model.ParentId,
+                            LeaderId = model.LeaderId,
+                            ShortName = model.ShortName,
+                            Name = model.Name,
+                            parentSequenceCode,
+                            orgId,
+                            memberIds = string.Join(',',model.MemberIds)
+                        },
+                        commandType: CommandType.StoredProcedure);
+                    return BaseResponse<bool>.Create(true);
+                }
 
-        
+            }
+            catch (Exception ex)
+            {
+                return BaseResponse<bool>.Create(false, GetException(ex));
+            }
+        }
+
+        public async Task<BaseResponse<string>> GetParentSequenceCodeAsync(int groupId)
+        {
+
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    var result = await con.QueryFirstOrDefaultAsync<string>("sp_NHOM_LayChuoiMaChaCuaMaNhom",
+                        new
+                        {
+                            MaNhom = groupId
+                        },
+                        commandType: CommandType.StoredProcedure);
+                    return BaseResponse<string>.Create(result);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BaseResponse<string>.Create("0", GetException(ex));
+            }
+        }
+
+
     }
 }
 

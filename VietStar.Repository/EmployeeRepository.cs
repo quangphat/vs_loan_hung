@@ -6,7 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using VietStar.Entities;
 using VietStar.Entities.Commons;
+using VietStar.Entities.GroupModels;
 using VietStar.Entities.ViewModels;
 using VietStar.Repository.Interfaces;
 
@@ -65,7 +67,7 @@ namespace VietStar.Repository
                 var result = await con.QueryAsync<string>("sp_getPermissionByRoleCode", new
                 {
                     roleCode,
-                    
+
                 }, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
@@ -110,7 +112,7 @@ namespace VietStar.Repository
                 using (var con = GetConnection())
                 {
                     var result = await con.QueryAsync<OptionSimple>("sp_NHAN_VIEN_LayDSCourierCode_v2",
-                        new {orgId },
+                        new { orgId },
                         commandType: CommandType.StoredProcedure);
                     return result.ToList();
                 }
@@ -157,5 +159,7 @@ namespace VietStar.Repository
                 return rs.ToList();
             }
         }
+
+        
     }
 }

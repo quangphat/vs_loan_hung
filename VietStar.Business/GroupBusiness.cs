@@ -142,7 +142,22 @@ namespace VietStar.Business
             return result;
         }
 
-        
+        public async Task<bool> UpdateAsync(GroupEditModel model)
+        {
+            if (model == null || model.Id <= 0)
+                return ToResponse(false, Errors.invalid_data);
 
+            if (model.MemberIds == null)
+                model.MemberIds = new List<int>();
+
+            string parentSequenceCode = "0";
+            if (model.ParentId > 0)
+            {
+                var parentCode = _rpGroup.GetParentSequenceCodeAsync(model.ParentId);
+                parentSequenceCode = parentCode + "." + model.ParentId;
+            }
+
+            return ToResponse(await _rpGroup.UpdateAsync(model, parentSequenceCode, _process.User.OrgId));
+        }
     }
 }

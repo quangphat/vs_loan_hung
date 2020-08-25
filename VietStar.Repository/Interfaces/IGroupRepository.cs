@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using VietStar.Entities;
 using VietStar.Entities.Commons;
 using VietStar.Entities.GroupModels;
 
@@ -16,5 +17,7 @@ namespace VietStar.Repository.Interfaces
         Task<List<GroupModel>> GetChildGroupByParentIdAsync(int parentGroupId, int userId);
         Task<List<GroupIndexModel>> GetChildGroupByParentIdForPagingAsync(int page, int limit, int parentGroupId, int userId);
         Task<GroupModel> GetGroupByIdAsync(int groupId);
+        Task<BaseResponse<bool>> UpdateAsync(GroupEditModel model, string parentSequenceCode, int orgId);
+        Task<BaseResponse<string>> GetParentSequenceCodeAsync(int groupId);
     }
 }

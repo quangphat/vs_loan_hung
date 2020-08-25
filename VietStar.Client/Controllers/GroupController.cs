@@ -6,6 +6,7 @@ using KingOffice.Infrastructures;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VietStar.Business.Interfaces;
+using VietStar.Entities.GroupModels;
 using VietStar.Entities.Infrastructures;
 
 namespace VietStar.Client.Controllers
@@ -61,6 +62,13 @@ namespace VietStar.Client.Controllers
         {
             var result = await _bizGroup.GetGroupByIdAsync(id);
             return View(result);
+        }
+
+        [HttpPost("Update/{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] GroupEditModel model)
+        {
+            var result = await _bizGroup.UpdateAsync(model);
+            return ToResponse(result);
         }
 
         [HttpGet("members/{groupId}")]

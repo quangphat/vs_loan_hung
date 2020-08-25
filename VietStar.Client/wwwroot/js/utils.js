@@ -81,7 +81,7 @@ function isNullOrWhiteSpace(text) {
     return false;
 }
 function showBlock(div, text = 'Vui lòng chờ trong giây lát') {
-    debugger
+    
     div.block({
         css: {
             border: 'none',

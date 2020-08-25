@@ -1485,3 +1485,23 @@ Select  Id, Ma + ' - ' + Ho_Ten as Name From Nhan_Vien where isnull(OrgId,0) = @
 END
 
 -----------
+
+
+alter procedure sp_Group_Update (@Id int, @parentId int, @LeaderId int, @ShortName nvarchar(50), @Name nvarchar(200), @ParentSequenceCode nvarchar(100),@memberIds varchar(200), @orgId int)
+as
+begin
+
+delete from NHAN_VIEN_NHOM where Ma_Nhom = @Id;
+ update NHOM
+ set Ma_Nhom_Cha = @parentId,
+ Ma_Nguoi_QL = @leaderId,
+ Ten_Viet_Tat =@ShortName,
+ Ten = @Name,
+ Chuoi_Ma_Cha = @ParentSequenceCode
+ where Id = @Id;
+ insert into NHAN_VIEN_NHOM (Ma_Nhom ,Ma_Nhan_Vien)
+ select @id, value from dbo.fn_SplitStringToTable(@memberIds, ',')
+ end
+
+
+ --------------
