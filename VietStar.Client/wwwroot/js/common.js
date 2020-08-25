@@ -11,7 +11,7 @@ var mcredit_location_key = 'mcredit-location'
 var mcredit_period_key = 'mcredit-period';
 var mcredit_city_key = 'mcredit-city';
 var mcredit_product = 'mcredit-product';
-
+var all_employee_key = 'all_employee_key';
 
 
 function setLocalStorage(key, data) {
@@ -66,7 +66,7 @@ function appendComment(control, content, commenttator, commenttime) {
     )
 }
 function AddNote(profileId, profileType, content, commentBox, commentDisplayControl) {
-    
+
     if (isNullOrWhiteSpace(profileType) || isNullOrWhiteSpace(content))
         return
 
@@ -244,11 +244,11 @@ function GetCheckDupPartners(control = null, defaultValue = 0) {
         $.each(data, function (index, item) {
             control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
         });
-        
+
         if (defaultValue > 0) {
-            
+
             control.val(defaultValue);
-            
+
         }
         return;
     }
@@ -265,7 +265,7 @@ function GetCheckDupPartners(control = null, defaultValue = 0) {
                 });
                 if (defaultValue != null && defaultValue > 0) {
                     control.val(defaultValue);
-                   
+
                 }
 
             }
@@ -356,7 +356,7 @@ function GetProvinces(control = null, defaultValue = 0, districId = 0) {
         $.each(data, function (index, item) {
             control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
         });
-        if (defaultValue != null && defaultValue >0) {
+        if (defaultValue != null && defaultValue > 0) {
             control.val(defaultValue);
             GetDistricts(defaultValue, null, districId)
         }
@@ -420,7 +420,7 @@ function GetDistricts(provinceId, control = null, defaultValue = 0) {
 function GetApproveGroupByUser(control = null, defaultValue = 0, followControl = null, followValue = 0) {
     if (control == null)
         control = $("#groupId");
-    
+
     control.empty();
     control.append("<option value='0'>Chọn nhóm</option>");
     let data = getLocalStorage(approvegroups_key)
@@ -433,7 +433,7 @@ function GetApproveGroupByUser(control = null, defaultValue = 0, followControl =
             if (followControl != null) {
                 GetMemberByGroup(defaultValue, followControl, followValue)
             }
-            
+
         }
         return
     }
@@ -468,7 +468,7 @@ function GetGroupByUser(control = null, defaultValue = 0) {
     control.empty();
     control.append("<option value='0'>Chọn nhóm</option>");
     let data = getLocalStorage(groups_key)
-    if (data != null ) {
+    if (data != null) {
         $.each(data, function (index, item) {
             control.append("<option value='" + item.Id + "'>" + item.Name + "(" + item.ShortName + ")</option>");
         });
@@ -507,7 +507,7 @@ function GetParentGroups(control = null, defaultValue = 0) {
     if (control == null)
         control = $("#groupId");
     control.empty();
-    
+
     control.append("<option value='0'>Chọn nhóm</option>");
     let data = getLocalStorage(parent_groups_key)
     if (data != null) {
@@ -546,7 +546,7 @@ function GetParentGroups(control = null, defaultValue = 0) {
 }
 
 function GetMemberByGroup(groupId, control = null, defaultValue = 0) {
-    if (isNullOrUndefined(groupId) || isNullOrWhiteSpace(groupId) || groupId==0)
+    if (isNullOrUndefined(groupId) || isNullOrWhiteSpace(groupId) || groupId == 0)
         return;
     if (control == null)
         control = $("#memberId");
@@ -590,7 +590,7 @@ function GetEmployeeByProvinceId(provinceId, control = null, defaultValue = 0) {
         data: {},
         success: function (data) {
             control.append("<option value='0'>Chọn courier</option>");
-            
+
             if (data.data != null && data.success == true) {
                 $.each(data.data, function (index, item) {
 
@@ -618,7 +618,7 @@ function renderOneItemFile(model, className = '',
     allowUpload = true,
     continueUpload = true
 ) {
-    
+
     let header = ''
     if (!isNullOrUndefined(model.titleName)) {
         if (model.isRequire) {
@@ -628,7 +628,7 @@ function renderOneItemFile(model, className = '',
             header = '<h5  class="header green ' + className + '">' + model.titleName + '<span > </span></h5>';
         }
     }
-    
+
     let guidId = isNullOrWhiteSpace(model.guidId) ? getNewGuid() : model.guidId;
     let content = header + "<div class='col-sm-3'> ";
     content += "<div class=\"file-loading\">";
@@ -636,12 +636,12 @@ function renderOneItemFile(model, className = '',
     content += "</div>";
     content += "</div>";
     $('#tailieu-' + model.key).append(content);
-    
+
     let item = $("#attachFile-" + model.itemId);
 
     let uploadUrl = '';
     if (model.isMCredit) {
-        
+
         let params = `key=${model.key}&profileId=${model.profileId}&fileId=${model.fileId}&guidId=${guidId}&docCode=${model.documentCode}&docId=${model.documentId}&groupId=${model.groupId}&mcId=${model.mcId}`;
         uploadUrl = `/media/UploadMCredit?${params}`
     }
@@ -706,11 +706,11 @@ function renderOneItemFile(model, className = '',
         //}
     }).on('filebatchuploadsuccess', function (event, data) {
 
-        if (continueUpload === true && model.fileId<=0) {
+        if (continueUpload === true && model.fileId <= 0) {
             let newItem = { ...model }
             newItem.guidId = getNewGuid
             newItem.fileId = 0
-            newItem.titleName =''
+            newItem.titleName = ''
             renderOneItemFile({
                 key: model.key,
                 type: model.type,
@@ -759,9 +759,9 @@ function onDeleteFile(fileId, guidId) {
         type: "POST",
         url: `/media/delete/${fileId}/${guidId}`,
         success: function (data) {
-            
+
             if (data.data != null && data.success == true) {
-                
+
             }
 
         },
@@ -777,13 +777,13 @@ function GetLocSigns(controlId, defaultValue = 0) {
 
     if (controlId == null)
         return;
-    $(controlId).empty(); 
+    $(controlId).empty();
     let data = getLocalStorage(mcredit_location_key)
     if (data != null) {
         $.each(data, function (index, item) {
             $(controlId).append("<option value='" + item.Code + "'>" + item.Name + "</option>");
         });
-        if (!isNullOrWhiteSpace(defaultValue) && defaultValue >0) {
+        if (!isNullOrWhiteSpace(defaultValue) && defaultValue > 0) {
             $(controlId).val(defaultValue);
         }
         return
@@ -814,7 +814,7 @@ function GetLocSigns(controlId, defaultValue = 0) {
 }
 
 function GetLoanPeriods(controlId, defaultValue = 0) {
-    
+
     if (controlId == null)
         return;
     $(controlId).empty();
@@ -834,7 +834,7 @@ function GetLoanPeriods(controlId, defaultValue = 0) {
         url: '/MCredit/GetMCSimpleList?type=loanperiod',
         data: {},
         success: function (data) {
-            
+
             if (data.data != null && data.success == true) {
                 setLocalStorage(mcredit_period_key, data.data)
                 $.each(data.data, function (index, item) {
@@ -843,7 +843,7 @@ function GetLoanPeriods(controlId, defaultValue = 0) {
                 if (!isNullOrWhiteSpace(defaultValue)) {
                     $(controlId).val(defaultValue);
                 }
-                
+
             }
         },
         complete: function () {
@@ -855,7 +855,7 @@ function GetLoanPeriods(controlId, defaultValue = 0) {
 }
 
 function GetLoanCities(controlId, defaultValue = 0) {
-    
+
     if (controlId == null)
         return;
     $(controlId).empty();
@@ -926,6 +926,52 @@ function GetLoanProducts(controlId, defaultValue = 0) {
                 }
 
             }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+
+function GetAllEmployees(control, defaultValue = 0) {
+    if (control == null)
+        control = $("#employeeId");
+    control.empty();
+    control.append("<option value='0'>Chọn nhân viên</option>");
+    let data = getLocalStorage(all_employee_key)
+    if (data != null) {
+        $.each(data, function (index, item) {
+            control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+        });
+        if (defaultValue != null && defaultValue > 0) {
+            control.val(defaultValue);
+        }
+        return
+    }
+
+    $.ajax({
+        type: "GET",
+        url: `/employees/all`,
+        data: {},
+        success: function (data) {
+            if (data.data != null && data.success == true) {
+                if (data.data != null && data.data.length > 0) {
+                    setLocalStorage(all_employee_key, data.data)
+                    $.each(data.data, function (index, item) {
+                        control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                    });
+                    if (data.data.length == 1) {
+                        control.val(data.data[0].Id);
+                    }
+                    else {
+                        if (defaultValue != null && defaultValue >0)
+                        control.val(defaultValue);
+                    }
+                }
+            }
+
         },
         complete: function () {
         },

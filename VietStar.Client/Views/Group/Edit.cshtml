@@ -30,7 +30,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Người quản lý<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="LeaderId" class="chosen-select form-control" data-placeholder="Chọn người quản lý">
+                            <select id="LeaderId" class="chosen-select form-control select2" data-placeholder="Chọn người quản lý">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -81,7 +81,7 @@
  let page = 1;
     $(document).ready(function () {
         GetMembers();
-        GetAllEmployees();
+        GetAllEmployees($('#LeaderId'), '@Model.LeaderId');
         GetNotMembers(page)
         GetParentGroups($('#ParentId'), @Model.ParentCode);
         //filter id = "#duallist_filter_id"
@@ -110,38 +110,7 @@
         page = 1;
         GetNotMembers(page)
     })
-    function GetAllEmployees(page) {
-        $('#LeaderId').empty();
-        showBlock($('#panel_body'));
-        
-        $.ajax({
-            type: "GET",
-            url: `/employees/all`,
-            data: {},
-            success: function (data) {
-                if (data.data != null && data.success == true) {
-                    if (data.data != null && data.data.length > 0) {
-                        $.each(data.data, function (index, item) {
-                            $('#LeaderId').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
-                        });
-                        if (data.data.length == 1) {
-                            $('#LeaderId').val(data.data[0].Id);
-                        }
-                    }
-                }
-                $('#LeaderId').val(@Model.LeaderId);
 
-            },
-            complete: function () {
-                
-                $('#panel_body').unblock();
-                page = page
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    }
     let firstLoad = true;
     function GetNotMembers(page) {
         $('#dualEmployees').empty();

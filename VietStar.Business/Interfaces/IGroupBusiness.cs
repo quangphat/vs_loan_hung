@@ -20,5 +20,6 @@ namespace VietStar.Business.Interfaces
         Task<GroupModel> GetGroupByIdAsync(int groupId);
         Task<List<OptionSimple>> GetMemberByGroupIdAsync(int groupId);
         Task<bool> UpdateAsync(GroupEditModel model);
+        Task<bool> CreateConfigAsync(CreateConfigModel model);
     }
 }

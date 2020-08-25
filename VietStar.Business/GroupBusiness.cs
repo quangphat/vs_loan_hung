@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -158,6 +158,23 @@ namespace VietStar.Business
             }
 
             return ToResponse(await _rpGroup.UpdateAsync(model, parentSequenceCode, _process.User.OrgId));
+        }
+
+        public async Task<bool> CreateConfigAsync(CreateConfigModel model)
+        {
+            if(model==null)
+            {
+                return ToResponse(false, Errors.invalid_data);
+            }
+            if(model.UserId<=0)
+            {
+                return ToResponse(false, "Vui lòng chọn nhân viên");
+            }
+            if (model.GroupIds ==null|| !model.GroupIds.Any())
+            {
+                return ToResponse(false, "Vui lòng chọn nhóm");
+            }
+            return ToResponse(await _rpGroup.CreateConfigAsync(model.UserId, model.GroupIds));
         }
     }
 }

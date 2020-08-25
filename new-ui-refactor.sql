@@ -1505,3 +1505,14 @@ delete from NHAN_VIEN_NHOM where Ma_Nhom = @Id;
 
 
  --------------
+
+ alter procedure sp_Group_UpdateConfig (@groupIds varchar(200), @userId int)
+as
+begin
+
+delete from NHAN_VIEN_CF where Ma_Nhan_Vien = @userId;
+Insert Into NHAN_VIEN_CF (Ma_Nhan_Vien, Ma_Nhom, Quyen)
+ select @userId, value ,0 from dbo.fn_SplitStringToTable(@groupIds, ',')
+ end
+
+ ----------

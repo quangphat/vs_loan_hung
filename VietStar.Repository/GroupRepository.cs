@@ -23,7 +23,7 @@ namespace VietStar.Repository
             _rpLog = logRepository;
         }
 
-        public async Task<List<GroupModel>> GetChildGroupBaseParentSequenceCodeByParentId(int parentGroupId , int userId)
+        public async Task<List<GroupModel>> GetChildGroupBaseParentSequenceCodeByParentId(int parentGroupId, int userId)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace VietStar.Repository
                 using (var con = GetConnection())
                 {
                     ProcessInputPaging(ref page, ref limit, out int offset);
-                    var result = await con.QueryAsync<GroupIndexModel>("sp_Group_GetChildGroupForPaging", new { parentGroupId, userId , page, limit}, commandType: CommandType.StoredProcedure);
+                    var result = await con.QueryAsync<GroupIndexModel>("sp_Group_GetChildGroupForPaging", new { parentGroupId, userId, page, limit }, commandType: CommandType.StoredProcedure);
                     return result.ToList();
                 }
 
@@ -86,7 +86,7 @@ namespace VietStar.Repository
                     return result.ToList();
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 await _rpLog.InsertLogFromException(nameof(GetGroupByUserId), e);
                 return null;
@@ -157,7 +157,7 @@ namespace VietStar.Repository
                             Name = model.Name,
                             parentSequenceCode,
                             orgId,
-                            memberIds = string.Join(',',model.MemberIds)
+                            memberIds = string.Join(',', model.MemberIds)
                         },
                         commandType: CommandType.StoredProcedure);
                     return BaseResponse<bool>.Create(true);
@@ -193,7 +193,28 @@ namespace VietStar.Repository
             }
         }
 
+        public async Task<BaseResponse<bool>> CreateConfigAsync(int userId, List<int> groupIds)
+        {
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    var result = await con.ExecuteAsync("sp_Group_UpdateConfig",
+                        new
+                        {
+                            userId,
+                            groupIds = string.Join(',', groupIds)
+                        },
+                        commandType: CommandType.StoredProcedure);
+                    return BaseResponse<bool>.Create(true);
+                }
 
+            }
+            catch (Exception ex)
+            {
+                return BaseResponse<bool>.Create(false, GetException(ex));
+            }
+        }
     }
 }
 

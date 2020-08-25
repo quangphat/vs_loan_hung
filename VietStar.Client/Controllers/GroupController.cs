@@ -77,5 +77,18 @@ namespace VietStar.Client.Controllers
             var result = await _bizGroup.GetMemberByGroupIdAsync(groupId);
             return ToResponse(result);
         }
+
+        [HttpGet("Config")]
+        public IActionResult Config()
+        {
+            return View();
+        }
+
+        [HttpPost("CreateConfig")]
+        public async Task<IActionResult> CreateConfig([FromBody]CreateConfigModel model)
+        {
+            var result = await _bizGroup.CreateConfigAsync(model);
+            return ToResponse(result);
+        }
     }
 }
