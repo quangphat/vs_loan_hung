@@ -31,10 +31,10 @@ function checkDup(controlId, value) {
                     });
                 }
                 else {
-                    document.getElementById(controlId).innerHTML = data.code;
+                    document.getElementById(controlId).innerHTML = data.error.code;
                     swal({
                         title: "Đã có lỗi xảy ra",
-                        text: data.code,
+                        text: data.error.code,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,
@@ -123,7 +123,7 @@ function checkCAT(controlId, value) {
             if (data.success == true) {
                 swal({
                     title: "Thành công",
-                    text: data.code,
+                    text: data.error.code,
                     type: "success",
                     timer: 4000,
                     showConfirmButton: true,
@@ -165,7 +165,7 @@ function checkSale(controlId, value, controlToSetId = null, profileId = 0) {
             if (data.success == true) {
                 swal({
                     title: "Thành công",
-                    text: data.code,
+                    text: data.error.code,
                     type: "success",
                     timer: 4000,
                     showConfirmButton: true,

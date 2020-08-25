@@ -246,7 +246,7 @@
                 if (data != null && data.success) {
                     swal({
                         title: "Thành công",
-                        text: data.code,
+                        text: data.error.code,
                         type: "success",
                         timer: 4000,
                         showConfirmButton: true,
@@ -442,7 +442,7 @@
                 else {
                     swal({
                         title: "",
-                        text: data.code,
+                        text: data.error.code,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,
@@ -483,7 +483,7 @@
                 else {
                     swal({
                         title: "",
-                        text: data.code,
+                        text: data.error.code,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,

@@ -441,7 +441,7 @@ function DownloadReport(e) {
         success: function (data) {
             if (data.success == true) {
                 var link = document.createElement("a");
-                link.href = data.code;
+                link.href = data.error.code;
                 link.click();
             }
             else {
