@@ -1,10 +1,31 @@
-﻿
+﻿var profile_status_key = 'profile_statuses';
+var salesbyuser_key = 'salesbyuser';
+var couriersbyuser_key = 'couriersbyuser';
+var checkdup_partners_key = 'checkdup-partners';
+var partners_key = 'partners';
+var provinces_key = 'provinces';
+var approvegroups_key = 'approvegroups';
+var groups_key = 'groups';
+var parent_groups_key = 'parent-groups';
+var mcredit_location_key = 'mcredit-location'
+var mcredit_period_key = 'mcredit-period';
+var mcredit_city_key = 'mcredit-city';
+var mcredit_product = 'mcredit-product';
+
+
+
 function setLocalStorage(key, data) {
     window.localStorage.removeItem(key);
     window.localStorage.setItem(key, JSON.stringify(data));
 }
 function getLocalStorage(key) {
     return JSON.parse(window.localStorage.getItem(key))
+}
+
+function removeAllGroup_Cache() {
+    window.localStorage.removeItem(approvegroups_key);
+    window.localStorage.removeItem(groups_key);
+    window.localStorage.removeItem(parent_groups_key);
 }
 function getComments(profileId, profileType, commentDisplayControl) {
     if (isNullOrUndefined(profileType) || isNullOrUndefined(profileId))
@@ -94,8 +115,8 @@ function renderStatusList(profileType, value = null) {
     if (isNullOrWhiteSpace(profileType))
         return
     let control = $('#ddlStatus')
-    control.empty(); 
-    let data = JSON.parse(window.localStorage.getItem(`profile_statuses-${profileType}`));
+    control.empty();
+    let data = getLocalStorage(`${profile_status_key}-${profileType}`);
     if (data != null && !isNullOrNoItem(data)) {
         $.each(data, function (index, item) {
             control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
@@ -112,7 +133,7 @@ function renderStatusList(profileType, value = null) {
         success: function (data) {
             $('#ddlStatus').append("<option value='0'></option>");
             if (data.data != null && data.success == true) {
-                setLocalStorage(`profile_statuses-${profileType}`, data.data)
+                setLocalStorage(`${profile_status_key}-${profileType}`, data.data)
                 $.each(data.data, function (index, item) {
                     $('#ddlStatus').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
@@ -138,7 +159,7 @@ function GetSales(control = null, defaultValue = 0) {
         control = $("#saleId");
     control.empty();
     control.append("<option value='0'>Chọn sale</option>");
-    let data = JSON.parse(window.localStorage.getItem('salesbyuser'));
+    let data = getLocalStorage(salesbyuser_key);
     if (data != null && !isNullOrNoItem(data)) {
         $.each(data, function (index, item) {
             control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
@@ -155,7 +176,7 @@ function GetSales(control = null, defaultValue = 0) {
         success: function (data) {
             control.append("<option value='0'>Chọn sale</option>");
             if (data.data != null && data.success == true) {
-                setLocalStorage('salesbyuser', data.data)
+                setLocalStorage(salesbyuser_key, data.data)
                 $.each(data.data, function (index, item) {
                     control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
@@ -178,7 +199,7 @@ function GetCouriers(control = null, defaultValue = 0) {
         control = $("#courierId");
     control.empty();
     control.append("<option value='0'>Chọn courier</option>");
-    let data = JSON.parse(window.localStorage.getItem('couriersbyuser'));
+    let data = getLocalStorage(couriersbyuser_key);
     if (data != null && !isNullOrNoItem(data)) {
         $.each(data, function (index, item) {
             control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
@@ -195,7 +216,7 @@ function GetCouriers(control = null, defaultValue = 0) {
         success: function (data) {
             control.append("<option value='0'>Chọn courier</option>");
             if (data.data != null && data.success == true) {
-                setLocalStorage('couriersbyuser', data.data)
+                setLocalStorage(couriersbyuser_key, data.data)
                 $.each(data.data, function (index, item) {
                     control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
@@ -218,7 +239,7 @@ function GetCheckDupPartners(control = null, defaultValue = 0) {
         control = $("#partnerId");
     control.empty();
     control.append("<option value='0'>Chọn đối tác</option>");
-    let data = JSON.parse(window.localStorage.getItem('checkdup-partners'));
+    let data = getLocalStorage(checkdup_partners_key);
     if (data != null && !isNullOrNoItem(data)) {
         $.each(data, function (index, item) {
             control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
@@ -238,7 +259,7 @@ function GetCheckDupPartners(control = null, defaultValue = 0) {
         success: function (data) {
             control.append("<option value='0'>Chọn đối tác</option>");
             if (data.data != null && data.success == true) {
-                setLocalStorage('checkdup-partners', data.data)
+                setLocalStorage(checkdup_partners_key, data.data)
                 $.each(data.data, function (index, item) {
                     control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
@@ -261,7 +282,7 @@ function GetPartners(control = null, defaultValue = 0, productId = 0) {
         control = $("#partnerId");
     control.empty();
     control.append("<option value='0'>Chọn đối tác</option>");
-    let data = JSON.parse(window.localStorage.getItem('partners'));
+    let data = getLocalStorage(partners_key);
     if (data != null && !isNullOrNoItem(data)) {
         $.each(data, function (index, item) {
             control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
@@ -279,7 +300,7 @@ function GetPartners(control = null, defaultValue = 0, productId = 0) {
         success: function (data) {
             control.append("<option value='0'>Chọn đối tác</option>");
             if (data.data != null && data.success == true) {
-                setLocalStorage('partners', data.data)
+                setLocalStorage(partners_key, data.data)
                 $.each(data.data, function (index, item) {
                     control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
@@ -330,7 +351,7 @@ function GetProvinces(control = null, defaultValue = 0, districId = 0) {
     if (control == null)
         control = $("#provinceId");
     control.append("<option value='0'>Chọn tỉnh/thành</option>");
-    let data = JSON.parse(window.localStorage.getItem('provinces'));
+    let data = getLocalStorage(provinces_key);
     if (data != null && !isNullOrNoItem(data)) {
         $.each(data, function (index, item) {
             control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
@@ -349,7 +370,7 @@ function GetProvinces(control = null, defaultValue = 0, districId = 0) {
         success: function (data) {
 
             if (data.data != null && data.success == true) {
-                window.localStorage.setItem('provinces', JSON.stringify(data.data))
+                setLocalStorage(provinces_key, data.data)
                 $.each(data.data, function (index, item) {
                     control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
@@ -402,7 +423,7 @@ function GetApproveGroupByUser(control = null, defaultValue = 0, followControl =
     
     control.empty();
     control.append("<option value='0'>Chọn nhóm</option>");
-    let data = getLocalStorage('approvegroups')
+    let data = getLocalStorage(approvegroups_key)
     if (data != null) {
         $.each(data, function (index, item) {
             control.append("<option value='" + item.Id + "'>" + item.Name + "(" + item.ShortName + ")</option>");
@@ -423,7 +444,7 @@ function GetApproveGroupByUser(control = null, defaultValue = 0, followControl =
         success: function (data) {
             control.append("<option value='0'>Chọn nhóm</option>");
             if (data.data != null && data.success == true) {
-                setLocalStorage('approvegroups', data.data)
+                setLocalStorage(approvegroups_key, data.data)
                 $.each(data.data, function (index, item) {
                     control.append("<option value='" + item.Id + "'>" + item.Name + "(" + item.ShortName + ")</option>");
                 });
@@ -446,7 +467,7 @@ function GetGroupByUser(control = null, defaultValue = 0) {
         control = $("#groupId");
     control.empty();
     control.append("<option value='0'>Chọn nhóm</option>");
-    let data = getLocalStorage('groups')
+    let data = getLocalStorage(groups_key)
     if (data != null ) {
         $.each(data, function (index, item) {
             control.append("<option value='" + item.Id + "'>" + item.Name + "(" + item.ShortName + ")</option>");
@@ -463,7 +484,7 @@ function GetGroupByUser(control = null, defaultValue = 0) {
         data: {},
         success: function (data) {
             if (data.data != null && data.success == true) {
-                setLocalStorage('groups', data.data)
+                setLocalStorage(groups_key, data.data)
                 $.each(data.data, function (index, item) {
                     control.append("<option value='" + item.Id + "'>" + item.Name + "(" + item.ShortName + ")</option>");
                 });
@@ -488,7 +509,7 @@ function GetParentGroups(control = null, defaultValue = 0) {
     control.empty();
     
     control.append("<option value='0'>Chọn nhóm</option>");
-    let data = getLocalStorage('parent-groups')
+    let data = getLocalStorage(parent_groups_key)
     if (data != null) {
         $.each(data, function (index, item) {
             control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
@@ -505,7 +526,7 @@ function GetParentGroups(control = null, defaultValue = 0) {
         data: {},
         success: function (data) {
             if (data.data != null && data.success == true) {
-                setLocalStorage('parent-groups', data.data)
+                setLocalStorage(parent_groups_key, data.data)
                 $.each(data.data, function (index, item) {
                     control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
                 });
@@ -757,7 +778,7 @@ function GetLocSigns(controlId, defaultValue = 0) {
     if (controlId == null)
         return;
     $(controlId).empty(); 
-    let data = getLocalStorage('mcredit-location')
+    let data = getLocalStorage(mcredit_location_key)
     if (data != null) {
         $.each(data, function (index, item) {
             $(controlId).append("<option value='" + item.Code + "'>" + item.Name + "</option>");
@@ -774,7 +795,7 @@ function GetLocSigns(controlId, defaultValue = 0) {
         success: function (data) {
             $(controlId).append("<option value='0'></option>");
             if (data.data != null && data.success == true) {
-                setLocalStorage('mcredit-location', data.data)
+                setLocalStorage(mcredit_location_key, data.data)
                 $.each(data.data, function (index, item) {
                     $(controlId).append("<option value='" + item.Code + "'>" + item.Name + "</option>");
                 });
@@ -797,7 +818,7 @@ function GetLoanPeriods(controlId, defaultValue = 0) {
     if (controlId == null)
         return;
     $(controlId).empty();
-    let data = getLocalStorage('mcredit-period')
+    let data = getLocalStorage(mcredit_period_key)
     if (!isNullOrNoItem(data)) {
         $(controlId).append("<option value='0'>Vui lòng chọn kỳ hạn vay</option>");
         $.each(data, function (index, item) {
@@ -815,7 +836,7 @@ function GetLoanPeriods(controlId, defaultValue = 0) {
         success: function (data) {
             
             if (data.data != null && data.success == true) {
-                setLocalStorage('mcredit-period', data.data)
+                setLocalStorage(mcredit_period_key, data.data)
                 $.each(data.data, function (index, item) {
                     $(controlId).append("<option value='" + item.Code + "'>" + item.Name + "</option>");
                 });
@@ -838,7 +859,7 @@ function GetLoanCities(controlId, defaultValue = 0) {
     if (controlId == null)
         return;
     $(controlId).empty();
-    let data = getLocalStorage('mcredit-city')
+    let data = getLocalStorage(mcredit_city_key)
     if (!isNullOrNoItem(data)) {
         $.each(data, function (index, item) {
             console.log(item.Id)
@@ -856,7 +877,7 @@ function GetLoanCities(controlId, defaultValue = 0) {
         success: function (data) {
             $(controlId).append("<option value='0'></option>");
             if (data.data != null && data.success == true) {
-                setLocalStorage('mcredit-city', data.data)
+                setLocalStorage(mcredit_city_key, data.data)
                 $.each(data.data, function (index, item) {
                     $(controlId).append("<option value='" + item.Code + "'>" + item.Name + "</option>");
                 });
@@ -879,7 +900,7 @@ function GetLoanProducts(controlId, defaultValue = 0) {
     if (controlId == null)
         return;
     $(controlId).empty();
-    let data = getLocalStorage('mcredit-product')
+    let data = getLocalStorage(mcredit_product)
     if (data != null) {
         $.each(data, function (index, item) {
             $(controlId).append("<option value='" + item.Code + "'>" + item.Name + "</option>");
@@ -896,7 +917,7 @@ function GetLoanProducts(controlId, defaultValue = 0) {
         success: function (data) {
             $(controlId).append("<option value='0'></option>");
             if (data.data != null && data.success == true) {
-                setLocalStorage('mcredit-product', data.data)
+                setLocalStorage(mcredit_product, data.data)
                 $.each(data.data, function (index, item) {
                     $(controlId).append("<option value='" + item.Code + "'>" + item.Name + "</option>");
                 });
