@@ -272,13 +272,29 @@
 
                         @if (string.IsNullOrWhiteSpace(@ViewBag.model.MCId))
                         {
-                            <a class="btn btn-sm btn-primary" id="btn_Temp">
-                                Cập nhật
-                            </a>
+						
+						       if (GlobalData.User.UserType == 3 && ViewBag.model.Status ==7)
+								{
+			
+									<div class="pull-right">
+										<a href="javascript:history.back()" title="@Global.Button_Return" class="btn btn-sm btn-primary on-top-return"><i class="ace-icon glyphicon glyphicon-backward"></i>Trở về</a>
+									</div>
+           
 
-                            <a class="btn btn-sm btn-primary" id="btn_Save">
-                                Nộp hồ sơ qua MCredit
-                            </a>
+								}
+								else 
+								{
+									<a class="btn btn-sm btn-primary" id="btn_Temp">
+											Cập nhật
+									</a>
+									
+									<a class="btn btn-sm btn-primary" id="btn_Save">
+										Nộp hồ sơ qua MCredit
+									</a>
+								
+								}
+                       
+                           
                         }
                         else
                         {
