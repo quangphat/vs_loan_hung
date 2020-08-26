@@ -47,5 +47,31 @@ namespace VietStar.Client.Controllers
             var result = await _bizEmployee.GetAllEmployeeAsync();
             return ToResponse(result);
         }
+
+        [HttpGet("roles")]
+        public async Task<IActionResult> GetRoles()
+        {
+            var result = await _bizEmployee.GetRoleList();
+            return ToResponse(result);
+        }
+
+        [HttpGet("Index")]
+        [MyAuthorize(Permissions ="employee")]
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpGet("search")]
+        [MyAuthorize(Permissions = "employee")]
+        public async Task<IActionResult> Search(string freetext = "",
+            int roleId = 0,
+            int page = 1, int limit = 10)
+        {
+            freetext = string.IsNullOrWhiteSpace(freetext) ? string.Empty : freetext.Trim();
+            var datas = await _bizEmployee.SearchsAsync( roleId, freetext, page, limit);
+            return ToResponse(datas);
+        }
+
     }
 }

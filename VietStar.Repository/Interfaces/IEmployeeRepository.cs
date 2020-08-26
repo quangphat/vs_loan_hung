@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using VietStar.Entities.Commons;
+using VietStar.Entities.Employee;
 using VietStar.Entities.ViewModels;
 
 namespace VietStar.Repository.Interfaces
@@ -20,5 +21,11 @@ namespace VietStar.Repository.Interfaces
         Task<List<int>> GetPeopleCanViewMyProfile(int profileId);
         Task<List<OptionSimple>> GetAllEmployee(int orgId);
         Task<List<OptionSimple>> GetAllEmployeePagingAsync(int orgId, int page, string freeText);
+        Task<List<EmployeeViewModel>> GetsAsync(
+           int roleId,
+           string freeText,
+           int page,
+           int limit, int OrgId);
+        Task<List<OptionSimple>> GetRoleList(int userId);
     }
 }

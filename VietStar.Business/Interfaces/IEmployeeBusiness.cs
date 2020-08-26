@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using VietStar.Entities.Commons;
+using VietStar.Entities.Employee;
 using VietStar.Entities.ViewModels;
+using VietStar.Utility;
 
 namespace VietStar.Business.Interfaces
 {
@@ -16,5 +18,7 @@ namespace VietStar.Business.Interfaces
         Task<List<OptionSimple>> GetMemberByGroupIdAsync(int groupId);
         Task<List<OptionSimple>> GetAllEmployeePagingAsync(int page, string freeText);
         Task<List<OptionSimple>> GetAllEmployeeAsync();
+        Task<DataPaging<List<EmployeeViewModel>>> SearchsAsync(int role, string freeText, int page = 1, int limit = 10);
+        Task<List<OptionSimple>> GetRoleList();
     }
 }

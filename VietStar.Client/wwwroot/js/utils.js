@@ -208,7 +208,7 @@ function renderGoFirstPage(page, totalPage) {
     }
 }
 function FormatDateTimeDMY(datetime, outputFormat = 'DD-MM-YYYY') {
-    debugger
+    
     let date = moment(datetime)
     return date.format(outputFormat)
 }

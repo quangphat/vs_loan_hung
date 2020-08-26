@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using VietStar.Business.Interfaces;
 using VietStar.Entities.Commons;
+using VietStar.Entities.Employee;
 using VietStar.Entities.Infrastructures;
 using VietStar.Entities.Messages;
 using VietStar.Entities.ViewModels;
@@ -18,7 +19,7 @@ namespace VietStar.Business
     {
         protected readonly IEmployeeRepository _rpEmployee;
         protected readonly IGroupRepository _rpGroup;
-        public EmployeeBusiness(IEmployeeRepository employeeRepository, IGroupRepository groupRepository,IMapper mapper, CurrentProcess process) : base(mapper, process)
+        public EmployeeBusiness(IEmployeeRepository employeeRepository, IGroupRepository groupRepository, IMapper mapper, CurrentProcess process) : base(mapper, process)
         {
             _rpEmployee = employeeRepository;
             _rpGroup = groupRepository;
@@ -38,7 +39,7 @@ namespace VietStar.Business
                 for (int i = 0; i < groups.Count; i++)
                 {
                     var members = await _rpEmployee.GetMemberByGroupIdIncludeChild(groups[i].Id, _process.User.Id);
-                    if(members!=null)
+                    if (members != null)
                         result.AddRange(members);
 
                 }
@@ -58,9 +59,9 @@ namespace VietStar.Business
                 for (int i = 0; i < groups.Count; i++)
                 {
                     var members = await _rpEmployee.GetMemberByGroupIdAsync(groups[i].Id, _process.User.Id);
-                    if(members!=null)
+                    if (members != null)
                         result.AddRange(members);
-                   
+
                 }
                 result.DistinctBy(p => p.Id);
             }
@@ -71,11 +72,11 @@ namespace VietStar.Business
         {
             return await _rpEmployee.GetStatus(userId);
         }
-        
+
 
         public async Task<Account> LoginAsync(LoginModel model)
         {
-            if(model==null)
+            if (model == null)
             {
                 AddError(Errors.invalid_data);
                 return null;
@@ -109,6 +110,20 @@ namespace VietStar.Business
         public async Task<List<OptionSimple>> GetAllEmployeeAsync()
         {
             var result = await _rpEmployee.GetAllEmployee(_process.User.OrgId);
+            return result;
+        }
+
+        public async Task<DataPaging<List<EmployeeViewModel>>> SearchsAsync(int role, string freeText, int page = 1, int limit = 10)
+        {
+            var data = await _rpEmployee.GetsAsync(role, freeText, page, limit, _process.User.OrgId);
+            if (data == null || !data.Any())
+                return DataPaging.Create<List<EmployeeViewModel>>(null, 0);
+            return  DataPaging.Create<List<EmployeeViewModel>>(data, data[0].TotalRecord);
+        }
+
+        public async Task<List<OptionSimple>> GetRoleList()
+        {
+            var result = await _rpEmployee.GetRoleList(_process.User.Id);
             return result;
         }
     }

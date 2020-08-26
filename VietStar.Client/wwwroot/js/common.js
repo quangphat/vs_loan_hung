@@ -12,7 +12,7 @@ var mcredit_period_key = 'mcredit-period';
 var mcredit_city_key = 'mcredit-city';
 var mcredit_product = 'mcredit-product';
 var all_employee_key = 'all_employee_key';
-
+var employee_role_key ='employee_roles'
 
 function setLocalStorage(key, data) {
     window.localStorage.removeItem(key);
@@ -62,7 +62,6 @@ function appendComment(control, content, commenttator, commenttime) {
         '<div class="timeline__message-container">' +
         '<strong>' + commenttator + ' (' + commenttime + '): </strong><span>' + content + '</span>' +
         '</div></div></div></div>'
-
     )
 }
 function AddNote(profileId, profileType, content, commentBox, commentDisplayControl) {
@@ -111,6 +110,43 @@ function AddNote(profileId, profileType, content, commentBox, commentDisplayCont
     });
 
 }
+
+function getRoles(control, value = 0, defaultText = "Tất cả") {
+    control.empty();
+    control.append('<option value="0">' + defaultText + '</option > ');
+    let data = getLocalStorage(employee_role_key);
+    if (data != null && !isNullOrNoItem(data)) {
+        $.each(data, function (index, item) {
+            control.append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+        });
+        if (value != null) {
+            control.val(value);
+        }
+        return;
+    }
+    $.ajax({
+        type: "GET",
+        url: '/employees/roles',
+        success: function (data) {
+            if (data.data != null && data.success == true) {
+                setLocalStorage(employee_role_key, data.data)
+                $.each(data.data, function (index, optionData) {
+                    $(control).append("<option value='" + optionData.Id + "'>" + optionData.Name + "</option>");
+                });
+            }
+            if (value > 0) {
+                $(control).val(value);
+            }
+           
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+
 function renderStatusList(profileType, value = null) {
     if (isNullOrWhiteSpace(profileType))
         return
@@ -966,8 +1002,8 @@ function GetAllEmployees(control, defaultValue = 0) {
                         control.val(data.data[0].Id);
                     }
                     else {
-                        if (defaultValue != null && defaultValue >0)
-                        control.val(defaultValue);
+                        if (defaultValue != null && defaultValue > 0)
+                            control.val(defaultValue);
                     }
                 }
             }

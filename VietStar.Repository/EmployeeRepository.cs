@@ -8,6 +8,7 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using VietStar.Entities;
 using VietStar.Entities.Commons;
+using VietStar.Entities.Employee;
 using VietStar.Entities.GroupModels;
 using VietStar.Entities.ViewModels;
 using VietStar.Repository.Interfaces;
@@ -25,6 +26,16 @@ namespace VietStar.Repository
             using (var con = GetConnection())
             {
                 var result = await con.QueryAsync<int>("sp_MCProfilePeople_GetPeopleCanViewProfile", new { profileId }, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+
+        public async Task<List<OptionSimple>> GetRoleList(int userId)
+        {
+
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryAsync<OptionSimple>("sp_Role_GetRoles", new { userId }, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
         }
@@ -160,6 +171,27 @@ namespace VietStar.Repository
             }
         }
 
-        
+        public async Task<List<EmployeeViewModel>> GetsAsync(
+           int roleId,
+           string freeText,
+           int page,
+           int limit, int OrgId)
+        {
+            ProcessInputPaging(ref page, ref limit, out int offset);
+            var p = new DynamicParameters();
+            p.Add("freeText", freeText);
+            p.Add("page", page);
+            p.Add("roleId", roleId);
+            p.Add("limit", limit);
+            p.Add("OrgId", OrgId);
+
+            using (var con = GetConnection())
+            {
+                var results = await con.QueryAsync<EmployeeViewModel>("sp_GetEmployees_v2", p, commandType: CommandType.StoredProcedure);
+                return results.ToList();
+            }
+
+        }
+
     }
 }

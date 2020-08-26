@@ -1516,3 +1516,41 @@ Insert Into NHAN_VIEN_CF (Ma_Nhan_Vien, Ma_Nhom, Quyen)
  end
 
  ----------
+
+
+ create procedure [dbo].[sp_GetEmployees_v2]
+(
+@freeText nvarchar(30),
+@roleId int,
+@page int,
+@limit int,
+@OrgId int =0
+)
+as
+begin
+if @freeText = '' begin set @freeText = null end;
+declare @offset as int;
+set @offset = (@page-1)*@limit;
+Select count(*) over() as TotalRecord, n.ID,n.Ten_Dang_Nhap as UserName,n.Ho_Ten as FullName,n.RoleId,r.Name as RoleName,
+n.Email, n.Dien_Thoai as Phone,n.CreatedTime,
+n.Ma as Code,
+n.WorkDate,CONCAT(k.Ten + ' - ',k2.Ten) as Location
+ from dbo.Nhan_Vien n left join KHU_VUC k on n.DistrictId = k.ID
+ left join KHU_VUC k2 on k.Ma_Cha = k2.ID
+ left join Role r on n.RoleId = r.Id
+where 
+--( convert(varchar(10),n.WorkDate,121) >= (convert(varchar(10),@workFromDate,121))
+--and convert(varchar(10),n.WorkDate,121) <= (convert(varchar(10),@workToDate,121)) or n.WorkDate is null) and 
+(@freeText is null or n.Ho_Ten like N'%' + @freeText + '%'
+		or n.Ten_Dang_Nhap like N'%' + @freeText + '%'
+		or n.Dien_Thoai like N'%' + @freeText + '%'
+		or n.Email like N'%' + @freeText + '%')
+		and ((@roleId <> 0 and n.RoleId = @roleId) or (@roleId = 0 and (n.RoleId <> 0 or n.RoleId is null)))
+		and ISNULL(n.IsDeleted,0) = 0
+		and isnull(n.OrgId,0) = @OrgId
+order by n.Id desc 
+	offset @offset ROWS FETCH NEXT @limit ROWS ONLY
+END
+
+------------
+
