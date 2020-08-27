@@ -267,101 +267,115 @@
 
                         </ul>
                     </li>
-                    <li class="treeview" id="profile">
-                        <a href="#">
-                            <i class="fa fa-file"></i> <span>Hồ sơ</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li id="Profile/Create"><a href="/Profile/Create"><i class="fa fa-circle-o"></i> Tạo hồ sơ</a></li>
-                            <li id="Profile/Index"><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Danh sách</a></li>
-                            <li id="Profile/Approve"><a href="/Profile/Approve"><i class="fa fa-circle-o"></i> Xét duyệt</a></li>
-                        </ul>
-                    </li>
-                    <li class="treeview" id="checkdup">
-                        <a href="#">
-                            <i class="fa fa-files-o"></i> <span>Check duplicate</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li id="CheckDup/Create"><a href="/CheckDup/Create"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
-                            <li id="CheckDup/Index"><a href="/CheckDup/Index"><i class="fa fa-circle-o"></i> Danh sách</a></li>
+                    @if (VietStar.Entities.Infrastructures.CurrentProcess.CurrentUser.OrgId == 1)
+                    {
+                        <li class="treeview" id="profile">
+                            <a href="#">
+                                <i class="fa fa-file"></i> <span>Hồ sơ</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li id="Profile/Create"><a href="/Profile/Create"><i class="fa fa-circle-o"></i> Tạo hồ sơ</a></li>
+                                <li id="Profile/Index"><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Danh sách</a></li>
+                                <li id="Profile/Approve"><a href="/Profile/Approve"><i class="fa fa-circle-o"></i> Xét duyệt</a></li>
+                            </ul>
+                        </li>
+                        <li class="treeview" id="checkdup">
+                            <a href="#">
+                                <i class="fa fa-files-o"></i> <span>Check duplicate</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li id="CheckDup/Create"><a href="/CheckDup/Create"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
+                                <li id="CheckDup/Index"><a href="/CheckDup/Index"><i class="fa fa-circle-o"></i> Danh sách</a></li>
 
-                        </ul>
-                    </li>
-                    <li class="treeview" id="company">
-                        <a href="#">
-                            <i class="fa fa-bank"></i> <span>Công ty</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li id="Company/Create"><a href="/Company/Create"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
-                            <li id="Company/Index"><a href="/Company/Index"><i class="fa fa-circle-o"></i> Danh sách</a></li>
+                            </ul>
+                        </li>
+                        <li class="treeview" id="company">
+                            <a href="#">
+                                <i class="fa fa-bank"></i> <span>Công ty</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li id="Company/Create"><a href="/Company/Create"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
+                                <li id="Company/Index"><a href="/Company/Index"><i class="fa fa-circle-o"></i> Danh sách</a></li>
 
-                        </ul>
-                    </li>
-                    <li class="treeview" id="courier">
-                        <a href="#">
-                            <i class="fa fa-dashboard"></i> <span>Courier</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li id="Courier/Create"><a href="/Courier/Create"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
-                            <li class="" id="Courier/Index"><a href="/Courier/Index"><i class="fa fa-circle-o"></i> Danh sách</a></li>
+                            </ul>
+                        </li>
+                        <li class="treeview" id="courier">
+                            <a href="#">
+                                <i class="fa fa-dashboard"></i> <span>Courier</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li id="Courier/Create"><a href="/Courier/Create"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
+                                <li class="" id="Courier/Index"><a href="/Courier/Index"><i class="fa fa-circle-o"></i> Danh sách</a></li>
 
-                        </ul>
-                    </li>
-                    <li class="treeview" id="mcredit">
-                        <a href="#">
-                            <i class="fa fa-globe"></i> <span>MCredit</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li id="MCredit/CheckCat"><a href="/MCredit/CheckCat"><i class="fa fa-circle-o"></i> Check CAT</a></li>
-                            <li id="MCredit/CheckCIC"><a href="/MCredit/CheckCIC"><i class="fa fa-circle-o"></i> Check CIC</a></li>
-                            <li id="MCredit/CheckDuplicate"><a href="/MCredit/CheckDuplicate"><i class="fa fa-circle-o"></i> Check Duplicate</a></li>
-                            <li id="MCredit/CheckStatus"><a href="/MCredit/CheckStatus"><i class="fa fa-circle-o"></i> Check Status</a></li>
-                            <li id="MCredit/Temp"><a href="/MCredit/Temp"><i class="fa fa-circle-o"></i>Danh sách tạo mới</a></li>
-                            <li id="MCredit/Index"><a href="/MCredit/Index"><i class="fa fa-circle-o"></i>Danh sách MCredit</a></li>
+                            </ul>
+                        </li>
+                        <li class="treeview" id="mcredit">
+                            <a href="#">
+                                <i class="fa fa-globe"></i> <span>MCredit</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li id="MCredit/CheckCat"><a href="/MCredit/CheckCat"><i class="fa fa-circle-o"></i> Check CAT</a></li>
+                                <li id="MCredit/CheckCIC"><a href="/MCredit/CheckCIC"><i class="fa fa-circle-o"></i> Check CIC</a></li>
+                                <li id="MCredit/CheckDuplicate"><a href="/MCredit/CheckDuplicate"><i class="fa fa-circle-o"></i> Check Duplicate</a></li>
+                                <li id="MCredit/CheckStatus"><a href="/MCredit/CheckStatus"><i class="fa fa-circle-o"></i> Check Status</a></li>
+                                <li id="MCredit/Temp"><a href="/MCredit/Temp"><i class="fa fa-circle-o"></i>Danh sách tạo mới</a></li>
+                                <li id="MCredit/Index"><a href="/MCredit/Index"><i class="fa fa-circle-o"></i>Danh sách MCredit</a></li>
 
-                        </ul>
-                    </li>
-                    <li class="treeview" id="groups">
-                        <a href="#">
-                            <i class="fa fa-group"></i> <span>Tổ nhóm</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li id="Groups/Create"><a href="/Groups/Create"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
-                            <li id="Groups/Index"><a href="/Groups/Index"><i class="fa fa-circle-o"></i> Quản lý</a></li>
-                            <li id="Groups/Config"><a href="/Groups/Config"><i class="fa fa-circle-o"></i> Cấu hình duyệt</a></li>
-                        </ul>
-                    </li>
-                    <li class="treeview">
-                        <a href="#">
-                            <i class="fa fa-product-hunt"></i> <span>MÃ AAP</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Quản lý mã</a></li>
-                            <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Import</a></li>
+                            </ul>
+                        </li>
+                        <li class="treeview" id="groups">
+                            <a href="#">
+                                <i class="fa fa-group"></i> <span>Tổ nhóm</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li id="Groups/Create"><a href="/Groups/Create"><i class="fa fa-circle-o"></i> Tạo mới</a></li>
+                                <li id="Groups/Index"><a href="/Groups/Index"><i class="fa fa-circle-o"></i> Quản lý</a></li>
+                                <li id="Groups/Config"><a href="/Groups/Config"><i class="fa fa-circle-o"></i> Cấu hình duyệt</a></li>
+                            </ul>
+                        </li>
+                        <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-product-hunt"></i> <span>MÃ AAP</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Quản lý mã</a></li>
+                                <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Import</a></li>
 
-                        </ul>
-                    </li>
+                            </ul>
+                        </li>
+
+                    }
+                    else
+                    {
+                        <li class="treeview" id="collection" onclick="redirectTo('/employees/Index')">
+                            <a href="/employees/Index">
+                                <i class="fa fa-sellsy"></i> <span>Thu hồi nợ</span>
+                                
+                            </a>
+                            
+                        </li>
+                    }
                     <li class="treeview" id="employees">
                         <a href="#">
                             <i class="fa fa-sellsy"></i> <span>Nhân sự</span>
@@ -374,7 +388,6 @@
 
                         </ul>
                     </li>
-
 
                 </ul>
             </section>
@@ -624,6 +637,9 @@
            });
 
        });
+        function redirectTo(url) {
+            window.location = url
+        }
        function doLogout() {
         $.ajax({
             type: "POST",
