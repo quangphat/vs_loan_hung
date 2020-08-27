@@ -133,10 +133,10 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             return View();
         }
-     
-            public async Task<JsonResult> SearchTemps(string freeText, string status, int page = 1, int limit = 20, string fromDate = null, string toDate = null, int loaiNgay = 0, int manhom = 0,
 
-              int mathanhvien = 0)
+        public async Task<JsonResult> SearchTemps(string freeText, string status, int page = 1, int limit = 20, string fromDate = null, string toDate = null, int loaiNgay = 0, int manhom = 0,
+
+          int mathanhvien = 0)
         {
             page = page <= 0 ? 1 : page;
 
@@ -315,9 +315,43 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 status = temp.Status;
             }
+
+
+
             if (temp.Status != status)
             {
                 var result = await _rpMCredit.UpdateTempProfileStatusAsync(temp.Id, status);
+
+                var getNoteResult = await _svMCredit.GetProfileById(temp.MCId, GlobalData.User.IDUser);
+                if (getNoteResult == null || getNoteResult.obj == null || getNoteResult.status == "error")
+                {
+                    return ToJsonResponse(false, "Không thể cập nhật ghi chú", null);
+                }
+
+                if (getNoteResult.obj.Reason != null)
+                {
+                    var reasonName = JsonConvert.SerializeObject(getNoteResult.obj.Reason);
+                    await _rpNote.AddNoteAsync(new GhichuModel
+                    {
+                        HosoId = profileId,
+                        CommentTime = DateTime.Now,
+                        Noidung = reasonName,
+                        TypeId = (int)NoteType.MCreditTemp,
+                        UserId = GlobalData.User.IDUser
+                    });
+                    await _rpLog.InsertLog($"AddReasonToNote-{profileId}", reasonName);
+                }
+                await _rpNote.AddNoteAsync(new GhichuModel
+                {
+                    HosoId = profileId,
+                    CommentTime = DateTime.Now,
+                    Noidung = getNoteResult.obj.Refuse,
+                    TypeId = (int)NoteType.MCreditTemp,
+                    UserId = GlobalData.User.IDUser
+                });
+                await _rpLog.InsertLog($"AddRefuseToNote-{profileId}", getNoteResult.obj.Refuse);
+
+
                 return ToJsonResponse(result);
             }
             return ToJsonResponse(false);
@@ -329,7 +363,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var profile = _mapper.Map<MCredit_TempProfile>(model);
             profile.UpdatedBy = GlobalData.User.IDUser;
             var isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
-            profile.Status = isAdmin ? model.Status: (int)MCreditProfileStatus.Submit;
+            profile.Status = isAdmin ? model.Status : (int)MCreditProfileStatus.Submit;
             await _rpLog.InsertLog("mcredit-UpdateDraft", model.Dump());
             var result = await _rpMCredit.UpdateDraftProfile(profile);
             if (!result)
@@ -475,31 +509,31 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 if (group.Documents == null)
                     continue;
-                
+
                 foreach (var doc in group.Documents)
                 {
-                    if(group.GroupId==24 && doc.DocumentCode == "ElectricBill")
+                    if (group.GroupId == 24 && doc.DocumentCode == "ElectricBill")
                     {
                         continue;
                     }
                     var files = uploadedFiles.Where(p => p.Key == doc.Id && p.MC_GroupId == group.GroupId);
-                        result.Add(new MCFileUpload
-                        {
-                            ID = doc.Id,
-                            BatBuoc = group.Mandatory ? 1 : 0,
-                            Ten = doc.DocumentName,
-                            DocumentId = doc.Id,
-                            GroupId = group.GroupId,
-                            DocumentCode = doc.DocumentCode,
-                            MapBpmVar = doc.MapBpmVar,
-                            ProfileId = profileId,
-                            ProfileTypeId = profileType,
-                            DocumentName = doc.DocumentName,
-                            Tailieus = files.ToList(),
-                            AllowUpload = string.IsNullOrWhiteSpace(profile.MCId)
-                       });
-                    
-                    
+                    result.Add(new MCFileUpload
+                    {
+                        ID = doc.Id,
+                        BatBuoc = group.Mandatory ? 1 : 0,
+                        Ten = doc.DocumentName,
+                        DocumentId = doc.Id,
+                        GroupId = group.GroupId,
+                        DocumentCode = doc.DocumentCode,
+                        MapBpmVar = doc.MapBpmVar,
+                        ProfileId = profileId,
+                        ProfileTypeId = profileType,
+                        DocumentName = doc.DocumentName,
+                        Tailieus = files.ToList(),
+                        AllowUpload = string.IsNullOrWhiteSpace(profile.MCId)
+                    });
+
+
                 }
 
             }
@@ -708,11 +742,11 @@ namespace VS_LOAN.Core.Web.Controllers
             if (model == null || string.IsNullOrWhiteSpace(model.Value) || string.IsNullOrWhiteSpace(model.Value2))
                 return ToJsonResponse(false);
             var profile = await _rpMCredit.GetTemProfileById(Convert.ToInt32(model.Value));
-         
-           var x = await _svMCredit.AddNote(new NoteAddRequestModel
+
+            var x = await _svMCredit.AddNote(new NoteAddRequestModel
             {
                 Content = model.Value2,
-                Id =model.Value
+                Id = model.Value
             }, GlobalData.User.IDUser);
 
             return ToJsonResponse(true);
