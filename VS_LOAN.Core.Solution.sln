@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.852
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{EC64C899-2255-4854-8855-114E503D2B37}"
 	ProjectSection(SolutionItems) = preProject
@@ -33,6 +33,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VS_LOAN.Core.Repository", "VS_LOAN.Core.Repository\VS_LOAN.Core.Repository.csproj", "{EEED2E30-177B-48FE-9B5E-879E0FFCB0E3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VS_LOAN.Core.Business", "VS_LOAN.Core.Business\VS_LOAN.Core.Business.csproj", "{7B00ED3E-F9B8-4F24-AB45-7E37F3A6F450}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{28C160B2-18AA-4122-B80C-54C8345A6170}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

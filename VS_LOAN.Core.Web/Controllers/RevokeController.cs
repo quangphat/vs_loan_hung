@@ -11,6 +11,7 @@ using VS_LOAN.Core.Entity;
 using VS_LOAN.Core.Entity.RevokeDebt;
 using VS_LOAN.Core.Entity.UploadModel;
 using VS_LOAN.Core.Repository.Interfaces;
+using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Web.Helpers;
 
 namespace VS_LOAN.Core.Web.Controllers
@@ -31,9 +32,16 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             return View();
         }
-        public async Task<JsonResult> Search(string freeText = null, string status = null, int groupId = 0, int assigneeId =0, int page = 1, int limit = 10)
+        public async Task<JsonResult> Search(string freeText = null, string status = null, int groupId = 0, int assigneeId =0, int page = 1, int limit = 10, string fromDate = null, string toDate = null, int loaiNgay = 1)
         {
-            var result = await _bizRevokeDebt.SearchAsync(GlobalData.User.IDUser, freeText, status, page, limit, groupId, assigneeId);
+
+            DateTime dtFromDate = DateTime.MinValue, dtToDate = DateTime.Now.AddDays(3);
+            if (fromDate != "")
+                dtFromDate = DateTimeFormat.ConvertddMMyyyyToDateTimeNew(fromDate);
+            if (toDate != "")
+                dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTimeNew(toDate);
+
+            var result = await _bizRevokeDebt.SearchAsync(GlobalData.User.IDUser, freeText, status, page, limit, groupId, assigneeId,dtFromDate,dtToDate,loaiNgay);
             return ToJsonResponse(true, null, result);
         }
         public async Task<JsonResult> Import()

@@ -1,11 +1,16 @@
 ﻿html, body, h1, h2, h3, h4, h5, h6 {
     font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
 }
+.activity-log{
+    margin-top:125px;
+}
 /*font-size: 11px;*/
-
 /*.form-group input, .form-group label, .form-group select, .form-group textarea {
   font-size: 11px !important;
 }*/
+.height-max {
+    height: max-content;
+}
 .label-orrange {
     background-color: #e38008 !important;
 }

@@ -303,7 +303,8 @@
                 (key >= 96 && key <= 105));
         });
     });
-};
+    };
+
     $("#txtPhone").ForceNumericOnly();
     $("#txtPhone2").ForceNumericOnly();
     $("#txtLoanMoney").ForceNumericOnly();
@@ -324,6 +325,35 @@
         let value = !isNullOrWhiteSpace($("#txtIdNumber").val()) ? $("#txtIdNumber").val() : $("#txtCCCDNumber").val();
         checkDup('checkdupResult', value);
     });
+    function CallForGetIsCheckCat(catNumber, checkatAreaId = null) {
+        let model = JSON.stringify({
+            "Value": catNumber
+        })
+
+        $.ajax({
+            type: "POST",
+            url: '/MCredit/IsCheckCat',
+            data: model,
+            traditional: true,
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+                if (data != null && data.success == true) {
+                    if (data.data == true)
+                        $(checkatAreaId).show();
+                    else {
+                        $(checkatAreaId).hide();
+                        modelCat = { CatName: '', ComName: '', CatNumber: '' }
+                    }
+                }
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
     let modelCat = { CatName:'',ComName:'',CatNumber:'' }
     $('#btnCheckCat').click(function (e) {
         let value = $("#txtCatNumber").val();

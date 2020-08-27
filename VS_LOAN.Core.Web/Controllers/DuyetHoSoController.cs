@@ -488,10 +488,10 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public JsonResult LayDSTrangThai()
         {
-            var isTeamlead = GlobalData.User.UserType == (int)UserTypeEnum.Teamlead ? true : false;
-            var isAdmin = GlobalData.User.UserType == (int)UserTypeEnum.Admin ? true : false;
-            if (!isTeamlead && !isAdmin)
-                return Json(new { DSTrangThai = new List<TrangThaiHoSoModel>() });
+            //var isTeamlead = GlobalData.User.UserType == (int)UserTypeEnum.Teamlead ? true : false;
+            //var isAdmin = GlobalData.User.UserType == (int)UserTypeEnum.Admin ? true : false;
+            //if (!isTeamlead && !isAdmin)
+            //    return Json(new { DSTrangThai = new List<TrangThaiHoSoModel>() });
             List<TrangThaiHoSoModel> rs = new TrangThaiHoSoBLL().LayDSTrangThai();
             if (rs == null)
                 rs = new List<TrangThaiHoSoModel>();

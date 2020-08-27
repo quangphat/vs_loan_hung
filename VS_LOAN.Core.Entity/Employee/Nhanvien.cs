@@ -18,6 +18,8 @@ namespace VS_LOAN.Core.Entity.Employee
         public int RoleId { get; set; }
         public int ProvinceId { get; set; }
         public int DistrictId { get; set; }
+        public bool IsDeleted { get; set; }
+        public int Xoa { get; set; }
         public DateTime WorkDate { get; set; }
     }
 }

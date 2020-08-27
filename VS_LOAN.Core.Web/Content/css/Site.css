@@ -9,6 +9,11 @@
     vertical-align: text-top;
 }
 
+.logo_kpmgRevoke {
+	width: 170px;
+    height: 65px;
+    /* vertical-align: text-top; */
+}
 .kpmg_login {
     width: 72px;
     vertical-align: bottom;

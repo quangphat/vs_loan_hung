@@ -1,4 +1,5 @@
 ﻿using MCreditService;
+using MCreditService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,7 +66,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var toDate = string.IsNullOrWhiteSpace(workToDate) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(workToDate);
             BusinessExtension.ProcessPaging(ref page, ref limit);
             freetext = string.IsNullOrWhiteSpace(freetext) ? string.Empty : freetext.Trim();
-            var datas = await _rpEmployee.Gets(fromDate, toDate, roleId, freetext, page, limit, GlobalData.User.OrgId);
+            var datas = await _rpEmployee.Gets(fromDate, toDate, roleId, freetext, page, limit, GlobalData.User.OrgId, GlobalData.User.IDUser);
             if (datas == null || !datas.Any())
             {
                 return ToJsonResponse(true, null, DataPaging.Create(null as List<EmployeeViewModel>, 0));
@@ -83,7 +84,9 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             var isAdmin = GlobalData.User.UserType == (int)UserTypeEnum.Admin ? true : false;
             if (!isAdmin)
-                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            {
+                return ToJsonResponse(false, "Bạn không có quyền");
+            }
             if (entity == null)
             {
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
@@ -91,6 +94,10 @@ namespace VS_LOAN.Core.Web.Controllers
             if (string.IsNullOrWhiteSpace(entity.UserName))
             {
                 return ToJsonResponse(false, "Tên đăng nhập không được để trống");
+            }
+            if (entity.UserName.Contains(" "))
+            {
+                return ToJsonResponse(false, "Tên đăng nhập viết liền không dấu cách");
             }
             if (string.IsNullOrWhiteSpace(entity.Password))
             {
@@ -130,7 +137,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "Mã đã tồn tại", 0);
             }
-            entity.UserName = entity.UserName.Trim();
+            entity.UserName = entity.UserName.Trim().ToLower();
             entity.Password = entity.Password.Trim();
             entity.Password = MD5.getMD5(entity.Password);
             entity.CreatedBy = GlobalData.User.IDUser;
@@ -142,9 +149,13 @@ namespace VS_LOAN.Core.Web.Controllers
             var isAdmin = GlobalData.User.UserType == (int)UserTypeEnum.Admin ? true : false;
             if (!isAdmin)
             {
-                return View();
+                return RedirectToAction("Index");
             }
             var employee = await _rpEmployee.GetByIdAsync(id);
+            if(employee.Xoa ==1)
+            {
+                return RedirectToAction("Index");
+            }
             ViewBag.employee = employee;
             ViewBag.account = GlobalData.User;
             return View();
@@ -161,9 +172,29 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             }
-           
+                
             model.UpdatedBy = GlobalData.User.IDUser;
             var result = await _rpEmployee.Update(model);
+            return ToJsonResponse(result);
+        }
+
+
+          public async Task<JsonResult> Delete([FromBody] EmployeeEditModel model)
+        {
+
+        if (model == null || model.Id <= 0)
+            {
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            }
+            var isAdmin = GlobalData.User.UserType == (int)UserTypeEnum.Admin ? true : false;
+            if (!isAdmin)
+            {
+                return ToJsonResponse(false, "Bạn không có quyền xóa nhan viên");
+            }
+            model.UpdatedBy = GlobalData.User.IDUser;
+            model.DeletedBy = GlobalData.User.IDUser;
+            model.Xoa = 1;
+            var result = await _rpEmployee.Delete(model);
             return ToJsonResponse(result);
         }
         public async Task<JsonResult> GetPartner(int customerId)
@@ -204,9 +235,27 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> ResetPassword(ResetPasswordModel model)
         {
-            if (model == null || string.IsNullOrWhiteSpace(model.UserName) || string.IsNullOrWhiteSpace(model.Password))
-                return ToJsonResponse(false);
-            var result = await _rpEmployee.ResetPassord(model.UserName.Trim(), MD5.getMD5(model.Password.Trim()));
+            var isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
+            if(!isAdmin)
+            {
+                return ToJsonResponse(false, "Bạn không có quyền");
+            }
+            if (model == null || model.Id<=0 || string.IsNullOrWhiteSpace(model.Confirm) || string.IsNullOrWhiteSpace(model.Password))
+                return ToJsonResponse(false, "Vui lòng nhập đầy đủ các thông tin");
+            if (model.Password != model.Confirm)
+            {
+                return ToJsonResponse(false, "Mật khẩu không khớp");
+            }
+            var employee = await _rpEmployee.GetByIdAsync(model.Id);
+            if (employee == null)
+            {
+                return ToJsonResponse(false, "Người dùng không tồn tại");
+            }
+            if (model.Password.Trim().Length < 5)
+            {
+                return ToJsonResponse(false, "Mật khẩu phải có ít nhất 5 ký tự, không bao gồm khoảng trắng");
+            }
+            var result = await _rpEmployee.ResetPassord(model.Id, MD5.getMD5(model.Password.Trim()), GlobalData.User.IDUser);
             return ToJsonResponse(true, "Thành công", result);
         }
         public async Task<JsonResult> GetAllEmployee()

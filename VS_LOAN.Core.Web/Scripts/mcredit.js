@@ -106,34 +106,34 @@ function GetLocSigns(controlId, defaultValue = 0) {
         }
     });
 }
-function CallForGetIsCheckCat(catNumber, checkatAreaId = null) {
-    let model = JSON.stringify({
-        "Value": catNumber
-    })
+//function CallForGetIsCheckCat(catNumber, checkatAreaId = null) {
+//    let model = JSON.stringify({
+//        "Value": catNumber
+//    })
     
-    $.ajax({
-        type: "POST",
-        url: '/MCredit/IsCheckCat',
-        data: model,
-        traditional: true,
-        contentType: "application/json; charset=utf-8",
-        success: function (data) {
+//    $.ajax({
+//        type: "POST",
+//        url: '/MCredit/IsCheckCat',
+//        data: model,
+//        traditional: true,
+//        contentType: "application/json; charset=utf-8",
+//        success: function (data) {
             
-            if (data != null && data.success == true) {
-                if (data.data == true)
-                    $(checkatAreaId).show();
-                else {
-                    $(checkatAreaId).hide();
-                }
-            }
-        },
-        complete: function () {
-        },
-        error: function (jqXHR, exception) {
-            showError(jqXHR, exception);
-        }
-    });
-}
+//            if (data != null && data.success == true) {
+//                if (data.data == true)
+//                    $(checkatAreaId).show();
+//                else {
+//                    $(checkatAreaId).hide();
+//                }
+//            }
+//        },
+//        complete: function () {
+//        },
+//        error: function (jqXHR, exception) {
+//            showError(jqXHR, exception);
+//        }
+//    });
+//}
 function GetLoanProducts(controlId, defaultValue = 0, checkatAreaId = null) {
     $(controlId).empty();
     $.ajax({
@@ -334,8 +334,9 @@ function checkSale(controlId, value, controlToSetId = null, profileId = 0) {
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-                        //document.getElementById(con)
-                            $(controlToSetId).val(data.data.obj.id)
+                            //document.getElementById(con)
+                            $(controlToSetId).val(data.data.obj.id );
+                            $("#nameSale").text("Tên sale: " + data.data.obj.name);
                     });
                 }
                 else {

@@ -51,8 +51,6 @@ namespace VS_LOAN.Core.Web.Controllers
             _rpEmployee = employeeRepository;
            // _rpLog = logRepository;
         }
-        private bool result;
-
 
         public ActionResult Index()
         {
@@ -228,6 +226,7 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             var hoso = await new HosoCourrierRepository().GetById(id);
             ViewBag.hoso = hoso;
+            ViewBag.isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
             return View();
         }
         public JsonResult LayDSGhichu(int hosoId)
@@ -260,27 +259,13 @@ namespace VS_LOAN.Core.Web.Controllers
             bool isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
             if (profile.Status == (int)TrangThaiHoSo.Cancel)
             {
-                
                 if (!isAdmin)
                 {
                     return ToJsonResponse(false, "Bạn không có quyền, vui lòng liên hệ Admin");
                 }
             }
             var sale = null as OptionSimple;
-            if(!isAdmin )
-            {
-                model.SaleCode = "";
-            }
-            else
-            {
-                if (string.IsNullOrWhiteSpace(model.SaleCode))
-                    return ToResponse(false, "Mã teleSale ko hợp lệ");
-                sale = await _rpEmployee.GetEmployeeByCode(model.SaleCode.Trim());
-                if (sale == null)
-                {
-                    return ToResponse(false, "Sale không tồn tại, vui lòng kiểm tra lại");
-                }
-            }
+           
             
             var hoso = new HosoCourier
             {

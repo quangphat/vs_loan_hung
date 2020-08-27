@@ -22,18 +22,66 @@
 
                     <div class="form-group">
 
-                        <label class="col-sm-1 col-xs-12  control-label no-padding-right">Tìm kiếm</label>
-                        <div class="col-sm-2 col-xs-12">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right">Tìm kiếm</label>
+                        <div class="col-sm-5 col-xs-12 ">
                             <input type="text" class="form-control" id="txtFreeText" placeholder="Tìm kiếm" />
                         </div>
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Loại</label>
                         <div class="col-sm-5 col-xs-12 ">
                             <select id="ddlStatus" class="chosen-select form-control" multiple data-placeholder="Chọn trạng thái">
-                                
                             </select>
                         </div>
                     </div>
-                   
+
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Nhóm</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlNhom" class="chosen-select form-control" data-placeholder="Chọn nhóm">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Thành viên</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlThanhVienNhom" class="chosen-select form-control" data-placeholder="Chọn thành viên nhóm">
+                                <option value="0"></option>
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-2 col-xs-12">
+                            <label class="control-label no-padding-right">
+                                <input name="radio-ngay" type="radio" checked="checked" value="1" class="ace">
+                                <span class="lbl"> Ngày tạo</span>
+                            </label>
+                            <label class="control-label no-padding-right">
+                                <input name="radio-ngay" type="radio" value="2" class="ace">
+                                <span class="lbl"> Ngày cập nhật</span>
+                            </label>
+                        </div>
+                        <div class="col-sm-2 col-xs-12 ">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtFromDate" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-xs-12 ">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtToDate" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+                      
+
+                    </div>
+
+
+
                     <div class="form-group text-right">
                         <div class="col-xs-12 ">
                             <a class="btn btn-primary" id="btn_search">
@@ -185,6 +233,10 @@
                 let arrStatus = status.split(',')
                 $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
             }
+            LayNhom();
+            
+        $('#ddlThanhVienNhom').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlNhom').chosen({ width: '100%', allow_single_deselect: true });
         }
 
         $('#ddllimit').chosen({ width: '100%', allow_single_deselect: true });
@@ -193,8 +245,24 @@
             let arrStatus = status.split(',')
             $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
         }
+  var fromDate = queries.get("fromDate");
+            if (isNullOrWhiteSpace(fromDate)) {
+                fromDate = new Date().getDay + -7;
+            }
+ $("#txtFromDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", fromDate);
+            var toDate = queries.get("toDate");
+            if (isNullOrWhiteSpace(toDate)) {
+                toDate = new Date().getDay + 1;
+            }
+            $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", toDate);
+            var dateType = queries.get("loaiNgay");
 
-        bindQueries()
+
+
+		 
+		 bindQueries();
+		 
+		 
     });
     var strLoading = '@Global.Message_Loading';
     $('#btn_search').click(function (e) {
@@ -203,6 +271,65 @@
         //$('#dtSource').DataTable().ajax.reload();
         //$('#dtSource').DataTable().columns.adjust().draw();
     });
+
+        function LayNhom() {
+        $('#ddlNhom').empty();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSNhom", "DuyetHoSo")',
+            data: {},
+            success: function (data) {
+                $('#ddlNhom').append("<option value='0'></option>");
+                if (data.data != null) {
+                    $.each(data.data, function (index, item) {
+                        $('#ddlNhom').append("<option value='" + item.ID + "'>" + item.Ten + "(" + item.TenQL + ")</option>");
+                    });
+                    var maNhom = queries.get("maNhom");
+                    $('#ddlNhom').val(maNhom)
+                    $('#ddlNhom').chosen().trigger("chosen:updated").change();
+                }
+                queries = new URLSearchParams(window.location.search)
+                var memberId = queries.get("maThanhVien");
+                getData(page, limit, memberId);
+                //InitTable();
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+     $('#ddlNhom').change(function () {
+        $('#ddlThanhVienNhom').empty();
+        $('#ddlThanhVienNhom').append("<option value='0'></option>");
+        var maNhom = $('#ddlNhom').val()
+        if (!isNullOrUndefined(maNhom)) {
+             $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSThanhVienNhom", "DuyetHoSo")',
+            data: { "maNhom": $('#ddlNhom').val() },
+            success: function (data) {
+                if (data.data != null) {
+                    $.each(data.data, function (index, item) {
+                        $('#ddlThanhVienNhom').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                    });
+                    var memberId = queries.get("maThanhVien");
+                    $('#ddlThanhVienNhom').val(memberId)
+                }
+            },
+            complete: function () {
+                $('#ddlThanhVienNhom').chosen().trigger("chosen:updated");
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+        }
+
+    });
+
     function renderStatusList() {
         $("#ddlStatus").empty();
         $.ajax({
@@ -482,6 +609,9 @@
                 'freeText': $("#txtFreeText").val(),
                 'status': "0",
                 'type': "draft",
+				'fromDate':$('#txtFromDate').val(),
+				'toDate': $('#txtToDate').val(),
+			    'loaiNgay': $('input[name="radio-ngay"]:checked').val(),
                 'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
             },
             success: function (response) {

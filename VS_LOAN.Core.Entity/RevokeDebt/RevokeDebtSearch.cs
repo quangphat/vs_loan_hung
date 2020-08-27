@@ -110,6 +110,7 @@ namespace VS_LOAN.Core.Entity.RevokeDebt
         public string UpdatedUser { get; set; }
         public int Status { get; set; }
         public string StatusName { get; set; }
+        public string PartnerName { get; set; }
         public string LastNote { get; set; }
         public int ProvinceId { get; set; }
         public int DistrictId { get; set; }
@@ -132,5 +133,7 @@ namespace VS_LOAN.Core.Entity.RevokeDebt
             }
         }
         public string AssigneeName { get; set; }
+
+        public string AssigneeCode { get; set; }
     }
 }

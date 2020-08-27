@@ -302,6 +302,7 @@
         return renderTextLeft(item.NotMatch, '', "m-w-150")
     }
     function renderRow(index, item) {
+        console.log(item);
         page = queries.get("page");
         if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
             page = 1;

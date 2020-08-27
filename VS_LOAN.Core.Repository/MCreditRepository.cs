@@ -317,7 +317,13 @@ namespace VS_LOAN.Core.Repository
                 return true;
             }
         }
-        public async Task<List<ProfileSearchSql>> GetTempProfiles(int page, int limit, string freeText, int userId, string status = null)
+        public async Task<List<ProfileSearchSql>> GetTempProfiles(int page, int limit, string freeText, int userId,
+            string status = null,
+            DateTime? fromDate = null,
+            DateTime? toDate = null,
+            int dateType = 0,
+            int maNhom = 0,
+            int maThanhVien = 0)
         {
             using (var con = GetConnection())
             {
@@ -327,7 +333,12 @@ namespace VS_LOAN.Core.Repository
                     userId,
                     page,
                     limit_tmp = limit,
-                    status
+                    status,
+                    fromDate,
+                    toDate,
+                    dateType,
+                    maNhom,
+                    maThanhVien
                 }, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }

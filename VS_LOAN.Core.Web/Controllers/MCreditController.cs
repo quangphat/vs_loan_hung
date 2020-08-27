@@ -1,4 +1,5 @@
 ﻿using MCreditService.Interfaces;
+using MCreditService.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -132,12 +133,22 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             return View();
         }
-        public async Task<JsonResult> SearchTemps(string freeText, string status, int page = 1, int limit = 20)
+     
+            public async Task<JsonResult> SearchTemps(string freeText, string status, int page = 1, int limit = 20, string fromDate = null, string toDate = null, int loaiNgay = 0, int manhom = 0,
+
+              int mathanhvien = 0)
         {
             page = page <= 0 ? 1 : page;
 
 
-            var profiles = await _rpMCredit.GetTempProfiles(page, limit, freeText, GlobalData.User.IDUser, status);
+
+            DateTime dtFromDate = DateTime.MinValue, dtToDate = DateTime.Now.AddDays(3);
+            if (fromDate != "")
+                dtFromDate = DateTimeFormat.ConvertddMMyyyyToDateTimeNew(fromDate);
+            if (toDate != "")
+                dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTimeNew(toDate);
+
+            var profiles = await _rpMCredit.GetTempProfiles(page, limit, freeText, GlobalData.User.IDUser, status, dtFromDate, dtToDate, loaiNgay, manhom, mathanhvien = 0);
             if (profiles == null || !profiles.Any())
             {
                 return ToJsonResponse(true, "", DataPaging.Create(null as List<ProfileSearchSql>, 0));
@@ -145,11 +156,20 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = DataPaging.Create(profiles, profiles[0].TotalRecord);
             return ToJsonResponse(true, "", result);
         }
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             //if (GlobalData.User.IDUser != (int)UserTypeEnum.Admin)
             //    return RedirectToAction("Index", "NoAuthorities");
-            return View();
+            var isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
+            if (isAdmin == true)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "NoAuthorities");
+            }
+
         }
         public async Task<JsonResult> Search(string freeText, string status, string type, int page)
         {
@@ -428,12 +448,14 @@ namespace VS_LOAN.Core.Web.Controllers
             profile = await _rpMCredit.GetTemProfileById(profileId);
             if (profile == null)
                 return ToJsonResponse(false, "Hồ sơ không tồn tại", new List<LoaiTaiLieuModel>());
+            var code = profile.ProductCode != null ? profile.ProductCode.Trim() : null;
+            var Loccode = profile.LocSignCode != null ? profile.LocSignCode.Trim() : null;
 
             var data = await _svMCredit.GetFileUpload(new GetFileUploadRequest
             {
-                Code = profile.ProductCode.Trim(),
+                Code = code,
                 Id = "0",
-                Loccode = profile.LocSignCode.Trim(),
+                Loccode = Loccode,
                 Issl = profile.IsAddr ? "1" : "0",
                 Money = profile.LoanMoney.ToString().Replace(",0000", "")
             }, GlobalData.User.IDUser);
@@ -455,9 +477,11 @@ namespace VS_LOAN.Core.Web.Controllers
                 
                 foreach (var doc in group.Documents)
                 {
-                    if(group.GroupId!=24 && doc.DocumentCode != "ElectricBill")
+                    if(group.GroupId==24 && doc.DocumentCode == "ElectricBill")
                     {
-                        var files = uploadedFiles.Where(p => p.Key == doc.Id && p.MC_GroupId == group.GroupId);
+                        continue;
+                    }
+                    var files = uploadedFiles.Where(p => p.Key == doc.Id && p.MC_GroupId == group.GroupId);
                         result.Add(new MCFileUpload
                         {
                             ID = doc.Id,
@@ -472,8 +496,8 @@ namespace VS_LOAN.Core.Web.Controllers
                             DocumentName = doc.DocumentName,
                             Tailieus = files.ToList(),
                             AllowUpload = string.IsNullOrWhiteSpace(profile.MCId)
-                        });
-                    }
+                       });
+                    
                     
                 }
 
@@ -683,12 +707,11 @@ namespace VS_LOAN.Core.Web.Controllers
             if (model == null || string.IsNullOrWhiteSpace(model.Value) || string.IsNullOrWhiteSpace(model.Value2))
                 return ToJsonResponse(false);
             var profile = await _rpMCredit.GetTemProfileById(Convert.ToInt32(model.Value));
-            if (profile == null)
-                return ToJsonResponse(true);
-            await _svMCredit.AddNote(new NoteAddRequestModel
+         
+           var x = await _svMCredit.AddNote(new NoteAddRequestModel
             {
                 Content = model.Value2,
-                Id = profile.MCId
+                Id =model.Value
             }, GlobalData.User.IDUser);
 
             return ToJsonResponse(true);

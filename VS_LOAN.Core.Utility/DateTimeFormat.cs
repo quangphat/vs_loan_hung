@@ -12,6 +12,14 @@ namespace VS_LOAN.Core.Utility
             return date;
 
         }
+        public static DateTime ConvertddMMyyyyToDateTimeNew(string str)
+        {
+            string[] p = str.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
+            DateTime date = new DateTime(Convert.ToInt32(p[0]), Convert.ToInt32(p[1]), Convert.ToInt32(p[2]));
+            return date;
+
+        }
+
         public static DatetimeConvertModel ConvertddMMyyyyToDateTimeV2(string str)
         {
             try

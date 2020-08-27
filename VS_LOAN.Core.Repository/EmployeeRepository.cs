@@ -153,15 +153,15 @@ namespace VS_LOAN.Core.Repository
             }
 
         }
-        public async Task<bool> ResetPassord(string userName, string password)
+        public async Task<bool> ResetPassord(int id, string password, int updatedBy)
         {
             using (var con = GetConnection())
             {
                 await con.ExecuteAsync("sp_ResetPassword",
-                    new
-                    {
-                        username = userName,
-                        password = password
+                    new {
+                        id,
+                        password,
+                        updatedBy
                     }, commandType: CommandType.StoredProcedure);
                 return true;
             }
@@ -173,7 +173,7 @@ namespace VS_LOAN.Core.Repository
             int roleId,
             string freeText,
             int page,
-            int limit, int OrgId)
+            int limit, int OrgId, int currentUserId)
         {
             var p = new DynamicParameters();
             p.Add("workFromDate", workFromDate);
@@ -183,6 +183,7 @@ namespace VS_LOAN.Core.Repository
             p.Add("roleId", roleId);
             p.Add("limit", limit);
             p.Add("OrgId", OrgId);
+            p.Add("currentUserId", currentUserId);
 
             using (var con = GetConnection())
             {
@@ -225,6 +226,22 @@ namespace VS_LOAN.Core.Repository
             using (var con = GetConnection())
             {
                 await con.ExecuteAsync("sp_Employee_UpdateUser_v2", p, commandType: CommandType.StoredProcedure);
+                return true;
+            }
+
+        }
+
+        public async Task<bool> Delete(EmployeeEditModel entity)
+        {
+            var p = new DynamicParameters();
+            p.Add("id", entity.Id);
+
+            p.Add("DeletedBy", entity.DeletedBy);
+            p.Add("updatedby", entity.UpdatedBy);
+            p.Add("Xoa", entity.Xoa);
+            using (var con = GetConnection())
+            {
+                await con.ExecuteAsync("sp_Employee_Delete_v2", p, commandType: CommandType.StoredProcedure);
                 return true;
             }
 

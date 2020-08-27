@@ -1,4 +1,5 @@
 ﻿@using VS_LOAN.Core.Web.Resources
+@using VS_LOAN.Core.Web.Helpers;
 <div id="navbar" style="background:#0D622F" class="navbar navbar-default">
     <div class="navbar-container" id="navbar-container">
         @*<button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
@@ -14,11 +15,22 @@
             <span class="icon-bar"></span>
         </button>
         <div class="navbar-header pull-left">
-            <a href="http://www.vietbankfc.vn" target="_blank" class="navbar-brand">
+            <a href="/"  class="navbar-brand">
                 <small>
                     @*<i class="fa fa-leaf"></i>*@
-                    <img alt="" class="logo_kpmg" src="/Logo.png">
-                    <strong class="hidden-xs" style="text-transform:uppercase">HỆ THỐNG KIỂM DUYỆT HỒ SƠ</strong>
+					
+					 @if (GlobalData.User.OrgId == 2)
+                    {
+							<img alt="" class="logo_kpmgRevoke" src="/logoRevoke.png">
+							 <strong class="hidden-xs" style="text-transform:uppercase">HỆ THỐNG BÁO CÁO</strong>
+					}
+					else 
+					{
+					       <img alt="" class="logo_kpmg" src="/Logo.png">
+							<strong class="hidden-xs" style="text-transform:uppercase">HỆ THỐNG KIỂM DUYỆT HỒ SƠ</strong>						   
+					}
+             
+                   
                 </small>
             </a>
         </div>

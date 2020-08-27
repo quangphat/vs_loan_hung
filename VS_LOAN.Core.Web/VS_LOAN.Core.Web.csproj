@@ -1773,6 +1773,9 @@
     <Content Include="Views\MCredit\MCreditProfile.cshtml" />
     <Content Include="Views\Revoke\Index.cshtml" />
     <Content Include="Views\Revoke\Edit.cshtml" />
+    <Content Include="Views\ShareRevoke\_LayoutRV.cshtml" />
+    <Content Include="Views\Home\Index - Copy.cshtml" />
+    <Content Include="Views\ShareRevoke\_NavBarRV.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

@@ -12,7 +12,7 @@ namespace VS_LOAN.Core.Repository.Interfaces
     public interface IEmployeeRepository
     {
         Task<List<OptionSimple>> GetEmployeesByGroupId(int groupId, bool isLeader = false);
-        Task<bool> ResetPassord(string userName, string password);
+        Task<bool> ResetPassord(int id, string password, int updatedBy);
         Task<OptionSimple> GetEmployeeByCode(string code);
         Task<bool> CheckIsAdmin(int userId);
         Task<List<int>> GetPeopleIdCanViewMyProfile(int userId);
@@ -34,10 +34,13 @@ namespace VS_LOAN.Core.Repository.Interfaces
             string freeText,
             int page,
             int limit,
-            int orgId);
+            int orgId,
+            int currentUserId);
         Task<Nhanvien> GetByIdAsync(int id);
         Task<List<OptionSimple>> GetRoleList(int userId);
         Task<bool> Update(EmployeeEditModel entity);
+        Task<bool> Delete(EmployeeEditModel entity);
+        
         Task<int> Create(UserCreateModel entity);
         Task<List<OptionSimple>> GetAllEmployee(int orgId);
         Task<List<OptionSimple>> GetAllEmployeePaging(int orgId, int page, string freeText);
