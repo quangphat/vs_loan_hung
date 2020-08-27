@@ -282,9 +282,16 @@
                         }
                         else
                         {
-                            <a class="btn btn-sm btn-primary" id="btn_CreateNew">
-                                Tạo hồ sơ mới từ hồ sơ này
+                            <a class="btn btn-sm btn-primary" id="btnUpdateFiles">
+                                Cập Nhật và Chuyển Qua MC
                             </a>
+                            if (@ViewBag.isAdmin)
+                            {
+                                <a class="btn btn-sm btn-primary" id="btn_CreateNew">
+                                    Tạo hồ sơ mới từ hồ sơ này
+                                </a>
+                            }
+
                         }
 
                     </div>
@@ -338,6 +345,46 @@
             CallForGetIsCheckCat(this.value, "#checkcat-area");
         })
 
+    });
+
+        $('#btnUpdateFiles').click(function (e) {
+        
+        $.ajax({
+            traditional: true,
+            url: '/MCredit/ReSendFileToEC?profileId=' + @ViewBag.model.MCId,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                if (data.success == true) {
+                     swal({
+                            title: "@Html.Raw(Global.Message_Title)",
+                            text: "Thành công",
+                            type: "success",
+                            timer: 4000,
+                            showConfirmButton: true,
+                        }, function () {
+                            //window.location = window.location;
+
+                            //uploadFiles(data.data, false);
+                        });
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.data.message,
+                        type: "error",
+                        timer: 10000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
     });
     function displayCat() {
         if (!isNullOrWhiteSpace(@ViewBag.model.CatNumber)) {
@@ -400,7 +447,7 @@
                         timer: 4000,
                         showConfirmButton: true,
                     });
-                    debugger
+                    
                     $("#checkcat-result").text(`${data.data.name} - ${data.data.cat}`);
                     modelCat = { CatName: data.data.cat, CatNumber: value, ComName: data.data.name }
                 }
@@ -518,7 +565,7 @@
                                         documentId: item.DocumentId,
                                         groupId: item.GroupId
                                     }
-                                    , className, true, _initialPreview, _initialPreviewConfig, item.AllowUpload, true, onUploadFile, onDeleteFile, filesUpload);
+                                    , className, true, _initialPreview, _initialPreviewConfig, true, true, onUploadFile, onDeleteFile, filesUpload);
                                 keys.push(item.ID)
                             })
                             if (item.Tailieus.length < 50) {
@@ -535,7 +582,7 @@
                                         documentId: item.DocumentId,
                                         groupId: item.GroupId
                                     }
-                                    , 'mt-46', true, [], [], item.AllowUpload, false, onUploadFile, onDeleteFile, filesUpload);
+                                    , 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
                             }
 
                         }
@@ -552,7 +599,7 @@
                                     documentId: item.DocumentId,
                                     groupId: item.GroupId
                                 }
-                                , 'mt-46', true, [], [], item.AllowUpload, false, onUploadFile, onDeleteFile, filesUpload);
+                                , 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
                             //keys.push(item.ID);
                         }
                         //------------

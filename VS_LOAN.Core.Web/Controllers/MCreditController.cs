@@ -370,6 +370,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 if (!peopleCanView.Contains(GlobalData.User.IDUser))
                     return RedirectToAction("Temp");
             }
+            ViewBag.isAdmin = GlobalData.User.TypeUser == (int)UserTypeEnum.Admin ? true : false;
             ViewBag.model = result;
             return View();
         }
