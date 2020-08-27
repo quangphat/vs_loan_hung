@@ -5,6 +5,7 @@ using System.Text;
 using VietStar.Entities.CheckDup;
 using VietStar.Entities.Company;
 using VietStar.Entities.Courier;
+using VietStar.Entities.Employee;
 using VietStar.Entities.Mcredit;
 using VietStar.Entities.Profile;
 
@@ -123,6 +124,8 @@ namespace VietStar.Entities.Infrastructures
                .ForMember(a => a.SaleNumber, b => b.MapFrom(c => c.idNumber))
                .ForMember(a => a.SaleId, b => b.MapFrom(c => c.id));
 
+            CreateMap<UserCreateModel, UserSql>();
+            CreateMap<UserEditModel, UserSql>();
 
             #endregion
         }

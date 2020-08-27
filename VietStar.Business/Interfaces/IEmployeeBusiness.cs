@@ -11,6 +11,11 @@ namespace VietStar.Business.Interfaces
 {
     public interface IEmployeeBusiness
     {
+        Task<bool> DeleteAsync(int userId);
+        Task<bool> ResetPassordAsync(ChangePasswordModel model);
+        Task<bool> UpdateAsync(UserEditModel model);
+        Task<UserSql> GetByIdAsync(int userId);
+        Task<int> CreateAsync(UserCreateModel model);
         Task<List<OptionSimple>> GetByProvinceIdAsync(int provinceId);
         Task<List<OptionSimple>> GetSalesAsync();
         Task<bool> GetStatusAsync(int userId);
@@ -19,6 +24,6 @@ namespace VietStar.Business.Interfaces
         Task<List<OptionSimple>> GetAllEmployeePagingAsync(int page, string freeText);
         Task<List<OptionSimple>> GetAllEmployeeAsync();
         Task<DataPaging<List<EmployeeViewModel>>> SearchsAsync(int role, string freeText, int page = 1, int limit = 10);
-        Task<List<OptionSimple>> GetRoleList();
+        Task<List<OptionSimple>> GetRoleListAsync();
     }
 }

@@ -55,7 +55,7 @@ namespace VietStar.Business
             var response = await _rpCourier.CreateAsync(profile);
             if (!response.success)
                 return ToResponse(response);
-            var sale = await _rpEmployee.GetEmployeeByCode(model.SaleCode.ToString().Trim(), _process.User.Id);
+            var sale = await _rpEmployee.GetEmployeeByCodeAsync(model.SaleCode.ToString().Trim(), _process.User.Id);
             if (sale == null)
             {
                 return ToResponse(0, "Sale không tồn tại, vui lòng kiểm tra lại");

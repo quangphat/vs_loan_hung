@@ -21,7 +21,138 @@ namespace VietStar.Repository
         {
         }
 
-        public async Task<List<int>> GetPeopleCanViewMyProfile(int profileId)
+        public async Task<BaseResponse<bool>> DeleteAsync(int userId, int deleteId)
+        {
+            var p = new DynamicParameters();
+            p.Add("userId", userId);
+
+            p.Add("deleteId", deleteId);
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    await con.ExecuteAsync("sp_Employee_Delete_v3", p, commandType: CommandType.StoredProcedure);
+                    return BaseResponse<bool>.Create(true);
+                }
+            }
+            catch (Exception e)
+            {
+                return BaseResponse<bool>.Create(false, GetException(e));
+            }
+
+        }
+
+        public async Task<BaseResponse<bool>> ResetPassordAsync(int id, string password, int updatedBy)
+        {
+
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    await con.ExecuteAsync("sp_ResetPassword",
+                        new
+                        {
+                            id,
+                            password,
+                            updatedBy
+                        }, commandType: CommandType.StoredProcedure);
+                    return BaseResponse<bool>.Create(true);
+                }
+            }
+            catch (Exception e)
+            {
+                return BaseResponse<bool>.Create(false, GetException(e));
+            }
+
+        }
+
+        public async Task<BaseResponse<bool>> UpdateAsync(UserSql model)
+        {
+            var p = new DynamicParameters();
+            p.Add("id", model.Id);
+            p.Add("fullName", model.FullName);
+            p.Add("phone", model.Phone);
+            p.Add("roleId", model.RoleId);
+            p.Add("email", model.Email);
+            p.Add("UpdatedBy", model.UpdatedBy);
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    await con.ExecuteAsync("sp_Employee_UpdateUser_v2", p, commandType: CommandType.StoredProcedure);
+                    return BaseResponse<bool>.Create(true); ;
+                }
+            }
+            catch (Exception e)
+            {
+                return BaseResponse<bool>.Create(false, GetException(e));
+            }
+
+
+        }
+
+        public async Task<UserSql> GetByIdAsync(int userId)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryFirstOrDefaultAsync<UserSql>("sp_GetEmployeeById_v2", new { userId }, commandType: CommandType.StoredProcedure);
+                return result;
+            }
+
+        }
+
+        public async Task<UserSql> GetByUserNameAsync(string userName, int userId)
+        {
+
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryFirstOrDefaultAsync<UserSql>("sp_Employee_GetByUsername", new { userName, userId }, commandType: CommandType.StoredProcedure);
+                return result;
+            }
+
+        }
+
+        public async Task<UserSql> GetByCodeAsync(string code, int userId)
+        {
+
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryFirstOrDefaultAsync<UserSql>("sp_Employee_GetByCode", new { code, userId }, commandType: CommandType.StoredProcedure);
+                return result;
+            }
+
+        }
+
+
+
+        public async Task<BaseResponse<int>> CreateAsync(UserSql model)
+        {
+            var p = AddOutputParam("id");
+            p.Add("code", model.Code);
+            p.Add("userName", model.UserName);
+            p.Add("password", model.Password);
+            p.Add("fullName", model.FullName);
+            p.Add("phone", model.Phone);
+            p.Add("roleId", model.RoleId);
+            p.Add("email", model.Email);
+            p.Add("createdby", model.CreatedBy);
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    await con.ExecuteAsync("sp_Employee_InsertUser_v2", p, commandType: CommandType.StoredProcedure);
+                    return BaseResponse<int>.Create(p.Get<int>("id"));
+                }
+            }
+            catch (Exception e)
+            {
+                return BaseResponse<int>.Create(0, GetException(e));
+            }
+
+
+        }
+
+        public async Task<List<int>> GetPeopleCanViewMyProfileAsync(int profileId)
         {
             using (var con = GetConnection())
             {
@@ -30,7 +161,7 @@ namespace VietStar.Repository
             }
         }
 
-        public async Task<List<OptionSimple>> GetRoleList(int userId)
+        public async Task<List<OptionSimple>> GetRoleListAsync(int userId)
         {
 
             using (var con = GetConnection())
@@ -40,7 +171,7 @@ namespace VietStar.Repository
             }
         }
 
-        public async Task<OptionSimple> GetEmployeeByCode(string code, int userId)
+        public async Task<OptionSimple> GetEmployeeByCodeAsync(string code, int userId)
         {
             using (var con = GetConnection())
             {
@@ -49,7 +180,7 @@ namespace VietStar.Repository
             }
         }
 
-        public async Task<List<OptionSimple>> GetByProvinceId(int provinceId)
+        public async Task<List<OptionSimple>> GetByProvinceIdAsync(int provinceId)
         {
             using (var con = GetConnection())
             {
@@ -60,7 +191,7 @@ namespace VietStar.Repository
 
         }
 
-        public async Task<bool> GetStatus(int userId)
+        public async Task<bool> GetStatusAsync(int userId)
         {
             using (var con = GetConnection())
             {
@@ -71,7 +202,7 @@ namespace VietStar.Repository
                 return result;
             }
         }
-        public async Task<List<string>> GetPermissions(string roleCode)
+        public async Task<List<string>> GetPermissionsAsync(string roleCode)
         {
             using (var con = GetConnection())
             {
@@ -84,7 +215,7 @@ namespace VietStar.Repository
             }
         }
 
-        public async Task<Account> Login(string userName, string password)
+        public async Task<Account> LoginAsync(string userName, string password)
         {
             using (var con = GetConnection())
             {
@@ -98,7 +229,7 @@ namespace VietStar.Repository
 
         }
 
-        public async Task<List<OptionSimple>> GetMemberByGroupIdIncludeChild(int groupId, int userId)
+        public async Task<List<OptionSimple>> GetMemberByGroupIdIncludeChildAsync(int groupId, int userId)
         {
             try
             {
@@ -116,7 +247,7 @@ namespace VietStar.Repository
                 return null;
             }
         }
-        public async Task<List<OptionSimple>> GetCouriers(int orgId)
+        public async Task<List<OptionSimple>> GetCouriersAsync(int orgId)
         {
             try
             {
@@ -153,7 +284,7 @@ namespace VietStar.Repository
             }
         }
 
-        public async Task<List<OptionSimple>> GetAllEmployee(int orgId)
+        public async Task<List<OptionSimple>> GetAllEmployeeAsync(int orgId)
         {
             using (var con = GetConnection())
             {

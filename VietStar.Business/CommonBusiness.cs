@@ -86,7 +86,7 @@ namespace VietStar.Business
 
         public async Task<List<OptionSimple>> GetCouriersAsync()
         {
-            var result = await _rpEmployee.GetCouriers(_process.User.OrgId);
+            var result = await _rpEmployee.GetCouriersAsync(_process.User.OrgId);
             return result;
         }
     }

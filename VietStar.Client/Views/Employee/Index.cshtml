@@ -172,10 +172,10 @@
         var stt = (page - 1) * limit + index + 1;
         return "<tr role='row' class = 'odd'>"
             + renderTextCenter(stt, '', 'center w-45')
-            + renderTextLink(rowData.Id, `/employee/edit/${rowData.Id}`, '', "w-20")
-            + renderTextLink(rowData.FullName, `/employee/edit/${rowData.Id}`, '', "min-120")
+            + renderTextLink(rowData.Id, `/employees/edit/${rowData.Id}`, '', "w-20")
+            + renderTextLink(rowData.FullName, `/employees/edit/${rowData.Id}`, '', "min-120")
            
-            + renderTextLink(rowData.Code, `/employee/edit/${rowData.Id}`, '', "w-150")
+            + renderTextLink(rowData.Code, `/employees/edit/${rowData.Id}`, '', "w-150")
             + renderTextLeft(rowData.UserName, '', "w-150")
             + renderTextLeft(rowData.Email, '', 'w-150')
             + renderTextLeft(rowData.Phone, '', 'w-84')

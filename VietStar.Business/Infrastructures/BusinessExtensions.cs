@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using VietStar.Entities.Commons;
 using VietStar.Entities.FileProfile;
 
@@ -36,6 +37,21 @@ namespace VietStar.Business.Infrastructures
             if (fileLength > Constants.MaxFileSize * 1024 * 1024)
                 return true;
             return false;
+        }
+
+        public static bool IsValidEmail(string email, int maxLength = 255)
+        {
+            return true;
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+            if (email.Length > maxLength)
+            {
+                return false;
+            }
+
+            var patternEmail = @"/\S+@\S+\.\S+/";
+
+            return Regex.IsMatch(email, patternEmail);
         }
     }
 

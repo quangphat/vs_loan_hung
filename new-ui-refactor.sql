@@ -1554,3 +1554,93 @@ END
 
 ------------
 
+  ALTER procedure [dbo].[sp_Employee_GetByUsername](@userId int, @username varchar(40))
+  as
+  begin
+  declare @orgId int = 0;
+  select @orgId = isnull(OrgId,0) from dbo.Nhan_Vien where Id = @userId;
+  select Id, Ten_Dang_Nhap AS UserName, Email from dbo.Nhan_Vien where isnull(IsDeleted,0) = 0 and OrgId = @orgId and Ten_Dang_Nhap = @username
+  end
+  
+  ----------
+
+   ALTER procedure [dbo].[sp_Employee_GetByCode](@code varchar(20), @userId int)
+as
+begin
+  declare @orgId int = 0;
+  select @orgId = isnull(OrgId,0) from Nhan_Vien where Id = @userId;
+select top 1 Id, Ma as Code from Nhan_Vien where Ma = @code and isnull(IsDeleted,0) = 0 and OrgId = @orgId
+END
+
+----------
+
+alter procedure [dbo].[sp_GetEmployeeById_v2](@userId int)
+as
+begin
+select Id, Ten_Dang_Nhap AS UserName, Ma AS Code, Email, Dien_Thoai AS Phone
+,RoleId, Ho_Ten AS FullName
+FROM dbo.Nhan_Vien where ID = @userId and ISNULL(IsDeleted,0) =0
+END
+
+----------
+
+
+ALTER procedure [dbo].[sp_Employee_InsertUser_v2]
+(
+@id int out,
+@userName varchar(50),
+@code varchar(50),
+@password varchar(50),
+@fullName nvarchar(100),
+@phone varchar(50),
+@email varchar(50),
+@roleId int,
+@createdby int
+)
+as
+begin
+declare @orgId int  = 0;
+select @orgId = isnull(OrgId,0) from nhan_vien where Id = @createdby;
+insert into nhan_vien(Ma,Ten_Dang_Nhap,Mat_Khau,Ho_Ten,Dien_Thoai,Email,RoleId,Status,IsDeleted,CreatedTime,CreatedBy, OrgId, UpdatedTime)
+values (@code,@userName,@password,@fullName,@phone,@email,@roleId,1,0,GETDATE(),@createdby, @orgId, GETDATE());
+SET @id=@@IDENTITY
+end
+
+
+----------
+
+
+CREATE PROCEDURE sp_Employee_Delete_v3(@userId INT, @deleteId INT)
+AS BEGIN
+ UPDATE dbo.Nhan_Vien SET IsDeleted = 1, UpdatedTime = GETDATE(), UpdatedBy = @userId
+ WHERE id = @deleteId
+ END
+ 
+ --------
+
+ ALTER procedure [dbo].[sp_Employee_UpdateUser_v2]
+(
+@id int,
+@fullName nvarchar(100),
+@phone varchar(50),
+@email varchar(50),
+@roleId int,
+@updatedby int
+)
+as
+begin
+--declare @oldRoleId int = 0;
+--select @oldRoleId = RoleId from NHAN_VIEN where ID = @id;
+--if(@oldRoleId is not null and @oldRoleId >0 )
+--begin
+
+--end
+update dbo.Nhan_Vien set 
+		Ho_Ten = @fullName,
+		Dien_Thoai = @phone,
+		Email = @email,
+		RoleId = @roleId,
+		UpdatedBy = @updatedby
+		
+		where ID = @id
+end
