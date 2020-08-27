@@ -32,7 +32,7 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             return View();
         }
-        public async Task<JsonResult> Search(string freeText = null, string status = null, int groupId = 0, int assigneeId =0, int page = 1, int limit = 10, string fromDate = null, string toDate = null, int loaiNgay = 1)
+        public async Task<JsonResult> Search(string freeText = null, string status = null, int groupId = 0, int assigneeId =0, int page = 1, int limit = 10, string fromDate = null, string toDate = null, int loaiNgay = 1, int ddlProcess =-1)
         {
 
             DateTime dtFromDate = DateTime.MinValue, dtToDate = DateTime.Now.AddDays(3);
@@ -41,7 +41,7 @@ namespace VS_LOAN.Core.Web.Controllers
             if (toDate != "")
                 dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTimeNew(toDate);
 
-            var result = await _bizRevokeDebt.SearchAsync(GlobalData.User.IDUser, freeText, status, page, limit, groupId, assigneeId,dtFromDate,dtToDate,loaiNgay);
+            var result = await _bizRevokeDebt.SearchAsync(GlobalData.User.IDUser, freeText, status, page, limit, groupId, assigneeId,dtFromDate,dtToDate,loaiNgay, ddlProcess);
             return ToJsonResponse(true, null, result);
         }
         public async Task<JsonResult> Import()

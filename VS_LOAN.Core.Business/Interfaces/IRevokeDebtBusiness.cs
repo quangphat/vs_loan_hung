@@ -13,7 +13,7 @@ namespace VS_LOAN.Core.Business.Interfaces
     public interface IRevokeDebtBusiness
     {
         Task<BaseResponse<bool>> InsertFromFileAsync(MemoryStream stream, int userId);
-        Task<DataPaging<List<RevokeDebtSearch>>> SearchAsync(int userId, string freeText, string status, int page, int limit, int groupId = 0, int assigneeId = 0, DateTime? fromDate = null, DateTime? toDate = null, int loaiNgay = 1);
+        Task<DataPaging<List<RevokeDebtSearch>>> SearchAsync(int userId, string freeText, string status, int page, int limit, int groupId = 0, int assigneeId = 0, DateTime? fromDate = null, DateTime? toDate = null, int loaiNgay = 1, int ddlProcess =-1);
         Task<RevokeDebtSearch> GetByIdAsync(int profileId, int userId);
         Task<bool> DeleteByIdAsync(int userId, int profileId);
         Task<BaseResponse<bool>> AddNoteAsync(int profileId, string content, int userId);

@@ -55,12 +55,12 @@ namespace VS_LOAN.Core.Repository
                 return false;
             }
         }
-        public async Task<List<RevokeDebtSearch>> SearchAsync(int userId, string freeText, string status, int page, int limit, int groupId = 0, int assigneeId = 0, DateTime? fromDate = null, DateTime? toDate = null, int dateType = 1)
+        public async Task<List<RevokeDebtSearch>> SearchAsync(int userId, string freeText, string status, int page, int limit, int groupId = 0, int assigneeId = 0, DateTime? fromDate = null, DateTime? toDate = null, int dateType = 1, int ddlProcess =-1)
         {
             using (var con = GetConnection())
             {
                 var result = await con.QueryAsync<RevokeDebtSearch>("sp_RevokeDebt_Search",
-                    new { freeText, page, limit_tmp = limit, status, groupId, userId, assigneeId, fromDate, toDate, dateType }
+                    new { freeText, page, limit_tmp = limit, status, groupId, userId, assigneeId, fromDate, toDate, dateType, ddlProcess }
                     , commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
