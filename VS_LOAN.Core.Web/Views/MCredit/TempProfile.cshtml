@@ -348,10 +348,17 @@
     });
 
         $('#btnUpdateFiles').click(function (e) {
-        
+            showBlock($('#panel_body'), 'Vui lòng chờ');
+            let mcId = '@ViewBag.model.MCId'
+            if (isNullOrWhiteSpace(mcId)) {
+                debugger
+                mcId =''
+                return
+            }
+                
         $.ajax({
             traditional: true,
-            url: '/MCredit/ReSendFileToEC?profileId=' + @ViewBag.model.MCId,
+            url: '/MCredit/ReSendFileToEC?profileId=' + mcId,
             type: "POST",
             contentType: "application/json; charset=utf-8",
             success: function (data) {
