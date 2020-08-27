@@ -39,7 +39,17 @@
                         </div>
 
                     </div>
+					 <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái xử lý</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlProcess" class="chosen-select form-control"  data-placeholder="Trạng thái xử lý">
+									<option value="0" >Chưa xử lý</option>
+									<option value="1">Đã xử lý</option>
+									<option value="-1" selected>Tất cả</option>
+							</select>
+                        </div>
 
+                    </div>
 
                     <div class="form-group">
                         <div class="col-sm-2 col-xs-12">
@@ -340,7 +350,7 @@
     function bindQueries() {
           var fromDate = queries.get("fromDate");
             if (isNullOrWhiteSpace(fromDate)) {
-                fromDate = new Date().getDay + -7;
+                fromDate = new Date().getDay + -90;
             }
  $("#txtFromDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", fromDate);
             var toDate = queries.get("toDate");
@@ -436,6 +446,7 @@
         
         let groupId = queries.get("groupId");
         let assigneeId = queries.get("assigneeId");
+		let ddlProcess = queries.get("ddlProcess");
         if (isNullOrWhiteSpace(assigneeId)) {
             assigneeId = $('#ddlAssignee').val();
         }
@@ -451,6 +462,7 @@
 			    'loaiNgay': $('input[name="radio-ngay"]:checked').val(),
                 'page': page,
                 'limit': limit,
+				'ddlProcess': $('#ddlProcess').val(),
                 'assigneeId': (isNaN(assigneeId) || assigneeId == 0 || isNullOrUndefined(assigneeId)) ? $('#ddlAssignee').val() : assigneeId,
                 'freetext': $("#txtFreeText").val(),
                 'groupId': (isNaN(groupId) || groupId == 0 || isNullOrUndefined(groupId)) ? $('#ddlGroup').val() : groupId,
