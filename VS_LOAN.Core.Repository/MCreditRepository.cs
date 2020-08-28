@@ -26,6 +26,16 @@ namespace VS_LOAN.Core.Repository
                 return result.ToList();
             }
         }
+
+        public async Task<List<IgnoreDocumentUpload>> GetIgnoreMcDocumentAsync()
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryAsync<IgnoreDocumentUpload>("sp_get_McreditIgnoreDocumentUploads", commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+
         public async Task<bool> UpdateSale(UpdateSaleModel model, int profileId)
         {
 

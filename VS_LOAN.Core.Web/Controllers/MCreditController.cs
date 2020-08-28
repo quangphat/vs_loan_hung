@@ -23,6 +23,10 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class MCreditController : BaseController
     {
+        private static IDictionary<int, string> _ignore_duplicate_documents = new Dictionary<int, string> {
+            { 24, "ElectricBill" },
+            { 29, "SalaryStatement" }
+        };
         protected readonly IMCeditRepository _rpMCredit;
         protected readonly IMCreditService _svMCredit;
         protected readonly INoteRepository _rpNote;
@@ -451,6 +455,10 @@ namespace VS_LOAN.Core.Web.Controllers
             var code = profile.ProductCode != null ? profile.ProductCode.Trim() : null;
             var Loccode = profile.LocSignCode != null ? profile.LocSignCode.Trim() : null;
 
+            var ignoreDocuments = await _rpMCredit.GetIgnoreMcDocumentAsync();
+            if (ignoreDocuments == null)
+                ignoreDocuments = new List<IgnoreDocumentUpload>();
+
             var data = await _svMCredit.GetFileUpload(new GetFileUploadRequest
             {
                 Code = code,
@@ -477,7 +485,8 @@ namespace VS_LOAN.Core.Web.Controllers
                 
                 foreach (var doc in group.Documents)
                 {
-                    if(group.GroupId==24 && doc.DocumentCode == "ElectricBill")
+                    var isIgnore = ignoreDocuments.Any(p => p.GroupId == group.GroupId && doc.DocumentCode == p.DocumentCode);
+                    if(isIgnore)
                     {
                         continue;
                     }
@@ -496,9 +505,7 @@ namespace VS_LOAN.Core.Web.Controllers
                             DocumentName = doc.DocumentName,
                             Tailieus = files.ToList(),
                             AllowUpload = string.IsNullOrWhiteSpace(profile.MCId)
-                       });
-                    
-                    
+                       });  
                 }
 
             }
