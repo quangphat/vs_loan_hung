@@ -136,6 +136,7 @@
     <Compile Include="MCreditModels\CheckCICResponseModel.cs" />
     <Compile Include="MCreditModels\GetFileUploadRequest.cs" />
     <Compile Include="MCreditModels\GetFileUploadResponse.cs" />
+    <Compile Include="MCreditModels\IgnoreDocumentUpload.cs" />
     <Compile Include="MCreditModels\McJsonFile.cs" />
     <Compile Include="MCreditModels\MCProfilePostModel.cs" />
     <Compile Include="MCreditModels\MCResponseModelBase.cs" />
