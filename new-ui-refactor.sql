@@ -1644,3 +1644,105 @@ update dbo.Nhan_Vien set
 		
 		where ID = @id
 end
+
+
+-------------------
+
+
+
+ALTER procedure [dbo].[sp_RevokeDebt_Search]
+(
+@freeText nvarchar(30),
+@status varchar(20) ='',
+@page int =1,
+@limit_tmp int = 10,
+@groupId int =0,
+@AssigneeId int =0,
+@userId int,
+@fromDate datetime,
+@toDate datetime,
+@dateType int,
+@provinceId int = 0,
+@processStatus int = -1
+)as
+begin
+declare @where  nvarchar(1000) = ' where isnull(rv.IsDeleted,0) = 0';
+declare @mainClause nvarchar(max);
+declare @params nvarchar(300);
+if @freeText = '' begin set @freeText = null end;
+declare @offset int = 0;
+set @offset = (@page-1)*@limit_tmp;
+set @mainClause = 'select count(*) over() as TotalRecord, rv.* 
+,fintechcom_vn_PortalNew.fn_getGhichuByHosoId(rv.Id,5) as LastNote,
+dbo.fn_getStatusName(null,2, rv.Status) as StatusName ,nv3.Ho_Ten as AssigneeName,nv3.Ma as AssigneeCode,
+nv1.Ho_Ten as CreatedUser, nv2.Ho_Ten as UpdatedUser
+from RevokeDebt rv left join Nhan_Vien nv1 on rv.CreatedBy = nv1.ID
+left join Nhan_Vien nv2 on rv.UpdatedBy = nv2.Id
+left join Nhan_Vien nv3 on rv.AssigneeId = nv3.Id'
+	if(@freeText  is not null)
+	begin
+	set @where += ' and (rv.CustomerName like  N''%' + @freeText +'%''';
+	set @where += ' or rv.IdCardNumber like  N''%' + @freeText +'%''';
+		set @where += ' or rv.AgreementNo like  N''%' + @freeText +'%''';
+	set @where += ' or rv.MobilePhone like  N''%' + @freeText +'%'')';
+
+	end;
+set @where += ' and (@userId in (select * from fn_GetUserIDCanViewMyProfile_v2 (rv.CreatedBy,rv.AssigneeIds)) )'
+if(@status <> '')
+begin
+set @where += ' and rv.Status in ('+ @status +')'; 
+end;
+--if(@groupId <> 0)
+--begin
+--set @where +=' and  @groupId in (select distinct value from dbo.fn_SplitStringToTable(rv.AssigneeGroupIds, ''.''))';
+--end;
+if(@assigneeId <> 0)
+begin
+set @where += ' and @AssigneeId in (select distinct value from dbo.fn_SplitStringToTable(rv.AssigneeIds, ''.''))';
+end;
+IF(@dateType=1)
+SET @where += ' and rv.createdTime  between @fromDate and @toDate'
+else
+set @where += ' and rv.UpdatedTime between @fromDate and @toDate';
+
+if(@processStatus = 0)
+begin 
+set @where = @where + ' and rv.status = 0'; 
+end;
+if(@processStatus = 1)
+begin 
+set @where = @where + ' and rv.status >0'; 
+end;
+
+if(@provinceId > 0)
+begin
+if(@where <> '')
+set @where = @where + ' and rv.ProvinceId = @provinceId'; 
+end;
+set @where += ' order by rv.createdTime desc  offset @offset ROWS FETCH NEXT @limit ROWS ONLY';
+set @mainClause = @mainClause +  @where
+set @params =N'@status varchar(20), @offset int, @limit int, @groupId int, @AssigneeId int ,@userId int,@fromDate datetime,@toDate datetime,@dateType int,@provinceId int,@processStatus int';
+EXECUTE sp_executesql @mainClause,@params, @status = @status, @offset = @offset, @limit = @limit_tmp, @groupId = @groupId,
+@AssigneeId = @AssigneeId, @userId = @userId ,@fromDate = @fromDate,@toDate = @toDate,@dateType = @dateType
+, @provinceId = @provinceId,@processStatus = @processStatus;
+print @mainClause;
+end
+
+
+
+
+
+----------
+
+  INSERT INTO dbo.ProfileStatus
+  (
+      Code,
+      Name,
+      Value,
+      IsDeleted,
+      OrgId,
+      ProfileType
+  )
+ SELECT Code,name,Value,IsDeleted,OrgId,'revoke' FROM dbo.ProfileStatus WHERE OrgId =2
+
+ ---------

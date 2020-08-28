@@ -11,6 +11,7 @@ namespace VietStar.Repository.Infrastructures
         public static void RegisterRepository(this IServiceCollection services)
         {
             services.AddSingleton<ICheckDupRepository, CheckDupRepository>();
+            services.AddSingleton<IRevokeDebtRepository, RevokeDebtRepository>();
             services.AddSingleton<IMCreditRepository, MCreditRepository>();
             services.AddSingleton<ICourierRepository, CourierRepository>();
             services.AddSingleton<ICompanyRepository, CompanyRepository>();
