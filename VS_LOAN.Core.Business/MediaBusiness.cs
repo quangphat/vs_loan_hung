@@ -19,6 +19,8 @@ namespace VS_LOAN.Core.Business
 {
     public class MediaBusiness : IMediaBusiness
     {
+        
+
         protected readonly ITailieuRepository _rpTailieu;
         protected readonly IHosoCourrierRepository _rpCourierProfile;
         protected readonly IMCeditRepository _rpMCredit;
