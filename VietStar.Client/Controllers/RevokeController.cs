@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,6 +6,7 @@ using KingOffice.Infrastructures;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VietStar.Business.Interfaces;
+using VietStar.Entities.Collection;
 using VietStar.Entities.Infrastructures;
 
 namespace VietStar.Client.Controllers
@@ -38,6 +39,39 @@ namespace VietStar.Client.Controllers
 
            
             var result = await _bizRevoke.SearchAsync(freeText, status, page, limit, groupId, assigneeId, fromDate, toDate, dateType, processStatus);
+            return ToResponse(result);
+        }
+
+        [MyAuthorize(Permissions ="import-revoke")]
+        [HttpPost("revoke/import")]
+        public async Task<IActionResult> Import()
+        {
+            var file = Request.Form.Files.FirstOrDefault();
+            var result = await _bizRevoke.InsertFromFileAsync(file);
+            return ToResponse(result);
+        }
+
+        [HttpGet("revoke/edit/{id}")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var profile = await _bizRevoke.GetByIdAsync(id);
+            return View(profile);
+        }
+
+        [HttpPut("revoke/update/{profileId}")]
+        public async Task<IActionResult> Update(int profileId,[FromBody] RevokeSimpleUpdate model)
+        {
+
+            var result = await _bizRevoke.UpdateSimpleAsync(model, profileId);
+            return ToResponse(result);
+        }
+
+        [MyAuthorize(Permissions = "revoke.delete")]
+        [HttpDelete("revoke/{profileId}")]
+        public async Task<IActionResult> Delete(int profileId)
+        {
+            
+            var result = await _bizRevoke.DeleteByIdAsync(profileId);
             return ToResponse(result);
         }
     }

@@ -113,15 +113,7 @@ namespace VietStar.Entities.Collection
         public string LastNote { get; set; }
         public int ProvinceId { get; set; }
         public int DistrictId { get; set; }
-        public string GroupId
-        {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(AssigneeGroupIds))
-                    return "0";
-                return AssigneeGroupIds.Split('.').FirstOrDefault();
-            }
-        }
+        public int GroupId { get; set; }
         public string AssigneeId
         {
             get

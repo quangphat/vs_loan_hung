@@ -15,6 +15,8 @@ using Microsoft.Extensions.DependencyInjection;
 using static VietStar.Entities.Commons.Enums;
 using VietStar.Business.Infrastructures;
 using System.IO;
+using Dapper;
+using NPOI.SS.UserModel;
 
 namespace VietStar.Business
 {
@@ -29,7 +31,7 @@ namespace VietStar.Business
         protected IServiceProvider _svProvider;
         public CommonBusiness(ICommonRepository commonRepository,
             IFileProfileRepository fileProfileRepository,
-            IPartnerRepository  partnerRepository,
+            IPartnerRepository partnerRepository,
             IEmployeeRepository employeeRepository,
             IProductRepository productRepository,
             ILocationRepository locationRepository,
@@ -65,10 +67,14 @@ namespace VietStar.Business
         }
         public async Task<List<OptionSimple>> GetStatusList(string profileType)
         {
+            if (_process.User.OrgId == 2)
+            {
+                profileType = _process.User.isAdmin ? profileType : _process.User.RoleCode;
+            }
             var result = await _rpCommon.GetProfileStatusByRoleCode(profileType, _process.User.OrgId, _process.User.RoleCode);
             return result;
         }
-        
+
 
 
         public async Task<List<OptionSimple>> GetProductsAsync(int partnerId)
@@ -88,6 +94,80 @@ namespace VietStar.Business
         {
             var result = await _rpEmployee.GetCouriersAsync(_process.User.OrgId);
             return result;
+        }
+
+        public async Task<List<DynamicParameters>> ReadXlsxFileAsync(MemoryStream stream, ProfileType profileType, string configCode)
+        {
+
+            var importExelFrameWork = await _rpCommon.GetImportFrameworkByTypeAsync((int)profileType);
+            if (importExelFrameWork == null)
+                return ToResponse<List<DynamicParameters>>(null, "Không tìm thấy importExelFrameWork");
+            var config = await _rpCommon.GetSystemConfigByCodeAsync(configCode);
+            //return null;
+
+            var workBook = WorkbookFactory.Create(stream);
+            var sheet = workBook.GetSheetAt(0);
+            var rows = sheet.GetRowEnumerator();
+            var hasData = rows.MoveNext();
+            var param = new DynamicParameters();
+            var pars = new List<DynamicParameters>();
+            int skipCell = 0;
+            if (sheet.PhysicalNumberOfRows - 2 > config.Value)
+            {
+                return ToResponse<List<DynamicParameters>>(null, $"Số dòng của file không được nhiều hơn {config.Value}");
+            }
+            for (int i = 2; i < sheet.PhysicalNumberOfRows; i++)
+            {
+                try
+                {
+                    param = new DynamicParameters();
+                    var row = sheet.GetRow(i);
+                    if (row != null)
+                    {
+                        if (row.Cells.Count > 1)
+                        {
+                            bool isNullRow = row.Cells.Count < 20 ? true : false;
+                            if (isNullRow)
+                                continue;
+                        }
+
+                        foreach (var col in importExelFrameWork)
+                        {
+                            try
+                            {
+                                if (row.GetCell(col.Position) == null)
+                                {
+                                    param.Add(col.Name, string.Empty);
+                                    skipCell += 1;
+                                }
+                                else
+                                {
+                                    param.Add(col.Name, TryGetValueFromCell(row.Cells[col.Position - skipCell].ToString(), col.ValueType));
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+                                param = null;
+                            }
+
+                        }
+                        if (param != null)
+                        {
+                            skipCell = 0;
+                            pars.Add(param);
+
+                        }
+
+                    }
+                }
+                catch
+                {
+
+                }
+
+            }
+            return pars;
         }
     }
 }

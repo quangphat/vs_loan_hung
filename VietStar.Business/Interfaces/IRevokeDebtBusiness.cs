@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,6 +11,7 @@ namespace VietStar.Business.Interfaces
 {
     public interface IRevokeDebtBusiness
     {
+        Task<string> InsertFromFileAsync(IFormFile file);
         Task<DataPaging<List<RevokeDebtSearch>>> SearchAsync(string freeText,
             string status,
             int page,
@@ -20,5 +22,9 @@ namespace VietStar.Business.Interfaces
             DateTime? toDate = null,
             int dateType = 1,
             int processStatus = -1);
+        Task<RevokeDebtSearch> GetByIdAsync(int profileId);
+        Task<bool> DeleteByIdAsync( int profileId);
+        Task<bool> UpdateStatusAsync(int profileId, int status);
+        Task<bool> UpdateSimpleAsync(RevokeSimpleUpdate model, int profileId);
     }
 }

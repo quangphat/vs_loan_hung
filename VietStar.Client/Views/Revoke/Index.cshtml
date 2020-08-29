@@ -15,7 +15,7 @@
                             <div class="input-group-addon">
                                 <i class="fa fa-calendar"></i>
                             </div>
-                            <input type="date" data-date-inline-picker="true" class="form-control pull-right" id="fromDate">
+                            <input type="date" data-date-inline-picker="true" onkeyup="" class="form-control pull-right" id="fromDate">
                         </div>
                     </div>
                     <label class="col-sm-1  col-xs-12 control-label no-padding-right">Đến ngày</label>
@@ -62,9 +62,9 @@
                     <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Thành viên</label>
                     <div class="col-sm-4 col-xs-12 ">
                         <select id="processStatus" class="chosen-select form-control" data-placeholder="Trạng thái xử lý">
-                            <option value="-1" selected>Tất cả</option>
-                            <option value="0">Chưa xử lý</option>
-                            <option value="1">Đã xử lý</option>
+                            <option value="0" selected>Tất cả</option>
+                            <option value="1">Chưa xử lý</option>
+                            <option value="2">Đã xử lý</option>
 
                         </select>
                     </div>
@@ -77,20 +77,14 @@
                         <input type="search" class="form-control" id="freeText" placeholder="">
                     </div>
                 </div>
-                <button type="button" id="btnSearch" class="btn btn-info pull-right">Tìm kiếm</button>
-                <div class="form-group">
-                    <div class=" col-sm-8 mt-50">
-                        <input multiple="" class="col-sm-4" type="file" id="file" />
-                        <a class="btn btn-primary" id="btnImport">Import file</a>
-                    </div>
-
-                </div>
-                <div class="form-group">
-                    <div class=" col-sm-8">
-                        <a style="font-style: italic;" href="/Common/DownloadTemplateFile?fileName=ImportRevokeDebtTemplate.xlsx">Nhấp vào để download mẫu import</a>
-                    </div>
-
-                </div>
+                <button type="button" id="btnSearch" class="btn btn-primary pull-right">Tìm kiếm</button>
+                @await Html.PartialAsync("../Shared/Partials/DownloadTemplate",
+                    new VietStar.Entities.Commons.DownloadReportPartialViewModel
+                    {
+                        ButtonName ="Import",
+                        FileName = "ImportRevokeDebtTemplate.xlsx"
+                    })
+                
             </div>
         </form>
 
@@ -195,7 +189,7 @@
 
     });
     $("#groupId").on("change", function () {
-        GetMemberByGroup(this.value, null, queries.get("assigneeId"))
+        GetMemberByGroup(this.value, $("#assigneeId"), queries.get("assigneeId"))
     })
 
 
@@ -232,7 +226,8 @@ function onClickPage(page) {
     });
 
     }
-    $("#freeText").on("keyup", function (event) {
+
+    $("#freeText ,#fromDate, #toDate").on("keyup", function (event) {
         if (event.keyCode === 13) {
             event.preventDefault();
             getData(1, limit, null, null, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#assigneeId").val(), $("#processStatus").val());
@@ -287,7 +282,7 @@ function onClickPage(page) {
         $("#processStatus").val(processStatus)
 
         GetParentGroups(null, groupId)
-        GetMemberByGroup(groupId, null, assigneeId)
+        GetMemberByGroup(groupId, $("#assigneeId"), assigneeId)
         sort = queries.get('sort');
         sortField = queries.get('sortField');
         if (callBack != null) {
@@ -351,7 +346,7 @@ function onClickPage(page) {
             else {
                 swal({
                     title: "",
-                    text: response.code,
+                    text: response.error.code,
                     type: "error",
                     timer: 4000,
                     showConfirmButton: true,
@@ -374,7 +369,52 @@ function onClickPage(page) {
 
 }
 
+    $('#btnImport').click(function (e) {
+        showBlock($('#panel_body'), loadingMsg);
+        var formData = new FormData();
+        let file = $('#file')[0].files[0];
+        if (file == null)
+            return;
+        formData.append('file', $('#file')[0].files[0]);
 
+        $.ajax({
+            url: '/Revoke/Import',
+            type: 'POST',
+            data: formData,
+            processData: false,  // tell jQuery not to process the data
+            contentType: false,  // tell jQuery not to set contentType
+            success: function (data) {
+                debugger
+                if (data != null && data.success) {
+                    swal({
+                        title: "",
+                        text: data.data,
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                        window.location = window.location
+                    });
+                }
+
+                else {
+                    swal({
+                        title: "",
+                        text: data.error.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    })
 function DownloadReport(e) {
     var groupId = 0;
     var assigneeId = 0;

@@ -539,7 +539,7 @@ function GetGroupByUser(control = null, defaultValue = 0) {
     });
 }
 
-function GetParentGroups(control = null, defaultValue = 0) {
+function GetParentGroups(control = null, defaultValue = 0, followControl = null, followValue = 0) {
     if (control == null)
         control = $("#groupId");
     control.empty();
@@ -552,7 +552,7 @@ function GetParentGroups(control = null, defaultValue = 0) {
         });
         if (defaultValue != null && defaultValue > 0) {
             control.val(defaultValue);
-            GetMemberByGroup(defaultValue, null, defaultValue)
+            GetMemberByGroup(defaultValue, followControl, followValue)
         }
         return
     }
@@ -568,7 +568,7 @@ function GetParentGroups(control = null, defaultValue = 0) {
                 });
                 if (defaultValue != null && defaultValue > 0) {
                     control.val(defaultValue);
-                    GetMemberByGroup(defaultValue, null, defaultValue)
+                    GetMemberByGroup(defaultValue, followControl, defaultValue)
                 }
 
             }
@@ -586,6 +586,7 @@ function GetMemberByGroup(groupId, control = null, defaultValue = 0) {
         return;
     if (control == null)
         control = $("#memberId");
+    debugger
     control.empty();
     $.ajax({
         type: "GET",
@@ -682,7 +683,7 @@ function renderOneItemFile(model, className = '',
         uploadUrl = `/media/UploadMCredit?${params}`
     }
     else {
-        debugger
+        
         let params = `key=${model.key}&profileType=${model.profileType}&profileId=${model.profileId}&fileId=${model.fileId}&guidId=${guidId}`;
         uploadUrl = `/media/UploadFile?${params}`
     }
@@ -750,6 +751,7 @@ function renderOneItemFile(model, className = '',
             renderOneItemFile({
                 key: model.key,
                 type: model.type,
+                profileType: model.profileType,
                 profileId: model.profileId,
                 fileId: 0,
                 isRequire: false,

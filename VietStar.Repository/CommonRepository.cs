@@ -45,6 +45,38 @@ namespace VietStar.Repository
                 return result.ToList();
             }
         }
+
+        public async Task<List<ImportExcelFrameWorkModel>> GetImportFrameworkByTypeAsync(int type)
+        {
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    var reader = await con.QueryAsync<ImportExcelFrameWorkModel>("sp_ImportExcel_GetByType", new { type }
+                        , commandType: CommandType.StoredProcedure);
+                    return reader.ToList();
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<SystemConfig> GetSystemConfigByCodeAsync(string code)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryFirstOrDefaultAsync<SystemConfig>("sp_SystemConfig_GetByCode", new { code }, commandType: System.Data.CommandType.StoredProcedure);
+                if (result == null)
+                {
+                    result = new SystemConfig { Code = code, Value = 500 };
+                }
+                return result;
+            }
+        }
     }
 }
 

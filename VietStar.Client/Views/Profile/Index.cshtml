@@ -261,7 +261,7 @@ function renderRow(index, item) {
     });
 
     }
-    $("#freeText").on("keyup", function (event) {
+    $("#freeText ,#fromDate, #toDate").on("keyup", function (event) {
         if (event.keyCode === 13) {
             event.preventDefault();
             getData(1, limit, null, null, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#memberId").val());

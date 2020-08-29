@@ -1705,11 +1705,11 @@ SET @where += ' and rv.createdTime  between @fromDate and @toDate'
 else
 set @where += ' and rv.UpdatedTime between @fromDate and @toDate';
 
-if(@processStatus = 0)
+if(@processStatus = 1)
 begin 
 set @where = @where + ' and rv.status = 0'; 
 end;
-if(@processStatus = 1)
+if(@processStatus = 2)
 begin 
 set @where = @where + ' and rv.status >0'; 
 end;
@@ -1746,3 +1746,33 @@ end
  SELECT Code,name,Value,IsDeleted,OrgId,'revoke' FROM dbo.ProfileStatus WHERE OrgId =2
 
  ---------
+
+ 
+  INSERT INTO dbo.LOAI_TAI_LIEU
+  (
+      Ten,
+      Bat_Buoc,
+      ProfileTypeId
+  )
+  SELECT Ten,Bat_Buoc,5 FROM dbo.LOAI_TAI_LIEU WHERE ProfileTypeId =1
+
+  ---------
+
+  ALTER TABLE RevokeDebt
+ADD GroupId int
+  ALTER procedure [dbo].[sp_RevokeDebt_UpdateSimple](@profileId int, @updateBy int,@provinceId int , @districtId int,@assigneeId int,@status int =0 , @GroupId int=0)
+as begin
+update RevokeDebt 
+set [status] = @status, 
+DistrictId = @districtId, 
+ProvinceId = @provinceId,
+AssigneeId = @assigneeId,
+UpdatedBy  = @updateBy, 
+UpdatedTime = GETDATE(),
+GroupId = @GroupId
+where id = @profileId
+END
+
+
+
+---------

@@ -73,5 +73,26 @@ namespace VietStar.Business
             }
             return data;
         }
+
+        public object TryGetValueFromCell(string value, string type)
+        {
+            if (type == "string")
+                return value;
+            if (type == "int")
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    return 0;
+                try
+                {
+                    return Convert.ToInt32(value);
+                }
+                catch
+                {
+                    return 0;
+                }
+            }
+
+            return string.Empty;
+        }
     }
 }

@@ -9,6 +9,8 @@ namespace VietStar.Repository.Interfaces
 {
     public interface ICommonRepository
     {
+        Task<SystemConfig> GetSystemConfigByCodeAsync(string code);
+        Task<List<ImportExcelFrameWorkModel>> GetImportFrameworkByTypeAsync(int type);
         Task<List<OptionSimple>> GetListForCheckCustomerDuplicateAsync();
         Task<List<OptionSimple>> GetProfileStatusByRoleId(string profileType, int orgId, int roleId = 0);
         Task<List<OptionSimple>> GetProfileStatusByRoleCode(string profileType, int orgId, string roleCode = null);

@@ -1,3 +1,4 @@
+using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,6 +10,7 @@ namespace VietStar.Repository.Interfaces
 {
     public interface IRevokeDebtRepository
     {
+        Task<int> InsertManyByParameterAsync(List<DynamicParameters> inputParams, int userId);
         Task<List<RevokeDebtSearch>> SearchAsync(int userId,
             string freeText,
             string status,
@@ -20,6 +22,11 @@ namespace VietStar.Repository.Interfaces
             DateTime? toDate = null,
             int dateType = 1,
             int processStatus = -1);
+
+        Task<RevokeDebtSearch> GetByIdAsync(int profileId, int userId);
+        Task<bool> DeleteByIdAsync(int userId, int profileId);
+        Task<bool> UpdateStatusAsync(int userId, int profileId, int status);
+        Task<bool> UpdateSimpleAsync(RevokeSimpleUpdate model, int updateBy, int profileId);
     }
 }
 
