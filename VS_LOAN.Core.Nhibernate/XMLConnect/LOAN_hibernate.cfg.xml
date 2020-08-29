@@ -12,6 +12,7 @@ for your own use before compile tests in VisualStudio.
       <!--Data Source=DOANLT-DC3;Initial Catalog=Test13;User ID=sa;Password=franklampard.no8;-->
     </property>
     <property name="show_sql">true</property>
+    <property name="show_sql">true</property>
     <property name="dialect">
       NHibernate.Dialect.MsSql2012Dialect
     </property>
