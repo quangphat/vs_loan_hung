@@ -125,8 +125,8 @@ function getTotalPage(totalRecord, limit) {
     
     return totalRecord > limit ? Math.ceil(totalRecord / limit) : 1
 }
-function renderPageList(page, limit, totalRc) {
-    let totalPage = getTotalPage(totalRc, limit)
+function renderPaging(page, limit, totalRecord) {
+    let totalPage = getTotalPage(totalRecord, limit)
     var startPage = page > pageMargin ? page - pageMargin : 1;
     var endPage = pageMargin + page > totalPage ? totalPage : pageMargin + page
     var paging = $("#pagination");

@@ -142,7 +142,7 @@ namespace VietStar.Business
                     for (int page = 0; page < totalPage; page++)
                     {
                         request.page = page + 1;
-                        request.limit = request.limit < 1000 ? request.limit : 1000;
+                        request.limit = 1000;
                         var datas = await funcGetData(request);
 
                         if (datas == null || !datas.Any())

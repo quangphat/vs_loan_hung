@@ -352,8 +352,10 @@
             return;
         window.location = "/Courier/edit/" + id;
     }
+    
     function getData(page, limit,courierId=0,groupId =0, isPopState = false)
     {
+       
         $.ajax({
             url: '/Courier/Search',
             type: "GET",
@@ -416,6 +418,24 @@
         })
 
     }
+    function ProfileSearch(dateType = 1, group = 2) {
+        fetch(`/profile/search?dateType=${dateType}&groupId=${group}`)
+            .then(res => res.json())
+            .then(res => {
+                if (res.success == true) {
+                    console.log(res.data)
+                    return res.data
+                }
+                else {
+                    return null;
+                }
+            })
+            .catch(err => {
+                console.log("failed");
+                return null;
+            });
+    }
+
     function DownloadReport(e) {
         let data = JSON.stringify({
             'page': page,

@@ -27,6 +27,7 @@ namespace VietStar.Client.Controllers
         {
             return View();
         }
+
         public async Task<IActionResult> Search(DateTime? fromDate
             , DateTime? toDate
             , int dateType = 1

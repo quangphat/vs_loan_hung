@@ -208,8 +208,8 @@ function onClickPage(page) {
 
 
     function onSelectLimit() {
-    limit = $("#ddlLimit").val()
-    getData(page, limit, null, null, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#memberId").val())
+        limit = $("#ddlLimit").val()
+        getData(page, limit, null, null, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#memberId").val())
     //alert(limit)
     }
     function onSort(sortField) {
@@ -255,15 +255,13 @@ function renderRow(index, item) {
         + "</tr>";
 }
     function renderTableBody(datas) {
-
-    var table = $("#dtSource")
-    var tableBody = $("#dtSource").find("tbody");
-    tableBody.empty();
-    if (isNullOrNoItem(datas))
-        return;
-    $.each(datas, function (index, item) {
-        tableBody.append(renderRow(index, item));
-    });
+        var tableBody = $("#dtSource").find("tbody");
+        tableBody.empty();
+        if (isNullOrNoItem(datas))
+            return;
+        $.each(datas, function (index, item) {
+            tableBody.append(renderRow(index, item));
+        });
 
     }
     $("#freeText ,#fromDate, #toDate").on("keyup", function (event) {
@@ -324,134 +322,63 @@ function renderRow(index, item) {
         }
 
     }
+    function processingExport(data) {
+        var link = document.createElement("a");
+                link.href = data;
+                link.click();
+    }
     $("#btnExport").click(function () {
         let status = getQueryStatus($("#ddlStatus"))
-        
         let groupId = $("#groupId").val();
-            let memberId = $("#memberId").val()
-        
-    showBlock($('#panel_body'));
-
-    $.ajax( {
-            url: '@Url.Action("Export", "Profile")',
-            type: "GET",
-            contentType: "application/json",
-        data: {
+        let memberId = $("#memberId").val()
+        SearchDatas('/Profile/Export', {
             'page': 1,
-            'limit': limit,
+            'limit': 20,
             'groupId': groupId,
             'memberId': memberId,
             'fromDate': $("#fromDate").val(),
             'toDate': $("#toDate").val(),
-            'freeText': !isNullOrWhiteSpace($("#freeText").val()) ? $("#freeText").val():'',
+            'freeText': !isNullOrWhiteSpace($("#freeText").val()) ? $("#freeText").val() : '',
             'dateType': $('input[name="radio-ngay"]:checked').val(),
             'status': removeDuplicate(status),
             'sort': 'desc',
             'sortField': 'updatedtime'
-        },
-        success: function (response) {
-            if (response.success == true) {
-                debugger
-                var link = document.createElement("a");
-                link.href = response.data;
-                link.click();
-            }
-            else {
-                swal({
-                    title: "",
-                    text: response.error.code,
-                    type: "error",
-                    timer: 4000,
-                    showConfirmButton: true,
-                });
-            }
+        }, true, null, null, null, processingExport);
+        return;
 
-        },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            },
-            complete: function () {
-                $('#panel_body').unblock();
-                
-        }
+    
     })
-    })
+    function renderPageList(page, limit, totalRecord) {
+        renderPaging(page, limit, totalRecord)
+    }
+    function onPopState(url) {
+        url = url.replace("Search", "Index")
+        window.history.pushState(url, this.title, url)
+    }
 function getData(page, limit, sort = "desc", sortField = "updatedtime",status, groupId, memberId, isPopState = false)
 {
-    if (isNullOrWhiteSpace(status)) {
-        status = getQueryStatus($("#ddlStatus"));
-    }
-    if (groupId==0)
+    if (groupId == 0)
         groupId = $("#groupId").val();
     if (memberId == 0)
         memberId = $("#memberId").val()
-    showBlock($('#panel_body'));
-
-    $.ajax( {
-            url: '@Url.Action("Search", "Profile")',
-            type: "GET",
-            contentType: "application/json",
-        data: {
-            'page': page,
-            'limit': limit,
-            'groupId': groupId,
-            'memberId': memberId,
-            'fromDate': $("#fromDate").val(),
-            'toDate': $("#toDate").val(),
-            'freeText': !isNullOrWhiteSpace($("#freeText").val()) ? $("#freeText").val():'',
-            'dateType': $('input[name="radio-ngay"]:checked').val(),
-            'status': removeDuplicate(status),
-            'sort': sort,
-            'sortField': sortField
-        },
-        success: function (response) {
-            if (response.success == true) {
-
-                totalRecord = response.data.TotalRecord;
-                var search = this.url.replace("/Profile/Index", "");
-                search = search.replace("/Profile/Search","")
-                queries = new URLSearchParams(search)
-
-                page = queries.get("page");
-                if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
-                    page = 1;
-                else
-                    page = parseInt(page)
-                limit = queries.get("limit")
-
-
-                if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
-                    limit = 10;
-                else
-                    limit = parseInt(limit)
-                renderTableBody(response.data.Datas)
-                //renderGoPreviousPage(page);
-                renderPageList(page, limit, totalRecord)
-
-            }
-            else {
-                swal({
-                    title: "",
-                    text: response.code,
-                    type: "error",
-                    timer: 4000,
-                    showConfirmButton: true,
-                });
-            }
-
-        },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            },
-            complete: function () {
-                $('#panel_body').unblock();
-                if (!isPopState) {
-                    var requestUrl = this.url.replace("Search", "Index")
-                    window.history.pushState(requestUrl, this.title, requestUrl)
-                }
-
-        }
-    })
+    if (isNullOrWhiteSpace(status)) {
+        status = getQueryStatus($("#ddlStatus"));
+    }
+    
+    SearchDatas('/Profile/Search',{
+        'page': page,
+        'limit': limit,
+        'groupId': groupId,
+        'memberId': memberId,
+        'fromDate': $("#fromDate").val(),
+        'toDate': $("#toDate").val(),
+        'freeText': !isNullOrWhiteSpace($("#freeText").val()) ? $("#freeText").val() : '',
+        'dateType': $('input[name="radio-ngay"]:checked').val(),
+        'status': removeDuplicate(status),
+        'sort': sort,
+        'sortField': sortField
+    }, isPopState, renderTableBody, renderPageList, onPopState);
+    return;
 
 }
 
@@ -463,55 +390,4 @@ function SuaHS(id) {
     window.location = "/Profile/SuaHSByID?id=" + id;
 }
 
-function DownloadReport(e) {
-    var groupId = 0;
-    var memberId = 0;
-
-    if ($('#groupId').val() != undefined) {
-        groupId = $('#groupId').val();
-    }
-    if ($('#memberId').val() != undefined) {
-        memberId = $('#memberId').val();
-    }
-    else
-        memberId = 0
-    let objectSend = JSON.stringify({
-        'groupId': groupId,
-        'memberId': memberId,
-        'fromDate': $('#txtFromDate').val(),
-        'toDate': $('#txtToDate').val(),
-        'maHS': $('#txtMaHS').val(),
-        'cmnd': $('#txtCMND').val(),
-        'dateType': $('input[name="radio-ngay"]:checked').val()
-    });
-    $.ajax({
-        traditional: true,
-        url: '/Profile/DownloadReport',
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        data: objectSend,
-        success: function (data) {
-            if (data.success == true) {
-                var link = document.createElement("a");
-                link.href = data.error.code;
-                link.click();
-            }
-            else {
-                swal({
-                    title: "",
-                    text: data.Message.ErrorMessage,
-                    type: "error",
-                    timer: 4000,
-                    showConfirmButton: true,
-                });
-            }
-        },
-        error: function (jqXHR, exception) {
-            showError(jqXHR, exception);
-        },
-        complete: function () {
-
-        },
-    });
-}
 </script>

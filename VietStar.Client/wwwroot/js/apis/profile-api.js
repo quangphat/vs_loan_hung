@@ -1,18 +1,51 @@
 ﻿
-function ProfileSearch(dateType = 1, group = 2) {
-    fetch(`/profile/search?dateType=${dateType}&groupId=${group}`)
-        .then(res => res.json())
-        .then(res => {
-            if (res.success == true) {
-                console.log(res.data)
-                return res.data
+function SearchDatas(apiPath, model, isPopState, callback1 = null, callback2 = null, onPopState = null, onExport = null) {
+    
+    if (isNullOrUndefined(model) || isNullOrWhiteSpace(apiPath))
+        return;
+
+    let query = jQuery.param(model)
+    let fullPath = `${apiPath}?${query}`
+    debugger
+    showBlock($('#panel_body'));
+    fetch(fullPath)
+        .then(response => response.json())
+        .then(response => {
+            if (response.success == true) {
+                if (callback1 != null) {
+                    callback1(response.data.Datas)
+                }
+                if (callback2 != null) {
+                    let totalRecord = response.data.TotalRecord;
+                    callback2(model.page, model.limit, totalRecord)
+                }
+                if (onPopState != null && !isPopState) {
+                    onPopState(fullPath)
+                }
+                if (onExport != null) {
+                    onExport(response.data)
+                }
             }
             else {
-                return null;
+                swal({
+                    title: "",
+                    text: response.error.code,
+                    type: "error",
+                    timer: 4000,
+                    showConfirmButton: true,
+                });
             }
+            $('#panel_body').unblock();
         })
         .catch(err => {
-            console.log("failed");
+            $('#panel_body').unblock();
+            swal({
+                title: errorMsg,
+                text: "Đã có lỗi xảy ra",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
             return null;
         });
 }
