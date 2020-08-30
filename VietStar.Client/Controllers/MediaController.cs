@@ -70,5 +70,14 @@ namespace VietStar.Client.Controllers
             response.FileDownloadName = fileName;
             return response;
         }
+
+        [HttpGet("download-export")]
+        public IActionResult DownloadExportFile(string fileName, string filePath)
+        {
+            byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+            var response = new FileContentResult(fileBytes, "application/octet-stream");
+            response.FileDownloadName = fileName;
+            return response;
+        }
     }
 }

@@ -13,6 +13,13 @@ namespace VietStar.Business.Interfaces
 {
     public interface ICommonBusiness
     {
+        Task<string> ExportData<TRequest, TData>(Func<TRequest, Task<List<TData>>> funcGetData,
+            TRequest request,
+            string folder,
+            string profileType,
+            int rowIndex)
+            where TData : Pagination
+            where TRequest : ExportRequestModelBase;
         Task<List<DynamicParameters>> ReadXlsxFileAsync(MemoryStream stream, ProfileType profileType, string configCode);
         Task<List<OptionSimple>> GetPartnerscheckDupAsync();
         Task<List<OptionSimple>> GetPartnersAsync();

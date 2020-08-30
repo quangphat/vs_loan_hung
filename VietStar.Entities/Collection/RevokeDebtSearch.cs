@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using VietStar.Entities.Commons;
 
 namespace VietStar.Entities.Collection
 {

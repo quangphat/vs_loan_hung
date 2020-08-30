@@ -14,6 +14,7 @@ using VietStar.Repository.Interfaces;
 using VietStar.Utility;
 using Microsoft.Extensions.DependencyInjection;
 using static VietStar.Entities.Commons.Enums;
+using VietStar.Entities.Commons;
 
 namespace VietStar.Business
 {
@@ -103,6 +104,7 @@ namespace VietStar.Business
             {
                 return DataPaging.Create((List<ProfileIndexModel>)null, 0);
             }
+
             return DataPaging.Create(result, result[0].TotalRecord);
 
         }
@@ -113,6 +115,57 @@ namespace VietStar.Business
             var result = _mapper.Map<ProfileEditView>(profile);
             return result;
         }
+
+        public async Task<string> ExportAsync(string contentRootPath,DateTime? fromDate
+            , DateTime? toDate
+            , int dateType = 1
+            , int groupId = 0
+            , int memberId = 0
+            , string status = null
+            , string freeText = null
+            , string sort = "desc"
+            , string sortField = "updatedtime"
+            , int page = 1
+            , int limit = 20)
+        {
+            fromDate = fromDate.HasValue ? fromDate.Value.ToStartDateTime() : DateTime.Now.ToStartDateTime();
+            toDate = toDate.HasValue ? toDate.Value.ToEndDateTime() : DateTime.Now.ToEndDateTime();
+            var request = new ExportRequestModel
+            {
+                userId = _process.User.Id,
+                page = page,
+                limit = limit,
+                fromDate = fromDate.Value,
+                toDate = toDate.Value,
+                dateType = dateType,
+                groupId = groupId,
+                memberId = memberId,
+                status = status,
+                freeText = freeText,
+                sort = sort,
+                sortField = sortField
+            };
+            var bizCommon = _svProvider.GetService<ICommonBusiness>();
+
+            var result = await bizCommon.ExportData<ExportRequestModel, ProfileIndexModel>(GetDatasAsync, request, contentRootPath, "common" , 4);
+            return result;
+        }
+
+        public async Task<List<ProfileIndexModel>> GetDatasAsync(ExportRequestModel request)
+        {
+            var result = await _rpProfile.GetsAsync(_process.User.Id, 
+                request.fromDate, 
+                request.toDate, 
+                request.dateType, 
+                request.groupId, 
+                request.memberId,
+                request.status,
+                request.freeText,
+                request.sort,
+                request.sortField, request.page, request.limit);
+            return result;
+        }
+
         protected bool ValidateProfile(ProfileAdd model)
         {
             if (model == null)

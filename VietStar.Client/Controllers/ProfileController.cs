@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using KingOffice.Infrastructures;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using VietStar.Business.Interfaces;
 using VietStar.Entities.Infrastructures;
@@ -15,9 +16,11 @@ namespace VietStar.Client.Controllers
     public class ProfileController : VietStarBaseController
     {
         protected readonly IProfileBusiness _bizProfile;
-        public ProfileController(IProfileBusiness profileBusiness,CurrentProcess process) : base(process)
+        protected readonly IHostingEnvironment _hosting;
+        public ProfileController(IProfileBusiness profileBusiness,IHostingEnvironment hosting,CurrentProcess process) : base(process)
         {
             _bizProfile = profileBusiness;
+            _hosting = hosting;
         }
         [MyAuthorize(Permissions ="profile,profile.view")]
         public IActionResult Index()
@@ -41,6 +44,23 @@ namespace VietStar.Client.Controllers
 
             return ToResponse(result);
         }
+        public async Task<IActionResult> Export(DateTime? fromDate
+            , DateTime? toDate
+            , int dateType = 1
+            , int groupId = 0
+            , int memberId = 0
+            , string status = null
+            , string freeText = null
+            , int page = 1
+            , int limit = 20
+            , string sort = "desc"
+            , string sortField = "updatedTime")
+        {
+            var result = await _bizProfile.ExportAsync(_hosting.ContentRootPath,fromDate, toDate, dateType, groupId, memberId, status, freeText, sort, sortField, page, limit);
+
+            return ToResponse(result);
+        }
+
         public IActionResult Approve()
         {
             return View();

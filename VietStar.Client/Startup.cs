@@ -57,6 +57,7 @@ namespace VietStar.Client
             services.RegisterMCService();
             services.AddDistributedMemoryCache();
             services.Configure<McreditApi>(Configuration.GetSection("McreditApi"));
+            services.Configure<SystemConfig>(Configuration.GetSection("SystemConfig"));
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(1);

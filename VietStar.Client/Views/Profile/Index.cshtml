@@ -83,6 +83,11 @@
         <div class="clearfix"></div>
         <div class="row">
             <div class="col-sm-12">
+                <div class="mb-10">
+                    <a id="btnExport" class="btn btn-sm btn-primary "><i class="ace-icon fa fa-download"></i> Export</a>
+                </div>
+
+
                 <div class="clearfix">
                     <div class="pull-right tableTools-container"></div>
                 </div>
@@ -319,13 +324,60 @@ function renderRow(index, item) {
         }
 
     }
+    $("#btnExport").click(function () {
+        let status = getQueryStatus($("#ddlStatus"))
+        
+        let groupId = $("#groupId").val();
+            let memberId = $("#memberId").val()
+        
+    showBlock($('#panel_body'));
+
+    $.ajax( {
+            url: '@Url.Action("Export", "Profile")',
+            type: "GET",
+            contentType: "application/json",
+        data: {
+            'page': 1,
+            'limit': limit,
+            'groupId': groupId,
+            'memberId': memberId,
+            'fromDate': $("#fromDate").val(),
+            'toDate': $("#toDate").val(),
+            'freeText': !isNullOrWhiteSpace($("#freeText").val()) ? $("#freeText").val():'',
+            'dateType': $('input[name="radio-ngay"]:checked').val(),
+            'status': removeDuplicate(status),
+            'sort': 'desc',
+            'sortField': 'updatedtime'
+        },
+        success: function (response) {
+            if (response.success == true) {
+                debugger
+                var link = document.createElement("a");
+                link.href = response.data;
+                link.click();
+            }
+            else {
+                swal({
+                    title: "",
+                    text: response.error.code,
+                    type: "error",
+                    timer: 4000,
+                    showConfirmButton: true,
+                });
+            }
+
+        },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+                
+        }
+    })
+    })
 function getData(page, limit, sort = "desc", sortField = "updatedtime",status, groupId, memberId, isPopState = false)
 {
-    //model = bindQueries();
-    //if (model == null) {
-    //    model = { status: '', freeText: '', fromDate: '', toDate: '', groupId: 0, memberId: 0 };
-    //}
-    //
     if (isNullOrWhiteSpace(status)) {
         status = getQueryStatus($("#ddlStatus"));
     }
@@ -354,7 +406,7 @@ function getData(page, limit, sort = "desc", sortField = "updatedtime",status, g
         },
         success: function (response) {
             if (response.success == true) {
-                debugger
+
                 totalRecord = response.data.TotalRecord;
                 var search = this.url.replace("/Profile/Index", "");
                 search = search.replace("/Profile/Search","")

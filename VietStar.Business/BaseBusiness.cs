@@ -74,7 +74,7 @@ namespace VietStar.Business
             return data;
         }
 
-        public object TryGetValueFromCell(string value, string type)
+        protected object TryGetValueFromCell(string value, string type)
         {
             if (type == "string")
                 return value;
@@ -94,5 +94,17 @@ namespace VietStar.Business
 
             return string.Empty;
         }
+
+        protected string GetValue<T>(T model, string fieldName)
+        {
+            var prop = model.GetType().GetProperty(fieldName);
+            if(prop!=null)
+            {
+                return prop.GetValue(model) ==null ? string.Empty : prop.GetValue(model).ToString();
+            }
+            return string.Empty;
+            
+        }
+
     }
 }

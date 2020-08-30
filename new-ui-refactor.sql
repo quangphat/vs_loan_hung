@@ -1759,7 +1759,12 @@ end
   ---------
 
   ALTER TABLE RevokeDebt
+DROP COLUMN AssigneeGroupIds;
+
+  ALTER TABLE RevokeDebt
 ADD GroupId int
+
+
   ALTER procedure [dbo].[sp_RevokeDebt_UpdateSimple](@profileId int, @updateBy int,@provinceId int , @districtId int,@assigneeId int,@status int =0 , @GroupId int=0)
 as begin
 update RevokeDebt 
@@ -1776,3 +1781,25 @@ END
 
 
 ---------
+
+CREATE TABLE ExportFramework
+(
+Id INT IDENTITY(1,1) PRIMARY KEY,
+ColPosition VARCHAR(5),
+FieldName VARCHAR(50)
+)
+
+ALTER table ExportFramework
+ADD ProfileType varchar(30),
+OrgId int
+
+INSERT INTO ExportFramework (ColPosition, FieldName, ProfileType, OrgId) VALUES
+('A','ProfileCode','common',1 ),
+('B','CMND', 'common' ,1)
+
+CREATE PROCEDURE sp_ExportFramework_GetByType(@profileType varchar(30), @orgId int)
+AS BEGIN
+SELECT * FROM ExportFramework WHERE ProfileType = @profileType AND OrgId = @orgId
+end
+
+----------

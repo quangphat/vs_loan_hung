@@ -17,6 +17,8 @@ using VietStar.Business.Infrastructures;
 using System.IO;
 using Dapper;
 using NPOI.SS.UserModel;
+using Microsoft.Extensions.Options;
+using System.IO.Compression;
 
 namespace VietStar.Business
 {
@@ -29,6 +31,7 @@ namespace VietStar.Business
         protected readonly IProductRepository _rpProduct;
         protected readonly IEmployeeRepository _rpEmployee;
         protected IServiceProvider _svProvider;
+        protected SystemConfig _systemConfig;
         public CommonBusiness(ICommonRepository commonRepository,
             IFileProfileRepository fileProfileRepository,
             IPartnerRepository partnerRepository,
@@ -36,6 +39,7 @@ namespace VietStar.Business
             IProductRepository productRepository,
             ILocationRepository locationRepository,
             IServiceProvider serviceProvider,
+            IOptions<SystemConfig> config,
             IMapper mapper, CurrentProcess process) : base(mapper, process)
         {
             _rpCommon = commonRepository;
@@ -45,6 +49,7 @@ namespace VietStar.Business
             _rpLocation = locationRepository;
             _rpProduct = productRepository;
             _rpEmployee = employeeRepository;
+            _systemConfig = config.Value;
         }
         public async Task<List<OptionSimple>> GetPartnerscheckDupAsync()
         {
@@ -96,13 +101,80 @@ namespace VietStar.Business
             return result;
         }
 
+        public async Task<string> ExportData<TRequest, TData>(Func<TRequest, Task<List<TData>>> funcGetData,
+            TRequest request,
+            string folder,
+            string profileType,
+            int rowIndex)
+            where TData : Pagination
+            where TRequest : ExportRequestModelBase
+        {
+            if (string.IsNullOrWhiteSpace(profileType))
+            {
+                return ToResponse<string>(string.Empty, "ProfileType không hợp lệ");
+            }
+            bool exists = System.IO.Directory.Exists(folder);
+            if (!exists)
+                System.IO.Directory.CreateDirectory(folder);
+            string fileName = $"{ DateTime.Now.ToString("yyyy/MM/dd").Replace('/', '_')}_{Guid.NewGuid().ToString()}_{_process.User.Id}_{profileType}.xlsx";
+            string fullPath = $"{folder}\\{_systemConfig.ExportFolder}\\{fileName}";
+
+            if (!File.Exists($"{folder}\\{_systemConfig.ExportFolder}\\Template\\{profileType}.xlsx"))
+            {
+                return ToResponse<string>(string.Empty, "Không tìm thấy file mẫu");
+            }
+
+            var exportFrameWorks = await _rpCommon.GetExportFrameworkByTypeAsync(profileType, _process.User.OrgId);
+            if (exportFrameWorks == null || !exportFrameWorks.Any())
+            {
+                return ToResponse<string>(string.Empty, "Không có dữ liệu ExportFramework");
+            }
+            long totalPage = 1;
+            using (var stream = new FileStream(fullPath, FileMode.CreateNew))
+            {
+                Byte[] info = System.IO.File.ReadAllBytes($"{folder}\\{_systemConfig.ExportFolder}\\Template\\{profileType}.xlsx");
+                stream.Write(info, 0, info.Length);
+                using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Update))
+                {
+                    string nameSheet = "Sheet1";
+                    ExcelOOXML excelOOXML = new ExcelOOXML(archive);
+                    
+                    for (int page = 0; page < totalPage; page++)
+                    {
+                        request.page = page + 1;
+                        request.limit = request.limit < 1000 ? request.limit : 1000;
+                        var datas = await funcGetData(request);
+
+                        if (datas == null || !datas.Any())
+                        {
+                            return ToResponse<string>(string.Empty, "Không có dữ liệu");
+                        }
+                        totalPage = (long)Math.Ceiling((decimal)datas[0].TotalRecord / request.limit);
+                        if (page == 0)
+                            excelOOXML.InsertRow(nameSheet, rowIndex, datas[0].TotalRecord - 1, true);
+                        foreach (var item in datas)
+                        {
+                            foreach (var rowInfo in exportFrameWorks)
+                            {
+                                excelOOXML.SetCellData(nameSheet, rowInfo.ColPosition + rowIndex, GetValue(item, rowInfo.FieldName));
+                            }
+                            rowIndex++;
+                        }
+                    }
+
+                    archive.Dispose();
+                }
+                stream.Dispose();
+            }
+            return $"/media/download-export?fileName={fileName}&filePath={fullPath}";
+        }
+
         public async Task<List<DynamicParameters>> ReadXlsxFileAsync(MemoryStream stream, ProfileType profileType, string configCode)
         {
 
             var importExelFrameWork = await _rpCommon.GetImportFrameworkByTypeAsync((int)profileType);
             if (importExelFrameWork == null)
                 return ToResponse<List<DynamicParameters>>(null, "Không tìm thấy importExelFrameWork");
-            var config = await _rpCommon.GetSystemConfigByCodeAsync(configCode);
             //return null;
 
             var workBook = WorkbookFactory.Create(stream);
@@ -112,9 +184,9 @@ namespace VietStar.Business
             var param = new DynamicParameters();
             var pars = new List<DynamicParameters>();
             int skipCell = 0;
-            if (sheet.PhysicalNumberOfRows - 2 > config.Value)
+            if (sheet.PhysicalNumberOfRows - 2 > _systemConfig.ImportMaxRow)
             {
-                return ToResponse<List<DynamicParameters>>(null, $"Số dòng của file không được nhiều hơn {config.Value}");
+                return ToResponse<List<DynamicParameters>>(null, $"Số dòng của file không được nhiều hơn {_systemConfig.ImportMaxRow}");
             }
             for (int i = 2; i < sheet.PhysicalNumberOfRows; i++)
             {

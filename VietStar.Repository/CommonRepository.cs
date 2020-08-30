@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using VietStar.Entities.Commons;
+using VietStar.Entities.Infrastructures;
 using VietStar.Entities.ViewModels;
 using VietStar.Repository.Interfaces;
 
@@ -25,6 +26,16 @@ namespace VietStar.Repository
             using (var con = GetConnection())
             {
                 var result = await con.QueryAsync<OptionSimple>("sp_getListPartnerForCustomerCheck", commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+
+        }
+
+        public async Task<List<ExportFramework>> GetExportFrameworkByTypeAsync(string profileType, int orgId)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryAsync<ExportFramework>("sp_ExportFramework_GetByType", new { profileType, orgId }, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
 
@@ -65,18 +76,18 @@ namespace VietStar.Repository
             }
         }
 
-        public async Task<SystemConfig> GetSystemConfigByCodeAsync(string code)
-        {
-            using (var con = GetConnection())
-            {
-                var result = await con.QueryFirstOrDefaultAsync<SystemConfig>("sp_SystemConfig_GetByCode", new { code }, commandType: System.Data.CommandType.StoredProcedure);
-                if (result == null)
-                {
-                    result = new SystemConfig { Code = code, Value = 500 };
-                }
-                return result;
-            }
-        }
+        //public async Task<SystemConfig> GetSystemConfigByCodeAsync(string code)
+        //{
+        //    using (var con = GetConnection())
+        //    {
+        //        var result = await con.QueryFirstOrDefaultAsync<SystemConfig>("sp_SystemConfig_GetByCode", new { code }, commandType: System.Data.CommandType.StoredProcedure);
+        //        if (result == null)
+        //        {
+        //            result = new SystemConfig { Code = code, Value = 500 };
+        //        }
+        //        return result;
+        //    }
+        //}
     }
 }
 

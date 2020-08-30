@@ -36,6 +36,9 @@ input:-moz-placeholder, textarea:-moz-placeholder {
 #ddlLimit_chosen{
     width:100px!important;
 }
+.mb-10{
+    margin-bottom:10px!important;
+}
 .ml-20 {
     margin-left: 20px !important;
 }
