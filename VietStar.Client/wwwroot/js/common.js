@@ -552,7 +552,10 @@ function GetParentGroups(control = null, defaultValue = 0, followControl = null,
         });
         if (defaultValue != null && defaultValue > 0) {
             control.val(defaultValue);
-            GetMemberByGroup(defaultValue, followControl, followValue)
+            if (followControl != null) {
+                GetMemberByGroup(defaultValue, followControl, followValue)
+            }
+                
         }
         return
     }

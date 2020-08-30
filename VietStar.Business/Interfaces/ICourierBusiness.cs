@@ -10,11 +10,27 @@ namespace VietStar.Business.Interfaces
 {
     public interface ICourierBusiness
     {
-        Task<DataPaging<List<CourierIndexModel>>> GetsAsync(string freeText
-            , int assigneeId
-            , string status
-            , int page
-            , int limit
+        Task<DataPaging<List<CourierIndexModel>>> GetsAsync(string freeText,
+            DateTime? fromDate
+            , DateTime? toDate
+            ,int dateType = 2
+            , string status = null
+            , int page = 1
+            , int limit = 10
+            , int assigneeId = 0
+            , int groupId = 0
+            , int provinceId = 0
+            , string saleCode = null
+            );
+        Task<string> ExportAsync(string contentRootPath,
+            string freeText,
+            DateTime? fromDate
+            , DateTime? toDate
+            , int dateType = 2
+            , string status = null
+            , int page = 1
+            , int limit = 10
+            , int assigneeId = 0
             , int groupId = 0
             , int provinceId = 0
             , string saleCode = null);

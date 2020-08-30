@@ -32,22 +32,25 @@ namespace VietStar.Repository
             }
         }
 
-        public async Task<List<CourierIndexModel>> GetsAsync(string freeText
-            , int assigneeId
-            , int userId
-            , string status
-            , int page
-            , int limit
+        public async Task<List<CourierIndexModel>> GetsAsync(string freeText,
+            DateTime fromDate
+            , DateTime toDate
+            , int dateType = 2
+            , string status = null
+            , int page = 1
+            , int limit = 10
+            , int assigneeId = 0
             , int groupId = 0
             , int provinceId = 0
-            , string saleCode = null)
+            , string saleCode = null
+            , int userId = 0)
         {
             status = string.IsNullOrWhiteSpace(status) ? string.Empty : status;
             ProcessInputPaging(ref page, ref limit, out offset);
             using (var con = GetConnection())
             {
                 var result = await con.QueryAsync<CourierIndexModel>("sp_GetHosoCourier",
-                    new { freeText, assigneeId, page, limit_tmp = limit, status, groupId, provinceId, saleCode, userId },
+                    new { freeText, fromDate ,toDate ,dateType, status, page, limit_tmp = limit , assigneeId, groupId, provinceId, saleCode, userId },
                     commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }

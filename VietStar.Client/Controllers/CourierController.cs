@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using KingOffice.Infrastructures;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using VietStar.Business.Interfaces;
 using VietStar.Entities.Courier;
@@ -15,9 +16,11 @@ namespace VietStar.Client.Controllers
     public class CourierController : VietStarBaseController
     {
         protected readonly ICourierBusiness _bizCourier;
-        public CourierController(ICourierBusiness courierBusiness, CurrentProcess process) : base(process)
+        protected readonly IHostingEnvironment _hosting;
+        public CourierController(ICourierBusiness courierBusiness, IHostingEnvironment hosting, CurrentProcess process) : base(process)
         {
             _bizCourier = courierBusiness;
+            _hosting = hosting;
         }
 
         public IActionResult Index()
@@ -25,16 +28,37 @@ namespace VietStar.Client.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Search(string freeText = null
-            , int provinceId = 0
-            , int courierId = 0
+        public async Task<IActionResult> Search(string freeText,
+            DateTime? fromDate
+            , DateTime? toDate
+            , int dateType = 2
             , string status = null
-            , int groupId = 0
             , int page = 1
             , int limit = 10
-            , string salecode = null)
+            , int assigneeId = 0
+            , int groupId = 0
+            , int provinceId = 0
+            , string saleCode = null)
         {
-            var result = await _bizCourier.GetsAsync(freeText, courierId, status, page, limit, groupId, provinceId, salecode);
+            var result = await _bizCourier.GetsAsync(freeText, fromDate, toDate, dateType, status, page, limit, assigneeId, groupId, provinceId, saleCode);
+            return ToResponse(result);
+        }
+
+        public async Task<IActionResult> Export(string freeText,
+            DateTime? fromDate
+            , DateTime? toDate
+            , int dateType = 2
+            , string status = null
+            , int page = 1
+            , int limit = 10
+            , int assigneeId = 0
+            , int groupId = 0
+            , int provinceId = 0
+            , string saleCode = null
+            )
+        {
+            var result = await _bizCourier.ExportAsync(_hosting.ContentRootPath, freeText, fromDate, toDate, dateType, status, page, limit, assigneeId, groupId, provinceId, saleCode);
+
             return ToResponse(result);
         }
 

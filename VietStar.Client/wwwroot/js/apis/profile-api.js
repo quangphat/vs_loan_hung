@@ -6,7 +6,7 @@ function SearchDatas(apiPath, model, isPopState, callback1 = null, callback2 = n
 
     let query = jQuery.param(model)
     let fullPath = `${apiPath}?${query}`
-    debugger
+    
     showBlock($('#panel_body'));
     fetch(fullPath)
         .then(response => response.json())

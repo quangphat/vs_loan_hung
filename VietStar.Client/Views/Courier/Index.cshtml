@@ -14,15 +14,47 @@
             <div class="col-xs-12">
                 <form class="form-horizontal" role="form">
                     <div class="space-4"></div>
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right">Từ ngày</label>
+                        <div class="col-sm-4  col-xs-12 ">
+                            <div class="input-group date">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <input type="date" data-date-inline-picker="true" class="form-control pull-right" id="fromDate">
+                            </div>
+                        </div>
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right">Đến ngày</label>
+                        <div class="col-sm-4">
+                            <div class="input-group date">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <input type="date" class="form-control pull-right" id="toDate">
+                            </div>
+                        </div>
+                        <div class="col-sm-offset-1 col-sm-10 no-padding-right">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="radio-ngay" id="optionsRadios1" value="1" checked="">
+                                    Ngày tạo
+                                </label>
+                                <label style="margin-left:20px">
+                                    <input type="radio" name="radio-ngay" id="optionsRadios1" value="2" checked="">
+                                    Ngày cập nhật
+                                </label>
+                            </div>
 
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Tỉnh thành</label>
-                        <div class="col-sm-5 col-xs-12 ">
+                        <div class="col-sm-4 col-xs-12 ">
                             <select id="provinceId" class="chosen-select form-control" data-placeholder="Tỉnh thành của courier"></select>
                         </div>
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Courier</label>
-                        <div class="col-sm-5 col-xs-12 ">
-                            <select id="courierId" class="chosen-select form-control" data-placeholder="Courier">
+                        <div class="col-sm-4 col-xs-12 ">
+                            <select id="assigneeId" class="chosen-select form-control" data-placeholder="Courier">
                                 <option value="0">Tất cả</option>
                             </select>
                         </div>
@@ -30,28 +62,28 @@
                     </div>
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
-                        <div class="col-sm-5 col-xs-12 ">
+                        <div class="col-sm-4 col-xs-12 ">
                             <select class="form-control select2 select2-hidden-accessible" id="ddlStatus" multiple=""
                                     style="width: 100%;" data-select2-id="7" tabindex="-1" aria-hidden="true">
                                 <option value="0"></option>
                             </select>
                         </div>
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Mã sale</label>
-                        <div class="col-sm-5 col-xs-12 ">
-                            <input type="text" class="form-control" id="txtSaleCode" placeholder="" />
+                        <div class="col-sm-4 col-xs-12 ">
+                            <input type="text" class="form-control" id="saleCode" placeholder="" />
                         </div>
 
                     </div>
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Nhóm cha</label>
-                        <div class="col-sm-5 col-xs-12 ">
+                        <div class="col-sm-4 col-xs-12 ">
                             <select id="groupId" class="chosen-select form-control" data-placeholder="Chọn nhóm cha">
                                 <option value="0"></option>
                             </select>
                         </div>
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Tìm kiếm</label>
-                        <div class="col-sm-5 col-xs-12 ">
-                            <input type="text" class="form-control" id="txtFreeText" placeholder="Tìm kiếm" />
+                        <div class="col-sm-4 col-xs-12 ">
+                            <input type="text" class="form-control" id="freeText" placeholder="Tìm kiếm" />
                         </div>
                     </div>
                     <div class="form-group text-right">
@@ -59,7 +91,7 @@
                             <a class="btn btn-primary" id="btnSearch">
                                 Tìm kiếm
                             </a>
-                            <a class="btn btn-primary" href="/Courier/Create">
+                            <a class="btn btn-info" href="/Courier/Create">
                                 Tạo mới
                             </a>
                         </div>
@@ -169,8 +201,6 @@
     var pageMargin = 2;
     var totalPage = 1;
     var totalRecord = 0;
-    var provinceId = 0;
-    var groupId = 0;
     var lstStatus = [
         { value: "1", display: "Mới" },
         { value: "2", display: "Đang xử lý" },
@@ -181,54 +211,23 @@
     ]
 
     $(document).ready(function e() {
-        $('#courierId').select2({
+        $('#assigneeId').select2({
             allowClear: true
         });
         $('#provinceId').select2({
             allowClear: true
         });
         //renderStatusList('courier');
-        GetProvinces();
-        GetParentGroups()
+        
         window.addEventListener('popstate', function (e) {
 
             queries = new URLSearchParams(window.location.search)
-            page = queries.get("page");
-            if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
-                page = 1;
-            else
-                page = parseInt(page)
-            limit = queries.get("limit")
-            if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
-                limit = 10;
-            else
-                limit = parseInt(limit)
-            groupId = queries.get("groupId");
-            getData(page, limit, memberId, groupId, true)
+            bindQueries(getData, true)
         });
-        var status = decodeURI(queries.get("status"))
-        if (!isNullOrWhiteSpace(status)) {
-            let arrStatus = status.split(',')
-            renderStatusList('common', arrStatus);
-        }
-        else
-            renderStatusList('common');
-        bindQueries()
-        let courierId = queries.get("courierId");
-        provinceId = queries.get("provinceId");
-        groupId = queries.get("groupId");
-        getData(page, limit, courierId, groupId);
+        bindQueries(getData);
     })
-    $('#provinceId').change(function () {
-        $('#courierId').empty();
-        $('#courierId').append("<option value='0'></option>");
-        provinceId = this.value
-        GetEmployeeByProvinceId(this.value)
-    });
-    var strLoading = 'Vui lòng chờ trong giây lát';
-    $('#btnSearch').click(function (e) {
-        getData(page, limit);
-    });
+    
+    
 
     $('#btnImport').click(function (e) {
 
@@ -272,15 +271,47 @@
             }
         });
     })
-
+    $("#freeText ,#fromDate, #toDate").on("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            getData(1, limit, null, null, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#memberId").val());
+        }
+    });
+    $('#btnSearch').click(function (e) {
+        getData(page, limit, getQueryStatus($("#ddlStatus")), $("#provinceId").val(), $("#assigneeId").val(), $("#groupId").val());
+    });
+    function onSelectLimit() {
+        limit = $("#ddlLimit").val()
+        getData(page, limit, getQueryStatus($("#ddlStatus")), $("#provinceId").val(), $("#assigneeId").val(), $("#groupId").val())
+    }
     function onClickPage(page) {
         page = page;
-        getData(page, limit);
+        getData(page, limit, getQueryStatus($("#ddlStatus")), $("#provinceId").val(), $("#assigneeId").val(), $("#groupId").val());
     }
-    function bindQueries() {
+    $('#provinceId').change(function () {
+        debugger
+        $('#assigneeId').empty();
+        $('#assigneeId').append("<option value='0'></option>");
+        GetEmployeeByProvinceId(this.value, $("#assigneeId"))
+    });
+    function bindQueries(callBack = null, isPopState = false) {
 
-        $('#txtFreeText').val(queries.get("freetext"))
-        $('#txtSaleCode').val(queries.get("salecode"))
+        let fromDate = queries.get("fromDate");
+        if (isNullOrWhiteSpace(fromDate)) {
+            fromDate = getDateSpecific(14);
+        }
+        $("#fromDate").val(fromDate)
+        var toDate = queries.get("toDate");
+        if (isNullOrWhiteSpace(toDate)) {
+            toDate = new Date();
+            toDate = FormatDateTimeDMY(toDate, 'YYYY-MM-DD')
+        }
+        $("#toDate").val(toDate)
+        var dateType = queries.get("dateType");
+        setCheckedValueOfRadioButtonGroup("radio-ngay", dateType)
+
+        $("#freeText").val(queries.get("freeText"));
+        $('#saleCode').val(queries.get("salecode"))
         page = queries.get("page");
         if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
             page = 1;
@@ -291,12 +322,73 @@
             limit = 10;
         else
             limit = parseInt(limit)
-        $("#ddlLimit").val(limit)
+        $("#ddlLimit").val(limit);
+
+        var groupId = queries.get("groupId");
+        $('#groupId').val(groupId)
+        GetParentGroups(null, groupId)
+
+        var provinceId = queries.get("provinceId");
+        GetProvinces(null, provinceId);
+        $('#provinceId').trigger({
+            type: 'select2:change'
+        });
+        
+        var assigneeId = queries.get("assigneeId");
+        $('#assigneeId').val(assigneeId);
+        GetEmployeeByProvinceId(provinceId, $("#assigneeId"), assigneeId)
+
+        var saleCode = queries.get("saleCode");
+        $('#saleCode').val(saleCode);
+
+        
+
+
+        let status = queries.get("status");
+        if (!isNullOrWhiteSpace(status)) {
+            let arrStatus = status.split(',')
+            renderStatusList('courier', arrStatus);
+        }
+        else
+            renderStatusList('courier');
+        if (callBack != null) {
+
+            callBack(page, limit, status, provinceId, assigneeId, groupId, isPopState);
+        }
     }
-    function onSelectLimit() {
-        limit = $("#ddlLimit").val()
-        getData(1, limit)
+    function onPopState(url) {
+        url = url.replace("Search", "Index")
+        window.history.pushState(url, this.title, url)
     }
+    function getData(page, limit, status, provinceId, assigneeId, groupId, isPopState = false) {
+        
+        if (groupId == 0)
+            groupId = $("#groupId").val();
+        if (provinceId == 0)
+            provinceId = $("#provinceId").val();
+        if (assigneeId == 0)
+            assigneeId = $("#assigneeId").val()
+        if (isNullOrWhiteSpace(status)) {
+            status = getQueryStatus($("#ddlStatus"));
+        }
+
+        SearchDatas('/Courier/Search', {
+            'freeText': !isNullOrWhiteSpace($("#freeText").val()) ? $("#freeText").val() : '',
+            'fromDate': $("#fromDate").val(),
+            'toDate': $("#toDate").val(),
+            'dateType': $('input[name="radio-ngay"]:checked').val(),
+            'status': removeDuplicate(status),
+            'page': page,
+            'limit': limit,
+            'groupId': groupId,
+            'assigneeId': assigneeId,
+            'provinceId': $("#provinceId").val(),
+            'saleCode': $('#saleCode').val()
+        }, isPopState, renderTableBody, renderPageList, onPopState);
+        return;
+
+    }
+
     function renderAddress(item) {
         if (item == null || item == undefined)
             return ''
@@ -347,103 +439,19 @@
         });
 
     }
-    function onEdit(id) {
-        if (isNullOrUndefined(id))
-            return;
-        window.location = "/Courier/edit/" + id;
+    function renderPageList(page, limit, totalRecord) {
+        renderPaging(page, limit, totalRecord)
     }
     
-    function getData(page, limit,courierId=0,groupId =0, isPopState = false)
-    {
-       
-        $.ajax({
-            url: '/Courier/Search',
-            type: "GET",
-            contentType: "application/json",
-
-            data: {
-                'page': page,
-                'limit': limit,
-                'provinceId': (isNaN(provinceId) || provinceId == 0) ? $('#ddlProvince').val() : provinceId,
-                'courierId': (isNaN(courierId) || courierId == 0) ? $('#CourierId').val() : courierId,
-                'freetext': $("#txtFreeText").val(),
-                'salecode': $("#txtSaleCode").val(),
-                'groupId': (isNaN(groupId) || groupId == 0) ? $('#groupId').val() : groupId,
-                'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
-            },
-            success: function (response) {
-                if (response.Message == null) {
-                    totalRecord = response.data.TotalRecord;
-                    let search = this.url.replace("/Courier/Index", "");
-
-                    search = search.replace("/Courier/Search", "")
-                    queries = new URLSearchParams(search)
-                    page = queries.get("page");
-                    if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
-                        page = 1;
-                    else
-                        page = parseInt(page)
-                    limit = queries.get("limit")
-                    if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
-                        limit = 10;
-                    else
-                        limit = parseInt(limit)
-                    renderTableBody(response.data.Datas)
-                    renderPageList(page, limit, totalRecord)
-                    totalPage = getTotalPage(totalRecord, limit);
-                    $("#dtSource_info").text("Tổng: " + totalRecord + " items");
-                    $("#totalPage").text("Tổng: " + totalPage + " trang");
-                }
-                else {
-                    swal({
-                        title: "",
-                        text: response.Message.ErrorMessage,
-                        type: "error",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    });
-                }
-            },
-                error: function (jqXHR, exception) {
-                    showError(jqXHR, exception);
-                },
-                complete: function () {
-                    $('#panel_body').unblock();
-                    if (!isPopState) {
-                        var requestUrl = this.url.replace("/Search", "/index")
-                        window.history.pushState(requestUrl, this.title, requestUrl)
-                    }
-
-            }
-        })
-
-    }
-    function ProfileSearch(dateType = 1, group = 2) {
-        fetch(`/profile/search?dateType=${dateType}&groupId=${group}`)
-            .then(res => res.json())
-            .then(res => {
-                if (res.success == true) {
-                    console.log(res.data)
-                    return res.data
-                }
-                else {
-                    return null;
-                }
-            })
-            .catch(err => {
-                console.log("failed");
-                return null;
-            });
-    }
 
     function DownloadReport(e) {
         let data = JSON.stringify({
             'page': page,
             'limit': limit,
-            'provinceId':$('#ddlProvince').val() ,
-            'courierId':  $('#CourierId').val(),
-            'freetext': $("#txtFreeText").val(),
-            'salecode': $("#txtSaleCode").val(),
+            'provinceId':$('#provinceId').val() ,
+            'assigneeId':  $('#assigneeId').val(),
+            'freetext': $("#freeText").val(),
+            'salecode': $("#saleCode").val(),
             'groupId': $('#groupId').val(),
             'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
         });
@@ -481,10 +489,10 @@
         let data = JSON.stringify({
             'page': page,
             'limit': limit,
-            'provinceId':$('#ddlProvince').val() ,
-            'courierId':  $('#CourierId').val(),
-            'freetext': $("#txtFreeText").val(),
-            'salecode': $("#txtSaleCode").val(),
+            'provinceId':$('#provinceId').val() ,
+            'assigneeId':  $('#assigneeId').val(),
+            'freetext': $("#freeText").val(),
+            'salecode': $("#saleCode").val(),
             'groupId': $('#groupId').val(),
             'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
         });

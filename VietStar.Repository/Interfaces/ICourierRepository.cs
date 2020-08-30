@@ -10,15 +10,19 @@ namespace VietStar.Repository.Interfaces
 {
     public interface ICourierRepository
     {
-        Task<List<CourierIndexModel>> GetsAsync(string freeText
-            , int assigneeId
-            , int userId
-            , string status
-            , int page
-            , int limit
+        Task<List<CourierIndexModel>> GetsAsync(
+           string freeText,
+            DateTime fromDate
+            , DateTime toDate
+            , int dateType = 2
+            , string status = null
+            , int page = 1
+            , int limit = 10
+            , int assigneeId = 0
             , int groupId = 0
             , int provinceId = 0
-            , string saleCode = null);
+            , string saleCode = null
+            , int userId = 0);
         Task<BaseResponse<bool>> UpdateAsync(CourierSql model);
         Task<CourierIndexModel> GetByIdAsync(int id);
         Task<BaseResponse<int>> CreateAsync(CourierSql model, int groupId = 0);

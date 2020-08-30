@@ -11,6 +11,8 @@ namespace VietStar.Entities.Commons
         public int dateType { get; set; }
         public int groupId { get; set; }
         public int memberId { get; set; }
+        public int assigneeId { get; set; }
+        public string saleCode { get; set; }
         public string status { get; set; }
         public int provinceId { get; set; }
         public string sort { get; set; }

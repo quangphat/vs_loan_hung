@@ -1181,24 +1181,27 @@ END
 
 ALTER procedure [dbo].[sp_GetHosoCourier]
 (
-@freeText nvarchar(30),
-@assigneeId int = 0,
+@freeText NVARCHAR(30),
+@fromDate DATETIME,
+@toDate DATETIME,
+@dateType INT=2,
 @status varchar(20) ='',
-@provinceId int = 0,
 @page int =1,
 @limit_tmp int = 10,
+@assigneeId int = 0,
 @groupId int =0,
+@provinceId int = 0,
 @saleCode varchar(20) ='',
 @userId int)as
 begin
-declare @where  nvarchar(1000) = '';
 declare @mainClause nvarchar(max);
 declare @params nvarchar(300);
 if @freeText = '' begin set @freeText = null end;
 if @saleCode = '' begin set @saleCode = null end;
 declare @offset int = 0;
 set @offset = (@page-1)*@limit_tmp;
-set @mainClause = 'select count(*) over() as TotalRecord, hc.Id, dbo.fn_getStatusName(''common'',1, hc.Status) as StatusName,
+declare @where  nvarchar(1000) = ' where isnull(hc.IsDeleted,0) = 0';
+set @mainClause = 'select count(*) over() as TotalRecord, hc.Id, dbo.fn_getStatusName(''courier'',1, hc.Status) as StatusName,
 hc.CustomerName,hc.Cmnd,hc.Status,hc.SaleCode, hc.Phone, hc.AssignUserId, hc.CreatedBy, hc.UpdatedBy,
  hc.CreatedTime, hc.UpdatedTime,fintechcom_vn_PortalNew.fn_getGhichuByHosoId(hc.Id,2) as LastNote, nv2.Ho_Ten as AssignUser,
  nv1.Ho_Ten as CreatedUser,
@@ -1208,14 +1211,12 @@ hc.CustomerName,hc.Cmnd,hc.Status,hc.SaleCode, hc.Phone, hc.AssignUserId, hc.Cre
     left join Khu_vuc kv2 on hc.DistrictId = kv2.Id'
 	if(@freeText  is not null)
 	begin
-	set @where = ' (hc.CustomerName like  N''%' + @freeText +'%''';
-	set @where = @where + ' or hc.cmnd like  N''%' + @freeText +'%''';
-	set @where = @where + ' or hc.phone like  N''%' + @freeText +'%''';
-	set @where = @where + ' or nv2.Ho_Ten like  N''%' + @freeText +'%'' )';
+	set @where += ' (hc.CustomerName like  N''%' + @freeText +'%''';
+	set @where += ' or hc.cmnd like  N''%' + @freeText +'%''';
+	set @where += ' or hc.phone like  N''%' + @freeText +'%''';
+	set @where += ' or nv2.Ho_Ten like  N''%' + @freeText +'%'' )';
 	end;
-if(@where <> '')
-set @where = @where + ' and';
-set @where = @where + ' (@userId in (select * from fn_GetUserIDCanViewMyProfile (hc.CreatedBy)) 
+set @where += ' and (@userId in (select * from fn_GetUserIDCanViewMyProfile (hc.CreatedBy)) 
 or (hc.Id in (select CourierId from CourierAssignee where @userId = AssigneeId))
 or (@userId in (select * from fn_MaNguoiQuanlyByHoSocourierId (hc.Id)))
 or (hc.SaleCode = (select Ma from Nhan_Vien where id = @userId))'
@@ -1229,38 +1230,37 @@ set @where += ')'
 end
 if(@status <> '')
 begin
-if(@where <> '')
-set @where = @where + ' and';
-set @where = @where + ' hc.Status in ('+ @status +')'; 
-end;
-if(@groupId <> 0)
-begin
-if(@where <> '')
-set @where = @where + ' and';
-set @where = @where + ' hc.GroupId = @groupId';
+SET @where = @where + ' and hc.Status in ('+ @status +')'; 
+END;
+IF(@groupId <> 0)
+BEGIN
+
+SET @where = @where + ' and hc.GroupId = @groupId';
 end;
 if(@provinceId <> 0)
 begin
-if(@where <> '')
-set @where = @where + ' and';
-set @where = @where + ' hc.ProvinceId = @provinceId'; 
+set @where = @where + ' and hc.ProvinceId = @provinceId'; 
 end;
 if(@saleCode is not null)
 begin
-if(@where <> '')  set @where = @where + ' and';
-set @where = @where + ' hc.SaleCode = @saleCode'; 
+set @where = @where + ' and hc.SaleCode = @saleCode'; 
 end;
-if(@where <>'')
+if(@dateType =1)
 begin
-set @where= ' where ' + @where
+	set @where += ' and hc.CreatedTime between @fromDate and @toDate'
 end
-set @where = @where + ' and isnull(hc.IsDeleted,0) = 0  order by hc.createdTime desc';
-set @where += ' offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
+else
+begin
+	set @where += ' and hc.UpdatedTime between @fromDate and @toDate'
+end
+set @where += ' and isnull(hc.IsDeleted,0) = 0  order by hc.createdTime desc offset @offset ROWS FETCH NEXT @limit ROWS ONLY';
 set @mainClause = @mainClause +  @where
 set @params =N'@assigneeId  int,@status varchar(20), @offset int, @limit int, @groupId int, @provinceId int
-, @saleCode varchar(20),@userId int';
+, @saleCode varchar(20),@userId int, @fromDate datetime, @toDate datetime, @dateType int';
 EXECUTE sp_executesql @mainClause,@params, @assigneeId = @assigneeId, @provinceId = @provinceId,
-@status = @status, @offset = @offset, @limit = @limit_tmp, @groupId = @groupId, @saleCode = @saleCode,@userId = @userId;
+@status = @status, @offset = @offset, @limit = @limit_tmp, @groupId = @groupId, @saleCode = @saleCode,@userId = @userId
+, @fromDate = @fromDate, @toDate = @toDate,
+ @dateType = @dateType;
 print @mainClause;
 end
 
@@ -1793,9 +1793,24 @@ ALTER table ExportFramework
 ADD ProfileType varchar(30),
 OrgId int
 
+
 INSERT INTO ExportFramework (ColPosition, FieldName, ProfileType, OrgId) VALUES
-('A','ProfileCode','common',1 ),
-('B','CMND', 'common' ,1)
+('A','Id','common',1 ),
+('B','CustomerName', 'common' ,1),
+('C','CMND', 'common' ,1),
+('D','Phone', 'common' ,1),
+('E','StatusName', 'common' ,1),
+('F','PartnerName', 'common' ,1),
+('G','ProductName', 'common' ,1),
+('H','IsInsurrance', 'common' ,1),
+('I','LastNote', 'common' ,1),
+('J','ProvinceName', 'common' ,1),
+('K','SellTeam', 'common' ,1),
+('L','CourierCode', 'common' ,1),
+('M','CreatedBy', 'common' ,1),
+('N','CreatedTime', 'common' ,1),
+('O','UpdatedBy', 'common' ,1),
+('P','UpdatedTime', 'common' ,1)
 
 CREATE PROCEDURE sp_ExportFramework_GetByType(@profileType varchar(30), @orgId int)
 AS BEGIN

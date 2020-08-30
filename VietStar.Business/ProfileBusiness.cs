@@ -146,7 +146,6 @@ namespace VietStar.Business
                 sortField = sortField
             };
             var bizCommon = _svProvider.GetService<ICommonBusiness>();
-
             var result = await bizCommon.ExportData<ExportRequestModel, ProfileIndexModel>(GetDatasAsync, request, contentRootPath, "common" , 4);
             return result;
         }
