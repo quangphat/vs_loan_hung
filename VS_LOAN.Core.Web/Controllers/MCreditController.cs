@@ -325,16 +325,9 @@ namespace VS_LOAN.Core.Web.Controllers
             if (temp.Status != status)
             {
                 var result = await _rpMCredit.UpdateTempProfileStatusAsync(temp.Id, status);
-
-                var getNoteResult = await _svMCredit.GetProfileById(temp.MCId, GlobalData.User.IDUser);
-                if (getNoteResult == null || getNoteResult.obj == null || getNoteResult.status == "error")
+                if (mcProfile.obj.Reason != null)
                 {
-                    return ToJsonResponse(false, "Không thể cập nhật ghi chú", null);
-                }
-
-                if (getNoteResult.obj.Reason != null)
-                {
-                    var reasonName = JsonConvert.SerializeObject(getNoteResult.obj.Reason);
+                    var reasonName = JsonConvert.SerializeObject(mcProfile.obj.Reason);
                     await _rpNote.AddNoteAsync(new GhichuModel
                     {
                         HosoId = profileId,
@@ -349,13 +342,11 @@ namespace VS_LOAN.Core.Web.Controllers
                 {
                     HosoId = profileId,
                     CommentTime = DateTime.Now,
-                    Noidung = getNoteResult.obj.Refuse,
-                    TypeId = (int)NoteType.MCreditTemp,
+                    Noidung = mcProfile.obj.Refuse,
+                    TypeId = (int)NoteType.MCreditMCECheck,
                     UserId = GlobalData.User.IDUser
                 });
-                await _rpLog.InsertLog($"AddRefuseToNote-{profileId}", getNoteResult.obj.Refuse);
-
-
+                await _rpLog.InsertLog($"AddRefuseToNote-{profileId}", mcProfile.obj.Refuse);
                 return ToJsonResponse(result);
             }
             return ToJsonResponse(false);

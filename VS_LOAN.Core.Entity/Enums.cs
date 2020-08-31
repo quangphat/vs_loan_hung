@@ -34,8 +34,11 @@ namespace VS_LOAN.Core.Entity
         HosoCourrier = 2,
         Company = 3,
         MCreditTemp = 4,
+        
         RevokeDebt = 5,
-        CheckDup = 6
+        CheckDup = 6,
+        MCreditMCECheck = 7,
+
     }
     public enum CatType
     {

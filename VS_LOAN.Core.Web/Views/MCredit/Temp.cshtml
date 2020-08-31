@@ -136,6 +136,8 @@
                                     <th class="w-94">Sale</th>
                                     <th style="width: 150px">Trạng thái</th>
                                     <th class="m-w-300">Ghi chú</th>
+                                    <th class="m-w-300">Ghi chú McNote</th>
+                                    
                                     <th class="w-94">Sản phẩm</th>
                                     <th class="w-94">Kỳ hạn</th>
                                     <th class="w-84">Người tạo</th>
@@ -461,6 +463,8 @@
             + renderTextLeft(rowData.SaleName)
             + renderStatus(rowData.StatusName, rowData.Id)
             + renderTextLeft(rowData.LastNote, '', 'tb-row-breakword')
+            + renderTextLeft(rowData.McNote, '', 'tb-row-breakword')
+            
             + renderTextLeft(rowData.ProductName)
             + renderTextLeft(rowData.LoanPeriodName)
             + renderTextLeft(rowData.CreatedUser)
