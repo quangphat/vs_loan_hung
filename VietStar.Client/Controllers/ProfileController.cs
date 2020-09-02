@@ -45,6 +45,8 @@ namespace VietStar.Client.Controllers
 
             return ToResponse(result);
         }
+
+        [MyAuthorize(Permissions = "profile,profile.export")]
         public async Task<IActionResult> Export(DateTime? fromDate
             , DateTime? toDate
             , int dateType = 1

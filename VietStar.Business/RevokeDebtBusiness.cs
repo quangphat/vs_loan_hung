@@ -31,20 +31,22 @@ namespace VietStar.Business
             _rpRevoke = revokeDebtRepository;
         }
 
-        public async Task<DataPaging<List<RevokeDebtSearch>>> SearchAsync(string freeText, 
-            string status,
-            int page, 
-            int limit, 
+        public async Task<DataPaging<List<RevokeDebtSearch>>> SearchAsync(
+            DateTime? fromDate = null,
+            DateTime? toDate = null,
+            int dateType = 1,
             int groupId = 0,
             int assigneeId = 0,
-            DateTime? fromDate = null, 
-            DateTime? toDate = null, 
-            int dateType = 1,
-            int processStatus = -1)
+            string status = null,
+            int processStatus = -1,
+            string freeText = null,
+            int page = 1,
+            int limit = 10
+            )
         {
             fromDate = fromDate.HasValue ? fromDate.ToStartDateTime() : DateTime.Now.ToStartDateTime();
             toDate = toDate.HasValue ? toDate.ToEndDateTime() : DateTime.Now.ToEndDateTime();
-            var data = await _rpRevoke.SearchAsync(_process.User.Id, freeText, status, page, limit, groupId, assigneeId, fromDate, toDate, dateType, processStatus);
+            var data = await _rpRevoke.SearchAsync(_process.User.Id, fromDate, toDate, dateType, groupId, assigneeId, status, processStatus, freeText, page, limit);
             if (data == null || !data.Any())
             {
                 return DataPaging.Create(null as List<RevokeDebtSearch>, 0);
@@ -56,7 +58,7 @@ namespace VietStar.Business
         public async Task<string> InsertFromFileAsync(IFormFile file)
         {
             if (file == null)
-                return ToResponse(string.Empty,Errors.file_cannot_be_null);
+                return ToResponse(string.Empty, Errors.file_cannot_be_null);
             var bizCommon = _svProvider.GetService<ICommonBusiness>();
             var inputParams = null as List<DynamicParameters>;
             using (var stream = new MemoryStream())
@@ -64,7 +66,7 @@ namespace VietStar.Business
                 await file.CopyToAsync(stream);
                 inputParams = await bizCommon.ReadXlsxFileAsync(stream, Entities.Commons.Enums.ProfileType.RevokeDebt, Constants.revoke_debt_max_row_import);
             }
-            if(inputParams ==null)
+            if (inputParams == null)
             {
                 return $"Đã import thành công {0} dòng";
             }
@@ -93,11 +95,58 @@ namespace VietStar.Business
         {
             if (model == null)
                 return ToResponse(false, Errors.invalid_data);
-            if(model.AssigneeId==0)
+            if (model.AssigneeId == 0)
             {
                 return ToResponse(false, "Vui lòng chọn người xử lý");
             }
             return await _rpRevoke.UpdateSimpleAsync(model, _process.User.Id, profileId);
+        }
+
+        public async Task<string> ExportAsync(string contentRootPath, DateTime? fromDate = null,
+            DateTime? toDate = null,
+            int dateType = 1,
+            int groupId = 0,
+            int assigneeId = 0,
+            string status = null,
+            int processStatus = -1,
+            string freeText = null,
+            int page = 1,
+            int limit = 10)
+        {
+            fromDate = fromDate.HasValue ? fromDate.Value.ToStartDateTime() : DateTime.Now.ToStartDateTime();
+            toDate = toDate.HasValue ? toDate.Value.ToEndDateTime() : DateTime.Now.ToEndDateTime();
+            var request = new ExportRequestModel
+            {
+                userId = _process.User.Id,
+                page = page,
+                limit = limit,
+                fromDate = fromDate.Value,
+                toDate = toDate.Value,
+                dateType = dateType,
+                groupId = groupId,
+                assigneeId = assigneeId,
+                processStatus = processStatus,
+                status = status,
+                freeText = freeText
+            };
+            var bizCommon = _svProvider.GetService<ICommonBusiness>();
+            var result = await bizCommon.ExportData<ExportRequestModel, RevokeDebtSearch>(GetDatasAsync, request, contentRootPath, "revoke", 2);
+            return result;
+        }
+        private async Task<List<RevokeDebtSearch>> GetDatasAsync(ExportRequestModel request)
+        {
+            var result = await _rpRevoke.SearchAsync(_process.User.Id,
+                request.fromDate,
+                request.toDate,
+                request.dateType,
+                request.groupId,
+                request.memberId,
+                request.status,
+                request.processStatus,
+                request.freeText,
+                request.page,
+                request.limit);
+            return result;
         }
     }
 }

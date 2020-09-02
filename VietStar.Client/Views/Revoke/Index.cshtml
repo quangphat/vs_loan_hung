@@ -84,13 +84,14 @@
                         ButtonName ="Import",
                         FileName = "revoke.xlsx"
                     })
-                
+
             </div>
         </form>
 
         <hr>
         <div class="row">
             <div class="col-sm-12">
+                <partial name="../Shared/Partials/ExportPartial" />
                 <div class="clearfix">
                     <div class="pull-right tableTools-container"></div>
                 </div>
@@ -200,7 +201,6 @@ function onClickPage(page) {
     getData(page, limit, null, null, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#assigneeId").val(), $("#processStatus").val());
 }
 
-
     function onSelectLimit() {
     limit = $("#ddlLimit").val()
         getData(page, limit, null, null, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#assigneeId").val(), $("#processStatus").val())
@@ -234,7 +234,6 @@ function onClickPage(page) {
         }
     });
     $('#btnSearch').click(function (e) {
-        
         getData(1, limit, null, null, getQueryStatus($("#ddlStatus")), $("#groupId").val(), $("#assigneeId").val(), $("#processStatus").val());
 
     });
@@ -243,7 +242,6 @@ function onClickPage(page) {
         if (isNullOrWhiteSpace(fromDate)) {
             fromDate = getDateSpecific(14);
         }
-        debugger
         $("#fromDate").val(fromDate)
         var toDate = queries.get("toDate");
         if (isNullOrWhiteSpace(toDate)) {
@@ -291,81 +289,55 @@ function onClickPage(page) {
         }
 
     }
-    function getData(page, limit, sort = "desc", sortField = "updatedtime", status, groupId, assigneeId, processStatus, isPopState = false)
-{
-    if (isNullOrWhiteSpace(status)) {
-        status = getQueryStatus($("#ddlStatus"));
+    function processingExport(data) {
+        var link = document.createElement("a");
+        link.href = data;
+        link.click();
     }
-    if (groupId==0)
-        groupId = $("#groupId").val();
-    if (assigneeId == 0)
-        assigneeId = $("#assigneeId").val()
-    showBlock($('#panel_body'));
+    $("#btnExport").click(function () {
+        let status = getQueryStatus($("#ddlStatus"));
 
-    $.ajax( {
-            url: '@Url.Action("Search", "Revoke")',
-            type: "GET",
-            contentType: "application/json",
-        data: {
+        let groupId = $("#groupId").val();
+        let assigneeId = $("#assigneeId").val();
+        let processStatus = $("#processStatus").val();
+        SearchDatas('/Revoke/Export', processSearchModel(1, 20, status, groupId, assigneeId, processStatus), true, null, null, null, processingExport);
+        return;
+
+
+    })
+    function renderPageList(page, limit, totalRecord) {
+        renderPaging(page, limit, totalRecord)
+    }
+    function onPopState(url) {
+        url = url.replace("Search", "Index")
+        window.history.pushState(url, this.title, url)
+    }
+    function processSearchModel(page, limit, status, groupId, assigneeId, processStatus) {
+        if (isNullOrWhiteSpace(status)) {
+            status = getQueryStatus($("#ddlStatus"));
+        }
+        if (groupId == 0)
+            groupId = $("#groupId").val();
+        if (assigneeId == 0)
+            assigneeId = $("#assigneeId").val()
+        return {
             'page': page,
             'limit': limit,
             'groupId': groupId,
             'assigneeId': assigneeId,
             'fromDate': $("#fromDate").val(),
             'toDate': $("#toDate").val(),
-            'freeText': !isNullOrWhiteSpace($("#freeText").val()) ? $("#freeText").val():'',
+            'freeText': !isNullOrWhiteSpace($("#freeText").val()) ? $("#freeText").val() : '',
             'dateType': $('input[name="radio-ngay"]:checked').val(),
             'status': removeDuplicate(status),
             'processStatus': processStatus
-        },
-        success: function (response) {
-            if (response.success == true) {
-                
-                totalRecord = response.data.TotalRecord;
-                var search = this.url.replace("/Revoke/Index", "");
-                search = search.replace("/Revoke/Search","")
-                queries = new URLSearchParams(search)
-
-                page = queries.get("page");
-                if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
-                    page = 1;
-                else
-                    page = parseInt(page)
-                limit = queries.get("limit")
-
-
-                if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
-                    limit = 10;
-                else
-                    limit = parseInt(limit)
-                renderTableBody(response.data.Datas)
-                //renderGoPreviousPage(page);
-                renderPaging(page, limit, totalRecord)
-
-            }
-            else {
-                swal({
-                    title: "",
-                    text: response.error.code,
-                    type: "error",
-                    timer: 4000,
-                    showConfirmButton: true,
-                });
-            }
-
-        },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            },
-            complete: function () {
-                $('#panel_body').unblock();
-                if (!isPopState) {
-                    var requestUrl = this.url.replace("Search", "Index")
-                    window.history.pushState(requestUrl, this.title, requestUrl)
-                }
-
         }
-    })
+    }
+    function getData(page, limit, status, groupId, assigneeId, processStatus, isPopState = false)
+    {
+        SearchDatas('/revoke/Search', processSearchModel(page, limit, status, groupId, assigneeId, processStatus), isPopState, renderTableBody, renderPageList, onPopState);
+        return;
+
 
 }
 
@@ -384,7 +356,7 @@ function onClickPage(page) {
             processData: false,  // tell jQuery not to process the data
             contentType: false,  // tell jQuery not to set contentType
             success: function (data) {
-                
+
                 if (data != null && data.success) {
                     swal({
                         title: "",
@@ -415,57 +387,6 @@ function onClickPage(page) {
             }
         });
     })
-function DownloadReport(e) {
-    var groupId = 0;
-    var assigneeId = 0;
-
-    if ($('#groupId').val() != undefined) {
-        groupId = $('#groupId').val();
-    }
-    if ($('#assigneeId').val() != undefined) {
-        assigneeId = $('#assigneeId').val();
-    }
-    else
-        assigneeId = 0
-    let objectSend = JSON.stringify({
-        'groupId': groupId,
-        'assigneeId': assigneeId,
-        'fromDate': $('#txtFromDate').val(),
-        'toDate': $('#txtToDate').val(),
-        'maHS': $('#txtMaHS').val(),
-        'cmnd': $('#txtCMND').val(),
-        'dateType': $('input[name="radio-ngay"]:checked').val()
-    });
-    $.ajax({
-        traditional: true,
-        url: '/Revoke/DownloadReport',
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        data: objectSend,
-        success: function (data) {
-            if (data.success == true) {
-                var link = document.createElement("a");
-                link.href = data.error.code;
-                link.click();
-            }
-            else {
-                swal({
-                    title: "",
-                    text: data.Message.ErrorMessage,
-                    type: "error",
-                    timer: 4000,
-                    showConfirmButton: true,
-                });
-            }
-        },
-        error: function (jqXHR, exception) {
-            showError(jqXHR, exception);
-        },
-        complete: function () {
-
-        },
-    });
-}
 
 
     function renderRow(index, rowData) {

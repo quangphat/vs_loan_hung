@@ -12,16 +12,17 @@ namespace VietStar.Repository.Interfaces
     {
         Task<int> InsertManyByParameterAsync(List<DynamicParameters> inputParams, int userId);
         Task<List<RevokeDebtSearch>> SearchAsync(int userId,
-            string freeText,
-            string status,
-            int page,
-            int limit,
-            int groupId = 0,
-            int assigneeId = 0,
             DateTime? fromDate = null,
             DateTime? toDate = null,
             int dateType = 1,
-            int processStatus = -1);
+            int groupId = 0,
+            int assigneeId = 0,
+            string status = null,
+            int processStatus = -1,
+            string freeText = null,
+            int page = 1,
+            int limit = 10
+            );
 
         Task<RevokeDebtSearch> GetByIdAsync(int profileId, int userId);
         Task<bool> DeleteByIdAsync(int userId, int profileId);

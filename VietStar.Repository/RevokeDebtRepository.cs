@@ -21,17 +21,17 @@ namespace VietStar.Repository
             _rpLog = logRepository;
         }
 
-        public async Task<List<RevokeDebtSearch>> SearchAsync(int userId, 
-            string freeText, 
-            string status, 
-            int page, 
-            int limit, 
-            int groupId = 0, 
+        public async Task<List<RevokeDebtSearch>> SearchAsync(int userId,
+            DateTime? fromDate = null,
+            DateTime? toDate = null,
+            int dateType = 1,
+            int groupId = 0,
             int assigneeId = 0,
-            DateTime? fromDate = null, 
-            DateTime? toDate = null, 
-            int dateType = 1, 
-            int processStatus = -1)
+            string status = null,
+            int processStatus = -1,
+            string freeText = null,
+            int page = 1,
+            int limit = 10)
         {
             using (var con = GetConnection())
             {

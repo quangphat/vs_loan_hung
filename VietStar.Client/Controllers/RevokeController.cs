@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using KingOffice.Infrastructures;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using VietStar.Business.Interfaces;
 using VietStar.Entities.Collection;
@@ -15,34 +16,34 @@ namespace VietStar.Client.Controllers
     public class RevokeController : VietStarBaseController
     {
         protected readonly IRevokeDebtBusiness _bizRevoke;
-        public RevokeController(IRevokeDebtBusiness revokeBusiness,CurrentProcess process) : base(process)
+        protected readonly IHostingEnvironment _hosting;
+        public RevokeController(IRevokeDebtBusiness revokeBusiness, IHostingEnvironment hosting, CurrentProcess process) : base(process)
         {
             _bizRevoke = revokeBusiness;
+            _hosting = hosting;
         }
-        
+
         public IActionResult Index()
         {
             return View();
         }
 
         public async Task<IActionResult> Search(string freeText = null,
-            string status = null, 
+            string status = null,
             int groupId = 0,
             int assigneeId = 0,
-            int page = 1, 
+            int page = 1,
             int limit = 10,
             DateTime? fromDate = null,
-            DateTime? toDate = null, 
+            DateTime? toDate = null,
             int dateType = 1,
             int processStatus = -1)
         {
-
-           
-            var result = await _bizRevoke.SearchAsync(freeText, status, page, limit, groupId, assigneeId, fromDate, toDate, dateType, processStatus);
+            var result = await _bizRevoke.SearchAsync(fromDate, toDate, dateType, groupId, assigneeId, status, processStatus, freeText, page, limit);
             return ToResponse(result);
         }
 
-        [MyAuthorize(Permissions ="revoke,revoke.import")]
+        [MyAuthorize(Permissions = "revoke,revoke.import")]
         [HttpPost("revoke/import")]
         public async Task<IActionResult> Import()
         {
@@ -59,7 +60,7 @@ namespace VietStar.Client.Controllers
         }
 
         [HttpPut("revoke/update/{profileId}")]
-        public async Task<IActionResult> Update(int profileId,[FromBody] RevokeSimpleUpdate model)
+        public async Task<IActionResult> Update(int profileId, [FromBody] RevokeSimpleUpdate model)
         {
 
             var result = await _bizRevoke.UpdateSimpleAsync(model, profileId);
@@ -70,8 +71,26 @@ namespace VietStar.Client.Controllers
         [HttpDelete("revoke/{profileId}")]
         public async Task<IActionResult> Delete(int profileId)
         {
-            
+
             var result = await _bizRevoke.DeleteByIdAsync(profileId);
+            return ToResponse(result);
+        }
+
+        [MyAuthorize(Permissions = "revoke,revoke.export")]
+        [HttpGet("revoke/export")]
+        public async Task<IActionResult> Export(string freeText = null,
+            string status = null,
+            int groupId = 0,
+            int assigneeId = 0,
+            int page = 1,
+            int limit = 10,
+            DateTime? fromDate = null,
+            DateTime? toDate = null,
+            int dateType = 1,
+            int processStatus = -1)
+        {
+            var result = await _bizRevoke.ExportAsync(_hosting.ContentRootPath, fromDate, toDate, dateType, groupId, assigneeId, status, processStatus, freeText, page, limit);
+
             return ToResponse(result);
         }
     }

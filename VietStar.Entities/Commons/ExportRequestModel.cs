@@ -16,6 +16,7 @@ namespace VietStar.Entities.Commons
         public string status { get; set; }
         public int provinceId { get; set; }
         public string sort { get; set; }
+        public int processStatus { get; set; }
         public string sortField { get; set; }
     }
 

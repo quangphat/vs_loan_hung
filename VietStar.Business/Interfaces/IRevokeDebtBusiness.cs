@@ -12,19 +12,29 @@ namespace VietStar.Business.Interfaces
     public interface IRevokeDebtBusiness
     {
         Task<string> InsertFromFileAsync(IFormFile file);
-        Task<DataPaging<List<RevokeDebtSearch>>> SearchAsync(string freeText,
-            string status,
-            int page,
-            int limit,
-            int groupId = 0,
-            int assigneeId = 0,
-            DateTime? fromDate = null,
+        Task<DataPaging<List<RevokeDebtSearch>>> SearchAsync(DateTime? fromDate = null,
             DateTime? toDate = null,
             int dateType = 1,
-            int processStatus = -1);
+            int groupId = 0,
+            int assigneeId = 0,
+            string status = null,
+            int processStatus = -1,
+            string freeText = null,
+            int page = 1,
+            int limit = 10);
         Task<RevokeDebtSearch> GetByIdAsync(int profileId);
         Task<bool> DeleteByIdAsync( int profileId);
         Task<bool> UpdateStatusAsync(int profileId, int status);
         Task<bool> UpdateSimpleAsync(RevokeSimpleUpdate model, int profileId);
+        Task<string> ExportAsync(string contentRootPath, DateTime? fromDate = null,
+            DateTime? toDate = null,
+            int dateType = 1,
+            int groupId = 0,
+            int assigneeId = 0,
+            string status = null,
+            int processStatus = -1,
+            string freeText = null,
+            int page = 1,
+            int limit = 10);
     }
 }

@@ -1904,3 +1904,18 @@ create procedure [dbo].[sp_Courier_Import]
   
 
 -------------
+
+INSERT INTO ExportFramework (ColPosition, FieldName, ProfileType, OrgId) VALUES
+('A','CustomerName', 'revoke' ,2),
+('B','AgreementNo', 'revoke' ,2),
+('C','IdCardNumber', 'revoke' ,2),
+('D','StatusName', 'revoke' ,2),
+('E','TotalCurros', 'revoke' ,2),
+('F','AssigneeName', 'revoke' ,2),
+('G','CreatedUser', 'revoke' ,2),
+('H','CreatedTime', 'revoke' ,2),
+('I','UpdatedUser', 'revoke' ,2),
+('J','UpdatedTime', 'revoke' ,2)
+
+
+------------

@@ -374,7 +374,7 @@ function getData(page, limit, sort = "desc", sortField = "updatedtime",status, g
         'status': removeDuplicate(status),
         'sort': sort,
         'sortField': sortField
-    }, isPopState, renderTableBody, renderPaging, onPopState);
+    }, isPopState, renderTableBody, renderPageList, onPopState);
     return;
 
 }
