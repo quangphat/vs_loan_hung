@@ -83,9 +83,7 @@
         <div class="clearfix"></div>
         <div class="row">
             <div class="col-sm-12">
-                <div class="mb-10">
-                    <a id="btnExport" class="btn btn-sm btn-primary "><i class="ace-icon fa fa-download"></i> Export</a>
-                </div>
+                <partial name="../Shared/Partials/ExportPartial" />
 
 
                 <div class="clearfix">
@@ -376,7 +374,7 @@ function getData(page, limit, sort = "desc", sortField = "updatedtime",status, g
         'status': removeDuplicate(status),
         'sort': sort,
         'sortField': sortField
-    }, isPopState, renderTableBody, renderPageList, onPopState);
+    }, isPopState, renderTableBody, renderPaging, onPopState);
     return;
 
 }

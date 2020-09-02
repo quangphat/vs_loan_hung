@@ -65,7 +65,7 @@ namespace VietStar.Client.Controllers
         [HttpGet("download-template")]
         public IActionResult DownloadTemplateFile(string fileName)
         {
-            byte[] fileBytes = System.IO.File.ReadAllBytes(_hosting.ContentRootPath + "\\wwwroot\\ReportTemplate\\" + fileName);
+            byte[] fileBytes = System.IO.File.ReadAllBytes(_hosting.ContentRootPath + "\\wwwroot\\ImportTemplate\\" + fileName);
             var response = new FileContentResult(fileBytes, "application/octet-stream");
             response.FileDownloadName = fileName;
             return response;

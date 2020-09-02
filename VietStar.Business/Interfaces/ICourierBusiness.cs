@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,6 +11,7 @@ namespace VietStar.Business.Interfaces
 {
     public interface ICourierBusiness
     {
+        Task<bool> InsertFromFileAsync(IFormFile file);
         Task<DataPaging<List<CourierIndexModel>>> GetsAsync(string freeText,
             DateTime? fromDate
             , DateTime? toDate

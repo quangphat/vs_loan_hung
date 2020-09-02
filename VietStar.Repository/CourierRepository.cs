@@ -50,7 +50,7 @@ namespace VietStar.Repository
             using (var con = GetConnection())
             {
                 var result = await con.QueryAsync<CourierIndexModel>("sp_GetHosoCourier",
-                    new { freeText, fromDate ,toDate ,dateType, status, page, limit_tmp = limit , assigneeId, groupId, provinceId, saleCode, userId },
+                    new { freeText, fromDate, toDate, dateType, status, page, limit_tmp = limit, assigneeId, groupId, provinceId, saleCode, userId },
                     commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
@@ -80,6 +80,35 @@ namespace VietStar.Repository
 
         }
 
+        public async Task<BaseResponse<bool>> ImportAsync(List<CourierSql> models, int groupId = 0)
+        {
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    foreach (var model in models)
+                    {
+                        var param = GetParams(model, ignoreKey: new string[] {
+                        nameof(model.CreatedTime),
+                        nameof(model.Id),
+                        nameof(model.UpdatedTime),
+                        nameof(model.UpdatedBy),
+                        nameof(model.AssigneeIds)
+
+                });
+                        await con.ExecuteAsync("sp_Courier_Import", param, commandType: CommandType.StoredProcedure);
+
+                    }
+                }
+                return BaseResponse<bool>.Create(true);
+            }
+            catch (Exception e)
+            {
+                return BaseResponse<bool>.Create(false, GetException(e));
+            }
+
+        }
+
         public async Task<BaseResponse<bool>> UpdateAsync(CourierSql model)
         {
             try
@@ -97,11 +126,11 @@ namespace VietStar.Repository
                     return BaseResponse<bool>.Create(true);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BaseResponse<bool>.Create(false, GetException(e));
             }
-            
+
 
         }
 

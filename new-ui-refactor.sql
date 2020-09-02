@@ -1818,3 +1818,89 @@ SELECT * FROM ExportFramework WHERE ProfileType = @profileType AND OrgId = @orgI
 end
 
 ----------
+
+INSERT INTO ExportFramework (ColPosition, FieldName, ProfileType, OrgId) VALUES
+('A','CustomerName', 'courier' ,1),
+('B','Cmnd', 'courier' ,1),
+('C','Phone', 'courier' ,1),
+('D','StatusName', 'courier' ,1),
+('E','DistrictName', 'courier' ,1),
+('F','ProvinceName', 'courier' ,1),
+('G','AssignUser', 'courier' ,1),
+('H','SaleCode', 'courier' ,1),
+('I','LastNote', 'courier' ,1),
+('J','CreatedTime', 'courier' ,1),
+('K','CreatedUser', 'courier' ,1),
+('L','UpdatedTime', 'courier' ,1),
+('M','UpdatedUser', 'courier' ,1)
+
+----------
+
+
+create procedure [dbo].[sp_Courier_Import]
+(
+@customerName nvarchar(200),
+@assignId int,
+@cmnd varchar(15),
+@phone varchar(15),
+@status int,
+@LastNote nvarchar(200),
+@createdby int,
+@groupId int =0,
+@ProvinceId int = 0,
+@DistrictId int =0,
+@SaleCode varchar(20) = ''
+)
+  as
+  BEGIN
+  DECLARE @id INT =0
+  INSERT into HosoCourrier(
+  CustomerName
+	,Cmnd
+	,Phone
+	,CreatedTime
+	,CreatedBy
+	,AssignUserId
+	,GroupId
+	, Status
+	,ProvinceId
+	,DistrictId
+	,SaleCode
+	,UpdatedTime)
+	values
+	(@customerName
+	,@cmnd
+	,@phone
+	,GETDATE()
+	,@createdby
+	,@assignId
+	,@groupId
+	,@status
+	,@ProvinceId
+	,@DistrictId
+	,@SaleCode,
+	GETDATE());
+	SET @id=@@IDENTITY;
+	IF(@id>0)
+	BEGIN
+		INSERT INTO dbo.Ghichu
+		(
+		    UserId,
+		    Noidung,
+		    HosoId,
+		    CommentTime,
+		    TypeId
+		)
+		VALUES
+		(   @createdby,         -- UserId - int
+		    @LastNote,       -- Noidung - nvarchar(300)
+		    @id,         -- HosoId - int
+		    GETDATE(), -- CommentTime - datetime
+		     2        -- TypeId - int
+		    )
+	END;
+
+  END
+  
+
+-------------

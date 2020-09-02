@@ -105,7 +105,7 @@ namespace VietStar.Business
             TRequest request,
             string folder,
             string profileType,
-            int rowIndex)
+            int rowIndex =2)
             where TData : Pagination
             where TRequest : ExportRequestModelBase
         {
@@ -119,7 +119,7 @@ namespace VietStar.Business
             string fileName = $"{ DateTime.Now.ToString("yyyy/MM/dd").Replace('/', '_')}_{Guid.NewGuid().ToString()}_{_process.User.Id}_{profileType}.xlsx";
             string fullPath = $"{folder}\\{_systemConfig.ExportFolder}\\{fileName}";
 
-            if (!File.Exists($"{folder}\\{_systemConfig.ExportFolder}\\Template\\{profileType}.xlsx"))
+            if (!File.Exists($"{folder}\\{_systemConfig.ExportTemplate}\\{profileType}.xlsx"))
             {
                 return ToResponse<string>(string.Empty, "Không tìm thấy file mẫu");
             }
@@ -132,7 +132,7 @@ namespace VietStar.Business
             long totalPage = 1;
             using (var stream = new FileStream(fullPath, FileMode.CreateNew))
             {
-                Byte[] info = System.IO.File.ReadAllBytes($"{folder}\\{_systemConfig.ExportFolder}\\Template\\{profileType}.xlsx");
+                Byte[] info = System.IO.File.ReadAllBytes($"{folder}\\{_systemConfig.ExportTemplate}\\{profileType}.xlsx");
                 stream.Write(info, 0, info.Length);
                 using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Update))
                 {

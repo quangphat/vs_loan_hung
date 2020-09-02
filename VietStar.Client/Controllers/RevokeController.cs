@@ -42,7 +42,7 @@ namespace VietStar.Client.Controllers
             return ToResponse(result);
         }
 
-        [MyAuthorize(Permissions ="import-revoke")]
+        [MyAuthorize(Permissions ="revoke,revoke.import")]
         [HttpPost("revoke/import")]
         public async Task<IActionResult> Import()
         {

@@ -77,13 +77,22 @@ namespace VietStar.Client.Controllers
         public async Task<ActionResult> Edit(int id)
         {
             var model = await _bizCourier.GetByIdAsync(id);
-            ViewBag.isAdmin = _process.User.RoleCode == "admin" ? true : false;
+            ViewBag.isAdmin = _process.User.isAdmin;
             return View(model);
         }
 
         public async Task<IActionResult> UpdateAsync([FromBody] CourierUpdateModel model)
         {
             var result = await _bizCourier.UpdateAsync(model);
+            return ToResponse(result);
+        }
+
+        [MyAuthorize(Permissions = "courier,courier.import")]
+        [HttpPost("courier/import/{groupId}")]
+        public async Task<IActionResult> Import(int groupId)
+        {
+            var file = Request.Form.Files.FirstOrDefault();
+            var result = await _bizCourier.InsertFromFileAsync(file);
             return ToResponse(result);
         }
     }

@@ -27,6 +27,7 @@ namespace VietStar.Repository.Interfaces
         Task<CourierIndexModel> GetByIdAsync(int id);
         Task<BaseResponse<int>> CreateAsync(CourierSql model, int groupId = 0);
         Task<bool> InsertCourierAssigneeAsync(int courierId, int assigneeId);
+        Task<BaseResponse<bool>> ImportAsync(List<CourierSql> models, int groupId = 0);
     }
 }
 

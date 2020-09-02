@@ -8,5 +8,7 @@ namespace VietStar.Entities.Infrastructures
     {
         public int ImportMaxRow { get; set; } = 400;
         public string ExportFolder { get; set; } = "wwwroot\\Export";
+        public string ExportTemplate { get; set; } = "wwwroot\\ExportTemplate";
+        public string ImportTemplate { get; set; } = "wwwroot\\ImportTemplate";
     }
 }

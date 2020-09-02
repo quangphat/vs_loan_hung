@@ -346,7 +346,7 @@ function getData(page, limit, sort = "desc", sortField = "updatedtime",status, i
                 else
                     limit = parseInt(limit)
                 renderTableBody(response.data.Datas)
-                renderPageList(page, limit, totalRecord)
+                renderPaging(page, limit, totalRecord)
                
             }
             else {

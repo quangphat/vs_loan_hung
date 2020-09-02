@@ -82,7 +82,7 @@
                     new VietStar.Entities.Commons.DownloadReportPartialViewModel
                     {
                         ButtonName ="Import",
-                        FileName = "ImportRevokeDebtTemplate.xlsx"
+                        FileName = "revoke.xlsx"
                     })
                 
             </div>
@@ -340,7 +340,7 @@ function onClickPage(page) {
                     limit = parseInt(limit)
                 renderTableBody(response.data.Datas)
                 //renderGoPreviousPage(page);
-                renderPageList(page, limit, totalRecord)
+                renderPaging(page, limit, totalRecord)
 
             }
             else {
@@ -384,7 +384,7 @@ function onClickPage(page) {
             processData: false,  // tell jQuery not to process the data
             contentType: false,  // tell jQuery not to set contentType
             success: function (data) {
-                debugger
+                
                 if (data != null && data.success) {
                     swal({
                         title: "",

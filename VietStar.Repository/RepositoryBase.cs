@@ -36,7 +36,8 @@ namespace VietStar.Repository
         protected DynamicParameters GetParams<T>(T model, string[] ignoreKey = null, string outputParam = "", DbType type = DbType.Int32)
         {
             var p = new DynamicParameters();
-            p.Add(outputParam, dbType: type, direction: ParameterDirection.Output);
+            if(!string.IsNullOrWhiteSpace(outputParam))
+                p.Add(outputParam, dbType: type, direction: ParameterDirection.Output);
             var properties = model.GetType().GetProperties();
             foreach (var prop in properties)
             {
@@ -51,7 +52,8 @@ namespace VietStar.Repository
                         continue;
                     }
                 }
-                p.Add(key, value);
+                if(!string.IsNullOrWhiteSpace(key))
+                    p.Add(key, value);
             }
             return p;
         }

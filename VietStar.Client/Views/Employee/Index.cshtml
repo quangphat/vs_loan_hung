@@ -235,7 +235,7 @@
                     else
                         limit = parseInt(limit)
                     renderTableBody(response.data.Datas)
-                    renderPageList(page, limit, totalRecord)
+                    renderPaging(page, limit, totalRecord)
                     totalPage = getTotalPage(totalRecord, limit);
                     $("#dtSource_info").text("Tổng: " + totalRecord + " items");
                     $("#totalPage").text("Tổng: " + totalPage + " trang");

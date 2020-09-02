@@ -85,6 +85,7 @@
                         <div class="col-sm-4 col-xs-12 ">
                             <input type="text" class="form-control" id="freeText" placeholder="Tìm kiếm" />
                         </div>
+                       
                     </div>
                     <div class="form-group text-right">
                         <div class="col-xs-12 ">
@@ -94,35 +95,27 @@
                             <a class="btn btn-info" href="/Courier/Create">
                                 Tạo mới
                             </a>
+                           
                         </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @await Html.PartialAsync("../Shared/Partials/DownloadTemplate",
+                 new VietStar.Entities.Commons.DownloadReportPartialViewModel
+                 {
+                     ButtonName ="Import",
+                     FileName = "courier.xlsx"
+                 })
+                        </div>
+                       
                     </div>
                 </form>
                 <hr>
-                <div class=" col-sm-10">
-                    <div class="form-group">
-                        <div class="col col-sm-4">
-                            <input multiple="" class="col-sm-4" type="file" id="file" />
-                        </div>
-                        <div class="col col-sm-6">
-                            <a style="font-style: italic;" href="/Common/DownloadTemplateFile?fileName=ImportCourierTemplate.xlsx">Nhấp vào để download mẫu import</a>
-                            <a class="btn btn-sm btn-primary" id="btnImport">Import file</a>
-                            <a id="btnDownReport" onclick="DownloadReport(this)" class="btn btn-sm btn-primary "><i class="ace-icon fa fa-download"></i> Export</a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="space-6" style="background-color: #d5e3ef;"></div>
-            <div class="col-xs-12" style="margin-bottom:40px;">
-                
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12">
+                <partial name="../Shared/Partials/ExportPartial" />
                 <div class="clearfix">
                     <div class="pull-right tableTools-container"></div>
                 </div>
@@ -235,7 +228,7 @@
         formData.append('file', $('#file')[0].files[0]);
 
         $.ajax({
-            url: '/Courier/Import?groupId=' + $('#groupId').val(),
+            url: '/Courier/Import/' + $('#groupId').val(),
             type: 'POST',
             data: formData,
             processData: false,  // tell jQuery not to process the data
@@ -360,7 +353,7 @@
         url = url.replace("Search", "Index")
         window.history.pushState(url, this.title, url)
     }
-    function getData(page, limit, status, provinceId, assigneeId, groupId, isPopState = false) {
+    function processingModelSearch(page, limit, status, provinceId, assigneeId, groupId) {
         
         if (groupId == 0)
             groupId = $("#groupId").val();
@@ -371,8 +364,7 @@
         if (isNullOrWhiteSpace(status)) {
             status = getQueryStatus($("#ddlStatus"));
         }
-
-        SearchDatas('/Courier/Search', {
+        let model = {
             'freeText': !isNullOrWhiteSpace($("#freeText").val()) ? $("#freeText").val() : '',
             'fromDate': $("#fromDate").val(),
             'toDate': $("#toDate").val(),
@@ -384,19 +376,40 @@
             'assigneeId': assigneeId,
             'provinceId': $("#provinceId").val(),
             'saleCode': $('#saleCode').val()
-        }, isPopState, renderTableBody, renderPageList, onPopState);
+        }
+        return model;
+    }
+    function getData(page, limit, status, provinceId, assigneeId, groupId, isPopState = false) {
+        
+
+        SearchDatas('/Courier/Search', processingModelSearch(page, limit, status, provinceId, assigneeId, groupId), isPopState, renderTableBody, renderPaging, onPopState);
         return;
 
     }
+    function processingExport(data) {
+        var link = document.createElement("a");
+        link.href = data;
+        link.click();
+    }
+    $("#btnExport").click(function () {
+        let groupId = $("#groupId").val();
+        let provinceId = $("#provinceId").val();
+        let assigneeId = $("#assigneeId").val()
+        let status = getQueryStatus($("#ddlStatus"));
+        SearchDatas('/courier/Export', processingModelSearch(page, limit, status, provinceId, assigneeId, groupId), true, null, null, null, processingExport);
+        return;
 
+
+    })
     function renderAddress(item) {
         if (item == null || item == undefined)
             return ''
         let result = ''
-        if (!isNullOrUndefined(item.ProvinceName))
-            result += item.ProvinceName
         if (!isNullOrUndefined(item.DistrictName))
-            result += ' -' + item.DistrictName
+            result += item.DistrictName
+        if (!isNullOrUndefined(item.ProvinceName))
+            result += ' - ' +  item.ProvinceName
+        
         return result;
     }
     function renderRow(index, rowData) {
@@ -443,88 +456,6 @@
         renderPaging(page, limit, totalRecord)
     }
     
-
-    function DownloadReport(e) {
-        let data = JSON.stringify({
-            'page': page,
-            'limit': limit,
-            'provinceId':$('#provinceId').val() ,
-            'assigneeId':  $('#assigneeId').val(),
-            'freetext': $("#freeText").val(),
-            'salecode': $("#saleCode").val(),
-            'groupId': $('#groupId').val(),
-            'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
-        });
-        $.ajax({
-            traditional: true,
-            url: '/Courier/ExportFile',
-            type: "PUT",
-            contentType: "application/json; charset=utf-8",
-            data: data,
-            success: function (data) {
-                if (data.success == true) {
-                    var link = document.createElement("a");
-                    link.href = data.data;
-                    link.click();
-                }
-                else {
-                    swal({
-                        title: "",
-                        text: data.error.code,
-                        type: "error",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    });
-                }
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            },
-            complete: function () {
-
-            },
-        });
-    }
-    function DownloadReport(e) {
-        let data = JSON.stringify({
-            'page': page,
-            'limit': limit,
-            'provinceId':$('#provinceId').val() ,
-            'assigneeId':  $('#assigneeId').val(),
-            'freetext': $("#freeText").val(),
-            'salecode': $("#saleCode").val(),
-            'groupId': $('#groupId').val(),
-            'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
-        });
-        $.ajax({
-            traditional: true,
-            url: '/Courier/ExportFile',
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            data: data,
-            success: function (data) {
-                if (data.success == true) {
-                    var link = document.createElement("a");
-                    link.href = data.data;
-                    link.click();
-                }
-                else {
-                    swal({
-                        title: "",
-                        text: data.error.code,
-                        type: "error",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    });
-                }
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            },
-            complete: function () {
-
-            },
-        });
-    }
+   
 </script>
 

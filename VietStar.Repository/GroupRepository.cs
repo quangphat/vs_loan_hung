@@ -215,6 +215,16 @@ namespace VietStar.Repository
                 return BaseResponse<bool>.Create(false, GetException(ex));
             }
         }
+
+        public async Task<int> GetGroupIdByLeaderIdAsync(int leaderId)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryFirstOrDefaultAsync<int>("sp_GetMaNhomChaByMaNguoiQuanLy", new { leaderId },
+                    commandType: CommandType.StoredProcedure);
+                return result;
+            }
+        }
     }
 }
 

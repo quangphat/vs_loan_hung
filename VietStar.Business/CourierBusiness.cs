@@ -15,6 +15,10 @@ using VietStar.Repository.Interfaces;
 using VietStar.Utility;
 using static VietStar.Entities.Commons.Enums;
 using Microsoft.Extensions.DependencyInjection;
+using Dapper;
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using NPOI.SS.UserModel;
 
 namespace VietStar.Business
 {
@@ -24,16 +28,20 @@ namespace VietStar.Business
         protected readonly IEmployeeRepository _rpEmployee;
         protected readonly INoteRepository _rpNote;
         protected readonly IServiceProvider _svProvider;
+        protected readonly IGroupRepository  _rpGroup;
 
         public CourierBusiness(ICourierRepository courierRepository,
             IEmployeeRepository employeeRepository,
             INoteRepository noteRepository,
             IServiceProvider svProvider,
+            IGroupRepository groupRepository,
             IMapper mapper, CurrentProcess process) : base(mapper, process)
         {
             _rpCourier = courierRepository;
             _rpEmployee = employeeRepository;
             _rpNote = noteRepository;
+            _svProvider = svProvider;
+            _rpGroup = groupRepository;
         }
 
         public async Task<DataPaging<List<CourierIndexModel>>> GetsAsync(string freeText,
@@ -88,7 +96,7 @@ namespace VietStar.Business
             };
             var bizCommon = _svProvider.GetService<ICommonBusiness>();
 
-            var result = await bizCommon.ExportData<ExportRequestModel, CourierIndexModel>(GetDatasAsync, request, contentRootPath, "common", 4);
+            var result = await bizCommon.ExportData<ExportRequestModel, CourierIndexModel>(GetDatasAsync, request, contentRootPath, "courier", 2);
             return result;
         }
 
@@ -122,21 +130,6 @@ namespace VietStar.Business
             {
                 return ToResponse(0, "Sale không tồn tại, vui lòng kiểm tra lại");
             }
-            //var tasks = new List<Task>();
-            //var ids = new List<int>() { model.AssignId, _process.User.Id, 1 };//1 is Thainm
-            //if (!string.IsNullOrWhiteSpace(model.SaleCode))
-            //{
-
-            //    if (sale != null)
-            //    {
-            //        ids.Add(sale.Id);
-            //    }
-            //}
-            //foreach (var assigneeId in ids)
-            //{
-            //    tasks.Add(_rpCourier.InsertCourierAssigneeAsync(response.data, assigneeId));
-            //}
-            //await Task.WhenAll(tasks);
             if (!string.IsNullOrWhiteSpace(model.LastNote))
             {
 
@@ -190,6 +183,77 @@ namespace VietStar.Business
         {
             var result = await _rpCourier.GetByIdAsync(id);
             return result;
+        }
+
+        public async Task<bool> InsertFromFileAsync(IFormFile file)
+        {
+            if (file == null)
+                return ToResponse(false, Errors.file_cannot_be_null);
+            var bizCommon = _svProvider.GetService<ICommonBusiness>();
+            var inputParams = null as List<DynamicParameters>;
+            using (var stream = new MemoryStream())
+            {
+                await file.CopyToAsync(stream);
+                var results = await ReadXlsxFile(stream, _process.User.Id);
+                if (results == null || !results.Any())
+                    return ToResponse(false, "Không thành công");
+                var importResult = await _rpCourier.ImportAsync(results);
+                return ToResponse(importResult);
+            }
+            
+        }
+
+        private async Task<List<CourierSql>> ReadXlsxFile(MemoryStream stream, int createBy)
+        {
+            var workBook = WorkbookFactory.Create(stream);
+            var sheet = workBook.GetSheetAt(0);
+            var rows = sheet.GetRowEnumerator();
+            var hasData = rows.MoveNext();
+            var param = new DynamicParameters();
+            var pars = new List<DynamicParameters>();
+            int count = 0;
+            var hosos = new List<CourierSql>();
+            for (int i = 1; i < sheet.PhysicalNumberOfRows; i++)
+            {
+                try
+                {
+                    var row = sheet.GetRow(i);
+                    if (row != null)
+                    {
+                        if (row.Cells.Count > 1)
+                        {
+                            bool isNullRow = row.Cells.Count < 3 ? true : false;
+                        }
+                        var hoso = new CourierSql()
+                        {
+                            CustomerName = row.Cells[0] != null ? row.Cells[0].ToString() : "",
+                            Phone = row.Cells[1] != null ? row.Cells[1].ToString() : "",
+                            Cmnd = row.Cells[2] != null ? row.Cells[2].ToString() : "",
+                            LastNote = row.Cells[4] != null ? row.Cells[4].ToString() : "",
+                            ProvinceId = row.Cells[5] != null ? Convert.ToInt32(row.Cells[5].ToString()) : 0,
+                            DistrictId = row.Cells[6] != null ? Convert.ToInt32(row.Cells[6].ToString()) : 0,
+                            SaleCode = row.Cells[7] != null ? row.Cells[7].ToString().Trim().ToLower() : string.Empty,
+                            Status = (int)ProfileStatus.New,
+                            CreatedBy = createBy
+                        };
+                        var strAssignee = row.Cells[3] != null ? row.Cells[3].ToString() : "";
+                        var assigneeIdsStr = string.IsNullOrWhiteSpace(strAssignee) ? new List<string>() : strAssignee.Split(',').ToList();
+                        var assigneeIds = (assigneeIdsStr != null && assigneeIdsStr.Any()) ? assigneeIdsStr.Select(s => Convert.ToInt32(s)).ToList() : new List<int>();
+                        hoso.AssigneeIds = assigneeIds;
+                        hoso.AssignId = assigneeIds.FirstOrDefault();
+
+                        hoso.GroupId = await _rpGroup.GetGroupIdByLeaderIdAsync(hoso.AssignId);
+                        hosos.Add(hoso);
+                        count++;
+                    }
+                }
+                catch
+                {
+                    return hosos;
+                }
+
+            }
+            return hosos;
         }
     }
 }
