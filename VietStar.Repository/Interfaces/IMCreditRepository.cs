@@ -19,7 +19,14 @@ namespace VietStar.Repository.Interfaces
         Task<List<OptionSimple>> GetMCProfileStatusListAsync();
         Task<bool> UpdateSaleAsyncAsync(UpdateSaleModel model, int profileId);
         Task<int> CountTempProfilesAsync(string freeText, int userId, string status = null);
-        Task<List<ProfileSearchSql>> GetTempProfilesAsync(int page, int limit, string freeText, int userId, string status = null);
+        Task<List<TempProfileIndexModel>> GetTempProfilesAsync(int userId, 
+            DateTime? fromDate
+            , DateTime? toDate
+            , int dateType = 1,
+            int page =1, 
+            int limit =10, 
+            string freeText = null, 
+            string status = null);
         Task<BaseResponse<int>> CreateDraftProfileAsync(MCredit_TempProfile model);
         Task<BaseResponse<bool>> UpdateDraftProfileAsync(MCredit_TempProfile model);
         Task<BaseResponse<bool>> UpdateMCIdAsync(int id, string mcId, int updatedBy);

@@ -27,7 +27,7 @@ namespace VietStar.Business
         protected readonly INoteRepository _rpNote;
         protected readonly ILogRepository _rpLog;
         protected readonly IFileProfileRepository _rpFile;
-        protected readonly IServiceProvider _serviceProvider;
+        protected readonly IServiceProvider _svProvider;
         public MCreditBusiness(IMCreditRepository mcreditRepository,
             IMCreditService mCreditService,
             INoteRepository noteRepository,
@@ -40,7 +40,7 @@ namespace VietStar.Business
             _svMcredit = mCreditService;
             _rpNote = noteRepository;
             _rpLog = logRepository;
-            _serviceProvider = serviceProvider;
+            _svProvider = serviceProvider;
             _rpFile = fileProfileRepository;
         }
 
@@ -114,13 +114,22 @@ namespace VietStar.Business
             return result.data;
         }
 
-        public async Task<DataPaging<List<ProfileSearchSql>>> SearchsTemsAsync(string freeText, string status, int page = 1, int limit = 20)
+        public async Task<DataPaging<List<TempProfileIndexModel>>> SearchsTemsAsync(
+            DateTime? fromDate
+            , DateTime? toDate
+            , int dateType = 1,
+            string freeText = null, 
+            string status = null, 
+            int page = 1, 
+            int limit = 20)
         {
             page = page <= 0 ? 1 : page;
-            var profiles = await _rpMCredit.GetTempProfilesAsync(page, limit, freeText, _process.User.Id, status);
+            fromDate = fromDate.HasValue ? fromDate.Value.ToStartDateTime() : DateTime.Now.ToStartDateTime();
+            toDate = toDate.HasValue ? toDate.Value.ToEndDateTime() : DateTime.Now.ToEndDateTime();
+            var profiles = await _rpMCredit.GetTempProfilesAsync(_process.User.Id, fromDate, toDate, dateType,page, limit, freeText, status);
             if (profiles == null || !profiles.Any())
             {
-                return DataPaging.Create(null as List<ProfileSearchSql>, 0);
+                return DataPaging.Create(null as List<TempProfileIndexModel>, 0);
             }
             return DataPaging.Create(profiles, profiles[0].TotalRecord);
         }
@@ -361,7 +370,7 @@ namespace VietStar.Business
             }
             if (profile == null || string.IsNullOrWhiteSpace(profile.data.MCId))
                 return ToResponse<MCResponseModelBase>(null, "Hồ sơ không tồn tại hoặc chưa được gửi qua MCredit");
-            var bizMedia = _serviceProvider.GetService<IMediaBusiness>();
+            var bizMedia = _svProvider.GetService<IMediaBusiness>();
 
             var zipFile = await bizMedia.ProcessFilesToSendToMC(profile.data.Id, Utility.FileUtils._profile_parent_folder);
             var sendFileResult = await _svMcredit.SendFiles(zipFile, profile.data.MCId);
@@ -429,7 +438,7 @@ namespace VietStar.Business
 
                 await _rpFile.UpdateFileMCProfileByIdAsync(model.Id, result.data.id);
 
-                var bizMedia = _serviceProvider.GetService<IMediaBusiness>();
+                var bizMedia = _svProvider.GetService<IMediaBusiness>();
 
                 var zipFile = await bizMedia.ProcessFilesToSendToMC(profile.data.Id, Utility.FileUtils._profile_parent_folder);
 
@@ -474,6 +483,38 @@ namespace VietStar.Business
                 result.data.obj.ReasonName = JsonConvert.SerializeObject(result.data.obj.Reason);
             }
             return result.data.obj;
+        }
+
+        public async Task<string> ExportAsync(string contentRootPath, DateTime? fromDate
+            , DateTime? toDate
+            , int dateType = 1
+            , string status = null
+            , string freeText = null
+            , int page = 1
+            , int limit = 20)
+        {
+            fromDate = fromDate.HasValue ? fromDate.Value.ToStartDateTime() : DateTime.Now.ToStartDateTime();
+            toDate = toDate.HasValue ? toDate.Value.ToEndDateTime() : DateTime.Now.ToEndDateTime();
+            var request = new ExportRequestModel
+            {
+                userId = _process.User.Id,
+                page = page,
+                limit = limit,
+                fromDate = fromDate.Value,
+                toDate = toDate.Value,
+                dateType = dateType,
+                status = status,
+                freeText = freeText
+            };
+            var bizCommon = _svProvider.GetService<ICommonBusiness>();
+            var result = await bizCommon.ExportData<ExportRequestModel, TempProfileIndexModel>(GetDatasAsync, request, contentRootPath, "mcredit", 2);
+            return result;
+        }
+
+        private async Task<List<TempProfileIndexModel>> GetDatasAsync(ExportRequestModel request)
+        {
+            var result = await _rpMCredit.GetTempProfilesAsync(_process.User.Id, request.fromDate, request.toDate, request.dateType, request.page, request.limit, request.freeText, request.status);
+            return result;
         }
     }
 }

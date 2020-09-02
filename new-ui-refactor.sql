@@ -1292,9 +1292,12 @@ end
 
 ALTER procedure [dbo].[sp_MCredit_TempProfile_Gets]
 (
-@freeText nvarchar(30),
+@fromDate DATETIME = NULL,
+@toDate DATETIME = NULL,
+@dateType INT=2,
+@freeText nvarchar(30) ='',
 @userId int,
-@status varchar(20),
+@status varchar(20) =NULL,
 @page int =1,
 @limit_tmp int = 10
 )
@@ -1338,13 +1341,21 @@ begin
 set @where += ' and mc.Status in ('+ @status +')'; 
 end
 set @where +=  ' and @userId in (select * from fn_GetUserIDCanViewMyProfile (mc.CreatedBy)) '
-
+if(@dateType =1)
+begin
+	set @where += ' and hc.CreatedTime between @fromDate and @toDate'
+end
+else
+begin
+	set @where += ' and hc.UpdatedTime between @fromDate and @toDate'
+end
 
 set @where +=' order by mc.UpdatedTime desc'; 
 set @where += ' offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
 set @mainClause = @mainClause +  @where
-set @params =N' @offset int, @limit int, @userId int';
-EXECUTE sp_executesql @mainClause,@params,  @offset = @offset, @limit = @limit_tmp, @userId = @userId
+set @params =N' @offset int, @limit int, @userId int, @fromDate datetime, @toDate datetime, @dateType int';
+EXECUTE sp_executesql @mainClause,@params,  @offset = @offset, @limit = @limit_tmp, @userId = @userId,
+@fromDate = @fromDate, @toDate = @toDate, @dateType = @dateType;
 print @mainClause;
 end
 

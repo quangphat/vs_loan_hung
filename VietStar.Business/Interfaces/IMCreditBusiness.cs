@@ -17,7 +17,20 @@ namespace VietStar.Business.Interfaces
         Task<CheckCICResponseModel> CheckCICAsync(CheckCICModel model);
         Task<CheckDupResponseModel> CheckDupAsync(StringModel model);
         Task<CheckStatusResponseModel> CheckStatusAsync(StringModel model);
-        Task<DataPaging<List<ProfileSearchSql>>> SearchsTemsAsync(string freeText, string status, int page = 1, int limit = 20);
+        Task<DataPaging<List<TempProfileIndexModel>>> SearchsTemsAsync(DateTime? fromDate
+            , DateTime? toDate
+            , int dateType = 1,
+            string freeText = null,
+            string status = null,
+            int page = 1,
+            int limit = 20);
+        Task<string> ExportAsync(string contentRootPath, DateTime? fromDate
+            , DateTime? toDate
+            , int dateType = 1
+            , string status = null
+            , string freeText = null
+            , int page = 1
+            , int limit = 20);
         Task<ProfileSearchResponse> SearchsAsync(string freeText, string status, string type, int page = 1);
         Task<int> CreateDraftAsync(MCredit_TempProfileAddModel model);
         Task<bool> AddRefuseReasonToNoteAsync(int profileId, string type);

@@ -11,6 +11,7 @@ using VietStar.Entities.Mcredit;
 using McreditServiceCore;
 using McreditServiceCore.Interfaces;
 using VietStar.Entities.Commons;
+using Microsoft.AspNetCore.Hosting;
 
 namespace VietStar.Client.Controllers
 {
@@ -19,12 +20,15 @@ namespace VietStar.Client.Controllers
     {
         protected readonly IMCreditBusiness _bizMCredit;
         protected readonly IMCreditService _svMcredit;
-        public MCreditController(IMCreditBusiness mcreditBusiness,
+        protected readonly IHostingEnvironment _hosting;
+        public MCreditController(IMCreditBusiness mcreditBusiness
+            , IHostingEnvironment hosting,
             IMCreditService mCreditService,
             CurrentProcess process) : base(process)
         {
             _bizMCredit = mcreditBusiness;
             _svMcredit = mCreditService;
+            _hosting = hosting;
         }
 
         public async Task<IActionResult> AuthenMC(AuthenMcRequestModel model)
@@ -96,9 +100,15 @@ namespace VietStar.Client.Controllers
             return View();
         }
 
-        public async Task<IActionResult> SearchTemps(string freeText, string status, int page = 1, int limit = 20)
+        public async Task<IActionResult> SearchTemps(DateTime? fromDate
+            , DateTime? toDate
+            , int dateType = 1,
+            string freeText = null,
+            string status = null,
+            int page = 1,
+            int limit = 20)
         {
-            var result = await _bizMCredit.SearchsTemsAsync(freeText, status, page, limit);
+            var result = await _bizMCredit.SearchsTemsAsync(fromDate,toDate, dateType ,freeText, status, page, limit);
             return ToResponse(result);
         }
 
@@ -108,7 +118,7 @@ namespace VietStar.Client.Controllers
             return View();
         }
 
-        [MyAuthorize(Permissions = "mcredit-profile")]
+        [MyAuthorize(Permissions = "mcprofile")]
         public async Task<IActionResult> Search(string freeText, string status, string type, int page = 1)
         {
             var result = await _bizMCredit.SearchsAsync(freeText, status, type, page);
@@ -173,18 +183,36 @@ namespace VietStar.Client.Controllers
             return ToResponse(result);
         }
 
-        [MyAuthorize(Permissions = "mcredit-submit")]
+        [MyAuthorize(Permissions = "mcprofile.submit")]
         public async Task<IActionResult> SubmitToMCredit([FromBody]MCredit_TempProfileAddModel model)
         {
             var result = await _bizMCredit.SubmitToMCreditAsync(model);
             return ToResponse(result);
         }
 
-        [MyAuthorize(Permissions = "mcredit-profile")]
+        [MyAuthorize(Permissions = "mcprofile")]
         public async Task<ActionResult> MCreditProfile(int id)
         {
             var result = await _bizMCredit.GetMCreditProfileByIdAsync(id);
             return View(result);
+        }
+
+        [MyAuthorize(Permissions = "mcprofile,mcprofile.export")]
+        public async Task<IActionResult> Export(DateTime? fromDate
+            , DateTime? toDate
+            , int dateType = 1
+            , int groupId = 0
+            , int memberId = 0
+            , string status = null
+            , string freeText = null
+            , int page = 1
+            , int limit = 20
+            , string sort = "desc"
+            , string sortField = "updatedTime")
+        {
+            var result = await _bizMCredit.ExportAsync(_hosting.ContentRootPath, fromDate, toDate, dateType, status, freeText, page, limit);
+
+            return ToResponse(result);
         }
     }
 }

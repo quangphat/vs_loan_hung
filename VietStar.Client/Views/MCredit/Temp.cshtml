@@ -15,6 +15,39 @@
     <div class="page-content" id="panel_body">
         <form class="form-horizontal">
             <div class="box-body">
+                <div class="form-group">
+                    <label class="col-sm-1  col-xs-12 control-label no-padding-right">Từ ngày</label>
+                    <div class="col-sm-4  col-xs-12 ">
+                        <div class="input-group date">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            <input type="date" data-date-inline-picker="true" class="form-control pull-right" id="fromDate">
+                        </div>
+                    </div>
+                    <label class="col-sm-1  col-xs-12 control-label no-padding-right">Đến ngày</label>
+                    <div class="col-sm-4">
+                        <div class="input-group date">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            <input type="date" class="form-control pull-right" id="toDate">
+                        </div>
+                    </div>
+                    <div class="col-sm-offset-1 col-sm-10 no-padding-right">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="radio-ngay" id="optionsRadios1" value="1" checked="">
+                                Ngày tạo
+                            </label>
+                            <label style="margin-left:20px">
+                                <input type="radio" name="radio-ngay" id="optionsRadios1" value="2" checked="">
+                                Ngày cập nhật
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
                 <div class="form-group" data-select2-id="25">
                     <label class="col-sm-1 control-label no-padding-right">Trạng thái</label>
                     <div class="col-sm-9">
@@ -37,18 +70,19 @@
                         <a class="btn btn-primary" id="btnSearch">
                             Tìm kiếm
                         </a>
-                        <a class="btn btn-primary" href="/MCredit/Create">
+                        <a class="btn btn-info" href="/MCredit/Create">
                             Tạo mới
                         </a>
                     </div>
                 </div>
-               
+
             </div>
             <!-- /.box-body -->
             <!-- /.box-footer -->
         </form>
         <div class="row">
             <div class="col-sm-12">
+                <partial name="../Shared/Partials/ExportPartial" />
                 <div class="clearfix">
                     <div class="pull-right tableTools-container"></div>
                 </div>
@@ -150,19 +184,19 @@
         bindQueries(getData);
     });
     function bindQueries(callBack = null, isPopState = false) {
-        //let fromDate = queries.get("fromDate");
-        //if (isNullOrWhiteSpace(fromDate)) {
-        //    fromDate = getDateSpecific(14);
-        //}
-        //$("#fromDate").val(fromDate)
-        //var toDate = queries.get("toDate");
-        //if (isNullOrWhiteSpace(toDate)) {
-        //    toDate = new Date();
-        //    toDate = FormatDateTimeDMY(toDate, 'YYYY-MM-DD')
-        //}
-        //$("#toDate").val(toDate)
-        //var dateType = queries.get("dateType");
-        //setCheckedValueOfRadioButtonGroup("radio-ngay", dateType)
+        let fromDate = queries.get("fromDate");
+        if (isNullOrWhiteSpace(fromDate)) {
+            fromDate = getDateSpecific(14);
+        }
+        $("#fromDate").val(fromDate)
+        var toDate = queries.get("toDate");
+        if (isNullOrWhiteSpace(toDate)) {
+            toDate = new Date();
+            toDate = FormatDateTimeDMY(toDate, 'YYYY-MM-DD')
+        }
+        $("#toDate").val(toDate)
+        var dateType = queries.get("dateType");
+        setCheckedValueOfRadioButtonGroup("radio-ngay", dateType)
 
         $("#freeText").val(queries.get("freeText"));
         page = queries.get("page");
@@ -194,14 +228,13 @@
         }
 
     }
-    $("#freeText").on("keyup", function (event) {
+    $("#freeText,#fromDate, #toDate").on("keyup", function (event) {
         if (event.keyCode === 13) {
             event.preventDefault();
             getData(1, limit, null, null, getQueryStatus($("#ddlStatus")));
         }
     });
-    $('#btn_search').click(function (e) {
-        showBlock($('#panel_body'), strLoading);
+    $('#btnSearch').click(function (e) {
         getData(1, limit);
     });
 
@@ -303,77 +336,45 @@
         });
 
     }
+    function processingModelSearch(page, limit, status) {
 
-function getData(page, limit, sort = "desc", sortField = "updatedtime",status, isPopState = false)
-{
-    if (isNullOrWhiteSpace(status)) {
-        status = getQueryStatus($("#ddlStatus"));
-    }
-
-    showBlock($('#panel_body'), loadingMsg);
-
-    $.ajax( {
-            url: '/MCredit/SearchTemps',
-            type: "GET",
-            contentType: "application/json",
-        data: {
+        
+        if (isNullOrWhiteSpace(status)) {
+            status = getQueryStatus($("#ddlStatus"));
+        }
+        let model = {
             'page': page,
             'limit': limit,
-           
-            'freeText': !isNullOrWhiteSpace($("#freeText").val()) ? $("#freeText").val():'', 
-            'status': removeDuplicate(status),
-            //'sort': sort,
-            //'sortField': sortField
-        },
-        success: function (response) {
-            if (response.success == true) {
-                debugger
-                totalRecord = response.data.TotalRecord;
-                var search = this.url.replace("/MCredit/Temp", "");
-                search = search.replace("/MCredit/SearchTemps","")
-                queries = new URLSearchParams(search)
-
-                page = queries.get("page");
-                if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
-                    page = 1;
-                else
-                    page = parseInt(page)
-                limit = queries.get("limit")
-
-
-                if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
-                    limit = 10;
-                else
-                    limit = parseInt(limit)
-                renderTableBody(response.data.Datas)
-                renderPaging(page, limit, totalRecord)
-               
-            }
-            else {
-                swal({
-                    title: "",
-                    text: response.error.code,
-                    type: "error",
-                    timer: 4000,
-                    showConfirmButton: true,
-                });
-            }
-
-        },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            },
-            complete: function () {
-                $('#panel_body').unblock();
-                if (!isPopState) {
-                    var requestUrl = this.url.replace("SearchTemps", "Temp")
-                    window.history.pushState(requestUrl, this.title, requestUrl)
-                }
-
+            'fromDate': $("#fromDate").val(),
+            'toDate': $("#toDate").val(),
+            'freeText': !isNullOrWhiteSpace($("#freeText").val()) ? $("#freeText").val() : '',
+            'status': removeDuplicate(status)
         }
+        return model;
+    }
+    function onPopState(url) {
+        url = url.replace("SearchTemps", "Temp")
+        window.history.pushState(url, this.title, url)
+    }
+    function renderPageList(page, limit, totalRecord) {
+        renderPaging(page, limit, totalRecord)
+    }
+function getData(page, limit,status, isPopState = false)
+{
+    SearchDatas('/mcredit/SearchTemps', processingModelSearch(page, limit, status), isPopState, renderTableBody, renderPageList, onPopState);
+    return;
+    }
+    $("#btnExport").click(function () {
+        let status = getQueryStatus($("#ddlStatus"));
+        SearchDatas('/mcredit/Export', processingModelSearch(1, 20, status), true, null, null, null, processingExport);
+        return;
+
+
     })
-
-}
-
+    function processingExport(data) {
+        var link = document.createElement("a");
+        link.href = data;
+        link.click();
+    }
 </script>
 

@@ -323,12 +323,13 @@ namespace VietStar.Repository
         }
 
         public async Task<BaseResponse<bool>> UpdateMCIdAsync(int id, string mcId, int updatedBy)
-        { 
+        {
             try
             {
                 using (var con = GetConnection())
                 {
-                    await con.ExecuteAsync("sp_MCProfile_UpdateMcId", new {
+                    await con.ExecuteAsync("sp_MCProfile_UpdateMcId", new
+                    {
                         id,
                         mcId,
                         updatedBy
@@ -355,24 +356,34 @@ namespace VietStar.Repository
 
             try
             {
-                
+
                 using (var con = GetConnection())
                 {
                     await con.ExecuteAsync("sp_update_MCredit_TempProfile", param, commandType: CommandType.StoredProcedure);
                     return BaseResponse<bool>.Create(true);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BaseResponse<bool>.Create(false, GetException(e));
             }
         }
-        public async Task<List<ProfileSearchSql>> GetTempProfilesAsync(int page, int limit, string freeText, int userId, string status = null)
+        public async Task<List<TempProfileIndexModel>> GetTempProfilesAsync(int userId,
+            DateTime? fromDate,
+            DateTime? toDate,
+            int dateType = 1,
+            int page = 1,
+            int limit = 10,
+            string freeText = null,
+            string status = null)
         {
             using (var con = GetConnection())
             {
-                var result = await con.QueryAsync<ProfileSearchSql>("sp_MCredit_TempProfile_Gets", new
+                var result = await con.QueryAsync<TempProfileIndexModel>("sp_MCredit_TempProfile_Gets", new
                 {
+                    fromDate,
+                    toDate,
+                    dateType,
                     freeText,
                     userId,
                     page,
@@ -404,6 +415,8 @@ namespace VietStar.Repository
                 return result == 1 ? true : false;
             }
         }
+
+        
     }
 }
 
