@@ -382,7 +382,7 @@
     function getData(page, limit, status, provinceId, assigneeId, groupId, isPopState = false) {
         
 
-        SearchDatas('/Courier/Search', processingModelSearch(page, limit, status, provinceId, assigneeId, groupId), isPopState, renderTableBody, renderPaging, onPopState);
+        SearchDatas('/Courier/Search', processingModelSearch(page, limit, status, provinceId, assigneeId, groupId), isPopState, renderTableBody, renderPageList, onPopState);
         return;
 
     }
