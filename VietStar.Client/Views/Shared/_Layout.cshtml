@@ -269,7 +269,7 @@
                     </li>
                     @if (VietStar.Entities.Infrastructures.CurrentProcess.CurrentUser.OrgId == 1)
                     {
-                        <li class="treeview" id="profile">
+                        <li class="treeview" id="profile" onclick="redirectTo('/profile/Index')">
                             <a href="#">
                                 <i class="fa fa-file"></i> <span>Hồ sơ</span>
                                 <span class="pull-right-container">
@@ -351,18 +351,11 @@
                                 <li id="Groups/Config"><a href="/Groups/Config"><i class="fa fa-circle-o"></i> Cấu hình duyệt</a></li>
                             </ul>
                         </li>
-                        <li class="treeview">
-                            <a href="#">
-                                <i class="fa fa-product-hunt"></i> <span>MÃ AAP</span>
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Quản lý mã</a></li>
-                                <li><a href="/Profile/Index"><i class="fa fa-circle-o"></i> Import</a></li>
+                        <li class="treeview" id="product" onclick="redirectTo('/revoke/Index')">
+                            <a href="/revoke/Index">
+                                <i class="fa fa-product-hunt"></i> <span>Sản phẩm vay</span>
 
-                            </ul>
+                            </a>
                         </li>
 
                     }
@@ -370,7 +363,7 @@
                     {
                         <li class="treeview" id="revoke" onclick="redirectTo('/revoke/Index')">
                             <a href="/revoke/Index">
-                                <i class="fa fa-sellsy"></i> <span>Thu hồi nợ</span>
+                                <i class="fa fa-refresh"></i> <span>Thu hồi nợ</span>
                                 
                             </a>
                             
@@ -378,7 +371,7 @@
                     }
                     <li class="treeview" id="employees">
                         <a href="#">
-                            <i class="fa fa-sellsy"></i> <span>Nhân sự</span>
+                            <i class="fa fa-user"></i> <span>Nhân sự</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
