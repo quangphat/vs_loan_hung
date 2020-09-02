@@ -28,7 +28,8 @@ namespace VietStar.Entities.Commons
             Courier = 2,
             MCredit = 3,
             Company = 4,
-            RevokeDebt = 5
+            RevokeDebt = 5,
+            Product = 10
         }
         public enum NoteType
         {

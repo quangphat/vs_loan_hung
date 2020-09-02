@@ -11,6 +11,8 @@ namespace VietStar.Business.Infrastructures
         public static void RegisterBusiness(this IServiceCollection services)
         {
             services.AddScoped<IMediaBusiness, MediaBusiness>();
+            services.AddScoped<IPartnerBusiness, PartnerBusiness>();
+            services.AddScoped<IProductBusiness, ProductBusiness>();
             services.AddScoped<IRevokeDebtBusiness, RevokeDebtBusiness>();
             services.AddScoped<IMCreditBusiness, MCreditBusiness>();
             services.AddScoped<ICourierBusiness, CourierBusiness>();

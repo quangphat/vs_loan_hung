@@ -1343,11 +1343,11 @@ end
 set @where +=  ' and @userId in (select * from fn_GetUserIDCanViewMyProfile (mc.CreatedBy)) '
 if(@dateType =1)
 begin
-	set @where += ' and hc.CreatedTime between @fromDate and @toDate'
+	set @where += ' and mc.CreatedTime between @fromDate and @toDate'
 end
 else
 begin
-	set @where += ' and hc.UpdatedTime between @fromDate and @toDate'
+	set @where += ' and mc.UpdatedTime between @fromDate and @toDate'
 end
 
 set @where +=' order by mc.UpdatedTime desc'; 
@@ -1930,3 +1930,147 @@ INSERT INTO ExportFramework (ColPosition, FieldName, ProfileType, OrgId) VALUES
 
 
 ------------
+
+INSERT INTO ExportFramework (ColPosition, FieldName, ProfileType, OrgId) VALUES
+('A','Id', 'mcredit' ,1),
+('B','CustomerName', 'mcredit' ,1),
+('C','IdNumber', 'mcredit' ,1),
+('D','Phone', 'mcredit' ,1),
+('E','StatusName', 'mcredit' ,1),
+('F','SaleName', 'mcredit' ,1),
+('G','ProductName', 'mcredit' ,1),
+('H','LoanPeriodName', 'mcredit' ,1),
+('I','LastNote', 'mcredit' ,1),
+('J','CreatedUser', 'mcredit' ,1),
+('K','CreatedTime', 'mcredit' ,1),
+('L','UpdatedUser', 'mcredit' ,1),
+('M','UpdatedTime', 'mcredit' ,1)
+
+
+-------------
+
+alter PROCEDURE sp_Product_Gets(
+@page int =1,
+@limit_tmp int = 10,
+@partnerId INT =0,
+@orgId INT =0
+)
+AS  BEGIN
+declare @offset int = 0;
+set @offset = (@page-1)*@limit_tmp;
+declare @mainClause nvarchar(max);
+declare @params nvarchar(300);
+declare @where  nvarchar(1000) = ' where isnull(p.IsDeleted,0) = 0';
+set @mainClause = 'select count(*) over() as TotalRecord, p.Id, p.Ma_Doi_Tac as PartnerId, p.Ma as Code, p.Ten as ProductName, p.Ngay_Tao as CreatedTime, dt.Ten as PartnerName 
+from San_Pham_Vay p left join Doi_Tac dt on p.Ma_Doi_Tac = dt.Id'
+IF(@partnerId>0)
+SET @where+=' and dt.Id = @partnerId'
+
+SET @where+=' order by p.Ngay_Tao desc offset @offset ROWS FETCH NEXT @limit ROWS ONLY'
+set @mainClause +=   @where
+set @params =N'@partnerId int,@offset int, @limit int';
+EXECUTE sp_executesql @mainClause,@params, @partnerId = @partnerId,@offset = @offset, @limit = @limit_tmp;
+print @mainClause;
+end
+
+-----------------
+
+ALTER TABLE dbo.SAN_PHAM_VAY ADD OrgId INT
+ 
+
+alter PROCEDURE sp_Product_Insert
+(
+@id int  OUT,
+@partnerId int,
+@code nvarchar(50),
+@productName nvarchar(200),
+@createdBy int,
+@orgId int
+)
+AS  BEGIN
+INSERT INTO dbo.SAN_PHAM_VAY
+(
+    Ma_Doi_Tac,
+    Ma,
+    Ten,
+    Ngay_Tao,
+    Ma_Nguoi_Tao,
+    OrgId,
+    IsDeleted
+)
+VALUES
+(   @partnerId,         -- Ma_Doi_Tac - int
+    @code,       -- Ma - nvarchar(50)
+    @productName,       -- Ten - nvarchar(200)
+    GETDATE(), -- Ngay_Tao - datetime
+    @createdBy,         -- Ma_Nguoi_Tao - int
+    @orgId,         -- Loai - int
+    0       -- IsDeleted - bit
+    )
+	SET @id=@@IDENTITY;
+END
+
+----------
+
+alter PROCEDURE sp_Product_Update
+(
+@id INT,
+@partnerId int,
+@code nvarchar(50),
+@productName nvarchar(200),
+@updatedBy int
+)
+AS  BEGIN
+UPDATE dbo.SAN_PHAM_VAY SET Ma_Doi_Tac = @partnerId, Ma = @code, Ten = @productName
+WHERE ID = @id
+end
+----CREATEEDUREEE sp_Product_Delete
+CREATE PROCEDURE sp_product_GetById(@id INT)
+AS BEGIN
+select  p.Id, p.Ma_Doi_Tac as PartnerId, p.Ma as Code, p.Ten as ProductName, p.Ngay_Tao as CreatedTime, dt.Id as PartnerIFFROM
+from San_Pham_Vay p left join Doi_Tac dt on p.Ma_Doi_Tac = dt.Id
+WHERE p.ID = @id
+
+END
+
+
+------
+
+CREATE PROCEDURE sp_Product_Delete
+(
+@id INT,
+@updateBy int
+)
+AS  BEGIN
+UPDATE dbo.SAN_PHAM_VAY SET IsDeleted =1
+WHERE ID = @id
+end
+
+----------
+
+
+INSERT INTO dbo.ImportExcel
+(
+    Name,
+    Position,
+    ImportType,
+    ValueType
+)
+VALUES
+(   'ProductName', -- Name - varchar(100)
+    0,  -- Position - int
+    10,  -- ImportType - int
+    'string'  -- ValueType - varchar(20)
+    ),
+(   'Code', -- Name - varchar(100)
+    1,  -- Position - int
+    10,  -- ImportType - int
+    'string'  -- ValueType - varchar(20)
+    ),
+	(   'PartnerId', -- Name - varchar(100)
+    2,  -- Position - int
+    10,  -- ImportType - int
+    'int'  -- ValueType - varchar(20)
+    )
+
+-----------

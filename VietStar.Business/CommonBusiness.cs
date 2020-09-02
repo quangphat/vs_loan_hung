@@ -84,7 +84,7 @@ namespace VietStar.Business
 
         public async Task<List<OptionSimple>> GetProductsAsync(int partnerId)
         {
-            var result = await _rpProduct.GetsAync(partnerId, _process.User.OrgId);
+            var result = await _rpProduct.GetByPartnerIdsAync(partnerId, _process.User.OrgId);
             return result;
         }
 
@@ -169,7 +169,7 @@ namespace VietStar.Business
             return $"/media/download-export?fileName={fileName}&filePath={fullPath}";
         }
 
-        public async Task<List<DynamicParameters>> ReadXlsxFileAsync(MemoryStream stream, ProfileType profileType, string configCode)
+        public async Task<List<DynamicParameters>> ReadXlsxFileAsync(MemoryStream stream, ProfileType profileType, int ignoreRow, int minRowRequire)
         {
 
             var importExelFrameWork = await _rpCommon.GetImportFrameworkByTypeAsync((int)profileType);
@@ -184,11 +184,11 @@ namespace VietStar.Business
             var param = new DynamicParameters();
             var pars = new List<DynamicParameters>();
             int skipCell = 0;
-            if (sheet.PhysicalNumberOfRows - 2 > _systemConfig.ImportMaxRow)
+            if (sheet.PhysicalNumberOfRows - ignoreRow > _systemConfig.ImportMaxRow)
             {
                 return ToResponse<List<DynamicParameters>>(null, $"Số dòng của file không được nhiều hơn {_systemConfig.ImportMaxRow}");
             }
-            for (int i = 2; i < sheet.PhysicalNumberOfRows; i++)
+            for (int i = ignoreRow; i < sheet.PhysicalNumberOfRows; i++)
             {
                 try
                 {
@@ -198,7 +198,7 @@ namespace VietStar.Business
                     {
                         if (row.Cells.Count > 1)
                         {
-                            bool isNullRow = row.Cells.Count < 20 ? true : false;
+                            bool isNullRow = row.Cells.Count < minRowRequire ? true : false;
                             if (isNullRow)
                                 continue;
                         }

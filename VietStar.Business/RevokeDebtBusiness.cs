@@ -64,7 +64,7 @@ namespace VietStar.Business
             using (var stream = new MemoryStream())
             {
                 await file.CopyToAsync(stream);
-                inputParams = await bizCommon.ReadXlsxFileAsync(stream, Entities.Commons.Enums.ProfileType.RevokeDebt, Constants.revoke_debt_max_row_import);
+                inputParams = await bizCommon.ReadXlsxFileAsync(stream, Entities.Commons.Enums.ProfileType.RevokeDebt,2,20);
             }
             if (inputParams == null)
             {

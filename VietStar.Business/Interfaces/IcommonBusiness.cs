@@ -20,7 +20,7 @@ namespace VietStar.Business.Interfaces
             int rowIndex)
             where TData : Pagination
             where TRequest : ExportRequestModelBase;
-        Task<List<DynamicParameters>> ReadXlsxFileAsync(MemoryStream stream, ProfileType profileType, string configCode);
+        Task<List<DynamicParameters>> ReadXlsxFileAsync(MemoryStream stream, ProfileType profileType, int ignoreRow, int minRowRequire);
         Task<List<OptionSimple>> GetPartnerscheckDupAsync();
         Task<List<OptionSimple>> GetPartnersAsync();
         Task<List<OptionSimple>> GetProductsAsync(int partnerId);
