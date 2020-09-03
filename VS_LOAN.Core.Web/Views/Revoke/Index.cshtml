@@ -489,7 +489,7 @@
 			    'loaiNgay': $('input[name="radio-ngay"]:checked').val(),
                 'page': page,
                 'limit': limit,
-				'ddPlrocess': $('#ddlProcess').val(),
+				'ddlProcess': $('#ddlProcess').val(),
                 'assigneeId':(!isNullOrWhiteSpace($("#ddlAssignee").val()) || isNullOrWhiteSpace(assigneeId)) ? (!isNullOrWhiteSpace($("#ddlAssignee").val()) ? $("#ddlAssignee").val().toString():"") : "",
                 'freetext': $("#txtFreeText").val(),
                 'groupId': (isNaN(groupId) || groupId == 0 || isNullOrUndefined(groupId)) ? $('#ddlGroup').val() : groupId,
