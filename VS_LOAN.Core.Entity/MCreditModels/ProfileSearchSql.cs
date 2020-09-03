@@ -22,5 +22,12 @@ namespace VS_LOAN.Core.Entity.MCreditModels
         public string Phone { get; set; }
         public int TotalRecord { get; set; }
         public string StatusName { get; set; }
+
+        public string McNote { get; set; }
+
+        public ProfileSearchSql ( )
+        {
+            McNote = string.Empty;
+        }
     }
 }

@@ -23,6 +23,10 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class MCreditController : BaseController
     {
+        private static IDictionary<int, string> _ignore_duplicate_documents = new Dictionary<int, string> {
+            { 24, "ElectricBill" },
+            { 29, "SalaryStatement" }
+        };
         protected readonly IMCeditRepository _rpMCredit;
         protected readonly IMCreditService _svMCredit;
         protected readonly INoteRepository _rpNote;
@@ -133,10 +137,10 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             return View();
         }
-     
-            public async Task<JsonResult> SearchTemps(string freeText, string status, int page = 1, int limit = 20, string fromDate = null, string toDate = null, int loaiNgay = 0, int manhom = 0,
 
-              int mathanhvien = 0)
+        public async Task<JsonResult> SearchTemps(string freeText, string status, int page = 1, int limit = 20, string fromDate = null, string toDate = null, int loaiNgay = 0, int manhom = 0,
+
+          int mathanhvien = 0)
         {
             page = page <= 0 ? 1 : page;
 
@@ -315,9 +319,34 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 status = temp.Status;
             }
+
+
+
             if (temp.Status != status)
             {
                 var result = await _rpMCredit.UpdateTempProfileStatusAsync(temp.Id, status);
+                if (mcProfile.obj.Reason != null)
+                {
+                    var reasonName = JsonConvert.SerializeObject(mcProfile.obj.Reason);
+                    await _rpNote.AddNoteAsync(new GhichuModel
+                    {
+                        HosoId = profileId,
+                        CommentTime = DateTime.Now,
+                        Noidung = reasonName,
+                        TypeId = (int)NoteType.MCreditTemp,
+                        UserId = GlobalData.User.IDUser
+                    });
+                    await _rpLog.InsertLog($"AddReasonToNote-{profileId}", reasonName);
+                }
+                await _rpNote.AddNoteAsync(new GhichuModel
+                {
+                    HosoId = profileId,
+                    CommentTime = DateTime.Now,
+                    Noidung = mcProfile.obj.Refuse,
+                    TypeId = (int)NoteType.MCreditMCECheck,
+                    UserId = GlobalData.User.IDUser
+                });
+                await _rpLog.InsertLog($"AddRefuseToNote-{profileId}", mcProfile.obj.Refuse);
                 return ToJsonResponse(result);
             }
             return ToJsonResponse(false);
@@ -329,7 +358,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var profile = _mapper.Map<MCredit_TempProfile>(model);
             profile.UpdatedBy = GlobalData.User.IDUser;
             var isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
-            profile.Status = isAdmin ? model.Status: (int)MCreditProfileStatus.Submit;
+            profile.Status = isAdmin ? model.Status : (int)MCreditProfileStatus.Submit;
             await _rpLog.InsertLog("mcredit-UpdateDraft", model.Dump());
             var result = await _rpMCredit.UpdateDraftProfile(profile);
             if (!result)
@@ -452,6 +481,10 @@ namespace VS_LOAN.Core.Web.Controllers
             var code = profile.ProductCode != null ? profile.ProductCode.Trim() : null;
             var Loccode = profile.LocSignCode != null ? profile.LocSignCode.Trim() : null;
 
+            var ignoreDocuments = await _rpMCredit.GetIgnoreMcDocumentAsync();
+            if (ignoreDocuments == null)
+                ignoreDocuments = new List<IgnoreDocumentUpload>();
+
             var data = await _svMCredit.GetFileUpload(new GetFileUploadRequest
             {
                 Code = code,
@@ -475,10 +508,11 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 if (group.Documents == null)
                     continue;
-                
+
                 foreach (var doc in group.Documents)
                 {
-                    if(group.GroupId==24 && doc.DocumentCode == "ElectricBill")
+                    var isIgnore = ignoreDocuments.Any(p => p.GroupId == group.GroupId && doc.DocumentCode == p.DocumentCode);
+                    if(isIgnore)
                     {
                         continue;
                     }
@@ -497,9 +531,7 @@ namespace VS_LOAN.Core.Web.Controllers
                             DocumentName = doc.DocumentName,
                             Tailieus = files.ToList(),
                             AllowUpload = string.IsNullOrWhiteSpace(profile.MCId)
-                       });
-                    
-                    
+                       });  
                 }
 
             }
@@ -708,11 +740,11 @@ namespace VS_LOAN.Core.Web.Controllers
             if (model == null || string.IsNullOrWhiteSpace(model.Value) || string.IsNullOrWhiteSpace(model.Value2))
                 return ToJsonResponse(false);
             var profile = await _rpMCredit.GetTemProfileById(Convert.ToInt32(model.Value));
-         
-           var x = await _svMCredit.AddNote(new NoteAddRequestModel
+
+            var x = await _svMCredit.AddNote(new NoteAddRequestModel
             {
                 Content = model.Value2,
-                Id =model.Value
+                Id = model.Value
             }, GlobalData.User.IDUser);
 
             return ToJsonResponse(true);

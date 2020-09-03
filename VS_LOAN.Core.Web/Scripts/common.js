@@ -45,7 +45,7 @@ function renderStatusDisplay(statusName, btnRefresh = null) {
 }
 
 function renderStatusRewrite(statusName) {
-
+   
 
     if (isNullOrWhiteSpace(statusName))
         return "<td class='text-left'></td>";
@@ -66,6 +66,9 @@ function renderStatusRewrite(statusName) {
         colorClass = 'label-inverse'
     if (cancel.indexOf(firstChar) >= 0)
         colorClass = 'label-cancel'
+    if (statusName == "Trống") {
+        return "<td class='text-left m-w-120'>" + "</td>";
+    }
     let statusString = `<span class='label label-sm ${colorClass} arrowed arrowed-righ tb-row-breakword height-max'>${statusName}</span>`;
     return "<td class='text-left m-w-120'>" + statusString + "</td>";
 
@@ -516,6 +519,8 @@ function getValueDisplay(value, type) {
 function renderTextLeft(value, type, className = '') {
     return "<td class='text-left " + className + "'>" + getValueDisplay(value, type) + "</td>";
 }
+
+
 function renderTextCenter(value, type) {
     return "<td class='text-center'>" + getValueDisplay(value, type) + "</td>";
 }
