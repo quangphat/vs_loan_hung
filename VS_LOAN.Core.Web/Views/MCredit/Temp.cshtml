@@ -135,8 +135,8 @@
                                     <th class="w-94">CMND</th>
                                     <th class="w-94">Sale</th>
                                     <th style="width: 150px">Trạng thái</th>
-                                    <th class="m-w-300">Ghi chú</th>
-                                    <th class="m-w-300">Ghi chú McNote</th>
+                                    <th class="m-w-300">Lỗi Toàn Cầu trả về</th>
+                                    <th class="m-w-300">Lỗi MC trả về</th>
                                     
                                     <th class="w-94">Sản phẩm</th>
                                     <th class="w-94">Kỳ hạn</th>
@@ -542,7 +542,10 @@
                         type: "success",
                         timer: 4000,
                         showConfirmButton: true,
+
                     }, function () {
+
+                            location.reload();
 
                     });
                 }

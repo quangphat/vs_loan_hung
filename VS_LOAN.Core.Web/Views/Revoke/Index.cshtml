@@ -1,16 +1,16 @@
-﻿
+﻿@using VS_LOAN.Core.Web.Resources;
 @{
     ViewBag.Title = "Index";
-      Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="main-content-inner">
-   @*<div class="breadcrumbs" id="breadcrumbs">
-        <ul class="breadcrumb">
-            <li>
-                <a href="#" class="active">Hồ sơ courier</a>
-            </li>
-        </ul>
-    </div>*@
+    @*<div class="breadcrumbs" id="breadcrumbs">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#" class="active">Hồ sơ courier</a>
+                </li>
+            </ul>
+        </div>*@
     <div class="page-content" id="panel_body">
         <div class="row">
             <div class="col-xs-12">
@@ -39,14 +39,14 @@
                         </div>
 
                     </div>
-					 <div class="form-group">
+                    <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái xử lý</label>
                         <div class="col-sm-5 col-xs-12 ">
-                            <select id="ddlProcess" class="chosen-select form-control"  data-placeholder="Trạng thái xử lý">
-									<option value="0" >Chưa xử lý</option>
-									<option value="1">Đã xử lý</option>
-									<option value="-1" selected>Tất cả</option>
-							</select>
+                            <select id="ddlProcess" class="chosen-select form-control" data-placeholder="Trạng thái xử lý">
+                                <option value="0">Chưa xử lý</option>
+                                <option value="1">Đã xử lý</option>
+                                <option value="-1" selected>Tất cả</option>
+                            </select>
                         </div>
 
                     </div>
@@ -182,6 +182,15 @@
             </div>
             <!-- /.col -->
         </div>
+
+        <div class="row">
+            <div class="space-6" style="background-color: #d5e3ef;"></div>
+            <div class="col-xs-12" style="margin-bottom:40px;">
+                <div class="pull-right">
+                    <a id="btnDownReport" onclick="DownloadReport(this)" class="btn btn-sm btn-primary "><i class="ace-icon fa fa-download"></i>@Global.Button_Download</a>
+                </div>
+            </div>
+        </div>
         <div class="clearfix"></div>
 
         <div class="clearfix"></div>
@@ -224,7 +233,7 @@
             $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
         }
         bindQueries()
-        
+
         groupId = queries.get("groupId");
         getData(page, limit);
         let assigneeId = queries.get("assigneeId");
@@ -406,7 +415,7 @@
         else
             limit = parseInt(limit)
         var stt = (page - 1) * limit + index + 1;
-       
+
         let result = "<tr role='row' class = 'odd'>"
             + renderTextCenter(stt, '','center w-45')
             + renderTextLink(rowData.CustomerName, `/Revoke/Edit/${rowData.Id}`, '', "m-w-120")
@@ -438,12 +447,58 @@
             return;
         window.location = "/Revoke/edit/" + id;
     }
+
+ 
+    function DownloadReport(e) {
+        var maNhom = 0;
+        var maThanhVien = 0;
+        
+        if ($('#ddlNhom').val() != undefined) {
+            maNhom = $('#ddlNhom').val();
+        }
+        if ($('#ddlThanhVienNhom').val() != undefined) {
+            maThanhVien = $('#ddlThanhVienNhom').val();
+        }
+        else
+            maThanhVien = @VS_LOAN.Core.Web.Helpers.GlobalData.User.IDUser
+        var objectSend = JSON.stringify({ 'maNhom': maNhom, 'maThanhVien': maThanhVien, 'fromDate': $('#txtFromDate').val(), 'toDate': $('#txtToDate').val(), 'maHS': $('#txtMaHS').val(), 'cmnd': $('#txtCMND').val(), 'loaiNgay': $('input[name="radio-ngay"]:checked').val() });
+        $.ajax({
+            traditional: true,
+            url: '/Revoke/DownloadReport',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                if (data.success == true) {
+                    var link = document.createElement("a");
+                    link.href = data.code;
+                    link.click();
+                }
+                else {
+                    swal({
+                        title: "",
+                        text: data.Message.ErrorMessage,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+
+            },
+        });
+    }
+
     function getData(page, limit ,isPopState = false)
     {
-        
+
         let search = window.location.search;
         queries = new URLSearchParams(search)
-        
+
         let groupId = queries.get("groupId");
         let assigneeId = queries.get("assigneeId");
 		let ddlProcess = queries.get("ddlProcess");
@@ -474,7 +529,7 @@
                     let search = this.url.replace("/Revoke/Index", "");
 
                     search = search.replace("/Revoke/Search", "")
-                    
+
                     page = queries.get("page");
                     if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
                         page = 1;
