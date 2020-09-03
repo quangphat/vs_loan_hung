@@ -462,8 +462,9 @@
             + renderTextLeft(rowData.IdNumber)
             + renderTextLeft(rowData.SaleName)
             + renderStatus(rowData.StatusName, rowData.Id)
-            + renderTextLeft(rowData.LastNote, '', 'tb-row-breakword')
             + renderTextLeft(rowData.McNote, '', 'tb-row-breakword')
+            + renderTextLeft(rowData.LastNote, '', 'tb-row-breakword')
+          
             
             + renderTextLeft(rowData.ProductName)
             + renderTextLeft(rowData.LoanPeriodName)
@@ -544,8 +545,8 @@
                         showConfirmButton: true,
 
                     }, function () {
-
-                            location.reload();
+                          
+                            window.location.href = "/MCredit/Temp/";
 
                     });
                 }

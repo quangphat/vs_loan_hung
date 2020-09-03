@@ -24,7 +24,7 @@ namespace VS_LOAN.Core.Repository.Interfaces
 
               int mathanhvien = 0);
         Task<int> CreateDraftProfile(MCredit_TempProfile model);
-        Task<bool> UpdateDraftProfile(MCredit_TempProfile model);
+        Task<bool> UpdateDraftProfile(MCredit_TempProfile model,bool isUpdateMCI =true);
         Task<bool> DeleteMCTableDatas(int type);
         Task<MCreditUserToken> GetUserTokenByIdAsync(int userId);
         Task<bool> InsertUserToken(MCreditUserToken model);

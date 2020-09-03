@@ -360,7 +360,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
             profile.Status = isAdmin ? model.Status : (int)MCreditProfileStatus.Submit;
             await _rpLog.InsertLog("mcredit-UpdateDraft", model.Dump());
-            var result = await _rpMCredit.UpdateDraftProfile(profile);
+            var result = await _rpMCredit.UpdateDraftProfile(profile,false);
             if (!result)
             {
                 return ToJsonResponse(result, "Lỗi cập nhật");

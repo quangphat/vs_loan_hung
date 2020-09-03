@@ -310,7 +310,7 @@ namespace VS_LOAN.Core.Repository
                 return true;
             }
         }
-        public async Task<bool> UpdateDraftProfile(MCredit_TempProfile model)
+        public async Task<bool> UpdateDraftProfile(MCredit_TempProfile model,bool isUpdateMci =true)
         {
             var param = GetParams(model, ignoreKey: new string[]
             {
@@ -323,7 +323,13 @@ namespace VS_LOAN.Core.Repository
 
             using (var con = GetConnection())
             {
-                await con.ExecuteAsync("sp_update_MCredit_TempProfile", param, commandType: CommandType.StoredProcedure);
+                var storeExecute = "sp_update_MCredit_TempProfile";
+                if(!isUpdateMci)
+                {
+                     storeExecute = "sp_update_MCredit_TempProfileNOMCId";
+                }
+                
+                await con.ExecuteAsync(storeExecute, param, commandType: CommandType.StoredProcedure);
                 return true;
             }
         }
