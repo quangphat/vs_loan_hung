@@ -1961,7 +1961,8 @@ set @offset = (@page-1)*@limit_tmp;
 declare @mainClause nvarchar(max);
 declare @params nvarchar(300);
 declare @where  nvarchar(1000) = ' where isnull(p.IsDeleted,0) = 0';
-set @mainClause = 'select count(*) over() as TotalRecord, p.Id, p.Ma_Doi_Tac as PartnerId, p.Ma as Code, p.Ten as ProductName, p.Ngay_Tao as CreatedTime, dt.Ten as PartnerName 
+set @mainClause = 'select count(*) over() as TotalRecord, p.Id, p.Ma_Doi_Tac as PartnerId, p.Ma as Code, 
+p.Ten as ProductName, p.Ngay_Tao as CreatedTime, dt.Ten as PartnerName , dt.Id as PartnerId
 from San_Pham_Vay p left join Doi_Tac dt on p.Ma_Doi_Tac = dt.Id'
 IF(@partnerId>0)
 SET @where+=' and dt.Id = @partnerId'
