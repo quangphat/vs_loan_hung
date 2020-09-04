@@ -130,6 +130,7 @@
                                 <tr>
                                     <th class="center w-45">STT</th>
                                     <th class="w-98">ID</th>
+                                    <th class="w-98">McId</th>
                                     <th class="m-w-150">Tên khách hàng</th>
                                     <th class="w-94">Phone</th>
                                     <th class="w-94">CMND</th>
@@ -137,7 +138,7 @@
                                     <th style="width: 150px">Trạng thái</th>
                                     <th class="m-w-300">Lỗi Toàn Cầu trả về</th>
                                     <th class="m-w-300">Lỗi MC trả về</th>
-                                    
+
                                     <th class="w-94">Sản phẩm</th>
                                     <th class="w-94">Kỳ hạn</th>
                                     <th class="w-84">Người tạo</th>
@@ -249,7 +250,7 @@
         }
   var fromDate = queries.get("fromDate");
             if (isNullOrWhiteSpace(fromDate)) {
-                fromDate = new Date().getDay + -7;
+                fromDate = new Date().getDay + -30;
             }
  $("#txtFromDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", fromDate);
             var toDate = queries.get("toDate");
@@ -457,6 +458,7 @@
         return "<tr role='row' class = 'odd'>"
             + renderTextCenter(stt)
             + renderTextLeft(rowData.Id)
+            + renderTextLeft(rowData.McId)
             + renderTextLink(rowData.CustomerName, '/MCredit/TempProfile/' + rowData.Id)
             + renderTextLeft(rowData.Phone)
             + renderTextLeft(rowData.IdNumber)
@@ -546,7 +548,7 @@
 
                     }, function () {
                           
-                          location.reload();
+                        window.location.href = "/MCredit/Temp";
 
                     });
                 }
