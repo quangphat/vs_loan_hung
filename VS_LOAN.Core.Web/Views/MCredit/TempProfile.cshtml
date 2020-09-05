@@ -272,14 +272,25 @@
 
 
                         @if (string.IsNullOrWhiteSpace(@ViewBag.model.MCId))
-                        {
-                            <a class="btn btn-sm btn-primary" id="btn_Temp">
-                                Cập nhật
-                            </a>
 
-                            <a class="btn btn-sm btn-primary" id="btn_Save">
-                                Nộp hồ sơ qua MCredit
-                            </a>
+                        {
+						    if (GlobalData.User.UserType == 3 && (@ViewBag.model.Status ==7) )
+							{
+							
+									
+
+							}
+							else 
+							{
+								<a class="btn btn-sm btn-primary" id="btn_Temp">
+								Cập nhật
+								</a>
+
+								<a class="btn btn-sm btn-primary" id="btn_Save">
+								Nộp hồ sơ qua MCredit
+								</a>
+							}							
+													  
                         }
                         else
                         {
