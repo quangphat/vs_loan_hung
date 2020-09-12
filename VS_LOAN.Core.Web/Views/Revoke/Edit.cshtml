@@ -346,7 +346,17 @@
                         </div>
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái hiện tại</label>
                         <div class="col-sm-5 col-xs-12 ">
-                            <input type="text" id="StatusName" value="@ViewBag.model.StatusName" readonly class="form-control">
+						   @if (@ViewBag.model.StatusName =="Không nợ xấu")
+						   {
+							    <input type="text" id="StatusName" value="" readonly class="form-control">  
+							   
+						   }
+						   else
+						   {
+							      <input type="text" id="StatusName" value="@ViewBag.model.StatusName" readonly class="form-control">  
+							   
+						   }
+                       
                         </div>
                     </div>
                     <div class="form-group">

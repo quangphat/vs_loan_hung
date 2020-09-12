@@ -722,6 +722,8 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToJsonResponse(false, "Hồ sơ không tồn tại hoặc chưa được gửi qua MCredit");
             var zipFile = await _bizMedia.ProcessFilesToSendToMC(profile.Id, Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}"));
             var sendFileResult = await _svMCredit.SendFiles(GlobalData.User.IDUser, zipFile, profile.MCId);
+
+            var deleteResulft = await _bizMedia.DeleteFileZip(zipFile);
             await _rpLog.InsertLog("ReSendFileToEC", sendFileResult != null ? sendFileResult.Dump() : "ReSendFileToEC = null");
             return ToJsonResponse(sendFileResult.status == "success" ? true : false, "", sendFileResult);
         }
@@ -748,6 +750,20 @@ namespace VS_LOAN.Core.Web.Controllers
             }, GlobalData.User.IDUser);
 
             return ToJsonResponse(true);
+        }
+
+        public async Task<JsonResult> AddNoteTempMC (StringModel3 model3)
+        {
+                GhichuModel note = new GhichuModel
+                {
+                UserId = GlobalData.User.IDUser,
+                HosoId = model3.HosoId,
+                Noidung = model3.Content,
+                CommentTime = DateTime.Now,
+                TypeId = (int)NoteType.MCreditTemp
+                };
+                await _rpNote.AddNoteAsync(note);
+                return ToJsonResponse(true);
         }
     }
 }

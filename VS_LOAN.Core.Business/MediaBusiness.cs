@@ -196,6 +196,19 @@ namespace VS_LOAN.Core.Business
             var result = await CreateZipFile(filePaths, jsonFileInfo.Folder, mcProfileId);
             return result;
         }
+
+
+        public async Task<bool> DeleteFileZip(string fileName)
+        {
+
+            var isExit = System.IO.File.Exists(fileName);
+            if(isExit)
+            {
+                System.IO.File.Delete(fileName);
+                return await Task.FromResult(true);
+            }
+            return await Task.FromResult(false);
+        }
         protected FileModel CreateJsonFile(McJsonFile model, string profileId, string rootPath)
         {
             if (model == null)
@@ -244,6 +257,9 @@ namespace VS_LOAN.Core.Business
             return Task.FromResult($"{folder}/{fileName}.zip");
         }
 
+
+
+       
         public async Task<BaseResponse<List<HosoTailieu>>> GetFilesUploadByProfile(int profileId, int profileType)
         {
             if (profileId <= 0 || profileType <= 0)

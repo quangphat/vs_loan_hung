@@ -269,28 +269,31 @@
                         </div>
                     </div>
                     <div class="pull-right">
+                        <a class="btn btn-sm btn-primary" id="btnAddNote">
+                            Thêm Note
+                        </a>
 
 
                         @if (string.IsNullOrWhiteSpace(@ViewBag.model.MCId))
 
                         {
-						    if (GlobalData.User.UserType == 3 && (@ViewBag.model.Status ==7) )
-							{
-							
-									
+                            if (GlobalData.User.UserType == 3 && (@ViewBag.model.Status == 7))
+                            {
 
-							}
-							else 
-							{
-								<a class="btn btn-sm btn-primary" id="btn_Temp">
-								Cập nhật
-								</a>
 
-								<a class="btn btn-sm btn-primary" id="btn_Save">
-								Nộp hồ sơ qua MCredit
-								</a>
-							}							
-													  
+
+                            }
+                            else
+                            {
+                                <a class="btn btn-sm btn-primary" id="btn_Temp">
+                                    Cập nhật
+                                </a>
+
+                                <a class="btn btn-sm btn-primary" id="btn_Save">
+                                    Nộp hồ sơ qua MCredit
+                                </a>
+                            }
+
                         }
                         else
                         {
@@ -841,7 +844,6 @@
             });
             return;
         }
-
         if ($('#ddlProduct').val() == "0" || $('#ddlProduct').val() == undefined) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
@@ -1087,4 +1089,51 @@
             },
         });
     }
+
+
+      $('#btnAddNote').click(function (e) {
+        
+       
+        var objectSend = JSON.stringify({
+            "HosoId": @ViewBag.model.Id,
+            "Content": $("#txtGhiChu").val()
+        });
+        $.ajax({
+            traditional: true,
+            url: '@Url.Action("AddNoteTempMC", "MCredit")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                if (data.success == true) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: "Thành công",
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                              $('#dsGhichu').empty();
+                             getCommentList(@ViewBag.model.Id, 4)
+
+                    });
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+    });
 </script>

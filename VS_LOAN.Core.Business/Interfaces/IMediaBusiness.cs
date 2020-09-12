@@ -13,10 +13,14 @@ namespace VS_LOAN.Core.Business.Interfaces
     public interface IMediaBusiness
     {
         Task<string> ProcessFilesToSendToMC(int profileId, string rootPath);
+        Task<bool> DeleteFileZip(string fileName);
         Task<MediaUploadConfig> UploadSingle(Stream stream, string key, int fileId, string name, string webRootPath);
         Task<List<HosoCourier>> ReadXlsxFile(MemoryStream stream, int createBy);
         FileModel GetFileUploadUrl(string fileInputName, string webRootPath, string folder, bool isKeepFileName = false);
         Task<BaseResponse<List<HosoTailieu>>> GetFilesUploadByProfile(int profileId, int profileType);
         //FileModel GetFileUploadUrl(string fileInputName, string webRootPath, string documentCode, );
+
+
+        
     }
 }

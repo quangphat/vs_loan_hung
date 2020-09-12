@@ -17,4 +17,12 @@ namespace VS_LOAN.Core.Entity
         public string Value3 { get; set; }
         public string Value4 { get; set; }
     }
+
+
+    public class StringModel3 : StringModel
+    {
+        public int HosoId { get; set; }
+        public string Content { get; set; }
+
+    }
 }
