@@ -31,9 +31,9 @@ namespace VS_LOAN.Core.Business
             _rpConfig = systemconfigRepository;
             _rpNote = noteRepository;
         }
-        public async Task<DataPaging<List<RevokeDebtSearch>>> SearchAsync(int userId, string freeText, string status, int page, int limit, int groupId = 0, int assigneeId = 0, DateTime? fromDate = null, DateTime? toDate = null, int loaiNgay = 1, int ddlProcess =-1)
+        public async Task<DataPaging<List<RevokeDebtSearch>>> SearchAsync(int userId, string freeText, string status, int page, int limit, int groupId = 0, int assigneeId = 0, DateTime? fromDate = null, DateTime? toDate = null, int loaiNgay = 1, int ddlProcess =-1, int ddlProvince =-1)
         {
-            var data = await _rpRevokeDebt.SearchAsync(userId, freeText, status, page, limit, groupId,assigneeId,fromDate,toDate,loaiNgay, ddlProcess);
+            var data = await _rpRevokeDebt.SearchAsync(userId, freeText, status, page, limit, groupId,assigneeId,fromDate,toDate,loaiNgay, ddlProcess,ddlProvince);
             if (data == null || !data.Any())
             {
                 return DataPaging.Create(null as List<RevokeDebtSearch>, 0);
@@ -41,6 +41,19 @@ namespace VS_LOAN.Core.Business
             var result = DataPaging.Create(data, data[0].TotalRecord);
             return result;
         }
+
+        public async Task<DataPaging<List<RevokeDebtSearch>>> GetDataExport(int userId, string freeText, string status, int page, int limit, int groupId = 0, int assigneeId = 0, DateTime? fromDate = null, DateTime? toDate = null, int loaiNgay = 1, int ddlProcess = -1, int ddlProvince = -1)
+        {
+            var data = await _rpRevokeDebt.GetDataExport(userId, freeText, status, page, limit, groupId, assigneeId, fromDate, toDate, loaiNgay, ddlProcess, ddlProvince);
+            if (data == null || !data.Any())
+            {
+                return DataPaging.Create(null as List<RevokeDebtSearch>, 0);
+            }
+            var result = DataPaging.Create(data, data[0].TotalRecord);
+            return result;
+        }
+
+        
         public async Task<BaseResponse<bool>> InsertFromFileAsync(MemoryStream stream, int userId)
         {
             var result = await ReadXlsxFile(stream);

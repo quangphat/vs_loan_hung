@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -12,6 +13,8 @@ using VS_LOAN.Core.Entity.RevokeDebt;
 using VS_LOAN.Core.Entity.UploadModel;
 using VS_LOAN.Core.Repository.Interfaces;
 using VS_LOAN.Core.Utility;
+using VS_LOAN.Core.Utility.Exceptions;
+using VS_LOAN.Core.Utility.OfficeOpenXML;
 using VS_LOAN.Core.Web.Helpers;
 
 namespace VS_LOAN.Core.Web.Controllers
@@ -32,7 +35,7 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             return View();
         }
-        public async Task<JsonResult> Search(string freeText = null, string status = null, int groupId = 0, int assigneeId =0, int page = 1, int limit = 10, string fromDate = null, string toDate = null, int loaiNgay = 1, int ddlProcess =-1)
+        public async Task<JsonResult> Search(string freeText = null, string status = null, int groupId = 0, int assigneeId =0, int page = 1, int limit = 10, string fromDate = null, string toDate = null, int loaiNgay = 1, int ddlProcess =-1,int ddlProvince =-1)
         {
 
             DateTime dtFromDate = DateTime.MinValue, dtToDate = DateTime.Now.AddDays(3);
@@ -41,7 +44,8 @@ namespace VS_LOAN.Core.Web.Controllers
             if (toDate != "")
                 dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTimeNew(toDate);
 
-            var result = await _bizRevokeDebt.SearchAsync(GlobalData.User.IDUser, freeText, status, page, limit, groupId, assigneeId,dtFromDate,dtToDate,loaiNgay, ddlProcess);
+            var result = await _bizRevokeDebt.SearchAsync(GlobalData.User.IDUser, freeText, status, page, limit, groupId, assigneeId,dtFromDate,dtToDate,loaiNgay, ddlProcess, ddlProvince);
+           
             return ToJsonResponse(true, null, result);
         }
         public async Task<JsonResult> Import()
@@ -97,9 +101,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> UploadFile(int key,int fileId, int profileId)
         {
-            //var profile = await _rpMCredit.GetTemProfileById(profileId);
-            //if(!string.IsNullOrWhiteSpace(profile.MCId) || profile == null)
-            //    return Json(new { Result = string.Empty });
+         
             string fileUrl = "";
             var _type = string.Empty;
             string deleteURL = string.Empty;
@@ -193,6 +195,74 @@ namespace VS_LOAN.Core.Web.Controllers
                 Session["LstFileHoSo"] = null;
             }
             return Json(new { Result = fileUrl });
+        }
+
+
+        public async Task<ActionResult> DownloadReportAsync(string freeText = null, string status = null, int groupId = 0, int assigneeId = 0, int page = 1, int limit = 10, string fromDate = null, string toDate = null, int loaiNgay = 1, int ddlProcess = -1, int ddlProvince = -1)
+        {
+         
+            string newUrl = string.Empty;
+            try
+            {
+                List<RevokeDebtSearch> rs = new List<RevokeDebtSearch>();
+                DateTime dtFromDate = DateTime.Now.AddDays(-90), dtToDate = DateTime.Now;
+                if (fromDate != "")
+                    dtFromDate = DateTimeFormat.ConvertddMMyyyyToDateTimeNew(fromDate);
+                if (toDate != "")
+                    dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTimeNew(toDate);
+
+                var result = await _bizRevokeDebt.SearchAsync(GlobalData.User.IDUser, freeText, status, 1, 100000, groupId, assigneeId, dtFromDate, dtToDate, loaiNgay, ddlProcess, ddlProvince);
+
+                rs = result.Datas;
+                string destDirectory = VS_LOAN.Core.Utility.Path.DownloadBill + "/" + DateTime.Now.Year.ToString() + "/" + DateTime.Now.Month.ToString() + "/";
+                bool exists = System.IO.Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + destDirectory);
+                if (!exists)
+                    System.IO.Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + destDirectory);
+                string fileName = "Report-revoke" + DateTime.Now.ToString("ddMMyyyyHHmmssfff") + ".xlsx";
+                using (FileStream stream = new FileStream(Server.MapPath(destDirectory + fileName), FileMode.CreateNew))
+                {
+                    Byte[] info = System.IO.File.ReadAllBytes(Server.MapPath(VS_LOAN.Core.Utility.Path.ReportTemplate + "Report-revoke.xlsx"));
+                    stream.Write(info, 0, info.Length);
+                    using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Update))
+                    {
+                        string nameSheet = "revoke";
+                        ExcelOOXML excelOOXML = new ExcelOOXML(archive);
+                        int rowindex = 4;
+                        if (rs != null)
+                        {
+                            excelOOXML.InsertRow(nameSheet, rowindex, rs.Count - 1, true);
+                            for (int i = 0; i < rs.Count; i++)// dòng
+                            {
+                                var item = rs[i];
+                                excelOOXML.SetCellData(nameSheet, "A" + rowindex, (i + 1).ToString());
+                                excelOOXML.SetCellData(nameSheet, "B" + rowindex,item.Id.ToString());
+                                excelOOXML.SetCellData(nameSheet, "C" + rowindex, item.AgreementNo);
+                                excelOOXML.SetCellData(nameSheet, "D" + rowindex, item.AgreementNo);
+                                excelOOXML.SetCellData(nameSheet, "E" + rowindex, item.StatusName);
+                                excelOOXML.SetCellData(nameSheet, "F" + rowindex, item.TotalCurros);
+
+                                excelOOXML.SetCellData(nameSheet, "G" + rowindex, item.AssigneeName);
+                                excelOOXML.SetCellData(nameSheet, "H" + rowindex, item.CreatedUser);
+                                excelOOXML.SetCellData(nameSheet, "I" + rowindex, item.CreatedTime.ToString());
+                                excelOOXML.SetCellData(nameSheet, "J" + rowindex, item.UpdatedUser);
+                                excelOOXML.SetCellData(nameSheet, "K" + rowindex, item.UpdatedTime.ToString());
+                                rowindex++;
+                            }
+                        }
+                        archive.Dispose();
+                    }
+                    stream.Dispose();
+                }
+
+                    newUrl = "/File/GetFile?path=" + destDirectory + fileName;
+                    return ToResponse(true,"" ,newUrl);
+                
+            }
+            catch (BusinessException ex)
+            {
+                return ToResponse(false, ex.Message);
+            }
+
         }
     }
 }

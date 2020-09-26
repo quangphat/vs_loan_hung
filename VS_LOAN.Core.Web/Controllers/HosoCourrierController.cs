@@ -58,17 +58,39 @@ namespace VS_LOAN.Core.Web.Controllers
             ViewBag.isAdmin = isAdmin ? 1 : 0;
             return View();
         }
-        public async Task<JsonResult> Search(string freeText = null, int provinceId = 0, int courierId = 0, string status = null, int groupId = 0, int page = 1, int limit = 10, string salecode = null)
+        public async Task<JsonResult> Search(string freeText = null, int provinceId = 0, int courierId = 0, string status = null, int groupId = 0, int page = 1, int limit = 10, string salecode = null, string fromDate = null, string toDate = null,
+            string maHS = null, string cmnd  = null, int loaiNgay = 1)
+
         {
+
+            DateTime dtFromDate = DateTime.MinValue, dtToDate = DateTime.Now.AddDays(3);
+            if (fromDate != "")
+                dtFromDate = DateTimeFormat.ConvertddMMyyyyToDateTimeNew(fromDate);
+            if (toDate != "")
+                dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTimeNew(toDate);
+
             //var totalRecord = await _rpCourierProfile.CountHosoCourrier(freeText, courierId, GlobalData.User.IDUser, status, groupId, provinceId, salecode);
-            var datas = await _rpCourierProfile.GetHosoCourrier(freeText, courierId, GlobalData.User.IDUser, status, page, limit, groupId, provinceId, salecode);
+            var datas = await _rpCourierProfile.GetHosoCourrier(freeText, courierId, GlobalData.User.IDUser, status, page, limit, groupId, provinceId, salecode,
+              dtFromDate, dtToDate, maHS , cmnd = null, loaiNgay );
+
+       
+
             var totalRecord = (datas != null && datas.Any()) ? datas[0].TotalRecord : 0;
             //await _rpLog.InsertLog("courier-search", $"freetext:{freeText}, userid:{ GlobalData.User.IDUser}, courierId:{courierId}, status:{status}, salecode: {salecode}");
             var result = DataPaging.Create(datas, totalRecord);
             return ToJsonResponse(true, null, result);
         }
-        public async Task<ActionResult> ExportFile(string freeText = null, int provinceId = 0, int courierId = 0, string status = null, int groupId = 0, int page = 1, int limit = 10, string salecode = null)
+        public async Task<ActionResult> ExportFile(string freeText = null, int provinceId = 0, int courierId = 0, string status = null, int groupId = 0, int page = 1, int limit = 10, string salecode = null,
+            string fromDate = null, string toDate = null
+
+            )
         {
+
+            DateTime dtFromDate = DateTime.Now.AddDays(-90), dtToDate = DateTime.Now;
+            if (fromDate != "")
+                dtFromDate = DateTimeFormat.ConvertddMMyyyyToDateTimeNew(fromDate);
+            if (toDate != "")
+                dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTimeNew(toDate);
             var request = new CourierSearchRequestModel
             {
                 freeText = freeText,
@@ -78,12 +100,12 @@ namespace VS_LOAN.Core.Web.Controllers
                 groupId = groupId,
                 page = page,
                 limit = limit,
-                salecode = salecode
+                salecode = salecode,
+                fromDate = dtFromDate,
+                toDate = dtToDate
             };
             try
             {
-
-
                 string destDirectory = VS_LOAN.Core.Utility.Path.DownloadBill + "/" + DateTime.Now.Year.ToString() + "/" + DateTime.Now.Month.ToString() + "/";
                 bool exists = System.IO.Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + destDirectory);
                 if (!exists)
@@ -91,6 +113,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 string fileName = "Report-DSHS" + DateTime.Now.ToString("ddMMyyyyHHmmssfff") + ".xlsx";
                 using (FileStream stream = new FileStream(Server.MapPath(destDirectory + fileName), FileMode.CreateNew))
                 {
+
                     Byte[] info = System.IO.File.ReadAllBytes(Server.MapPath(VS_LOAN.Core.Utility.Path.ReportTemplate + "CourierExportTemplate.xlsx"));
                     stream.Write(info, 0, info.Length);
                     using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Update))
@@ -439,7 +462,8 @@ namespace VS_LOAN.Core.Web.Controllers
         private async Task<DataPaging<List<CourierExportModel>>> SearchByModel(CourierSearchRequestModel request)
         {
 
-            var datas = await _rpCourierProfile.GetHosoCourrier(request.freeText, request.courierId, GlobalData.User.IDUser, request.status, request.PageNumber, request.limit, request.groupId, request.provinceId, request.salecode);
+            var datas = await _rpCourierProfile.GetHosoCourrier(request.freeText, request.courierId, GlobalData.User.IDUser, request.status, request.PageNumber, request.limit, request.groupId, request.provinceId, request.salecode,
+                request.fromDate,request.toDate,null,null,1);
             var totalRecord = (datas != null && datas.Any()) ? datas[0].TotalRecord : 0;
             try
             {

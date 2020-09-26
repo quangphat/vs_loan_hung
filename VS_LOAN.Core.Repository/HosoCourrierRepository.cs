@@ -105,13 +105,15 @@ namespace VS_LOAN.Core.Repository
 
             }
         }
-        public async Task<List<HosoCourierViewModel>> GetHosoCourrier(string freeText, int assigneeId, int userId, string status, int page, int limit, int groupId = 0, int provinceId = 0, string saleCode = null)
+        public async Task<List<HosoCourierViewModel>> GetHosoCourrier(string freeText, int assigneeId, int userId, string status, int page, int limit, int groupId = 0, int provinceId = 0, string saleCode = null,
+                      DateTime? fromDate = null, DateTime? toDate = null,
+            string maHS = null, string cmnd = null, int dateType = 1)
         {
             status = string.IsNullOrWhiteSpace(status) ? string.Empty : status;
             using (var con = GetConnection())
             {
-                var result = await con.QueryAsync<HosoCourierViewModel>("sp_GetHosoCourier",
-                    new { freeText, assigneeId, page, limit_tmp = limit, status, groupId, provinceId, saleCode, userId },
+                var result = await con.QueryAsync<HosoCourierViewModel>("sp_GetHosoCourier3",
+                    new { freeText, assigneeId, page, limit_tmp = limit, status, groupId, provinceId, saleCode, userId,fromDate,toDate,maHS,cmnd, dateType },
                     commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }

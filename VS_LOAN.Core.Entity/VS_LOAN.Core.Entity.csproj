@@ -119,6 +119,7 @@
     <Compile Include="F88Model\LadipageModel.cs" />
     <Compile Include="F88ResponseModel.cs" />
     <Compile Include="GhichuViewModel.cs" />
+    <Compile Include="RevokeModel.cs" />
     <Compile Include="ImportExcelFrameWorkModel.cs" />
     <Compile Include="MCreditModels\AuthenMCModel.cs" />
     <Compile Include="MCreditModels\CheckCatRequestModel.cs" />

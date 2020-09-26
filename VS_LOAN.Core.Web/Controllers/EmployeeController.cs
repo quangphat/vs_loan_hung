@@ -57,6 +57,10 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             return View();
         }
+        public ActionResult ChangePassWord()
+        {
+            return View();
+        }
         public async Task<JsonResult> Search(string workFromDate, string workToDate,
             string freetext = "",
             int roleId = 0,
@@ -283,12 +287,21 @@ namespace VS_LOAN.Core.Web.Controllers
             try
             {
                 UserPMModel user = new UserPMBLL().DangNhap(userName, MD5.getMD5(password));
+
+             
                 //user = new UserPMModel {
                 //    IDUser = 1,
                 //    UserName = "t"
                 //};
                 if (user != null)
                 {
+
+                    //if(user.FirstLogin)
+                    //{
+                    //    newUrl = "/Employee/ChangePassWord";
+                    //    return ToResponse(true, null, newUrl);
+                    //}
+                    
                     GlobalData.User = user;
                     GlobalData.User.UserType = (int)UserTypeEnum.Sale;
                     var isTeamLead = new GroupRepository().checkIsTeamLeadByUserId(user.IDUser);
@@ -343,10 +356,82 @@ namespace VS_LOAN.Core.Web.Controllers
             }
 
         }
+
+
+        public ActionResult ChangePasswordRequired(string password, string passwordNew,string passwordNewAgain)
+        {
+
+            string newUrl = string.Empty;
+            try
+            {
+                if (password == null)
+                    password = "";
+                UserPMModel user = new UserPMBLL().GetUserByID(GlobalData.User.IDUser.ToString());
+                if (user != null)
+                {
+                    if (password.Trim().Equals(string.Empty) && !user.Password.Equals(string.Empty))
+                    {
+                        return ToResponse(false, null, Resources.Global.NhanVien_UserProfile_Password_Error_PassOld_Empty);
+
+                    }
+                    else if (passwordNew.Trim().Equals(string.Empty))
+                    {
+                        return ToResponse(false, null, Resources.Global.NhanVien_UserProfile_Password_Error_PassNew_Empty);
+
+                    }
+                    else if (passwordNewAgain.Trim().Equals(string.Empty))
+                    {
+                        return ToResponse(false, null, Resources.Global.NhanVien_UserProfile_Password_Error_PassComfirm_Empty);
+
+                    }
+                    else if (!passwordNew.Trim().Equals(passwordNewAgain.Trim()))
+                    {
+                        return ToResponse(false, null, Resources.Global.NhanVien_UserProfile_Password_Error_PassNewConform);
+
+                    }
+                    else if (MD5.getMD5(password.Trim()) != user.Password.Trim() && user.Password != string.Empty)
+                    {
+                        return ToResponse(false, null, Resources.Global.NhanVien_UserProfile_Password_Error_Old);
+
+                    }
+                    else
+                    {
+                        bool result = new UserPMBLL().ChangePass(user.IDUser.ToString(), MD5.getMD5(passwordNew.Trim()), true);
+                        if (result)
+                        {
+                            newUrl = Url.Action("Index", "Home");
+                            return ToResponse(true, null, newUrl);
+                        }
+                        return ToResponse(false, string.Empty);
+                    }
+                }
+                return ToResponse(false, string.Empty);
+
+            }
+            catch (Exception ex)
+            {
+                return ToResponse(false, ex.Message);
+            }
+
+        }
         public ActionResult Login()
         {
             if (GlobalData.User != null)
-                return RedirectToAction("Index", "Home");
+            {
+                if(!GlobalData.User.FirstLogin)
+                {
+
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+
+                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("ChangePassWord", "Employee");
+                }
+               
+            }
+              
             string userName = "", password = "";
             if (Request.Cookies["userName"] != null)
                 userName = Request.Cookies["userName"].Value;

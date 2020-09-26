@@ -250,6 +250,7 @@ namespace VS_LOAN.Core.Repository
         {
             var p = AddOutputParam("id");
             p.Add("code", entity.Code);
+            //p.Add("FirstLogin", true);
            
             p.Add("userName", entity.UserName);
             p.Add("password", entity.Password);

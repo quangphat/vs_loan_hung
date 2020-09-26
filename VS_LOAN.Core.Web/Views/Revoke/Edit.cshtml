@@ -321,7 +321,7 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <h3 class="header smaller lighter blue">6.Hồ sơ đính kèm:</h3>
+                <h3 class="header smaller lighter blue">7.Hồ sơ đính kèm:</h3>
                 <div class="row">
                     <div class="col-xs-12" style="overflow-y: scroll;max-height:400px;">
                         <form class="form-horizontal" role="form" id="lstTailieu"></form>
@@ -331,6 +331,38 @@
             </div>
 
         </div>
+		
+		<div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">8.Thông tin hẹn thanh toán:</h3>
+                <div class="row">
+                     <form class="form-horizontal" role="form">
+					<div class="form-group">
+					
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày hẹn thanh toán <span ></span> </label>
+                         <div class="col-sm-4">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="PaymentAppointmentDate" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+
+                        </div>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số tiền hẹn thanh toán <span ></span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="PaymentAppointmentAmount"  class="form-control">
+					</div>
+                    </form>
+
+
+
+                </div>
+
+            </div>
+
+        </div>
+		</div>
         <div class="row">
             <div class="col-xs-12">
                 <hr />
@@ -395,6 +427,9 @@
 </div>
 <script>
     $(document).ready(function () {
+	   setDateTimeInput('#PaymentAppointmentDate', 'dd/mm/yyyy');
+	   
+
         setTextForPTag('checkSaleResult');
         setTextForPTag('checkdupResult');
         setCheckedValueOfRadioButtonGroup('radio-isAddr', 'true');
@@ -420,6 +455,9 @@
         $("#FinalPaymentAmount").val(formatCurrency('@ViewBag.model.FinalPaymentAmount'));
         $("#CashPrice").val(formatCurrency('@ViewBag.model.CashPrice'));
         $("#TotalPayableAmount").val(formatCurrency('@ViewBag.model.TotalPayableAmount'));
+		    $("#PaymentAppointmentDate").val('@ViewBag.model.PaymentAppointmentDate');	
+	        $("#PaymentAppointmentAmount").val('@ViewBag.model.PaymentAppointmentAmount');
+
         renderStatusList('#ddlStatus',@ViewBag.model.Status);
         Getcomments();
         getFilesUpload();
@@ -693,7 +731,9 @@
             'DistrictId': $("#ddlHuyen").val(),
             'ProvinceId': $("#ddlTinh").val(),
             'AssigneeId': $("#ddlCourier").val(),
-            'GroupId': $("#ddlGroup").val()
+            'GroupId': $("#ddlGroup").val(),
+			'PaymentAppointmentAmount': $("#PaymentAppointmentAmount").val(),
+            'PaymentAppointmentDate': $("#PaymentAppointmentDate").val()
         })
         
 
@@ -712,6 +752,7 @@
                             timer: 4000,
                             showConfirmButton: true,
                         }, function () {
+						
                             window.location = window.location;
 
 

@@ -16,5 +16,8 @@ namespace VS_LOAN.Core.Entity.HosoCourrier
         public int page { get; set; }
         public int limit { get; set; }
         public string salecode { get; set; }
+
+        public DateTime? fromDate { get; set; }
+        public DateTime? toDate { get; set; }
     }
 }

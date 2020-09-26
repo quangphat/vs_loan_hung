@@ -17,6 +17,8 @@ namespace VS_LOAN.Core.Repository.Interfaces
         Task<int> Create(HosoCourier hoso, int groupId = 0);
         Task<bool> InsertCourierAssignee(int courierId, int assigneeId);
         Task<int> CountHosoCourrier(string freeText, int courierId, int userId, string status, int groupId = 0, int provinceId = 0,string saleCode= null);
-        Task<List<HosoCourierViewModel>> GetHosoCourrier(string freeText, int courierId, int userId, string status, int page, int limit, int groupId = 0, int provinceId = 0,string saleCode = null);
+        Task<List<HosoCourierViewModel>> GetHosoCourrier(string freeText, int courierId, int userId, string status, int page, int limit, int groupId = 0, int provinceId = 0,string saleCode = null,
+            DateTime? fromDate = null,DateTime? toDate = null,
+            string maHS = null, string cmnd = null, int loaiNgay = 1);
     }
 }

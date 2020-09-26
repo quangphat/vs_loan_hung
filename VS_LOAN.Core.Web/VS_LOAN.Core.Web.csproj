@@ -963,6 +963,7 @@
     <Content Include="Scripts\Excel\xlsx.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
     <Content Include="App_Data\TemplateReport\Report-DSHS.xlsx" />
+    <Content Include="App_Data\TemplateReport\Report-revoke.xlsx" />
     <None Include="Properties\PublishProfiles\LOAN.pubxml" />
     <None Include="Properties\PublishProfiles\PD.pubxml" />
     <None Include="Properties\PublishProfiles\PRMS.pubxml" />
@@ -1776,6 +1777,7 @@
     <Content Include="Views\ShareRevoke\_LayoutRV.cshtml" />
     <Content Include="Views\Home\Index - Copy.cshtml" />
     <Content Include="Views\ShareRevoke\_NavBarRV.cshtml" />
+    <Content Include="Views\Employee\ChangePassWord.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

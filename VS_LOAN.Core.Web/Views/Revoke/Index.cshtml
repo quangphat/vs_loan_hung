@@ -4,13 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="main-content-inner">
-    @*<div class="breadcrumbs" id="breadcrumbs">
-            <ul class="breadcrumb">
-                <li>
-                    <a href="#" class="active">Hồ sơ courier</a>
-                </li>
-            </ul>
-        </div>*@
+
     <div class="page-content" id="panel_body">
         <div class="row">
             <div class="col-xs-12">
@@ -38,7 +32,19 @@
                             <select id="ddlStatus" class="chosen-select form-control" multiple data-placeholder="Chọn trạng thái"></select>
                         </div>
 
+
+                          
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Tỉnh thành</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlProvince" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành"></select>
+                  
+                     
+
                     </div>
+
+                    </div>
+
+                   
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái xử lý</label>
                         <div class="col-sm-5 col-xs-12 ">
@@ -51,6 +57,7 @@
 
                     </div>
 
+                   
                     <div class="form-group">
                         <div class="col-sm-2 col-xs-12">
                             <label class="control-label no-padding-right">
@@ -209,6 +216,7 @@
     $(document).ready(function e() {
             $('#ddlGroup').chosen({ width: '100%', allow_single_deselect: true });
             $('#ddlAssignee').chosen({ width: '100%', allow_single_deselect: true });
+                    $('#ddlProvince').chosen({ width: '100%', allow_single_deselect: true });
         preventTxtSearchEnter();
         window.addEventListener('popstate', function (e) {
 
@@ -241,6 +249,8 @@
         $('#ddlGroup').on('change', function () {
             GetEmployeesByGroupId('#ddlAssignee', this.value, false, assigneeId);
         });
+
+          LayDSTinh();
     })
     var strLoading = 'Vui lòng chờ';
     $('#btnSearch').click(function (e) {
@@ -346,10 +356,10 @@
     }
 
     $('#ddlProvince').change(function () {
-        $('#ddlThanhVienNhom').empty();
-        $('#ddlThanhVienNhom').append("<option value='0'></option>");
-        provinceId = this.value
-        getRevoke(this.value)
+        // $('#ddlThanhVienNhom').empty();
+        // $('#ddlThanhVienNhom').append("<option value='0'></option>");
+        // provinceId = this.value
+        // getRevoke(this.value)
     });
 
     function onClickPage(page) {
@@ -452,6 +462,56 @@
  
     function DownloadReport(e) {
 
+  
+         let data = JSON.stringify({
+
+                 'fromDate':$('#txtFromDate').val(),
+				'toDate': $('#txtToDate').val(),
+			    'loaiNgay': $('input[name="radio-ngay"]:checked').val(),
+                'page': page,
+                'limit': limit,
+				'ddlProcess': $('#ddlProcess').val(),
+                'ddlProvince':$('#ddlProvince').val(),
+                'assigneeId':$("#ddlAssignee").val(),
+                'freetext': $("#txtFreeText").val(),
+                'groupId':$('#ddlGroup').val(),
+                'status': $("#ddlStatus").val()
+        });
+        $.ajax({
+            traditional: true,
+            url: '/Revoke/DownloadReportAsync',
+            type: "POST",
+             contentType: "application/json; charset=utf-8",
+            data: data,
+            success: function (data) {
+				console.log(data);
+		
+                if (data.success == true) {
+                    
+					var link = document.createElement("a");
+					
+
+                    link.href = data.data;
+                    link.click();
+                }
+                else {
+                    swal({
+                        title: "",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+
+            },
+        });
+
       
     }
 
@@ -465,7 +525,42 @@
         return "<td class='text-left " + className + "'>" + getValueDisplay(value, type) + "</td>";
         }
  
+    
+    
     }
+
+    function LayDSTinh() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSTinh", "KhuVuc")',
+            data: {},
+            success: function (data) {
+                $('#ddlProvince').empty();
+                $('#ddlProvince').append("<option value='0'>Tất cả</option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#ddlProvince').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                    });
+                    let provinceId = queries.get("provinceId");
+                    $('#ddlProvince').val(provinceId)
+                    $('#ddlProvince').chosen().trigger("chosen:updated").change();
+                }
+               
+                $('#ddlProvince').chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+      $('#ddlProvince').change(function () {
+        $('#ddlThanhVienNhom').empty();
+        $('#ddlThanhVienNhom').append("<option value='0'></option>");
+        provinceId = this.value;
+      
+    });
 
     function getData(page, limit ,isPopState = false,isSelect =false)
     {
@@ -490,6 +585,7 @@
                 'page': page,
                 'limit': limit,
 				'ddlProcess': $('#ddlProcess').val(),
+                'ddlProvince':$('#ddlProvince').val(),
                 'assigneeId':(!isNullOrWhiteSpace($("#ddlAssignee").val()) || isNullOrWhiteSpace(assigneeId)) ? (!isNullOrWhiteSpace($("#ddlAssignee").val()) ? $("#ddlAssignee").val().toString():"") : "",
                 'freetext': $("#txtFreeText").val(),
                 'groupId': (isNaN(groupId) || groupId == 0 || isNullOrUndefined(groupId)) ? $('#ddlGroup').val() : groupId,

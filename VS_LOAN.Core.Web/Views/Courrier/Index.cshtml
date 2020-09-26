@@ -31,6 +31,37 @@
                         </div>
 
                     </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-2 col-xs-12">
+                            <label class="control-label no-padding-right">
+                                <input name="radio-ngay" type="radio" checked="checked" value="1" class="ace">
+                                <span class="lbl"> Ngày tạo</span>
+                            </label>
+                            <label class="control-label no-padding-right">
+                                <input name="radio-ngay" type="radio" value="2" class="ace">
+                                <span class="lbl"> Ngày cập nhật</span>
+                            </label>
+                        </div>
+                        <div class="col-sm-2 col-xs-12 ">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtFromDate" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-xs-12 ">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtToDate" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+                      
+
+                    </div>
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
                         <div class="col-sm-5 col-xs-12 ">
@@ -365,9 +396,27 @@
         getData(page, limit);
     }
     function bindQueries() {
+		 var fromDate = queries.get("fromDate");
+            if (isNullOrWhiteSpace(fromDate)) {
+                fromDate = new Date().getDay + -7;
+            }
+		$('#txtFreeText').val(queries.get("freetext"))
+        $('#txtSaleCode').val(queries.get("salecode"));
+		$("#txtFromDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", fromDate);
+		var toDate = queries.get("toDate");
+		if (isNullOrWhiteSpace(toDate)) {
+			toDate = new Date().getDay + 1;
+		}
+		$("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", toDate);
+		var dateType = queries.get("loaiNgay");
+		setCheckedValueOfRadioButtonGroup("radio-ngay", dateType)
+		var maHS = queries.get("maHS");
+		$('#txtMaHS').val(maHS)
+	  
+		var cmnd = queries.get("cmnd");
+		$('#txtCMND').val(cmnd)
 
-        $('#txtFreeText').val(queries.get("freetext"))
-        $('#txtSaleCode').val(queries.get("salecode"))
+          
         page = queries.get("page");
         if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
             page = 1;
@@ -378,6 +427,17 @@
             limit = 10;
         else
             limit = parseInt(limit)
+
+        $('#txtFromDate').datepicker({
+        dateFormat: 'dd-mm-yy'
+        }).next().on(ace.click_event, function () {
+        $(this).prev().focus();
+        });
+        $('#txtToDate').datepicker({
+        dateFormat: 'dd-mm-yy'
+        }).next().on(ace.click_event, function () {
+        $(this).prev().focus();
+        });
         $("#ddlLimit").val(limit)
     }
     function onSelectLimit() {
@@ -484,7 +544,12 @@
                 'freetext': $("#txtFreeText").val(),
                 'salecode': $("#txtSaleCode").val(),
                 'groupId': (isNaN(groupId) || groupId == 0) ? $('#ddlNhomCha').val() : groupId,
-                'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
+                'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : "",
+				'fromDate':$('#txtFromDate').val(),
+				'toDate': $('#txtToDate').val(),
+				'maHS':$('#txtMaHS').val(),
+                'cmnd': $('#txtCMND').val(),
+                'loaiNgay': $('input[name="radio-ngay"]:checked').val(),
             },
             success: function (response) {
                 if (response.Message == null) {
@@ -533,6 +598,7 @@
         })
 
     }
+   
     function DownloadReport(e) {
         let data = JSON.stringify({
             'page': page,
@@ -542,48 +608,12 @@
             'freetext': $("#txtFreeText").val(),
             'salecode': $("#txtSaleCode").val(),
             'groupId': $('#ddlNhomCha').val(),
-            'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
-        });
-        $.ajax({
-            traditional: true,
-            url: '/Courrier/ExportFile',
-            type: "PUT",
-            contentType: "application/json; charset=utf-8",
-            data: data,
-            success: function (data) {
-                if (data.success == true) {
-                    var link = document.createElement("a");
-                    link.href = data.data;
-                    link.click();
-                }
-                else {
-                    swal({
-                        title: "",
-                        text: data.code,
-                        type: "error",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    });
-                }
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            },
-            complete: function () {
-
-            },
-        });
-    }
-    function DownloadReport(e) {
-        let data = JSON.stringify({
-            'page': page,
-            'limit': limit,
-            'provinceId':$('#ddlProvince').val() ,
-            'courierId':  $('#ddlCourier').val(),
-            'freetext': $("#txtFreeText").val(),
-            'salecode': $("#txtSaleCode").val(),
-            'groupId': $('#ddlNhomCha').val(),
-            'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
+            'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : "",
+			'fromDate':$('#txtFromDate').val(),
+			'toDate': $('#txtToDate').val(),
+			'maHS':$('#txtMaHS').val(),
+			'cmnd': $('#txtCMND').val(),
+			'loaiNgay': $('input[name="radio-ngay"]:checked').val()
         });
         $.ajax({
             traditional: true,

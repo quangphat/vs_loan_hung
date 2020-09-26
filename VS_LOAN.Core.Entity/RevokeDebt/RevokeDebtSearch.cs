@@ -114,6 +114,27 @@ namespace VS_LOAN.Core.Entity.RevokeDebt
         public string LastNote { get; set; }
         public int ProvinceId { get; set; }
         public int DistrictId { get; set; }
+
+        public decimal? PaymentAppointmentAmount { get; set; }
+
+        public string PaymentAppointmentAmountText
+        {
+
+            get
+            {
+                if( PaymentAppointmentAmount==null)
+                {
+                    return "";
+                }
+                else
+                {
+                  return  string.Format("{0:C}", PaymentAppointmentAmount);
+                }
+            }
+        }
+
+
+        public DateTime? PaymentAppointmentDate { get; set; }
         public string GroupId
         {
             get
@@ -135,5 +156,9 @@ namespace VS_LOAN.Core.Entity.RevokeDebt
         public string AssigneeName { get; set; }
 
         public string AssigneeCode { get; set; }
+        public RevokeDebtSearch()
+        {
+            PaymentAppointmentAmount = 0;
+        }
     }
 }

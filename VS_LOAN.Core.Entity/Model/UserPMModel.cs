@@ -132,8 +132,27 @@ namespace VS_LOAN.Core.Entity.Model
                 _code = value;
             }
         }
+
+        private bool _firstLogin;
+        public bool FirstLogin
+        {
+            get
+            {
+                return _firstLogin;
+            }
+            set
+            {
+                _firstLogin = value;
+            }
+        }
         public int UserType { get; set; }
         public int OrgId { get; set; }
         public int  RoleId { get; set; }
+
+
+        public UserPMModel()
+        {
+            _firstLogin = false;
+        }
     }
 }

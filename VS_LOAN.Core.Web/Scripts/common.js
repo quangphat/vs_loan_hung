@@ -959,6 +959,10 @@ function formatCurrency(number) {
     var n2 = n.replace(/\d\d\d(?!$)/g, "$&.");
     return n2.split('').reverse().join('') + '';
 }
+
+function fomratRevoke(number) {
+
+}
 function formatCurrencyVND(number, unit = '') {
     var n = number.toString().split('').reverse().join("");
     var n2 = n.replace(/\d\d\d(?!$)/g, "$&.");

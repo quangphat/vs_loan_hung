@@ -34,6 +34,7 @@ namespace VS_LOAN.Core.Repository
                             userModel.Email = dt.Rows[0]["Email"].ToString();
                             userModel.UserName = dt.Rows[0]["UserName"].ToString();
                             userModel.FullName = dt.Rows[0]["FullName"].ToString();
+                            //userModel.FirstLogin =Convert.ToBoolean(dt.Rows[0]["FistLogin"].ToString());
                             userModel.OrgId = Convert.ToInt32(dt.Rows[0]["OrgId"].ToString());
                             userModel.RoleId = string.IsNullOrWhiteSpace(dt.Rows[0]["RoleId"].ToString()) ? 0 :  Convert.ToInt32(dt.Rows[0]["RoleId"].ToString());
                             return userModel;
@@ -47,7 +48,7 @@ namespace VS_LOAN.Core.Repository
                 throw ex;
             }
         }
-        public bool ChangePass(string userID, string pass)
+        public bool ChangePass(string userID, string pass, bool firstLogin = false)
         {
             try
             {
@@ -59,6 +60,10 @@ namespace VS_LOAN.Core.Repository
                     command.CommandText = "sp_NHANVIEN_ChangePass";
                     command.Parameters.Add(new SqlParameter("@ID", userID));
                     command.Parameters.Add(new SqlParameter("@Pass", pass));
+                    if(firstLogin)
+                    {
+                        command.Parameters.Add(new SqlParameter("@changePassword", true));
+                    }
                     command.ExecuteNonQuery();
                     return true;
                 }
@@ -68,6 +73,9 @@ namespace VS_LOAN.Core.Repository
                 throw ex;
             }
         }
+
+
+
         public UserPMModel Get(string user)
         {
             try

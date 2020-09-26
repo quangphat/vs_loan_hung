@@ -20,6 +20,8 @@ namespace VS_LOAN.Core.Entity.Employee
         public int DistrictId { get; set; }
         public bool IsDeleted { get; set; }
         public int Xoa { get; set; }
+
+        public bool FirstLogin { get; set; }
         public DateTime WorkDate { get; set; }
     }
 }
