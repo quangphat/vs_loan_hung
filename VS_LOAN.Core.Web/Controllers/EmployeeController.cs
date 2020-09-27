@@ -295,13 +295,13 @@ namespace VS_LOAN.Core.Web.Controllers
                 //};
                 if (user != null)
                 {
+                    GlobalData.User = user;
+                    if (user.FirstLogin)
+                    {
+                        newUrl = "/Employee/ChangePassWord";
+                        return ToResponse(true, null, newUrl);
+                    }
 
-                    //if(user.FirstLogin)
-                    //{
-                    //    newUrl = "/Employee/ChangePassWord";
-                    //    return ToResponse(true, null, newUrl);
-                    //}
-                    
                     GlobalData.User = user;
                     GlobalData.User.UserType = (int)UserTypeEnum.Sale;
                     var isTeamLead = new GroupRepository().checkIsTeamLeadByUserId(user.IDUser);
@@ -399,7 +399,9 @@ namespace VS_LOAN.Core.Web.Controllers
                         bool result = new UserPMBLL().ChangePass(user.IDUser.ToString(), MD5.getMD5(passwordNew.Trim()), true);
                         if (result)
                         {
-                            newUrl = Url.Action("Index", "Home");
+                            RemoveAllSession();
+                            GlobalData.User = null;
+                            newUrl = Url.Action("Login", "Employee");
                             return ToResponse(true, null, newUrl);
                         }
                         return ToResponse(false, string.Empty);
@@ -426,7 +428,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 else
                 {
 
-                    return RedirectToAction("Index", "Home");
+                
                     return RedirectToAction("ChangePassWord", "Employee");
                 }
                

@@ -34,7 +34,7 @@ namespace VS_LOAN.Core.Repository
                             userModel.Email = dt.Rows[0]["Email"].ToString();
                             userModel.UserName = dt.Rows[0]["UserName"].ToString();
                             userModel.FullName = dt.Rows[0]["FullName"].ToString();
-                            //userModel.FirstLogin =Convert.ToBoolean(dt.Rows[0]["FistLogin"].ToString());
+                            userModel.FirstLogin =Convert.ToBoolean(dt.Rows[0]["FistLogin"].ToString());
                             userModel.OrgId = Convert.ToInt32(dt.Rows[0]["OrgId"].ToString());
                             userModel.RoleId = string.IsNullOrWhiteSpace(dt.Rows[0]["RoleId"].ToString()) ? 0 :  Convert.ToInt32(dt.Rows[0]["RoleId"].ToString());
                             return userModel;
@@ -62,7 +62,7 @@ namespace VS_LOAN.Core.Repository
                     command.Parameters.Add(new SqlParameter("@Pass", pass));
                     if(firstLogin)
                     {
-                        command.Parameters.Add(new SqlParameter("@changePassword", true));
+                        command.Parameters.Add(new SqlParameter("@changePassword", 1));
                     }
                     command.ExecuteNonQuery();
                     return true;
