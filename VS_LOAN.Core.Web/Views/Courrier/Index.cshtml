@@ -145,6 +145,7 @@
                                     <th class="center w-45">STT</th>
                                     <th class="m-w-120">Khách hàng</th>
                                     <th class="w-84">Số CMND</th>
+                                    <th class="w-84">Số Điện thoại</th>
                                     <th style="width: 150px">Trạng thái</th>
                                     <th style="width: 150px">Địa chỉ</th>
                                     <th class="m-w-120">Nhân viên</th>
@@ -502,6 +503,7 @@
             + renderTextCenter(stt, '','center w-45')
             + renderTextLink(rowData.CustomerName, `/Courrier/edit/${rowData.Id}`, '', "m-w-120")
             + renderTextLeft(rowData.Cmnd, '','w-84')
+			+ renderTextLeft(rowData.Phone, '','w-84')
             + renderStatus(rowData.Status)
             + renderTextLeft(renderAddress(rowData), '', 'w-150' )
             + renderTextLeft(rowData.AssignUser, '', "m-w-120")

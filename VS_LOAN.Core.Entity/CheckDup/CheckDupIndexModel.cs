@@ -29,5 +29,29 @@ namespace VS_LOAN.Core.Entity.CheckDup
         public int TotalRecord { get; set; }
         public string MatchCondition { get; set; }
         public string NotMatchCondition { get; set; }
+
+        public int? Status { get; set; }
+
+        public string StatusText
+        {
+            get
+            {
+                switch (Status)
+                {
+                    case 0:
+                        return "Bổ sung hồ sơ";
+                    case 2:
+                        return "Đã check";
+                    case 3:
+                        return "Chưa check";
+                    case 4:
+                        return "Cancel";
+
+                    default:
+                        return "";
+                }
+               
+            }
+        }
     }
 }

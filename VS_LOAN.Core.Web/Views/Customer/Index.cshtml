@@ -79,6 +79,7 @@
                                     <th style="width: 150px">CIC</th>
                                     <th class="m-w-150">Đối tác</th>
                                     <th class="m-w-150">Trạng thái</th>
+                                   <th class="m-w-150">Trạng thái check</th>
                                     <th class="m-w-150">Tỉnh</th>
                                     <th class="m-w-300">Ghi chú</th>
                                     <th class="w-90">Mã nhân viên</th>
@@ -322,6 +323,7 @@
             + renderStatusDisplay(item.CICStatusName, null)
             + renderTextLeft(item.PartnerName, '', "m-w-150")
             + renderPartnerStatus(item.IsMatch, item.PartnerStatus, item.MatchCondition, item.NotMatchCondition)
+			 + renderTextLeft(item.StatusText, '', "m-w-150")
             + renderTextLeft(item.ProvinceName, '', "m-w-150")
             + renderTextLeft(item.LastNote, '', 'tb-row-breakword')
             + renderTextLeft(item.MaVBF, '', "w-90")

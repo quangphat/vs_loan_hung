@@ -42,6 +42,46 @@ namespace VS_LOAN.Core.Web.Controllers
             }
 
         }
+
+        public JsonResult GetListStatus()
+        {
+            var result = new List<OptionSimple>();
+
+            var item = new OptionSimple()
+            {
+                Code = "0",
+                IsSelect = true,
+                Name = "Bổ Sung hồ sơ"
+            };
+
+            result.Add(item);
+
+
+            item = new OptionSimple()
+            {
+                Code = "2",
+                IsSelect = false,
+                Name = "Đã check"
+            };
+
+            result.Add(item);
+
+            item = new OptionSimple()
+            {
+                Code = "3",
+                IsSelect = false,
+                Name = "Chưa check"
+            };
+            result.Add(item);
+            item = new OptionSimple()
+            {
+                Code = "4",
+                IsSelect = false,
+                Name = "Cancel"
+            };
+            result.Add(item);
+            return ToJsonResponse(true, "", result);
+        }
         public ActionResult Index()
         {
             return View();

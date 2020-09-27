@@ -1,4 +1,33 @@
-﻿function GetLoanProfileStatuses(controlId, defaultValue = 0, isAppend = false) {
+﻿function getCustomerCheckStatus(controlId, defaultValue = 0, isAppend = false) {
+    if (!isAppend)
+        $(controlId).empty();
+    $.ajax({
+        type: "GET",
+        url: '/Customer/GetListStatus',
+        data: {},
+        success: function (data) {
+            //$(controlId).append("<option value='0'></option>");
+            if (data.data != null && data.success == true) {
+                $.each(data.data, function (index, item) {
+                    $(controlId).append("<option value='" + item.Code + "'>" + item.Name + "</option>");
+                });
+
+                if (defaultValue > 0) {
+                    $(controlId).val(defaultValue);
+                }
+
+                $(controlId).chosen().trigger("chosen:updated");
+            }
+        },
+        complete: function () {
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+
+function GetLoanProfileStatuses(controlId, defaultValue = 0, isAppend = false) {
     if (!isAppend)
         $(controlId).empty();
     $.ajax({

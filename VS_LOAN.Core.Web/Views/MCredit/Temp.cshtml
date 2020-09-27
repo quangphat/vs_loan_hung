@@ -90,6 +90,10 @@
                             <a class="btn btn-primary" href="/MCredit/AddNew">
                                 Thêm mới
                             </a>
+							
+							  <a class="btn btn-primary"  href="javascript:void(0)" onclick ="updateStatusAll()">
+                                Cập nhật trạng thái
+                            </a>
                         </div>
 
 
@@ -186,6 +190,7 @@
 <script>
     var queries = new URLSearchParams(window.location.search);
     var page = 1;
+	var pageClick = 1;
     var limit = 10;
     var pageMargin = 2;
     var totalPage = 1;
@@ -367,6 +372,7 @@
     }
     function onClickPage(page) {
         page = page;
+		pageClick = page;
         getData(page, limit);
     }
     function renderGoPreviousPage(page) {
@@ -596,6 +602,72 @@
 
     });
 
+
+	function updateStatusAll( )
+	{
+	
+			showBlock($('#panel_body'), strLoading);
+			
+	 
+	         var currentPage = queries.get("page");
+            if (isNullOrUndefined(currentPage) || isNullOrWhiteSpace(currentPage))
+                currentPage = 1;
+            else
+                currentPage = parseInt(currentPage)
+            limit = queries.get("limit")
+            if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                limit = 10;
+            else
+                limit = parseInt(limit)
+	 
+	 $.ajax( {
+                url: '@Url.Action("updateStuatusAll", "MCredit")',
+                type: "GET",
+                contentType: "application/json",
+				data: {
+                'page': currentPage,
+                'limit': limit,
+                'freeText': $("#txtFreeText").val(),             
+                'type': "draft",
+				'fromDate':$('#txtFromDate').val(),
+				'toDate': $('#txtToDate').val(),
+			    'loaiNgay': $('input[name="radio-ngay"]:checked').val(),
+                'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
+            },
+            success: function (response) {
+                
+               if (response.success == true) {
+                     swal({
+                            title: "@Html.Raw(Global.Message_Title)",
+                            text: "Thành công",
+                            type: "success",
+                            timer: 4000,
+                            showConfirmButton: true,
+                        }, function () {
+                            window.location = window.location;
+
+                            //uploadFiles(data.data, false);
+                        });
+                }
+
+            },
+                error: function (jqXHR, exception) {
+                    showError(jqXHR, exception);
+                },
+                complete: function () {
+                    $('#panel_body').unblock();
+                    if (!isPopState) {
+                       
+                    }
+
+            }
+        })
+
+	 
+	 
+	 
+	
+	}
     function getData(page, limit, memberId = 0, isPopState = false)
     {
         showBlock($('#panel_body'), strLoading);

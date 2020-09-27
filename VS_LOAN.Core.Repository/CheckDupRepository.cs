@@ -28,12 +28,13 @@ namespace VS_LOAN.Core.Repository
                 {
                     var pars = GetParams(model, nameof(model.Id),ignoreKey: new string[] {
                         nameof(model.CreatedTime),
+                          nameof(model.StatusValue),
                         nameof(model.UpdatedTime),
                         nameof(model.UpdatedBy),
                         nameof(model.CreatedBy)
                     });
                     pars.Add("CreatedBy", createdBy);
-
+                   
                     await con.ExecuteAsync("sp_InsertCustomer_v2", pars, commandType: CommandType.StoredProcedure);
                     return RepoResponse<int>.Create(pars.Get<int>(nameof(model.Id)));
 
@@ -102,6 +103,7 @@ namespace VS_LOAN.Core.Repository
                             nameof(model.CreatedBy),
                             nameof(model.CreatedTime),
                             nameof(model.UpdatedTime),
+                              nameof(model.StatusValue),
                             nameof(model.UpdatedBy),
                         });
             pars.Add(nameof(model.UpdatedBy), updateBy);

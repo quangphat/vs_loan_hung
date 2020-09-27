@@ -160,10 +160,84 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = DataPaging.Create(profiles, profiles[0].TotalRecord);
             return ToJsonResponse(true, "", result);
         }
+
+        public async Task<JsonResult> updateStuatusAll(string freeText, string status, int page = 1, int limit = 20, string fromDate = null, string toDate = null, int loaiNgay = 0, int manhom = 0,
+
+          int mathanhvien = 0)
+        {
+            page = page <= 0 ? 1 : page;
+            DateTime dtFromDate = DateTime.MinValue, dtToDate = DateTime.Now.AddDays(3);
+            if (fromDate != "")
+                dtFromDate = DateTimeFormat.ConvertddMMyyyyToDateTimeNew(fromDate);
+            if (toDate != "")
+                dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTimeNew(toDate);
+
+            var profiles = await _rpMCredit.GetTempProfiles(page, limit, freeText, GlobalData.User.IDUser, status, dtFromDate, dtToDate, loaiNgay, manhom, mathanhvien = 0);
+            if (profiles == null || !profiles.Any())
+            {
+                return ToJsonResponse(true, "", DataPaging.Create(null as List<ProfileSearchSql>, 0));
+            }
+            var result = DataPaging.Create(profiles, profiles[0].TotalRecord);
+
+            foreach (var item in result.Datas)
+            {
+                if (string.IsNullOrWhiteSpace(item.McId))
+                {
+                    continue;
+                }
+                var mcProfile = await _svMCredit.GetProfileById(item.McId, GlobalData.User.IDUser);
+                if (mcProfile == null)
+                {
+                    continue;
+                }
+                if (mcProfile.obj == null || mcProfile.status == "error")
+                {
+                    continue;
+                }
+                int statusID;
+                try
+                {
+                    statusID = Convert.ToInt32(mcProfile.obj.Status);
+                }
+                catch
+                {
+                    statusID = item.Status;
+                }
+                if (item.Status != statusID)
+                {
+                   var idProfile = Convert.ToInt32(item.Id);
+                    await _rpMCredit.UpdateTempProfileStatusAsync(idProfile, statusID);
+                    if (mcProfile.obj.Reason != null)
+                    {
+                        var reasonName = JsonConvert.SerializeObject(mcProfile.obj.Reason);
+                        await _rpNote.AddNoteAsync(new GhichuModel
+                        {
+                            HosoId = idProfile,
+                            CommentTime = DateTime.Now,
+                            Noidung = reasonName,
+                            TypeId = (int)NoteType.MCreditTemp,
+                            UserId = GlobalData.User.IDUser
+                        });
+                        await _rpLog.InsertLog($"AddReasonToNote-{idProfile}", reasonName);
+                    }
+                    await _rpNote.AddNoteAsync(new GhichuModel
+                    {
+                        HosoId = idProfile,
+                        CommentTime = DateTime.Now,
+                        Noidung = mcProfile.obj.Refuse,
+                        TypeId = (int)NoteType.MCreditMCECheck,
+                        UserId = GlobalData.User.IDUser
+                    });
+                    await _rpLog.InsertLog($"AddRefuseToNote-{idProfile}", mcProfile.obj.Refuse);
+                }
+            }
+            return ToJsonResponse(true, "", result);
+        }
+
+     
+       
         public async Task<ActionResult> Index()
         {
-            //if (GlobalData.User.IDUser != (int)UserTypeEnum.Admin)
-            //    return RedirectToAction("Index", "NoAuthorities");
             var isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
             if (isAdmin == true)
             {
@@ -173,8 +247,9 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return RedirectToAction("Index", "NoAuthorities");
             }
-
         }
+
+
         public async Task<JsonResult> Search(string freeText, string status, string type, int page)
         {
             var result = await _svMCredit.SearchProfiles(freeText, status, type, page, GlobalData.User.IDUser);

@@ -24,6 +24,10 @@ namespace VS_LOAN.Core.Entity
         MCreditProduct = 4,
         MCreditProfileStatus = 5
     }
+
+ 
+
+
     public enum PartnerType
     {
         MCredit = 7

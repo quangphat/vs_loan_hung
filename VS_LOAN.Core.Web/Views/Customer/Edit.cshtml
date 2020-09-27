@@ -1,4 +1,5 @@
-﻿@model VS_LOAN.Core.Entity.CheckDup.CheckDupAddSql
+﻿@using VS_LOAN.Core.Web.Helpers;
+@model VS_LOAN.Core.Entity.CheckDup.CheckDupAddSql
 @{
     ViewBag.Title = "Cập nhật khách hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -115,6 +116,33 @@
                         </div>
 
                     </div>
+
+
+                    @if (GlobalData.User.UserType == 3)
+                    {
+                          <div class="form-group" style ="display:none">
+                            <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
+                            <div class="col-sm-5 col-xs-12 ">
+                                <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
+                                </select>
+                            </div>
+
+                        </div>            
+
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
+                            <div class="col-sm-5 col-xs-12 ">
+                                <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
+                                </select>
+                            </div>
+
+                        </div>
+
+                    }
+
                 </form>
             </div>
         </div>
@@ -160,6 +188,9 @@
         GetNotes('@Model.Id')
         setDateTimeInput('#CheckDate', 'dd/mm/yyyy')
         setDateTimeInput('#txtBirthDay', 'dd/mm/yyyy')
+        
+        getCustomerCheckStatus("#ddlStatus", '@Model.StatusValue')
+
 
         $("#CheckDate").val(FormatDateTimeDMYv2('@Model.CheckDate.ToString("yyyy/MM/dd")', 'YYYY-MM-DD'))
         $("#txtBirthDay").val(FormatDateTimeDMYv2('@Model.BirthDay.ToString("yyyy/MM/dd")', 'YYYY-MM-DD'))
@@ -270,7 +301,8 @@
             'PartnerStatus':$('input[name="radio-check"]:checked').val() == "1"  ? 1 : 2,
             'Address': $('#Address').val(),
             'Phone': $('#Phone').val(),
-            'Salary': getDecimalValueFromMoneyInput($("#Salary").val())
+            'Salary': getDecimalValueFromMoneyInput($("#Salary").val()),
+            "Status": (isNullOrUndefined($("#ddlStatus").val()) || isNullOrWhiteSpace($("#ddlStatus").val())) ? @Model.StatusValue : parseInt($("#ddlStatus").val())
 
         }
             var objectSend = JSON.stringify(model);
