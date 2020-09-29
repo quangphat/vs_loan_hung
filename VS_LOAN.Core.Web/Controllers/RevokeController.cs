@@ -237,15 +237,15 @@ namespace VS_LOAN.Core.Web.Controllers
                                 excelOOXML.SetCellData(nameSheet, "A" + rowindex, (i + 1).ToString());
                                 excelOOXML.SetCellData(nameSheet, "B" + rowindex,item.Id.ToString());
                                 excelOOXML.SetCellData(nameSheet, "C" + rowindex, item.AgreementNo);
-                                excelOOXML.SetCellData(nameSheet, "D" + rowindex, item.AgreementNo);
-                                excelOOXML.SetCellData(nameSheet, "E" + rowindex, item.StatusName);
-                                excelOOXML.SetCellData(nameSheet, "F" + rowindex, item.TotalCurros);
-
-                                excelOOXML.SetCellData(nameSheet, "G" + rowindex, item.AssigneeName);
-                                excelOOXML.SetCellData(nameSheet, "H" + rowindex, item.CreatedUser);
-                                excelOOXML.SetCellData(nameSheet, "I" + rowindex, item.CreatedTime.ToString());
-                                excelOOXML.SetCellData(nameSheet, "J" + rowindex, item.UpdatedUser);
-                                excelOOXML.SetCellData(nameSheet, "K" + rowindex, item.UpdatedTime.ToString());
+                                excelOOXML.SetCellData(nameSheet, "D" + rowindex, item.IdCardNumber);
+                                excelOOXML.SetCellData(nameSheet, "E" + rowindex, item.CustomerName);                              
+                                excelOOXML.SetCellData(nameSheet, "F" + rowindex, item.StatusName);
+                                excelOOXML.SetCellData(nameSheet, "G" + rowindex, item.TotalCurros);
+                                excelOOXML.SetCellData(nameSheet, "H" + rowindex, item.PaymentAppointmentDate != null ? item.PaymentAppointmentDate.ToString() : "");
+                                excelOOXML.SetCellData(nameSheet, "I" + rowindex, item.PaymentAppointmentAmount != null ? item.PaymentAppointmentAmount.ToString() : "");
+                                excelOOXML.SetCellData(nameSheet, "J" + rowindex, item.AssigneeName);
+                                excelOOXML.SetCellData(nameSheet, "K" + rowindex, item.UpdatedUser);
+                                excelOOXML.SetCellData(nameSheet, "L" + rowindex, item.UpdatedTime.ToString());
                                 rowindex++;
                             }
                         }

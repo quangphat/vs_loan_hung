@@ -58,6 +58,19 @@
                         </div>
 
                     </div>
+
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Giới tính<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddGender" class="chosen-select form-control" data-placeholder="">
+
+                                <option value="0">Nữ</option>
+                                <option value="1">Nam</option>
+                            </select>
+                        </div>
+
+                    </div>
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại</label>
                         <div class="col-sm-4">
@@ -198,14 +211,14 @@
                 'FullName': $('#txtHoTen').val(),
                 'CheckDate': $('#txtCheckDate').val(),
                 'Note': $('#txtGhiChu').val(),
-                'Cmnd': $('#txtCMND').val(),
-                'Gender': 0,
+                'Cmnd': $('#txtCMND').val(),           
                 'PartnerId': $("#partnerId").val(),
                 'ProvinceId': $("#ddlProvince").val(),
                 'Address': $('#txtAddress').val(),
                 'BirthDay': $('#txtBirthDay').val(),
                 'Phone': $('#txtPhone').val(),
-                'Salary': $('#txtSalary').val()
+                'Salary': $('#txtSalary').val(),	
+                'Gender': $("#ddGender").val()>-1? $("#ddGender").val():null	
 
         });
         $.ajax({

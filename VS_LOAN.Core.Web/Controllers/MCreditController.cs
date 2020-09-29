@@ -797,8 +797,18 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToJsonResponse(false, "Hồ sơ không tồn tại hoặc chưa được gửi qua MCredit");
             var zipFile = await _bizMedia.ProcessFilesToSendToMC(profile.Id, Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}"));
             var sendFileResult = await _svMCredit.SendFiles(GlobalData.User.IDUser, zipFile, profile.MCId);
-
-            var deleteResulft = await _bizMedia.DeleteFileZip(zipFile);
+            //var deleteResulft = await _bizMedia.DeleteFileZip(zipFile);
+            var serverPath = Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}");
+            var fileZip = System.IO.Path.Combine(serverPath, zipFile);
+            if(!string.IsNullOrWhiteSpace(fileZip))
+            {
+                var isExit = System.IO.File.Exists(fileZip);
+                if (isExit)
+                {
+                    System.IO.File.Delete(fileZip);
+                    await _rpLog.InsertLog("ReSendFileToEC","đã xóa file");
+                }
+            }
             await _rpLog.InsertLog("ReSendFileToEC", sendFileResult != null ? sendFileResult.Dump() : "ReSendFileToEC = null");
             return ToJsonResponse(sendFileResult.status == "success" ? true : false, "", sendFileResult);
         }
