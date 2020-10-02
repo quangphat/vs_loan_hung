@@ -23,6 +23,8 @@ namespace VS_LOAN.Core.Entity.CheckDup
         public string Phone { get; set; }
         public decimal Salary { get; set; }
 
+        public int? Gender { get; set; }
+
         public int? Status { get; set; }
 
         public int? StatusValue

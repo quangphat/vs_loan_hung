@@ -102,7 +102,7 @@ namespace VS_LOAN.Core.Repository
             using (var con = GetConnection())
             {
                 await con.ExecuteAsync("sp_RevokeDebt_UpdateSimple",
-                     new { profileId, updateBy, model.Status, model.AssigneeId, model.DistrictId, model.ProvinceId,model.PaymentAppointmentAmount,model.PaymentAppointmentDate}
+                     new { profileId, updateBy, model.Status, model.AssigneeId, model.DistrictId, model.ProvinceId,model.PaymentAppointmentAmount,model.PaymentAppointmentDate,model.GroupId}
                      , commandType: CommandType.StoredProcedure);
                 return true;
             }

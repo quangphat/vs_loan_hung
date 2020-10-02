@@ -37,15 +37,12 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> Search(string freeText = null, string status = null, int groupId = 0, int assigneeId =0, int page = 1, int limit = 10, string fromDate = null, string toDate = null, int loaiNgay = 1, int ddlProcess =-1,int ddlProvince =-1)
         {
-
             DateTime dtFromDate = DateTime.MinValue, dtToDate = DateTime.Now.AddDays(3);
             if (fromDate != "")
                 dtFromDate = DateTimeFormat.ConvertddMMyyyyToDateTimeNew(fromDate);
             if (toDate != "")
                 dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTimeNew(toDate);
-
             var result = await _bizRevokeDebt.SearchAsync(GlobalData.User.IDUser, freeText, status, page, limit, groupId, assigneeId,dtFromDate,dtToDate,loaiNgay, ddlProcess, ddlProvince);
-           
             return ToJsonResponse(true, null, result);
         }
         public async Task<JsonResult> Import()
@@ -66,7 +63,20 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<ActionResult> Edit(int id)
         {
             var profile = await _bizRevokeDebt.GetByIdAsync(id, GlobalData.User.IDUser);
-            ViewBag.model = profile;
+
+            if (GlobalData.User.UserType == (int)UserTypeEnum.Admin)
+          
+                              
+             ViewBag.model = profile;
+             var isadmin = (GlobalData.User.UserType == (int)UserTypeEnum.Admin);
+            if(isadmin)
+            {
+                ViewBag.statusReadOnly = "";
+            }
+            else
+            {
+                ViewBag.statusReadOnly = "disabled";
+            }
             return View();
         }
         public async Task<JsonResult> Delete(int profileId)

@@ -1,4 +1,5 @@
 ﻿@using VS_LOAN.Core.Web.Resources;
+@using VS_LOAN.Core.Web.Helpers;
 @{
     ViewBag.Title = "Hồ sơ thu nợ";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -304,7 +305,8 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Nhóm<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlGroup" class="chosen-select form-control" data-placeholder="Chọn nhóm">
+
+                            <select id="ddlGroup" class="chosen-select form-control" data-placeholder="Chọn nhóm" @ViewBag.statusReadOnly>
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -372,7 +374,7 @@
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
                         <div class="col-sm-5 col-xs-12 ">
-                            <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
+                            <select id="ddlStatus"  class="chosen-select form-control" data-placeholder="Chọn trạng thái">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -465,9 +467,11 @@
         $('#ddlTinh').on('change', function () {
             getDistricts('#ddlHuyen', this.value);
         });
+
+
         LayDSNhomCha('#ddlGroup', @ViewBag.model.GroupId, '#ddlCourier', @ViewBag.model.AssigneeId);
         $('#ddlGroup').on('change', function () {
-            GetEmployeesByGroupId('#ddlCourier', this.value, false, hoso.AssignId);
+            GetEmployeesByGroupId('#ddlCourier', this.value, false,  @ViewBag.model.AssigneeId);
         });
     });
 

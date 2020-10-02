@@ -128,31 +128,38 @@ namespace VS_LOAN.Core.Entity.RevokeDebt
                 }
                 else
                 {
-                  return  string.Format("{0:C}", PaymentAppointmentAmount);
+                    return PaymentAppointmentAmount.ToString();
                 }
             }
         }
 
 
         public DateTime? PaymentAppointmentDate { get; set; }
-        public string GroupId
+
+        public int ? GroupId
         {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(AssigneeGroupIds))
-                    return "0";
-                return  AssigneeGroupIds.Split('.').FirstOrDefault();
-            }
+            get;set;
         }
-        public string AssigneeId
-        {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(AssigneeIds))
-                    return "0";
-                return AssigneeIds.Split('.').FirstOrDefault();
-            }
-        }
+        //public string GroupId
+        //{
+        //    get
+        //    {
+        //        if (string.IsNullOrWhiteSpace(AssigneeGroupIds))
+        //            return "0";
+        //        return  AssigneeGroupIds.Split('.').FirstOrDefault();
+        //    }
+        //}
+
+            public int? AssigneeId { get; set; }
+        //public string AssigneeId
+        //{
+        //    get
+        //    {
+        //        if (string.IsNullOrWhiteSpace(AssigneeIds))
+        //            return "0";
+        //        return AssigneeIds.Split('.').FirstOrDefault();
+        //    }
+        //}
         public string AssigneeName { get; set; }
 
         public string AssigneeCode { get; set; }

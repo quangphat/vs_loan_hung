@@ -14,7 +14,10 @@ namespace VS_LOAN.Core.Entity.CheckDup
         public DateTime BirthDay { get; set; }
         public string Cmnd { get; set; }
         public int CICStatus { get; set; }
-        public bool Gender { get; set; }
+        public int? Gender { get; set; }
+        
+
+    
         public string Note { get; set; }
         public int PartnerId { get; set; }
         public int PartnerStatus { get; set; }
@@ -24,5 +27,10 @@ namespace VS_LOAN.Core.Entity.CheckDup
         public decimal Salary { get; set; }
 
         public int Status { get; set; }
+
+    
+
+
+
     }
 }
