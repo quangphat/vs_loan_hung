@@ -52,8 +52,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IMCreditService.cs" />
+    <Compile Include="Interfaces\IOdcService.cs" />
     <Compile Include="MCreditLoanService.cs" />
     <Compile Include="MCreditServiceBase.cs" />
+    <Compile Include="OdbServiceBase.cs" />
+    <Compile Include="OdbServiceService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -231,6 +231,7 @@
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\DuyetHoSoController.cs" />
     <Compile Include="Controllers\F88Controller.cs" />
+    <Compile Include="Controllers\OcbController.cs" />
     <Compile Include="Controllers\MCreditController.cs" />
     <Compile Include="Controllers\QuanLyHoSoController.cs" />
     <Compile Include="Controllers\RevokeController.cs" />
@@ -1778,6 +1779,9 @@
     <Content Include="Views\Home\Index - Copy.cshtml" />
     <Content Include="Views\ShareRevoke\_NavBarRV.cshtml" />
     <Content Include="Views\Employee\ChangePassWord.cshtml" />
+    <Content Include="Views\Ocb\Temp.cshtml" />
+    <Content Include="Views\Ocb\AddNew.cshtml" />
+    <Content Include="Views\Ocb\OcbProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

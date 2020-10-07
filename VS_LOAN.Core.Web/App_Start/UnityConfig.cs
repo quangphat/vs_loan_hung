@@ -59,6 +59,7 @@ namespace VS_LOAN.Core.Web
             container.RegisterSingleton<IRevokeDebtRepository, RevokeDebtRepository>();
             container.RegisterSingleton<ILogRepository, LogRepository>();
             container.RegisterSingleton<IHosoRepository, HosoRepository>();
+            container.RegisterSingleton<IOcbRepository, OcbRepository>();
             container.RegisterSingleton<ICustomerRepository, CustomerRepository>();
             container.RegisterSingleton<IHosoCourrierRepository, HosoCourrierRepository>();
             container.RegisterSingleton<IMCreditRepositoryTest, MCreditRepositoryTest>();
@@ -68,6 +69,8 @@ namespace VS_LOAN.Core.Web
             container.RegisterSingleton<IPartnerRepository, PartnerRepository>();
             container.RegisterSingleton<ITailieuRepository, TailieuRepository>();
             container.RegisterType<MCreditService.Interfaces.IMCreditService, MCreditLoanService>();
+
+            container.RegisterType<MCreditService.Interfaces.IOdcService, OdbServiceService>();
             // container.RegisterType<IProductRepository, ProductRepository>();
         }
     }

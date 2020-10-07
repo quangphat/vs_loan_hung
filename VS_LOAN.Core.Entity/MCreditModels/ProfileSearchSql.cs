@@ -25,6 +25,9 @@ namespace VS_LOAN.Core.Entity.MCreditModels
 
         public string McNote { get; set; }
 
+
+
+
         public ProfileSearchSql ( )
         {
             McNote = string.Empty;
