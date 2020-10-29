@@ -1,9 +1,17 @@
 ﻿@using VS_LOAN.Core.Web.Resources;
-@using VS_LOAN.Core.Web.Helpers;
 @{
     ViewBag.Title = "Hồ sơ thu nợ";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+
+
+
+
+
+
+
+
 <script type="text/javascript">
 
 </script>
@@ -306,7 +314,7 @@
                         <label class="col-sm-2 control-label no-padding-right">Nhóm<span class="required">(*)</span></label>
                         <div class="col-sm-4">
 
-                            <select id="ddlGroup" class="chosen-select form-control" data-placeholder="Chọn nhóm" @ViewBag.statusReadOnly>
+                            <select id="ddlGroup" class="chosen-select form-control" data-placeholder="Chọn nhóm">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -351,29 +359,11 @@
                             </div>
 
                         </div>
-                     
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số tiền hẹn thanh toán<span class="required">(*)</span></label>
-                    <div class="col-sm-4">
-                        <input type="text" id="PaymentAppointmentAmount" value="@ViewBag.model.PaymentAppointmentAmount" placeholder="Nhập số tiền đề nghị vay" class="form-control">
-                    </div>
-
-
-
-              
-
-
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                                            </form>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số tiền hẹn thanh toán <span ></span> </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="PaymentAppointmentAmount"  class="form-control">
+					</div>
+                    </form>
 
 
 
@@ -392,7 +382,7 @@
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
                         <div class="col-sm-5 col-xs-12 ">
-                            <select id="ddlStatus"  class="chosen-select form-control" data-placeholder="Chọn trạng thái">
+                            <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -447,15 +437,8 @@
 </div>
 <script>
     $(document).ready(function () {
-
-
-       
-	   setDateTimeInput('#PaymentAppointmentDate', 'dd-mm-yy');
-
-           $("#PaymentAppointmentAmount").ForceNumericOnly();
-        $("#PaymentAppointmentAmount").change(function () {
-        $("#PaymentAppointmentAmount").val(formatCurrency($("#PaymentAppointmentAmount").val().replace(/\./g, '')));
-        });
+	   setDateTimeInput('#PaymentAppointmentDate', 'dd/mm/yyyy');
+	   
 
         setTextForPTag('checkSaleResult');
         setTextForPTag('checkdupResult');
@@ -483,10 +466,8 @@
         $("#CashPrice").val(formatCurrency('@ViewBag.model.CashPrice'));
         $("#TotalPayableAmount").val(formatCurrency('@ViewBag.model.TotalPayableAmount'));
 		    $("#PaymentAppointmentDate").val('@ViewBag.model.PaymentAppointmentDate');	
-	     var hosoInfo = @Html.Raw(Json.Encode(ViewBag.model));
+	        $("#PaymentAppointmentAmount").val('@ViewBag.model.PaymentAppointmentAmount');
 
-         $('#PaymentAppointmentDate').val(SetFormatDateTimeDMY(hosoInfo.PaymentAppointmentDate));
-        $('#PaymentAppointmentAmount').val(formatCurrency(hosoInfo.PaymentAppointmentAmount));
         renderStatusList('#ddlStatus',@ViewBag.model.Status);
         Getcomments();
         getFilesUpload();
@@ -494,20 +475,9 @@
         $('#ddlTinh').on('change', function () {
             getDistricts('#ddlHuyen', this.value);
         });
-		
-		var modelobject = @Html.Raw(Json.Encode(ViewBag.model));
-	
 
-		if(modelobject.GroupId == null)
-		{
-		  LayDSNhomCha('#ddlGroup', 0, '#ddlCourier', @ViewBag.model.AssigneeId);
-		}
-		else 
-		{
-		LayDSNhomCha('#ddlGroup', modelobject.GroupId, '#ddlCourier', @ViewBag.model.AssigneeId);
-		}
-		
-      
+
+        LayDSNhomCha('#ddlGroup', @ViewBag.model.GroupId, '#ddlCourier', @ViewBag.model.AssigneeId);
         $('#ddlGroup').on('change', function () {
             GetEmployeesByGroupId('#ddlCourier', this.value, false,  @ViewBag.model.AssigneeId);
         });
@@ -774,7 +744,7 @@
             'ProvinceId': $("#ddlTinh").val(),
             'AssigneeId': $("#ddlCourier").val(),
             'GroupId': $("#ddlGroup").val(),
-            'PaymentAppointmentAmount': $('#PaymentAppointmentAmount').val().replace(/\./g, ''),
+			'PaymentAppointmentAmount': $("#PaymentAppointmentAmount").val(),
             'PaymentAppointmentDate': $("#PaymentAppointmentDate").val()
         })
         
@@ -794,7 +764,8 @@
                             timer: 4000,
                             showConfirmButton: true,
                         }, function () {
-						
+
+                               return;
                             window.location = window.location;
 
 

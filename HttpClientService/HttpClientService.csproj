@@ -43,7 +43,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="VS_LOAN.Core.Entity">
-      <HintPath>..\VS_LOAN.Core.Entity\bin\Debug\VS_LOAN.Core.Entity.dll</HintPath>
+      <HintPath>..\VS_LOAN.Core.Entity\bin\Release\VS_LOAN.Core.Entity.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -64,11 +64,9 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             var profile = await _bizRevokeDebt.GetByIdAsync(id, GlobalData.User.IDUser);
 
-            if (GlobalData.User.UserType == (int)UserTypeEnum.Admin)
-          
-                              
+            
              ViewBag.model = profile;
-             var isadmin = (GlobalData.User.UserType == (int)UserTypeEnum.Admin);
+             var isadmin = (GlobalData.User.UserType == (int)UserTypeEnum.Admin || (GlobalData.User.UserType == (int)UserTypeEnum.Teamlead));
             if(isadmin)
             {
                 ViewBag.statusReadOnly = "";

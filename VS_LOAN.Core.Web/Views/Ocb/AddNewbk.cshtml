@@ -4,15 +4,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @model String
-
-
-
-
-
-
-
-
-
 <script type="text/javascript">
     SetActiveMenu('@ViewBag.formindex', 2);
 </script>
@@ -35,15 +26,7 @@
                         <div class="col-sm-4">
                             <input type="text" id="txtHoTen" placeholder="Nhập họ tên" class="form-control">
                         </div>
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày nhận đơn đề nghị<span class="required">(*)</span></label>
-                        <div class="col-sm-4">
-                            <div class="input-group">
-                                <input class="form-control date-picker" id="txtToDate" />
-                                <span class="input-group-addon">
-                                    <i class="fa fa-calendar bigger-110"></i>
-                                </span>
-                            </div>
-                        </div>
+                      
 
                     </div>
                     <div class="form-group">
@@ -66,10 +49,7 @@
                         <div class="col-sm-4">
                             <input type="text" id="txtDienThoai" placeholder="Nhập số điện thoại khách hàng" class="form-control">
                         </div>
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại nhân viên</label>
-                        <div class="col-sm-4">
-                            <input type="text" id="txtDienThoai2" placeholder="Nhập số điện thoại nhân viên" class="form-control">
-                        </div>
+                        
                     </div>
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CMND/CCCD<span class="required">(*)</span></label>
@@ -90,11 +70,13 @@
                         <label class="col-sm-2 control-label no-padding-right">Giới tính</label>
                         <div class="col-sm-4">
                             <select id="ddlGioiTinh" class="chosen-select form-control">
-                                <option value="1">Nam</option>
-                                <option value="2">Nữ</option>
+                                <option value="0">Nam</option>
+                                <option value="1">Nữ</option>
                             </select>
                         </div>
                     </div>
+
+                       <h3 class="header smaller lighter blue">Thông tin về địa chỉ hiên tại`</h3>
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Tỉnh/TP<span class="required">(*)</span></label>
                         <div class="col-sm-4">
@@ -108,33 +90,114 @@
                                 <option value="0"></option>
                             </select>
                         </div>
+						
+						
                     </div>
-                    <div class="form-group">
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Địa chỉ<span class="required">(*)</span></label>
+					
+					
+					 <div class="form-group">
+                       
+						<label class="col-sm-2 control-label no-padding-right">Phường/Xã<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlReward" class="chosen-select form-control" data-placeholder="Chọn đường">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+						
+                    </div>
+					
+					
+                      <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Thôn ấp<span class="required">(*)</span></label>
                         <div class="col-sm-10">
-                            <textarea type="text" id="txtDiaChi" placeholder="Nhập địa chỉ" class="form-control"></textarea>
+                            <textarea type="text" id="CurAddressRegion" placeholder="Nhập địa chỉ" class="form-control"></textarea>
                         </div>
                     </div>
+					
+                    
+                           <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên đường<span class="required">(*)</span></label>
+                        <div class="col-sm-10">
+                            <textarea type="text" id="CurAddressStreet" placeholder="Nhập địa chỉ" class="form-control"></textarea>
+                        </div>
+                    </div>
+
+
                     <div class="form-group">
-                        <label class="col-sm-2 control-label no-padding-right">Sale Code</label>
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số nhà địa chỉ<span class="required">(*)</span></label>
+                        <div class="col-sm-10">
+                            <textarea type="text" id="CurAddressNumber" placeholder="Nhập địa chỉ" class="form-control"></textarea>
+                        </div>
+                    </div>
+		
+
+                   
+                   
+              
+
+
+
+
+ <h3 class="header smaller lighter blue">Thông tin về địa chỉ thường trú`</h3>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Tỉnh/TP<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlInternalCode" class="chosen-select form-control" data-placeholder="Chọn Sale Code">
+                            <select id="RegAddressProvinceId" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
                                 <option value="0"></option>
                             </select>
                         </div>
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên nhân viên</label>
+                        <label class="col-sm-2 control-label no-padding-right">Quận/huyện<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtTenNV" data-toggle-tt="tooltip" placeholder="Tên nhân viên" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Data Entry Code</label>
-                        <div class="col-sm-4">
-                            <select id="ddlCourier" class="chosen-select form-control" data-placeholder="Chọn Data Entry code">
+                            <select id="RegAddressDistId" class="chosen-select form-control" data-placeholder="Chọn quận huyện">
                                 <option value="0"></option>
                             </select>
                         </div>
+						
+						
                     </div>
+					
+					
+					 <div class="form-group">
+                       
+						<label class="col-sm-2 control-label no-padding-right">Phường/xã<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="RegAddressWardId" class="chosen-select form-control" data-placeholder="Chọn đường">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+						
+                    </div>
+					
+					
+					
+                     <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Thôn ấp<span class="required">(*)</span></label>
+                        <div class="col-sm-10">
+                            <textarea type="text" id="RegAddressRegion" placeholder="Nhập địa chỉ" class="form-control"></textarea>
+                        </div>
+                    </div>
+
+
+                           <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên đường<span class="required">(*)</span></label>
+                        <div class="col-sm-10">
+                            <textarea type="text" id="RegAddressStreet" placeholder="Nhập địa chỉ" class="form-control"></textarea>
+                        </div>
+                    </div>
+
+              
+                    <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số nhà địa chỉ<span class="required">(*)</span></label>
+                        <div class="col-sm-10">
+                            <textarea type="text" id="RegAddressNumber" placeholder="Nhập địa chỉ" class="form-control"></textarea>
+                        </div>
+                    </div>
+		
+
+                   
+
+                    
+                
                 </form>
             </div>
         </div>
@@ -142,11 +205,25 @@
             <div class="col-xs-12">
                 <h3 class="header smaller lighter blue">2.Thông tin khoản vay và sản phẩm:</h3>
                 <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label no-padding-right">Tên ngân hàng<span class="required">(*)</span></label>
+
+                 <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Thông tin thu nhập<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlDoiTac" class="chosen-select form-control" data-placeholder="Chọn đối tác">
-                                <option value="0"></option>
+                            <input type="text" id="txtInCome" placeholder="Nhập thông tin thu nhập" class="form-control">
+                        </div>
+                       
+                    </div>
+
+                 
+
+             
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Loại sản phẩm vay<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                            <select id="ddlloaisanpham" class="chosen-select form-control" data-placeholder="Chọn loại sản phẩm vay">
+                         
+                                <option value="100"> VAY THEO GPLX-HK</option>
+                                <option value="9">VAY THEO LƯƠNG</option>
                             </select>
                         </div>
                         <label class="col-sm-2 control-label no-padding-right">Sản phẩm vay<span class="required">(*)</span></label>
@@ -157,20 +234,8 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <div class="col-sm-4  col-md-offset-2">
-                            <div class="checkbox">
-                                <label>
-                                    <input name="form-field-checkbox" id="cbbaohiem" type="checkbox" class="ace">
-                                    <span class="lbl">Không đề nghị mua bảo hiểm dư TD cá nhân</span>
-                                </label>
-                            </div>
-                        </div>
-                        <label style="display:none" for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên cửa hàng<span class="required">(*)</span></label>
-                        <div class="col-sm-4" style="display:none">
-                            <input type="text" id="txtTenCuaHang"  placeholder="Nhập tên của hàng" class="form-control" />
-                        </div>
-                    </div>
+
+                    
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số tiền đề nghị vay<span class="required">(*)</span></label>
                         <div class="col-sm-4">
@@ -181,17 +246,16 @@
                             <input type="text" id="spnThoiHanVay" />
                         </div>
                     </div>
+
+                         
+                  
                 </form>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <h3 class="header smaller lighter blue">3.Hồ sơ đính kèm:</h3>
-                <div class="row">
-                    <div class="col-xs-12" style="overflow-y: scroll;max-height:400px;">
-                        <form class="form-horizontal" role="form" id="lstTailieu"></form>
-                    </div>
-                </div>
+                <h3 class="header smaller lighter blue">3.Thông tin thêm:</h3>
+               
 
             </div>
 
@@ -209,14 +273,10 @@
                     </div>
                     <div class="pull-right">
                         <a class="btn btn-sm btn-primary" id="btn_Temp">
-                            Lưu tạm
+                           Lưu
                         </a>
-                        <a class="btn btn-sm btn-primary" id="btn_Save">
-                            Nộp hồ sơ
-                        </a>
-                        @*<a class="btn btn-sm btn-primary" href="/HoSo/AddNew" id="btn_addNew">
-                Tạo mới
-            </a>*@
+                       
+                       
                     </div>
                 </form>
             </div>
@@ -231,12 +291,15 @@
         $('#ddlCourier').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlHuyen').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlTinh').chosen({ width: '100%', allow_single_deselect: true });
-        $('#txtToDate').datepicker({
-            dateFormat: 'dd-mm-yy'
 
-        }).next().on(ace.click_event, function () {
-            $(this).prev().focus();
-        });
+           $('#RegAddressProvinceId').chosen({ width: '100%', allow_single_deselect: true });
+
+             $('#RegAddressDistId').chosen({ width: '100%', allow_single_deselect: true });
+
+
+  $('#RegAddressWardId').chosen({ width: '100%', allow_single_deselect: true });
+               $('#RegAddressProvinceId').chosen({ width: '100%', allow_single_deselect: true });
+     
         $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
         $('#txtBirhDay').datepicker({
             dateFormat: 'dd-mm-yy'
@@ -282,17 +345,56 @@
     });
 
     $(document).ready(function () {
-        LayDSTaiLieu();
-        LayDSNganHang();
+    ;
         LayDSTinh();
-        LayDSCourier();
-        LayDSale('@ViewBag.MaNV');
-        $('#ddlDoiTac').on('change', function () {
-            LayDSSanPham(this.value);
+       
+        //$('#ddlDoiTac').on('change', function () {
+          
+        //});
+
+
+        $("#txtInCome").ForceNumericOnly();
+        $("#txtInCome").change(function () {
+        $("#txtInCome").val(formatCurrency($("#txtInCome").val().replace(/\./g, '')));
         });
+
+
+        $("#txtTienDeNghiVay").ForceNumericOnly();
+        $("#txtTienDeNghiVay").change(function () {
+        $("#txtTienDeNghiVay").val(formatCurrency($("#txtTienDeNghiVay").val().replace(/\./g, '')));
+        });
+
+          $('#ddlloaisanpham').on('change', function () {
+          LayDSSanPham(this.value);
+        });
+        
         $('#ddlTinh').on('change', function () {
             LayDSHuyen(this.value);
         });
+		
+		
+		 $('#ddlHuyen').on('change', function () {
+            laydanhsachReward(this.value);
+			
+			
+        }); 
+
+
+        $('#RegAddressProvinceId').on('change', function () {
+            laydanhsachthanhphothuongtru(this.value);
+        });
+		
+		
+		 $('#RegAddressDistId').on('change', function () {
+            laydanhsachwarchThuongtru(this.value);
+			
+			
+        });
+
+
+
+
+
         $('#ddlInternalCode').on('change', function () {
              $('#txtTenNV').val( $('option:selected', this).attr('ten'));
         });
@@ -303,20 +405,29 @@
 				.on('changed.fu.spinbox', function () {
 				    //alert($('#spinner1').val())
 				});
+				
+		
     function LayDSTinh() {
         $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSTinh", "KhuVuc")',
+            type: "get",
+            url: '@Url.Action("LayDanhSachTinh", "Ocb")',
             data: {},
             success: function (data) {
                 $('#ddlTinh').empty();
+
+                $('#RegAddressProvinceId').empty();
                 $('#ddlTinh').append("<option value='0'></option>");
+
+                   $('#RegAddressProvinceId').append("<option value='0'></option>");
                 if (data != null) {
                     $.each(data.data, function (index, optionData) {
-                        $('#ddlTinh').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                        $('#ddlTinh').append("<option value='" + optionData.ProvinceId + "'>" + optionData.ProvinceName + "</option>");
+
+                          $('#RegAddressProvinceId').append("<option value='" + optionData.ProvinceId + "'>" + optionData.ProvinceName + "</option>");
                     });
                 }
                 $('#ddlTinh').chosen().trigger("chosen:updated");
+                   $('#RegAddressProvinceId').chosen().trigger("chosen:updated");
             },
             complete: function () {
             },
@@ -326,20 +437,23 @@
         });
     }
 
-    function LayDSCourier() {
+
+    
+
+    function laydanhsachReward(ciityCode) {
         $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSCourier", "HoSo")',
-            data: {},
+            type: "get",
+            url: '@Url.Action("LayDanhSachWard", "Ocb")',
+            data: {'cityCode':ciityCode},
             success: function (data) {
-                $('#ddlCourier').empty();
-                $('#ddlCourier').append("<option value='0'></option>");
+                $('#ddlReward').empty();
+                $('#ddlReward').append("<option value='0'></option>");
                 if (data != null) {
                     $.each(data.data, function (index, optionData) {
-                        $('#ddlCourier').append("<option value='" + optionData.ID + "'>" + optionData.FullText + "</option>");
+                        $('#ddlReward').append("<option value='" + optionData.WardId + "'>" + optionData.WardName + "</option>");
                     });
                 }
-                $('#ddlCourier').chosen().trigger("chosen:updated");
+                $('#ddlReward').chosen().trigger("chosen:updated");
             },
             complete: function () {
             },
@@ -348,21 +462,69 @@
             }
         });
     }
-
+   
     function LayDSHuyen(maTinh) {
         $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSHuyen", "KhuVuc")',
-            data: {'maTinh':maTinh},
+            type: "get",
+            url: '@Url.Action("LayDanhSachThanhPho", "Ocb")',
+            data: {'province':maTinh},
             success: function (data) {
                 $('#ddlHuyen').empty();
                 $('#ddlHuyen').append("<option value='0'></option>");
                 if (data != null) {
                     $.each(data.data, function (index, optionData) {
-                        $('#ddlHuyen').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                        $('#ddlHuyen').append("<option value='" + optionData.CityId + "'>" + optionData.CityName + "</option>");
                     });
                 }
                 $('#ddlHuyen').chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+    
+
+    function laydanhsachwarchThuongtru(ciityCode) {
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("LayDanhSachWard", "Ocb")',
+            data: {'cityCode':ciityCode},
+            success: function (data) {
+                $('#RegAddressWardId').empty();
+                $('#RegAddressWardId').append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#RegAddressWardId').append("<option value='" + optionData.WardId + "'>" + optionData.WardName + "</option>");
+                    });
+                }
+                $('#RegAddressWardId').chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+    function laydanhsachthanhphothuongtru(maTinh) {
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("LayDanhSachThanhPho", "Ocb")',
+            data: {'province':maTinh},
+            success: function (data) {
+                $('#RegAddressDistId').empty();
+                $('#RegAddressDistId').append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#RegAddressDistId').append("<option value='" + optionData.CityId + "'>" + optionData.CityName + "</option>");
+                    });
+                }
+                $('#RegAddressDistId').chosen().trigger("chosen:updated");
             },
             complete: function () {
             },
@@ -397,96 +559,19 @@
         });
     }
 
-    function LayDSTaiLieu() {
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSTaiLieu", "HoSo")',
-            data: {},
-            success: function (data) {
-                if (data.data != null) {
-                    var i = 0;
-                    var htmlContent = "";
-                    let keys = [];
-                    $.each(data.data, function (index, item) {
-                        $("#lstTailieu").append("<div class='form-group'><div id='tailieu-" + item.ID + "'></div></div > ");
-                        let name = '',
-                            className = ''
-                        if (keys.indexOf(item.ID) < 0) {
-                            name = item.Ten;
-                        }
-                        else {
-                            className = 'mt-46'
-                        }
-
-                        renderOneItemFile(item.ID, item.ID, name, item.BatBuoc, className, true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
-                        keys.push(item.ID);
-                    })
-                }
-               
-            },
-            complete: function () {
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    }
-    let filesUpload = [];
-    function onDeleteFile(key, fileId, isExist) {
-        removeFile(key, fileId);
-    }
-    function onUploadFile(key, fileId, data, isExist) {
-
-        if (isReach5Files(filesUpload, key))
-            return;
-        let response = data;
-        if (isNullOrNoItem(filesUpload)) {
-            filesUpload = []
-        }
-        let file = {
-            Key: parseInt(response.initialPreviewConfig[0].key),
-            FileName: response.initialPreviewConfig[0].caption,
-            FileUrl: response.initialPreview,
-            KeyName: "",
-            Id: fileId
-        }
-        let existKeyIndex = filesUpload.findIndex(p => p.key == key)
-        if (existKeyIndex < 0) {
-            filesUpload.push({ key: parseInt(key), files: [file] })
-        }
-        else {
-            if (filesUpload[existKeyIndex].files == null)
-                filesUpload[existKeyIndex].files = []
-            filesUpload[existKeyIndex].files.push(file);
-        }
-        if (isReach5Files(filesUpload, key) === false) {
-            let newAttachhFileId = getNewGuid();
-            renderOneItemFile(key, newAttachhFileId, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile, filesUpload);
-        }
-    }
-    function removeFile(key, fileId) {
-        if (isNullOrNoItem(filesUpload))
-            return;
-        let index = filesUpload.findIndex(p => p.key == key);
-        if (index >= 0) {
-            if (!isNullOrNoItem(filesUpload[index].files)) {
-                let indexOfFile = filesUpload[index].files.findIndex(p => p.Id == fileId);
-                if (indexOfFile >= 0)
-                    filesUpload[index].files.splice(indexOfFile, 1);
-            }
-        }
-    }
+    
     function LayDSSanPham(maDoiTac) {
+        
         $.ajax({
             type: "POST",
-            url: '@Url.Action("LayDSSanPham", "HoSo")',
-            data: { 'maDoiTac': maDoiTac },
+            url: '@Url.Action("GetLoanProduct", "Ocb")',
+            data: { 'maDoiTac': maDoiTac},
             success: function (data) {
                 $('#ddlSanPhamVay').empty();
                 $('#ddlSanPhamVay').append("<option value='0'></option>");
                 if (data != null) {
                     $.each(data.data, function (index, optionData) {
-                        $('#ddlSanPhamVay').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                        $('#ddlSanPhamVay').append("<option value='" + optionData.Ten + "'>" + optionData.Ten + "</option>");
                     });
                 }
                 $('#ddlSanPhamVay').chosen().trigger("chosen:updated");
@@ -500,34 +585,13 @@
         });
     }
 
-    function LayDSale(maNV) {
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSSale", "HoSo")',
-            data: { },
-            success: function (data) {
-                $('#ddlInternalCode').empty();
-                $('#ddlInternalCode').append("<option value='0'></option>");
-                var ten = '';
-                if (data != null) {
-                    $.each(data.data, function (index, optionData) {
-                        $('#ddlInternalCode').append("<option  ten='" + optionData.FullName + "' value='" + optionData.IDUser + "'>" + optionData.Code + "</option>");
-                    });
-                }
-                $('#ddlInternalCode').val(maNV);
-                $('#ddlInternalCode').trigger("change");
-                $('#ddlInternalCode').chosen().trigger("chosen:updated");
-
-            },
-            complete: function () {
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    }
+    var save = false;
 
     $('#btn_Temp').click(function (e) {
+        if(save ==true)
+        {
+            return;
+        }
         if ($('#txtHoTen').val() == "" || $('#txtHoTen').val() == undefined) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
@@ -538,16 +602,8 @@
             });
             return;
         }
-        if ($('#ddlDoiTac').val() == "0" || $('#ddlDoiTac').val() == undefined) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn đối tác",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
+
+     
         if ($('#ddlSanPhamVay').val() == "0" || $('#ddlSanPhamVay').val() == undefined) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
@@ -558,21 +614,85 @@
             });
             return;
         }
+
+             
+        if ($('#ddlTinh').val() == "0" || $('#ddlTinh').val() == undefined) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui long chon tỉnh",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+		
+		
+                   
+        if ($('#ddlHuyen').val() == "0" || $('#ddlHuyen').val() == undefined) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui long chọn huyện",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+		
+
+                      
+        if ($('#ddlReward').val() == "0" || $('#ddlReward').val() == undefined) {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Vui long chọn xã phường thị trấn",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+        save =true;
+	
         var objectSend = JSON.stringify({
-            'hoten': $('#txtHoTen').val(), 'phone': $('#txtDienThoai').val(),
-            'phone2': $('#txtDienThoai2').val(), 'ngayNhanDon': $('#txtToDate').val(),
-            'hoSoCuaAi': $('#ddlInternalCode').val(), 'cmnd': $('#txtCMND').val(), 'gioiTinh': $('#ddlGioiTinh').val(),
-            'maKhuVuc': $('#ddlHuyen').val(), 'diaChi': $('#txtDiaChi').val(),'courier':$('#ddlCourier').val(),
-            'sanPhamVay': $('#ddlSanPhamVay').val(), 'tenCuaHang': $('#txtTenCuaHang').val(),
-            'baoHiem': $('#cbbaohiem').is(":checked"), 'thoiHanVay': $('#spnThoiHanVay').val(),
-            'ghiChu': $('#txtGhiChu').val(),
-            'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, ''),
+
+            'traceCode' :'',
+            'FullNamme': $('#txtHoTen').val(),         
+            'Gender': $('#ddlGioiTinh').val() == "1" ? false:true,
+            'IdCard': $('#txtCMND').val(),
+            'idIssueDate':'',
+            'idIssuePlaceId':'',
             'birthDayStr': $('#txtBirhDay').val(),
-            'cmndDayStr': $('#txtCmndDay').val()
+            'Mobilephone': $('#txtDienThoai').val(),            
+            'InCome':  $('#txtInCome').val().replace(/\./g, ''),
+            'CurAddressWardId': $('#ddlReward').val(),
+    
+            'CurAddressProvinceId': $('#ddlTinh').val(),
+            'CurAddressDistId': $('#ddlHuyen').val(),
+            'IdIssueDatestr':$("#txtCmndDay").val(),
+            'CurAddressNumber': $('#CurAddressNumber').val(),
+            'CurAddressRegion': $('#CurAddressRegion').val(),
+            'CurAddressStreet': $('#CurAddressStreet').val(),           
+            'RegAddressWardId':$('#RegAddressWardId').val(),
+            'RegAddressDistId': $('#RegAddressDistId').val(),
+            'RegAddressProvinceId': $('#RegAddressProvinceId').val(),
+            'RegAddressRegion':$('#RegAddressRegion').val(),
+            'RegAddressNumber': $('#RegAddressNumber').val(),
+            'RegAddressStreet': $('#RegAddressStreet').val(),
+            'productId':$('#ddlSanPhamVay').val(),
+            'RequestLoanTerm': $('#spnThoiHanVay').val(),
+            'SellerNote': $('#txtGhiChu').val(),
+            'RequestLoanAmount': $('#txtTienDeNghiVay').val().replace(/\./g, ''),
+            'Email': '',              
+        
+            'IncomeType': $('#ddlloaisanpham').val()
+
         });
+		
+		
         $.ajax({
             traditional: true,
-            url: '@Url.Action("SaveDaft", "HoSo")',
+            url: '@Url.Action("CreateDraft", "Ocb")',
             type: "POST",
             contentType: "application/json; charset=utf-8",
             data: objectSend,
@@ -585,159 +705,9 @@
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-                        //window.location = window.location;
-
-                            uploadHoso2(data.data, false);
-                    });
-                }
-                else {
-                    swal({
-                        title: "@Html.Raw(Global.Message_Title)",
-                        text: data.code,
-                        type: "error",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    });
-                }
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            },
-            complete: function () {
-                $('#panel_body').unblock();
-            },
-        });
-    });
-
-    $('#btn_Save').click(function (e) {
-
-        if ($('#ddlDoiTac').val() == "0" || $('#ddlDoiTac').val() == undefined ) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn đối tác",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if ($('#ddlSanPhamVay').val() == "0" || $('#ddlSanPhamVay').val() == undefined) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Vui lòng chọn sản phẩm vay",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-
-        if ($('#txtDienThoai').val().length != 10) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Số điện thoại di động phải đúng 10 số!",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        if ($('#txtDienThoai2').val().length > 0 && $('#txtDienThoai2').val().length != 10) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Số điện thoại di động 2 phải đúng 10 số!",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        let doitacF88Value = 0;
-        if (!isNullOrNoItem(lstDoitac)) {
-            let doitacId = !isNullOrUndefined($('#ddlDoiTac').val()) ? parseInt($('#ddlDoiTac').val()) : 0;
-            let doitac = lstDoitac.find(p => p.ID == doitacId);
-            if (!isNullOrUndefined(doitac)) {
-                doitacF88Value = doitac.F88Value;
-            }
-        }
-        if ($('#txtCMND').val().length != 9 && $('#txtCMND').val().length != 12) {
-            swal({
-                title: "@Html.Raw(Global.Message_Title)",
-                text: "Số CMND chỉ 9 hoặc 12 số!",
-                type: "error",
-                timer: 4000,
-                showConfirmButton: true,
-            });
-            return;
-        }
-        let FileRequireIds = [];
-        var objectSend = JSON.stringify({
-            'hoten': $('#txtHoTen').val(), 'phone': $('#txtDienThoai').val(),
-            'phone2': $('#txtDienThoai2').val(), 'ngayNhanDon': $('#txtToDate').val(),
-            'hoSoCuaAi': $('#ddlInternalCode').val(), 'cmnd': $('#txtCMND').val(), 'gioiTinh': $('#ddlGioiTinh').val(),
-            'maKhuVuc': $('#ddlHuyen').val(), 'diaChi': $('#txtDiaChi').val(),'courier':$('#ddlCourier').val(),
-            'sanPhamVay': $('#ddlSanPhamVay').val(), 'tenCuaHang': $('#txtTenCuaHang').val(),
-            'baoHiem': $('#cbbaohiem').is(":checked"), 'thoiHanVay': $('#spnThoiHanVay').val(),
-            'ghiChu': $('#txtGhiChu').val(),
-            'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, ''),
-            'link': window.location.href,
-            'provinceId': parseInt($('#ddlTinh').val()),
-            'doitacF88Value': doitacF88Value,
-            'birthDayStr': $('#txtBirhDay').val(),
-            'cmndDayStr': $('#txtCmndDay').val(),
-            'FileRequireIds': filesUpload.map(p => FileRequireIds.push(p.key))
-        });
-        $.ajax({
-            traditional: true,
-            url: '@Url.Action("Save", "HoSo")',
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            data: objectSend,
-            success: function (data) {
-                if (data.success == true) {
-                    swal({
-                        title: "@Html.Raw(Global.Message_Title)",
-                        text: "Thành công",
-                        type: "success",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    }, function () {
-                        uploadHoso2(data.data, true);
-                    });
-                }
-                else {
-                    swal({
-                        title: "@Html.Raw(Global.Message_Title)",
-                        text: data.code,
-                        type: "error",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    });
-                }
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            },
-            complete: function () {
-                $('#panel_body').unblock();
-            },
-        });
-    });
-         function uploadHoso2(hosoId, reloadOnSuccess = false) {
-            if (isNullOrNoItem(filesUpload))
-                return;
-            $.ajax({
-                traditional: true,
-                url: `/HoSo/UploadToHoso?hosoId=${hosoId}&isReset=true`,
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                //dataType: 'json',
-                data: JSON.stringify(filesUpload),
-                success: function (data) {
-                    if (data.success == true) {
-                        if (reloadOnSuccess == true) {
+                            save = false;
                             window.location = window.location;
-                        }
+                    });
                 }
                 else {
                     swal({
@@ -746,15 +716,24 @@
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,
+                    }, function () {
+                         save = false;
+                          window.location = window.location;
                     });
                 }
             },
             error: function (jqXHR, exception) {
+
                 showError(jqXHR, exception);
             },
             complete: function () {
-                $('#panel_body').unblock();
+
+                 $('#panel_body').unblock();
+                  save = false;
             },
         });
-        }
+    });
+
+    
+        
 </script>

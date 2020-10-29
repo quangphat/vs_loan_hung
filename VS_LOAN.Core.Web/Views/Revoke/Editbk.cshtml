@@ -1,9 +1,17 @@
 ﻿@using VS_LOAN.Core.Web.Resources;
-@using VS_LOAN.Core.Web.Helpers;
 @{
     ViewBag.Title = "Hồ sơ thu nợ";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+
+
+
+
+
+
+
+
 <script type="text/javascript">
 
 </script>
@@ -305,8 +313,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Nhóm<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-
-                            <select id="ddlGroup" class="chosen-select form-control" data-placeholder="Chọn nhóm" @ViewBag.statusReadOnly>
+                            <select id="ddlGroup" class="chosen-select form-control" data-placeholder="Chọn nhóm">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -323,7 +330,7 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <h3 class="header smaller lighter blue">7.Hồ sơ đính kèm:</h3>
+                <h3 class="header smaller lighter blue">6.Hồ sơ đính kèm:</h3>
                 <div class="row">
                     <div class="col-xs-12" style="overflow-y: scroll;max-height:400px;">
                         <form class="form-horizontal" role="form" id="lstTailieu"></form>
@@ -333,56 +340,6 @@
             </div>
 
         </div>
-		
-		<div class="row">
-            <div class="col-xs-12">
-                <h3 class="header smaller lighter blue">8.Thông tin hẹn thanh toán:</h3>
-                <div class="row">
-                     <form class="form-horizontal" role="form">
-					<div class="form-group">
-					
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày hẹn thanh toán <span ></span> </label>
-                         <div class="col-sm-4">
-                            <div class="input-group">
-                                <input class="form-control date-picker" id="PaymentAppointmentDate" />
-                                <span class="input-group-addon">
-                                    <i class="fa fa-calendar bigger-110"></i>
-                                </span>
-                            </div>
-
-                        </div>
-                     
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số tiền hẹn thanh toán<span class="required">(*)</span></label>
-                    <div class="col-sm-4">
-                        <input type="text" id="PaymentAppointmentAmount" value="@ViewBag.model.PaymentAppointmentAmount" placeholder="Nhập số tiền đề nghị vay" class="form-control">
-                    </div>
-
-
-
-              
-
-
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                                            </form>
-
-
-
-                </div>
-
-            </div>
-
-        </div>
-		</div>
         <div class="row">
             <div class="col-xs-12">
                 <hr />
@@ -392,23 +349,13 @@
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
                         <div class="col-sm-5 col-xs-12 ">
-                            <select id="ddlStatus"  class="chosen-select form-control" data-placeholder="Chọn trạng thái">
+                            <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
                                 <option value="0"></option>
                             </select>
                         </div>
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái hiện tại</label>
                         <div class="col-sm-5 col-xs-12 ">
-						   @if (@ViewBag.model.StatusName =="Không nợ xấu")
-						   {
-							    <input type="text" id="StatusName" value="" readonly class="form-control">  
-							   
-						   }
-						   else
-						   {
-							      <input type="text" id="StatusName" value="@ViewBag.model.StatusName" readonly class="form-control">  
-							   
-						   }
-                       
+                            <input type="text" id="StatusName" value="@ViewBag.model.StatusName" readonly class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
@@ -447,16 +394,6 @@
 </div>
 <script>
     $(document).ready(function () {
-
-
-       
-	   setDateTimeInput('#PaymentAppointmentDate', 'dd-mm-yy');
-
-           $("#PaymentAppointmentAmount").ForceNumericOnly();
-        $("#PaymentAppointmentAmount").change(function () {
-        $("#PaymentAppointmentAmount").val(formatCurrency($("#PaymentAppointmentAmount").val().replace(/\./g, '')));
-        });
-
         setTextForPTag('checkSaleResult');
         setTextForPTag('checkdupResult');
         setCheckedValueOfRadioButtonGroup('radio-isAddr', 'true');
@@ -482,11 +419,6 @@
         $("#FinalPaymentAmount").val(formatCurrency('@ViewBag.model.FinalPaymentAmount'));
         $("#CashPrice").val(formatCurrency('@ViewBag.model.CashPrice'));
         $("#TotalPayableAmount").val(formatCurrency('@ViewBag.model.TotalPayableAmount'));
-		    $("#PaymentAppointmentDate").val('@ViewBag.model.PaymentAppointmentDate');	
-	     var hosoInfo = @Html.Raw(Json.Encode(ViewBag.model));
-
-         $('#PaymentAppointmentDate').val(SetFormatDateTimeDMY(hosoInfo.PaymentAppointmentDate));
-        $('#PaymentAppointmentAmount').val(formatCurrency(hosoInfo.PaymentAppointmentAmount));
         renderStatusList('#ddlStatus',@ViewBag.model.Status);
         Getcomments();
         getFilesUpload();
@@ -494,22 +426,9 @@
         $('#ddlTinh').on('change', function () {
             getDistricts('#ddlHuyen', this.value);
         });
-		
-		var modelobject = @Html.Raw(Json.Encode(ViewBag.model));
-	
-
-		if(modelobject.GroupId == null)
-		{
-		  LayDSNhomCha('#ddlGroup', 0, '#ddlCourier', @ViewBag.model.AssigneeId);
-		}
-		else 
-		{
-		LayDSNhomCha('#ddlGroup', modelobject.GroupId, '#ddlCourier', @ViewBag.model.AssigneeId);
-		}
-		
-      
+        LayDSNhomCha('#ddlGroup', @ViewBag.model.GroupId, '#ddlCourier', @ViewBag.model.AssigneeId);
         $('#ddlGroup').on('change', function () {
-            GetEmployeesByGroupId('#ddlCourier', this.value, false,  @ViewBag.model.AssigneeId);
+            GetEmployeesByGroupId('#ddlCourier', this.value, false, hoso.AssignId);
         });
     });
 
@@ -773,9 +692,7 @@
             'DistrictId': $("#ddlHuyen").val(),
             'ProvinceId': $("#ddlTinh").val(),
             'AssigneeId': $("#ddlCourier").val(),
-            'GroupId': $("#ddlGroup").val(),
-            'PaymentAppointmentAmount': $('#PaymentAppointmentAmount').val().replace(/\./g, ''),
-            'PaymentAppointmentDate': $("#PaymentAppointmentDate").val()
+            'GroupId': $("#ddlGroup").val()
         })
         
 
@@ -794,7 +711,6 @@
                             timer: 4000,
                             showConfirmButton: true,
                         }, function () {
-						
                             window.location = window.location;
 
 

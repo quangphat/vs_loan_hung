@@ -1,18 +1,15 @@
-﻿@using VS_LOAN.Core.Web.Helpers;
-
-@using VS_LOAN.Core.Web.Resources;
+﻿@using VS_LOAN.Core.Web.Resources;
 @{
-    ViewBag.Title = "Quản lý hồ sơ courier";
+    ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <div class="main-content-inner">
-    <div class="breadcrumbs" id="breadcrumbs">
-        <ul class="breadcrumb">
-            <li>
-                <a href="#" class="active">Hồ sơ courier</a>
-            </li>
-        </ul>
+    @*<div class="breadcrumbs" id="breadcrumbs">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#" class="active">Hồ sơ courier</a>
+                </li>
+            </ul>
 
 
 
@@ -22,7 +19,7 @@
 
 
 
-    </div>
+        </div>*@
     <div class="page-content" id="panel_body">
         <div class="row">
             <div class="col-xs-12">
@@ -30,14 +27,34 @@
                     <div class="space-4"></div>
 
                     <div class="form-group">
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Tỉnh thành</label>
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Nhóm</label>
                         <div class="col-sm-5 col-xs-12 ">
-                            <select id="ddlProvince" class="chosen-select form-control" data-placeholder="Tỉnh thành của courier"></select>
+                            <select id="ddlGroup" class="chosen-select form-control" data-placeholder="Chọn nhóm">
+                                <option value="0"></option>
+                            </select>
                         </div>
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Courier</label>
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Nhân viên xử lý</label>
                         <div class="col-sm-5 col-xs-12 ">
-                            <select id="ddlCourier" class="chosen-select form-control" data-placeholder="Courier">
+                            <select id="ddlAssignee" class="chosen-select form-control" data-placeholder="">
                                 <option value="0">Tất cả</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlStatus" class="chosen-select form-control" multiple data-placeholder="Chọn trạng thái"></select>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái xử lý</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlProcess" class="chosen-select form-control" data-placeholder="Trạng thái xử lý">
+                                <option value="0">Chưa xử lý</option>
+                                <option value="1">Đã xử lý</option>
+                                <option value="-1" selected>Tất cả</option>
                             </select>
                         </div>
 
@@ -70,27 +87,10 @@
                                 </span>
                             </div>
                         </div>
-                      
 
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
-                        <div class="col-sm-5 col-xs-12 ">
-                            <select id="ddlStatus" class="chosen-select form-control" multiple data-placeholder="Chọn trạng thái"></select>
-                        </div>
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Mã sale</label>
-                        <div class="col-sm-5 col-xs-12 ">
-                            <input type="text" class="form-control" id="txtSaleCode" placeholder="" />
-                        </div>
 
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Nhóm cha</label>
-                        <div class="col-sm-5 col-xs-12 ">
-                            <select id="ddlNhomCha" class="chosen-select form-control" data-placeholder="Chọn nhóm cha">
-                                <option value="0"></option>
-                            </select>
-                        </div>
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Tìm kiếm</label>
                         <div class="col-sm-5 col-xs-12 ">
                             <input type="text" class="form-control" id="txtFreeText" placeholder="Tìm kiếm" />
@@ -101,7 +101,7 @@
                             <a class="btn btn-primary" id="btnSearch">
                                 Tìm kiếm
                             </a>
-                            <a class="btn btn-primary" href="/Courrier/AddNew">
+                            <a class="btn btn-primary" href="/Revoke/AddNew">
                                 Tạo mới
                             </a>
                         </div>
@@ -115,7 +115,7 @@
                     </div>
                     <div class="form-group">
                         <div class=" col-sm-8">
-                            <a style="font-style: italic;" href="/Common/DownloadTemplateFile?fileName=ImportCourierTemplate.xlsx">Nhấp vào để download mẫu import</a>
+                            <a style="font-style: italic;" href="/Common/DownloadTemplateFile?fileName=ImportRevokeDebtTemplate.xlsx">Nhấp vào để download mẫu import</a>
                         </div>
 
                     </div>
@@ -155,18 +155,15 @@
                                 <tr>
                                     <th class="center w-45">STT</th>
                                     <th class="m-w-120">Khách hàng</th>
+                                    <th class="m-w-120">Số hợp đồng</th>
                                     <th class="w-84">Số CMND</th>
-				
-                                  
                                     <th style="width: 150px">Trạng thái</th>
-                                    <th style="width: 150px">Địa chỉ</th>
-                                    <th class="m-w-120">Nhân viên</th>
-                                    <th class="m-w-300">Ghi chú</th>
-                                    <th class="w-150">Ngày tạo</th>
+                                    <th style="width: 150px">Tổng nợ còn lại</th>
+                                    <th class="m-w-120">Nhân viên xử lý</th>
                                     <th class="m-w-120">Người tạo</th>
-                                    <th class="m-w-120">Sale code</th>
+                                    <th class="w-150">Ngày tạo</th>
+                                    <th class="m-w-120">Người cập nhật</th>
                                     <th class="w-150">Ngày cập nhật</th>
-
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -194,6 +191,7 @@
             </div>
             <!-- /.col -->
         </div>
+
         <div class="row">
             <div class="space-6" style="background-color: #d5e3ef;"></div>
             <div class="col-xs-12" style="margin-bottom:40px;">
@@ -202,6 +200,9 @@
                 </div>
             </div>
         </div>
+        <div class="clearfix"></div>
+
+        <div class="clearfix"></div>
     </div>
 </div>
 <script>
@@ -213,23 +214,10 @@
     var totalRecord = 0;
     var provinceId = 0;
     var groupId = 0;
-    var lstStatus = [
-        { value: "1", display: "Mới" },
-        { value: "2", display: "Đang xử lý" },
-        { value: "3", display: "Từ chối" },
-        { value: "4", display: "Chấp nhận" },
-        { value: "5", display: "Giải ngân" },
-        { value: "6", display: "Hoàn thành" }
-    ]
-    
+
     $(document).ready(function e() {
-        $(document).ready(function e() {
-            $('#ddlNhomCha').chosen({ width: '100%', allow_single_deselect: true });
-        });
-        $('#ddlProvince').chosen({ width: '100%', allow_single_deselect: true });
-        $('#ddlCourier').chosen({ width: '100%', allow_single_deselect: true });
-        LayDSTinh();
-        LayNhom();
+            $('#ddlGroup').chosen({ width: '100%', allow_single_deselect: true });
+            $('#ddlAssignee').chosen({ width: '100%', allow_single_deselect: true });
         preventTxtSearchEnter();
         window.addEventListener('popstate', function (e) {
 
@@ -244,8 +232,7 @@
                 limit = 10;
             else
                 limit = parseInt(limit)
-            groupId = queries.get("groupId");
-            getData(page, limit, memberId, groupId, true)
+            getData(page, limit,true)
         });
         renderStatusList();
         setTableLimit("#ddlLimit");
@@ -255,44 +242,21 @@
             $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
         }
         bindQueries()
-        let courierId = queries.get("courierId");
-        provinceId = queries.get("provinceId");
+
         groupId = queries.get("groupId");
-        getData(page, limit, courierId, groupId);
-    })
-    function LayNhom() {
-        $('#ddlNhomCha').empty();
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("LayDSNhomCha", "ToNhom")',
-            data: {},
-            success: function (data) {
-                $('#ddlNhomCha').append("<option value='0'></option>");
-                if (data.data != null && data.success == true) {
-                    data.data.unshift({ ID: 0, Ten: 'Tất cả', MaNguoiQL: -1, ChuoiMaCha: "0"})
-                    $.each(data.data, function (index, item) {
-                        $('#ddlNhomCha').append("<option value='" + item.ID + "'>" + item.Ten + "</option>");
-                    });
-                    let groupId = queries.get("groupId");
-                    $('#ddlNhomCha').val(groupId)
-                    $('#ddlNhomCha').chosen().trigger("chosen:updated").change();
-                   
-                }
-            },
-            complete: function () {
-                
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    }
-    var strLoading = '@Global.Message_Loading';
-    $('#btnSearch').click(function (e) {
         getData(page, limit);
+        let assigneeId = queries.get("assigneeId");
+        LayDSNhomCha('#ddlGroup', groupId, '#ddlAssignee', assigneeId);
+        $('#ddlGroup').on('change', function () {
+            GetEmployeesByGroupId('#ddlAssignee', this.value, false, assigneeId);
+        });
+    })
+    var strLoading = 'Vui lòng chờ';
+    $('#btnSearch').click(function (e) {
+        getData(page, limit,false,false,true);
     });
-    function getCourrier(maTinh) {
-        
+    function getRevoke(maTinh) {
+
         if (isNullOrWhiteSpace(maTinh))
             return;
         $.ajax({
@@ -300,17 +264,17 @@
             url: '@Url.Action("GetUserByProvinceId", "Employee")',
             data: {'provinceID':maTinh},
             success: function (data) {
-                $('#ddlCourier').empty();
-                $('#ddlCourier').append("<option value='0'>Tất cả</option>");
+                $('#ddlAssignee').empty();
+                $('#ddlAssignee').append("<option value='0'>Tất cả</option>");
                 if (data != null) {
                     $.each(data.data, function (index, optionData) {
-                        $('#ddlCourier').append("<option value='" + optionData.Id + "'>" + optionData.Name + "</option>");
+                        $('#ddlAssignee').append("<option value='" + optionData.Id + "'>" + optionData.Name + "</option>");
                     });
-                    let courierId = queries.get("courierId");
-                    $('#ddlCourier').val(courierId)
-                    $('#ddlCourier').chosen().trigger("chosen:updated").change();
+                    let assigneeId = queries.get("assigneeId");
+                    $('#ddlAssignee').val(assigneeId)
+                    $('#ddlAssignee').chosen().trigger("chosen:updated").change();
                 }
-                $('#ddlCourier').chosen().trigger("chosen:updated");
+                $('#ddlAssignee').chosen().trigger("chosen:updated");
             },
             complete: function () {
             },
@@ -320,12 +284,12 @@
         });
     }
     $('#btnImport').click(function (e) {
-        
+        showBlock($('#panel_body'), 'Vui lòng chờ');
         var formData = new FormData();
         formData.append('file', $('#file')[0].files[0]);
 
         $.ajax({
-            url: '/Courrier/Import?groupId=' + $('#ddlNhomCha').val(),
+            url: '/Revoke/Import',
             type: 'POST',
             data: formData,
             processData: false,  // tell jQuery not to process the data
@@ -334,7 +298,7 @@
 
                 if (data != null && data.success) {
                     swal({
-                        title: "@Html.Raw(Global.Message_Title)",
+                        title: "",
                         text: data.code,
                         type: "success",
                         timer: 4000,
@@ -346,7 +310,7 @@
 
                 else {
                     swal({
-                        title: "@Html.Raw(Global.Message_Title)",
+                        title: "",
                         text: data.code,
                         type: "error",
                         timer: 4000,
@@ -355,13 +319,14 @@
                 }
             },
             complete: function () {
+                $('#panel_body').unblock();
             },
             error: function (jqXHR, exception) {
                 showError(jqXHR, exception);
             }
         });
     })
-    
+
     function LayDSTinh() {
         $.ajax({
             type: "POST",
@@ -378,7 +343,7 @@
                     $('#ddlProvince').val(provinceId)
                     $('#ddlProvince').chosen().trigger("chosen:updated").change();
                 }
-               
+
                 $('#ddlProvince').chosen().trigger("chosen:updated");
             },
             complete: function () {
@@ -388,48 +353,35 @@
             }
         });
     }
-    
+
     $('#ddlProvince').change(function () {
         $('#ddlThanhVienNhom').empty();
         $('#ddlThanhVienNhom').append("<option value='0'></option>");
         provinceId = this.value
-        getCourrier(this.value)
+        getRevoke(this.value)
     });
-    function renderStatusList() {
-        $("#ddlStatus").empty();
-        $.each(lstStatus, function (index, item) {
-            $("#ddlStatus").append("<option value='" + item.value + "'>" + item.display + "</option>")
-        })
-        $('#ddlStatus').chosen().trigger("chosen:updated");
-        $('#ddlStatus').trigger("change");
 
-    }
     function onClickPage(page) {
+          debugger;
         page = page;
-        getData(page, limit);
+        getData(page, limit,false,true);
     }
     function bindQueries() {
-		 var fromDate = queries.get("fromDate");
+          var fromDate = queries.get("fromDate");
             if (isNullOrWhiteSpace(fromDate)) {
-                fromDate = new Date().getDay + -7;
+                fromDate = new Date().getDay + -90;
             }
-		$('#txtFreeText').val(queries.get("freetext"))
-        $('#txtSaleCode').val(queries.get("salecode"));
-		$("#txtFromDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", fromDate);
-		var toDate = queries.get("toDate");
-		if (isNullOrWhiteSpace(toDate)) {
-			toDate = new Date().getDay + 1;
-		}
-		$("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", toDate);
-		var dateType = queries.get("loaiNgay");
-		setCheckedValueOfRadioButtonGroup("radio-ngay", dateType)
-		var maHS = queries.get("maHS");
-		$('#txtMaHS').val(maHS)
-	  
-		var cmnd = queries.get("cmnd");
-		$('#txtCMND').val(cmnd)
+        $("#txtFromDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", fromDate);
+            var toDate = queries.get("toDate");
+            if (isNullOrWhiteSpace(toDate)) {
+                toDate = new Date().getDay + 1;
+            }
+            $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", toDate);
+        var dateType = queries.get("loaiNgay");
 
-          
+
+        $('#txtFreeText').val(queries.get("freetext"))
+        $('#txtSaleCode').val(queries.get("salecode"))
         page = queries.get("page");
         if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
             page = 1;
@@ -440,48 +392,11 @@
             limit = 10;
         else
             limit = parseInt(limit)
-
-        $('#txtFromDate').datepicker({
-        dateFormat: 'dd-mm-yy'
-        }).next().on(ace.click_event, function () {
-        $(this).prev().focus();
-        });
-        $('#txtToDate').datepicker({
-        dateFormat: 'dd-mm-yy'
-        }).next().on(ace.click_event, function () {
-        $(this).prev().focus();
-        });
         $("#ddlLimit").val(limit)
     }
     function onSelectLimit() {
         limit = $("#ddlLimit").val()
-        getData(1, limit)
-    }
-   function renderStatus(statusId) {
-        var statusString = "";
-        if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.New)')
-            statusString = "<span class='label label-sm label-purple arrowed arrowed-righ'>Mới</span>";
-        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.InProgress)')
-            statusString = "<span class='label label-sm label-danger arrowed arrowed-righ'>Đang xử lý</span>";
-        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.Deny)')
-            statusString = "<span class='label label-sm label-inverse arrowed arrowed-righ'>Từ chối</span>";
-        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.Accept)')
-            statusString = "<span class='label label-sm label-cancel arrowed arrowed-righ'>Chấp nhận</span>";
-        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.Finish)')
-            statusString = "<span class='label label-sm label-pcb arrowed arrowed-righ'>Hoàn thành</span>";
-        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.Cancel)')
-           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Hủy</span>";
-       else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.Nhaplieu)')
-           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Nhập liệu</span>";
-        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.Thamdinh)')
-           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Thẩm định</span>";
-        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.BosungHoso)')
-           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Bổ sung hồ sơ</span>";
-        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.DaDoichieu)')
-           statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>Đã đối chiếu</span>";
-        else if (statusId == '@((int)VS_LOAN.Core.Entity.HosoCourierStatus.PCB)')
-            statusString = "<span class='label label-sm label-success arrowed arrowed-righ'>PCB</span>";
-        return "<td class='text-left'>" + statusString + "</td>";
+        getData(page, limit)
     }
     function renderAddress(item) {
         if (item == null || item == undefined)
@@ -498,7 +413,7 @@
         return "<td class='text-left " + className + "'><a href='" + href + "' >" + display + "</a></td>";
     }
     function renderRow(index, rowData) {
-        
+
         page = queries.get("page");
         if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
             page = 1;
@@ -510,21 +425,18 @@
         else
             limit = parseInt(limit)
         var stt = (page - 1) * limit + index + 1;
-        
+
         let result = "<tr role='row' class = 'odd'>"
             + renderTextCenter(stt, '','center w-45')
-            + renderTextLink(rowData.CustomerName, `/Courrier/edit/${rowData.Id}`, '', "m-w-120")
-            + renderTextLeft(rowData.Cmnd, '','w-84')
-				
-
-						  
-            + renderStatus(rowData.Status)
-            + renderTextLeft(renderAddress(rowData), '', 'w-150' )
-            + renderTextLeft(rowData.AssignUser, '', "m-w-120")
-            + renderTextLeft(rowData.LastNote, '', "tb-row-breakword")
-            + renderTextLeft(rowData.CreatedTime, 'datetime', 'w-150')
+            + renderTextLink(rowData.CustomerName, `/Revoke/Edit/${rowData.Id}`, '', "m-w-120")
+            + renderTextLeft(rowData.AgreementNo, '', 'm-w-120')
+            + renderTextLeft(rowData.IdCardNumber, '', 'w-84')
+            + renderStatusRewrite( rowData.StatusName)
+            + renderTextLeft(formatCurrencyVND(rowData.TotalCurros,''), '', 'w-150')
+            + renderTextLeft(rowData.AssigneeName, '', "m-w-120")
             + renderTextLeft(rowData.CreatedUser, '', "m-w-120")
-            + renderTextLeft(rowData.SaleCode, '', "m-w-120")
+            + renderTextLeft(rowData.CreatedTime, 'datetime', 'w-150')
+            + renderTextLeft(rowData.UpdatedUser, '', "m-w-120")
             + renderTextLeft(rowData.UpdatedTime, 'datetime', 'w-150')
             @*+ renderAction(rowData.Id,(@ViewBag.isAdmin == 0 && rowData.Status == 7))*@
             + "</tr>";
@@ -543,38 +455,71 @@
     function onEdit(id) {
         if (isNullOrUndefined(id))
             return;
-        window.location = "/Courrier/edit/" + id;
+        window.location = "/Revoke/edit/" + id;
     }
-    function getData(page, limit,courierId=0,groupId =0, isPopState = false)
+
+ 
+    function DownloadReport(e) {
+
+      
+    }
+
+    function renderstatusRevoke(value, type, className = '') {
+        if(value=="RV040")
+        {
+        return "<td class='text-left " + className + "'>" + "</td>";
+        }
+        else 
+        {
+        return "<td class='text-left " + className + "'>" + getValueDisplay(value, type) + "</td>";
+        }
+ 
+    }
+
+    function getData(page, limit ,isPopState = false,isSelect =false)
     {
+        let search = window.location.search;
+        queries = new URLSearchParams(search)
+         let groupId = queries.get("groupId");
+        let assigneeId = queries.get("assigneeId");
+		let ddlProcess = queries.get("ddlProcess");
+        if (isNullOrWhiteSpace(assigneeId)) {
+            assigneeId = $('#ddlAssignee').val();
+        }
+        let status = isNullOrWhiteSpace(queries.get("status")) ? "" : decodeURI(queries.get("status"))
         $.ajax({
-            url: '/Courrier/Search',
+            url: '/Revoke/Search',
             type: "GET",
             contentType: "application/json",
 
             data: {
+                'fromDate':$('#txtFromDate').val(),
+				'toDate': $('#txtToDate').val(),
+			    'loaiNgay': $('input[name="radio-ngay"]:checked').val(),
                 'page': page,
                 'limit': limit,
-                'provinceId': (isNaN(provinceId) || provinceId == 0) ? $('#ddlProvince').val() : provinceId,
-                'courierId': (isNaN(courierId) || courierId == 0) ? $('#ddlCourier').val() : courierId,
+				'ddlProcess': $('#ddlProcess').val(),
+                'assigneeId':(!isNullOrWhiteSpace($("#ddlAssignee").val()) || isNullOrWhiteSpace(assigneeId)) ? (!isNullOrWhiteSpace($("#ddlAssignee").val()) ? $("#ddlAssignee").val().toString():"") : "",
                 'freetext': $("#txtFreeText").val(),
-                'salecode': $("#txtSaleCode").val(),
-                'groupId': (isNaN(groupId) || groupId == 0) ? $('#ddlNhomCha').val() : groupId,
-                'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : "",
-				'fromDate':$('#txtFromDate').val(),
-				'toDate': $('#txtToDate').val(),
-				'maHS':$('#txtMaHS').val(),
-                'cmnd': $('#txtCMND').val(),
-                'loaiNgay': $('input[name="radio-ngay"]:checked').val(),
+                'groupId': (isNaN(groupId) || groupId == 0 || isNullOrUndefined(groupId)) ? $('#ddlGroup').val() : groupId,
+                'status': (!isNullOrWhiteSpace($("#ddlStatus").val()) || isNullOrWhiteSpace(status)) ? (!isNullOrWhiteSpace($("#ddlStatus").val()) ? $("#ddlStatus").val().toString():"") : ""
             },
             success: function (response) {
                 if (response.Message == null) {
                     totalRecord = response.data.TotalRecord;
-                    let search = this.url.replace("/Courrier/Index", "");
+                    let search = this.url.replace("/Revoke/Index", "");
+
+                    search = search.replace("/Revoke/Search", "")
                     
-                    search = search.replace("/Courrier/Search", "")
-                    queries = new URLSearchParams(search)
-                    page = queries.get("page");
+                    if(!isSelect)
+                    {
+                        page = queries.get("page");
+                    }
+                    else 
+                    {
+                        
+                    }
+                    
                     if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
                         page = 1;
                     else
@@ -614,51 +559,7 @@
         })
 
     }
-   
-    function DownloadReport(e) {
-        let data = JSON.stringify({
-            'page': page,
-            'limit': limit,
-            'provinceId':$('#ddlProvince').val() ,
-            'courierId':  $('#ddlCourier').val(),
-            'freetext': $("#txtFreeText").val(),
-            'salecode': $("#txtSaleCode").val(),
-            'groupId': $('#ddlNhomCha').val(),
-            'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : "",
-			'fromDate':$('#txtFromDate').val(),
-			'toDate': $('#txtToDate').val(),
-			'maHS':$('#txtMaHS').val(),
-			'cmnd': $('#txtCMND').val(),
-			'loaiNgay': $('input[name="radio-ngay"]:checked').val()
-        });
-        $.ajax({
-            traditional: true,
-            url: '/Courrier/ExportFile',
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            data: data,
-            success: function (data) {
-                if (data.success == true) {
-                    var link = document.createElement("a");
-                    link.href = data.data;
-                    link.click();
-                }
-                else {
-                    swal({
-                        title: "",
-                        text: data.code,
-                        type: "error",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    });
-                }
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            },
-            complete: function () {
 
-            },
-        });
-    }
+
 </script>
+

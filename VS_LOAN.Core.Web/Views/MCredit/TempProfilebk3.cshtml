@@ -5,6 +5,15 @@
     ViewBag.Title = "Cập nhật hồ sơ tạm";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+
+
+
+
+
+
+
+
 <script type="text/javascript">
 
 </script>
@@ -184,17 +193,10 @@
 
                     </div>
                     <div class="form-group">
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Thu nhập hàng tháng<span class="required">(*)</span></label>
-                        <div class="col-sm-4">
-                            <input type="text" id="txtcustIncome" value="@ViewBag.model.CustIncome.ToString("#,##0")" placeholder="Nhập số tiền đề nghị vay" class="form-control">
-                        </div>
-
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số tiền đề nghị vay<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <input type="text" id="txtLoanMoney" value="@ViewBag.model.LoanMoney.ToString("#,##0")" placeholder="Nhập số tiền đề nghị vay" class="form-control">
                         </div>
-
-                        
                         <label class="col-sm-2 control-label no-padding-right">Thời hạn vay</label>
                         <div class="col-sm-4">
                             <select id="ddlLoanPeriod" class="chosen-select form-control" data-placeholder="Kỳ hạn vay">
@@ -523,18 +525,11 @@
 };
     $("#txtPhone").ForceNumericOnly();
     $("#txtPhone2").ForceNumericOnly();
-	 $("#txtcustIncome").ForceNumericOnly();
-	
     $("#txtLoanMoney").ForceNumericOnly();
     $("#txtIdNumber").ForceNumericOnly();
-	
     $("#txtLoanMoney").change(function () {
         $("#txtLoanMoney").val(formatCurrency($("#txtLoanMoney").val().replace(/\,/g, '')));
     });
-	
-	$("#txtcustIncome").change(function () {
-	$("#txtcustIncome").val(formatCurrency($("#txtcustIncome").val().replace(/\,/g, '')));
-	});
 
     $('#btn_CheckSale').click(function (e) {
         let value = $("#txtSaleCode").val()
@@ -769,7 +764,6 @@
             "LocSignCode": $("#ddlLocSign").val(),
             "LastNote": $("#txtGhiChu").val(),
             "LoanMoney": $('#txtLoanMoney').val().replace(/\./g, ''),
-            "custIncome": $('#txtcustIncome').val().replace(/\./g, ''),
             "IsInsurrance": getCheckboxValue('cbbIsInsurrance'),
             "Status": (isNullOrUndefined($("#ddlStatus").val()) || isNullOrWhiteSpace($("#ddlStatus").val())) ? @ViewBag.model.Status : parseInt($("#ddlStatus").val()),
             "SaleId": $("#txtSaleId").val(),
@@ -780,7 +774,7 @@
         showBlock($('#panel_body'), 'Vui lòng chờ');
         $.ajax({
             traditional: true,
-            url: '@Url.Action("UpdateDraft", "MCredit")',
+            url: '@Url.Action("AddNoteTempMC", "MCredit")',
             type: "POST",
             contentType: "application/json; charset=utf-8",
             data: objectSend,
@@ -910,7 +904,6 @@
             "LoanPeriodCode": $("#ddlLoanPeriod").val(),
             "LocSignCode": $("#ddlLocSign").val(),
             "LoanMoney": $('#txtLoanMoney').val().replace(/\./g, ''),
-			"custIncome": $('#txtcustIncome').val().replace(/\./g, ''),
             "IsInsurrance": getCheckboxValue('cbbIsInsurrance'),
             "Status": 0,
             "SaleId": $("#txtSaleId").val(),
