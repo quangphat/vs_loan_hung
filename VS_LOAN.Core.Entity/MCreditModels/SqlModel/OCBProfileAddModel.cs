@@ -55,9 +55,8 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
         public string Email { get; set; }
         public int? AssigneeId { get; set; }
 
-        public string CurAddressDistId { get; set; }
-
-
+        public string CurAddressDistId { get; set; } 
+        public bool? IsDuplicateAdrees { get; set; }
 
     }
 }

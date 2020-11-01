@@ -62,6 +62,9 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
 
         public string CurAddressDistId { get; set; }
 
-        public string IdIssueDatestr { get; set; }
+        public string IdIssueDatestr { get; set; } 
+        public bool? IsDuplicateAdrees { get; set; }
+
+
     }
 }

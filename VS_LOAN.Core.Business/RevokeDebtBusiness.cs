@@ -160,6 +160,9 @@ namespace VS_LOAN.Core.Business
         {
             return await _rpNote.GetNoteByTypeAsync(profileId, (int)HosoType.RevokeDebt);
         }
+
+
+       
         public async Task<BaseResponse<bool>> AddNoteAsync(int profileId , string content ,int userId)
         {
             if(string.IsNullOrWhiteSpace(content))

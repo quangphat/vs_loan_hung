@@ -60,7 +60,8 @@ namespace VS_LOAN.Core.Entity
         Hoso = 1,
         HosoCourrier = 2,
         MCredit = 3,
-        RevokeDebt = 5
+        RevokeDebt = 5,
+        Ocb =  7
     }
     public enum AutoID
     {

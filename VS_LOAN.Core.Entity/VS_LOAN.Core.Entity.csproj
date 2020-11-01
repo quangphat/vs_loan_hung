@@ -157,6 +157,7 @@
     <Compile Include="MCreditModels\NoteRequestModel.cs" />
     <Compile Include="MCreditModels\NoteResponseModel.cs" />
     <Compile Include="MCreditModels\OcbLeadResponseModel.cs" />
+    <Compile Include="MCreditModels\OcbStatusImportModel.cs" />
     <Compile Include="MCreditModels\ProfileAddRequest.cs" />
     <Compile Include="MCreditModels\ProfileAddResponse.cs" />
     <Compile Include="MCreditModels\ProfileGetByIdRequest.cs" />

@@ -20,6 +20,16 @@ namespace VS_LOAN.Core.Repository.Interfaces
               int mathanhvien = 0);
         Task<int> CreateDraftProfile(OcbProfile model);
         Task<bool> UpdateDraftProfile(OcbProfile model);
+        Task<bool> UpdateOCBProileReport(OcbStatusImportModel model);
+
+        Task<List<OcbProfileStatus>> GetAllStatus();
+        Task<List<OcbProductLoan>> GetLoanProduct(int MaDoiTac);
+        Task<List<GhichuViewModel>> GetCommentsAsync(int profileId);
+
+
+        Task<BaseResponse<bool>> AddNoteAsync(int profileId, string content, int userId);
       
+
+
     }
 }

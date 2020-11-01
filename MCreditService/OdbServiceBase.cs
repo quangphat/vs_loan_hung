@@ -23,7 +23,9 @@ namespace MCreditService
         protected static string _baseUrl = "https://prepro.m-ocb.com.vn:8889";
         protected static string _userName = "vietbank_test";
         protected static string _password = "Abc@1234!";
-        protected static string _authenToken = "bearer 7V83nVoWNIfgRiv250kuu_7VhjS_5PSovGX3a1mgaJs9ip-K5K_o1u5tLYUsg8MMeH_Z5gFb01aCTWEiNW2uoiVz9IPaAiXtB1LrLFkyf3axQFVczmb8MaIMc5oHiiktPruyjArdxXDBfCfXMFWsBx0emU_20GNaKsDpcKOvpzIVui-ab3TTbMRrwgFs06K93daQVo2kV5c_6RVkVy_1K0D6LHYNvUf12Nb988IQvjVi_kJVFeCMcQCJ_YB4ABAqn4-XlmrqomuGKjSnMTecmGHsHsiNbQjfJEXIXsmqaRx67zvwj0SGjOGSF-gE4lIHijtvFxY8LySZTheCPdKqvE1wKXRDKHqJAFPHn2ttHrWwLexSA9jyHKc0zblBEIi9xPcTLoWIE_l3YVSg9XTxdMn7BcdZnOT0lh9ZY9LbJbteKtc1I7wSlLYD019M_0dpkeWR8Zvg0_R8Bx0FbYZBLXkE8JmsFX4ZG01RnuCIZCQm5jbc1Y8i0zKOHB7xF7Dw";
+
+
+        protected static string _authenToken = "bearer ";
         protected static string _xdnCode = "TWpBeU1FUjFibWRBVG1Wdk1qQXlNQT09";
 
    
@@ -37,7 +39,7 @@ namespace MCreditService
         protected static string _getallcity = "api/MasterData/GetAllCity";
         protected static string _getallWard = "api/MasterData/GetAllWard";
 
-
+        protected static string _token = "/token";
         protected readonly HttpClient _httpClient;
         protected HttpRequestMessage _requestMessage;
         protected readonly IOcbRepository _bizMcredit;

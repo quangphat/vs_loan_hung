@@ -26,6 +26,9 @@ namespace MCreditService
         public static List<DictionaryResponseItem> AllDictionary { get; set; }
         public static List<CityItem> AllCity { get; set; }
         public static List<WardResponseItem> AllWard { get; set; }
+
+        public static AuthenResponseModel _authenGlobal;
+       
         public OdbServiceService(IOcbRepository mCeditBusiness, ILogRepository logRepository) : base(mCeditBusiness, logRepository)
         {
 
@@ -126,19 +129,13 @@ namespace MCreditService
 
         public async Task<WardResponseModel> GetAllWard(WardRequestModel model)
         {
-
-
             var client = new HttpClient();
-
             client.BaseAddress = new Uri(_baseUrl);
             client.DefaultRequestHeaders.Add("Authorization", _authenToken);
             client.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue(_contentType));
             var url = _getallWard;
             HttpResponseMessage response = await client.GetAsync(url);
-
-
-
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
@@ -154,6 +151,58 @@ namespace MCreditService
             }
 
             return await Task.FromResult(new WardResponseModel());
+        }
+        public async Task<bool> CheckAuthen ()
+        {
+
+            if(_authenGlobal ==null || _authenGlobal.ValidTo ==null ||  _authenGlobal.ValidTo.Value.AddSeconds(3600) >DateTime.Now)
+            {
+                await Authen();
+                await GetAllCity(new CityRequestModel());
+                await GetAllProvince();
+                await GetAllWard(new WardRequestModel());
+                await GetAllDictionary();
+            }
+            return true;
+             
+        }
+
+        public async Task<bool> Authen()
+        {
+            var nvc = new List<KeyValuePair<string, string>>();
+            nvc.Add(new KeyValuePair<string, string>("grant_type", "password"));
+            nvc.Add(new KeyValuePair<string, string>("username",_userName));
+            nvc.Add(new KeyValuePair<string, string>("password", _password));
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            var req = new HttpRequestMessage(HttpMethod.Post,_token ) { Content = new FormUrlEncodedContent(nvc) };
+            var res = await client.SendAsync(req);
+            if (res.IsSuccessStatusCode)
+            {
+                var content = await res.Content.ReadAsStringAsync();
+                AuthenResponseModel contributors = JsonConvert.DeserializeObject<AuthenResponseModel>(content);
+                int expries_in = 0;
+                try
+                {
+                    expries_in = int.Parse(contributors.Expires_in);
+                }
+                catch (Exception)
+                {
+
+
+                }
+                contributors.ValidTo = DateTime.Now.AddSeconds(expries_in);
+                _authenToken = "bearer " + contributors.Access_token;
+                _authenGlobal = contributors;
+
+            }
+            else
+            {
+
+            }
+
+            return true;
+
         }
     }
 }

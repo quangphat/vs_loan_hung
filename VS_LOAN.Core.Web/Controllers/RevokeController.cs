@@ -63,8 +63,6 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<ActionResult> Edit(int id)
         {
             var profile = await _bizRevokeDebt.GetByIdAsync(id, GlobalData.User.IDUser);
-
-            
              ViewBag.model = profile;
              var isadmin = (GlobalData.User.UserType == (int)UserTypeEnum.Admin || (GlobalData.User.UserType == (int)UserTypeEnum.Teamlead));
             if(isadmin)
@@ -248,12 +246,24 @@ namespace VS_LOAN.Core.Web.Controllers
                                 excelOOXML.SetCellData(nameSheet, "D" + rowindex, item.IdCardNumber);
                                 excelOOXML.SetCellData(nameSheet, "E" + rowindex, item.CustomerName);                              
                                 excelOOXML.SetCellData(nameSheet, "F" + rowindex, item.StatusName);
-                                excelOOXML.SetCellData(nameSheet, "G" + rowindex, item.TotalCurros);
+                                decimal? totlcurrosnumber = null;
+                                try
+                                {
+                                    totlcurrosnumber = Convert.ToDecimal(item.TotalCurros);
+                                }
+                                catch (Exception)
+                                {
+
+                                    totlcurrosnumber = null;
+                                }
+
+                                excelOOXML.SetCellData(nameSheet, "G" + rowindex, totlcurrosnumber != null ? String.Format("{0:n0}", totlcurrosnumber) : "");
                                 excelOOXML.SetCellData(nameSheet, "H" + rowindex, item.PaymentAppointmentDate != null ? item.PaymentAppointmentDate.ToString() : "");
-                                excelOOXML.SetCellData(nameSheet, "I" + rowindex, item.PaymentAppointmentAmount != null ? item.PaymentAppointmentAmount.ToString() : "");
+                                excelOOXML.SetCellData(nameSheet, "I" + rowindex, item.PaymentAppointmentAmount != null ? String.Format("{0:n0}", item.PaymentAppointmentAmount) : "");
                                 excelOOXML.SetCellData(nameSheet, "J" + rowindex, item.AssigneeName);
-                                excelOOXML.SetCellData(nameSheet, "K" + rowindex, item.UpdatedUser);
-                                excelOOXML.SetCellData(nameSheet, "L" + rowindex, item.UpdatedTime.ToString());
+                                excelOOXML.SetCellData(nameSheet, "K" + rowindex, item.PartnerName);
+                                excelOOXML.SetCellData(nameSheet, "L" + rowindex, item.UpdatedUser);
+                                excelOOXML.SetCellData(nameSheet, "M" + rowindex, item.UpdatedTime.ToString());
                                 rowindex++;
                             }
                         }

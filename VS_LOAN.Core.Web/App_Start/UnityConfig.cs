@@ -71,6 +71,9 @@ namespace VS_LOAN.Core.Web
             container.RegisterType<MCreditService.Interfaces.IMCreditService, MCreditLoanService>();
 
             container.RegisterType<MCreditService.Interfaces.IOdcService, OdbServiceService>();
+            container.RegisterType<IOcbBusiness, OcbBusiness>();
+            
+
             // container.RegisterType<IProductRepository, ProductRepository>();
         }
     }

@@ -14,9 +14,11 @@ namespace VS_LOAN.Core.Repository
 {
     public class OcbRepository : BaseRepository, IOcbRepository
     {
-
-        public OcbRepository() : base(typeof(OcbRepository))
+        protected readonly INoteRepository _rpNote;
+        public OcbRepository(INoteRepository rpNote) : base(typeof(OcbRepository))
         {
+            _rpNote = rpNote;
+
         }
 
         public async Task<int> CreateDraftProfile(OcbProfile model)
@@ -42,6 +44,46 @@ namespace VS_LOAN.Core.Repository
             }
         }
 
+        public async Task<List<OcbProfileStatus>> GetAllStatus()
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryAsync<OcbProfileStatus>("sp_ocb_profileStatus", commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+
+        }
+
+        public async Task<List<GhichuViewModel>> GetCommentsAsync(int profileId)
+        {
+            return await _rpNote.GetNoteByTypeAsync(profileId, (int)HosoType.RevokeDebt);
+        }
+
+        public async Task<List<OcbProductLoan>> GetLoanProduct( int MaDoiTac)
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryAsync<OcbProductLoan>("sp_SAN_PHAM_VAYOcb_LayDSByID", new { MaDoiTac }, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+
+        public async Task<BaseResponse<bool>> AddNoteAsync(int profileId, string content, int userId)
+        {
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                return new BaseResponse<bool>("Dữ liệu không hợp lệ", false, false);
+            }
+            await _rpNote.AddNoteAsync(new Entity.Model.GhichuModel
+            {
+                CommentTime = DateTime.Now,
+                HosoId = profileId,
+                Noidung = content,
+                TypeId = (int)HosoType.RevokeDebt,
+                UserId = userId
+            });
+            return new BaseResponse<bool>(true);
+        }
         public Task<List<int>> GetPeopleCanViewMyProfile(int profileId)
         {
             throw new NotImplementedException();
@@ -105,6 +147,20 @@ namespace VS_LOAN.Core.Repository
             using (var con = GetConnection())
             {
                 var storeExecute = "sp_update_ocb";
+                await con.ExecuteAsync(storeExecute, param, commandType: CommandType.StoredProcedure);
+                return true;
+            }
+        }
+
+        public async Task<bool> UpdateOCBProileReport(OcbStatusImportModel model)
+        {
+            var param = GetParams(model, ignoreKey: new string[]
+            {
+
+            });
+            using (var con = GetConnection())
+            {
+                var storeExecute = "sp_updateOCBStatus";
                 await con.ExecuteAsync(storeExecute, param, commandType: CommandType.StoredProcedure);
                 return true;
             }

@@ -19,6 +19,11 @@ namespace MCreditService.Interfaces
 
         Task<ALlCityResponseModel> GetAllCity(CityRequestModel model);
         Task<WardResponseModel> GetAllWard(WardRequestModel model);
-     
+
+        Task<bool> Authen();
+
+        Task<bool> CheckAuthen();
+
+
     }
 }

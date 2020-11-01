@@ -37,6 +37,7 @@ namespace VS_LOAN.Core.Entity.MCreditModels
         public string RegAddressDistId { get; set; }
 
         public string RegAddressProvinceId { get; set; }
+
         public string CurAddressDistId { get; set; }
 
         public string ProductId { get; set; }
@@ -47,6 +48,7 @@ namespace VS_LOAN.Core.Entity.MCreditModels
         public decimal? RequestLoanAmount { get; set; }
 
         public int? RequestLoanTerm { get; set; }
+
         public string RegAddressNumber { get; set; }
 
         public string RegAddressStreet { get; set; }
@@ -59,20 +61,32 @@ namespace VS_LOAN.Core.Entity.MCreditModels
 
         public string IncomeType { get; set; }
         public string Email { get; set; }
+
         public int? AssigneeId { get; set; }
 
         public string CreatedBy { get; set; }
-
-    
 
         public string CreatedUser { get; set; }
 
         public string UpdateUser { get; set; }
 
+        public string FirstCallStatus { get; set; }
+
+        public string LastCallStatus { get; set; }
+
+        public DateTime? LastCallDate { get; set; }
+
+        public string lastCallNote { get; set; }
+
+        public string AppProcessStatus { get; set; }
+
+        public string AppStatusForSale { get; set; }
+
+        public string RejectCode { get; set; }
 
 
 
 
-
+    }
 }
-}
+

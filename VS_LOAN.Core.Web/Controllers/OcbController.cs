@@ -28,17 +28,19 @@ namespace VS_LOAN.Core.Web.Controllers
         protected readonly IOcbRepository _rpMCredit;
 
         protected readonly IOdcService _odcService;
+        public readonly IOcbBusiness _ocbBusiness;
         public static ProvinceResponseModel _provinceResponseModel;
-        public OcbController(IOcbRepository rpMCredit , IOdcService odcService) : base()
+        public OcbController(IOcbRepository rpMCredit , IOdcService odcService, IOcbBusiness ocbBusiness) : base()
         {
 
             _rpMCredit = rpMCredit;
             _odcService = odcService;
+            _ocbBusiness = ocbBusiness;
 
 
         }
 
-   
+        
 
 
         public async Task<JsonResult> SearchTemps(string freeText, string status, int page = 1, int limit = 10, string fromDate = null, string toDate = null, int loaiNgay = 0, int manhom = 0,
@@ -171,12 +173,6 @@ namespace VS_LOAN.Core.Web.Controllers
            public async Task<ActionResult> OcbProfile(int id)
         {
             var result = await _rpMCredit.GetTemProfileByMcId(id);
-            //var peopleCanView = await _rpMCredit.GetPeopleCanViewMyProfile(id);
-            //if (peopleCanView != null && peopleCanView.Any())
-            //{
-            //    if (!peopleCanView.Contains(GlobalData.User.IDUser))
-            //        return RedirectToAction("Temp");
-            //}
             ViewBag.isAdmin = GlobalData.User.TypeUser == (int)UserTypeEnum.Admin ? true : false;
             ViewBag.model = result;
             return View();
@@ -192,27 +188,74 @@ namespace VS_LOAN.Core.Web.Controllers
 
         }
 
-
-        public ActionResult Temp()
+        public async Task<ActionResult> Temp()
         {
-             _odcService.GetAllCity(new CityRequestModel());
-             _odcService.GetAllProvince();
-            _odcService.GetAllWard(new WardRequestModel());
-            _odcService.GetAllDictionary();
+
+          await _odcService.CheckAuthen();
+
+
             return View();
         }
 
+        public async Task<JsonResult> AuthenAsync()
+        {
 
-       
+            await _odcService.Authen();
+             await _odcService.GetAllCity(new CityRequestModel());
+            await _odcService.GetAllProvince();
+            await  _odcService.GetAllWard(new WardRequestModel());
+            await _odcService.GetAllDictionary();
+            return ToJsonResponse(true, "Thành công");
+
+        }
+
         public ActionResult AddNew()
 
         {
             return View();
         }
+        public async Task<JsonResult> Import()
+        {
+            var file = Request.Files[0];
+            if (file == null)
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            Stream stream = file.InputStream;
+            stream.Position = 0;
+            try
+            {
+                await _ocbBusiness.HandleFileImport(stream, GlobalData.User.IDUser);
+            }
+            catch (Exception e)
+            {
+                return ToJsonResponse(false,e.Message);
+            }
+            return ToJsonResponse(true, "Import thành công");
+        }
 
-       
-  
+        public async Task<JsonResult> GetAllStatus()
+        {
+            var result = await _rpMCredit.GetAllStatus();
+            return ToJsonResponse(true, "", data: result);
+        }
+        public async Task<JsonResult> GetLoanProduct(int MaDoiTac)
+        {
+            var result = await _rpMCredit.GetLoanProduct(MaDoiTac);
+            return ToJsonResponse(true, "", data: result);
+        }
 
-        
+
+        public async Task<JsonResult> Comments(int profileId)
+        {
+            var result = await _rpMCredit.GetCommentsAsync(profileId);
+            return ToJsonResponse(true, null, result);
+        }
+        public async Task<JsonResult> AddNote(int profileId, StringModel model)
+        {
+            if (model == null)
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            var result = await _rpMCredit.AddNoteAsync(profileId, model.Value, GlobalData.User.IDUser);
+            return ToJsonResponse(result.IsSuccess, result.Message);
+        }
+
     }
 }

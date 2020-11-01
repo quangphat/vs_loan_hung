@@ -52,7 +52,19 @@ namespace VS_LOAN.Core.Entity.MCreditModels
     }
 
 
-   
+    public class AuthenResponseModel
+    {
+
+        public string Access_token { get; set; }
+        public string Token_type { get; set; }
+        public DateTime? ValidTo { get; set; }
+        public string Expires_in { get; set; }
+        public string UserName { get; set; }
+
+    }
+
+
+
 
 
 
