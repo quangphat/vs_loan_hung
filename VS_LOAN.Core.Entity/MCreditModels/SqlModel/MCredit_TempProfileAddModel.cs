@@ -40,6 +40,8 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
         public string LoanPeriodCode { get; set; }
 
         public decimal LoanMoney { get; set; }
+
+        public decimal? CustIncome { get; set; }
         public string LocSignCode { get; set; }
 
         public bool IsInsurrance { get; set; }

@@ -32,27 +32,175 @@ namespace MCreditService
         public OdbServiceService(IOcbRepository mCeditBusiness, ILogRepository logRepository) : base(mCeditBusiness, logRepository)
         {
 
-        }
-
-        public Task<CheckVavlidOdcResponseModel> CheckValidData(string mobilePhone, string idNo)
-        {
-            throw new NotImplementedException();
-
 
         }
-        public Task<OcbLeadResponseModel> CreateLead(OcbProfile model)
+
+        public async Task<CheckVavlidOdcResponseModel> CheckValidData(string mobilePhone, string idNo)
         {
-            throw new NotImplementedException();
+
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            client.DefaultRequestHeaders.Add("Authorization", _authenToken);
+            client.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue(_contentType));
+            var url = _checkValidData;
+            var request = new CheckValidOdcRequestModel() { IdNo = idNo, MobilePhone = mobilePhone };
+
+
+
+        
+            var json = JsonConvert.SerializeObject(request);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync(url, data);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                CheckVavlidOdcResponseModel contributors = JsonConvert.DeserializeObject<CheckVavlidOdcResponseModel>(content);
+           
+
+                return await Task.FromResult(contributors);
+            }
+            else
+            {
+                return new CheckVavlidOdcResponseModel()
+                {
+                    Data = new ValidDataOdbResponse()
+                    {
+                        ValidData = false
+                    }
+                };
+            }
+        }
+        public async Task<OcbLeadResponseModel> CreateLead(OcbProfile model)
+        {
+
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            client.DefaultRequestHeaders.Add("Authorization", _authenToken);
+            client.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue(_contentType));
+            var url = _createLead;
+
+            var validResponse = await CheckValidData(model.Mobilephone, model.IdCard);
+
+            if (validResponse.Status != "200")
+            {
+                return new OcbLeadResponseModel() { Status = "400", ErrorCode = "", Message = "Bị trùng số điện thoại" };
+            }
+            else
+            {
+
+               
+            }
+
+            var request = new CreateLeadRequest()
+            {
+                Birthday = model.BirthDay,
+                CurAddressDistId = model.CurAddressDistId,
+                CurAddressProvinceId = model.CurAddressProvinceId,
+                CurAddressWardId = model.CurAddressWardId,
+                FullName = model.FullNamme,
+                Gender = model.Gender == true ? 1 : 0,
+                IdCard = model.IdCard,
+                IdIssueDate = model.IdIssueDate,
+                Income = model.InCome != null ? model.InCome.Value : 0,
+                Mobilephone = model.Mobilephone,
+                RegAddressDistId = model.RegAddressDistId,
+                RequestLoanTerm = model.RequestLoanTerm != null ? model.RequestLoanTerm.Value : 0,
+                SellerNote = model.SellerNote,
+                TraceCode = model.TraceCode,
+                ProductId = model.ProductId,
+                RegAddressProvinceId = model.RegAddressProvinceId,
+                RegAddressWardId = model.RegAddressWardId,
+                RequestLoanAmount = model.RequestLoanAmount != null ? model.RequestLoanAmount.Value : 0,
+
+
+            };
+
+            string intcomtypeitem = "1";
+            if (model.IncomeType != "9")
+            {
+
+                intcomtypeitem = "2";
+            }
+           
+            var metadata = new MetaData()
+            {
+                CurAddressNumber = model.CurAddressNumber,
+                CurAddressRegion = model.CurAddressRegion,
+                CurAddressStreet = model.CurAddressStreet,
+                Email = model.Email,
+                IncomeType = intcomtypeitem,
+                RegAddressNumber = model.RegAddressNumber,
+                RegAddressRegion = model.RegAddressRegion,
+                RegAddressStreet = model.RegAddressStreet
+                
+            };
+
+
+            request.MetaData = JsonConvert.SerializeObject(metadata); 
+            var json = JsonConvert.SerializeObject(request);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+        
+            var response = await client.PostAsync(url, data);
+
+           
+            if(response.IsSuccessStatusCode)
+            {
+
+                 var content = await response.Content.ReadAsStringAsync();
+                var resultReponse = JsonConvert.DeserializeObject<OcbLeadResponseModel>(content);
+
+                if(resultReponse.Status=="200")
+                {
+
+                    var dataReponse = resultReponse.Data;
+
+                    var customenrId = dataReponse.CustomerId;
+                    if (customenrId != null || customenrId !="")
+                    {
+                        var updateCustomerId = await _bizMcredit.UpdateStatusComplete(Convert.ToInt32(customenrId), model.Id);
+                    }
+
+                }
+                else
+                {
+
+                }
+                return resultReponse;
+            }
+            return new OcbLeadResponseModel();
+
+
+            //HttpResponseMessage response = await client.PostAsync(_createLead, )
+
+
+            //if (response.IsSuccessStatusCode)
+            //{
+            //    var content = await response.Content.ReadAsStringAsync();
+            //    DictionaryResponseModel contributors = JsonConvert.DeserializeObject<DictionaryResponseModel>(content);
+            //    var allProvicec = JsonConvert.DeserializeObject<List<DictionaryResponseItem>>(contributors.ResponseData);
+
+            //    contributors.listDictionary = allProvicec;
+            //    AllDictionary = allProvicec;
+            //    return await Task.FromResult(contributors);
+            //}
+            //else
+            //{
+
+            //}
+            //return await Task.FromResult(new DictionaryResponseModel());
+
         }
 
         public async Task<ALlCityResponseModel> GetAllCity(CityRequestModel model)
         {
             var client = new HttpClient();
-
             client.BaseAddress = new Uri(_baseUrl);
             client.DefaultRequestHeaders.Add("Authorization", _authenToken);
             client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue(_contentType));
+            new MediaTypeWithQualityHeaderValue(_contentType));
             var url = _getallcity;
             HttpResponseMessage response = await client.GetAsync(url);
             if (response.IsSuccessStatusCode)

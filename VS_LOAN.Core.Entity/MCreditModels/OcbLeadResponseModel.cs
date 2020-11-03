@@ -9,13 +9,21 @@ namespace VS_LOAN.Core.Entity.MCreditModels
     public class OcbLeadResponseModel
     {
 
-        public string status { get; set; }
+        public string Status { get; set; }
 
 
-        public string messsage { get; set; }
+        public string Message { get; set; }
 
-        public object data { get; set; }
+        public string ErrorCode { get; set; }
+        
+        public OcbLeadResponseData Data
+        { get; set; }
 
+    }
+
+    public class OcbLeadResponseData
+    {
+        public string CustomerId { get; set; }
     }
     public class DictionaryResponseModel
     {
@@ -128,18 +136,80 @@ namespace VS_LOAN.Core.Entity.MCreditModels
     }
 
             
-    public class WardResponseItem
-    {
+        public class WardResponseItem
+        {
         public string WardId { get; set; }
         public string WardName { get; set; }
         public string CityId { get; set; }
         public string WardType { get; set; }
-    }
+        }
         public class WardRequestModel
         {
-            public string CityId { get; set; }
+        public string CityId { get; set; }
 
         }
+
+
+    public class CreateLeadRequest
+    {
+        public string TraceCode { get; set; }
+
+        public string FullName { get; set; }
+
+        public int? Gender { get; set; }
+
+        public string IdCard { get; set; }
+
+        public DateTime? IdIssueDate { get; set; }
+
+        public string IdIssuePlaceId { get; set; }
+
+        public DateTime Birthday { get; set; }
+        public string Mobilephone { get; set; }
+        public string RegAddressWardId { get; set; }
+
+        public string RegAddressDistId { get; set; }
+
+        public string RegAddressProvinceId { get; set; } 
+
+        public string CurAddressWardId { get; set; }
+
+        public string CurAddressDistId { get; set; }
+
+        public string CurAddressProvinceId { get; set; }
+
+        public decimal Income { get; set; }
+
+        public decimal RequestLoanAmount { get; set; }
+
+        public int RequestLoanTerm { get; set; }
+
+        public string ProductId { get; set; }
+
+        public string SellerNote { get; set; }
+
+        public string MetaData { get; set; }
+
+
+    }
+
+
+    public class MetaData
+    {
+
+        public string RegAddressNumber { get; set; }
+        public string RegAddressStreet { get; set; }
+        public string RegAddressRegion { get; set; }
+        public string CurAddressNumber { get; set; }
+
+        public string CurAddressStreet { get; set; }
+
+        public string CurAddressRegion { get; set; }
+        public string IncomeType { get; set; }
+
+        public string Email { get; set; }
+
+    }
     
 }
 

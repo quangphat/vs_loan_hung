@@ -40,7 +40,7 @@
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày tháng năm sinh<span class="required">(*)</span> </label>
                         <div class="col-sm-4">
                             <div class="input-group">
-                                <input class="form-control date-picker" id="txtBirhDay"  value="@ViewBag.BirthdayDisplay"/>
+                                <input class="form-control date-picker" id="txtBirhDay" />
                                 <span class="input-group-addon">
                                     <i class="fa fa-calendar bigger-110"></i>
                                 </span>
@@ -423,7 +423,7 @@
 
         var hoso = @Html.Raw(Json.Encode(ViewBag.model));
 		
-		if(hoso.dup)
+		if(hoso.IsDuplicateAdrees)
 		{
 				$('#IsDuplicateAdreesHas').prop('checked',true);
 		}
@@ -470,28 +470,28 @@
 
 
 
-        $('#txtBirhDay').datepicker({
-            dateFormat: 'dd-mm-yy'
-
-        }).next().on(ace.click_event, function () {
-            $(this).prev().focus();
-        });
-        // $("#txtBirhDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
+    
         $('#txtCmndDay').datepicker({
             dateFormat: 'dd-mm-yy'
 
         }).next().on(ace.click_event, function () {
             $(this).prev().focus();
         });
+	  
+       
 
+		$('#txtBirhDay').datepicker({
+            dateFormat: 'dd-mm-yy'
 
-          
-
-
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
 
     
 
         $('#txtCmndDay').val(SetFormatDateTimeDMY(hoso.IdIssueDate));
+		
+		  $("#txtBirhDay").val(SetFormatDateTimeDMY(hoso.BirthDay));
 
           $('#ddlTinh').on('change', function () {
             LayDSHuyen(this.value);
@@ -1119,13 +1119,14 @@ function getReward(controlId, value, valueReward = null) {
             success: function (data) {
                 if (data.success == true) {
                         isPushOCB = false;
-                    var dataRespone =JSON.parse(data.data);
-
-                    if(dataRespone.status == 400)
-                    {
-                    swal({
-                        title: "@Html.Raw(Global.Message_Title)",
-                        text: Object.values(dataRespone.data)[0],
+                    var dataRespone =data.data;			
+					
+					if(dataRespone.Status != "200")
+					{
+					 swal({
+						   title: "@Html.Raw(Global.Message_Title)",
+                   
+						 text: dataRespone.Message,
                          type: "error",
                         timer: 4000,
                         showConfirmButton: true,
@@ -1133,26 +1134,14 @@ function getReward(controlId, value, valueReward = null) {
 
 
                     });
-                    }
-                    else if(dataRespone.status ==500)
-                    {
-
-
-                         swal({
-                                title: "@Html.Raw(Global.Message_Title)",
-                                text: dataRespone.message,
-                                type: "error",
-                                timer: 4000,
-                                showConfirmButton: true,
-                            });
-                    }
-
-                    else
-                    {
-
-                    swal({
-                        title: dataRespone.message ,
-                        text: Object.values(dataRespone.data)[0],
+					
+					}
+					else
+					{
+						swal({
+                          title: "@Html.Raw(Global.Message_Title)",
+                   
+						 text: dataRespone.Message,
                         type: "success",
                         timer: 4000,
                         showConfirmButton: true,
@@ -1160,18 +1149,26 @@ function getReward(controlId, value, valueReward = null) {
 
 
                     });
-
-                    }
+						
+						
+					}
 
                 }
                 else {
+					
+					     var dataRespone =data.data;						 
                     swal({
-                        title: "@Html.Raw(Global.Message_Title)",
-                        text:   data.code,
+                          title: "@Html.Raw(Global.Message_Title)",
+                   
+						 text: dataRespone.Message,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,
+                    }, function (data) {
+						isPushOCB = false;
+
                     });
+					 isPushOCB = false;
                 }
             },
             error: function (jqXHR, exception) {

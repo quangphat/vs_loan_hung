@@ -8,8 +8,8 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
 {
     public class OcbProfile : BaseSqlEntity
     {
-        public DateTime IdIssueDate;
-        public string idIssueDate;
+        public DateTime IdIssueDate { get; set; }
+        
 
         public int Id { get; set; }
 
@@ -62,7 +62,12 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
         public string Email { get; set; }
         public int? AssigneeId { get; set; }
 
-       
+        public bool? IsDuplicateAdrees { get; set; }
+
+        public int Status { get; set; }
+
+
+
 
     }
 

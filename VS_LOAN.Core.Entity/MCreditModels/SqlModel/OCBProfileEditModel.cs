@@ -65,6 +65,8 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
         public string IdIssueDatestr { get; set; } 
         public bool? IsDuplicateAdrees { get; set; }
 
+        public int Status { get; set; }
+
 
     }
 }

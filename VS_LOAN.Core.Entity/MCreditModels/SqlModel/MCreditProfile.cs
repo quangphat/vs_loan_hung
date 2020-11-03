@@ -68,6 +68,8 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
         public string CatNumber { get; set; }
         public string ComName { get; set; }
         public string CatName { get; set; }
+
+        public decimal? CustIncome { get; set; }
     }
 
 }

@@ -84,7 +84,11 @@ namespace VS_LOAN.Core.Entity.MCreditModels
 
         public string RejectCode { get; set; }
 
+        public string LastNoteVietBank { get; set; }
 
+        public string CustomerId { get; set; }
+
+        public string StatusName { get; set; }
 
 
     }

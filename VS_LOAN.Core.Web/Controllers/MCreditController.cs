@@ -748,6 +748,10 @@ namespace VS_LOAN.Core.Web.Controllers
                 var files = await _rpTailieu.GetTailieuByHosoId(model.Id, (int)HosoType.MCredit);
                 if (files == null || !files.Any())
                     return ToJsonResponse(false, "Vui lòng upload hồ sơ");
+
+                profileMC.Sex = model.Gender == true ? 1 : 0;
+                profileMC.Addr = model.Address;
+                profileMC.CustIncome = model.CustIncome!=null?model.CustIncome.Value:0;
                 var result = await _svMCredit.CreateProfile(profileMC, GlobalData.User.IDUser);
                 if (result == null || result.status == "error")
                     return ToJsonResponse(false, "", result);

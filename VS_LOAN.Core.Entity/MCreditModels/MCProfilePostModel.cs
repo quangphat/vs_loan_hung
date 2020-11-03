@@ -43,5 +43,11 @@ namespace VS_LOAN.Core.Entity.MCreditModels
         public string CatNumber { get; set; }
         public string ComName { get; set; }
         public string CatName { get; set; }
+
+        public int Sex { get; set; }
+        public string Addr { get; set; }
+        public decimal CustIncome { get; set; }
+
+
     }
 }

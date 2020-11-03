@@ -165,5 +165,15 @@ namespace VS_LOAN.Core.Repository
                 return true;
             }
         }
+
+        public async Task<bool> UpdateStatusComplete(int customerId, int id)
+        {
+            using (var con = GetConnection())
+            {
+                var storeExecute = "sp_update_customerId";
+                await con.ExecuteAsync(storeExecute, new { id,customerId }, commandType: CommandType.StoredProcedure);
+                return true;
+            }
+        }
     }
 }

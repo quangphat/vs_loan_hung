@@ -6,16 +6,27 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Entity.MCreditModels
 {
+
+    public class CheckValidOdcRequestModel
+    {
+
+        public string MobilePhone { get; set; }
+
+        public string IdNo { get; set; }
+    }
     public class CheckVavlidOdcResponseModel
     {
-        
-        public string status { get; set; }
-        public object errorCode { get; set; }
 
-        public string messsage { get; set; }
+        public string Status { get; set; }
 
-        public object data { get; set; }
+        public string Messsage { get; set; }
+        public ValidDataOdbResponse Data { get; set; }
 
+    }
+
+    public class ValidDataOdbResponse
+    {
+        public bool ValidData { get; set; }
     }
     
 }

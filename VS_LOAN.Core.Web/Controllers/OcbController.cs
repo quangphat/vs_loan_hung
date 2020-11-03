@@ -82,7 +82,6 @@ namespace VS_LOAN.Core.Web.Controllers
             profile.FullNamme = model.FullNamme;
             profile.Gender = model.Gender;
             profile.IdCard = model.IdCard;
-            profile.idIssueDate = "";
             profile.Mobilephone = model.Mobilephone;
             profile.RegAddressWardId = model.RegAddressWardId;
             profile.RegAddressDistId = model.RegAddressDistId;
@@ -101,12 +100,27 @@ namespace VS_LOAN.Core.Web.Controllers
             profile.CurAddressNumber = model.CurAddressNumber;
             profile.CurAddressStreet = model.CurAddressStreet;
             profile.CurAddressRegion = model.CurAddressRegion;
+            profile.Status = model.Status;
+            profile.IsDuplicateAdrees = model.IsDuplicateAdrees;
+            if (model.IsDuplicateAdrees==true)
+            {
+                profile.RegAddressNumber = model.CurAddressNumber;
+                profile.RegAddressStreet = model.CurAddressStreet;
+                profile.RegAddressRegion = model.CurAddressRegion;
+                profile.RegAddressProvinceId = model.CurAddressProvinceId;
+                profile.RegAddressDistId = model.CurAddressDistId;
+                profile.RegAddressWardId = model.CurAddressWardId;
+
+
+            }
             profile.IncomeType = model.IncomeType;
             profile.Email = model.Email;
             profile.BirthDay = string.IsNullOrWhiteSpace(model.birthDayStr) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(model.birthDayStr);
             profile.IdIssueDate = string.IsNullOrWhiteSpace(model.IdIssueDatestr) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(model.IdIssueDatestr);
             profile.IncomeType = model.IncomeType;
             profile.CreatedBy = GlobalData.User.IDUser;
+
+            
             var result = await _rpMCredit.UpdateDraftProfile(profile);
             
             if (!result)
@@ -118,11 +132,15 @@ namespace VS_LOAN.Core.Web.Controllers
         }
 
         public async Task<JsonResult> SumbitToOcb (int id)
-        {   
+        {
+
+            var result = await _rpMCredit.GetTemProfileByMcId(id);
+           
 
 
+            var resultReponse =await _odcService.CreateLead(result);
 
-            return ToJsonResponse(true, "", id);
+            return ToJsonResponse(resultReponse.Status=="200", "",resultReponse);
 
         }
 
@@ -137,7 +155,7 @@ namespace VS_LOAN.Core.Web.Controllers
             profile.FullNamme = model.FullNamme;
             profile.Gender = model.Gender;
             profile.IdCard = model.IdCard;
-            profile.idIssueDate = "";
+            
             profile.Mobilephone = model.Mobilephone;
             profile.RegAddressWardId = model.RegAddressWardId;
             profile.RegAddressDistId = model.RegAddressDistId;
@@ -158,6 +176,20 @@ namespace VS_LOAN.Core.Web.Controllers
             profile.CurAddressRegion = model.CurAddressRegion;
             profile.IncomeType = model.IncomeType;
             profile.Email = model.Email;
+            profile.IsDuplicateAdrees = model.IsDuplicateAdrees;
+            profile.Status = model.Status;
+
+            if (model.IsDuplicateAdrees == true)
+            {
+            profile.RegAddressNumber = model.CurAddressNumber;
+            profile.RegAddressStreet = model.CurAddressStreet;
+            profile.RegAddressRegion = model.CurAddressRegion;
+            profile.RegAddressProvinceId = model.CurAddressProvinceId;
+            profile.RegAddressDistId = model.CurAddressDistId;
+            profile.RegAddressWardId = model.CurAddressWardId;
+
+
+            }
             profile.BirthDay = string.IsNullOrWhiteSpace(model.birthDayStr) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(model.birthDayStr);
             profile.IdIssueDate = string.IsNullOrWhiteSpace(model.IdIssueDatestr) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(model.IdIssueDatestr);
             profile.IncomeType = model.IncomeType;
@@ -174,7 +206,7 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             var result = await _rpMCredit.GetTemProfileByMcId(id);
             ViewBag.isAdmin = GlobalData.User.TypeUser == (int)UserTypeEnum.Admin ? true : false;
-            ViewBag.model = result;
+            ViewBag.model = result;         
             return View();
         }
         public JsonResult LayDanhSachThanhPho(string province)
@@ -242,8 +274,6 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = await _rpMCredit.GetLoanProduct(MaDoiTac);
             return ToJsonResponse(true, "", data: result);
         }
-
-
         public async Task<JsonResult> Comments(int profileId)
         {
             var result = await _rpMCredit.GetCommentsAsync(profileId);

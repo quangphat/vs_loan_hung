@@ -22,6 +22,7 @@ namespace VS_LOAN.Core.Repository.Interfaces
         Task<bool> UpdateDraftProfile(OcbProfile model);
         Task<bool> UpdateOCBProileReport(OcbStatusImportModel model);
 
+        Task<bool> UpdateStatusComplete(int customerId, int profileid);
         Task<List<OcbProfileStatus>> GetAllStatus();
         Task<List<OcbProductLoan>> GetLoanProduct(int MaDoiTac);
         Task<List<GhichuViewModel>> GetCommentsAsync(int profileId);
