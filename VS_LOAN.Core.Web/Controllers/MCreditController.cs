@@ -503,6 +503,7 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 result.obj.ReasonName = JsonConvert.SerializeObject(result.obj.Reason);
             }
+
             ViewBag.model = result.status == "success" ? result.obj : new ProfileGetByIdResponseObj();
             return View();
         }

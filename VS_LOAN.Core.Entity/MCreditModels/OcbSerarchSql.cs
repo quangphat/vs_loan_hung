@@ -90,6 +90,21 @@ namespace VS_LOAN.Core.Entity.MCreditModels
 
         public string StatusName { get; set; }
 
+        public DateTime? DisbureseDate { get; set; }
+
+        public string DisbureseMonth { get; set; }
+        public decimal? Volumn { get; set; }
+
+        public string CancelCode { get; set; }
+
+        public string Vbf { get; set; }
+
+        public string VbFUserUpdate { get; set; }
+
+       
+
+
+
 
     }
 }

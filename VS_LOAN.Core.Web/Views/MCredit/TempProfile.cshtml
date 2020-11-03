@@ -112,19 +112,14 @@
                                 <option value="0"></option>
                             </select>
                         </div>
-                        @*<label class="col-sm-2 control-label no-padding-right">Quận/huyện<span class="required">(*)</span></label>
-                            <div class="col-sm-4">
-                                <select id="ddlHuyen" class="chosen-select form-control" data-placeholder="Chọn quận huyện">
-                                    <option value="0"></option>
-                                </select>
-                            </div>*@
+                       
                     </div>
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Địa chỉ</label>
                         <div class="col-sm-10">
                             <textarea type="text" id="txtAddress" placeholder="Nhập địa chỉ" class="form-control">@ViewBag.model.Address</textarea>
                         </div>
-                    </div>
+                    </div
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Sale (Số CMND | CCCD | Mã sale) </label>
                         <div class="col-sm-4">
@@ -186,7 +181,16 @@
                     <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Thu nhập hàng tháng<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <input type="text" id="txtcustIncome" value="@ViewBag.model.CustIncome.ToString("#,##0")" placeholder="Nhập số tiền đề nghị vay" class="form-control">
+							  @if (ViewBag.model.CustIncome != null)
+							  {
+							  <input type="text" id="txtcustIncome" value="@ViewBag.model.CustIncome.ToString("#,##0")" placeholder="Nhập số tiền đề nghị vay" class="form-control">
+							  }
+							  else 
+							  {
+							  <input type="text" id="txtcustIncome" value="" placeholder="Nhập số tiền đề nghị vay" class="form-control">
+							  
+							  }
+                            
                         </div>
 
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số tiền đề nghị vay<span class="required">(*)</span></label>

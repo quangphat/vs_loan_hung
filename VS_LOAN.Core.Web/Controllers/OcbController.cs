@@ -39,10 +39,6 @@ namespace VS_LOAN.Core.Web.Controllers
 
 
         }
-
-        
-
-
         public async Task<JsonResult> SearchTemps(string freeText, string status, int page = 1, int limit = 10, string fromDate = null, string toDate = null, int loaiNgay = 0, int manhom = 0,
 
           int mathanhvien = 0)
@@ -229,6 +225,14 @@ namespace VS_LOAN.Core.Web.Controllers
             return View();
         }
 
+        public async Task<ActionResult> Index()
+        {
+
+            await _odcService.CheckAuthen();
+
+
+            return View("Temp");
+        }
         public async Task<JsonResult> AuthenAsync()
         {
 

@@ -98,7 +98,7 @@
                     </div>
                 </form>
                 <hr>
-					@if (GlobalData.User.IDUser != 1)
+					@if (GlobalData.User.IDUser == 1)
 						{
 
 								<div class="form-group">
@@ -176,20 +176,21 @@
                                     <th class="w-94">Kỳ hạn</th>
                                     <th class="w-94">Mã nhân viên</th>
                                     <th class="w-84">Người tạo</th>
-                                    <th class="w-84">Ngày tạo</th>
+                                    <th class="w-150">Ngày tạo</th>
                                     <th class="w-84">Người Cập nhật</th>
-                                    <th class="w-84">Ngày Cập nhật</th>
+                                    <th class="w-150">Ngày Cập nhật</th>
 									<th class="w-94">FirstCallStatus</th>
 									<th class="w-94">LastCallStatus</th>
                                     <th class="w-150">LastCallDate</th>
+									<th class="w-94">Volumn</th>
+									<th class="w-94">CancelCode</th>
                                     <th class="w-94">lastCallNote</th>
                                     <th class="w-94">AppProcessStatus</th>
                                     <th class="w-94">AppStatusForSale</th>
                                     <th class="w-94">RejectCode</th>
-									
-									
-
-
+									<th class="w-150">DisbureseDate</th>
+									<th class="w-94">DisbureseMonth</th>
+								
 
 
                                 </tr>
@@ -514,11 +515,16 @@
 		+ renderTextLeft(rowData.FirstCallStatus)
 		+renderTextLeft(rowData.LastCallStatus) 	
 		+ renderTextLeft(rowData.LastCallDate, 'datetime', 'w-150')
-		
+		+ renderTextLeft(rowData.Volumn)
+		+ renderTextLeft(rowData.CancelCode)
 		+ renderTextLeft(rowData.lastCallNote)
 		+ renderTextLeft(rowData.AppProcessStatus)
 		+ renderTextLeft(rowData.AppStatusForSale)
-	   + renderTextLeft(rowData.RejectCode);
+	   + renderTextLeft(rowData.RejectCode)
+		+ renderTextLeft(rowData.DisbureseDate, 'datetime', 'w-150')
+		+ renderTextLeft(rowData.DisbureseMonth);
+		
+
             + "</tr>";
 		return strhtmlData;
     }
