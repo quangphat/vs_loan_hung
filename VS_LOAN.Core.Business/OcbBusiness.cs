@@ -62,7 +62,7 @@ namespace VS_LOAN.Core.Business
                     }
                     try
                     {
-                        item.DisbureseDate = row.Cells[10].DateCellValue;
+                        item.DisbureseDate = row.Cells[13].DateCellValue;
                     }
                     catch (Exception)
                     {
@@ -74,8 +74,8 @@ namespace VS_LOAN.Core.Business
                     item.AppStatusForSale = row.Cells[11].StringCellValue;
                     item.AppProcessStatus = row.Cells[12].StringCellValue;
                     item.DisbureseMonth = row.Cells[14].StringCellValue;
-                    item.RejectCode = row.Cells[16].StringCellValue;
-                    item.CancelCode = row.Cells[17].StringCellValue;
+                    item.RejectCode = row.Cells[17].StringCellValue;
+                    item.CancelCode = row.Cells[16].StringCellValue;
                     try
                     {
                         item.lastCallNote = row.Cells[10].StringCellValue;
@@ -152,11 +152,11 @@ namespace VS_LOAN.Core.Business
 
 
                     }
-                    
 
-                  
-                
-                  
+
+                    item.UpdatedBy = userId;
+                    
+               
                 
                     await _rpRevokeDebt.UpdateOCBProileReport(item);
                 }

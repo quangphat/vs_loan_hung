@@ -131,13 +131,8 @@ namespace VS_LOAN.Core.Web.Controllers
         {
 
             var result = await _rpMCredit.GetTemProfileByMcId(id);
-           
-
-
             var resultReponse =await _odcService.CreateLead(result);
-
             return ToJsonResponse(resultReponse.Status=="200", "",resultReponse);
-
         }
 
 
@@ -151,7 +146,6 @@ namespace VS_LOAN.Core.Web.Controllers
             profile.FullNamme = model.FullNamme;
             profile.Gender = model.Gender;
             profile.IdCard = model.IdCard;
-            
             profile.Mobilephone = model.Mobilephone;
             profile.RegAddressWardId = model.RegAddressWardId;
             profile.RegAddressDistId = model.RegAddressDistId;
@@ -183,8 +177,6 @@ namespace VS_LOAN.Core.Web.Controllers
             profile.RegAddressProvinceId = model.CurAddressProvinceId;
             profile.RegAddressDistId = model.CurAddressDistId;
             profile.RegAddressWardId = model.CurAddressWardId;
-
-
             }
             profile.BirthDay = string.IsNullOrWhiteSpace(model.birthDayStr) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(model.birthDayStr);
             profile.IdIssueDate = string.IsNullOrWhiteSpace(model.IdIssueDatestr) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(model.IdIssueDatestr);

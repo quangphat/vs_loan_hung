@@ -9,7 +9,7 @@ for your own use before compile tests in VisualStudio.
       <!--Data Source=QUANGPHAT\CLARKKENT;Initial Catalog=Test13;User ID=sa;Password=number8;-->
 
 
-      <!--Data Source=DESKTOP-83V2DTV;Initial Catalog=fintechcom_vn_Portal;Integrated Security=True-->
+       <!--Data Source=DESKTOP-83V2DTV;Initial Catalog=fintechcom_vn_Portal;Integrated Security=True-->
       Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;
       <!--Data Source=QUANGPHAT\CLARKKENT;Initial Catalog=fintechcom_vn_PortalNew;User ID=sa;Password=number8;-->
       <!--Data Source=alpha.dotvndns.vn,1441;Initial Catalog=fintechcom_vn_Portal;User ID=fintechcom_vn_PortalNew;Password=123456789;-->
