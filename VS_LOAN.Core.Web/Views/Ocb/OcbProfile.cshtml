@@ -87,13 +87,13 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Tỉnh/TP<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlTinh" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố" @ViewBag.disable   >
+                            <select id="ddlTinh" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố" @ViewBag.disable>
                                 <option value="0"></option>
                             </select>
                         </div>
                         <label class="col-sm-2 control-label no-padding-right">Quận/huyện<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlHuyen" class="chosen-select form-control" data-placeholder="Chọn quận huyện" @ViewBag.disable >
+                            <select id="ddlHuyen" class="chosen-select form-control" data-placeholder="Chọn quận huyện" @ViewBag.disable>
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -106,7 +106,7 @@
 
                         <label class="col-sm-2 control-label no-padding-right">Phường/Xã<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlReward" class="chosen-select form-control" data-placeholder="Chọn đường" @ViewBag.disable >
+                            <select id="ddlReward" class="chosen-select form-control" data-placeholder="Chọn đường" @ViewBag.disable>
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -139,22 +139,22 @@
 
 
 
-<div class="form-group">
+                    <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Địa chỉ thường trú trùng địa chỉ hiện tại *</label>
                         <div class="col-sm-4">
                             <label class="control-label no-padding-right">
-                                <input name="IsDuplicateAdrees" type="radio" checked="checked" value= "true" id ="IsDuplicateAdreesHas" class="ace">
+                                <input name="IsDuplicateAdrees" type="radio" checked="checked" value="true" id="IsDuplicateAdreesHas" class="ace">
                                 <span class="lbl"> Có</span>
                             </label>
                             <label class="control-label no-padding-right" style="margin-left:20px">
-                                <input name="IsDuplicateAdrees" type="radio" value="false" class="ace" id ="IsDuplicateAdreesNo">
+                                <input name="IsDuplicateAdrees" type="radio" value="false" class="ace" id="IsDuplicateAdreesNo">
                                 <span class="lbl"> Không</span>
                             </label>
                         </div>
-                        
-              </div>
-			  
-			 
+
+                    </div>
+
+
 
 
 
@@ -271,14 +271,194 @@
 
                 </form>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12">
-                <h3 class="header smaller lighter blue">3.Thông tin thêm:</h3>
+        </div>	
 
+		 
+		<div class="row">
+		<div class="col-xs-12">
+			<h3 class="header smaller lighter blue">3.Thông tin người tham chiếu 1:</h3>
+			<form class="form-horizontal" role="form">
+
+				<div class="form-group">
+					<label for="form-field-1" class="col-sm-2 control-label no-padding-right">Họ tên người tham chiếu 1<span class="required">(*)</span></label>
+					<div class="col-sm-4">
+						<input type="text" id="ReferenceFullName1" value="@ViewBag.model.ReferenceFullName1" placeholder="Nhập họ tên" class="form-control">
+					</div>
+
+				</div>
+
+
+				<div class="form-group">
+					<label for="form-field-1" class="col-sm-2 control-label no-padding-right">Quan hệ người tham chiếu 1<span class="required">(*)</span></label>
+					<div class="col-sm-4">
+					
+					<select id="ReferenceRelationship1" class="chosen-select form-control">
+							<option value="1">Cha/ Mẹ ruột </option>
+							<option value="10">Cô/ Dì/ Chú/ Bác/ Cậu</option>
+							<option value="12">Bạn/ đồng nghiệp</option>
+							<option value="2">Vợ/Chồng</option>
+							<option value="3">Con</option>
+							<option value="4">Anh/Chị/Em họ</option>
+							<option value="5">Anh/Chị/Em ruột</option>
+							<option value="6">Ông/Bà</option>
+							<option value="7">Cha/Mẹ của Vợ/Chồng</option>
+							<option value="8">Họ hàng</option>
+							<option value="99">Người thân khác trong cùng hộ khẩu</option>
+							
+					</select>
+						
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số điện thoại người tham chiếu 1<span class="required">(*)</span></label>
+					<div class="col-sm-4">
+						<input type="text" id="ReferencePhone1" value="@ViewBag.model.ReferencePhone1" placeholder="Nhập họ tên" class="form-control">
+					</div>
+				</div>
+				
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right">Giới tính</label>
+						<div class="col-sm-4">
+							<select id="Reference1Gender" class="chosen-select form-control">
+								<option value="1">Nam</option>
+								<option value="2">Nữ</option>
+								<option value="9">Khác</option>
+							</select>
+						</div>
+					</div>
+
+
+			</form>
+		</div>
+		</div>
+		
+		
+		<div class="row">
+		<div class="col-xs-12">
+			<h3 class="header smaller lighter blue">4.Thông tin người tham chiếu 2:</h3>
+			<form class="form-horizontal" role="form">
+
+				<div class="form-group">
+					<label for="form-field-1" class="col-sm-2 control-label no-padding-right">Họ tên người tham chiếu 2<span class="required">(*)</span></label>
+					<div class="col-sm-4">
+						<input type="text" id="ReferenceFullName2" value="@ViewBag.model.ReferenceFullName2" placeholder="Nhập họ tên" class="form-control">
+					</div>
+
+				</div>
+
+
+				<div class="form-group">
+					<label for="form-field-1" class="col-sm-2 control-label no-padding-right">Quan hệ người tham chiếu 2<span class="required">(*)</span></label>
+					<div class="col-sm-4">
+							<select id="ReferenceRelationship2" class="chosen-select form-control">
+							<option value="1">Cha/ Mẹ ruột </option>
+							<option value="10">Cô/ Dì/ Chú/ Bác/ Cậu</option>
+							<option value="12">Bạn/ đồng nghiệp</option>
+							<option value="2">Vợ/Chồng</option>
+							<option value="3">Con</option>
+							<option value="4">Anh/Chị/Em họ</option>
+							<option value="5">Anh/Chị/Em ruột</option>
+							<option value="6">Ông/Bà</option>
+							<option value="7">Cha/Mẹ của Vợ/Chồng</option>
+							<option value="8">Họ hàng</option>
+							<option value="99">Người thân khác trong cùng hộ khẩu</option>
+							
+					</select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số điện thoại người tham chiếu 2<span class="required">(*)</span></label>
+					<div class="col-sm-4">
+						<input type="text" id="ReferencePhone2" value="@ViewBag.model.ReferencePhone2" placeholder="Nhập họ tên" class="form-control">
+					</div>
+				</div>
+				
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right">Giới tính</label>
+						<div class="col-sm-4">
+							<select id="Reference2Gender" class="chosen-select form-control">
+								<option value="1">Nam</option>
+								<option value="2">Nữ</option>
+								<option value="9">Khác</option>
+							</select>
+						</div>
+					</div>
+
+			</form>
+		</div>
+		</div>
+		 
+		 
+		 
+		<div class="row">
+		<div class="col-xs-12">
+			<h3 class="header smaller lighter blue">5.Thông tin người tham chiếu 3:</h3>
+			<form class="form-horizontal" role="form">
+
+				<div class="form-group">
+					<label for="form-field-1" class="col-sm-2 control-label no-padding-right">Họ tên người tham chiếu 3<span class="required">(*)</span></label>
+					<div class="col-sm-4">
+						<input type="text" id="ReferenceFullName3" value="@ViewBag.model.ReferenceFullName3" placeholder="Nhập họ tên" class="form-control">
+					</div>
+
+				</div>
+
+
+				<div class="form-group">
+					<label for="form-field-1" class="col-sm-2 control-label no-padding-right">Quan hệ người tham chiếu 3<span class="required">(*)</span></label>
+					<div class="col-sm-4">
+							<select id="ReferenceRelationship3" class="chosen-select form-control">
+							<option value="1">Cha/ Mẹ ruột </option>
+							<option value="10">Cô/ Dì/ Chú/ Bác/ Cậu</option>
+							<option value="12">Bạn/ đồng nghiệp</option>
+							<option value="2">Vợ/Chồng</option>
+							<option value="3">Con</option>
+							<option value="4">Anh/Chị/Em họ</option>
+							<option value="5">Anh/Chị/Em ruột</option>
+							<option value="6">Ông/Bà</option>
+							<option value="7">Cha/Mẹ của Vợ/Chồng</option>
+							<option value="8">Họ hàng</option>
+							<option value="99">Người thân khác trong cùng hộ khẩu</option>
+							
+					</select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số điện thoại người tham chiếu 3<span class="required">(*)</span></label>
+					<div class="col-sm-4">
+						<input type="text" id="ReferencePhone3" value="@ViewBag.model.ReferencePhone3" placeholder="Nhập họ tên" class="form-control">
+					</div>
+				</div>
+				
+						<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right">Giới tính</label>
+						<div class="col-sm-4">
+							<select id="Reference3Gender" class="chosen-select form-control">
+								<option value="1">Nam</option>
+								<option value="2">Nữ</option>
+								<option value="9">Khác</option>
+							</select>
+						</div>
+					</div>
+
+			</form>
+		</div>
+		</div>
+		 
+
+		<div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">6.Hồ sơ đính kèm:</h3>
+                <div class="row">
+                    <div class="col-xs-12" style="overflow-y: scroll;max-height:400px;">
+                        <form class="form-horizontal" role="form" id="lstTailieu"></form>
+                    </div>
+                </div>
 
             </div>
-
         </div>
         <div class="row">
             <div class="col-xs-12">
@@ -293,9 +473,7 @@
                         <div class="form-group">
                             <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
                             <div class="col-sm-5 col-xs-12 ">
-                                <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái" >
-                                   
-                                  
+                                <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
                                 </select>
                             </div>
 
@@ -310,8 +488,6 @@
                             <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
                             <div class="col-sm-5 col-xs-12 ">
                                 <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Trạng thái">
-                                   
-                                  
                                 </select>
                             </div>
 
@@ -341,27 +517,29 @@
                         <a class="btn btn-sm btn-primary" id="btnAddNote">
                             Thêm ghi chú
                         </a>
-						
-					  
-							
-							<a class="btn btn-sm btn-primary" id="btn_Temp">
+
+
+
+                        <a class="btn btn-sm btn-primary" id="btn_Temp">
                             Cập nhật
-							</a>
-							@if (GlobalData.User.UserType == (int)UserTypeEnum.Admin)
-								
-								{
-									
-									<a class="btn btn-sm btn-primary" id="btn_Save">
+                        </a>
+                        @if (GlobalData.User.UserType == (int)UserTypeEnum.Admin)
+
+                        {
+
+                            <a class="btn btn-sm btn-primary" id="btn_Save">
                                 Nộp hồ sơ qua OCB
                             </a>
-								}
 							
+							<a class="btn btn-sm btn-primary" id="btnPushDocument">
+                                Đẩy tài liệu
+                            </a>
+												
 							
-							
-						
-                        
-						
-                       
+                        }
+
+
+
                     </div>
                 </form>
             </div>
@@ -370,6 +548,171 @@
     </div>
 </div>
 <script>
+ 
+    var fileRequireIds =[];
+    function LayDSTaiLieu(id) {
+
+        $.ajax({
+            type: "GET",
+            url: "/Ocb/TailieuByHosoForEdit?hosoId=" +id,
+            success: function (data) {
+                if (data.data != null && data.success == true) {
+                    var i = 0;
+                    var content = "";
+                    let keys = [];
+                    $.each(data.data, function (index, item) {
+                        
+                        
+                        $("#lstTailieu").append("<div class='form-group'><div id='tailieu-" + item.ID + "'></div></div > ");
+                        if (!isNullOrNoItem(item.Tailieus)) {
+                            
+                            let _initialPreview = [];
+                            let _initialPreviewConfig = [];
+                            $.each(item.Tailieus, function (i, tailieu) {
+                                fileRequireIds.push(item.ID);
+                                _initialPreview = [];
+                                _initialPreviewConfig = [];
+                                var _imgExts = ["jpg", "jpeg", "png", "pdf"];
+                                var extn = tailieu.FileUrl.split('.').pop();
+                                var isImg = isExtension(extn, _imgExts);
+                                if (isImg) {
+                                    _initialPreview.push(tailieu.FileUrl);
+                                    _initialPreviewConfig.push({
+                                        caption: tailieu.FileName,
+                                        url: "/Ocb/RemoveTailieuByHoso?hosoId=" + id + "&fileId=" + tailieu.FileId,
+                                        type: extn.indexOf('pdf') > -1 ? "pdf" : "jpg",
+                                        width: "120px"
+                                    });
+                                }
+                                let name = '',
+                                    isrequire = false,
+                                    className = ''
+                                if (keys.indexOf(tailieu.Key) < 0) {
+                                    name = tailieu.KeyName;
+                                    isrequire = true
+                                }
+                                else {
+                                    className = 'mt-46'
+                                }
+                                renderOneItemFileOcb(tailieu.Key, tailieu.FileId, name, isrequire, className, true, _initialPreview, _initialPreviewConfig, true, true, onUploadFile, onDeleteFile,[],7)
+                                
+                                keys.push(item.ID)
+                            })
+                            if (item.Tailieus.length < 5) {
+                                renderOneItemFileOcb(item.ID, item.ID, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile,[],7)
+                            }
+                            
+                        }
+                        else {
+                            renderOneItemFileOcb(item.ID, item.ID, item.Ten, item.BatBuoc, '', true, [], [], true, false, onUploadFile, onDeleteFile,[],7)
+                        }
+                       
+                    });
+                }
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+        filesUpload = [];
+        function onUploadFile(key, fileId, data, isExist) {
+            if (isReach5Files(filesUpload, key))
+                return;
+            let response = data;
+            if (isNullOrNoItem(filesUpload)) {
+                filesUpload = []
+            }
+
+            fileRequireIds.push(key);
+            if (isExist == false) {
+                let file = {
+                    Key: parseInt(response.initialPreviewConfig[0].key),
+                    FileName: response.initialPreviewConfig[0].caption,
+                    FileUrl: response.initialPreview,
+                    KeyName: "",
+                    Id: fileId
+                }
+                let existKeyIndex = filesUpload.findIndex(p => p.key == key)
+                if (existKeyIndex < 0) {
+                    filesUpload.push({ key: parseInt(key), files: [file] })
+                }
+                else {
+                    if (filesUpload[existKeyIndex].files == null)
+                        filesUpload[existKeyIndex].files = []
+                    filesUpload[existKeyIndex].files.push(file);
+                }
+            }
+           
+            if (isReach5Files(filesUpload, key) === false) {
+                let newAttachhFileId = getNewGuid();
+                renderOneItemFileOcb(key, newAttachhFileId, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile)
+            }
+        }
+        function onDeleteFile(key, fileId, isExist) {
+            
+            let index = fileRequireIds.findIndex(p => p == key)
+            fileRequireIds.splice(index, 1);
+            removeFile(key, fileId);
+        }
+        function removeFile(key, fileId) {
+			debugger;
+            if (isNullOrNoItem(filesUpload))
+                return;
+            let index = filesUpload.findIndex(p => p.key == key);
+            if (index >= 0) {
+                if (!isNullOrNoItem(filesUpload[index].files)) {
+                    let indexOfFile = filesUpload[index].files.findIndex(p => p.Id == fileId);
+                    if (indexOfFile >= 0)
+                        filesUpload[index].files.splice(indexOfFile, 1);
+                }
+            }
+        }
+
+    }
+    function uploadHoso(hosoId, reloadOnSuccess = false) {
+	
+		debugger;
+        if (isNullOrNoItem(filesUpload)) {
+            if (reloadOnSuccess == true) {
+                window.location = window.location;
+            }
+            return;
+        }
+               
+            $.ajax({
+                traditional: true,
+                url: `/Ocb/UploadToHoso?hosoId=${hosoId}&isReset=false`,
+                type: "POST",
+                contentType: "application/json;",
+                dataType: 'json',
+                data: JSON.stringify(filesUpload),
+                success: function (data) {
+                    if (data.data != null && data.success == true) {
+                        if (reloadOnSuccess == true) {
+                            window.location = window.location;
+                        }
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.Message.ErrorMessage,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+        }
     $(document).ready(function () {
 
         $('#btnAddNote').click(function (e) {
@@ -431,8 +774,11 @@
 		{
 		
 		$('#IsDuplicateAdreesNo').prop('checked',true);
-		}
-		 
+        }
+
+
+
+       
 
 
 		
@@ -447,8 +793,18 @@
         $("#RegAddressStreet").val(hoso.RegAddressStreet);
         $("#RegAddressNumber").val(hoso.RegAddressNumber);
 		
-		$('#ddlGioiTinh').val(hoso.Gender == true ? 1:0);
+        $('#ddlGioiTinh').val(hoso.Gender == true ? 1 : 0);
+  
 
+       
+        $('#Reference1Gender').val(hoso.Reference1Gender != null ? hoso.Reference1Gender : null);
+        $('#Reference2Gender').val(hoso.Reference2Gender != null ? hoso.Reference2Gender : null);
+		$('#Reference3Gender').val(hoso.Reference3Gender != null ? hoso.Reference3Gender : null);	
+		$('#ReferenceRelationship1').val(hoso.ReferenceRelationship1 != null ? hoso.ReferenceRelationship1 : null);	
+		$('#ReferenceRelationship2').val(hoso.ReferenceRelationship2 != null ? hoso.ReferenceRelationship2 : null);	
+		$('#ReferenceRelationship3').val(hoso.ReferenceRelationship3 != null ? hoso.ReferenceRelationship3 : null);	
+
+	
 
         $('#ddlSanPhamVay').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlCourier').chosen({ width: '100%', allow_single_deselect: true });
@@ -534,9 +890,14 @@
 
 
            Getcomments();
-		   
-		 
 
+		// var listTailieu =  @Html.Raw(Json.Encode(ViewBag.LstTaiLieu));
+		// var lstLoaiTaiLieu = @Html.Raw(Json.Encode(ViewBag.LstLoaiTaiLieu));
+        LayDSTaiLieu(hoso.Id);
+
+
+
+          
 
     });
 
@@ -745,6 +1106,9 @@
     });
 };
     $("#txtDienThoai").ForceNumericOnly();
+	$("#ReferencePhone1").ForceNumericOnly();
+	$("#ReferencePhone2").ForceNumericOnly();
+	$("#ReferencePhone3").ForceNumericOnly();
     $("#txtDienThoai2").ForceNumericOnly();
     $("#txtTienDeNghiVay").ForceNumericOnly();
     $("#txtCMND").ForceNumericOnly();
@@ -948,6 +1312,77 @@ function getReward(controlId, value, valueReward = null) {
 
     }
 
+
+ var isPushDocoment = true;
+
+    $('#btnPushDocument').click(function (e) {
+
+        if(isPushDocoment ==false)
+        {
+            return;
+        }
+        // if ($('#txtHoTen').val() == "" || $('#txtHoTen').val() == undefined) {
+            // swal({
+                // title: "@Html.Raw(Global.Message_Title)",
+                // text: "Vui lòng nhập tên",
+                // type: "error",
+                // timer: 4000,
+                // showConfirmButton: true,
+            // });
+            // return;
+        // }
+
+
+     
+
+        isPushDocoment = false;
+
+        var objectSend = JSON.stringify({
+              'id' : @ViewBag.model.Id             
+
+        });
+
+
+        $.ajax({
+            traditional: true,
+            url: '@Url.Action("SendFile", "Ocb")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                isSave = true;
+                if (data.success == true) {
+                    swal({
+                        title: "Đẩy chứng từ thành công",
+                        text: "Thành công",
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+						
+		
+                    });
+                }
+                else {
+                    swal({
+                        title: "Có lỗi trong khi đẩy dữ liệu, vui lòng liên hệ It",
+                        text: "có lỗi",
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+                isPushDocoment = true;
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+                isPushDocoment = true;
+            },
+        });
+    });
     var isSave = true;
 
     $('#btn_Temp').click(function (e) {
@@ -1049,7 +1484,22 @@ function getReward(controlId, value, valueReward = null) {
             'Email': '',
             'Status' : $("#ddlStatus").val(),
             'IncomeType': $('#ddlloaisanpham').val(),
-			'IsDuplicateAdrees': getRadioButtonValue('IsDuplicateAdrees')
+			  
+			'IsDuplicateAdrees': getRadioButtonValue('IsDuplicateAdrees'),
+			'ReferenceRelationship1': $('#ReferenceRelationship1').val(),
+			'ReferenceFullName1': $('#ReferenceFullName1').val(),
+			'Reference1Gender': $('#Reference1Gender').val(),
+			'ReferencePhone1': $('#ReferencePhone1').val(),
+			
+			'ReferenceFullName2': $('#ReferenceFullName2').val(),
+			'ReferenceRelationship2': $('#ReferenceRelationship2').val(),
+			'Reference2Gender': $('#Reference2Gender').val(),
+			'ReferencePhone2': $('#ReferencePhone2').val(),
+					
+			'ReferenceFullName3': $('#ReferenceFullName3').val(),
+			'ReferenceRelationship3': $('#ReferenceRelationship3').val(),
+			'Reference3Gender': $('#Reference3Gender').val(),
+			'ReferencePhone3': $('#ReferencePhone3').val(),
 
         });
 
@@ -1070,7 +1520,9 @@ function getReward(controlId, value, valueReward = null) {
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-
+						uploadHoso(@ViewBag.model.Id, true);
+					
+		
                     });
                 }
                 else {
@@ -1103,7 +1555,7 @@ function getReward(controlId, value, valueReward = null) {
         }
 
         showBlock($('#panel_body'), 'Vui lòng chờ');
-        let FileRequireIds = [];
+        // let FileRequireIds = [];
         var objectSend = JSON.stringify({
 
             "Id": @ViewBag.model.Id,
@@ -1123,6 +1575,8 @@ function getReward(controlId, value, valueReward = null) {
 					
 					if(dataRespone.Status != "200")
 					{
+						debugger;
+						
 					 swal({
 						   title: "@Html.Raw(Global.Message_Title)",
                    
@@ -1132,7 +1586,7 @@ function getReward(controlId, value, valueReward = null) {
                         showConfirmButton: true,
                     }, function (data) {
 
-
+							
                     });
 					
 					}

@@ -27,8 +27,7 @@ namespace MCreditService
         public static List<CityItem> AllCity { get; set; }
         public static List<WardResponseItem> AllWard { get; set; }
 
-        public static AuthenResponseModel _authenGlobal;
-       
+        public static AuthenResponseModel _authenGlobal;       
         public OdbServiceService(IOcbRepository mCeditBusiness, ILogRepository logRepository) : base(mCeditBusiness, logRepository)
         {
 
@@ -45,10 +44,6 @@ namespace MCreditService
             new MediaTypeWithQualityHeaderValue(_contentType));
             var url = _checkValidData;
             var request = new CheckValidOdcRequestModel() { IdNo = idNo, MobilePhone = mobilePhone };
-
-
-
-        
             var json = JsonConvert.SerializeObject(request);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -114,8 +109,19 @@ namespace MCreditService
                 RegAddressProvinceId = model.RegAddressProvinceId,
                 RegAddressWardId = model.RegAddressWardId,
                 RequestLoanAmount = model.RequestLoanAmount != null ? model.RequestLoanAmount.Value : 0,
+                ReferenceFullName1 =model.ReferenceFullName1,
+                ReferencePhone1 = model.ReferencePhone1,
+                ReferenceRelationship1 = model.ReferenceRelationship1,
+                Reference1Gender = model.Reference1Gender,
 
-
+                ReferenceFullName2 = model.ReferenceFullName2,
+                ReferencePhone2 = model.ReferencePhone2,
+                ReferenceRelationship2 = model.ReferenceRelationship2,
+                Reference2Gender = model.Reference2Gender,
+                ReferenceFullName3 = model.ReferenceFullName3,
+                ReferencePhone3 = model.ReferencePhone3,
+                ReferenceRelationship3 = model.ReferenceRelationship3,
+                Reference3Gender = model.Reference3Gender,
             };
 
             string intcomtypeitem = "1";
@@ -173,27 +179,9 @@ namespace MCreditService
             return new OcbLeadResponseModel();
 
 
-            //HttpResponseMessage response = await client.PostAsync(_createLead, )
-
-
-            //if (response.IsSuccessStatusCode)
-            //{
-            //    var content = await response.Content.ReadAsStringAsync();
-            //    DictionaryResponseModel contributors = JsonConvert.DeserializeObject<DictionaryResponseModel>(content);
-            //    var allProvicec = JsonConvert.DeserializeObject<List<DictionaryResponseItem>>(contributors.ResponseData);
-
-            //    contributors.listDictionary = allProvicec;
-            //    AllDictionary = allProvicec;
-            //    return await Task.FromResult(contributors);
-            //}
-            //else
-            //{
-
-            //}
-            //return await Task.FromResult(new DictionaryResponseModel());
+       
 
         }
-
         public async Task<ALlCityResponseModel> GetAllCity(CityRequestModel model)
         {
             var client = new HttpClient();
@@ -314,7 +302,6 @@ namespace MCreditService
             return true;
              
         }
-
         public async Task<bool> Authen()
         {
             var nvc = new List<KeyValuePair<string, string>>();
@@ -351,6 +338,50 @@ namespace MCreditService
 
             return true;
 
+        }
+
+        public async Task<OcbSendfileReponseModel> SendFile(OcbSendfileReQuestModel model)
+        {
+
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            client.DefaultRequestHeaders.Add("Authorization", _authenToken);
+            client.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue(_contentType));
+            var url = _addDocument;
+            var request = new OcbSendfileReQuestModel()
+            {
+               CustomerId  = model.CustomerId,
+               Fieldname = model.Fieldname,
+               FileType = model.FileType,
+               FileContent= model.FileContent,
+            };
+            var json = JsonConvert.SerializeObject(request);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await client.PostAsync(url, data);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var resultReponse = JsonConvert.DeserializeObject<OcbSendfileReponseModel>(content);
+                if (resultReponse.Status == "200")
+                {
+                    return new OcbSendfileReponseModel()
+                    {
+                        Message = "Đẩy file thành công",
+                        Status = resultReponse.Status
+                    };
+                }
+                else
+                {
+                    return new OcbSendfileReponseModel()
+                    {
+                        Message = "Bị lỗi",
+                        Status = resultReponse.Status
+                    };
+                }
+               
+            }
+            return new OcbSendfileReponseModel();
         }
     }
 }

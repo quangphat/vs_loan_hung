@@ -29,7 +29,9 @@ namespace VS_LOAN.Core.Repository
                 var param = GetParams(model, "Id", ignoreKey: new string[] {
                 nameof(model.CreatedTime),
                 nameof(model.UpdatedTime),
-            
+                   nameof(model.CustomerId),
+                      nameof(model.IsPushDocument)
+
             });
 
                 using (var con = GetConnection())
@@ -140,7 +142,9 @@ namespace VS_LOAN.Core.Repository
             {
                 nameof(model.CreatedTime),
                 nameof(model.UpdatedTime),
-                nameof(model.CreatedBy)
+                nameof(model.CreatedBy),
+                nameof(model.CustomerId),
+                nameof(model.IsPushDocument)
                
             });
 

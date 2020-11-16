@@ -15,7 +15,6 @@ namespace VS_LOAN.Core.Repository
 {
     public class TailieuRepository : BaseRepository, ITailieuRepository
     {
-
         public TailieuRepository() : base(typeof(TailieuRepository)) { }
         public async Task<List<ImportExcelFrameWorkModel>> GetImportTypes(int type)
         {
@@ -156,7 +155,6 @@ namespace VS_LOAN.Core.Repository
                     commandType: CommandType.StoredProcedure);
                 return true;
             }
-
         }
         public async Task<bool> AddMCredit(MCTailieuSqlModel model)
         {
@@ -207,5 +205,79 @@ namespace VS_LOAN.Core.Repository
                 return true;
             }
         }
+
+        public async Task<List<FileUploadModel>> GetTailieuOCByHosoId(int hosoId, int type)
+        {
+            using (var con = GetConnection())
+            {
+                var p = new DynamicParameters();
+                p.Add("profileId", hosoId);
+                p.Add("profileTypeId", type);
+                var result = await con.QueryAsync<FileUploadModel>("getTailieuOCBByHosoId", p,
+                    commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+
+        }
+
+        public async Task<bool> RemoveTailieuOcb(int hosoId, int tailieuId)
+        {
+            var p = new DynamicParameters();
+            p.Add("hosoId", hosoId);
+            p.Add("tailieuId", tailieuId);
+            using (var con = GetConnection())
+            {
+                var result = await con.ExecuteAsync("removeTailieuOCB", p,
+                    commandType: CommandType.StoredProcedure);
+                return true;
+            }
+        }
+
+        public async Task<bool> RemoveAllTailieuOcb(int hosoId, int typeId)
+        {
+            using (var con = GetConnection())
+            {
+                var p = new DynamicParameters();
+                p.Add("ProfileId", hosoId);
+                p.Add("ProfileTypeId", typeId);
+                await con.ExecuteAsync("sp_TAI_LIEU_HS_XoaTatCaOCB", p,
+                    commandType: CommandType.StoredProcedure);
+                return true;
+            }
+        }
+
+
+
+        public async Task<bool> AddOCB(TaiLieu model)
+        {
+            using (var con = GetConnection())
+            {
+                var p = new DynamicParameters();
+                p.Add("FileKey", model.FileKey);
+                p.Add("FilePath", model.FilePath);
+                p.Add("Folder", model.Folder);
+                p.Add("FileName", model.FileName);
+                p.Add("ProfileId", model.ProfileId);
+                p.Add("ProfileTypeId", model.ProfileTypeId);
+                await con.ExecuteAsync("sp_TAI_LIEU_HS_ThemOCB", p,
+                    commandType: CommandType.StoredProcedure);
+                return true;
+            }
+
+        }
+
+        public async Task<bool> UpdateExistingFileOCB(TaiLieu model, int fileId)
+        {
+            var p = GetParams(model, ignoreKey: new string[] { nameof(model.FileKey), nameof(model.ProfileId) });
+            p.Add("fileId", fileId);
+            using (var con = GetConnection())
+            {
+                var result = await con.ExecuteAsync("updateExistingFileOcb", p,
+                    commandType: CommandType.StoredProcedure);
+                return true;
+            }
+        }
+
+  
     }
 }

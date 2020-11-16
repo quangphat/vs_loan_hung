@@ -842,6 +842,7 @@
             removeFile(key, fileId);
         }
         function removeFile(key, fileId) {
+    
             if (isNullOrNoItem(filesUpload))
                 return;
             let index = filesUpload.findIndex(p => p.key == key);

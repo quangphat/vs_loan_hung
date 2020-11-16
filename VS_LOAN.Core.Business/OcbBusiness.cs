@@ -23,6 +23,8 @@ namespace VS_LOAN.Core.Business
         {
             _rpRevokeDebt = revokeDebtRepository;
         }
+
+        
         public async Task<bool> HandleFileImport(Stream stream, int userId)
         {
           
@@ -42,6 +44,7 @@ namespace VS_LOAN.Core.Business
                     if (row == null)
                         continue;
                     var item = new OcbStatusImportModel();
+                   
                     item.ImportDate = row.Cells[0].DateCellValue;
                     item.MonthImport = row.Cells[1].StringCellValue;
                     item.CustomerId = Convert.ToInt32(row.Cells[2].NumericCellValue);
@@ -69,13 +72,79 @@ namespace VS_LOAN.Core.Business
 
                        
                     }
-                    item.FirstCallStatus = row.Cells[7].StringCellValue;
-                    item.LastCallStatus = row.Cells[9].StringCellValue;
-                    item.AppStatusForSale = row.Cells[11].StringCellValue;
-                    item.AppProcessStatus = row.Cells[12].StringCellValue;
-                    item.DisbureseMonth = row.Cells[14].StringCellValue;
-                    item.RejectCode = row.Cells[17].StringCellValue;
-                    item.CancelCode = row.Cells[16].StringCellValue;
+                    try
+                    {
+                        item.FirstCallStatus = row.Cells[7].StringCellValue;
+                    }
+                    catch (Exception)
+                    {
+                        item.FirstCallStatus = "";
+
+                    }
+
+                    try
+                    {
+                        item.LastCallStatus = row.Cells[9].StringCellValue;
+                    }
+                    catch (Exception)
+                    {
+                        item.LastCallStatus = "";
+
+                    }
+
+                    try
+                    {
+                        item.AppStatusForSale = row.Cells[11].StringCellValue;
+                    }
+                    catch (Exception)
+                    {
+                        item.AppStatusForSale = "";
+
+                    }
+
+                    try
+                    {
+                        item.AppProcessStatus = row.Cells[12].StringCellValue;
+                    }
+                    catch (Exception)
+                    {
+
+                    
+                    }
+
+
+                    try
+                    {
+                        item.DisbureseMonth = row.Cells[14].StringCellValue;
+                    }
+                    catch (Exception)
+                    {
+
+
+                    }
+                    try
+                    {
+                        item.RejectCode = row.Cells[17].StringCellValue;
+                       
+                    }
+                    catch (Exception)
+                    {
+
+              
+                    }
+
+                    try
+                    {
+                        item.CancelCode = row.Cells[16].StringCellValue;
+                    }
+                    catch (Exception)
+                    {
+                 
+
+
+                    }
+                  
+                
                     try
                     {
                         item.lastCallNote = row.Cells[10].StringCellValue;

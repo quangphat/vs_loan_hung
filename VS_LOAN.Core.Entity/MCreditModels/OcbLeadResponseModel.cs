@@ -21,6 +21,27 @@ namespace VS_LOAN.Core.Entity.MCreditModels
 
     }
 
+    public class OcbSendfileReponseModel
+    {
+
+        public string Status { get; set; }
+
+
+        public string Message { get; set; }
+
+    }
+
+    public class OcbSendfileReQuestModel
+    {
+
+        public string CustomerId { get; set; }
+        public string Fieldname { get; set; }
+        public string FileContent { get; set; }
+        public string FileType { get; set; }
+    }
+
+
+
     public class OcbLeadResponseData
     {
         public string CustomerId { get; set; }
@@ -189,6 +210,23 @@ namespace VS_LOAN.Core.Entity.MCreditModels
         public string SellerNote { get; set; }
 
         public string MetaData { get; set; }
+
+
+        public string ReferenceFullName1 { get; set; }
+        public string ReferenceRelationship1 { get; set; }
+        public string ReferencePhone1 { get; set; }
+        public int? Reference1Gender { get; set; }
+
+
+        public string ReferenceFullName2 { get; set; }
+        public string ReferenceRelationship2 { get; set; }
+        public string ReferencePhone2 { get; set; }
+        public int? Reference2Gender { get; set; }
+
+        public string ReferenceFullName3 { get; set; }
+        public string ReferenceRelationship3 { get; set; }
+        public string ReferencePhone3 { get; set; }
+        public int? Reference3Gender { get; set; }
 
 
     }

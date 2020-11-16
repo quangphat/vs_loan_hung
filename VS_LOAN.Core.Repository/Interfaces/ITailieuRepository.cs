@@ -23,5 +23,12 @@ namespace VS_LOAN.Core.Repository.Interfaces
         Task<bool> Add(TaiLieu model);
         Task<bool> AddMCredit(MCTailieuSqlModel model);
         Task<List<FileUploadModel>> GetTailieuByHosoId(int hosoId, int type);
+        Task<List<FileUploadModel>> GetTailieuOCByHosoId(int hosoId, int type);
+        Task<bool> RemoveTailieuOcb(int hosoId, int tailieuId);
+        Task<bool> RemoveAllTailieuOcb(int hosoId, int typeId);
+        Task<bool> AddOCB(TaiLieu model);
+        Task<bool> UpdateExistingFileOCB(TaiLieu taiLieu, int fileId);
+
+
     }
 }

@@ -58,7 +58,24 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
         public string CurAddressDistId { get; set; } 
         public bool? IsDuplicateAdrees { get; set; }
 
-        public int Status { get; set; } 
+        public int Status { get; set; }
+
+
+        public string ReferenceFullName1 { get; set; }
+        public string ReferenceRelationship1 { get; set; }
+        public string ReferencePhone1 { get; set; }
+        public int? Reference1Gender { get; set; }
+
+
+        public string ReferenceFullName2 { get; set; }
+        public string ReferenceRelationship2 { get; set; }
+        public string ReferencePhone2 { get; set; }
+        public int? Reference2Gender { get; set; }
+
+        public string ReferenceFullName3 { get; set; }
+        public string ReferenceRelationship3 { get; set; }
+        public string ReferencePhone3 { get; set; }
+        public int? Reference3Gender { get; set; }
 
     }
 }

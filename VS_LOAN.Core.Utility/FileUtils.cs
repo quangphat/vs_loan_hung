@@ -16,7 +16,8 @@ namespace VS_LOAN.Core.Utility
         private static string _mc_profile_folder = "/MCredit";
         private static string _revoke_profile_folder = "/Revoke";
         private static string _vietstar_profile_folder = "/VietStar";
-        
+        private static string _vietstar_OcbProfile_folder = "/OcbProfile";
+
         public static string GenerateProfileFolderForMc()
         {
             string folderByDate = DateTime.Now.ToString("yyyy/MM/dd").Replace('/','_');
@@ -31,6 +32,12 @@ namespace VS_LOAN.Core.Utility
         {
             string folderByDate = DateTime.Now.ToString("yyyy/MM/dd").Replace('/', '_');
             return $"{_vietstar_profile_folder}/{folderByDate}";
+        }
+
+        public static string GenerateOcbProfile()
+        {
+            string folderByDate = DateTime.Now.ToString("yyyy/MM/dd").Replace('/', '_');
+            return $"{_vietstar_OcbProfile_folder}/{folderByDate}";
         }
         public static bool WriteToFile(string fileName, string value)
         {

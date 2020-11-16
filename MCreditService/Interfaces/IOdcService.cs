@@ -13,6 +13,8 @@ namespace MCreditService.Interfaces
       
         Task<CheckVavlidOdcResponseModel> CheckValidData(string mobilePhone, string idNo);
         Task<OcbLeadResponseModel> CreateLead(OcbProfile model);
+
+        Task<OcbSendfileReponseModel> SendFile(OcbSendfileReQuestModel model);
         Task<DictionaryResponseModel> GetAllDictionary();
 
         Task<ProvinceResponseModel> GetAllProvince();
