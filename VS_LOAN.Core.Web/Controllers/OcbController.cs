@@ -228,9 +228,9 @@ namespace VS_LOAN.Core.Web.Controllers
            public async Task<ActionResult> OcbProfile(int id)
         {
             var result = await _rpMCredit.GetTemProfileByMcId(id);
-            ViewBag.pushDocument = result.IsPushDocument.Value == true;
-            ViewBag.pushOCB = string.IsNullOrEmpty(result.CustomerId);
-            ViewBag.DisableUpdate = (result.Status == 7 || result.Status == 1 || result.Status == 4 || result.Status == 5);
+            //ViewBag.pushDocument = result.IsPushDocument.Value == true;
+            //ViewBag.pushOCB = string.IsNullOrEmpty(result.CustomerId);
+            //ViewBag.DisableUpdate = (result.Status == 7 || result.Status == 1 || result.Status == 4 || result.Status == 5);
             ViewBag.isAdmin = GlobalData.User.TypeUser == (int)UserTypeEnum.Admin ? true : false;
             ViewBag.model = result;
             ViewBag.LstTaiLieu = new List<TaiLieuModel>();
