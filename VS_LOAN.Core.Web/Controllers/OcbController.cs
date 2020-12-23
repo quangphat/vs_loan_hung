@@ -24,6 +24,8 @@ namespace VS_LOAN.Core.Web.Controllers
 {
     public class OcbController : BaseController
     {
+
+        
         protected readonly ITailieuRepository _rpTailieu;
         protected readonly IOcbRepository _rpMCredit;
         protected readonly IMediaBusiness _bizMedia;
@@ -142,6 +144,11 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToJsonResponse(result, "Lỗi cập nhật");
             }
 
+            if(!string.IsNullOrWhiteSpace(model.Note))
+            {
+                await AddNote(profile.Id, new StringModel() { Value = model.Note });
+            }
+
             return ToJsonResponse(true);
         }
 
@@ -228,9 +235,7 @@ namespace VS_LOAN.Core.Web.Controllers
            public async Task<ActionResult> OcbProfile(int id)
         {
             var result = await _rpMCredit.GetTemProfileByMcId(id);
-            //ViewBag.pushDocument = result.IsPushDocument.Value == true;
-            //ViewBag.pushOCB = string.IsNullOrEmpty(result.CustomerId);
-            //ViewBag.DisableUpdate = (result.Status == 7 || result.Status == 1 || result.Status == 4 || result.Status == 5);
+       
             ViewBag.isAdmin = GlobalData.User.TypeUser == (int)UserTypeEnum.Admin ? true : false;
             ViewBag.model = result;
             ViewBag.LstTaiLieu = new List<TaiLieuModel>();
@@ -270,7 +275,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var filesExist = await _rpTailieu.GetTailieuOCByHosoId(id, 7);
             foreach (var item in filesExist)
             {
-                string _fieldName = "DRIVING_LICENSE_ATTACH";
+                string _fieldName = "";
                 switch (item.Key)
                 {
                     case 51:
@@ -297,6 +302,21 @@ namespace VS_LOAN.Core.Web.Controllers
                     case 57:
                         _fieldName = "LABOR_CONTRACT_ATTACH";
                         break;
+
+                    case 58:
+                        _fieldName = "PAYROLL_ATTACH";
+                        break;
+                    case 59:
+                        _fieldName = "PAYMENT_ACCOUNT_ATTACH";
+                        break;
+                    case 60:
+                        _fieldName = "HEALTH_INSURANCE_ATTACH";
+                        break;
+                }
+
+                if(_fieldName=="")
+                {
+                    continue;
                 }
 
                 string fileType = System.IO.Path.GetExtension(item.FileUrl);
@@ -350,7 +370,11 @@ namespace VS_LOAN.Core.Web.Controllers
                 {
 
                     isSuccess = false;
+                   
+
+                     
                 }
+                continue;
              
             }
             return ToJsonResponse(isSuccess);

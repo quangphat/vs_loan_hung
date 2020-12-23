@@ -146,8 +146,10 @@ namespace VS_LOAN.Core.Web.Helpers
                         new SiteMenuItem("Danh sách tạo mới","", IndexMenu.M_9_5,ControllerRoles.Roles["mcedit_list_temp"]._href, ControllerRoles.Roles["mcedit_list_temp"]._mangChucNang), // 1.2  
                         new SiteMenuItem("Danh sách MC","", IndexMenu.M_9_6,ControllerRoles.Roles["mcedit_list"]._href, ControllerRoles.Roles["mcedit_list"]._mangChucNang), // 1.2 
                  
-              new SiteMenuItem("Ocb","menu-icon courier",IndexMenu.M_15,"#",new int[] { }),
-                        new SiteMenuItem("Danh sạch tạo mới","", IndexMenu.M_15_1, ControllerRoles.Roles["ocbList"]._href, ControllerRoles.Roles["mcedit_checkcat"]._mangChucNang)
+                   new SiteMenuItem("Ocb","menu-icon courier",IndexMenu.M_15,"#",new int[] { }),
+                        new SiteMenuItem("Danh sạch tạo mới","", IndexMenu.M_15_1, ControllerRoles.Roles["ocbList"]._href, ControllerRoles.Roles["mcedit_checkcat"]._mangChucNang),
+                new SiteMenuItem("Mirae","menu-icon courier",IndexMenu.M_16,"#",new int[] { }),
+                        new SiteMenuItem("Danh sạch tạo mới","", IndexMenu.M_16_1, ControllerRoles.Roles["mirae_list"]._href, ControllerRoles.Roles["mirae_list"]._mangChucNang)
                       // 1.2           
             };
             List<SiteMenuItem> siteMenuAdmin = new List<SiteMenuItem>

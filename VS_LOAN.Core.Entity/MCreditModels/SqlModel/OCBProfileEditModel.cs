@@ -85,6 +85,8 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
         public string ReferencePhone3 { get; set; }
         public int? Reference3Gender { get; set; }
 
+        public string Note { get; set; }
+
 
     }
 }

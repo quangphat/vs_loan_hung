@@ -362,7 +362,7 @@
 
     $(document).ready(function () {
     ;
-        LayDSTinh();
+        LayDSTinh("ddlTinhCur");
        
         //$('#ddlDoiTac').on('change', function () {
           
@@ -384,16 +384,18 @@
           LayDSSanPham(this.value);
         });
         
-        $('#ddlTinh').on('change', function () {
+        $('#ddlTinhCur').on('change', function () {
             LayDSHuyen(this.value);
         });
 		
 		
-		 $('#ddlHuyen').on('change', function () {
+		 $('#ddlHuyenCur').on('change', function () {
             laydanhsachReward(this.value);
 			
 			
         }); 
+
+
 
 
         $('#RegAddressProvinceId').on('change', function () {
@@ -423,27 +425,30 @@
 				});
 				
 		
-    function LayDSTinh() {
+    function LayDSTinh(idTinh) {
         $.ajax({
             type: "get",
-            url: '@Url.Action("LayDanhSachTinh", "Ocb")',
+            url: '@Url.Action("LayDanhsachTinh", "Mirae")',
             data: {},
             success: function (data) {
-                $('#ddlTinh').empty();
+                var idTinh1 = '#'+idTinh;
 
-                $('#RegAddressProvinceId').empty();
-                $('#ddlTinh').append("<option value='0'></option>");
+                  var idHuyen1 = '#'+idHuyen;
+                $(idTinh1).empty();
 
-                   $('#RegAddressProvinceId').append("<option value='0'></option>");
+
+
+                $(idTinh1).append("<option value='0'></option>");
+
+                   $('idTinh1').append("<option value='0'></option>");
                 if (data != null) {
                     $.each(data.data, function (index, optionData) {
-                        $('#ddlTinh').append("<option value='" + optionData.ProvinceId + "'>" + optionData.ProvinceName + "</option>");
-
-                          $('#RegAddressProvinceId').append("<option value='" + optionData.ProvinceId + "'>" + optionData.ProvinceName + "</option>");
+                        $(idTinh1).append("<option value='" + optionData.Stateid + "'>" + optionData.Statedesc + "</option>");
+                    
                     });
                 }
-                $('#ddlTinh').chosen().trigger("chosen:updated");
-                   $('#RegAddressProvinceId').chosen().trigger("chosen:updated");
+                $(idHuyen1).chosen().trigger("chosen:updated");
+                  
             },
             complete: function () {
             },
@@ -482,7 +487,7 @@
     function LayDSHuyen(maTinh) {
         $.ajax({
             type: "get",
-            url: '@Url.Action("LayDanhSachThanhPho", "Ocb")',
+            url: '@Url.Action("LayDanhSachThanhPho", "Mirae")',
             data: {'province':maTinh},
             success: function (data) {
                 $('#ddlHuyen').empty();

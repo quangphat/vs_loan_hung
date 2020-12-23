@@ -1164,7 +1164,7 @@
 
     function laydanhsachtinh(controlId, value = null, districtValue = 0, districtControlId , controliIDReward , valueReward ) {
 
-	debugger;
+
     $.ajax({
         type: "GET",
           url: '@Url.Action("LayDanhSachTinh", "Ocb")',
@@ -1351,6 +1351,7 @@ function getReward(controlId, value, valueReward = null) {
             data: objectSend,
             success: function (data) {
                 isSave = true;
+                console.log(data);
                 if (data.success == true) {
                     swal({
                         title: "Đẩy chứng từ thành công",
@@ -1364,12 +1365,16 @@ function getReward(controlId, value, valueReward = null) {
                     });
                 }
                 else {
+				var datareponse = data.data;
                     swal({
-                        title: "Có lỗi trong khi đẩy dữ liệu, vui lòng liên hệ It",
-                        text: "có lỗi",
+                        title: "Có lỗi",
+                        text: datareponse.Message,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,
+                    }, function () {
+						  isPushDocoment = true;
+		
                     });
                 }
             },
@@ -1500,6 +1505,7 @@ function getReward(controlId, value, valueReward = null) {
 			'ReferenceRelationship3': $('#ReferenceRelationship3').val(),
 			'Reference3Gender': $('#Reference3Gender').val(),
 			'ReferencePhone3': $('#ReferencePhone3').val(),
+			"Note": $("#txtGhiChu").val()
 
         });
 
@@ -1592,6 +1598,7 @@ function getReward(controlId, value, valueReward = null) {
 					}
 					else
 					{
+				
 						swal({
                           title: "@Html.Raw(Global.Message_Title)",
                    

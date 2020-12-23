@@ -187,6 +187,9 @@ namespace VS_LOAN.Core.Web.Helpers
 
         public const string M_15 = "15";
         public const string M_15_1 = "15_1";
-  
+
+        public const string M_16 = "16";
+        public const string M_16_1 = "16_1";
+
     }
 }

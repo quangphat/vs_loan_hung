@@ -20,7 +20,7 @@ namespace MCreditService
     public abstract class MCreditServiceBase
     {
         //pro
-        protected static string _baseUrl = "http://hosoapi.taichinhtoancau.vn";
+        protected static string _baseUrl = "https://hosoapi.taichinhtoancau.vn";
         protected static string _userName = "vietbankapi";
         protected static string _password = "@vietb@pi@123";
         protected static string _authenToken = "$2y$10$Eeh8kYRifE6Es1NU7UIqNOg6XGgfclFz0xgCObo2L4du8t.5SJVx6";

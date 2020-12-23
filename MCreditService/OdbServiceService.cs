@@ -375,7 +375,7 @@ namespace MCreditService
                 {
                     return new OcbSendfileReponseModel()
                     {
-                        Message = "Bị lỗi",
+                        Message = resultReponse.Message,
                         Status = resultReponse.Status
                     };
                 }

@@ -231,6 +231,7 @@
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\DuyetHoSoController.cs" />
     <Compile Include="Controllers\F88Controller.cs" />
+    <Compile Include="Controllers\MiraeController.cs" />
     <Compile Include="Controllers\OcbController.cs" />
     <Compile Include="Controllers\MCreditController.cs" />
     <Compile Include="Controllers\QuanLyHoSoController.cs" />
@@ -1782,6 +1783,11 @@
     <Content Include="Views\Ocb\Temp.cshtml" />
     <Content Include="Views\Ocb\AddNew.cshtml" />
     <Content Include="Views\Ocb\OcbProfile.cshtml" />
+    <Content Include="Views\Mirae\AddNew.cshtml" />
+    <Content Include="Views\Mirae\OcbProfile.cshtml" />
+    <Content Include="Views\Mirae\Temp.cshtml" />
+    <Content Include="Views\Mirae\CurrentAddress.cshtml" />
+    <Content Include="Views\Mirae\test.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
