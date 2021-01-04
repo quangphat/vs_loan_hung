@@ -1,0 +1,372 @@
+﻿    @using VS_LOAN.Core.Web.Resources;
+    @{
+    ViewBag.Title = "Tạo hồ sơ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    @model String
+
+<script type="text/javascript">
+    SetActiveMenu('@ViewBag.formindex', 2);
+</script>
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-caret-right"></i>
+                <a href="javascript:void(0)">Cập nhật trạng thái defer</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+
+              <h3 class="header smaller lighter blue">Thông tin khách defer:</h3>
+            <form class="form-horizontal" role="form" id ="frmAdd">
+
+
+                <div class="form-group">
+
+                        <label class="col-sm-2 control-label no-padding-right">Mã khách hàng<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                        <input type="text" id="appid" name ="Id_f1" placeholder="Lý do từ chối mua bảo hiểm" name ="reasonReject"  class="form-control" />
+                        </div>
+
+                </div>
+                    
+
+                          <div class="form-group">
+
+                        <label class="col-sm-2 control-label no-padding-right">Tên khách hàng<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                        <input type="text" id="client_name" name ="client_name" placeholder="Lý do từ chối mua bảo hiểm" name ="reasonReject"  class="form-control" />
+                        </div>
+
+                    </div>
+                   
+                <div class="form-group">
+
+                <label class="col-sm-2 control-label no-padding-right">Mã defer<span class="required">(*)</span></label>
+                <div class="col-sm-4">
+                <input type="text" id="defer_code" name ="defer_code" placeholder="Lý do từ chối mua bảo hiểm" name ="reasonReject"  class="form-control" />
+                </div>
+
+                </div>
+               
+                    <div class="form-group">
+
+                    <label class="col-sm-2 control-label no-padding-right">Ghi chú<span class="required">(*)</span></label>
+                    <div class="col-sm-4">
+                    <input type="text" id="defer_note" name ="defer_note" placeholder="Lý do từ chối mua bảo hiểm" name ="reasonReject"  class="form-control" />
+                    </div>
+
+                    </div>
+
+
+                     <div class="form-group">
+
+                        <label class="col-sm-2 control-label no-padding-right">Defer time<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                        <input type="text" id="defer_time" name ="defer_time" placeholder="Lý do từ chối mua bảo hiểm" name ="reasonReject"  class="form-control" />
+                        </div>
+
+                    </div>
+
+
+                    <h3 class="header smaller lighter blue">Bổ sung hồ sơ</h3>
+             <form>
+            </div>
+        </div>
+    
+        <div class="row">
+            <div class="col-xs-12">
+                <hr />
+                <form class="form-horizontal">
+                    <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Ghi chú hồ sơ</h4>
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
+                        <div class="col-md-11 col-sm-12 col-xs-12">
+                            <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
+                        </div>
+                    </div>
+                        <div class="pull-right">
+                            <a class="btn btn-sm btn-primary" id="btn_Temp">
+                                Lưu 
+                            </a>
+
+                                <a class="btn btn-sm btn-primary" id="btnPushDDE">
+                                        Resovle
+                            </a>
+                            
+                        </div>
+
+                    
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $('#ddlStatus').chosen({ width: '100%', allow_single_deselect: true });
+        $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
+        $('#txtBirhDay').datepicker({
+        dateFormat: 'dd-mm-yy'
+
+        }).next().on(ace.click_event, function () {
+        $(this).prev().focus();
+        });
+
+
+
+        $('#frmAdd input, #frmAdd select').each(
+    function(index){  
+        var inputelement = $(this);
+        var typeAssinge = inputelement.attr("typeInput");
+        if(typeAssinge)
+        {
+
+
+
+            if(typeAssinge =="phoneInput")
+            {
+                inputelement.ForceNumericOnly();
+
+            }
+
+            else if( typeAssinge =="")
+            {
+
+
+            }
+
+        }
+
+        else 
+
+        {
+
+
+        }
+    }
+);
+
+    });
+
+    jQuery.fn.ForceNumericOnly =function () {
+    return this.each(function () {
+        $(this).keydown(function (e) {
+            var key = e.charCode || e.keyCode || 0;
+            // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers ONLY
+            // home, end, period, and numpad decimal
+            return (
+                key == 8 ||
+                key == 9 ||
+                key == 13 ||
+                key == 46 ||
+                key == 110 ||
+                key == 190 ||
+                (key >= 35 && key <= 40) ||
+                (key >= 48 && key <= 57) ||
+                (key >= 96 && key <= 105));
+        });
+    });
+};
+
+
+    function lowerFirstLetter(string) {
+    return string.charAt(0).toLowerCase() + string.slice(1);
+    }
+    function bindData()
+    {
+
+        var model = @Html.Raw(Json.Encode(ViewBag.model));
+     
+
+        for(var key in model) {
+
+            var keylower = lowerFirstLetter(key);
+            var value = model[key];
+                if(keylower =="lname")
+                {
+                    debugger;
+                }
+            
+             if(value != "")
+            {
+
+                var element = document.getElementById(keylower);
+
+                if (element instanceof HTMLInputElement) {
+
+                
+                    if(element.classList.contains("date-picker"))
+                    {
+	                    $('#'+keylower).val(SetFormatDateTimeDMY(value));
+                    }
+                    else 
+                    {
+
+
+                        element.value = value;
+
+                    }
+                }       
+                
+                if (element instanceof HTMLSelectElement) { 
+                   
+                    element.value =value;
+                }    
+                
+                if (element instanceof HTMLTextAreaElement) {
+
+                }  
+                
+            
+            }
+        
+            
+        }
+    }
+
+    var datamodel ={
+
+    };
+    $(document).ready(function () {
+    var modelbind = @Html.Raw(Json.Encode(ViewBag.model));
+    datamodel =modelbind;
+    bindData();
+    });
+
+
+
+    
+    
+    var save = false;
+    var savePush = false;   
+
+
+    $('#btnPushDDE').click(function (e) {
+        var data = {};
+        if(savePush ==true)
+        {
+            return;
+        }
+        
+        var dataobject = {
+                id : datamodel.Id
+            };
+      
+           var objectSend = JSON.stringify(dataobject);
+      
+        $.ajax({
+            traditional: true,
+            url: '@Url.Action("SumbitToDDE", "Mirae")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                if (data.success == true) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: "Tạo lead thành công",
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                            savePush = false;
+                            window.location = window.location;
+                    });
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                          savePush =false;
+                          window.location = window.location;
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+
+                 $('#panel_body').unblock();
+                  savePush = false;
+            },
+        });
+    });
+
+        $('#btn_Temp').click(function (e) {
+ 
+        var data = {};
+        $("#frmAdd").serializeArray().map(function(x){data[x.name] = x.value;});     
+		
+         var model = @Html.Raw(Json.Encode(ViewBag.model));
+          data.Id =model.Id; 
+         var objectSend = JSON.stringify(data);
+
+        if(save ==true)
+        {
+            return;
+        }
+        
+        save =true;
+        
+      
+        $.ajax({
+            traditional: true,
+            url: '@Url.Action("UpdateDDEAsync", "Mirae")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                if (data.success == true) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: "Thành công",
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                            save = false;
+                            window.location = window.location;
+                    });
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                         save = false;
+                         
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+
+                 $('#panel_body').unblock();
+                  save = false;
+            },
+        });
+    });
+
+
+
+</script>

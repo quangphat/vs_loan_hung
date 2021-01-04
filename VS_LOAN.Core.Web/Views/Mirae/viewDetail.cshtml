@@ -1,0 +1,1108 @@
+﻿@using VS_LOAN.Core.Web.Resources;
+@{
+    ViewBag.Title = "Tạo hồ sơ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model String
+
+<script type="text/javascript">
+    SetActiveMenu('@ViewBag.formindex', 2);
+</script>
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="fa fa-caret-right"></i>
+                <a href="#">Cập nhật hồ sở DDE</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+
+            
+
+                <h3 class="header smaller lighter blue">1.Thông tin khách hàng vay:</h3>
+                <form class="form-horizontal" role="form" id ="frmAdd">
+					
+                        @Html.Partial("infomationDDE")
+                        @Html.Partial("CurrentAddress")
+        
+
+		    	<h3 class="header smaller lighter blue">3.Thông tin khoản vay:</h3>
+					
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Mục đích vay<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                        <select id="loanpurpose" name ="loanpurpose" class="chosen-select form-control">
+                        <option value="A">Mua hàng</option>
+                        <option value="M">Chi phí y tế</option>
+                        <option value="H">Sủa nhà</option>
+                        <option value="P">Khác</option>
+                        </select>
+
+                        </div>
+			      </div>
+
+
+
+	            <div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right">Sản phẩm vay<span class="required">(*)</span></label>
+                       <div class="col-sm-4">
+                            <select id="schemeid" name ="schemeid" class="chosen-select form-control">
+                               
+                        </select>
+                        
+						</div>
+			    </div>
+
+
+
+           
+				
+                <div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right">Số tiền đề nghị bao gồm<span class="required">(*)</span></label>
+                      
+			    </div>
+              
+
+
+                
+					<div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">A. Khoản vay tiêu dùng*:<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                             <input type="text" id="totalloanamountreq" name ="totalloanamountreq" placeholder="Khoản vay" class="form-control" />
+                        </div>
+                        <label class="col-sm-2 control-label no-padding-right">Bằng chữ(*): <span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                           <input type="text" id="totalloanamountreqText" name="totalloanamountreqText" placeholder="Email" class="form-control" />
+                        </div>
+                    </div>
+					
+
+
+				    <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right">Thời hạn<span class="required">(*)</span></label>
+                <div class="col-sm-1">
+                
+                     <input type="text" id="tenure" name ="tenure" placeholder="Mô tả đường đi" class="form-control" />
+ 
+                </div>
+                  <div class="col-sm-2">
+                
+                       <label class=" control-label">tháng</label>
+                   
+                </div>
+                </div>
+
+
+
+
+		
+				<div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Mua bảo hiểm người vay *</label>
+                        <div class="col-sm-4">
+                            <label class="control-label no-padding-right">
+                                <input name="Laa_app_ins_applicable" id ="IsLaa_app_ins_applicableHas" type="radio"  value="true" class="ace">
+                                <span class="lbl"> Có</span>
+                            </label>
+                            <label class="control-label no-padding-right" style="margin-left:20px">
+                                <input name="Laa_app_ins_applicable" id ="IsLaa_app_ins_applicablesNo" type="radio" value="false" checked class="ace">
+                                <span class="lbl"> Không</span>
+                            </label>
+                        </div>
+
+                        
+                        
+				</div>
+
+                    <div class="form-group">
+
+                    <label class="col-sm-2 control-label no-padding-right">Lý do từ chỗi mua bảo hiểm<span class="required">(*)</span></label>
+                    <div class="col-sm-4">
+                    <input type="text" id="reasonReject" placeholder="Lý do từ chối mua bảo hiểm" name ="reasonReject"  class="form-control" />
+                    </div>
+
+                    </div>
+                    @Html.Partial("informationCarrer") 
+                    @Html.Partial("incomInfo") 
+                    @Html.Partial("relationship") 
+    
+                </form>
+            </div>
+        </div>
+
+         <div class="row">
+            <div class="col-xs-12">
+                <h3 class="header smaller lighter blue">3.Hồ sơ đính kèm:</h3>
+                <div class="row">
+                    <div class="col-xs-12" style="overflow-y: scroll;max-height:400px;">
+                        <form class="form-horizontal" role="form" id="lstTailieu"></form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    
+        <div class="row">
+            <div class="col-xs-12">
+                <hr />
+                <form class="form-horizontal">
+                    <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Ghi chú hồ sơ</h4>
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
+                        <div class="col-md-11 col-sm-12 col-xs-12">
+                            <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
+                        </div>
+                    </div>
+                    <div class="pull-right">
+                       <button class="btn btn-sm btn-primary" onclick="uploadfile()"  >
+                           Upload file
+                        </button>
+                    </div>
+
+                       <div class="pull-right">
+                      
+                        <a class="btn btn-sm btn-primary" onclick ="uploadfileSubmi()" id="btnPushDDE">
+                               Đẩy file
+                        </a>
+                       </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+    $(document).ready(function () {
+
+    
+        $('#ddlSanPhamVay').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlCourier').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlHuyen').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlTinh').chosen({ width: '100%', allow_single_deselect: true });
+        $('#RegAddressProvinceId').chosen({ width: '100%', allow_single_deselect: true });
+        $('#RegAddressDistId').chosen({ width: '100%', allow_single_deselect: true });
+        $('#RegAddressWardId').chosen({ width: '100%', allow_single_deselect: true });
+        $('#RegAddressProvinceId').chosen({ width: '100%', allow_single_deselect: true });
+        $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
+        $('#idissuer').chosen({ width: '100%', allow_single_deselect: true });
+              LayDSTinhCMND("idissuer");
+        $('#txtBirhDay').datepicker({
+            dateFormat: 'dd-mm-yy'
+
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+        $('#frmAdd input, #frmAdd select').each(
+    function(index){  
+        var inputelement = $(this);
+        var typeAssinge = inputelement.attr("typeInput");
+        if(typeAssinge)
+        {
+
+
+
+            if(typeAssinge =="phoneInput")
+            {
+                inputelement.ForceNumericOnly();
+
+            }
+
+            else if( typeAssinge =="")
+            {
+
+
+            }
+
+        }
+
+        else 
+
+        {
+
+
+        }
+    }
+);
+
+    });
+
+    jQuery.fn.ForceNumericOnly =function () {
+    return this.each(function () {
+        $(this).keydown(function (e) {
+            var key = e.charCode || e.keyCode || 0;
+            // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers ONLY
+            // home, end, period, and numpad decimal
+            return (
+                key == 8 ||
+                key == 9 ||
+                key == 13 ||
+                key == 46 ||
+                key == 110 ||
+                key == 190 ||
+                (key >= 35 && key <= 40) ||
+                (key >= 48 && key <= 57) ||
+                (key >= 96 && key <= 105));
+        });
+    });
+};
+    $("#txtDienThoai").ForceNumericOnly();
+    $("#txtDienThoai2").ForceNumericOnly();
+    
+    $("#txtTienDeNghiVay").ForceNumericOnly();
+    $("#txtCMND").ForceNumericOnly();
+    $("#txtTienDeNghiVay").change(function () {
+        $("#txtTienDeNghiVay").val(formatCurrency($("#txtTienDeNghiVay").val().replace(/\./g, '')));
+    });
+
+
+function lowerFirstLetter(string) {
+  return string.charAt(0).toLowerCase() + string.slice(1);
+}
+    function bindData()
+    {
+
+        var model = @Html.Raw(Json.Encode(ViewBag.model));
+     
+        console.log(model);
+        for(var key in model) {
+
+            var keylower = lowerFirstLetter(key);
+            var value = model[key];
+                if(keylower =="lname")
+                {
+                    debugger;
+                }
+            
+             if(value != "")
+            {
+
+                var element = document.getElementById(keylower);
+
+                if (element instanceof HTMLInputElement) {
+
+                
+                    if(element.classList.contains("date-picker"))
+                    {
+	                    $('#'+keylower).val(SetFormatDateTimeDMY(value));
+                    }
+                    else 
+                    {
+
+
+                        element.value = value;
+
+                    }
+                }       
+                
+                if (element instanceof HTMLSelectElement) { 
+                   
+                    element.value =value;
+                }    
+                
+                if (element instanceof HTMLTextAreaElement) {
+
+                }  
+                
+            
+            }
+        
+            
+        }
+    }
+
+    var datamodel ={
+
+    };
+
+  
+
+    $(document).ready(function () {
+    
+        LayDSTinh('ddlTinhCur');
+        LayDSTinh('ddlTinhPer');
+        LayDSTinh('cityCompany');
+
+        
+        $('#ddlTinhCur').on('change', function () {
+                    LayDSHuyen(this.value,"ddlHuyenCur");
+          });
+		
+		
+		 $('#ddlHuyenCur').on('change', function () {
+
+            laydanhsachReward(this.value,"ddlRewardCur");
+			
+        }); 
+
+
+          $('#ddlTinhPer').on('change', function () {
+                    LayDSHuyen(this.value,"ddlHuyenPer");
+          });
+		
+		
+		 $('#ddlHuyenPer').on('change', function () {
+
+            laydanhsachReward(this.value,"ddlRewardPer");
+			
+        }); 
+
+
+
+	 $('#ddlHuyenCur').on('change', function () {
+
+            laydanhsachReward(this.value,"ddlRewardCur");
+			
+        }); 
+
+
+          $('#cityCompany').on('change', function () {
+                    LayDSHuyen(this.value,"districtCompany");
+          });
+		
+		
+		 $('#districtCompany').on('change', function () {
+
+            laydanhsachReward(this.value,"wardCompany");
+			
+        }); 
+    
+     
+        $('#dob').datepicker({
+            dateFormat: 'dd-mm-yy'
+
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+
+          $('#nationalidissuedate').datepicker({
+            dateFormat: 'dd-mm-yy'
+
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+        //$("#txtBirhDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
+        $('#txtNationDate').datepicker({
+            dateFormat: 'dd-mm-yy'
+
+        }).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+        $("#txtInCome").ForceNumericOnly();
+        $("#txtInCome").change(function () {
+        $("#txtInCome").val(formatCurrency($("#txtInCome").val().replace(/\./g, '')));
+        });
+
+
+        $("#txtTienDeNghiVay").ForceNumericOnly();
+        $("#txtTienDeNghiVay").change(function () {
+        $("#txtTienDeNghiVay").val(formatCurrency($("#txtTienDeNghiVay").val().replace(/\./g, '')));
+        });
+
+
+            $('#ddlloaisanpham').on('change', function () {
+
+
+        
+
+        });
+
+
+var modelbind = @Html.Raw(Json.Encode(ViewBag.model));
+
+        LayDSTaiLieu(modelbind.Id);
+        datamodel =modelbind;
+
+        laydanhsachtinh("#cityCompany", modelbind.CityCompany, modelbind.DistrictCompany, "#districtCompany" , "#wardCompany" , modelbind.WardCompany );
+        laydanhsachtinh("#ddlTinhPer", modelbind.AddressPer_City, modelbind.AddressPer_District, "#ddlHuyenPer" , "#ddlRewardPer" , modelbind.AddressPer_Ward );
+        laydanhsachtinh("#ddlTinhCur", modelbind.AddressCur_City, modelbind.AddressCur_District, "#ddlHuyenCur" , "#ddlRewardCur" , modelbind.AddressCur_Ward );
+        LayDanhSachSaleOfficer();
+        LayDSSanPham();
+
+        bindData();
+
+
+        GetAllBank();
+
+        if(datamodel.IsDuplicateAdrees)
+        {
+                $('#IsDuplicateAdreesHas').prop('checked',true);
+        }
+        else 
+        {
+
+        $('#IsDuplicateAdreesNo').prop('checked',true);
+        }
+
+
+
+
+        if(datamodel.Laa_app_ins_applicable)
+        {
+                $('#IsLaa_app_ins_applicableHas').prop('checked',true);
+        }
+        else 
+        {
+
+        $('#IsLaa_app_ins_applicablesNo').prop('checked',true);
+        }
+
+        if(datamodel.Accountbank == 1)
+
+        {
+                $('#accountbankHas').prop('checked',true);
+        }
+        else 
+        {
+
+        $('#accountbankNo').prop('checked',true);
+        }
+
+
+        });
+
+
+
+
+    $('#spnThoiHanVay').ace_spinner({ value: 0, min: 0, max: 36, step: 3, btn_up_class: 'btn-info', btn_down_class: 'btn-info' })
+				.closest('.ace-spinner')
+				.on('changed.fu.spinbox', function () {
+				    //alert($('#spinner1').val())
+				});
+				
+		
+    function LayDSTinh(idTinh) {
+
+        var idTinh ='#'+idTinh;
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("LayDanhSachTinh", "Mirae")',
+            data: {},
+            success: function (data) {
+                $(idTinh).empty();
+                $(idTinh).append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                         $(idTinh).append("<option value='" + optionData.Stateid + "'>" + optionData.Statedesc + "</option>");
+                    });
+                }
+                $(idTinh).chosen().trigger("chosen:updated");
+                  
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+
+
+    }
+
+ function LayDSTinhCMND(idTinh) {
+
+        var idTinh ='#'+idTinh;
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("LayDanhSachTinh", "Mirae")',
+            data: {},
+            success: function (data) {
+                $(idTinh).empty();
+       
+                $(idTinh).append("<option value='CỤC TRƯỞNG CỤC CS QLHC VỀ TTXH'>CỤC TRƯỞNG CỤC CS QLHC VỀ TTXH</option>");
+                $(idTinh).append("<option value='CT CỤC CẢNH SÁT ĐKQL CƯ TRÚ VÀ DLQG VỀ DÂN CƯ'>  CT CỤC CẢNH SÁT ĐKQL CƯ TRÚ VÀ DLQG VỀ DÂN CƯ</option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                         $(idTinh).append("<option value='" + optionData.Statedesc + "'>" + optionData.Statedesc + "</option>");
+                    });
+                }
+                $(idTinh).chosen().trigger("chosen:updated");
+
+                 
+                  
+            },
+            complete: function () {
+         
+                $("#idissuer").val(datamodel.Idissuer); 
+                $("#idissuer").chosen().trigger("chosen:updated");
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+    
+
+
+    function laydanhsachReward(ciityCode,idReward) {
+        idReward='#'+idReward;
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("LayDanhSachWard", "Mirae")',
+            data: {'cityCode':ciityCode},
+            success: function (data) {
+                $(idReward).empty();
+                $(idReward).append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $(idReward).append("<option value='" + optionData.Zipcode + "'>" + optionData.Zipdesc + "</option>");
+                    });
+                }
+                $(idReward).chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+   
+    function LayDSHuyen(maTinh, idHuyen) {
+        idHuyen ='#'+idHuyen;
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("LayDanhSachThanhPho", "Mirae")',
+            data: {'province':maTinh},
+            success: function (data) {
+                $(idHuyen).empty();
+                $(idHuyen).append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $(idHuyen).append("<option value='" + optionData.Lmc_CITYID_C + "'>" + optionData.Lmc_CITYNAME_C + "</option>");
+                    });
+                }
+                $(idHuyen).chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+    
+
+    function laydanhsachwarchThuongtru(ciityCode) {
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("LayDanhSachWard", "Ocb")',
+            data: {'cityCode':ciityCode},
+            success: function (data) {
+                $('#RegAddressWardId').empty();
+                $('#RegAddressWardId').append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#RegAddressWardId').append("<option value='" + optionData.WardId + "'>" + optionData.WardName + "</option>");
+                    });
+                }
+                $('#RegAddressWardId').chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+
+
+    function laydanhsachthanhphothuongtru(maTinh) {
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("LayDanhSachThanhPho", "Ocb")',
+            data: {'province':maTinh},
+            success: function (data) {
+                $('#RegAddressDistId').empty();
+                $('#RegAddressDistId').append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#RegAddressDistId').append("<option value='" + optionData.CityId + "'>" + optionData.CityName + "</option>");
+                    });
+                }
+                $('#RegAddressDistId').chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+    var lstDoitac =[]
+    function LayDSNganHang() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSDoiTac", "HoSo")',
+            data: {},
+            success: function (data) {
+                $('#ddlDoiTac').empty();
+                $('#ddlDoiTac').append("<option value='0'></option>");
+                if (data != null) {
+
+                    lstDoitac = data.data
+                    $.each(data.data, function (index, optionData) {
+                        $('#ddlDoiTac').append("<option value='" + optionData.ID + "'>" + optionData.Ten + "</option>");
+                    });
+                }
+                $('#ddlDoiTac').chosen().trigger("chosen:updated");
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+    
+    
+    var save = false;
+    var savePush = false;
+    
+
+
+   
+
+  
+
+
+ function laydanhsachtinh(controlId, value = null, districtValue = 0, districtControlId , controliIDReward , valueReward ) {
+ 
+    $.ajax({
+        type: "GET",
+          url: '@Url.Action("LayDanhsachTinh", "Mirae")',
+        success: function (data) {
+            $(controlId).empty();
+            $(controlId).append("<option value='0'></option>");
+            if (data !== null) {
+              
+
+                  $.each(data.data, function (index, optionData) {
+                         $(controlId).append("<option value='" + optionData.Stateid + "'>" + optionData.Statedesc + "</option>");
+                    });
+            }
+            if (value !== null)
+                $(controlId).val(value);
+            $(controlId).chosen().trigger("chosen:updated");
+
+        },
+        complete: function () {
+
+            getDistricts(districtControlId, value,districtValue,controliIDReward , valueReward );
+
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+
+
+function getDistricts(controlId,provinceId, value = null,controliIDReward , valueReward) {
+
+    if (isNullOrUndefined(provinceId))
+        return;
+    $.ajax({
+        type: "GET",
+        url: '/Mirae/LayDanhSachThanhPho?province=' + provinceId,
+        success: function (data) {
+            $(controlId).empty();
+            $(controlId).append("<option value='0'></option>");
+            if (data !== null) {
+               $.each(data.data, function (index, optionData) {
+                        $(controlId).append("<option value='" + optionData.Lmc_CITYID_C + "'>" + optionData.Lmc_CITYNAME_C + "</option>");
+                    });
+            }
+            if (value !== null)
+                $(controlId).val(value);
+            $(controlId).chosen().trigger("chosen:updated");
+        },
+        complete: function () {
+
+             getReward(controliIDReward,value,valueReward);
+
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+
+
+
+function getReward(controlId, value, valueReward = null) {
+
+    if (isNullOrUndefined(value))
+        return;
+    $.ajax({
+        type: "GET",
+        url: '/Mirae/LayDanhSachWard?cityCode=' + value,
+        success: function (data) {
+            $(controlId).empty();
+            $(controlId).append("<option value='0'></option>");
+            if (data !== null) {
+                $.each(data.data, function (index, optionData) {
+                        $(controlId).append("<option value='" + optionData.Zipcode + "'>" + optionData.Zipdesc + "</option>");
+                    });
+            }
+
+        },
+        complete: function () {
+
+               if (valueReward !== null)
+                $(controlId).val(valueReward);
+                $(controlId).chosen().trigger("chosen:updated");
+        },
+        error: function (jqXHR, exception) {
+            showError(jqXHR, exception);
+        }
+    });
+}
+
+
+function LayDanhSachSaleOfficer() {
+        
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetAllSaleOfficeUser", "Mirae")',
+            data: { },
+            success: function (data) {
+                allProduct = data;
+                $('#salesofficer').empty();
+                $('#salesofficer').append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#salesofficer').append("<option value='" + optionData.Inspectorid + "'>" + optionData.Inspectorname + "</option>");
+                    });
+                }
+                $('#salesofficer').chosen().trigger("chosen:updated");
+
+            },
+            complete: function () {
+            $('#salesofficer').val(datamodel.Salesofficer);
+
+             $('#salesofficer').chosen().trigger("chosen:updated");
+
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+
+
+
+function GetAllBank() {
+        
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetAllBank", "Mirae")',
+            data: { },
+            success: function (data) {
+                allProduct = data;
+                $('#bankname').empty();
+                $('#bankname').append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#bankname').append("<option value='" + optionData.Bankid + "'>" + optionData.Bankdesc + "</option>");
+                    });
+                }
+                $('#bankname').chosen().trigger("chosen:updated");
+
+            },
+            complete: function () {
+            
+                  $('#bankname').val(datamodel.Bankname);     
+                    $('#bankname').chosen().trigger("chosen:updated");
+                  
+             },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+    function LayDSSanPham() {
+        
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetAllProduct", "Mirae")',
+            data: { },
+            success: function (data) {
+                allProduct = data;
+                $('#schemeid').empty();
+                $('#schemeid').append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#schemeid').append("<option value='" + optionData.Schemeid + "'>" + optionData.Schemename + "</option>");
+                    });
+                }
+                $('#schemeid').chosen().trigger("chosen:updated");
+
+            },
+            complete: function () {
+            
+                  $('#schemeid').val(datamodel.Schemeid);     
+                    $('#schemeid').chosen().trigger("chosen:updated");
+                  
+                         },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+
+    var fileRequireIds =[];
+    function LayDSTaiLieu(id) {
+
+        $.ajax({
+            type: "GET",
+            url: "/mirae/TailieuByHosoForEdit?hosoId=" +id,
+            success: function (data) {
+                if (data.data != null && data.success == true) {
+                    var i = 0;
+                    var content = "";
+                    let keys = [];
+                    $.each(data.data, function (index, item) {
+                        
+                        
+                        $("#lstTailieu").append("<div class='form-group'><div id='tailieu-" + item.ID + "'></div></div > ");
+                        if (!isNullOrNoItem(item.Tailieus)) {
+                            
+                            let _initialPreview = [];
+                            let _initialPreviewConfig = [];
+                            $.each(item.Tailieus, function (i, tailieu) {
+                                fileRequireIds.push(item.ID);
+                                _initialPreview = [];
+                                _initialPreviewConfig = [];
+                                var _imgExts = ["jpg", "jpeg", "png", "pdf"];
+                                var extn = tailieu.FileUrl.split('.').pop();
+                                var isImg = isExtension(extn, _imgExts);
+                                if (isImg) {
+                                    _initialPreview.push(tailieu.FileUrl);
+                                    _initialPreviewConfig.push({
+                                        caption: tailieu.FileName,
+                                        url: "/mirae/RemoveTailieuByHoso?hosoId=" + id + "&fileId=" + tailieu.FileId,
+                                        type: extn.indexOf('pdf') > -1 ? "pdf" : "jpg",
+                                        width: "120px"
+                                    });
+                                }
+                                let name = '',
+                                    isrequire = false,
+                                    className = ''
+                                if (keys.indexOf(tailieu.Key) < 0) {
+                                    name = tailieu.KeyName;
+                                    isrequire = true
+                                }
+                                else {
+                                    className = 'mt-46'
+                                }
+                                renderOneItemFilMirae(tailieu.Key, tailieu.FileId, name, isrequire, className, true, _initialPreview, _initialPreviewConfig, true, true, onUploadFile, onDeleteFile,[],7)
+                                
+                                keys.push(item.ID)
+                            })
+                            if (item.Tailieus.length < 5) {
+                                renderOneItemFilMirae(item.ID, item.ID, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile,[],7)
+                            }
+                            
+                        }
+                        else {
+                            renderOneItemFilMirae(item.ID, item.ID, item.Ten, item.BatBuoc, '', true, [], [], true, false, onUploadFile, onDeleteFile,[],7)
+                        }
+                       
+                    });
+                }
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+        filesUpload = [];
+        function onUploadFile(key, fileId, data, isExist) {
+            if (isReach5Files(filesUpload, key))
+                return;
+            let response = data;
+            if (isNullOrNoItem(filesUpload)) {
+                filesUpload = []
+            }
+
+            fileRequireIds.push(key);
+            if (isExist == false) {
+                let file = {
+                    Key: parseInt(response.initialPreviewConfig[0].key),
+                    FileName: response.initialPreviewConfig[0].caption,
+                    FileUrl: response.initialPreview,
+                    KeyName: "",
+                    Id: fileId
+                }
+                let existKeyIndex = filesUpload.findIndex(p => p.key == key)
+                if (existKeyIndex < 0) {
+                    filesUpload.push({ key: parseInt(key), files: [file] })
+                }
+                else {
+                    if (filesUpload[existKeyIndex].files == null)
+                        filesUpload[existKeyIndex].files = []
+                    filesUpload[existKeyIndex].files.push(file);
+                }
+            }
+           
+            if (isReach5Files(filesUpload, key) === false) {
+                let newAttachhFileId = getNewGuid();
+                renderOneItemFilMirae(key, newAttachhFileId, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile)
+            }
+        }
+        function onDeleteFile(key, fileId, isExist) {
+            
+            let index = fileRequireIds.findIndex(p => p == key)
+            fileRequireIds.splice(index, 1);
+            removeFile(key, fileId);
+        }
+        function removeFile(key, fileId) {
+			debugger;
+            if (isNullOrNoItem(filesUpload))
+                return;
+            let index = filesUpload.findIndex(p => p.key == key);
+            if (index >= 0) {
+                if (!isNullOrNoItem(filesUpload[index].files)) {
+                    let indexOfFile = filesUpload[index].files.findIndex(p => p.Id == fileId);
+                    if (indexOfFile >= 0)
+                        filesUpload[index].files.splice(indexOfFile, 1);
+                }
+            }
+        }
+
+    }
+    function uploadHoso(hosoId, reloadOnSuccess = false) {
+        if (isNullOrNoItem(filesUpload)) {
+            if (reloadOnSuccess == true) {
+                save =false;
+                window.location = window.location;
+            }
+            return;
+        }
+            $.ajax({
+                traditional: true,
+                url: `/mirae/UploadToHoso?hosoId=${hosoId}&isReset=false`,
+                type: "POST",
+                contentType: "application/json;",
+                dataType: 'json',
+                data: JSON.stringify(filesUpload),
+                success: function (data) {
+                    if (data.data != null && data.success == true) {
+                          save =false;  
+                        if (reloadOnSuccess == true) {
+
+                            window.location = window.location;
+                        }
+
+                        
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.Message.ErrorMessage,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+               
+                $('#panel_body').unblock();
+            },
+        });
+        }
+
+
+  function PushFile(hosoId) {
+  
+            $.ajax({
+                traditional: true,
+                url: `/mirae/SendFile?id=${hosoId}`,
+                type: "POST",
+                contentType: "application/json;",
+                dataType: 'json',
+                success: function (data) {
+                    debugger;
+                    if ( data.success == true) {
+                         
+
+                        swal({      
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: "đẩy file thành công",
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+
+                        }, function () {
+                
+                            window.location = window.location;
+
+                             save =false;  
+                
+                              });
+                  }
+                else {
+
+                  
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text:data.data.Message,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+                 save =false;  
+            },
+            
+            complete: function () {
+               
+                $('#panel_body').unblock();
+                 save =false;  
+            },
+        });
+        }
+
+          function uploadfile()
+    {
+
+
+         uploadHoso(@ViewBag.model.Id, true);
+
+    }
+
+    function uploadfileSubmi()
+    {
+
+
+         PushFile(@ViewBag.model.Id);
+
+    }
+
+
+ 
+</script>
+
+

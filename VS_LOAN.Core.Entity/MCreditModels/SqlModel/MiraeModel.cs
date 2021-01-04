@@ -8,6 +8,9 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
 {
     public class MiraeModel : BaseSqlEntity
     {
+        public string Mobile { get; set; }
+        public string Fixphone { get; set; }
+
         public string AppId { get; set; }
         public int Id { get; set; }
         public string Channel { get; set; }
@@ -217,6 +220,28 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
             this.ContryCompany = 189;
             this.Status = 0;
         }
+
+    }
+
+
+
+    public class ClientUpdateStatusRequest
+    {
+        public int AppId { get; set; }
+        public string Status { get; set; }
+
+        public DateTime BussinessTime { get; set; }
+
+
+
+
+
+
+
+
+        public string Rejeccode { get; set; }
+
+        public string Reason { get; set; }
 
     }
 

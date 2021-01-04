@@ -18,7 +18,7 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -109,6 +109,7 @@
       <HintPath>..\packages\System.Net.Http.2.0.20126.16343\lib\net40\System.Net.Http.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="System.Net.Http.WebRequest">
       <HintPath>..\packages\System.Net.Http.2.0.20126.16343\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
       <Private>True</Private>
@@ -231,7 +232,9 @@
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\DuyetHoSoController.cs" />
     <Compile Include="Controllers\F88Controller.cs" />
+    <Compile Include="Controllers\MiraeApiController.cs" />
     <Compile Include="Controllers\MiraeController.cs" />
+    <Compile Include="Controllers\MiraeDeferController.cs" />
     <Compile Include="Controllers\OcbController.cs" />
     <Compile Include="Controllers\MCreditController.cs" />
     <Compile Include="Controllers\QuanLyHoSoController.cs" />
@@ -282,6 +285,7 @@
     <Compile Include="Helpers\FormatLinkPath.cs" />
     <Compile Include="Helpers\MenuWarning.cs" />
     <Compile Include="Infrastructures\ControllerRoles.cs" />
+    <Compile Include="modelApi\ClientUpdateStatusRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -1784,10 +1788,12 @@
     <Content Include="Views\Ocb\AddNew.cshtml" />
     <Content Include="Views\Ocb\OcbProfile.cshtml" />
     <Content Include="Views\Mirae\AddNew.cshtml" />
-    <Content Include="Views\Mirae\OcbProfile.cshtml" />
     <Content Include="Views\Mirae\Temp.cshtml" />
     <Content Include="Views\Mirae\CurrentAddress.cshtml" />
     <Content Include="Views\Mirae\test.cshtml" />
+    <Content Include="Views\Mirae\CheckCIC.cshtml" />
+    <Content Include="Views\MiraeDefer\Temp.cshtml" />
+    <Content Include="Views\MiraeDefer\viewDDE.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -1811,6 +1817,7 @@
   <ItemGroup>
     <Folder Include="App_Data\Download\" />
     <Folder Include="App_Data\ImportSanPham\" />
+    <Folder Include="Controllers\NewFolder1\" />
     <Folder Include="Views\Common\" />
   </ItemGroup>
   <ItemGroup>

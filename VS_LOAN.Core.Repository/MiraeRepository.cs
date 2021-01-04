@@ -126,6 +126,20 @@ namespace VS_LOAN.Core.Repository
             }
         }
 
+
+
+
+        public async Task<MiraeModel> GetByAppid(int appID)
+        {
+
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryFirstOrDefaultAsync<MiraeModel>("sp_mirae_GetByAppId", new { appID }, commandType: CommandType.StoredProcedure);
+                return result;
+            }
+
+        }
+
         public async Task<MiraeModel> GetTemProfileByMcId(int id)
         {
 
@@ -182,6 +196,21 @@ namespace VS_LOAN.Core.Repository
             {
                 var storeExecute = "sp_update_customerId";
                 await con.ExecuteAsync(storeExecute, new { id,customerId }, commandType: CommandType.StoredProcedure);
+                return true;
+            }
+        }
+
+
+        public async Task<bool> UpdatStatusClient(ClientUpdateStatusRequest request)
+         {
+            var param = GetParams(request, ignoreKey: new string[]
+           {
+
+           });
+            using (var con = GetConnection())
+            {
+                var storeExecute = "sp_MiraeUpdateClientStatus";
+                await con.ExecuteAsync(storeExecute,param, commandType: CommandType.StoredProcedure);
                 return true;
             }
         }

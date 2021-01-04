@@ -78,14 +78,16 @@ namespace VS_LOAN.Core.Entity.MCreditModels
 
         public string in_debit_credit { get; set; }
         public string in_per_cont { get; set; }
+
+        public string in_mobile { get; set; }
+        public string in_fixphone { get; set; }
         public MiraeQDELeadReQuest()
         {
-            
+       
             in_frequency = "MONTHLY";
             in_head = "NETINCOM";
             in_accountbank = "Y";
             in_debit_credit = "P";
-
             in_per_cont = "in_per_cont";
 
         }
@@ -135,7 +137,10 @@ namespace VS_LOAN.Core.Entity.MCreditModels
 
         public string in_landmark { get; set; }
 
-      
+        public string in_fixphone { get; set; }
+
+
+
 
         public AddressItem()
         {

@@ -27,12 +27,18 @@ namespace MCreditService
         public static List<MiraeDistrictItem> AllDistrict { get; set; }
         public static List<MiraeAllWardItem> AllWard { get; set; }
 
-        public static AuthenResponseModel _authenGlobal;       
-        public MiraeService(IMiraeRepository mCeditBusiness, ILogRepository logRepository) : base(mCeditBusiness, logRepository)
+        public static AuthenResponseModel _authenGlobal;
+
+        private readonly IMiraeRepository _miraeRepository;
+
+        public readonly IMiraeMaratialRepository _rpTailieu;
+
+        public MiraeService(IMiraeRepository mCeditBusiness, ILogRepository logRepository, IMiraeMaratialRepository miraeMaratialRepository) : base(mCeditBusiness, logRepository)
         {
 
 
-
+            _miraeRepository = mCeditBusiness;
+            _rpTailieu = miraeMaratialRepository;
 
         }
 
@@ -61,13 +67,10 @@ namespace MCreditService
             }
             else
             {
-                return new CheckCustomerResponseModel()
-                {
-                    Data = new CheckCustomerDataReponseModel()
-                    {
-                      
-                    }
-                };
+                var content = await response.Content.ReadAsStringAsync();
+                CheckCustomerResponseModel contributors = JsonConvert.DeserializeObject<CheckCustomerResponseModel>(content);
+
+                return contributors;
             }
 
         }
@@ -139,7 +142,7 @@ namespace MCreditService
             var client = new HttpClient();
             model.in_channel = "SBK";
             model.msgName = "inputQDE";
-            model.in_userid = "EXT_VFS";
+            model.in_userid = "EXT_SBK";
             model.in_per_cont = "100";
             model.in_bankbranchcode = "01";
             model.in_head = "NETINCOM";
@@ -148,23 +151,30 @@ namespace MCreditService
             model.in_possipbranch = "14";
             model.in_creditofficercode = "EXT_SBK";
             model.in_sourcechannel = "ADVT";
-            model.in_bankbranchcode = "01";
+            //model.in_tenure = 13;
+           
+            //model.in_totalloanamountreq = 15000000;
+
+
             model.in_possipbranch = "14";
+    
 
             model.in_per_cont = "100";
             model.in_debit_credit = "P";
-     
+  
+
+            model.in_referalgroup = "3";
+            model.in_previousjobmth = 0;
+            model.in_previousjobyear = 0;
+            
          
-       
 
+
+            //model.in_tenure = 12;
             client.BaseAddress = new Uri(_baseUrl);
-
-           
             client.DefaultRequestHeaders.Add("Authorization", "Basic ZGF0YWVudHJ5bWNpOm1pcmFlNTIzNDUhQCMlJA==");
             client.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue(_contentType));
-          
-
             var url = _createLead;
             var json = JsonConvert.SerializeObject(model);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
@@ -392,6 +402,37 @@ namespace MCreditService
             AllBank = result.Data;
 
             return result;
+        }
+
+
+        public async Task<PushToUNDReponse> PushToUND (MultipartFormDataContent request)
+        {
+            //gettailieu 
+            var client = new HttpClient();
+            client.BaseAddress = new Uri("https://apigw-staging.mafc.vn");
+            client.DefaultRequestHeaders.Add("Authorization", "Basic ZGF0YWVudHJ5Om1hZmNkYXRhZW50cnkkJSYkIUAj");
+            var url = "/dataentry/openapi/pushUnderSystem";
+            var response = await client.PostAsync(url, request);
+            if (response.IsSuccessStatusCode)
+            {
+
+             
+                var content = await response.Content.ReadAsStringAsync();
+                var resultReponse = JsonConvert.DeserializeObject<PushToUNDReponse>(content);
+
+              
+                return resultReponse;
+            }
+            else
+            {
+                return new PushToUNDReponse();
+            }
+         
+        }
+
+        public async Task<PushToHistoryReponse> PushToPendHistory(PushToHistoryRequest request)
+        {
+            return new PushToHistoryReponse();
         }
     }
 }

@@ -20,20 +20,22 @@ using VS_LOAN.Core.Utility;
 using VS_LOAN.Core.Web.Helpers;
 using System.Net.Http;
 using System.Text;
+using System.Net.Http.Headers;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
     public class MiraeController : BaseController
     {
-        protected readonly ITailieuRepository _rpTailieu;
+
         protected readonly IMiraeRepository _rpMCredit;
         protected readonly IMediaBusiness _bizMedia;
         protected readonly IMiraeService _odcService;
         public readonly IOcbBusiness _ocbBusiness;
+        public readonly IMiraeMaratialRepository _rpTailieu;
         public static ProvinceResponseModel _provinceResponseModel;
         public MiraeController(IMiraeRepository rpMCredit ,
               IMediaBusiness mediaBusiness,
-            IMiraeService odcService, IOcbBusiness ocbBusiness, ITailieuRepository tailieuBusiness) : base()
+            IMiraeService odcService, IOcbBusiness ocbBusiness, IMiraeMaratialRepository tailieuBusiness) : base()
         {
             _rpTailieu = tailieuBusiness;
             _rpMCredit = rpMCredit;
@@ -86,8 +88,18 @@ namespace VS_LOAN.Core.Web.Controllers
             return ToJsonResponse(true, "", MiraeService.Allproduct.ToList());
 
         }
+        public ActionResult CheckCIC()
+        {
+            return View();
+        }
 
-
+        public async Task<JsonResult> CheckCMND(StringModel2 model)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(model.Value))    
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            var result = await _odcService.CheckCustomer(model.Value,"SBK");
+            return ToJsonResponse(result.Success, result.Data?.ToString(), result);
+        }
 
 
         public async Task<JsonResult> SearchTemps(string freeText, string status, int page = 1, int limit = 10, string fromDate = null, string toDate = null, int loaiNgay = 0, int manhom = 0,
@@ -116,12 +128,11 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
 
             var profilerequest = await _rpMCredit.GetTemProfileByMcId(model.Id);
-
             var request = new MiraeDDEEditModel();
             request.Id = profilerequest.Id;
             request.Maritalstatus = model.Maritalstatus;
-
             request.Qualifyingyear = model.Qualifyingyear;
+            request.Qualifyingyear = "0";
             request.Eduqualify = model.Eduqualify;
             request.Noofdependentin = model.Noofdependentin;
             request.Paymentchannel = model.Paymentchannel;
@@ -131,19 +142,21 @@ namespace VS_LOAN.Core.Web.Controllers
             request.Spousename = model.Spousename;
             request.Spouse_id_c = model.Spouse_id_c;
             request.Categoryid = model.Categoryid;
+            request.Categoryid = "SBK";
             request.Bankname = model.Bankname;
             request.Bankbranch = model.Bankbranch;
             request.Acctype = model.Acctype;
             request.Accno = model.Accno;
             request.Dueday = model.Dueday;
-            request.Notecode = model.Notecode;
+            request.Notecode = "DE_MOBILE";
             request.Notedetails = model.Notedetails;
             request.UpdatedBy = GlobalData.User.IDUser;
             request.Familybooknumber = model.Familybooknumber;
             request.Spousename = model.Spousename;
             request.Spouse_id_c = model.Spouse_id_c;
             request.Notedetails = model.Notedetails;
-            request.Categoryid = model.Categoryid;
+
+     
             var result = await _rpMCredit.UpdateDDE(request);
 
             if (!result)
@@ -152,12 +165,6 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             return ToJsonResponse(true);
         }
-
-
-
-
-
-
         public async Task<JsonResult> UpdateAsync(MiraeEditModel model)
         {
             if (model == null)
@@ -166,7 +173,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var profilerequest = await _rpMCredit.GetTemProfileByMcId(model.Id);
 
 
-            profilerequest.Channel = model.Channel;
+                   profilerequest.Channel = model.Channel;
                 profilerequest.Schemeid = model.Schemeid;
                 profilerequest.Downpayment = model.Downpayment != null ? model.Downpayment : 0;
                 profilerequest.Totalloanamountreq = model.Totalloanamountreq;
@@ -259,6 +266,11 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
             profilerequest.Position = model.Position;
             profilerequest.IsDuplicateAdrees = model.IsDuplicateAdrees;
 
+            profilerequest.Phone = model.Phone;
+            profilerequest.Fixphone = model.Fixphone;
+            profilerequest.Mobile = model.Mobile;
+            profilerequest.IsDuplicateAdrees = model.IsDuplicateAdrees;
+
 
             var result = await _rpMCredit.UpdateDraftProfile(profilerequest);
             
@@ -270,7 +282,6 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
           
             return ToJsonResponse(true);
         }
-
         public async Task<JsonResult> SumbitToDDE(int id)
         {
             var model = await _rpMCredit.GetTemProfileByMcId(id);
@@ -283,10 +294,7 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
             }
             catch (Exception)
             {
-
-                
             }
-
             try
             {
                 if(bankName.Length <8)
@@ -308,7 +316,7 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
                 in_noofdependentin = model.Noofdependentin,
                 in_paymentchannel = model.Paymentchannel,
                 in_nationalidissuedate = model.Nationalidissuedate.Value.ToShortDateString(),
-                in_familybooknumber  = model.Familybooknumber,
+                in_familybooknumber  = "123456789",
                 in_idissuer = model.Idissuer,
                 in_spousename = model.Spousename,
                 in_spouse_id_c  = model.Spouse_id_c,
@@ -317,21 +325,19 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
                 in_bankbranch = model.Bankbranch,
                 in_acctype = model.Acctype,
                 in_accno = model.Accno,
-                 in_dueday = model.Dueday,
-                 in_notecode = model.Notecode,
-                 in_notedetails = model.Notedetails
+                in_dueday = model.Dueday,
+                in_notecode = model.Notecode,
+                in_notedetails = model.Notedetails
             };
             request.in_qualifyingyear = "0";
             request.in_notecode = "DE_MOBILE";
             request.in_channel = "SBK";
             request.in_userid = "EXT_SBK";
             request.in_categoryid = "SBK";
-
             var result = await _odcService.DDESubmit(request);
-
-            if(result.Success)
+            if (result.Success)
             {
-               var response =   await _odcService.DDEToPoR(new DDEToPORReQuest()
+                var response = await _odcService.DDEToPoR(new DDEToPORReQuest()
                 {
                     in_channel = "SBK",
                     in_userid = "EXT_SBK",
@@ -339,27 +345,22 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
                     p_appid = request.in_appid
 
                 });
-
-                if(response.Success)
+                if (response.Success)
                 {
                     await _rpMCredit.UpdateStatus(id, 2, request.in_appid, GlobalData.User.IDUser);
                 }
-
             }
             return ToJsonResponse(result.Success, "", result);
 
         }
+
+        
         public async Task<JsonResult> SumbitToOcb (int id)
         {
-            
             var model = await _rpMCredit.GetTemProfileByMcId(id);
-
-
-            model.Sourcechannel = "ADVT1";
-            model.Userid = "EXT_SBK1";
-        
-            var validResponse = await _odcService.CheckCustomer(model.Phone, "EXT_SBK");
-           
+            model.Sourcechannel = "ADVT";
+            model.Userid = "EXT_SBK";
+            var validResponse = await _odcService.CheckCustomer(model.Mobile, "EXT_SBK");           
             if(validResponse.Success !=true)
             {
                 return ToJsonResponse(false,"lỗi số điện thại hoặc cmnd không hợp lệ", validResponse.Data);
@@ -367,27 +368,31 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
             }
             var request = new MiraeQDELeadReQuest()
             {
-                in_channel = model.Channel,
+                in_phone = model.Phone,
+              
+                in_fixphone =model.Fixphone!=null?model.Fixphone:"",
+                in_channel = "SBK",
                 in_schemeid = (model.Schemeid != null) ? int.Parse(model.Schemeid) : 0,
                 in_downpayment = model.Downpayment != null ? model.Downpayment : 0,
                 in_totalloanamountreq = model.Totalloanamountreq,
                 in_tenure = model.Tenure,
-                in_sourcechannel = model.Sourcechannel,
+                in_sourcechannel = "ADVT",
                 in_salesofficer = (model.Salesofficer != null) ? int.Parse(model.Salesofficer) : 0,
+                
 
                 in_loanpurpose = model.Loanpurpose,
-                in_creditofficercode = model.Creditofficercode,
+                in_creditofficercode = "EXT_SBK",
                 in_bankbranchcode = model.Bankbranchcode,
                 in_laa_app_ins_applicable =model.Laa_app_ins_applicable =="true" ?"Y":"N",
                 in_priority_c = model.Priority_c,
 
-                in_userid = model.Userid,
+                in_userid = "EXT_SBK",
                 in_fname =model.Fname
             };
             request.in_mname = model.Mname;
             request.in_lname = model.Lname;
             request.in_nationalid = model.Nationalid;
-            request.in_title = model.Title;
+            request.in_title = model.Title+'.';
             request.in_gender = model.Gender=="0"?"M":"F";
             request.in_dob = model.Dob.Value.ToString("dd/MM/yyyy");
             request.in_constid = 5;
@@ -407,96 +412,188 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
             request.in_phone = model.Phone;
             request.in_others = model.Others;
             request.in_position = model.Position;
-            request.in_laa_app_ins_applicable = (model.Laa_app_ins_applicable == "1") ? "Y" : "N";
+            request.in_constid = 5;
+            request.in_possipbranch = "14";
+            request.in_debit_credit = "P";
+            request.in_per_cont = "100";
+            //request.in_others = "Công ty TNHH MTV ABC";
+            request.in_title = model.Title + '.';
+            //request.in_mobile = model.Mobile;
+            //request.in_fixphone = model.Fixphone;
+            request.in_others = model.Others;
+            request.in_amount = model.Amount;
 
-            if(model.Accountbank == "1")
+        
+
+            if(model.IsDuplicateAdrees.HasValue)
             {
-              
-                request.in_constid = 5;
+
+                if(model.IsDuplicateAdrees.Value)
+                {
+                    request.address = new List<AddressItem>()
+                     {
+                            new AddressItem()
+                            {
+                                in_mobile = model.Mobile,
+                                in_address1stline = model.AddressCur_address1stline,
+                                in_addresstype = "CURRES",
+                                in_city = model.AddressCur_City,
+                                in_country = 189,
+                                in_district =model.AddressCur_District,
+                                in_landlord = model.AddressCur_landlord,
+                                in_landmark = model.AddressCur_landmark,
+                                in_mailingaddress = "Y",
+                                in_propertystatus = model.AddressCur_in_propertystatus,
+                                in_roomno = model.AddressCur_roomno!=null?model.AddressCur_roomno:"",
+                                in_stayduratcuradd_m = model.AddressCur_stayduratcuradd_m!=null ?  int.Parse( model.AddressCur_stayduratcuradd_m):0,
+                                in_stayduratcuradd_y = model.AddressCur_stayduratcuradd_y!=null ?  int.Parse( model.AddressCur_stayduratcuradd_y):0,
+                                in_ward = model.AddressCur_Ward,
+
+                            }
+
+                    };
+
+                }
+                else
+                {
+                      request.address = new List<AddressItem>()
+                    {
+                        new AddressItem()
+                        {
+                            in_mobile = model.Mobile,
+                           
+                            in_address1stline = model.AddressCur_address1stline,
+                            in_addresstype = "CURRES",
+                            in_city = model.AddressCur_City,
+                            in_country = 189,
+                            in_district =model.AddressCur_District,
+                            in_landlord = model.AddressCur_landlord,
+                            in_landmark = model.AddressCur_landmark,
+                            in_mailingaddress = "Y",
+                            in_propertystatus = model.AddressCur_in_propertystatus,
+                            in_roomno = model.AddressCur_roomno,
+                            in_stayduratcuradd_m = model.AddressCur_stayduratcuradd_m!=null ?  int.Parse( model.AddressCur_stayduratcuradd_m):0,
+                            in_stayduratcuradd_y = model.AddressCur_stayduratcuradd_y!=null ?  int.Parse( model.AddressCur_stayduratcuradd_y):0,
+                            in_ward = model.AddressCur_Ward,
+
+                        },
+                         new AddressItem()
+                        {
+                            in_mobile = model.AddressPer_mobile,
+                            in_address1stline = model.AddressPer_address1stline,
+                            in_addresstype = "PERMNENT",
+                            in_city = model.AddressPer_City,
+                            in_country = 189,
+                            in_district =model.AddressPer_District,
+                            in_landlord = model.AddressPer_landlord,
+                            in_landmark = model.AddressPer_landmark,
+                            in_mailingaddress = "N",
+                            in_propertystatus = model.AddressPer_in_propertystatus,
+                            in_roomno = model.AddressPer_roomno,
+                            in_stayduratcuradd_m = model.AddressPer_stayduratPeradd_m!=null ?  int.Parse( model.AddressPer_stayduratPeradd_m):0,
+                            in_stayduratcuradd_y = model.AddressPer_stayduratPeradd_y!=null ?  int.Parse( model.AddressPer_stayduratPeradd_y):0,
+                            in_ward = model.AddressPer_Ward,
+
+                        },
+
+                 };
+
+
+                }
+
             }
             else
             {
-                request.in_constid = 8;
+
+                request.address = new List<AddressItem>()
+                    {
+                        new AddressItem()
+                        {
+                            in_mobile = model.Mobile,
+                            in_fixphone ="",
+                            in_address1stline = model.AddressCur_address1stline,
+                            in_addresstype = "CURRES",
+                            in_city = model.AddressCur_City,
+                            in_country = 189,
+                            in_district =model.AddressCur_District,
+                            in_landlord = model.AddressCur_landlord,
+                            in_landmark = model.AddressCur_landmark,
+                            in_mailingaddress = "Y",
+                            in_propertystatus = model.AddressCur_in_propertystatus,
+                            in_roomno = model.AddressCur_roomno,
+                            in_stayduratcuradd_m = model.AddressCur_stayduratcuradd_m!=null ?  int.Parse( model.AddressCur_stayduratcuradd_m):0,
+                            in_stayduratcuradd_y = model.AddressCur_stayduratcuradd_y!=null ?  int.Parse( model.AddressCur_stayduratcuradd_y):0,
+                            in_ward = model.AddressCur_Ward,
+
+                        },
+                         new AddressItem()
+                        {
+                            in_mobile ="",
+                            in_fixphone ="",
+                            in_address1stline = model.AddressPer_address1stline,
+                            in_addresstype = "PERMNENT",
+                            in_city = model.AddressPer_City,
+                            in_country = 189,
+                            in_district =model.AddressPer_District,
+                            in_landlord = model.AddressPer_landlord,
+                            in_landmark = model.AddressPer_landmark,
+                            in_mailingaddress = "N",
+                            in_propertystatus = model.AddressPer_in_propertystatus,
+                            in_roomno = model.AddressPer_roomno,
+                            in_stayduratcuradd_m = model.AddressPer_stayduratPeradd_m!=null ?  int.Parse( model.AddressPer_stayduratPeradd_m):0,
+                            in_stayduratcuradd_y = model.AddressPer_stayduratPeradd_y!=null ?  int.Parse( model.AddressPer_stayduratPeradd_y):0,
+                            in_ward = model.AddressPer_Ward,
+
+                        },
+
+                 };
+
+
             }
-               
-            request.reference = new List<ReferenceItem>()
+
+            request.reference = new List<ReferenceItem>();
+
+            if (string.IsNullOrEmpty(model.Refferee1_Refereename) ==false)
             {
-               new ReferenceItem()
-               {
-                   in_phone_1 = model.Refferee1_Phone1,
-                   in_phone_2 = model.Refferee1_Phone2,
-                   in_title =model.Refferee1_in_title,
-                   in_refereename = model.Refferee1_Refereename,
-                   in_refereerelation = model.Refferee1_Refereerelation
-               }
-               ,
-                   new ReferenceItem()
-               {
-                       in_title =model.Refferee2_in_title,
-                   in_phone_1 = model.Refferee2_Phone1,
-                   in_phone_2 = model.Refferee2_Phone2,
-                   in_refereename = model.Refferee2_Refereename,
-                   in_refereerelation = model.Refferee2_Refereerelation
-               },
-                  new ReferenceItem()
-               {
-                      in_title =model.Refferee3_in_title,
-                   in_phone_1 = model.Refferee3_Phone1,
-                   in_phone_2 = model.Refferee3_Phone2,
-                   in_refereename = model.Refferee3_Refereename,
-                   in_refereerelation = model.Refferee3_Refereerelation
-               }
-            };
+                request.reference.Add(new ReferenceItem()
+                {
+                    in_phone_1 = model.Refferee1_Phone1,
+                    in_phone_2 = "",
+                    in_title = model.Refferee1_in_title + '.',
+                    in_refereename = model.Refferee1_Refereename,
+                    in_refereerelation = model.Refferee1_Refereerelation
+                });
 
-            request.address = new List<AddressItem>()
+            }
+
+            if (string.IsNullOrEmpty(model.Refferee2_Refereename) == false)
             {
-                new AddressItem()
+                request.reference.Add(new ReferenceItem()
                 {
-                    in_mobile = model.AddressCur_mobile,
-                    in_address1stline = model.AddressCur_address1stline,
-                    in_addresstype = "CURRES",
-                    in_city = model.AddressCur_City,
-                    in_country = 189,
-                    in_district =model.AddressCur_District,
-                    in_landlord = model.AddressCur_landlord,
-                    in_landmark = model.AddressCur_landmark,
-                    in_mailingaddress = "Y",
-                    in_propertystatus = model.AddressCur_in_propertystatus,
-                    in_roomno = model.AddressCur_roomno,
-                    in_stayduratcuradd_m = model.AddressCur_stayduratcuradd_m!=null ?  int.Parse( model.AddressCur_stayduratcuradd_m):0,
-                    in_stayduratcuradd_y = model.AddressCur_stayduratcuradd_y!=null ?  int.Parse( model.AddressCur_stayduratcuradd_y):0,
-                    in_ward = model.AddressCur_Ward,
-                    
-                },
-                 new AddressItem()
+                    in_title = model.Refferee2_in_title + '.',
+                    in_phone_1 = model.Refferee2_Phone1 + '.',
+                    in_phone_2 = "",
+                    in_refereename = model.Refferee2_Refereename,
+                    in_refereerelation = model.Refferee2_Refereerelation
+                });
+
+            }
+
+            if (string.IsNullOrEmpty(model.Refferee3_Refereename) == false)
+            {
+                request.reference.Add( new ReferenceItem()
                 {
-                    in_mobile = model.AddressPer_mobile,
-                    in_address1stline = model.AddressPer_address1stline,
-                    in_addresstype = "PERMNENT",
-                    in_city = model.AddressPer_City,
-                    in_country = 189,
-                    in_district =model.AddressPer_District,
-                    in_landlord = model.AddressPer_landlord,
-                    in_landmark = model.AddressPer_landmark,
-                    in_mailingaddress = "Y",
-                    in_propertystatus = model.AddressPer_in_propertystatus,
-                    in_roomno = model.AddressPer_roomno,
-                    in_stayduratcuradd_m = model.AddressPer_stayduratPeradd_m!=null ?  int.Parse( model.AddressPer_stayduratPeradd_m):0,
-                    in_stayduratcuradd_y = model.AddressPer_stayduratPeradd_y!=null ?  int.Parse( model.AddressPer_stayduratPeradd_y):0,
-                    in_ward = model.AddressPer_Ward,
+                    in_title = model.Refferee3_in_title + '.',
+                    in_phone_1 = model.Refferee3_Phone1 + '.',
+                    in_phone_2 = "",
+                    in_refereename = model.Refferee3_Refereename,
+                    in_refereerelation = model.Refferee3_Refereerelation
+                });
 
-                },
-
-            };
-
-          
-           
+            }
            var ressult =  await _odcService.QDESubmit(request);
-
-            
-
-            if(ressult.Success)
-            {
+                if(ressult.Success)
+                {
                 var appid = 0;
                 try
                 {
@@ -513,22 +610,34 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
                     p_appid = appid
                     
                 });
-            }
+                }
             return ToJsonResponse(ressult.Success, "",ressult);
         }
 
-
-       
         public async Task<JsonResult> CreateDraft(MiraeAddModel model)
         {
             if (model == null)
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+    
+            if (string.IsNullOrEmpty(model.Others))
+            {
+                return ToJsonResponse(false, "Vui lòng điền tên công ty");
 
+            }
+            //else if (string.IsNullOrEmpty(model.Nationalid) ||  model.Nationalid.Length <9 || model.Nationalid.Length >10)
+            //{
+            //    return ToJsonResponse(false, "Vui lòng điền chứng minh nhân dân");
 
+            //}
 
+          
+            if(model.Natureofbuss=="")
+            {
+                model.Natureofbuss = "hoat dong lam thue cac cong viec trong cac hgd,sx sp vat chat va dich vu tu tieu dung cua ho gia dinh";
+            }
             var profile = new MiraeModel
             {
-                Channel = model.Channel,
+                Channel = "SBK",
                 Schemeid = model.Schemeid,
                 Downpayment = model.Downpayment != null ? model.Downpayment : 0,
                 Totalloanamountreq = model.Totalloanamountreq,
@@ -597,8 +706,8 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
                 Refferee2_in_title = model.Refferee2_in_title,
                 Refferee2_Refereename = model.Refferee2_Refereename,
                 Refferee2_Refereerelation = model.Refferee2_Refereerelation,
-                Refferee2_Phone2 = model.Refferee2_Phone1,
-                Refferee2_Phone1 = model.Refferee2_Phone2,
+                Refferee2_Phone2 = model.Refferee2_Phone2,
+                Refferee2_Phone1 = model.Refferee2_Phone1,
 
                 Refferee3_in_title = model.Refferee3_in_title,
                 Refferee3_Refereename = model.Refferee3_Refereename,
@@ -611,16 +720,25 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
                 DistrictCompany = model.DistrictCompany,
                 WardCompany = model.WardCompany,
                 Addressline = model.Addressline,
-                Phone = model.Phone,
+        
                 Natureofbuss = model.Natureofbuss,
-                Position = model.Position
+                Position = model.Position,
+                Phone = model.Phone,
+                Fixphone = model.Fixphone,
+                Mobile = model.Mobile
+                
 
 
-        };
-
+             };
+            
 
             profile.CreatedBy = GlobalData.User.IDUser;
-                
+            profile.Others = model.Others;
+            profile.Amount = model.Amount;
+            if(string.IsNullOrEmpty(model.Head))
+            {
+                profile.Head = "NETINCOM";
+            }
             var id = await _rpMCredit.CreateDraftProfile(profile);
             if (id > 0)
             {
@@ -635,14 +753,25 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
             ViewBag.isAdmin = GlobalData.User.TypeUser == (int)UserTypeEnum.Admin ? true : false;
             ViewBag.model = result;
             ViewBag.LstTaiLieu = new List<TaiLieuModel>();
-            ViewBag.LstLoaiTaiLieu = await _rpTailieu.GetLoaiTailieuList(7);
+            ViewBag.LstLoaiTaiLieu = await _rpTailieu.GetLoaiTailieuList(8);
 
             if(result.Status ==0)
             {
                 return View("viewQDE");
             }
-            else 
-            return View("viewDDE");
+            else  if(result.Status ==1)
+            {
+                return View("viewDDE");
+            }
+            else if (result.Status == 2)
+            {
+                return View("viewDetail");
+            }
+            else
+            {
+                return View("viewLock");
+            }
+           
         }
 
       
@@ -650,142 +779,34 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
     
         public async Task<JsonResult> SendFile(int id)
         {
-            //if (id <= 0)
-            //    return ToJsonResponse(false);
-            //var result = await _rpMCredit.GetTemProfileByMcId(id);
+            int profileId = id;
+            id = 19;
+            var model = await _rpMCredit.GetTemProfileByMcId(profileId);
+            var allTaiLieu = await _rpTailieu.GetTailieuMiraeHosoId(model.Id, 7);
+            var multiForm = new MultipartFormDataContent();
+            multiForm.Add(new StringContent("EXT_SBK"), "usersname");
+            multiForm.Add(new StringContent("mafc123"), "password");
+            multiForm.Add(new StringContent(model.AppId), "appid");
+            multiForm.Add(new StringContent("EXT_SBK"), "salecode");
 
+            multiForm.Add(new StringContent(""), "warning");
+            multiForm.Add(new StringContent(""), "warning_msg");
 
-            //if(result==null)
-            //{
-            //    return ToJsonResponse(false, "không tìm thấy hồ sơ");
-            //}
+            foreach (var item in allTaiLieu)
+            {
+                string filePath = Server.MapPath(item.FileUrl);
+                multiForm.Add(new ByteArrayContent(System.IO.File.ReadAllBytes(filePath)),item.Keycode , System.IO.Path.GetFileName(filePath));
+            }
 
-            //if(result.IsPushDocument!=null)
-            //{
-            //    if (result.IsPushDocument==true)
-            //    {
-            //        return ToJsonResponse(false, "Đã đẩy chứng từ rồi, không được đẩy nữa");
-            //    }
-            //}
-            //ViewBag.isAdmin = GlobalData.User.TypeUser == (int)UserTypeEnum.Admin ? true : false;
+             var result =  await _odcService.PushToUND(multiForm);
 
-            //var lstLoaiTailieu = await _rpTailieu.GetLoaiTailieuList(7);
-            //if (lstLoaiTailieu == null || !lstLoaiTailieu.Any())
-            //    return ToJsonResponse(false);
-
-            //List<OcbSendfileReQuestModel> sendObjectRequest = new List<OcbSendfileReQuestModel>();
-            //var filesExist = await _rpTailieu.GetTailieuOCByHosoId(id, 7);
-            //foreach (var item in filesExist)
-            //{
-            //    string _fieldName = "";
-            //    switch (item.Key)
-            //    {
-            //        case 51:
-            //            _fieldName = "DRIVING_LICENSE_ATTACH";
-            //            break;
-
-            //        case 52:
-            //            _fieldName = "FAMILY_BOOK_ATTACH";
-            //            break;
-
-            //        case 53:
-            //            _fieldName = "IDCARD_ATTACH";
-            //            break;
-            //        case 54:
-            //            _fieldName = "CLIENT_PICTURE_ATTACH";
-            //            break;
-
-            //        case 55:
-            //            _fieldName = "OTHER_ATTACH";
-            //            break;
-            //        case 56:
-            //            _fieldName = "BUSINESS_LICENSE_ATTACH";
-            //            break;
-            //        case 57:
-            //            _fieldName = "LABOR_CONTRACT_ATTACH";
-            //            break;
-
-            //        case 58:
-            //            _fieldName = "PAYROLL_ATTACH";
-            //            break;
-            //        case 59:
-            //            _fieldName = "PAYMENT_ACCOUNT_ATTACH";
-            //            break;
-            //        case 60:
-            //            _fieldName = "HEALTH_INSURANCE_ATTACH";
-            //            break;
-            //    }
-
-            //    if(_fieldName=="")
-            //    {
-            //        continue;
-            //    }
-
-            //    string fileType = System.IO.Path.GetExtension(item.FileUrl);
-            //    if(fileType=="" )
-            //    {
-            //        continue;
-            //    }
-            //    string filePath = Server.MapPath(item.FileUrl);
-            //    using (var fileContent = new System.IO.FileStream(filePath, System.IO.FileMode.Open, System.IO.FileAccess.Read))
-            //    {
-            //        byte[] filebytes = new byte[fileContent.Length];
-            //        fileContent.Read(filebytes, 0, Convert.ToInt32(fileContent.Length));
-            //        string encodedData = Convert.ToBase64String(filebytes,
-            //                                Base64FormattingOptions.InsertLineBreaks);
-            //        var request = new OcbSendfileReQuestModel()
-            //        {
-            //            CustomerId = result.CustomerId,
-            //            Fieldname = _fieldName,
-            //            FileType = fileType,
-            //            FileContent = encodedData
-
-            //        };
-                
-            //        switch (fileType.ToLower())
-            //        {
-            //            case ".pdf":
-            //                fileType = "pdf";
-            //                break;
-
-            //            case ".png":
-            //                fileType = "png";
-            //                break;
-            //            case ".jpg":
-            //                fileType = "jpg";
-            //                break;
-            //            default:
-            //                break;
-            //        }
-            //        request.FileType = fileType;
-            //        sendObjectRequest.Add(request);
-
-            //    }
-
-            //}
-
-            //var isSuccess = true;
-            // foreach (var item in sendObjectRequest)
-            //{
-            //     var resultSendfile=   await  _odcService.SendFile(item);
-            //    if(resultSendfile.Status !="200")
-            //    {
-
-            //        isSuccess = false;
-                   
-
-                     
-            //    }
-            //    continue;
-             
-            //}
-            return ToJsonResponse(true);
+            if (result.Success)
+            {
+                await _rpMCredit.UpdateStatus(id,3, int.Parse(model.AppId), GlobalData.User.IDUser);
+            }
+            return ToJsonResponse(result.Success,result.Data,result);
 
         }
-
-
-        
-
         public async Task<ActionResult> Temp()
         {
 
@@ -794,7 +815,6 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
 
             return View();
         }
-
         public async Task<ActionResult> Index()
         {
 
@@ -803,8 +823,6 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
 
             return View("Temp");
         }
-        
-
         public ActionResult AddNew()
 
         {
@@ -849,6 +867,9 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
             var result = await _rpMCredit.AddNoteAsync(profileId, model.Value, GlobalData.User.IDUser);
             return ToJsonResponse(result.IsSuccess, result.Message);
         }
+
+
+
         public async Task<JsonResult> UploadToHoso(int hosoId, bool isReset, List<FileUploadModelGroupByKey> filesGroup)
         {
             if (hosoId <= 0 || filesGroup == null)
@@ -856,7 +877,7 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
 
             if (isReset)
             {
-                var deleteAll = await _rpTailieu.RemoveAllTailieuOcb(hosoId, (int)HosoType.Ocb);
+                var deleteAll = await _rpTailieu.RemoveAllTailieuMirae(hosoId, (int)HosoType.Ocb);
                 if (!deleteAll)
                     return ToJsonResponse(false);
             }
@@ -875,7 +896,7 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
                             ProfileTypeId = (int)HosoType.Ocb,
                             Folder = file.FileUrl
                         };
-                        await _rpTailieu.AddOCB(tailieu);
+                        await _rpTailieu.AddMirae(tailieu);
                     }
                 }
             }
@@ -905,11 +926,11 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
                             fileStream.Close();
                             fileUrl = file.FileUrl;
                         }
-                        deleteURL = fileId <= 0 ? $"/Ocb/delete?key={key}" : $"/Ocb/delete/0/{fileId}";
+                        deleteURL = fileId <= 0 ? $"/Mirae/delete?key={key}" : $"/Mirae/delete/0/{fileId}";
                         if (fileId > 0)
                         {
 
-                            await _rpTailieu.UpdateExistingFileOCB(new TaiLieu
+                            await _rpTailieu.UpdateExistingFileMirae(new TaiLieu
                             {
                                 FileName = file.Name,
                                 Folder = file.Folder,
@@ -972,10 +993,10 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
             {
                 return ToJsonResponse(false, null, "Dữ liệu không hợp lệ");
             }
-            var result = await _rpTailieu.RemoveTailieuOcb(hosoId, fileId);
+            var result = await _rpTailieu.RemoveTailieuMirae(hosoId, fileId);
             return ToJsonResponse(true);
         }
-        public  string ConvertToBase64( Stream stream)
+        public string ConvertToBase64(Stream stream)
         {
             var bytes = new Byte[(int)stream.Length];
 
@@ -1002,7 +1023,7 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
 
             typeId = 7;
 
-            var filesExist = await _rpTailieu.GetTailieuOCByHosoId(hosoId, typeId);
+            var filesExist = await _rpTailieu.GetTailieuMiraeHosoId(hosoId, typeId);
 
             var result = new List<HosoTailieu>();
 
@@ -1024,7 +1045,7 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
         }
         public async Task<JsonResult> TailieuByHoso(int hosoId, int type = 1)
         {
-            var result = await _rpTailieu.GetTailieuOCByHosoId(hosoId, type);
+            var result = await _rpTailieu.GetTailieuMiraeHosoId(hosoId, type);
             if (result == null)
                 result = new List<FileUploadModel>();
             return ToJsonResponse(true, null, result);
@@ -1032,7 +1053,6 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
 
 
 
-        
 
     }
 }

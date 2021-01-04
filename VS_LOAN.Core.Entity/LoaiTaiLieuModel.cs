@@ -53,4 +53,19 @@ namespace VS_LOAN.Core.Entity
         public int GroupId { get; set; }
         public bool AllowUpload { get; set; }
     }
+
+
+
+    public class LoaiTaiLieuMiraeDeferModle
+    {
+        public int ID { get; set; }
+        public string Ten { get; set; }
+        public int BatBuoc { get; set; }
+        public int ProfileId { get; set; }
+        public int ProfileTypeId { get; set; }
+        public string FileKey { get; set; }
+        public string FilePath { get; set; }
+        public string Folder { get; set; }
+        public string FileName { get; set; }
+    }
 }

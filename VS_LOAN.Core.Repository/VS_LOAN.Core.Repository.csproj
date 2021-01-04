@@ -125,6 +125,8 @@
     <Compile Include="Interfaces\IGroupRepository.cs" />
     <Compile Include="Interfaces\IHosoCourrierRepository.cs" />
     <Compile Include="Interfaces\ILogRepository.cs" />
+    <Compile Include="Interfaces\IMiraeDeferRepository.cs" />
+    <Compile Include="Interfaces\IMiraeMaratialRepositorybk.cs" />
     <Compile Include="Interfaces\IMiraeRepository.cs" />
     <Compile Include="Interfaces\IOcbRepository.cs" />
     <Compile Include="Interfaces\IMCreditRepositoryTest.cs" />
@@ -133,6 +135,7 @@
     <Compile Include="Interfaces\IRevokeDebtRepository.cs" />
     <Compile Include="Interfaces\ISystemconfigRepository.cs" />
     <Compile Include="LogRepository.cs" />
+    <Compile Include="MiraeDeferRepository.cs" />
     <Compile Include="MiraeRepository.cs" />
     <Compile Include="OcbRepository.cs" />
     <Compile Include="MCreditRepositoryTest.cs" />
@@ -161,6 +164,7 @@
     <Compile Include="RevokeDebtRepository.cs" />
     <Compile Include="SanPhamBLL.cs" />
     <Compile Include="SystemconfigRepository.cs" />
+    <Compile Include="MiraeMaratialRepository.cs" />
     <Compile Include="TailieuRepository.cs" />
     <Compile Include="TrangThaiHoSoBLL.cs" />
     <Compile Include="UserPMBLL.cs" />

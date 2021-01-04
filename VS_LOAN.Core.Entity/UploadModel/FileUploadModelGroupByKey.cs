@@ -24,6 +24,8 @@ namespace VS_LOAN.Core.Entity.UploadModel
         public int MC_GroupId { get; set; }
         public string FullPath { get; set; }
         public string Folder { get; set; }
+
+        public string Keycode { get; set; }
     }
     public class FileUploadModelGroupByKey
     {

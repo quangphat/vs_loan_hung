@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -253,6 +254,65 @@ namespace VS_LOAN.Core.Entity.MCreditModels
     }
 
 
-  
+
+    public class PushToUNDReponse 
+
+    {
+        public bool Success { get; set; }
+
+        public string Message { get; set; }
+
+        public string Data { get; set; }
+
+        public PushToUNDReponse()
+        {
+            Success = false;
+        }
+
+    }
+
+
+    public class PushToHistoryReponse
+
+    {
+        public bool Success { get; set; }
+
+        public string Message { get; set; }
+
+        public string Data { get; set; }
+
+        public PushToHistoryReponse()
+        {
+            Success = false;
+        }
+
+    }
+
+    public class PushToHistoryRequest
+
+    {
+
+        public int AppId { get; set; }
+
+        public PushToHistoryRequest()
+        {
+           
+        }
+
+    }
+    public class TaiLieuMirateModel
+    {
+
+        public int Id { get; set; }
+
+        public string FileKey { get; set; }
+
+        public string FileName { get; set; }
+
+        public string FilePath { get; set; }
+
+       
+    }
+
 
 }

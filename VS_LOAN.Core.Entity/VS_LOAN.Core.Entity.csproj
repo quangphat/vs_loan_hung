@@ -153,6 +153,7 @@
     <Compile Include="MCreditModels\AuthenResponseObj.cs" />
     <Compile Include="MCreditModels\MCreditRequestModelBase.cs" />
     <Compile Include="MCreditModels\MCreditUserToken.cs" />
+    <Compile Include="MCreditModels\MiraModel\UploadDeferRequest.cs" />
     <Compile Include="MCreditModels\NoteAddRequestModel.cs" />
     <Compile Include="MCreditModels\NoteAddResponseModel.cs" />
     <Compile Include="MCreditModels\NoteRequestModel.cs" />
@@ -174,7 +175,9 @@
     <Compile Include="MCreditModels\SqlModel\MCreditlocations.cs" />
     <Compile Include="MCreditModels\SqlModel\MCreditProduct.cs" />
     <Compile Include="MCreditModels\SqlModel\MiraeDDEEditModel.cs" />
+    <Compile Include="MCreditModels\SqlModel\MiraeDeferSearchModel.cs" />
     <Compile Include="MCreditModels\SqlModel\MiraeEditModel.cs" />
+    <Compile Include="MCreditModels\SqlModel\MiraeDeferModel.cs" />
     <Compile Include="MCreditModels\SqlModel\MiraeModelSearchModel.cs" />
     <Compile Include="MCreditModels\SqlModel\MiraeModel.cs" />
     <Compile Include="MCreditModels\SqlModel\MiraeAddModel.cs" />

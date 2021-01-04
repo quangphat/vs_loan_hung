@@ -1,0 +1,806 @@
+﻿@using VS_LOAN.Core.Web.Resources;
+@using VS_LOAN.Core.Web.Helpers;
+@{
+    ViewBag.Title = "Comb-ODC";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+    SetActiveMenu('@ViewBag.formindex', 9);
+</script>
+<div class="main-content-inner">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <a href="#">Danh sách hồ sơ ocb</a>
+            </li>
+        </ul>
+    </div>
+    <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+                <form class="form-horizontal" role="form">
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right">Tìm kiếm</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <input type="text" class="form-control" id="txtFreeText" placeholder="Tìm kiếm" />
+                        </div>
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Loại</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlStatus" class="chosen-select form-control" multiple data-placeholder="Chọn trạng thái">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Nhóm</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlNhom" class="chosen-select form-control" data-placeholder="Chọn nhóm">
+                                <option value="0"></option>
+                            </select>
+                        </div>
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Thành viên</label>
+                        <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlThanhVienNhom" class="chosen-select form-control" data-placeholder="Chọn thành viên nhóm">
+                                <option value="0"></option>
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-2 col-xs-12">
+                            <label class="control-label no-padding-right">
+                                <input name="radio-ngay" type="radio" checked="checked" value="1" class="ace">
+                                <span class="lbl"> Ngày tạo</span>
+                            </label>
+                            <label class="control-label no-padding-right">
+                                <input name="radio-ngay" type="radio" value="2" class="ace">
+                                <span class="lbl"> Ngày cập nhật</span>
+                            </label>
+                        </div>
+                        <div class="col-sm-2 col-xs-12 ">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtFromDate" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-xs-12 ">
+                            <div class="input-group">
+                                <input class="form-control date-picker" id="txtToDate" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar bigger-110"></i>
+                                </span>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+                    <div class="form-group text-right">
+                        <div class="col-xs-12 ">
+                            <a class="btn btn-primary" id="btn_search">
+                                Tìm kiếm
+                            </a>
+                            <a class="btn btn-primary" href="/ocb/AddNew">
+                                Thêm mới
+                            </a>
+
+
+                        </div>
+
+                    </div>
+                </form>
+                <hr>
+					@if (GlobalData.User.IDUser == 1)
+						{
+
+								<div class="form-group">
+								<div class=" col-sm-8">
+								<input multiple="" class="col-sm-4" type="file" id="file" />
+								<a class="btn btn-primary" id="btnImport">Import file</a>
+								</div>
+
+								</div>
+						}
+						else
+						{
+
+
+						}
+
+               
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="clearfix">
+                    <div class="pull-right tableTools-container"></div>
+                </div>
+                <div class="table-header">
+                    Danh sách hồ sơ
+                </div>
+                <div class="dataTables_wrapper form-inline no-footer">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <label>
+                                Hiển thị
+                                <select id="ddlLimit" class="form-control input-sm" onchange="onSelectLimit()">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+
+                                </select> dòng mỗi trang
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- div.table-responsive -->
+                <!-- div.dataTables_borderWrap -->
+                <div class="col">
+                    <div class="report-table-custom--overflow">
+                        <table id="dtSource" class="report-table-custom table table-striped table-bordered table-hover">
+                            <thead class="table-header">
+                                <tr>
+                                    <th class="center w-45">STT</th>
+                                    <th class="w-98">TraceCode</th>
+                                    <th class="m-w-150">Mã đối chiếu OCB</th>
+                                    <th class="m-w-150">Tên khách hàng</th>
+                                    <th class="w-94">CMND</th>
+                                    @if (GlobalData.User.IDUser == 1)
+                                    {
+
+                                        <th class="w-94">Số điện thoại</th>
+
+
+                                    }
+                                    else
+                                    {
+
+
+                                    }
+									
+									
+									<th class="m-w-300">Last noted VietBank</th>
+                                    
+
+                                    <th class="w-94">Sản phẩm</th>
+                                    <th class="w-94">Trạng thái</th>
+                                    <th class="w-94">Kỳ hạn</th>
+                                    <th class="w-94">Mã nhân viên</th>
+                                    <th class="w-84">Người tạo</th>
+                                    <th class="w-150">Ngày tạo</th>
+                                    <th class="w-84">Người Cập nhật</th>
+                                    <th class="w-150">Ngày Cập nhật</th>
+									<th class="w-94">FirstCallStatus</th>
+									<th class="w-94">LastCallStatus</th>
+                                    <th class="w-150">LastCallDate</th>
+									<th class="w-94">Volumn</th>
+                                    <th class="w-150">DisbureseDate</th>
+                                    <th class="w-94">lastCallNote</th>
+                                    <th class="w-94">AppProcessStatus</th>
+                                    <th class="w-94">AppStatusForSale</th>
+                                
+									
+									<th class="w-94">DisbureseMonth</th>
+								
+
+
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="clearfix" />
+                <div class="one-row no-gutters justify-content-between paginate">
+                    <div class="col-auto">
+                        <div class="dataTables_info" id="dtSource_info" role="status" aria-live="polite"></div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="one-row no-gutters align-items-center">
+                            <div class="col-auto">
+                                <span id="totalPage"></span>
+                            </div>
+                            <div class="col">
+                                <div class="dataTables_paginate paging_simple_numbers" id="dtSource_paginate">
+                                    <ul class="pagination" id="paging"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+        <div class="row">
+            <div class="space-6" style="background-color: #d5e3ef;"></div>
+            <div class="col-xs-12" style="margin-bottom:40px;">
+                <div class="pull-right">
+                    <a id="btnDownReport" onclick="DownloadReport(this)" class="btn btn-sm btn-primary "><i class="ace-icon fa fa-download"></i>@Global.Button_Download</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var queries = new URLSearchParams(window.location.search);
+    var page = 1;
+	var pageClick = 1;
+    var limit = 10;
+    var pageMargin = 2;
+    var totalPage = 1;
+    var totalRecord = 0;
+	
+	var userData = @Html.Raw(Json.Encode(GlobalData.User));
+
+    $(document).ready(function e() {
+        //renderStatusList();
+		GetAllStatus();
+        $('#ddlStatus').chosen({ width: '100%', allow_single_deselect: true });
+        window.addEventListener('popstate', function (e) {
+
+            queries = new URLSearchParams(window.location.search)
+            bindQueries()
+
+            page = queries.get("page");
+            if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+                page = 1;
+            else
+                page = parseInt(page)
+            limit = queries.get("limit")
+            if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                limit = 10;
+            else
+                limit = parseInt(limit)
+            getData(page, limit, memberId, true)
+        });
+        var input = document.getElementById("txtFreeText");
+        input.addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                $("#btn_search").click();
+            }
+        });
+        function bindQueries() {
+            $('#txtFreeText').val(queries.get("freetext"))
+            var cmnd = queries.get("cmnd");
+            page = queries.get("page");
+            if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+                page = 1;
+            else
+                page = parseInt(page)
+            limit = queries.get("limit")
+            if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                limit = 10;
+            else
+                limit = parseInt(limit)
+            $("#ddlLimit").val(limit)
+            var status = decodeURI(queries.get("status"))
+            if (!isNullOrWhiteSpace(status)) {
+                let arrStatus = status.split(',')
+                $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
+            }
+            LayNhom();
+
+        $('#ddlThanhVienNhom').chosen({ width: '100%', allow_single_deselect: true });
+        $('#ddlNhom').chosen({ width: '100%', allow_single_deselect: true });
+        }
+
+        $('#ddllimit').chosen({ width: '100%', allow_single_deselect: true });
+        var status = decodeURI(queries.get("status"))
+        if (!isNullOrWhiteSpace(status)) {
+            let arrStatus = status.split(',')
+            $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
+        }
+  var fromDate = queries.get("fromDate");
+            if (isNullOrWhiteSpace(fromDate)) {
+                fromDate = new Date().getDay + -30;
+            }
+ $("#txtFromDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", fromDate);
+            var toDate = queries.get("toDate");
+            if (isNullOrWhiteSpace(toDate)) {
+                toDate = new Date().getDay + 1;
+            }
+            $("#txtToDate").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", toDate);
+            var dateType = queries.get("loaiNgay");
+
+
+
+
+		 bindQueries();
+
+
+    });
+    var strLoading = '@Global.Message_Loading';
+    $('#btn_search').click(function (e) {
+        showBlock($('#panel_body'), strLoading);
+        getData(page, limit);
+        //$('#dtSource').DataTable().ajax.reload();
+        //$('#dtSource').DataTable().columns.adjust().draw();
+    });
+
+        function LayNhom() {
+        $('#ddlNhom').empty();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSNhom", "DuyetHoSo")',
+            data: {},
+            success: function (data) {
+                $('#ddlNhom').append("<option value='0'></option>");
+                if (data.data != null) {
+                    $.each(data.data, function (index, item) {
+                        $('#ddlNhom').append("<option value='" + item.ID + "'>" + item.Ten + "(" + item.TenQL + ")</option>");
+                    });
+                    var maNhom = queries.get("maNhom");
+                    $('#ddlNhom').val(maNhom)
+                    $('#ddlNhom').chosen().trigger("chosen:updated").change();
+                }
+                queries = new URLSearchParams(window.location.search)
+                var memberId = queries.get("maThanhVien");
+                getData(page, limit, memberId);
+                //InitTable();
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+     $('#ddlNhom').change(function () {
+        $('#ddlThanhVienNhom').empty();
+        $('#ddlThanhVienNhom').append("<option value='0'></option>");
+        var maNhom = $('#ddlNhom').val()
+        if (!isNullOrUndefined(maNhom)) {
+             $.ajax({
+            type: "POST",
+            url: '@Url.Action("LayDSThanhVienNhom", "DuyetHoSo")',
+            data: { "maNhom": $('#ddlNhom').val() },
+            success: function (data) {
+                if (data.data != null) {
+                    $.each(data.data, function (index, item) {
+                        $('#ddlThanhVienNhom').append("<option value='" + item.Id + "'>" + item.Name + "</option>");
+                    });
+                    var memberId = queries.get("maThanhVien");
+                    $('#ddlThanhVienNhom').val(memberId)
+                }
+            },
+            complete: function () {
+                $('#ddlThanhVienNhom').chosen().trigger("chosen:updated");
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+        }
+
+    });
+
+   
+    function getTotalPage(totalRecord, limit) {
+        return totalRecord > limit ? Math.ceil(totalRecord / limit) : 1
+    }
+    function onClickPage(page) {
+        page = page;
+		pageClick = page;
+        getData(page, limit);
+    }
+    function renderGoPreviousPage(page) {
+        let newCurrentPage = page
+        if (page > 1) {
+            newCurrentPage = page - 1
+            return "<li class='paginate_button previous' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + newCurrentPage + ")'>"
+                + "<a href='javascript:;'>Trước</a>"
+                + "</li>"
+
+        } else {
+            return ""
+        }
+    }
+    function renderGoNextPage(page) {
+        if (page < totalPage) {
+            newCurrentPage = page + 1
+            return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + newCurrentPage + ")' >"
+                + "<a href='javascript:;'>Sau</a>"
+                + "</li>"
+
+        } else {
+            return ""
+        }
+    }
+    function renderGoLastPage(page) {
+
+        if (totalPage > page) {
+            return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + totalPage + ")' >"
+                + "<a href='javascript:;'>Trang cuối</a>"
+                + "</li>"
+        } else {
+            return ""
+        }
+    }
+    function renderGoFirstPage(page) {
+        if (totalPage > 1 && page > 1) {
+            return "<li class='paginate_button next' aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + 1 + ")' >"
+                + "<a href='javascript:;'>Trang đầu</a>"
+                + "</li>"
+        } else {
+            return ""
+        }
+    }
+    function renderPageList(page, limit, totalRc) {
+        totalPage = getTotalPage(totalRc, limit)
+        var startPage = page > pageMargin ? page - pageMargin : 1;
+        var endPage = pageMargin + page > totalPage ? totalPage : pageMargin + page
+        var paging = $("#paging");
+        paging.empty();
+        var first = renderGoFirstPage(page)
+        var next = renderGoNextPage(page);
+        var prev = renderGoPreviousPage(page)
+        var last = renderGoLastPage(page)
+        paging.append(first)
+        paging.append(prev)
+        for (var i = startPage; i <= endPage; i++) {
+            var active = page == i ? ' active' : '';
+            var item = "<li class='paginate_button" + active + " aria-controls='dtSource' tabindex='0' onclick='onClickPage(" + i + ")' >"
+                + "<a href='javascript:;'>" + i + "</a>"
+                + "</li>"
+            paging.append(item)
+        }
+        paging.append(next);
+        paging.append(last)
+    }
+    function onSelectLimit() {
+        limit = $("#ddlLimit").val()
+        getData(page, limit)
+        //alert(limit)
+    }
+    function renderTextLink(textValue, href, type, className = '') {
+        let display = getValueDisplay(textValue, type);
+        return "<td class='text-left " + className + "'><a href='" + href + "' >" + display + "</a></td>";
+    }
+    function renderRow(index, rowData) {
+		
+		
+        page = queries.get("page");
+        if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+            page = 1;
+        else
+            page = parseInt(page)
+        limit = queries.get("limit")
+        if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+            limit = 10;
+        else
+            limit = parseInt(limit)
+        var stt = (page - 1) * limit + index + 1;
+        var strhtmlData = "<tr role='row' class = 'odd'>"
+		+ renderTextCenter(stt)
+		+ renderTextLeft(rowData.TraceCode)
+        + renderTextLeft(rowData.CustomerId)
+		+ renderTextLink(rowData.FullNamme, '/ocb/OcbProfile/' + rowData.Id)
+		+ renderTextLeft(rowData.IdCard);
+		
+		
+		
+		if( userData.IDUser == 1) 
+		{
+			strhtmlData += renderTextLeft(rowData.Mobilephone);
+		}
+		                              				
+
+				 
+			
+		strhtmlData += renderTextLeft(rowData.LastNoteVietBank, '', 'tb-row-breakword');
+		
+			
+		strhtmlData += renderTextLeft(rowData.ProductId)
+        + renderStatusDisplay(rowData.StatusName)
+		+ renderTextLeft(rowData.RequestLoanTerm)
+        + renderTextLeft(rowData.Vbf)
+		+ renderTextLeft(rowData.CreatedUser)
+		+ renderTextLeft(rowData.CreatedTime, 'datetime', 'w-150')
+		+ renderTextLeft(rowData.UpdateUser)
+		+ renderTextLeft(rowData.UpdatedTime, 'datetime', 'w-150')
+		
+		
+		+ renderTextLeft(rowData.FirstCallStatus)
+		+renderTextLeft(rowData.LastCallStatus) 	
+		+ renderTextLeft(rowData.LastCallDate, 'datetime', 'w-150')
+            + renderTextLeft(rowData.Volumn)
+            + renderTextLeft(rowData.DisbureseDate, 'datetime', 'w-150')
+		+ renderTextLeft(rowData.lastCallNote)
+		+ renderTextLeft(rowData.AppProcessStatus)
+		+ renderTextLeft(rowData.AppStatusForSale)
+		
+		+ renderTextLeft(rowData.DisbureseMonth);
+		
+
+            + "</tr>";
+		return strhtmlData;
+    }
+    function getValueDisplay(value, type='TYPE') {
+
+        if (isNullOrWhiteSpace(type))
+            return value
+        if (isNullOrWhiteSpace(value))
+            value = ''
+        var display = value;
+        switch (type) {
+            case 'datetime':
+                display = FormatDateTimeDMY(value);
+            default: break;
+        }
+        return display;
+    }
+
+    function renderTextLeft(value, type='test', className = '') {
+        let display = getValueDisplay(value, type)
+
+
+        return "<td class='text-left " + className + "'>" + display + "</td>";
+    }
+
+    function renderTextCenter(value, type) {
+        return "<td class='text-center'>" + getValueDisplay(value, type) + "</td>";
+    }
+
+    function renderStatus(status, profileId) {
+
+       var statusString = "";
+        let btnRefresh = "<a class='pull-right' onclick='updateStatus(" + profileId + ")' style='cursor: pointer;'><i class='fa fa-refresh bigger - 110'></i></a>"
+        return renderStatusDisplay(status, btnRefresh)
+
+    }
+    function renderCoBaoHiem(CoBaoHiem) {
+        var value = ""
+        if (CoBaoHiem == true)
+            value = "<td class='text-left'> <div class='orange bolder' title='Không có bảo hiểm' ><i class=\"ace-icon fa fa-ban bigger-130\"></i></div> </td>";
+        else
+            value = "<td class='text-left'> <div class='green bolder'title = 'Có bảo hiểm' > <i class=\"ace-icon glyphicon glyphicon-ok bigger-130\"></i></div> </td>";
+        return value;
+    }
+    function updateStatus(profileId) {
+        showBlock($('#panel_body'), strLoading);
+
+        $.ajax({
+            traditional: true,
+            url: `/MCredit/UpdateTempProfileStatus?profileId=${profileId}`,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                if (data.success == true) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: `Thành công`,
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+
+                    }, function () {
+
+                        getData(queries.get("page"), queries.get("limit"));
+
+                      //  window.location.href = "/MCredit/Temp";
+
+                    });
+                }
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+    }
+    function renderTableBody(datas) {
+        var table = $("#dtSource")
+        var tableBody = $("#dtSource").find("tbody");
+        tableBody.empty();
+        if (isNullOrNoItem(datas))
+            return;
+
+        $.each(datas, function (index, item) {
+
+            tableBody.append(renderRow(index, item));
+        });
+
+    }
+    $(document).ready(function () {
+
+            page = queries.get("page");
+            if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+                page = 1;
+            else
+                page = parseInt(page)
+            limit = queries.get("limit")
+            if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                limit = 10;
+            else
+            limit = parseInt(limit)
+        var status = decodeURI(queries.get("status"))
+        if (!isNullOrWhiteSpace(status)) {
+            let arrStatus = status.split(',')
+            $('#ddlStatus').val(arrStatus).chosen().trigger("chosen:updated")
+        }
+            getData(page, limit)
+          
+
+
+    });
+
+
+    function getData(page, limit, memberId = 0, isPopState = false)
+    {
+
+        showBlock($('#panel_body'), strLoading);
+        $.ajax( {
+                url: '@Url.Action("SearchTemps", "Ocb")',
+                type: "GET",
+                contentType: "application/json",
+            data: {
+                'page': page,
+                'limit': limit,
+                'freeText': $("#txtFreeText").val(),
+                'status': "0",
+                'type': "draft",
+				'fromDate':$('#txtFromDate').val(),
+				'toDate': $('#txtToDate').val(),
+			    'loaiNgay': $('input[name="radio-ngay"]:checked').val(),
+                'status': !isNullOrNoItem($("#ddlStatus").val()) ? $("#ddlStatus").val().toString() : ""
+            },
+            success: function (response) {
+
+                if (response.success == true) {
+                    totalRecord = response.data.TotalRecord;
+                    var search = this.url.replace("/MCredit/Temp", "");
+                    search = search.replace("/Ocb/SearchTemps","")
+                    queries = new URLSearchParams(search)
+
+                    page = queries.get("page");
+                    if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
+                        page = 1;
+                    else
+                        page = parseInt(page)
+                    limit = queries.get("limit")
+
+                    if (isNullOrUndefined(limit) || isNullOrWhiteSpace(limit))
+                        limit = 10;
+                    else
+                        limit = parseInt(limit)
+
+                    renderTableBody(response.data.Datas)
+                    //renderGoPreviousPage(page);
+                    renderPageList(page, limit, totalRecord)
+                    $("#dtSource_info").text("Tổng: " + totalRecord + " items");
+                    $("#totalPage").text("Tổng: " + totalPage + " trang");
+                }
+                else {
+                    swal({
+                        title: "",
+                        text: response.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+
+            },
+                error: function (jqXHR, exception) {
+                    showError(jqXHR, exception);
+                },
+                complete: function () {
+                    $('#panel_body').unblock();
+                    if (!isPopState) {
+                        var requestUrl = this.url.replace("SearchTemps", "Temp")
+                        window.history.pushState(requestUrl, this.title, requestUrl)
+                    }
+            }
+        })
+
+    }
+	
+	
+	  function GetAllStatus() {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetAllStatus", "Ocb")',
+
+            success: function (data) {
+                $('#ddlStatus').empty();
+                $('#ddlStatus').append("<option value='-1'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#ddlStatus').append("<option value='" + optionData.Code + "'>" + optionData.Name + "</option>");
+                    });
+                }
+                $('#ddlStatus').chosen().trigger("chosen:updated");
+
+            },
+            complete: function () {
+			
+		
+				  $('#ddlStatus').chosen().trigger("chosen:updated");
+
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+
+
+     $('#btnImport').click(function (e) {
+        
+        var formData = new FormData();
+        formData.append('file', $('#file')[0].files[0]);
+       
+        $.ajax({
+            url: '/Ocb/Import',
+            type: 'POST',
+            data: formData,
+            processData: false,  // tell jQuery not to process the data
+            contentType: false,  // tell jQuery not to set contentType
+            success: function (data) {
+
+                if (data != null && data.success) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                        window.location = window.location
+                    });
+                }
+
+                else {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    })
+    
+   
+</script>
+
+<script>
+
+    function XemHS(id) {
+        window.location = "/QuanLyHoSo/XemHSByID?id=" + id;
+    }
+    function SuaHS(id) {
+        window.location = "/QuanLyHoSo/SuaHSByID?id=" + id;
+    }
+</script>

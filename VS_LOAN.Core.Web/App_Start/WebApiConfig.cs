@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using VS_LOAN.Core.Web.Controllers;
 
 namespace VS_LOAN.Core.Web
 {
@@ -9,6 +10,8 @@ namespace VS_LOAN.Core.Web
     {
         public static void Register(HttpConfiguration config)
         {
+
+          
             config.MapHttpAttributeRoutes();
             config.Routes.MapHttpRoute(
               name: "RpcApi",
@@ -16,17 +19,23 @@ namespace VS_LOAN.Core.Web
               defaults: new { id = RouteParameter.Optional }
          );
 
+
+
             config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
+            name: "uploadStatus1ds",
+            routeTemplate: "api/{action}",
+            defaults: new { controller = "MiraeApi", Action = RouteParameter.Optional }
             );
+
+
 
             //config.Routes.MapHttpRoute(
             //    name: "DefaultApi",
             //    routeTemplate: "api/{controller}/{id}",
             //    defaults: new { id = RouteParameter.Optional }
             //);
+
+            config.Filters.Add(new BasicAuthenticationAttribute());
         }
     }
 }

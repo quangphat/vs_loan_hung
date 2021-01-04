@@ -765,6 +765,101 @@ function renderOneItemFileOcb(key, fileId, titleName, isRequire = false, classNa
     }
 
 }
+
+
+
+function renderOneItemFilMirae(key, fileId, titleName, isRequire = false, className = '', generateInput = false,
+    _initialPreview = [],
+    _initialPreviewConfig = [],
+    allowUpload = false,
+    isFileExist = false,
+    onUpload = null,
+    onDelete = null,
+    filesUploaded = [],
+    type = 8
+) {
+
+    let content = "<div class='col-sm-3'";
+
+    if (!isNullOrUndefined(titleName)) {
+        if (isRequire) {
+            content += '<h5  class="header green ' + className + '">' + titleName + '<span class="required">(*)</span></h5>';
+        }
+        else {
+            content += '<h5  class="header green ' + className + '">' + titleName + '<span > </span></h5>';
+        }
+    }
+
+    content += "<div class=\"file-loading\">";
+    content += "<input class='attachFile' key=" + key + " id=\"attachFile-" + fileId + "\" type=\"file\">";
+    content += "</div>";
+    content += "</div>";
+    $('#tailieu-' + key).append(content);
+    if (generateInput === true) {
+        let item = $("#attachFile-" + fileId);
+
+        fileId = (isFileExist === true) ? fileId : getNewGuid();
+        let uploadUrl = isFileExist === true ? '/ocb/UploadFile?key=' + key + "&fileId=" + fileId + "&type=" + type : '/Mirae/UploadFile?key=' + key + "&fileId=0" + "&type=" + type;
+        $(item).fileinput({
+            uploadUrl: allowUpload === true ? uploadUrl : null,
+            validateInitialCount: true,
+            maxFileSize: 25 * 1024,
+            msgSizeTooLarge: 'File "{name}" (<b>{size} KB</b>)'
+                + 'exceeds maximum allowed upload size of <b>{25} MB</b>. '
+                + 'Please retry your upload!',
+            allowedFileExtensions: ['png', 'jpg', 'pdf','.docx'],
+            initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+            initialPreviewFileType: 'image',
+            overwriteInitial: false,
+            showUploadedThumbs: false,
+            uploadAsync: false,
+            showClose: false,
+            showCaption: false,
+            showBrowse: false,
+            showUpload: false, // hide upload button
+            showRemove: false, // hide remove button
+            browseOnZoneClick: true,
+            removeLabel: '',
+            fileId: fileId,
+            btnDeleteId: 'btn-remove-file-' + fileId,
+            dropZoneTitle: 'Kéo và thả tập tin vào đây',
+            dropZoneClickTitle: '<br>(hoặc nhấp để chọn)',
+            removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+            removeTitle: 'Cancel or reset changes',
+            elErrorContainer: '#kv-avatar-errors-2',
+            msgErrorClass: 'alert alert-block alert-danger',
+            //layoutTemplates: { main2: '{preview} ' + btnCust + ' {remove} {browse}' },
+            //layoutTemplates: { footer: '' },
+            initialPreview: _initialPreview,
+            initialPreviewDownloadUrl: _initialPreview,
+            initialPreviewConfig: _initialPreviewConfig,
+            fileActionSettings: {
+                showDownload: true,
+                showRemove: true,
+                showUpload: true,
+                showZoom: true,
+                showDrag: false
+            },
+            append: true
+
+        }).on("filebatchselected", function (event, files) {
+            if (countFilesByKey(filesUploaded, parseInt(key)) >= 50)
+                return;
+            $(item).fileinput("upload");
+        }).on("filebeforedelete", function (event, key2, fileId) {
+
+            if (onDelete !== null) {
+                onDelete(key, fileId, isFileExist);
+            }
+        }).on('filebatchuploadsuccess', function (event, data) {
+            if (onUpload !== null) {
+                onUpload(key, fileId, data.response, isFileExist);
+            }
+        });
+
+    }
+
+}
 function isReach5Files(filesUpload, key) {
     if (isNullOrWhiteSpace(key))
         return true;

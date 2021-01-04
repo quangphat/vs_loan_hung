@@ -74,6 +74,10 @@ namespace VS_LOAN.Core.Web
             container.RegisterType<IOcbBusiness, OcbBusiness>();
             container.RegisterType<IMiraeRepository, MiraeRepository>();
             container.RegisterType<MCreditService.Interfaces.IMiraeService, MiraeService>();
+            
+            container.RegisterType<IMiraeDeferRepository, MiraeDeferRepository>();
+            container.RegisterType<IMiraeMaratialRepository, MiraeMaratialRepository>();
+
             // container.RegisterType<IProductRepository, ProductRepository>();
         }
     }

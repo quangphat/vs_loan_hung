@@ -186,6 +186,8 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
         public string Refferee1_Phone1 { get; set; }
 
         public string Refferee1_Phone2 { get; set; }
+        public string Fixphone { get; set; }
+        public string Mobile { get; set; }
 
         public MiraeEditModel()
         {

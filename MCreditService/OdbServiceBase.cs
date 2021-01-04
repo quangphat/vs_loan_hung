@@ -20,13 +20,13 @@ namespace MCreditService
     public abstract class OdbServiceBase
     {
         //pro
-        protected static string _baseUrl = "https://prepro.m-ocb.com.vn:8889";
-        protected static string _userName = "vietbank_test";
-        protected static string _password = "Abc@1234!";
+        //protected static string _baseUrl = "https://prepro.m-ocb.com.vn:8889";
+        //protected static string _userName = "vietbank_test";
+        //protected static string _password = "Abc@1234!";
 
-        //protected static string _baseUrl = "https://etecom.com-b.vn:8889/token";
-        //protected static string _userName = "vietbank";
-        //protected static string _password = "))W9/6b5xg3QeF6y";
+        protected static string _baseUrl = "https://etecom.com-b.vn:8889/token";
+        protected static string _userName = "vietbank";
+        protected static string _password = "))W9/6b5xg3QeF6y";
 
 
 
