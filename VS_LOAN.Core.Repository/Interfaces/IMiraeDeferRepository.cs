@@ -14,10 +14,10 @@ namespace VS_LOAN.Core.Repository.Interfaces
         Task<int> Add(MiraeDeferModel model);
         Task<bool> Resove(int id, int status, int appid, int userid);
         Task<MiraeDeferModel> GetTemProfileByMcId(int id);
+        Task<List<MiraeDeferSearchModel>> GetDeferById(int appId);
+        Task<int> AddPushPendHistory(PushPundHistoryModel model);
 
+        Task<List<MiraeDeferType>> GetAllMiraeDeferType();
 
-        Task<List<MiraeDeferSearchModel>> GetTempProfiles(int page, int limit, string freeText, int userId, string status = null, DateTime? fromDate = null, DateTime? toDate = null, int loaiNgay = 0, int manhom = 0,
-
-      int mathanhvien = 0);
     }
 }

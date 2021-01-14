@@ -1,7 +1,7 @@
 ﻿@using VS_LOAN.Core.Web.Resources;
 @using VS_LOAN.Core.Web.Helpers;
 @{
-    ViewBag.Title = "Mirae assets";
+    ViewBag.Title = "Comb-ODC";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <script type="text/javascript">
@@ -11,7 +11,7 @@
     <div class="breadcrumbs" id="breadcrumbs">
         <ul class="breadcrumb">
             <li>
-                <a href="javascript:void(0)">Quản lý trạng thái </a>
+                <a href="#">Danh sách hồ sơ QDE</a>
             </li>
         </ul>
     </div>
@@ -22,7 +22,6 @@
                     <div class="space-4"></div>
 
                     <div class="form-group">
-
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right">Tìm kiếm</label>
                         <div class="col-sm-5 col-xs-12 ">
                             <input type="text" class="form-control" id="txtFreeText" placeholder="Tìm kiếm" />
@@ -88,11 +87,7 @@
                             <a class="btn btn-primary" id="btn_search">
                                 Tìm kiếm
                             </a>
-                            <a class="btn btn-primary" href="/mirae/AddNew">
-                                Thêm mới
-                            </a>
-
-
+                        
                         </div>
 
                     </div>
@@ -124,7 +119,7 @@
                     <div class="pull-right tableTools-container"></div>
                 </div>
                 <div class="table-header">
-                   Danh sách hồ sơ 
+                    Danh sách hồ sơ
                 </div>
                 <div class="dataTables_wrapper form-inline no-footer">
                     <div class="row">
@@ -149,21 +144,15 @@
                         <table id="dtSource" class="report-table-custom table table-striped table-bordered table-hover">
                             <thead class="table-header">
                                 <tr>
-                                   <th class="center w-45">STT</th>
+                                    <th class="center w-45">STT</th>
                                     <th class="w-98">Mã app</th>
                                     <th class="m-w-150">Tên khách hàng</th>
                                     <th class="m-w-150">CMND</th>
                                      <th class="m-w-300"> Trạng thái bên MAFC</th>
-                                 
-
-
-                                    <th class="m-w-300">Đang Xử lý/ Chưa xử lý</th>
-                                  
                                     <th class="m-w-300">Last noted VietBank</th>
-                                     <th class="w-84">Mã nhân viên </th>
-                                   <th class="w-84">Nguời tạo </th>
+                                    <th class="w-94">Mã nhân viên</th>
+                                    <th class="w-84">Ngày tạo tạo</th>
                                     <th class="w-150">Ngày tạo</th>
-                                          <th class="w-84">Mã VBF cập nhật </th>
                                     <th class="w-84">Người Cập nhật</th>
                                     <th class="w-150">Ngày Cập nhật</th>
 
@@ -219,7 +208,7 @@
 	var userData = @Html.Raw(Json.Encode(GlobalData.User));
 
     $(document).ready(function e() {
-        //`derStatusList();
+        //renderStatusList();
 		GetAllStatus();
         $('#ddlStatus').chosen({ width: '100%', allow_single_deselect: true });
         window.addEventListener('popstate', function (e) {
@@ -462,35 +451,16 @@
         var strhtmlData = "<tr role='row' class = 'odd'>"
 		+ renderTextCenter(stt)
 		+ renderTextLeft(rowData.Appid)
-        + renderTextLink(rowData.Fname +" "+rowData.Mname + " " +rowData.Lname, '/mirae/mirae/' + rowData.Id)
-		+ renderTextLeft(rowData.Nationalid)
+        + renderTextLink(rowData.Fname +" "+rowData.Mname + " " +rowData.Lname, '/Mirae/Tracking/' + rowData.Id)
+		+ renderTextLeft(rowData.Nationalid);
 		+ renderTextLeft(rowData.Statusclient);
-      
-
-        if(   rowData.Statusclient =="QDE" || rowData.Statusclient =="DDE"|| rowData.Statusclient =="POR"  )
-        {
-               strhtmlData += renderTextLeft("Chưa xử lý", "tb-row-breakword");
-        }
-        else 	
-
-        {
-
-        strhtmlData += renderTextLeft("Đang xử lý", "tb-row-breakword");
-        }
-        
         strhtmlData += renderTextLeft(rowData.LastNoteVietBank, '', 'tb-row-breakword');
-
-
-	
-    
-      
         strhtmlData += renderTextLeft(rowData.Vbf)
-          + renderTextLeft(rowData.CreatedUser)
-        + renderTextLeft(rowData.CreatedTime, 'datetime', 'w-150')
-        + renderTextLeft(rowData.VbFUserUpdate)
-        + renderTextLeft(rowData.UpdateUser)
-        + renderTextLeft(rowData.UpdatedTime, 'datetime', 'w-150');
-	
+		+ renderCreatedTimeTextLeft(rowData.CreatedTime, 'datetime', 'w-150')
+		+ renderTextLeft(rowData.VbFUserUpdate)
+		+ renderTextLeft(rowData.UpdatedTime, 'datetime', 'w-150')
+		
+		
 		
 
             + "</tr>";
@@ -622,7 +592,7 @@
 
         showBlock($('#panel_body'), strLoading);
         $.ajax( {
-                url: '@Url.Action("SearchTemps", "mirae")',
+                url: '@Url.Action("SearchTemps", "Mirae")',
                 type: "GET",
                 contentType: "application/json",
             data: {

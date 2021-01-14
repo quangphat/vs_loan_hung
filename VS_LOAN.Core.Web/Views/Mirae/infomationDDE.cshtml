@@ -54,7 +54,7 @@
 						<label for="form-field-1" class="col-sm-2 control-label no-padding-right">Ngày tháng năm sinh<span class="required">(*)</span> </label>
                            <div class="col-sm-4">
                             <div class="input-group">
-                                <input class="form-control date-picker" id="dob" name ="dob" />
+                                <input class="form-control date-picker"  id="dob" name ="dob" />
                                 <span class="input-group-addon">
                                     <i class="fa fa-calendar bigger-110"></i>
                                 </span>
@@ -73,16 +73,46 @@
                     </div>
                    
 					
+<div class="form-group">
+        
+        <label class="col-sm-2 control-label no-padding-right">CMND Cũ(CCCD)</label>
+        <div class="col-sm-4">
+                <input type="text" id="notedetails" name ="notedetails" placeholder="CMND cũ" class="form-control" />
+        </div>
+        </div>
+                    
+      
+        <div class="form-group">
+            <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Nơi cấp<span class="required">(*)</span></label>
+            <div class="col-sm-4">
+                    <select id="idissuer"name ="idissuer" class="chosen-select form-control" data-placeholder="Nơi cấp CMND">
+                    <select>
+                    </div>
+            <label class="col-sm-2 control-label no-padding-right">Ngày cấp CMND/CCCD<span class="required">(*)</span></label>
+            <div class="col-sm-4">
+                <div class="input-group">
+                    <input class="form-control date-picker" name ="nationalidissuedate" id="nationalidissuedate" />
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar bigger-110"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    
 		
-					  <div class="form-group">
+					 <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">ĐTDĐ<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                             <input type="text" typeInput ="phoneInput"  id="phone" name ="phone" placeholder="Điện thoại di dộng" class="form-control" />
+                             <input type="text" typeInput ="phoneInput"  id="mobile" name ="Mobile" placeholder="Điện thoại di dộng" class="form-control" />
                         </div>
-                        <label class="col-sm-2 control-label no-padding-right">Email<span class="required">(*)</span></label>
+                    </div>
+
+	              <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại bàn<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                           <input type="text" id="email" name ="email"  placeholder="Nhập địa chỉ Email" class="form-control" />
+                             <input type="text" typeInput ="phoneInput"  id="fixphone" name ="fixphone" placeholder="Điện thoại di dộng" class="form-control" />
                         </div>
+                        
                     </div>
 
 
@@ -90,7 +120,7 @@
                         <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Mã số kinh doanh<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                        <select id="salesofficer"name ="salesofficer" class="chosen-select form-control" data-placeholder="Chọn cách xưng  hô">
+                        <select id="salesofficer"  name ="salesofficer" class="chosen-select form-control" data-placeholder="Chọn mã số kinh doanh">
                         <option value="MR">MR</option>
                         <option value="MRS">MRS </option>
 
@@ -115,16 +145,16 @@
             </div>
             
             <div class="form-group">
-                    <label class="col-sm-2 control-label no-padding-right">Trạng thái hôn nhân<span class="required">(*)</span></label>
+                    <label class="col-sm-2 control-label no-padding-right">Trình độ học vấn<span class="required">(*)</span></label>
                     <div class="col-sm-4">
-                    <select id="eduqualify"name ="eduqualify" class="chosen-select form-control" data-placeholder="Chọn cách xưng  hô">
-                    <option value="CE">COLLEGE OR EQUIVALENT    </option>
-                    <option value="HG">HIGH SCHOOL     </option>
+                    <select id="eduqualify"name ="eduqualify" class="chosen-select form-control" data-placeholder="Trình độ học vấn">
+                    <option value="CE">Cao đăng hoặc tương đương    </option>
+                    <option value="HG">Phổ thông( lớp12)    </option>
 
-                    <option value="LG">LOWER HIGH SCHOOL     </option>
-                    <option value="U">UNIVERSITY</option>
+                    <option value="LG">Dưới phổ thông     </option>
+                    <option value="U">Đại học</option>
 
-                    <option value="UU">UPPER UNIVERSITY</option>
+                    <option value="UU">Cao học</option>
 
 
                     <select>
@@ -134,36 +164,16 @@
 
          <div class="form-group">
                 
-                <label class="col-sm-2 control-label no-padding-right">Số người phụ thuộc<span class="required">(*)</span></label>
+                <label class="col-sm-2 control-label no-padding-right">Số người phụ thuộc</label>
                 <div class="col-sm-4">
-                        <input type="text" id="noofdependentin" name ="noofdependentin" placeholder="Mức thu nhập" class="form-control" />
+                        <input type="text" id="noofdependentin" name ="noofdependentin" placeholder="Số người phụ thuộc" class="form-control" />
                 </div>
                 
             </div>
 
-                
-      
-        <div class="form-group">
-            <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Nơi cấp<span class="required">(*)</span></label>
-            <div class="col-sm-4">
-             
 
-                <div class="col-sm-4">
-                    <select id="idissuer"name ="idissuer" class="chosen-select form-control" data-placeholder="Nơi cấp CMND">
-                    <select>
-                    </div>
-            </div>
-            <label class="col-sm-2 control-label no-padding-right">Ngày cấp CMND/CCCD<span class="required">(*)</span></label>
-            <div class="col-sm-4">
-                <div class="input-group">
-                    <input class="form-control date-picker" name ="nationalidissuedate" id="nationalidissuedate" />
-                    <span class="input-group-addon">
-                        <i class="fa fa-calendar bigger-110"></i>
-                    </span>
-                </div>
-            </div>
-        </div>
-    
+
+
 
         
 
@@ -171,7 +181,7 @@
         
         <label class="col-sm-2 control-label no-padding-right">Số sổ hộ khẩu<span class="required">(*)</span></label>
         <div class="col-sm-4">
-                <input type="text" id="familybooknumber" name ="familybooknumber" placeholder="Mức thu nhập" class="form-control" />
+                <input type="text" id="familybooknumber" name ="familybooknumber" placeholder="Sổ hộ khẩu" class="form-control" />
         </div>
 
         </div>
@@ -179,35 +189,33 @@
 
           <div class="form-group">
         
-        <label class="col-sm-2 control-label no-padding-right">Người hôn phối<span class="required">(*)</span></label>
+        <label class="col-sm-2 control-label no-padding-right">Người hôn phối</label>
         <div class="col-sm-4">
-                <input type="text" id="spousename" name ="spousename" placeholder="Mức thu nhập" class="form-control" />
+                <input type="text" id="spousename" name ="spousename" placeholder="Tên người hôn phối" class="form-control" />
         </div>
         </div>
 
         <div class="form-group">
         
-        <label class="col-sm-2 control-label no-padding-right">CMND người hôn phối<span class="required">(*)</span></label>
+        <label class="col-sm-2 control-label no-padding-right">CMND người hôn phối</label>
         <div class="col-sm-4">
-                <input type="text" id="spouse_id_c" name ="Spouse_id_c" placeholder="Mức thu nhập" class="form-control" />
+                <input type="text" id="spouse_id_c" name ="Spouse_id_c" placeholder="CMND người hôn phối" class="form-control" />
         </div>
-
+    </div>
     
 
-          <label class="col-sm-2 control-label no-padding-right">CMND Cũ người hôn phối<span class="required">(*)</span></label>
-        <div class="col-sm-4">
-                <input type="text" id="notedetails" name ="notedetails" placeholder="Chứng minh nhân dân cũ" class="form-control" />
-        </div>
-        </div>
 
+
+
+        
         
          <div class="form-group">
                 
-                <label class="col-sm-2 control-label no-padding-right">Payment channel<span class="required">(*)</span></label>
+                <label class="col-sm-2 control-label no-padding-right">Hình thức thanh toán<span class="required">(*)</span></label>
                 <div class="col-sm-4">
 
 
-                         <select id="paymentchannel"name ="paymentchannel" class="chosen-select form-control" data-placeholder="Chọn cách xưng  hô">
+                         <select id="paymentchannel"name ="paymentchannel" class="chosen-select form-control" data-placeholder="Hình thức thanh toán">
                         <option value="O">khấu trừ qua lương   </option>
                             <option value="C">trích nợ tự động    </option>
 
@@ -223,13 +231,13 @@
 
 
         
-         <div class="form-group">
+         <div class="form-group" style ="display:none">
                 
                 <label class="col-sm-2 control-label no-padding-right">Loan category<span class="required">(*)</span></label>
                 <div class="col-sm-4">
 
 
-                         <select id="categoryid"name ="categoryid" class="chosen-select form-control" data-placeholder="Chọn cách xưng  hô">
+                         <select id="categoryid"name ="categoryid"  class="chosen-select form-control" data-placeholder="Chọn cách xưng  hô">
                         <option value="TEL">TELESALE   </option>
                             <option value="DAN">ĐẶNG NAM    </option>
 
@@ -266,7 +274,7 @@
               
               <div class="col-sm-4">
                       
-                       <select id="bankname"name ="bankname" class="chosen-select form-control" data-placeholder="Chọn cách xưng  hô">
+                       <select id="bankname"name ="bankname" class="chosen-select form-control" data-placeholder="Chọn ngân hàng giải ngân">
                      
                             
                         <select>
@@ -279,9 +287,9 @@
 
          <div class="form-group">
                 
-                <label class="col-sm-2 control-label no-padding-right">Chi nhánh ngân hàng<span class="required">(*)</span></label>
+                <label class="col-sm-2 control-label no-padding-right">Chi nhánh ngân hàng</label>
                 <div class="col-sm-4">
-                        <input type="text" id="bankbranch" name ="bankbranch" placeholder="Mức thu nhập" class="form-control" />
+                        <input type="text" id="bankbranch" name ="bankbranch" placeholder="Nhập tên chi nhánh ngân hàng giải ngân" class="form-control" />
                 </div>
                 
             </div>
@@ -290,7 +298,7 @@
                 
                 <label class="col-sm-2 control-label no-padding-right">Số tài khoản<span class="required">(*)</span></label>
                 <div class="col-sm-4">
-                        <input type="text" id="accno" name ="accno" placeholder="Mức thu nhập" class="form-control" />
+                        <input type="text" id="accno" name ="accno" placeholder="Số tài khoản giải ngân" class="form-control" />
                 </div>
                 
             </div>
@@ -302,9 +310,9 @@
                 <div class="col-sm-4">
 
 
-                         <select id="acctype"name ="acctype" class="chosen-select form-control" data-placeholder="Chọn cách xưng  hô">
-                        <option value="SAVINGS">Tài khoản tiết kiệm  </option>
-                            <option value="CURRENT">CURRENT ACCOUNT   </option>
+                         <select id="acctype"name ="acctype" class="chosen-select form-control" data-placeholder="Chọn loại tài khoản">
+                           <option value="SAVINGS"  > Tài khoản tiết kiệm  </option>
+                            <option value="CURRENT" select >CURRENT ACCOUNT   </option>
                             <option value="OVRDRAFT">OVRDRAFT ACCOUNT   </option>
                             <option value="JOINT">JOINT ACCOUNT    </option>
 

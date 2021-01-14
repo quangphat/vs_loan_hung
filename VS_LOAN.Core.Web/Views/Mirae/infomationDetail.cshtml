@@ -1,0 +1,141 @@
+﻿
+
+@using VS_LOAN.Core.Web.Resources;
+
+<div class="main-content-inner">
+  
+    <div class="page-content" id="panel_body">
+        <div class="row">
+            <div class="col-xs-12">
+
+            
+
+                <h3 class="header smaller lighter blue">1.Thông tin khách hàng vay:</h3>
+                <form class="form-horizontal" role="form" id ="frmAdd">
+					
+                        @Html.Partial("infomationDDE")
+                         @Html.Partial("incomInfo") 
+<h3 class="header smaller lighter blue">5.Thông tin khoản vay:</h3>
+					
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Mục đích vay<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                        <select id="loanpurpose" name ="loanpurpose" class="chosen-select form-control">
+                        <option value="A">Mua hàng</option>
+                        <option value="M">Chi phí y tế</option>
+                        <option value="H">Sủa nhà</option>
+                        <option value="P">Khác</option>
+                        </select>
+
+                        </div>
+			      </div>
+
+
+
+	            <div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right">Sản phẩm vay<span class="required">(*)</span></label>
+                       <div class="col-sm-4">
+                            <select id="schemeid" name ="schemeid" class="chosen-select form-control">
+                               
+                        </select>
+                        
+						</div>
+			    </div>
+
+
+
+
+                
+            <div class="form-group">
+            <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số tiền vay<span class="required">(*)</span></label>
+            <div class="col-sm-4">
+                    <input type="text" id="totalloanamountreq" name ="totalloanamountreq" placeholder="Khoản vay" class="form-control" />
+            </div>
+
+            </div>
+
+            <div class="form-group">
+            <label class="col-sm-2 control-label no-padding-right">Thời hạn<span class="required">(*)</span></label>
+            <div class="col-sm-1">
+
+            <input type="text" id="tenure" name ="tenure" placeholder="Mô tả đường đi" class="form-control" />
+
+            </div>
+            <div class="col-sm-2">
+
+            <label class=" control-label">tháng</label>
+
+            </div>
+            </div>
+
+
+
+
+		
+				<div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">Mua bảo hiểm người vay *</label>
+                        <div class="col-sm-4">
+                            <label class="control-label no-padding-right">
+                                <input name="Laa_app_ins_applicable" id ="IsLaa_app_ins_applicableHas" type="radio"  value="true" class="ace">
+                                <span class="lbl"> Có</span>
+                            </label>
+                            <label class="control-label no-padding-right" style="margin-left:20px">
+                                <input name="Laa_app_ins_applicable" id ="IsLaa_app_ins_applicablesNo" type="radio" value="false" checked class="ace">
+                                <span class="lbl"> Không</span>
+                            </label>
+                        </div>
+
+                        
+                        
+				</div>
+
+           
+          
+
+                        @Html.Partial("CurrentAddress")
+        
+
+		    	          @Html.Partial("informationCarrer") 
+                   
+                          @Html.Partial("relationship") 
+    
+                </form>
+            </div>
+        </div>
+
+        
+
+
+         <div class="row">
+            <div class="col-xs-12">
+                <hr />
+                <form class="form-horizontal">
+                    <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Ghi chú hồ sơ</h4>
+                    <div class="form-group">
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
+                        <div class="col-md-11 col-sm-12 col-xs-12">
+                            <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
+                        </div>
+                    </div>
+
+                       <div class="pull-right">
+                      
+                        <a class="btn btn-sm btn-primary"  id="btn_Temp">
+
+                            Lưu lại
+                        </a>
+
+                       </div>
+
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+

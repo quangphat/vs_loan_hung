@@ -66,14 +66,15 @@
 <div class="tab">
   <button class="tablinks" onclick="openCity(event, 'London')" id="defaultOpen">Thông tin hồ sơ </button>
   <button class="tablinks" onclick="openCity(event, 'Paris')">Chứng từ tài liệu</button>
-  <button class="tablinks" onclick="openCity(event, 'Paris')">Thông tin defer</button>
+  <button class="tablinks" onclick="openCity(event, 'defer')">Quản lý defer</button>
 </div>
 
 <div id="London" class="tabcontent">
-   @Html.Partial("infomationDetail")
+ 
+ @Html.Partial("infomationApp", null, new ViewDataDictionary { { "isAdmin", ViewBag.isAdmin } })
 </div>
 <div id="Paris" class="tabcontent">
-  <div class="row">
+         <div class="row">
             <div class="col-xs-12">
                 <h3 class="header smaller lighter blue">3.Hồ sơ đính kèm:</h3>
                 <div class="row">
@@ -85,11 +86,24 @@
             </div>
 
         </div>
+
+     
 </div>
+
+
 <div id="Tokyo" class="tabcontent">
   <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
   <h3>Tokyo</h3>
   <p>Tokyo is the capital of Japan.</p>
+</div>
+
+
+<div id="defer" class="tabcontent">
+ @if( !string.IsNullOrEmpty(ViewBag.model.AppId ) )
+ {
+    @Html.Partial("deferApp", null, new ViewDataDictionary { { "appId", ViewBag.model.AppId } })
+
+ }
 </div>
 
         
@@ -116,11 +130,18 @@ function openCity(evt, cityName) {
 
   // Show the current tab, and add an "active" class to the button that opened the tab
   document.getElementById(cityName).style.display = "block";
-  evt.currentTarget.className += " active";
-    }
 
-   openCity(event, 'London');
+}
+
+
+  openCity(event, 'London');
+
+
 </script>
+
+
+
+
 
 
 
@@ -129,7 +150,7 @@ function openCity(evt, cityName) {
 
     $(document).ready(function () {
 
-     $('#salesofficer').chosen({ width: '100%', allow_single_deselect: true });
+         $('#salesofficer').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlSanPhamVay').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlCourier').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlHuyen').chosen({ width: '100%', allow_single_deselect: true });
@@ -147,6 +168,7 @@ function openCity(evt, cityName) {
         }).next().on(ace.click_event, function () {
             $(this).prev().focus();
         });
+
 
       $('#frmAdd select').each(
        function(index){  
@@ -224,6 +246,8 @@ function lowerFirstLetter(string) {
     function bindData()
     {
 
+     
+
         var model = @Html.Raw(Json.Encode(ViewBag.model));
      
         console.log(model);
@@ -233,10 +257,11 @@ function lowerFirstLetter(string) {
             var value = model[key];
                 if(keylower =="lname")
                 {
-                    debugger;
+                  
                 }
             
              if(value != "")
+
             {
 
                 var element = document.getElementById(keylower);
@@ -247,6 +272,7 @@ function lowerFirstLetter(string) {
                     if(element.classList.contains("date-picker"))
                     {
 	                    $('#'+keylower).val(SetFormatDateTimeDMY(value));
+                        
                     }
                     else 
                     {
@@ -258,8 +284,26 @@ function lowerFirstLetter(string) {
                 }       
                 
                 if (element instanceof HTMLSelectElement) { 
-                   
-                    element.value =value;
+                        
+
+                        var autobind =element.getAttribute("autobind");
+                        if(autobind =="false")
+                        {
+                            
+                     
+
+                        }
+                        else 
+                        {
+                            element.value = value;
+
+                             $('#'+keylower).chosen().trigger("chosen:updated");
+
+                        }
+                    
+
+                     
+                 
                 }    
                 
                 if (element instanceof HTMLTextAreaElement) {
@@ -285,7 +329,8 @@ function lowerFirstLetter(string) {
         LayDSTinh('ddlTinhPer');
         LayDSTinh('cityCompany');
 
-        
+      
+	
         $('#ddlTinhCur').on('change', function () {
                     LayDSHuyen(this.value,"ddlHuyenCur");
           });
@@ -343,7 +388,7 @@ function lowerFirstLetter(string) {
         }).next().on(ace.click_event, function () {
             $(this).prev().focus();
         });
-        //$("#txtBirhDay").datepicker({ dateFormat: 'yy/mm/dd' }).datepicker("setDate", new Date().getDay + 0);
+  
         $('#txtNationDate').datepicker({
             dateFormat: 'dd-mm-yy'
 
@@ -370,23 +415,73 @@ function lowerFirstLetter(string) {
         });
 
 
-var modelbind = @Html.Raw(Json.Encode(ViewBag.model));
-
+        var modelbind = @Html.Raw(Json.Encode(ViewBag.model));
+         bindData();
         LayDSTaiLieu(modelbind.Id);
         datamodel =modelbind;
 
-        laydanhsachtinh("#cityCompany", modelbind.CityCompany, modelbind.DistrictCompany, "#districtCompany" , "#wardCompany" , modelbind.WardCompany );
-        laydanhsachtinh("#ddlTinhPer", modelbind.AddressPer_City, modelbind.AddressPer_District, "#ddlHuyenPer" , "#ddlRewardPer" , modelbind.AddressPer_Ward );
-        laydanhsachtinh("#ddlTinhCur", modelbind.AddressCur_City, modelbind.AddressCur_District, "#ddlHuyenCur" , "#ddlRewardCur" , modelbind.AddressCur_Ward );
         LayDanhSachSaleOfficer();
         LayDSSanPham();
-
-        bindData();
-
-
         GetAllBank();
+        var modelbindViewbag = @Html.Raw(Json.Encode(ViewBag));        
+       laydanhsachtinh("#ddlTinhPer", modelbind.AddressPer_City, modelbind.AddressPer_District, "#ddlHuyenPer" , "#ddlRewardPer" , modelbind.AddressPer_Ward );
+        laydanhsachtinh("#ddlTinhCur", modelbind.AddressCur_City, modelbind.AddressCur_District, "#ddlHuyenCur" , "#ddlRewardCur" , modelbind.AddressCur_Ward );
+        laydanhsachtinh("#cityCompany", modelbind.CityCompany, modelbind.DistrictCompany, "#districtCompany" , "#wardCompany" , modelbind.WardCompany );
 
-        if(datamodel.IsDuplicateAdrees)
+
+
+  if( datamodel.addressCur_in_propertystatus =="R")
+  {
+      
+       if(val =="R")
+       {
+         $(".displayRoom").show();
+       }
+       else  {
+        $(".displayRoom").hide();
+
+       }
+
+      
+  }
+
+$("#maritalstatus").val(datamodel.Maritalstatus);
+$("#maritalstatus").chosen().trigger("chosen:updated");
+$("#eduqualify").val(datamodel.Eduqualify);
+$("#eduqualify").chosen().trigger("chosen:updated");
+$("#paymentchannel").val(datamodel.Paymentchannel);
+$("#paymentchannel").chosen().trigger("chosen:updated");
+$("#paymentchannel").val(datamodel.Paymentchannel);
+$("#paymentchannel").chosen().trigger("chosen:updated");
+$("#acctype").val(datamodel.Acctype);
+$("#acctype").chosen().trigger("chosen:updated");
+$("#acctype").val(datamodel.Acctype);
+$("#acctype").chosen().trigger("chosen:updated");
+$("#loanpurpose").val(datamodel.Loanpurpose);
+$("#loanpurpose").chosen().trigger("chosen:updated");
+$("#bankname").val(datamodel.Bankname);
+$("#bankname").chosen().trigger("chosen:updated");
+$("#schemeid").val(datamodel.Bankname);
+$("#schemeid").chosen().trigger("chosen:updated");
+$("#addressCur_in_propertystatus").val(datamodel.AddressCur_in_propertystatus);
+$("#addressCur_in_propertystatus").chosen().trigger("chosen:updated");
+
+$("#priority_c").val(datamodel.Priority_c);
+$("#priority_c").chosen().trigger("chosen:updated");
+$("#addresstype").val(datamodel.Addresstype);
+$("#addresstype").chosen().trigger("chosen:updated");
+$("#refferee1_Refereere1ation").val(datamodel.Refferee1_Refereere1ation);
+$("#refferee1_Refereerelation").chosen().trigger("chosen:updated");
+
+
+
+$("#refferee2_Refereere1ation").val(datamodel.Refferee2_Refereere1ation);
+$("#refferee2_Refereerelation").chosen().trigger("chosen:updated");
+
+
+$("#refferee3_Refereere1ation").val(datamodel.Refferee3_Refereere1ation);
+$("#refferee3_Refereerelation").chosen().trigger("chosen:updated");
+     if(datamodel.IsDuplicateAdrees)
         {
                 $('#IsDuplicateAdreesHas').prop('checked',true);
         }
@@ -421,8 +516,11 @@ var modelbind = @Html.Raw(Json.Encode(ViewBag.model));
         }
 
 
+
+
         });
 
+            
 
 
 
@@ -452,6 +550,10 @@ var modelbind = @Html.Raw(Json.Encode(ViewBag.model));
                   
             },
             complete: function () {
+
+                
+     
+      
             },
             error: function (jqXHR, exception) {
                 showError(jqXHR, exception);
@@ -479,9 +581,6 @@ var modelbind = @Html.Raw(Json.Encode(ViewBag.model));
                     });
                 }
                 $(idTinh).chosen().trigger("chosen:updated");
-
-                 
-                  
             },
             complete: function () {
          
@@ -494,10 +593,8 @@ var modelbind = @Html.Raw(Json.Encode(ViewBag.model));
         });
     }
 
-    
-
-
     function laydanhsachReward(ciityCode,idReward) {
+
         idReward='#'+idReward;
         $.ajax({
             type: "get",
@@ -620,18 +717,9 @@ var modelbind = @Html.Raw(Json.Encode(ViewBag.model));
         });
     }
 
-    
-    
     var save = false;
     var savePush = false;
     
-
-
-   
-
-  
-
-
  function laydanhsachtinh(controlId, value = null, districtValue = 0, districtControlId , controliIDReward , valueReward ) {
  
     $.ajax({
@@ -651,9 +739,11 @@ var modelbind = @Html.Raw(Json.Encode(ViewBag.model));
                 $(controlId).val(value);
             $(controlId).chosen().trigger("chosen:updated");
 
+            console.log(value);
+
         },
         complete: function () {
-
+         
             getDistricts(districtControlId, value,districtValue,controliIDReward , valueReward );
 
         },
@@ -679,12 +769,17 @@ function getDistricts(controlId,provinceId, value = null,controliIDReward , valu
                         $(controlId).append("<option value='" + optionData.Lmc_CITYID_C + "'>" + optionData.Lmc_CITYNAME_C + "</option>");
                     });
             }
-            if (value !== null)
-                $(controlId).val(value);
-            $(controlId).chosen().trigger("chosen:updated");
+           
+            
+               
+
+          
         },
         complete: function () {
-
+             if (value !== null)
+             $(controlId).val(value);
+               $(controlId).chosen().trigger("chosen:updated");
+            
              getReward(controliIDReward,value,valueReward);
 
         },
@@ -710,14 +805,27 @@ function getReward(controlId, value, valueReward = null) {
                 $.each(data.data, function (index, optionData) {
                         $(controlId).append("<option value='" + optionData.Zipcode + "'>" + optionData.Zipdesc + "</option>");
                     });
+
+
+               
             }
 
         },
         complete: function () {
+           
 
-               if (valueReward !== null)
-                $(controlId).val(valueReward);
+              if (valueReward !== null)
+              {
+                  valueReward = valueReward.toString();
+
+                  if(valueReward.length <5)
+                  {
+                      valueReward = "0" + valueReward;
+                  }
+                 $(controlId).val(valueReward);
                 $(controlId).chosen().trigger("chosen:updated");
+              }
+               
         },
         error: function (jqXHR, exception) {
             showError(jqXHR, exception);
@@ -916,10 +1024,10 @@ function GetAllBank() {
                 }
             }
            
-            if (isReach5Files(filesUpload, key) === false) {
-                let newAttachhFileId = getNewGuid();
-                renderOneItemFilMirae(key, newAttachhFileId, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile)
-            }
+            //if (isReach5Files(filesUpload, key) === false) {
+              //  let newAttachhFileId = getNewGuid();
+                //renderOneItemFilMirae(key, newAttachhFileId, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile)
+           // }
         }
         function onDeleteFile(key, fileId, isExist) {
             
@@ -987,10 +1095,10 @@ function GetAllBank() {
         });
         }
 
+        
 
+        $('#btn_Temp').click(function (e) {
 
-$('#btn_Temp').click(function (e) {
- 
 
         
         var data = {};
@@ -1054,8 +1162,7 @@ $('#btn_Temp').click(function (e) {
         });
     });
 
-  
-          function uploadfile()
+      function uploadfile()
     {
 
 
@@ -1065,11 +1172,12 @@ $('#btn_Temp').click(function (e) {
 
     function uploadfileSubmi()
     {
-
-
+  
          PushFile(@ViewBag.model.Id);
 
     }
+
+
 
 
  var savepushFile = false;
@@ -1163,7 +1271,7 @@ $('#btn_Temp').click(function (e) {
                 if (data.success == true) {
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
-                        text: "Tạo QDE thành công",
+                        text: "Tạo DDE thành công",
                         type: "success",
                         timer: 4000,
                         showConfirmButton: true,
@@ -1173,9 +1281,16 @@ $('#btn_Temp').click(function (e) {
                     });
                 }
                 else {
+
+                    var mesageError = data.code;
+
+                    if(data.code =="")
+                    {
+                        mesageError = data.data.Message;
+                    }
                     swal({
-                        title: "@Html.Raw(Global.Message_Title)",
-                        text: data.code,
+                        title: "Có lỗi",
+                        text: mesageError,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,
@@ -1198,11 +1313,74 @@ $('#btn_Temp').click(function (e) {
     });
 
  var savePush = false;
-    
+
+var savePushToDDE = false;
+
+ $('#btnQDEToDDE').click(function (e) {
+        var data = {};
+
+        if(savePushToDDE ==true)
+        {
+            return;
+        }
+        
+        var dataobject = {
+            id : datamodel.Id
+        };
+      
+           var objectSend = JSON.stringify(dataobject);
+      
+        $.ajax({
+            traditional: true,
+            url: '@Url.Action("QDEToDDE", "Mirae")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                if (data.success == true) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: "Chuyển đổi trạng thái sang DDE thành công",
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                            savePushToDDE = false;
+                            window.location = window.location;
+                    });
+                }
+                else {
+                    var MessageCode = data.code;
+                    if(MessageCode =="")
+                    {
+                        MessageCode = data.data.Message;
+                    }
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.data.Message,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                          savePushToDDE =false;
+                        
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+
+                 $('#panel_body').unblock();
+                  savePushToDDE = false;
+            },
+        });
+    });
 
 
-var savePushToPOR = false;
-
+var savePushToPOR =false;
  $('#btnDDEToPOR').click(function (e) {
         var data = {};
 
@@ -1227,7 +1405,7 @@ var savePushToPOR = false;
                 if (data.success == true) {
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
-                        text: "Tạo QDE thành công",
+                        text: "Chuyển đổi trạng thái POR thành công",
                         type: "success",
                         timer: 4000,
                         showConfirmButton: true,
@@ -1237,15 +1415,20 @@ var savePushToPOR = false;
                     });
                 }
                 else {
+                    var MessageCode = data.code;
+                    if(MessageCode =="")
+                    {
+                        MessageCode = data.data.Message;
+                    }
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
-                        text: data.code,
+                        text: data.data.Message,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
                           savePushToPOR =false;
-                          window.location = window.location;
+                        
                     });
                 }
             },
@@ -1263,14 +1446,7 @@ var savePushToPOR = false;
 
 
     $('#btnCreateQDE').click(function (e) {
- 
-
         var data = {};
-     
-		
-       
-      
-
         if(savePush ==true)
         {
             return;
@@ -1302,15 +1478,22 @@ var savePushToPOR = false;
                     });
                 }
                 else {
+                   
+
+                    var errorCode = data.code;
+                    if(errorCode =="")
+                    {
+                        errorCode = data.data.Message;
+                    }
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
-                        text: data.code,
+                        text: errorCode,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
                           savePush =false;
-                          window.location = window.location;
+                       
                     });
                 }
             },
@@ -1325,7 +1508,23 @@ var savePushToPOR = false;
             },
         });
     });
+ 
 
+ $("#addressCur_in_propertystatus").change(function () {
+        var val = this.value;
+       
+       if(val =="R")
+       {
+         $(".displayRoom").show();
+       }
+       else  {
+        $(".displayRoom").hide();
+
+       }
+
+
+
+    });
  
 </script>
 

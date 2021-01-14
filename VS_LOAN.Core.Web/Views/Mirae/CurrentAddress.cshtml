@@ -1,16 +1,16 @@
 ﻿
-             <h3 class="header smaller lighter blue">2. Thông tin địa chỉ cư trú </h3>
+             <h3 class="header smaller lighter blue">3. Thông tin địa chỉ hiện tai</h3>
 
                 <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Tỉnh/TP<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                        <select id="ddlTinhCur" name ="ddlTinhCur" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
+                        <select id="ddlTinhCur" autobind ="false" name ="ddlTinhCur" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
                             <option value="0"></option>
                         </select>
                         </div>
                         <label class="col-sm-2 control-label no-padding-right">Quận/huyện<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                        <select id="ddlHuyenCur" name ="ddlHuyenCur" class="chosen-select form-control" data-placeholder="Chọn quận huyện">
+                        <select id="ddlHuyenCur" name ="ddlHuyenCur" autobind ="false" class="chosen-select form-control" data-placeholder="Chọn quận huyện">
                             <option value="0"></option>
                         </select>
                         </div>
@@ -22,24 +22,25 @@
                        
 						<label class="col-sm-2 control-label no-padding-right">Phường/Xã<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlRewardCur"  name ="ddlRewardCur" class="chosen-select form-control" data-placeholder="Chọn đường">
+                            <select id="ddlRewardCur"  autobind ="false"  name ="ddlRewardCur" class="chosen-select form-control" data-placeholder="Chọn phường xã">
                                 <option value="0"></option>
                             </select>
                         </div>
 						
                     </div>
-					
-				
-					
-
-
-			
-					
-			     <div class="form-group">
+					    <div class="form-group">
+                
+                <label class="col-sm-2 control-label no-padding-right">Địa chỉ<span class="required">(*)</span></label>
+                <div class="col-sm-4">
+                        <input type="text" id="addressCur_address1stline" name ="address1stlineCur" placeholder="Địa chỉ hiện tại" class="form-control" />
+                </div>
+                
+            </div>
+            <div class="form-group">
                       <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Thời gian sinh sống<span class="required">(*)</span></label>
                        <div class="col-sm-10">
                             <label class="control-label no-padding-right">
-                              <input class = "lbl" type="text" id="addressCur_stayduratcuradd_y" name ="stayduratcuradd_yCur" placeholder="Email" class="form-control" />
+                              <input class = "lbl" type="text" id="addressCur_stayduratcuradd_y" name ="stayduratcuradd_yCur" placeholder="Năm" class="form-control" />
                                 <span class="lbl">Năm</span>
                             </label>
                             <label class="control-label no-padding-right" style="margin-left:20px">
@@ -56,21 +57,11 @@
 						
 						
                     </div>
-					
-			
-                    <div class="form-group">
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại bàn<span class="required">(*)</span></label>
-                        <div class="col-sm-4">
-                            <input type="text" id="addressCur_mobile" name="mobileCur" placeholder="Điện thoại bàn" class="form-control" />
-                        </div>
-
-                    </div>
-					
 				
 					 <div class="form-group">
                          <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tình trạng sở hữu nhà hiện tại<span class="required">(*)</span></label>
                        <div class="col-sm-4">
-                            <select id="addressCur_in_propertystatus"  name="propertystatusCur" class="chosen-select form-control">
+                            <select id="addressCur_in_propertystatus"  autobind ="false"  name="propertystatusCur" class="chosen-select form-control">
                                 <option value="O">Sở hữu</option>
                                 <option value="R">Thuê</option>
 								 <option value="F">Nhà người thân</option>
@@ -79,45 +70,42 @@
                     </div>
 					</div>
 					
-					
-					
-                     <div class="form-group">
+			     		
+
+              <div class="form-group">
+                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Điện thoại bàn</label>
+                        <div class="col-sm-4">
+                            <input type="text" id="addressCur_mobile" name="mobileCur" placeholder="Điện thoại bàn" class="form-control" />
+                        </div>
+
+                    </div>
+
+			
+                     <div class="form-group displayRoom"   >
                          <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Đối với khách hàng thuê  trọ(nếu có)<span class="required">(*)</span></label>
                       
                         
                     </div>
-					
-                    
-                    <div class="form-group">
+
+                        <div class="form-group displayRoom" >
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên chủ nhà trọ<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <input type="text" id="addressCur_landlord" name ="landlordCur" placeholder="nhân chủ nhà trọ" class="form-control" />
                         </div>
-                        
-                    </div>
 
+                        </div>
 
-                       <div class="form-group">
+                        <div class="form-group displayRoom">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Phòng trọ số<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <input type="text" id="addressCur_roomno" name ="roomnoCur" placeholder="Phòng trọ số" class="form-control" />
                         </div>
-                        
-                    </div>
-				
-					  
-					   <div class="form-group">
-                       
-						<label class="col-sm-2 control-label no-padding-right">Địa chỉ<span class="required">(*)</span></label>
-                        <div class="col-sm-4">
-                              <input type="text" id="addressCur_address1stline" name ="address1stlineCur" placeholder="Địa chỉ hộ khẩu" class="form-control" />
+
                         </div>
-						
-                    </div>
-					
+
 					 <div class="form-group">
                        
-						<label class="col-sm-2 control-label no-padding-right">Mô tả đường đi<span class="required">(*)</span></label>
+						<label class="col-sm-2 control-label no-padding-right">Mô tả đường đi</label>
                         <div class="col-sm-4">
                               <input type="text" id="addressCur_landmark" name ="landmarkCur"  placeholder="Mô tả đường đi" class="form-control" />
                         </div>
@@ -125,7 +113,7 @@
                     </div>
 					
 				<div class="form-group">
-                        <label class="col-sm-2 control-label no-padding-right">Địa chỉ thường trú trùng địa chỉ hiện tại *</label>
+                        <label class="col-sm-2 control-label no-padding-right">Địa chỉ thường trú trùng địa chỉ hiện tại</label>
                         <div class="col-sm-4">
                             <label class="control-label no-padding-right">
                                 <input name="IsDuplicateAdrees" id ="IsDuplicateAdreesHas" type="radio"  value="true" class="ace">
@@ -142,7 +130,7 @@
 
 
 
-             <h3 class="header smaller lighter blue">3. Thông tin địa chỉ thường trú</h3>
+             <h3 class="header smaller lighter blue">4. Thông tin địa chỉ thường trú</h3>
                     
 					
                     <div class="form-group">
@@ -159,13 +147,13 @@
                       <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Tỉnh/TP<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlTinhPer" name ="ddlTinhPer" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
+                            <select id="ddlTinhPer" autobind ="false"  name ="ddlTinhPer" class="chosen-select form-control" data-placeholder="Chọn tỉnh thành phố">
                                 <option value="0"></option>
                             </select>
                         </div>
                         <label class="col-sm-2 control-label no-padding-right">Quận/huyện<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <select id="ddlHuyenPer" name ="ddlHuyenPer" class="chosen-select form-control" data-placeholder="Chọn quận huyện">
+                            <select id="ddlHuyenPer" autobind ="false" name ="ddlHuyenPer" class="chosen-select form-control" data-placeholder="Chọn quận huyện">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -178,7 +166,7 @@
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Phường/Xã<span class="required">(*)</span></label>
 					
                         <div class="col-sm-4">
-                            <select id="ddlRewardPer" style ="width:100%"  name ="DdlRewardPer" banclass="chosen-select form-control" data-placeholder="Chọn đường">
+                            <select id="ddlRewardPer" autobind ="false" style ="width:100%"  name ="DdlRewardPer" banclass="chosen-select form-control" data-placeholder="Chọn đường">
                                 <option value="0"></option>
                             </select>
                         </div>
@@ -192,11 +180,11 @@
                     
 					
 
-			<div class="form-group">
+			 <div class="form-group" style="display:none">
                       <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Thời gian sinh sống<span class="required">(*)</span></label>
                        <div class="col-sm-10">
                             <label class="control-label no-padding-right">
-                              <input class = "lbl" type="text" id="addressPer_stayduratPeradd_y" name ="StayduratPeradd_mPer" placeholder="Email" class="form-control" />
+                              <input class = "lbl" type="text" id="addressPer_stayduratPeradd_y" name ="StayduratPeradd_mPer" placeholder="Năm" class="form-control" />
                                 <span class="lbl">Năm</span>
                             </label>
                             <label class="control-label no-padding-right" style="margin-left:20px">
@@ -224,11 +212,11 @@
                     </div>
 					
 				
-					 <div class="form-group">
+							 <div class="form-group" style="display:none">
                          <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tình trạng sở hữu nhà hiện tại<span class="required">(*)</span></label>
                        <div class="col-sm-4">
-                            <select id="propertystatusCur"  name="propertystatusPer" class="chosen-select form-control">
-                                <option value="O">Sở hữu</option>
+                            <select id="propertystatusCur"   name="propertystatusPer" class="chosen-select form-control">
+                                <option select value="O">Sở hữu</option>
                                 <option value="R">Thuê</option>
 								 <option value="F">Nhà người thân</option>
                             </select>
@@ -238,14 +226,14 @@
 					
 					
 					
-                     <div class="form-group">
+                		 <div class="form-group" style="display:none">
                          <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Đối với khách hàng thuê  trọ(nếu có)<span class="required">(*)</span></label>
                       
                         
                     </div>
 					
                     
-                    <div class="form-group">
+                   		 <div class="form-group" style="display:none">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên chủ nhà trọ<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <input type="text" id="addressPer_landlord" name ="landlordPer" placeholder="nhân chủ nhà trọ" class="form-control" />
@@ -254,7 +242,7 @@
                     </div>
 
 
-                       <div class="form-group">
+                      		 <div class="form-group" style="display:none">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Phòng trọ số<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <input type="text" id="addressPer_roomno" name ="roomnoPer" placeholder="Phòng trọ số" class="form-control" />
@@ -265,7 +253,7 @@
 					  
 					
 					
-					 <div class="form-group">
+					 <div class="form-group" style="display:none">
                        
 						<label class="col-sm-2 control-label no-padding-right">Mô tả đường đi<span class="required">(*)</span></label>
                         <div class="col-sm-4">

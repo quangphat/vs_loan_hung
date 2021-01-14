@@ -1,0 +1,338 @@
+﻿@using VS_LOAN.Core.Web.Resources;
+@using VS_LOAN.Core.Web.Helpers;
+@model string
+@{
+    string appId = this.ViewData.ContainsKey("appId") ? this.ViewData["appId"].ToString() : string.Empty;
+}
+<div class="main-content-inner" id ="deferId">
+ 
+ 
+
+
+        <div class="row">
+            <div class="col-xs-12">
+                <form class="form-horizontal" role="form" id ="frmReSove"  enctype="multipart/form-data"
+                       action="/MiraeDefer/PushPendHistory" method="POST">>
+                    <div class="space-4"></div>
+                        <div class="form-group">
+
+                        <label class="col-sm-2 control-label no-padding-right">Mã app</label>
+                        <div class="col-sm-4">
+                        <input type="text" readonly name ="appId" value="@appId" placeholder="Mã app" class="form-control" />
+                        </div>
+                        </div>
+
+                    <div class="form-group">
+
+                        <label class="col-sm-2 control-label no-padding-right">Trạng thái defer</label>
+                        <div class="col-sm-4">
+                       
+            
+                         <select  name ="deferStatus" id ="deferStatus" class="chosen-select form-control">
+                                <option select value="Y">Yes</option>
+                                <option value="N">No</option>
+                            </select>
+                        </div>
+                        </div>
+
+
+
+                     <div class="form-group">
+
+                        <label class="col-sm-2 control-label no-padding-right">Loại chứng từ cần bổ sung</label>
+                        <div class="col-sm-4">
+                       
+                         <select  name ="documentType" id ="documentType" class="chosen-select form-control">
+                                <option select value="Y">Yes</option>
+                                <option value="N">No</option>
+                            </select>
+                        </div>
+                         </div>
+
+
+
+
+                     <div class="form-group">
+
+                        <label class="col-sm-2 control-label no-padding-right" for ="document" >File chứng từ bổ sung</label>
+                        <div class="col-sm-4">
+                                   <input type="file" id="document" name="document">
+                        </div>
+                   </div>
+
+                 
+
+                      <div class="form-group">
+
+                        <label class="col-sm-2 control-label no-padding-right">Comment</label>
+                        <div class="col-sm-4">
+                        <input type="text" name ="comment" id ="comment" placeholder="Ghi chú" class="form-control" />
+                        </div>
+                        </div>
+                    
+                    <div class="form-group text-right">
+                        <div class="col-xs-12 ">
+                           
+                            <input  type ="submit" class="btn btn-primary" id = "btnResolve" value ="Bổ sung hồ sơ">
+                             
+
+                        </div>
+
+                    </div>
+                </form>
+            
+               
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="clearfix">
+                    <div class="pull-right tableTools-container"></div>
+                </div>
+                <div class="table-header">
+                   Danh sách defer
+                </div>
+               
+                <!-- div.table-responsive -->
+                <!-- div.dataTables_borderWrap -->
+                <div class="col">
+                    <div class="report-table-custom--overflow">
+                        <table id="dataDefer" class="report-table-custom table table-striped table-bordered table-hover">
+                            <thead class="table-header">
+                                <tr>
+                                    <th class="center w-45">STT</th>
+                                      <th class="w-98">AppId</th>
+                                    <th class="w-98">Defer code</th>
+                                    <th class="m-w-200">Defer node </th>
+                                    <th class="w-150">Defer time </th>                                
+                                    <th class="w-150">Ngày tạo</th>
+                                  
+                                
+
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="clearfix">
+                <div class="one-row no-gutters justify-content-between paginate">
+                    <div class="col-auto">
+                        <div class="dataTables_info" id="dtSource_info" role="status" aria-live="polite"></div>
+                    </div>
+                   
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+       
+    </div>
+</div>
+<script>
+
+ 
+ $(document).ready(function e() {
+     $('#documentType').chosen({ width: '100%', allow_single_deselect: true });
+     getData();
+     getAllDocumentType();
+ });
+
+
+function getAllDocumentType() {
+        
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetAllMiraeDeferType", "MiraeDefer")',
+            data: { },
+            success: function (data) {
+                allProduct = data;
+                $('#documentType').empty();
+                $('#documentType').append("<option value=''> Không bổ sung chứng từ</option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#documentType').append("<option value='" + optionData.Key + "'>" + optionData.Ten + "</option>");
+                    });
+                }
+                $('#documentType').chosen().trigger("chosen:updated");
+
+            },
+            complete: function () {
+            
+               
+                  
+             },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+    function getData()
+    {
+    var strLoading = '@Global.Message_Loading';
+
+        $.ajax( {
+                 type: "GET",
+                url: '/MiraeDefer/GetAlLDefer?appId=' + @appId,
+             
+                contentType: "application/json",
+          
+            success: function (response) {
+
+                if (response.success == true) {
+                   
+                    renderTableBody(response.data.Datas)
+                    //renderGoPreviousPage(page);
+            
+                }
+                else {
+                    swal({
+                        title: "",
+                        text: response.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+
+            },
+                error: function (jqXHR, exception) {
+                    showError(jqXHR, exception);
+                },
+                complete: function () {
+                    
+                  
+            }
+        })
+
+    }
+
+     function renderTableBody(datas) {
+        var table = $("#dataDefer")
+        var tableBody = $("#dataDefer").find("tbody");
+        tableBody.empty();
+        if (isNullOrNoItem(datas))
+            return;
+
+        $.each(datas, function (index, item) {
+
+            tableBody.append(renderRow(index, item));
+        });
+
+    }
+
+      function renderRow(index, rowData) {
+		
+	
+        var stt = index + 1;
+        var strhtmlData = "<tr role='row' class = 'odd'>"
+		+ renderTextCenter(stt)
+		+ renderTextLeft(rowData.Appid)
+        + renderTextLink(rowData.Defer_code)
+		+ renderTextLeft(rowData.Defer_note)
+        + renderTextLeft(rowData.Defer_time, 'datetime', 'w-150')
+        + renderTextLeft(rowData.CreatedTime, 'datetime', 'w-150');
+	
+		
+
+            + "</tr>";
+		return strhtmlData;
+    }
+
+
+var ispushResolve = true;
+$('#frmReSove').submit(function(e) {
+    e.preventDefault(); // stop the standard form submission
+
+    debugger;
+    var documentType = $("#documentType").val();
+
+    if(documentType == "")
+    {
+        if ($('#comment').val() == "") {
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Bạn chưa điền comment",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+            return;
+        }
+
+    }
+
+    else 
+
+    {
+
+        if( document.getElementById("document").files.length == 0 ){
+            swal({
+                title: "@Html.Raw(Global.Message_Title)",
+                text: "Bạn chưa chọn file chứng từ",
+                type: "error",
+                timer: 4000,
+                showConfirmButton: true,
+            });
+        }
+    }
+    if(ispushResolve==false)
+    {
+        return;
+    }
+
+    ispushResolve = false;
+
+
+
+    $.ajax({
+        url: this.action,
+        type: this.method,
+        data: new FormData(this),
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+          
+            var dataReponse = data.data;
+            if (data.success == true) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: dataReponse.Message,
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                            ispushResolve = true;
+                           
+                    });
+                }
+                else {
+                   
+
+                    swal({
+                        title: "bổ sung hồ sơ thất bại",
+                        text: dataReponse.Message,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                          ispushResolve =true;
+                       
+                    });
+                }
+          
+            
+        
+        },
+        error: function(xhr, error, status) {
+            console.log(error, status);
+            ispushResolve = true;
+        }
+    });
+});
+	
+
+</script>
+

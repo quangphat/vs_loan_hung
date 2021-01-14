@@ -44,15 +44,14 @@ namespace MCreditService
 
         public async Task<CheckCustomerResponseModel> CheckCustomer(string searchVal, string partner)
         {
+
             var client = new HttpClient();
-            client.BaseAddress = new Uri(_baseUrl);
-            client.DefaultRequestHeaders.Add("Authorization", "Basic Y2hlY2tjdXN0b21lcjptYWZjMTIzNV4jJCVeIw==");
-           
+            client.BaseAddress = new Uri(_baseUrl);          
+            client.DefaultRequestHeaders.Add("Authorization", "Basic M3AtY2hlY2tjdXN0b21lci1zYms6cFppYTBJWFJ0OUlaWjR2aGFTZXhFOXlCSGljdEQ5Vjc=");
             client.DefaultRequestHeaders.Accept.Add(
             new MediaTypeWithQualityHeaderValue(_contentType));
-            var url = _checkValidData;
+            var url = "/thirdparty/checkcustomer";
             var request = new CheckCustomerRequestModel() {
-
                 partner = partner,
                 searchVal =searchVal
             };
@@ -69,19 +68,14 @@ namespace MCreditService
             {
                 var content = await response.Content.ReadAsStringAsync();
                 CheckCustomerResponseModel contributors = JsonConvert.DeserializeObject<CheckCustomerResponseModel>(content);
-
                 return contributors;
             }
 
         }
         public async Task<bool> CheckAuthen ()
         {
-
-
-           
-            if (AllProvince != null || AllWard == null || AllDistrict == null)
-            {
-                
+            if (AllProvince ==null)
+            {    
                 await GetAllProvince(new MiraeCityRequest());
                 await GetAllWard(new MiraeCityRequest());
                 await GetDistrict(new MiraeCityRequest());
@@ -135,7 +129,6 @@ namespace MCreditService
             return true;
 
         }
-
         public async Task<MiraeQDELeadRePonse> QDESubmit(MiraeQDELeadReQuest model)
         {
 
@@ -147,54 +140,41 @@ namespace MCreditService
             model.in_bankbranchcode = "01";
             model.in_head = "NETINCOM";
             model.in_frequency = "MONTHLY";
-            model.in_sourcechannel = "ADVT";
+  
             model.in_possipbranch = "14";
             model.in_creditofficercode = "EXT_SBK";
             model.in_sourcechannel = "ADVT";
-            //model.in_tenure = 13;
-           
-            //model.in_totalloanamountreq = 15000000;
-
-
             model.in_possipbranch = "14";
-    
-
             model.in_per_cont = "100";
             model.in_debit_credit = "P";
-  
-
             model.in_referalgroup = "3";
+            model.in_natureofbuss = "";
             model.in_previousjobmth = 0;
             model.in_previousjobyear = 0;
-            
-         
-
-
+            model.in_natureofbuss = "hoat dong lam thue cac cong viec trong cac hgd,sx sp vat chat va dich vu tu tieu dung cua ho gia dinh";
             //model.in_tenure = 12;
             client.BaseAddress = new Uri(_baseUrl);
-            client.DefaultRequestHeaders.Add("Authorization", "Basic ZGF0YWVudHJ5bWNpOm1pcmFlNTIzNDUhQCMlJA==");
+            if(string.IsNullOrEmpty(model.in_tax_code))
+            {
+                model.in_tax_code = "1111111111";
+            }
+            client.DefaultRequestHeaders.Add("Authorization", "Basic M3AtZGF0YWVudHJ5LXNiazp1aDlObFVtTkR3anN1Y3BHaFF5d202YndrOXlobEdBaA==");
             client.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue(_contentType));
             var url = _createLead;
             var json = JsonConvert.SerializeObject(model);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
-
             var response = await client.PostAsync(url, data);
             if (response.IsSuccessStatusCode)
             {
             var content = await response.Content.ReadAsStringAsync();
             var resultReponse = JsonConvert.DeserializeObject<MiraeQDELeadRePonse>(content);
             var dataReponse = resultReponse.Data;
-
-              
-
              return resultReponse;
             }
             return new MiraeQDELeadRePonse();
 
         }
-
-
         public async Task<MiraeDDELeadRePonse> DDESubmit(MiraeDDELeadReQuest model)
         {
 
@@ -203,7 +183,7 @@ namespace MCreditService
             client.BaseAddress = new Uri(_baseUrl);
 
 
-            client.DefaultRequestHeaders.Add("Authorization", "Basic ZGF0YWVudHJ5bWNpOm1pcmFlNTIzNDUhQCMlJA==");
+            client.DefaultRequestHeaders.Add("Authorization", "Basic M3AtZGF0YWVudHJ5LXNiazp1aDlObFVtTkR3anN1Y3BHaFF5d202YndrOXlobEdBaA==");
             client.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue(_contentType));
 
@@ -226,14 +206,11 @@ namespace MCreditService
             return new MiraeDDELeadRePonse();
 
         }
-
-
         public async Task<QDEToDDERePonse> QDEToDDE(QDEToDDEReQuest model)
         {
-
             var client = new HttpClient();
             client.BaseAddress = new Uri(_baseUrl);
-            client.DefaultRequestHeaders.Add("Authorization", "Basic ZGF0YWVudHJ5bWNpOm1pcmFlNTIzNDUhQCMlJA==");
+            client.DefaultRequestHeaders.Add("Authorization", "Basic M3AtZGF0YWVudHJ5LXNiazp1aDlObFVtTkR3anN1Y3BHaFF5d202YndrOXlobEdBaA==");
             client.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue(_contentType));
             var url = _createLead;
@@ -252,15 +229,12 @@ namespace MCreditService
                 return new QDEToDDERePonse();
             }
         }
-
-
-
         public async Task<DDEToPOReponse> DDEToPoR(DDEToPORReQuest model)
         {
 
             var client = new HttpClient();
             client.BaseAddress = new Uri(_baseUrl);
-            client.DefaultRequestHeaders.Add("Authorization", "Basic ZGF0YWVudHJ5bWNpOm1pcmFlNTIzNDUhQCMlJA==");
+            client.DefaultRequestHeaders.Add("Authorization", "Basic M3AtZGF0YWVudHJ5LXNiazp1aDlObFVtTkR3anN1Y3BHaFF5d202YndrOXlobEdBaA==");
             client.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue(_contentType));
             var url = _createLead;
@@ -279,26 +253,22 @@ namespace MCreditService
                 return new DDEToPOReponse();
             }
         }
-
-
         private static async Task<T> GetMasterData<T>(string httpMethod,
             string route, string objectRequest)
         {
             using (var client = new HttpClient())
             {
-
-                var userName = "masterdatamci";
-                var passwd = "mafc32412^&%^$";
+                var userName = "EXT_SBK";
+                var passwd = "mafc123!";
                 var authToken = Encoding.ASCII.GetBytes($"{userName}:{passwd}");
-                client.DefaultRequestHeaders.Add("Authorization", "Basic bWFzdGVyZGF0YW1jaTptYWZjMzI0MTJeJiVeJA==");
+                client.DefaultRequestHeaders.Add("Authorization", "Basic M3AtZGF0YWVudHJ5bWQtc2JrOkF4eGV2bjVFNUh5QjkyQ2wyYUJOR3RlbFlyblVkbWZr");
                 var request = new MiraeCityRequest()
                 {
                     msgName = objectRequest
 
                 };
-                var url = "masterdatamci";
+                var url = "/thirdparty/dataentryMD";
                 client.BaseAddress = new Uri(_baseUrl);
-
                 var json = JsonConvert.SerializeObject(request);
                 var data = new StringContent(json, Encoding.UTF8, "application/json");
                 var response = await client.PostAsync(url, data);
@@ -310,10 +280,8 @@ namespace MCreditService
                 }
                 else
                 {
-
                     return (T)Activator.CreateInstance(typeof(T));
                 }
-
             }
         }
         public async Task<MiraeCityResponseModel> GetAllProvince(MiraeCityRequest model)
@@ -326,8 +294,6 @@ namespace MCreditService
             return result;
 
         }
-
-        
         public async Task<MiraeDistrictItemResponseModel> GetDistrict(MiraeCityRequest model)
         {
 
@@ -340,7 +306,6 @@ namespace MCreditService
 
 
         }
-
         public async Task<MiraeAllWardResponseModel> GetAllWard(MiraeCityRequest model)
         {
             var result = await GetMasterData<MiraeAllWardResponseModel>("post", "masterdatamci", "getWard");
@@ -350,22 +315,14 @@ namespace MCreditService
             return result;
 
         }
-
         public Task<MiraeCityResponseModel> GetAllCity(MiraeCityRequest model)
         {
             throw new NotImplementedException();
         }
-
-
-
         public static List<SaleOfficeReponseItem> AllOfficeUser { get; set; }
-
         public static List<BankItem> AllBank { get; set; }
-
         public static List<SchemeReponseItem> Allproduct { get; set; }
-
         public static List<SelectItem> AllSelectUser { get; set; }
-
         public async Task<SchemeReponseModel> GetAllProduct(SchemeRequestModel model)
         {
             var result = await GetMasterData<SchemeReponseModel>("post", "masterdatamci", "getSchemes");
@@ -376,7 +333,6 @@ namespace MCreditService
 
 
         }
-
         public async Task<SelectUserReponseModel> GetAllUser(SelectUserRequestModel model)
         {
             var result = await GetMasterData<SelectUserReponseModel>("post", "masterdatamci", "getSecUser");
@@ -385,16 +341,15 @@ namespace MCreditService
 
             return result;
         }
-
         public async Task<SaleOfficeReponseModel> GetAllSaleOffice(SaleOfficeRequestModel model)
         {
             var result = await GetMasterData<SaleOfficeReponseModel>("post", "masterdatamci", "getSaleOffice");
 
-            AllOfficeUser = result.Data;
+            AllOfficeUser = result.Data.Where(x => x.Inspectorname.Contains("SBK")).ToList();
+     
 
             return result;
         }
-
         public async Task<BankReponseModel> GetAllBank(BankRequestModel model)
         {
             var result = await GetMasterData<BankReponseModel>("post", "masterdatamci", model.msgName);
@@ -403,24 +358,19 @@ namespace MCreditService
 
             return result;
         }
-
-
         public async Task<PushToUNDReponse> PushToUND (MultipartFormDataContent request)
         {
-            //gettailieu 
-            var client = new HttpClient();
-            client.BaseAddress = new Uri("https://apigw-staging.mafc.vn");
-            client.DefaultRequestHeaders.Add("Authorization", "Basic ZGF0YWVudHJ5Om1hZmNkYXRhZW50cnkkJSYkIUAj");
-            var url = "/dataentry/openapi/pushUnderSystem";
+           
+               //gettailieu 
+               var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            client.DefaultRequestHeaders.Add("Authorization", "Basic M3AtcHVzaHVuZGVyc3lzdGVtLXNiazpBcmE3cFQ1clFzM1R3RVc4WnR1dWMycTEzdmRUMkhCaQ==");
+            var url = "/thirdparty/pushundersystem";
             var response = await client.PostAsync(url, request);
             if (response.IsSuccessStatusCode)
             {
-
-             
                 var content = await response.Content.ReadAsStringAsync();
                 var resultReponse = JsonConvert.DeserializeObject<PushToUNDReponse>(content);
-
-              
                 return resultReponse;
             }
             else
@@ -429,10 +379,27 @@ namespace MCreditService
             }
          
         }
-
-        public async Task<PushToHistoryReponse> PushToPendHistory(PushToHistoryRequest request)
+        public async Task<PushToHistoryReponse> PushToPendHistory(MultipartFormDataContent request)
         {
-            return new PushToHistoryReponse();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            client.DefaultRequestHeaders.Add("Authorization", "Basic M3AtcHVzaHBlbmhpc3Rvcnktc2JrOnRqSG9PTTZkRHN0eHU3VVNqeWFWQ1J2a243UThrQVI4");
+            var url = "/thirdparty/pushpenhistory";
+            var response = await client.PostAsync(url, request);
+            if (response.IsSuccessStatusCode)
+            {
+
+
+                var content = await response.Content.ReadAsStringAsync();
+                var resultReponse = JsonConvert.DeserializeObject<PushToHistoryReponse>(content);
+
+
+                return resultReponse;
+            }
+            else
+            {
+                return new PushToHistoryReponse();
+            }
         }
     }
 }

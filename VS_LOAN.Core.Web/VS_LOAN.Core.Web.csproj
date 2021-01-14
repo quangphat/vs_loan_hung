@@ -235,6 +235,7 @@
     <Compile Include="Controllers\MiraeApiController.cs" />
     <Compile Include="Controllers\MiraeController.cs" />
     <Compile Include="Controllers\MiraeDeferController.cs" />
+    <Compile Include="Controllers\MiraeStatusController.cs" />
     <Compile Include="Controllers\OcbController.cs" />
     <Compile Include="Controllers\MCreditController.cs" />
     <Compile Include="Controllers\QuanLyHoSoController.cs" />
@@ -1794,6 +1795,8 @@
     <Content Include="Views\Mirae\CheckCIC.cshtml" />
     <Content Include="Views\MiraeDefer\Temp.cshtml" />
     <Content Include="Views\MiraeDefer\viewDDE.cshtml" />
+    <Content Include="Views\Mirae\miraeStatus.cshtml" />
+    <Content Include="Views\Mirae\CheckCIC - Copy %282%29.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

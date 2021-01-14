@@ -116,10 +116,14 @@
             contentType: "application/json; charset=utf-8",
             data: objectSend,
             success: function (data) {
-                if (data.success == true) {
+                debugger;
+                var result =data.data.Data;
+                if (result.StatusNumber == "0") {
+
+                    
                     swal({
                         title: "Thành công",
-                        text: 'Thành công',
+                        text: 'Đủ điều kiện',
                         type: "success",
                         timer: 4000,
                         showConfirmButton: true,
@@ -129,8 +133,8 @@
                 }
                 else {
                     swal({
-                        title: "@Html.Raw(Global.Message_Title)",
-                        text: data.messages,
+                        title: "Khách hàng",
+                        text: 'Không đủ điều kiện',
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,

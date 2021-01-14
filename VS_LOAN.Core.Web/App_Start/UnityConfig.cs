@@ -78,7 +78,7 @@ namespace VS_LOAN.Core.Web
             container.RegisterType<IMiraeDeferRepository, MiraeDeferRepository>();
             container.RegisterType<IMiraeMaratialRepository, MiraeMaratialRepository>();
 
-            // container.RegisterType<IProductRepository, ProductRepository>();
+  
         }
     }
 }

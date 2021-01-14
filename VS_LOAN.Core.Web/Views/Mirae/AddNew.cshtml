@@ -1,4 +1,72 @@
-﻿@using VS_LOAN.Core.Web.Resources;
+﻿<script>
+function openCity(evt, cityName) {
+  var i, x, tablinks;
+  x = document.getElementsByClassName("city");
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < x.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" w3-red", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " w3-red";
+}
+
+   openCity(event, 'London');
+</script>
+<style>
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+  height: 100vh;
+}
+
+/* Style the close button */
+.topright {
+  float: right;
+  cursor: pointer;
+  font-size: 28px;
+}
+
+.topright:hover {color: red;}
+</style>
+
+
+@using VS_LOAN.Core.Web.Resources;
 @{
     ViewBag.Title = "Tạo hồ sơ";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,193 +75,56 @@
 <script type="text/javascript">
     SetActiveMenu('@ViewBag.formindex', 2);
 </script>
+
+
 <div class="main-content-inner">
-    <div class="breadcrumbs" id="breadcrumbs">
-        <ul class="breadcrumb">
-            <li>
-                <i class="fa fa-caret-right"></i>
-                <a href="#">Tạo hồ sợ QDE</a>
-            </li>
-        </ul>
-    </div>
+  
     <div class="page-content" id="panel_body">
-        <div class="row">
+
+
+<div class="tab">
+  <button class="tablinks" onclick="openCity(event, 'London')" id="defaultOpen">Thông tin hồ sơ </button>
+  <button class="tablinks" onclick="openCity(event, 'Paris')">Chứng từ tài liệu</button>
+  <button class="tablinks" onclick="openCity(event, 'Paris')">Thông tin defer</button>
+</div>
+
+<div id="London" class="tabcontent">
+   @Html.Partial("infomationDetail")
+</div>
+<div id="Paris" class="tabcontent">
+  <div class="row">
             <div class="col-xs-12">
-                <h3 class="header smaller lighter blue">1.Thông tin khách hàng vay:</h3>
-                <form class="form-horizontal" role="form" id ="frmAdd">
-                   
-					
-					 
-					    @Html.Partial("infomation")
-					
-					<h3 class="header smaller lighter blue">3.Thông tin khoản vay:</h3>
-
-
-
-					
-					<div class="form-group">
-						<label class="col-sm-2 control-label no-padding-right">Mục đích khoản vay<span class="required">(*)</span></label>
-                       <div class="col-sm-4">
-                            <select id="loanpurpose" name ="loanpurpose" class="chosen-select form-control">
-                                    <option value="A">Mua hàng</option>
-                                <option value="M">Chi phí y tế</option>
-								 <option value="H">Sủa nhà</option>
-								 <option value="P">Khác</option>
-                        </select>
-                        
-						</div>
-					</div>
-
-
-	            <div class="form-group">
-						<label class="col-sm-2 control-label no-padding-right">Mục đích vay<span class="required">(*)</span></label>
-                       <div class="col-sm-4">
-                            <select id="schemeid" name ="schemeid" class="chosen-select form-control">
-                            
-                        </select>
-                        
-						</div>
-			    </div>
-
-
-
-           
-				
-                <div class="form-group">
-						<label class="col-sm-2 control-label no-padding-right">Số tiền đề nghị bao gồm<span class="required">(*)</span></label>
-                      
-			    </div>
-              
-
-
-                
-					<div class="form-group">
-                        <label for="form-field-1" class="col-sm-2 control-label no-padding-right">A. Khoản vay tiêu dùng*:<span class="required">(*)</span></label>
-                        <div class="col-sm-4">
-                             <input type="text" id="totalloanamountreq" name ="totalloanamountreq" placeholder="Khoản vay" class="form-control" />
-                        </div>
-                        <label class="col-sm-2 control-label no-padding-right">Bằng chữ(*): <span class="required">(*)</span></label>
-                        <div class="col-sm-4">
-                           <input type="text" id="totalloanamountreqText" name="totalloanamountreqText" placeholder="Email" class="form-control" />
-                        </div>
+                <h3 class="header smaller lighter blue">3.Hồ sơ đính kèm:</h3>
+                <div class="row">
+                    <div class="col-xs-12" style="overflow-y: scroll;max-height:400px;">
+                        <form class="form-horizontal" role="form" id="lstTailieu"></form>
                     </div>
-					
-
-
-				    <div class="form-group">
-                <label class="col-sm-2 control-label no-padding-right">Thời hạn<span class="required">(*)</span></label>
-                <div class="col-sm-1">
-                
-                     <input type="text" id="tenure" name ="tenure" placeholder="Mô tả đường đi" class="form-control" />
- 
-                </div>
-                  <div class="col-sm-2">
-                
-                       <label class=" control-label">tháng</label>
-                   
-                </div>
                 </div>
 
+            </div>
 
-
-
-		
-			<div class="form-group">
-                        <label class="col-sm-2 control-label no-padding-right">Mua bảo hiểm người vay *</label>
-                        <div class="col-sm-4">
-                            <label class="control-label no-padding-right">
-                                <input name="Laa_app_ins_applicable" id ="IsLaa_app_ins_applicableHas" type="radio"  value="true" class="ace">
-                                <span class="lbl"> Có</span>
-                            </label>
-                            <label class="control-label no-padding-right" style="margin-left:20px">
-                                <input name="Laa_app_ins_applicable" id ="IsLaa_app_ins_applicablesNo" type="radio" value="false" checked class="ace">
-                                <span class="lbl"> Không</span>
-                            </label>
-                        </div>
-
-                        
-                        
-				</div>
-
-                    <div class="form-group">
-
-                    <label class="col-sm-2 control-label no-padding-right">Lý do từ chỗi mua bảo hiểm<span class="required">(*)</span></label>
-                    <div class="col-sm-4">
-                    <input type="text" id="reasonReject" placeholder="Lý do từ chối mua bảo hiểm" name ="reasonReject"  class="form-control" />
-                    </div>
-
-                    </div>
-
-    
-                       @Html.Partial("CurrentAddress")
-      
-           
-
-		
-                    
-<!-- 
-     <div class="form-group">
-                
-                      <label class="col-sm-2 control-label no-padding-right">Tổng số tiền đề nghị vay<span class="required">(*)</span></label>
-                     <div class="col-sm-4">
-                        <input type="text" id="txtCMND" placeholder="Tổng số tiền đề nghị vay" class="form-control" />
-                     </div>
-                
-                  </div>
-
-
-
- -->
-               
-
-
-
-					
-
-                             @Html.Partial("informationCarrer") 
-
-
-              
-                       @Html.Partial("incomInfo") 
-
-
-                         @Html.Partial("relationship") 
-     
- 
+        </div>
+</div>
+<div id="Tokyo" class="tabcontent">
+  <span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
+  <h3>Tokyo</h3>
+  <p>Tokyo is the capital of Japan.</p>
+</div>
 
         
-
-                </form>
-            </div>
-        </div>
-    
-        <div class="row">
-            <div class="col-xs-12">
-                <hr />
-                <form class="form-horizontal">
-                    <h4 class="header lighter orange"><i class="ace-icon fa fa-bell"></i>Ghi chú hồ sơ</h4>
-                    <div class="form-group">
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
-                        <div class="col-md-11 col-sm-12 col-xs-12">
-                            <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
-                        </div>
-                    </div>
-                    <div class="pull-right">
-                        <a class="btn btn-sm btn-primary" id="btn_Temp">
-                           Lưu
-                        </a>
-                       
-                       
-                    </div>
-                </form>
-            </div>
-
-        </div>
     </div>
 </div>
 
+
+
+
+
+
 <script>
     $(document).ready(function () {
+
+        LayDSTinhCMND("idissuer");
+        GetAllBank();
         $('#ddlSanPhamVay').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlCourier').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlHuyen').chosen({ width: '100%', allow_single_deselect: true });
@@ -214,7 +145,14 @@
         }).next().on(ace.click_event, function () {
             $(this).prev().focus();
         });
-    
+     $('#frmAdd select').each(
+       function(index){  
+        var inputelement = $(this);
+        inputelement.chosen({ width: '100%', allow_single_deselect: true });
+
+
+       });
+      
 
 
         $('#frmAdd input, #frmAdd select').each(
@@ -689,7 +627,7 @@ function lowerFirstLetter(string) {
                     });
                 }
                 else {
-                    swal({
+                  swal({
                         title: "@Html.Raw(Global.Message_Title)",
                         text: data.code,
                         type: "error",
@@ -697,7 +635,7 @@ function lowerFirstLetter(string) {
                         showConfirmButton: true,
                     }, function () {
                          save = false;
-                          window.location = window.location;
+                         
                     });
                 }
             },
@@ -713,6 +651,68 @@ function lowerFirstLetter(string) {
         });
     });
 
+    function LayDSTinhCMND(idTinh) {
+
+        var idTinh ='#'+idTinh;
+        $.ajax({
+            type: "get",
+            url: '@Url.Action("LayDanhSachTinh", "Mirae")',
+            data: {},
+            success: function (data) {
+                $(idTinh).empty();
+       
+                $(idTinh).append("<option value='CỤC TRƯỞNG CỤC CS QLHC VỀ TTXH'>CỤC TRƯỞNG CỤC CS QLHC VỀ TTXH</option>");
+                $(idTinh).append("<option value='CT CỤC CẢNH SÁT ĐKQL CƯ TRÚ VÀ DLQG VỀ DÂN CƯ'>  CT CỤC CẢNH SÁT ĐKQL CƯ TRÚ VÀ DLQG VỀ DÂN CƯ</option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                         $(idTinh).append("<option value='" + optionData.Statedesc + "'>" + optionData.Statedesc + "</option>");
+                    });
+                }
+                $(idTinh).chosen().trigger("chosen:updated");
+
+                 
+                  
+            },
+            complete: function () {
+         
+                $("#idissuer").val(datamodel.Idissuer); 
+                $("#idissuer").chosen().trigger("chosen:updated");
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
     
+function GetAllBank() {
+        
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetAllBank", "Mirae")',
+            data: { },
+            success: function (data) {
+                allProduct = data;
+                $('#bankname').empty();
+                $('#bankname').append("<option value='0'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#bankname').append("<option value='" + optionData.Bankid + "'>" + optionData.Bankdesc + "</option>");
+                    });
+                }
+                $('#bankname').chosen().trigger("chosen:updated");
+
+            },
+            complete: function () {
+            
+                  $('#bankname').val(datamodel.Bankname);     
+                    $('#bankname').chosen().trigger("chosen:updated");
+                  
+             },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
         
 </script>

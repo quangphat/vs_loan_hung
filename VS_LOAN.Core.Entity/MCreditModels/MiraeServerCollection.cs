@@ -179,9 +179,11 @@ namespace VS_LOAN.Core.Entity.MCreditModels
         public QDEToDDEReQuest()
         {
             msgName = "procQDEChangeState";
-
+            
             in_channel = "SBK";
             in_userid = "EXT_SBK";
+
+     
         }
 
     }

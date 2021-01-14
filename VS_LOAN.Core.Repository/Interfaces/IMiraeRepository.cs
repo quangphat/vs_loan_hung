@@ -11,8 +11,10 @@ namespace VS_LOAN.Core.Repository.Interfaces
 {
     public interface IMiraeRepository
     {
-       
-        Task<List<int>> GetPeopleCanViewMyProfile(int profileId);
+
+      
+
+      Task<List<int>> GetPeopleCanViewMyProfile(int profileId);
         Task<bool> InsertPeopleWhoCanViewProfile(int profileisUpdateMCIId, string peopleIds);
         Task<MiraeModel> GetTemProfileByMcId(int id);
 

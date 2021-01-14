@@ -158,27 +158,32 @@ namespace VS_LOAN.Core.Web.Controllers
                     id_f1 = item.Id_f1
                 }
             };
+          
             if (profile==null)
             {
                 itemReponse.message = String.Format("{0} không tồn tại.",
                         item.Id_f1);
                 itemReponse.status = "ERROR";
+
+
+                item.StatusDefer = itemReponse.status;
+                await this._miraeDeferRepository.Add(item);
+
+
             }
             else
             {
                 itemReponse.message = "";
                 itemReponse.status = "SUCCESS";
+                item.StatusDefer = itemReponse.status;
                 await this._miraeDeferRepository.Add(item);
             }
+           
             return this.Request.CreateResponse(HttpStatusCode.OK, itemReponse);
         }
 
-
-
-
         public async Task<HttpResponseMessage> uploadStatusF1(List<UploadStatusRequest> requests)
         {
-
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, requests);
             var responseList = new List<UploadStatusReponse>();
             foreach (var item1 in requests)
@@ -202,19 +207,16 @@ namespace VS_LOAN.Core.Web.Controllers
                     status_f1 = item1.status_f1,
                     client_name = item1.client_name,
                     f1_time = item1.f1_time,
-                    id_f1 = item1.id_f1
-
+                    id_f1 = item1.id_f1,
+                    f1_no = item1.f1_no
                 };
-
                 if (profile == null)
                 {
                     message = "Không tồn tại mã id_f1";
                     success = false;
-
                 }
                 else
                 {
-
                     success = true;
                   
                 } 
@@ -227,18 +229,16 @@ namespace VS_LOAN.Core.Web.Controllers
                     try
                     {
                         dt = DateTime.Parse(item1.f1_time);
-
                     }
                     catch (Exception)
                     {
-
                     }
                      await _miraeRepository.UpdatStatusClient(new ClientUpdateStatusRequest() {
-                        AppId = appId,
-                        BussinessTime = dt,
-                        Status = item1.status_f1,
-                        Reason = item1.reason,
-                        Rejeccode = item1.reject_code
+                            AppId = appId,
+                            BussinessTime = dt,
+                            Status = item1.status_f1,
+                            Reason = item1.reason,
+                            Rejeccode = item1.rejected_code
                     });
                   
                 }

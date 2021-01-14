@@ -56,6 +56,7 @@
     <Compile Include="Interfaces\IOdcService.cs" />
     <Compile Include="MCreditLoanService.cs" />
     <Compile Include="MCreditServiceBase.cs" />
+    <None Include="MiraeServicebk.bk" />
     <Compile Include="MiraeServiceBase.cs" />
     <Compile Include="OdbServiceBase.cs" />
     <Compile Include="MiraeService.cs" />

@@ -34,7 +34,7 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
         public string Title { get; set; }
         public string Gender { get; set; }
 
-        public DateTime? Dob { get; set; }
+        public DateTime Dob { get; set; }
 
         public int Constid { get; set; }
 

@@ -36,7 +36,7 @@ namespace MCreditService.Interfaces
 
         Task<PushToUNDReponse> PushToUND(MultipartFormDataContent content);
 
-        Task<PushToHistoryReponse> PushToPendHistory(PushToHistoryRequest request);
+        Task<PushToHistoryReponse> PushToPendHistory(MultipartFormDataContent request);
 
     }
 }

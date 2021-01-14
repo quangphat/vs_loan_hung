@@ -444,7 +444,6 @@
 
     function renderRow(index, rowData) {
 		
-		
         page = queries.get("page");
         if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
             page = 1;
@@ -470,9 +469,6 @@
 		+ renderTextLeft(rowData.Updateby)
 		+ renderTextLeft(rowData.UpdatedTime, 'datetime', 'w-150');
 		
-		
-		
-
             + "</tr>";
 		return strhtmlData;
     }

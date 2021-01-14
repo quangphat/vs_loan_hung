@@ -10,8 +10,6 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
     {
         public string id_f1 { get; set; }
 
-        public string f1_no { get; set; }
-
         public string client_name { get; set; }
         public string defer_code { get; set; }
 
@@ -23,7 +21,6 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
 
     public class UploadDeferReponseItem
     {
-       
 
         public string client_name { get; set; }
         public string defer_code { get; set; }
@@ -32,7 +29,8 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
 
         public DateTime defer_time { get; set; }
 
-        
+        public string id_f1 { get; set; }
+
     }
 
     public class UploadDeferReponse
@@ -49,22 +47,13 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
     public class UploadStatusRequest
     {
         public string id_f1 { get; set; }
-
         public string f1_no { get; set; }
-
-
         public string client_name { get; set; }
-
         public string status_f1 { get; set; }
         public string f1_time { get; set; }
-
         public string reject_code { get; set; }
-
-
         public string rejected_code { get; set; }
         public string reason { get; set; }
-      
-
     }
 
     public class UploadStatusReponseItem
@@ -75,8 +64,7 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
         public string status_f1 { get; set; }
         public string f1_time { get; set; }
 
-
-
+        public string f1_no { get; set; }
 
     }
 

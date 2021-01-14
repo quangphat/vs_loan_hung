@@ -49,7 +49,7 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
 
         public string Gender { get; set; }
 
-        public DateTime? Dob { get; set; }
+        public DateTime Dob { get; set; }
 
         public int Constid { get; set; }
 
@@ -152,6 +152,14 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
         public string Address2landlord { get; set; }
         public string Address2landmark { get; set; }
 
+        public string Statusclient { get; set; }
+        public string CreatedUser { get; set; }
+
+        public string VbFUserUpdate { get; set; }
+
+        public string UpdateUser { get; set; }
+
+        public string Vbf { get; set; }
     }
 
 }

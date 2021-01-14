@@ -27,12 +27,11 @@
                 <form class="form-horizontal" role="form" id ="frmAdd">
 					
                         @Html.Partial("infomationDDE")
-
                         @Html.Partial("incomInfo") 
                         @Html.Partial("CurrentAddress")
         
 
-		    	<h3 class="header smaller lighter blue">3.Thông tin khoản vay:</h3>
+		    	<h3 class="header smaller lighter blue">5.Thông tin khoản vay:</h3>
 					
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Mục đích vay<span class="required">(*)</span></label>
@@ -76,10 +75,7 @@
                         <div class="col-sm-4">
                              <input type="text" id="totalloanamountreq" name ="totalloanamountreq" placeholder="Khoản vay" class="form-control" />
                         </div>
-                        <label class="col-sm-2 control-label no-padding-right">Bằng chữ(*): <span class="required">(*)</span></label>
-                        <div class="col-sm-4">
-                           <input type="text" id="totalloanamountreqText" name="totalloanamountreqText" placeholder="Email" class="form-control" />
-                        </div>
+                 
                     </div>
 					
 
@@ -119,7 +115,7 @@
                         
 				</div>
 
-                    <div class="form-group">
+                    <div class="form-group" style="display:none">
 
                     <label class="col-sm-2 control-label no-padding-right">Lý do từ chỗi mua bảo hiểm<span class="required">(*)</span></label>
                     <div class="col-sm-4">
@@ -693,10 +689,10 @@ var modelbind = @Html.Raw(Json.Encode(ViewBag.model));
             contentType: "application/json; charset=utf-8",
             data: objectSend,
             success: function (data) {
-                if (data.success == true) {
+              if (data.success == true) {
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
-                        text: "Tạo lead thành công",
+                        text: "Thành công",
                         type: "success",
                         timer: 4000,
                         showConfirmButton: true,
@@ -707,14 +703,14 @@ var modelbind = @Html.Raw(Json.Encode(ViewBag.model));
                 }
                 else {
                     swal({
-                        title: "@Html.Raw(Global.Message_Title)",
+                        title: "Có lỗi",
                         text: data.code,
                         type: "error",
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-                          savePush =false;
-                          window.location = window.location;
+                         savePush = false;
+                         
                     });
                 }
             },
@@ -756,7 +752,7 @@ var modelbind = @Html.Raw(Json.Encode(ViewBag.model));
             contentType: "application/json; charset=utf-8",
             data: objectSend,
             success: function (data) {
-                if (data.success == true) {
+               if (data.success == true) {
                     swal({
                         title: "@Html.Raw(Global.Message_Title)",
                         text: "Thành công",
@@ -770,7 +766,7 @@ var modelbind = @Html.Raw(Json.Encode(ViewBag.model));
                 }
                 else {
                     swal({
-                        title: "@Html.Raw(Global.Message_Title)",
+                        title: "Có lỗi",
                         text: data.code,
                         type: "error",
                         timer: 4000,

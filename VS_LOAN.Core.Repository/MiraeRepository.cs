@@ -31,26 +31,10 @@ namespace VS_LOAN.Core.Repository
                 nameof(model.UpdatedTime),
                  nameof(model.UpdatedBy),
                  nameof(model.AppId),
-                nameof(model.Maritalstatus ),
-                nameof(model.Qualifyingyear ),
-                nameof(model.Noofdependentin  ),
-                nameof(model.Paymentchannel ),
-                nameof(model.Nationalidissuedate  ),
-                nameof(model.Familybooknumber ),
-                nameof(model.Idissuer ),
-                nameof(model.Spousename ),
-                nameof(model.Spouse_id_c ),
-                nameof(model.Categoryid ),
-                nameof(model.Bankname ),
-               nameof(model.Bankbranch ),
-                nameof(model.Acctype ),
-                nameof(model.Accno ),
-                nameof(model.Dueday ),
-                nameof(model.Notecode ),
-                nameof(model.Eduqualify ),
+           
 
-                nameof(model.Status ),
-                nameof(model.Notedetails )
+                nameof(model.Status )
+             
 
 
             });
@@ -58,7 +42,7 @@ namespace VS_LOAN.Core.Repository
                 using (var con = GetConnection())
                 {
                   
-                    await con.ExecuteAsync("sp_insert_Mirae_Item", param, commandType: CommandType.StoredProcedure);
+                      await con.ExecuteAsync("sp_insert_Mirae_Item", param, commandType: CommandType.StoredProcedure);
                     return 1;
                 }
             }
@@ -68,13 +52,13 @@ namespace VS_LOAN.Core.Repository
             }
         }
 
+
+       
     
         public async Task<List<GhichuViewModel>> GetCommentsAsync(int profileId)
         {
             return await _rpNote.GetNoteByTypeAsync(profileId, (int)HosoType.Mirae);
         }
-
-   
 
         public async Task<BaseResponse<bool>> AddNoteAsync(int profileId, string content, int userId)
         {
@@ -223,29 +207,31 @@ namespace VS_LOAN.Core.Repository
            {
                 nameof(model.CreatedTime),
                 nameof(model.UpdatedTime),
-                nameof(model.CreatedBy),
+          
                 nameof(model.AppId),
-                nameof(model.Maritalstatus ),
-                nameof(model.Qualifyingyear ),
-                nameof(model.Noofdependentin  ),
-                nameof(model.Paymentchannel ),
-                nameof(model.Nationalidissuedate  ),
-                nameof(model.Familybooknumber ),
-                nameof(model.Idissuer ),
-                nameof(model.Spousename ),
-                nameof(model.Spouse_id_c ),
-                nameof(model.Categoryid ),
-                nameof(model.Bankname ),nameof(model.Bankbranch ),
-                nameof(model.Acctype ),
-                nameof(model.Accno ),
-                nameof(model.Dueday ),
-                nameof(model.Notecode ),
-                nameof(model.Eduqualify ),
+                nameof(model.CreatedBy),
+           
+                //nameof(model.Maritalstatus ),
+                //nameof(model.Qualifyingyear ),
+                //nameof(model.Noofdependentin  ),
+                //nameof(model.Paymentchannel ),
+                //nameof(model.Nationalidissuedate  ),
+                //nameof(model.Familybooknumber ),
+                //nameof(model.Idissuer ),
+                //nameof(model.Spousename ),
+                //nameof(model.Spouse_id_c ),
+                //nameof(model.Categoryid ),
+                //nameof(model.Bankname ),nameof(model.Bankbranch ),
+                //nameof(model.Acctype ),
+                //nameof(model.Accno ),
+                //nameof(model.Dueday ),
+                //nameof(model.Notecode ),
+                //nameof(model.Eduqualify ),
 
 
-                nameof(model.Notedetails )
+                //nameof(model.Notedetails )
 
-           });
+           }); 
                 model.Status = 0;
                 using (var con = GetConnection())
                 {

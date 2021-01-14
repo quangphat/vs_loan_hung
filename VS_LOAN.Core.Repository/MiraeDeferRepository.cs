@@ -22,33 +22,24 @@ namespace VS_LOAN.Core.Repository
         }
 
 
-        public async Task<List<MiraeDeferSearchModel>> GetTempProfiles(int page, int limit, string freeText, int userId,
-        string status = null,
-        DateTime? fromDate = null,
-        DateTime? toDate = null,
-        int dateType = 0,
-        int maNhom = 0,
-        int maThanhVien = 0)
+        public async Task<List<MiraeDeferSearchModel>> GetDeferById(int appId)
         {
             using (var con = GetConnection())
             {
-                var result = await con.QueryAsync<MiraeDeferSearchModel>("sp_MiraeDefer_Gets", new
-                {
-                    freeText,
-                    userId,
-                    page,
-                    limit_tmp = limit,
-                    status,
-                    fromDate,
-                    toDate,
-                    dateType,
-                    maNhom,
-                    maThanhVien
-                }, commandType: CommandType.StoredProcedure);
+                var result = await con.QueryAsync<MiraeDeferSearchModel>("sp_MiraeDefer_Gets", new { appId },commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
         }
 
+        public async Task<List<MiraeDeferType>> GetAllMiraeDeferType()
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryAsync<MiraeDeferType>("sp_MiraeDeferType_Gets", commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+        
 
         public async Task<int> Add(MiraeDeferModel model)
         {
@@ -61,12 +52,10 @@ namespace VS_LOAN.Core.Repository
                 nameof(model.UpdatedTime),
                  nameof(model.UpdatedBy),
                  nameof(model.Id)
-
             });
 
                 using (var con = GetConnection())
                 {
-                  
                     await con.ExecuteAsync("sp_insert_MiraeDefer_Item", param, commandType: CommandType.StoredProcedure);
                     return 1;
                 }
@@ -76,6 +65,34 @@ namespace VS_LOAN.Core.Repository
                 return 0;
             }
         }
+
+
+        public async Task<int> AddPushPendHistory(PushPundHistoryModel model)
+        {
+            try
+            {
+                model.Id = 0;
+                var param = GetParams(model, "Id", ignoreKey: new string[] {
+                nameof(model.CreatedTime),
+                        nameof(model.CreatedBy),
+                nameof(model.UpdatedTime),
+                 nameof(model.UpdatedBy),
+                 nameof(model.Id)
+            });
+                using (var con = GetConnection())
+                {
+                    await con.ExecuteAsync("sp_insert_PushPundHistoroy_Item", param, commandType: CommandType.StoredProcedure);
+                    return 1;
+                }
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
+        }
+
+
+
 
         public Task<bool> Resove(int id, int status, int appid, int userid)
         {

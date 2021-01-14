@@ -46,7 +46,6 @@ namespace VS_LOAN.Core.Web.Controllers
 
         }
 
-
         public JsonResult LayDanhsachTinh()
         {
             return ToJsonResponse(true, "", MiraeService.AllProvince.ToList());
@@ -58,9 +57,6 @@ namespace VS_LOAN.Core.Web.Controllers
             return ToJsonResponse(true, "", MiraeService.AllBank.ToList());
 
         }
-
-
-        
         public JsonResult LayDanhSachThanhPho(string province)
         {
             return ToJsonResponse(true, "", MiraeService.AllDistrict.Where(x => x.Lmc_STATE_N == province).ToList());
@@ -93,15 +89,34 @@ namespace VS_LOAN.Core.Web.Controllers
             return View();
         }
 
+        public async Task<ActionResult> Tracking( int id)
+        {
+             var result = await _rpMCredit.GetTemProfileByMcId(id);
+            ViewBag.isAdmin = GlobalData.User.TypeUser == (int)UserTypeEnum.Admin ? 1 : 0;
+            ViewBag.model = result;
+
+            ViewBag.DobMonth = result.Dob.Month;
+            ViewBag.DobYear = result.Dob.Year;
+            ViewBag.DobDay = result.Dob.Day ;
+      
+            return View();
+        }
         public async Task<JsonResult> CheckCMND(StringModel2 model)
         {
             if (model == null || string.IsNullOrWhiteSpace(model.Value))    
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var result = await _odcService.CheckCustomer(model.Value,"SBK");
-            return ToJsonResponse(result.Success, result.Data?.ToString(), result);
+            var item = result.Data;
+            var boolSuccess = false;
+
+    
+
+            if(item.StatusNumber =="0" ||  item.StatusNumber =="302")
+            {
+                boolSuccess = true;
+            }
+            return ToJsonResponse(boolSuccess, result.Data?.ToString(), result);
         }
-
-
         public async Task<JsonResult> SearchTemps(string freeText, string status, int page = 1, int limit = 10, string fromDate = null, string toDate = null, int loaiNgay = 0, int manhom = 0,
 
           int mathanhvien = 0)
@@ -286,6 +301,45 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
         {
             var model = await _rpMCredit.GetTemProfileByMcId(id);
 
+
+            if (model == null)
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+
+            if (model.Nationalidissuedate == null ||   model.Nationalidissuedate.HasValue ==false)
+            {
+                return ToJsonResponse(false, "Vui lòng điền ngày cấp chứng minh nhân dân");
+
+            }
+            else if (string.IsNullOrEmpty(model.Idissuer))
+            {
+                return ToJsonResponse(false, "Chưa chọn địa chỉ cung cấp CMND");
+
+            }
+            else if (string.IsNullOrEmpty(model.Maritalstatus))
+            {
+
+                return ToJsonResponse(false, "Vui lòng chọn trạng thái hôn nhân");
+            }
+            else if (string.IsNullOrEmpty(model.Familybooknumber))
+            {
+
+                return ToJsonResponse(false, "Vui lòng  cung cấp thông tin sổ hộ khẩu");
+            }
+            else if (string.IsNullOrEmpty(model.Eduqualify))
+            {
+
+                return ToJsonResponse(false, "Vui lòng chọn trình độ học vấn");
+            }
+
+            else if (string.IsNullOrEmpty(model.Acctype))
+            {
+
+                return ToJsonResponse(false, "Vui lòng chọn loại tài khoản ");
+            }
+
+
+           
+
             var appId = 0;
             var bankName = model.Bankname;
             try
@@ -316,7 +370,7 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
                 in_noofdependentin = model.Noofdependentin,
                 in_paymentchannel = model.Paymentchannel,
                 in_nationalidissuedate = model.Nationalidissuedate.Value.ToShortDateString(),
-                in_familybooknumber  = "123456789",
+                in_familybooknumber  = model.Familybooknumber,
                 in_idissuer = model.Idissuer,
                 in_spousename = model.Spousename,
                 in_spouse_id_c  = model.Spouse_id_c,
@@ -353,19 +407,128 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
             return ToJsonResponse(result.Success, "", result);
 
         }
+        public async Task<JsonResult> BDEToPor(int id)
+        {
+            var model = await _rpMCredit.GetTemProfileByMcId(id);
+            if (model == null)
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
 
-        
+            if (string.IsNullOrEmpty(model.AppId))
+            {
+                return ToJsonResponse(false, "Chưa có thông appid");
+
+            }
+            var appId = 0;
+           
+            try
+            {
+                appId = int.Parse(model.AppId);
+            }
+            catch (Exception)
+            {
+            }
+            var response = await _odcService.DDEToPoR(new DDEToPORReQuest()
+            {
+                in_channel = "SBK",
+                in_userid = "EXT_SBK",
+                msgName = "procDDEChangeState",
+                p_appid = appId
+
+            });
+            return ToJsonResponse(response.Success, "", response);
+        }
         public async Task<JsonResult> SumbitToOcb (int id)
         {
             var model = await _rpMCredit.GetTemProfileByMcId(id);
-            model.Sourcechannel = "ADVT";
-            model.Userid = "EXT_SBK";
-            var validResponse = await _odcService.CheckCustomer(model.Mobile, "EXT_SBK");           
-            if(validResponse.Success !=true)
+          
+
+            if (model == null)
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+
+            if (model.Dob == DateTime.MinValue)
             {
-                return ToJsonResponse(false,"lỗi số điện thại hoặc cmnd không hợp lệ", validResponse.Data);
+                return ToJsonResponse(false, "Vui lòng điền ngày sinh nhật");
 
             }
+            else if (string.IsNullOrEmpty(model.Mobile))
+            {
+                return ToJsonResponse(false, "Chưa cunng cấp số điện thoại di động khách hàng");
+
+            }
+            else if (string.IsNullOrEmpty(model.Lname)  || string.IsNullOrEmpty(model.Fname))
+            {
+
+                return ToJsonResponse(false, "Cung cấp thông tin tên khách hàng");
+            }
+            else if (string.IsNullOrEmpty(model.Gender))
+            {
+
+                return ToJsonResponse(false, "Vui lòng cung cấp giới tính");
+            }
+            else if (string.IsNullOrEmpty(model.Nationalid))
+            {
+
+                return ToJsonResponse(false, "Vui lòng cung cấp số chứng minh nhân dân");
+            }
+            else if (string.IsNullOrEmpty(model.Schemeid) )
+
+            {
+
+                return ToJsonResponse(false, "Vui lòng chọn sản phẩm vay");
+            }
+            else if (model.Tenure <1)
+
+            {
+
+                return ToJsonResponse(false, "Chưa  nhập thời hạn vay");
+            }
+            else if (string.IsNullOrEmpty(model.Loanpurpose))
+
+            {
+
+                return ToJsonResponse(false, "Chưa nhập mục đích vay");
+            }
+
+            else if (string.IsNullOrEmpty(model.AddressCur_address1stline))
+
+            {
+
+                return ToJsonResponse(false, "Chưa nhập đầy đủ thông tin địa chỉ hiện tại");
+            }
+
+            else if (string.IsNullOrEmpty(model.Others))
+
+            {
+
+                return ToJsonResponse(false, "Chưa nhập tên công ty");
+            }
+          
+
+            model.Sourcechannel = "ADVT";
+            model.Userid = "EXT_SBK";  
+            //var validResponse = await _odcService.CheckCustomer(model.Mobile, "EXT_SBK");
+
+            //if (validResponse.Success != true)
+            //{
+            //    validResponse.Data.Message = "Khách hàng không đủ điều kiện vay do chứng minh nhân dân hoặc số điện thoại" +
+            //        validResponse.Data.Phone;
+            //    return ToJsonResponse(false, "Khách hàng không đủ điều kiện vay", validResponse.Data);
+
+            //}
+            //else
+            //{
+
+            //    var valid = validResponse.Data.StatusNumber;
+            //    if (valid == "0" || valid == "302")
+            //    {
+
+            //    }
+            //    else
+            //    {
+            //        return ToJsonResponse(false, "Khách hàng không đủ điều kiện vay", validResponse.Data);
+
+            //    }
+            //}
             var request = new MiraeQDELeadReQuest()
             {
                 in_phone = model.Phone,
@@ -383,7 +546,7 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
                 in_loanpurpose = model.Loanpurpose,
                 in_creditofficercode = "EXT_SBK",
                 in_bankbranchcode = model.Bankbranchcode,
-                in_laa_app_ins_applicable =model.Laa_app_ins_applicable =="true" ?"Y":"N",
+                in_laa_app_ins_applicable =model.Laa_app_ins_applicable =="True" ?"Y":"N",
                 in_priority_c = model.Priority_c,
 
                 in_userid = "EXT_SBK",
@@ -394,7 +557,7 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
             request.in_nationalid = model.Nationalid;
             request.in_title = model.Title+'.';
             request.in_gender = model.Gender=="0"?"M":"F";
-            request.in_dob = model.Dob.Value.ToString("dd/MM/yyyy");
+            request.in_dob = model.Dob.ToString("dd/MM/yyyy");
             request.in_constid = 5;
             request.in_tax_code = model.Tax_code;
             request.in_presentjobmth = model.Presentjobmth;
@@ -502,7 +665,7 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
                 }
 
             }
-            else
+            else 
             {
 
                 request.address = new List<AddressItem>()
@@ -605,33 +768,199 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
                     appid = 0;
                 }
                 await _rpMCredit.UpdateStatus(model.Id, 1, appid, GlobalData.User.IDUser);
-                await _odcService.QDEToDDE(new QDEToDDEReQuest()
-                {
-                    p_appid = appid
-                    
-                });
+               
                 }
+
             return ToJsonResponse(ressult.Success, "",ressult);
         }
+        public async Task<JsonResult> QDEToDDE(int id)
+        {
+            var model = await _rpMCredit.GetTemProfileByMcId(id);
+            if (model == null)
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
 
+            if (string.IsNullOrEmpty(model.AppId))
+            {
+                return ToJsonResponse(false, "Chưa có thông appid");
+
+            }
+            var appId = 0;
+
+            try
+            {
+                appId = int.Parse(model.AppId);
+            }
+            catch (Exception)
+            {
+            }
+            var response = await _odcService.QDEToDDE(new QDEToDDEReQuest()
+            {
+               
+                p_appid = appId
+
+            });
+            return ToJsonResponse(response.Success, "", response);
+        }
+        public async Task<JsonResult> UpdateMirae(MiraeEditModel model)
+        {
+                       
+            if (model == null)
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            var profilerequest = await _rpMCredit.GetTemProfileByMcId(model.Id);
+            profilerequest.Channel = model.Channel;
+            profilerequest.Schemeid = model.Schemeid;
+            profilerequest.Downpayment = model.Downpayment != null ? model.Downpayment : 0;
+            profilerequest.Totalloanamountreq = model.Totalloanamountreq;
+            profilerequest.Tenure = model.Tenure;
+            profilerequest.Sourcechannel = "ADVT";
+            profilerequest.Salesofficer = model.Salesofficer;
+            profilerequest.Loanpurpose = model.Loanpurpose;
+            profilerequest.Creditofficercode = model.Creditofficercode;
+            profilerequest.Bankbranchcode = model.Bankbranchcode;
+            profilerequest.Laa_app_ins_applicable = model.Laa_app_ins_applicable;
+            profilerequest.Possipbranch = model.Possipbranch;
+            profilerequest.Priority_c = model.Priority_c;
+            profilerequest.Userid = model.Userid;
+            profilerequest.Fname = model.Fname;
+            profilerequest.Mname = model.Mname;
+            profilerequest.Lname = model.Lname;
+            profilerequest.Nationalid = model.Nationalid;
+            profilerequest.Title = model.Title;
+            profilerequest.Gender = model.Gender;
+            profilerequest.Dob = model.Dob;
+            profilerequest.Constid = model.Constid;
+            profilerequest.AddressPer_in_propertystatus = model.PropertystatusPer;
+            profilerequest.AddressPer_address1stline = model.Address1stlinePer;
+            profilerequest.AddressPer_Country = 189;
+            profilerequest.AddressPer_District = model.DdlHuyenPer;
+            profilerequest.AddressPer_City = model.DdlTinhPer;
+            profilerequest.AddressPer_Ward = model.DdlRewardPer;
+            profilerequest.AddressPer_roomno = model.RoomnoPer;
+            profilerequest.AddressPer_stayduratPeradd_m = model.StayduratPeradd_mPer;
+            profilerequest.AddressPer_stayduratPeradd_y = model.StayduratPeradd_yPer;
+            profilerequest.AddressPer_mobile = model.MobilePer;
+            profilerequest.AddressPer_landlord = model.LandlordPer;
+            profilerequest.AddressPer_landmark = model.Landmarkper;
+            profilerequest.AddressCur_in_propertystatus = model.PropertystatusCur;
+            profilerequest.AddressCur_address1stline = model.Address1stlineCur;
+            profilerequest.AddressCur_Country = model.DdlTinhCur;
+            profilerequest.AddressCur_District = model.DdlHuyenCur;
+            profilerequest.AddressCur_City = model.DdlTinhCur;
+            profilerequest.AddressCur_Ward = model.DdlRewardCur;
+            profilerequest.AddressCur_roomno = model.RoomnoCur;
+            profilerequest.AddressCur_stayduratcuradd_m = model.Stayduratcuradd_mCur;
+            profilerequest.AddressCur_stayduratcuradd_y = model.Stayduratcuradd_yCur;
+            profilerequest.AddressCur_mobile = model.MobileCur;
+            profilerequest.AddressCur_landlord = model.LandlordCur;
+            profilerequest.AddressCur_landmark = model.LandmarkCur;
+            profilerequest.Tax_code = model.Tax_code;
+            profilerequest.Presentjobyear = model.Presentjobyear;
+            profilerequest.Previousjobmth = model.Previousjobmth;
+            profilerequest.Presentjobmth = model.Presentjobmth;
+            profilerequest.Previousjobyear = model.Previousjobyear;
+            profilerequest.Accountbank = model.Accountbank;
+            profilerequest.Debit_credit = model.Debit_credit;
+            profilerequest.In_per_cont = model.Per_cont;
+            profilerequest.Amount = model.Amount;
+            profilerequest.Head = model.Head;
+            profilerequest.Frequency = model.Frequency;
+            profilerequest.Others = model.Others;
+            profilerequest.Refferee1_in_title = model.Refferee1_in_title;
+            profilerequest.Refferee1_Refereename = model.Refferee1_Refereename;
+            profilerequest.Refferee1_Refereerelation = model.Refferee1_Refereerelation;
+            profilerequest.Refferee1_Phone2 = model.Refferee1_Phone1;
+            profilerequest.Refferee1_Phone1 = model.Refferee1_Phone1;
+            profilerequest.Refferee2_in_title = model.Refferee2_in_title;
+            profilerequest.Refferee2_Refereename = model.Refferee2_Refereename;
+            profilerequest.Refferee2_Refereerelation = model.Refferee2_Refereerelation;
+            profilerequest.Refferee2_Phone2 = model.Refferee2_Phone1;
+            profilerequest.Refferee2_Phone1 = model.Refferee2_Phone1;
+            profilerequest.Refferee3_in_title = model.Refferee3_in_title;
+            profilerequest.Refferee3_Refereename = model.Refferee3_Refereename;
+            profilerequest.Refferee3_Refereerelation = model.Refferee3_Refereerelation;
+            profilerequest.Refferee3_Phone2 = model.Refferee3_Phone2;
+            profilerequest.Refferee3_Phone1 = model.Refferee3_Phone1;
+            profilerequest.ContryCompany = model.ContryCompany;
+            profilerequest.CityCompany = model.CityCompany;
+            profilerequest.DistrictCompany = model.DistrictCompany;
+            profilerequest.WardCompany = model.WardCompany;
+            profilerequest.Addressline = model.Addressline;
+            profilerequest.Phone = model.Phone;
+
+            profilerequest.Natureofbuss = model.Natureofbuss;
+            profilerequest.Addresstype = model.Addresstype;
+
+
+
+            profilerequest.UpdatedBy = GlobalData.User.IDUser;
+            profilerequest.Position = model.Position;
+            profilerequest.IsDuplicateAdrees = model.IsDuplicateAdrees;
+
+            profilerequest.Phone = model.Phone;
+            profilerequest.Fixphone = model.Fixphone;
+            profilerequest.Mobile = model.Mobile;
+            profilerequest.IsDuplicateAdrees = model.IsDuplicateAdrees;
+
+           profilerequest.Maritalstatus = model.Maritalstatus;
+            profilerequest.Qualifyingyear = model.Qualifyingyear;
+            profilerequest.Qualifyingyear = "0";
+            profilerequest.Eduqualify = model.Eduqualify;
+            profilerequest.Noofdependentin = model.Noofdependentin;
+            profilerequest.Paymentchannel = model.Paymentchannel;
+            profilerequest.Nationalidissuedate = model.Nationalidissuedate;
+            profilerequest.Familybooknumber = model.Familybooknumber;
+            profilerequest.Idissuer = model.Idissuer;
+            profilerequest.Spousename = model.Spousename;
+            profilerequest.Spouse_id_c = model.Spouse_id_c;
+            profilerequest.Categoryid = model.Categoryid;
+            profilerequest.Categoryid = "SBK";
+            profilerequest.Bankname = model.Bankname;
+            profilerequest.Bankbranch = model.Bankbranch;
+            profilerequest.Acctype = model.Acctype;
+            profilerequest.Accno = model.Accno;
+            profilerequest.Dueday = model.Dueday;
+            profilerequest.Notecode = "DE_MOBILE";
+            profilerequest.Notedetails = model.Notedetails;
+            profilerequest.UpdatedBy = GlobalData.User.IDUser;
+            profilerequest.Familybooknumber = model.Familybooknumber;
+            profilerequest.Spousename = model.Spousename;
+            profilerequest.Spouse_id_c = model.Spouse_id_c;
+            profilerequest.Notedetails = model.Notedetails;
+
+            var result = await _rpMCredit.UpdateDraftProfile(profilerequest);
+
+            if (!result)
+            {
+                return ToJsonResponse(result, "Lỗi cập nhật");
+            }
+
+
+            return ToJsonResponse(true);
+
+
+        }
         public async Task<JsonResult> CreateDraft(MiraeAddModel model)
         {
             if (model == null)
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
-    
+
             if (string.IsNullOrEmpty(model.Others))
             {
                 return ToJsonResponse(false, "Vui lòng điền tên công ty");
 
             }
-            //else if (string.IsNullOrEmpty(model.Nationalid) ||  model.Nationalid.Length <9 || model.Nationalid.Length >10)
-            //{
-            //    return ToJsonResponse(false, "Vui lòng điền chứng minh nhân dân");
+            else if (string.IsNullOrEmpty(model.Nationalid) || model.Nationalid.Length < 9 || model.Nationalid.Length > 12)
+            {
+                return ToJsonResponse(false, "Vui lòng điền chứng minh nhân dân");
 
-            //}
+            }
 
-          
-            if(model.Natureofbuss=="")
+            else if (string.IsNullOrEmpty(model.Mobile))
+            {
+                return ToJsonResponse(false, "Vui lòng nhập số điện thoại khách hàng");
+
+            }
+            if (model.Natureofbuss=="")
             {
                 model.Natureofbuss = "hoat dong lam thue cac cong viec trong cac hgd,sx sp vat chat va dich vu tu tieu dung cua ho gia dinh";
             }
@@ -702,36 +1031,49 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
                 Refferee1_Refereerelation = model.Refferee1_Refereerelation,
                 Refferee1_Phone2 = model.Refferee1_Phone1,
                 Refferee1_Phone1 = model.Refferee1_Phone1,
-
                 Refferee2_in_title = model.Refferee2_in_title,
                 Refferee2_Refereename = model.Refferee2_Refereename,
                 Refferee2_Refereerelation = model.Refferee2_Refereerelation,
                 Refferee2_Phone2 = model.Refferee2_Phone2,
                 Refferee2_Phone1 = model.Refferee2_Phone1,
-
                 Refferee3_in_title = model.Refferee3_in_title,
                 Refferee3_Refereename = model.Refferee3_Refereename,
                 Refferee3_Refereerelation = model.Refferee3_Refereerelation,
                 Refferee3_Phone2 = model.Refferee3_Phone2,
                 Refferee3_Phone1 = model.Refferee3_Phone1,
-
                 ContryCompany = model.ContryCompany,
                 CityCompany = model.CityCompany,
                 DistrictCompany = model.DistrictCompany,
                 WardCompany = model.WardCompany,
                 Addressline = model.Addressline,
-        
-                Natureofbuss = model.Natureofbuss,
+               Natureofbuss = model.Natureofbuss,
                 Position = model.Position,
                 Phone = model.Phone,
                 Fixphone = model.Fixphone,
-                Mobile = model.Mobile
-                
-
-
-             };
-            
-
+                Mobile = model.Mobile,
+                Bankbranch = model.Bankbranch,
+                Bankname = model.Bankname,
+                Categoryid = model.Categoryid,
+                Eduqualify = model.Eduqualify,
+                Dueday =model.Dueday,
+                Familybooknumber = model.Familybooknumber,
+                Idissuer = model.Idissuer,
+                IsDuplicateAdrees = model.IsDuplicateAdrees,
+                Maritalstatus =model.Maritalstatus,
+                Accno = model.Accno,
+                Nationalidissuedate =model.Nationalidissuedate,
+                Noofdependentin = model.Noofdependentin,
+                Notedetails =model.Notedetails,
+                Notecode =model.Notecode,
+                Acctype = model.Acctype,
+                Paymentchannel =model.Paymentchannel,
+                Others = model.Others,
+                Referalgroup = "3",
+                Qualifyingyear =model.Qualifyingyear,
+                Spousename =model.Spousename,
+                Spouse_id_c = model.Spouse_id_c,
+                Status = 0
+            };
             profile.CreatedBy = GlobalData.User.IDUser;
             profile.Others = model.Others;
             profile.Amount = model.Amount;
@@ -739,53 +1081,34 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
             {
                 profile.Head = "NETINCOM";
             }
+          
             var id = await _rpMCredit.CreateDraftProfile(profile);
             if (id > 0)
             {
                
             }
-            return ToJsonResponse(true, "", id);
+            return ToJsonResponse(id>0, "", id);
         }
-
-           public async Task<ActionResult> Mirae(int id)
+         public async Task<ActionResult> Mirae(int id)
         {
             var result = await _rpMCredit.GetTemProfileByMcId(id);
             ViewBag.isAdmin = GlobalData.User.TypeUser == (int)UserTypeEnum.Admin ? true : false;
             ViewBag.model = result;
             ViewBag.LstTaiLieu = new List<TaiLieuModel>();
             ViewBag.LstLoaiTaiLieu = await _rpTailieu.GetLoaiTailieuList(8);
+            return View("viewQDE");
 
-            if(result.Status ==0)
-            {
-                return View("viewQDE");
-            }
-            else  if(result.Status ==1)
-            {
-                return View("viewDDE");
-            }
-            else if (result.Status == 2)
-            {
-                return View("viewDetail");
-            }
-            else
-            {
-                return View("viewLock");
-            }
-           
+
         }
-
-      
-
-    
         public async Task<JsonResult> SendFile(int id)
         {
             int profileId = id;
-            id = 19;
+
             var model = await _rpMCredit.GetTemProfileByMcId(profileId);
             var allTaiLieu = await _rpTailieu.GetTailieuMiraeHosoId(model.Id, 7);
             var multiForm = new MultipartFormDataContent();
             multiForm.Add(new StringContent("EXT_SBK"), "usersname");
-            multiForm.Add(new StringContent("mafc123"), "password");
+            multiForm.Add(new StringContent("mafc123!"), "password");
             multiForm.Add(new StringContent(model.AppId), "appid");
             multiForm.Add(new StringContent("EXT_SBK"), "salecode");
 
@@ -815,6 +1138,14 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
 
             return View();
         }
+         public async Task<ActionResult> Status()
+        {
+
+            //await _odcService.CheckAuthen();
+
+
+            return View("Temp");
+        }
         public async Task<ActionResult> Index()
         {
 
@@ -827,23 +1158,6 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
 
         {
             return View();
-        }
-        public async Task<JsonResult> Import()
-        {
-            var file = Request.Files[0];
-            if (file == null)
-                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
-            Stream stream = file.InputStream;
-            stream.Position = 0;
-            try
-            {
-                await _ocbBusiness.HandleFileImport(stream, GlobalData.User.IDUser);
-            }
-            catch (Exception e)
-            {
-                return ToJsonResponse(false,e.Message);
-            }
-            return ToJsonResponse(true, "Import thành công");
         }
         public async Task<JsonResult> GetAllStatus()
         {
@@ -867,9 +1181,6 @@ profilerequest.Refferee1_in_title = model.Refferee1_in_title;
             var result = await _rpMCredit.AddNoteAsync(profileId, model.Value, GlobalData.User.IDUser);
             return ToJsonResponse(result.IsSuccess, result.Message);
         }
-
-
-
         public async Task<JsonResult> UploadToHoso(int hosoId, bool isReset, List<FileUploadModelGroupByKey> filesGroup)
         {
             if (hosoId <= 0 || filesGroup == null)

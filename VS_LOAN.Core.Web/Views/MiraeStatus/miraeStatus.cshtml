@@ -25,11 +25,28 @@
 
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right">Tìm kiếm</label>
                         <div class="col-sm-5 col-xs-12 ">
-                            <input type="text" class="form-control" id="txtFreeText" placeholder="Tìm kiếm" />
+                            <input type="text" class="form-control" id="txtFreeText" placeholder="Mã app, số điện thoại, CMND" />
                         </div>
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Loại</label>
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái </label>
                         <div class="col-sm-5 col-xs-12 ">
-                            <select id="ddlStatus" class="chosen-select form-control" multiple data-placeholder="Chọn trạng thái">
+
+
+                             <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
+                                        <option value="" select>Chưa chọn Trạng thái</option>
+                                        <option value="QDE">QDE</option>
+                                        <option value="BDE">BDE</option>
+                                        <option value="POL">POL</option>
+                                        <option value="POR">POR</option>
+                                        <option value="CBC">CBC</option>
+                                        <option value="SRR">SRR</option>
+                                        <option value="UND">UND</option>
+                                        <option value="POSSTG">POSSTG</option>
+                                        <option value="REJ">REJ</option>
+                                        <option value="CAN">CAN</option>
+                                        <option value="PDOC">PDOC</option>
+                                        <option value="DISBDTL">DISBDTL</option>
+                                        <option value="DII">DII</option>
+                                        <option value="FINISH">FINISH_Hồ sơ đã giải ngân</option>
                             </select>
                         </div>
                     </div>
@@ -88,7 +105,7 @@
                             <a class="btn btn-primary" id="btn_search">
                                 Tìm kiếm
                             </a>
-                            <a class="btn btn-primary" href="/mirae/AddNew">
+                            <a class="btn btn-primary" href="/miraeStatus/AddNew">
                                 Thêm mới
                             </a>
 
@@ -149,7 +166,7 @@
                         <table id="dtSource" class="report-table-custom table table-striped table-bordered table-hover">
                             <thead class="table-header">
                                 <tr>
-                                   <th class="center w-45">STT</th>
+                                    <th class="center w-45">STT</th>
                                     <th class="w-98">Mã app</th>
                                     <th class="m-w-150">Tên khách hàng</th>
                                     <th class="m-w-150">CMND</th>
@@ -219,8 +236,7 @@
 	var userData = @Html.Raw(Json.Encode(GlobalData.User));
 
     $(document).ready(function e() {
-        //`derStatusList();
-		GetAllStatus();
+ 
         $('#ddlStatus').chosen({ width: '100%', allow_single_deselect: true });
         window.addEventListener('popstate', function (e) {
 
@@ -269,6 +285,7 @@
 
         $('#ddlThanhVienNhom').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlNhom').chosen({ width: '100%', allow_single_deselect: true });
+   
         }
 
         $('#ddllimit').chosen({ width: '100%', allow_single_deselect: true });
@@ -462,12 +479,12 @@
         var strhtmlData = "<tr role='row' class = 'odd'>"
 		+ renderTextCenter(stt)
 		+ renderTextLeft(rowData.Appid)
-        + renderTextLink(rowData.Fname +" "+rowData.Mname + " " +rowData.Lname, '/mirae/mirae/' + rowData.Id)
+        + renderTextLink(rowData.Fname +" "+rowData.Mname + " " +rowData.Lname, '/mirae/tracking/' + rowData.Id)
 		+ renderTextLeft(rowData.Nationalid)
 		+ renderTextLeft(rowData.Statusclient);
       
 
-        if(   rowData.Statusclient =="QDE" || rowData.Statusclient =="DDE"|| rowData.Statusclient =="POR"  )
+        if(   rowData.Statusclient =="QDE" || rowData.Statusclient =="DDE" )
         {
                strhtmlData += renderTextLeft("Chưa xử lý", "tb-row-breakword");
         }
@@ -480,10 +497,6 @@
         
         strhtmlData += renderTextLeft(rowData.LastNoteVietBank, '', 'tb-row-breakword');
 
-
-	
-    
-      
         strhtmlData += renderTextLeft(rowData.Vbf)
           + renderTextLeft(rowData.CreatedUser)
         + renderTextLeft(rowData.CreatedTime, 'datetime', 'w-150')
@@ -622,7 +635,7 @@
 
         showBlock($('#panel_body'), strLoading);
         $.ajax( {
-                url: '@Url.Action("SearchTemps", "mirae")',
+                url: '@Url.Action("SearchTemps", "MiraeStatus")',
                 type: "GET",
                 contentType: "application/json",
             data: {

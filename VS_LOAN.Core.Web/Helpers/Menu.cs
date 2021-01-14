@@ -149,9 +149,10 @@ namespace VS_LOAN.Core.Web.Helpers
                    new SiteMenuItem("Ocb","menu-icon courier",IndexMenu.M_15,"#",new int[] { }),
                         new SiteMenuItem("Danh sạch tạo mới","", IndexMenu.M_15_1, ControllerRoles.Roles["ocbList"]._href, ControllerRoles.Roles["mcedit_checkcat"]._mangChucNang),
                 new SiteMenuItem("Mirae","menu-icon courier",IndexMenu.M_16,"#",new int[] { }),
-                        new SiteMenuItem("Danh sạch tạo mới","", IndexMenu.M_16_1, ControllerRoles.Roles["mirae_list"]._href, ControllerRoles.Roles["mirae_list"]._mangChucNang),
-                        new SiteMenuItem("Check Số điện thoại","", IndexMenu.M_16_2, ControllerRoles.Roles["mirae_checkDuplicate"]._href, ControllerRoles.Roles["mirae_checkDuplicate"]._mangChucNang),
-                         new SiteMenuItem("Danh sách defer","", IndexMenu.M_16_3, ControllerRoles.Roles["mirae_checkDefer"]._href, ControllerRoles.Roles["mirae_checkDefer"]._mangChucNang)
+                        new SiteMenuItem("Lên mới hồ sơ","", IndexMenu.M_16_1, ControllerRoles.Roles["mirae_list"]._href, ControllerRoles.Roles["mirae_list"]._mangChucNang),
+                        new SiteMenuItem("Check DUP","", IndexMenu.M_16_2, ControllerRoles.Roles["mirae_checkDuplicate"]._href, ControllerRoles.Roles["mirae_checkDuplicate"]._mangChucNang),
+                           
+                         new SiteMenuItem("Quản lý trạng thái Hồ sơ","", IndexMenu.M_16_3, ControllerRoles.Roles["mirae_managementstatus"]._href, ControllerRoles.Roles["mirae_checkDefer"]._mangChucNang)
 
 
                       // 1.2           

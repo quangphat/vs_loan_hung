@@ -37,6 +37,8 @@ namespace VS_LOAN.Core.Entity.MCreditModels
         public string Partner { get; set; }
         public string StatusNumber { get; set; }
 
+        public string Message { get; set; }
+
     }
 
     public class MiraeCityRequest
@@ -187,7 +189,7 @@ namespace VS_LOAN.Core.Entity.MCreditModels
 
     public class BankItem
     {
-        public int Bankid  { get;set;}
+        public string Bankid  { get;set;}
 
         public string Bankdesc { get; set; }
 
@@ -291,12 +293,27 @@ namespace VS_LOAN.Core.Entity.MCreditModels
     public class PushToHistoryRequest
 
     {
+        public string appid { get; set; }
 
-        public int AppId { get; set; }
+        public int id { get; set; }
+
+        public string pathImage { get; set; }
+        public string docCode { get; set; }
+
+        public string userid { get; set; }
+
+        public string defercode { get; set; }
+
+        public string deferstatus { get; set; }
+       
+        public string comment { get; set; }
+
 
         public PushToHistoryRequest()
         {
-           
+            this.userid = "EXT_SBK";
+            this.defercode = "S1";
+            this.deferstatus = "N";
         }
 
     }
