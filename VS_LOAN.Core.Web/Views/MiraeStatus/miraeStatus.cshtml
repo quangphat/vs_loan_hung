@@ -1,7 +1,8 @@
 ﻿@using VS_LOAN.Core.Web.Resources;
 @using VS_LOAN.Core.Web.Helpers;
+@using VS_LOAN.Core.Entity;
 @{
-    ViewBag.Title = "Mirae assets";
+    ViewBag.Title = "Danh sách hồ sơ mirae";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <script type="text/javascript">
@@ -11,7 +12,7 @@
     <div class="breadcrumbs" id="breadcrumbs">
         <ul class="breadcrumb">
             <li>
-                <a href="javascript:void(0)">Quản lý trạng thái </a>
+                <a href="javascript:void(0)">Danh sách hồ sơ Mirae</a>
             </li>
         </ul>
     </div>
@@ -25,32 +26,37 @@
 
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right">Tìm kiếm</label>
                         <div class="col-sm-5 col-xs-12 ">
-                            <input type="text" class="form-control" id="txtFreeText" placeholder="Mã app, số điện thoại, CMND" />
+                            <input type="text" class="form-control" id="txtFreeText" placeholder="Tìm kiếm" />
                         </div>
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái </label>
+                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái MAFC</label>
                         <div class="col-sm-5 col-xs-12 ">
+                            <select id="ddlStatus" class="chosen-select form-control">
+                          
+                            
+                                                <option value="" select> Tất cả</option>
 
-
-                             <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
-                                        <option value="" select>Chưa chọn Trạng thái</option>
-                                        <option value="QDE">QDE</option>
-                                        <option value="BDE">BDE</option>
-                                        <option value="POL">POL</option>
-                                        <option value="POR">POR</option>
-                                        <option value="CBC">CBC</option>
-                                        <option value="SRR">SRR</option>
-                                        <option value="UND">UND</option>
-                                        <option value="POSSTG">POSSTG</option>
-                                        <option value="REJ">REJ</option>
-                                        <option value="CAN">CAN</option>
-                                        <option value="PDOC">PDOC</option>
-                                        <option value="DISBDTL">DISBDTL</option>
-                                        <option value="DII">DII</option>
-                                        <option value="FINISH">FINISH_Hồ sơ đã giải ngân</option>
+                                                <option value="QDE">QDE</option>
+                                                <option value="BDE">BDE</option>
+                                                <option value="POL">POL</option>
+                                                <option value="POR">POR</option>
+                                                <option value="CBC">CBC</option>
+                                                <option value="SRR">SRR</option>
+                                                <option value="UND">UND</option>
+                                                <option value="POSSTG">POSSTG</option>
+                                                <option value="REJ">REJ</option>
+                                                <option value="CAN">CAN</option>
+                                                <option value="PDOC">PDOC</option>
+                                                <option value="DISBDTL">DISBDTL</option>
+                                                <option value="DII">DII</option>
+                                                <option value="FINISH">FINISH_Hồ sơ đã giải ngân</option>
+                                     
                             </select>
                         </div>
                     </div>
 
+
+                 @if (GlobalData.User.UserType == (int)UserTypeEnum.Admin)
+                {
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Nhóm</label>
                         <div class="col-sm-5 col-xs-12 ">
@@ -66,6 +72,8 @@
 
                         </div>
                     </div>
+
+                }
 
                     <div class="form-group">
                         <div class="col-sm-2 col-xs-12">
@@ -105,7 +113,7 @@
                             <a class="btn btn-primary" id="btn_search">
                                 Tìm kiếm
                             </a>
-                            <a class="btn btn-primary" href="/miraeStatus/AddNew">
+                            <a class="btn btn-primary" href="/Mirae/AddNew">
                                 Thêm mới
                             </a>
 
@@ -115,23 +123,7 @@
                     </div>
                 </form>
                 <hr>
-					@if (GlobalData.User.IDUser == 1)
-						{
-
-								<div class="form-group">
-								<div class=" col-sm-8">
-								<input multiple="" class="col-sm-4" type="file" id="file" />
-								<a class="btn btn-primary" id="btnImport">Import file</a>
-								</div>
-
-								</div>
-						}
-						else
-						{
-
-
-						}
-
+					
                
             </div>
         </div>
@@ -141,7 +133,7 @@
                     <div class="pull-right tableTools-container"></div>
                 </div>
                 <div class="table-header">
-                   Danh sách hồ sơ 
+                    Danh sách hồ sơ
                 </div>
                 <div class="dataTables_wrapper form-inline no-footer">
                     <div class="row">
@@ -166,24 +158,26 @@
                         <table id="dtSource" class="report-table-custom table table-striped table-bordered table-hover">
                             <thead class="table-header">
                                 <tr>
-                                    <th class="center w-45">STT</th>
-                                    <th class="w-98">Mã app</th>
-                                    <th class="m-w-150">Tên khách hàng</th>
-                                    <th class="m-w-150">CMND</th>
-                                     <th class="m-w-300"> Trạng thái bên MAFC</th>
-                                 
-
-
-                                    <th class="m-w-300">Đang Xử lý/ Chưa xử lý</th>
-                                  
-                                    <th class="m-w-300">Last noted VietBank</th>
-                                     <th class="w-84">Mã nhân viên </th>
-                                   <th class="w-84">Nguời tạo </th>
-                                    <th class="w-150">Ngày tạo</th>
-                                          <th class="w-84">Mã VBF cập nhật </th>
-                                    <th class="w-84">Người Cập nhật</th>
-                                    <th class="w-150">Ngày Cập nhật</th>
-
+                                   
+                        <th class="center w-45">STT</th>
+                        <th class="w-70">Mã app</th>
+                        <th class="m-w-130">Tên khách hàng</th>
+                        <th class="m-w-100">CMND</th>
+					     <th class="m-w-85">Trạng thái</th>               
+                        <th class="m-w-55">  MAFC</th>
+                         <th class="m-w-50">Trạng thái file</th>
+                        <th class="m-w-200">Phản hồi & lỗi MAFC</th>                    
+                        <th class="m-w-200">Last noted VietBank</th>
+                           <th class="m-w-90">Lý do  từ chối</th>
+               
+                        <th class="w-84">Mã nhân viên </th>
+                        <th class="w-84">Nguời tạo </th>
+                        <th class="w-150">Ngày tạo</th>
+                        <th class="w-84">Mã VBF cập nhật </th>
+                        <th class="w-84">Người Cập nhật</th>
+                        <th class="w-150">Ngày Cập nhật</th>
+                      
+                        
 
 
                                 </tr>
@@ -193,7 +187,7 @@
                     </div>
                 </div>
 
-                <div class="clearfix">
+                <div class="clearfix" >
                 <div class="one-row no-gutters justify-content-between paginate">
                     <div class="col-auto">
                         <div class="dataTables_info" id="dtSource_info" role="status" aria-live="polite"></div>
@@ -236,7 +230,8 @@
 	var userData = @Html.Raw(Json.Encode(GlobalData.User));
 
     $(document).ready(function e() {
- 
+        //renderStatusList();
+	
         $('#ddlStatus').chosen({ width: '100%', allow_single_deselect: true });
         window.addEventListener('popstate', function (e) {
 
@@ -285,7 +280,6 @@
 
         $('#ddlThanhVienNhom').chosen({ width: '100%', allow_single_deselect: true });
         $('#ddlNhom').chosen({ width: '100%', allow_single_deselect: true });
-   
         }
 
         $('#ddllimit').chosen({ width: '100%', allow_single_deselect: true });
@@ -461,10 +455,8 @@
         let display = getValueDisplay(textValue, type);
         return "<td class='text-left " + className + "'><a href='" + href + "' >" + display + "</a></td>";
     }
-
     function renderRow(index, rowData) {
-		
-		
+	
         page = queries.get("page");
         if (isNullOrUndefined(page) || isNullOrWhiteSpace(page))
             page = 1;
@@ -476,26 +468,54 @@
         else
             limit = parseInt(limit)
         var stt = (page - 1) * limit + index + 1;
-        var strhtmlData = "<tr role='row' class = 'odd'>"
+
+        if(rowData.LastDeffer==null )
+        {
+            rowData.LastDeffer ="";
+        }
+
+        var statusSendFile = "Chưa đẩy file";
+
+        if(rowData.IsPushDoucment)
+        {
+            statusSendFile = "Đẩy file";
+        }
+
+        var textReason = rowData.Rejeccode;
+
+        if(rowData.Reason ==null)
+        {
+       
+             textReason = rowData.Rejeccode;
+        }
+        else 
+        {
+             textReason =  rowData.Rejeccode +"__"+rowData.Reason;
+        }
+    
+    if(textReason ==null)
+    {
+        textReason ="";
+    }
+
+        console.log(textReason);       
+       
+   
+		 var strhtmlData = "<tr role='row' class = 'odd'>"
 		+ renderTextCenter(stt)
-		+ renderTextLeft(rowData.Appid)
+		+ renderTextLeft(rowData.AppId)
         + renderTextLink(rowData.Fname +" "+rowData.Mname + " " +rowData.Lname, '/mirae/tracking/' + rowData.Id)
 		+ renderTextLeft(rowData.Nationalid)
-		+ renderTextLeft(rowData.Statusclient);
-      
-
-        if(   rowData.Statusclient =="QDE" || rowData.Statusclient =="DDE" )
-        {
-               strhtmlData += renderTextLeft("Chưa xử lý", "tb-row-breakword");
-        }
-        else 	
-
-        {
-
-        strhtmlData += renderTextLeft("Đang xử lý", "tb-row-breakword");
-        }
+	 + renderStatusDisplay(rowData.StatusName)
+		+ renderTextLeft(rowData.Statusclient)
+        	+ renderStatusDisplaySendFile(statusSendFile)
         
+        + renderTextLeft(rowData.LastDeffer, '', 'tb-row-breakword');
+
+    
         strhtmlData += renderTextLeft(rowData.LastNoteVietBank, '', 'tb-row-breakword');
+         strhtmlData += renderTextLeft(textReason, '', 'tb-row-breakword');
+            + "</tr>";
 
         strhtmlData += renderTextLeft(rowData.Vbf)
           + renderTextLeft(rowData.CreatedUser)
@@ -503,10 +523,8 @@
         + renderTextLeft(rowData.VbFUserUpdate)
         + renderTextLeft(rowData.UpdateUser)
         + renderTextLeft(rowData.UpdatedTime, 'datetime', 'w-150');
-	
-		
-
-            + "</tr>";
+        
+        
 		return strhtmlData;
     }
     function getValueDisplay(value, type='TYPE') {
@@ -632,18 +650,20 @@
 
     function getData(page, limit, memberId = 0, isPopState = false)
     {
+   
 
         showBlock($('#panel_body'), strLoading);
         $.ajax( {
-                url: '@Url.Action("SearchTemps", "MiraeStatus")',
+                   url: '@Url.Action("SearchTemps", "MiraeStatus")',
                 type: "GET",
-                contentType: "application/json",
             data: {
                 'page': page,
                 'limit': limit,
                 'freeText': $("#txtFreeText").val(),
                 'status': "0",
                 'type': "draft",
+                'manhom':$("#ddlNhom").val(),
+                'mathanhvien':$("#ddlThanhVienNhom").val(),
 				'fromDate':$('#txtFromDate').val(),
 				'toDate': $('#txtToDate').val(),
 			    'loaiNgay': $('input[name="radio-ngay"]:checked').val(),
@@ -653,8 +673,8 @@
 
                 if (response.success == true) {
                     totalRecord = response.data.TotalRecord;
-                    var search = this.url.replace("/MCredit/Temp", "");
-                    search = search.replace("/Ocb/SearchTemps","")
+                    var search = this.url.replace("/MiraeStatus/Index", "");
+                    search = search.replace("/MiraeStatus/SearchTemps","")
                     queries = new URLSearchParams(search)
 
                     page = queries.get("page");
@@ -671,6 +691,7 @@
 
                     renderTableBody(response.data.Datas)
                     //renderGoPreviousPage(page);
+                   
                     renderPageList(page, limit, totalRecord)
                     $("#dtSource_info").text("Tổng: " + totalRecord + " items");
                     $("#totalPage").text("Tổng: " + totalPage + " trang");
@@ -692,7 +713,7 @@
                 complete: function () {
                     $('#panel_body').unblock();
                     if (!isPopState) {
-                        var requestUrl = this.url.replace("SearchTemps", "Temp")
+                        var requestUrl = this.url.replace("SearchTemps", "Index")
                         window.history.pushState(requestUrl, this.title, requestUrl)
                     }
             }
@@ -700,89 +721,35 @@
 
     }
 	
+
+    function renderStatusDisplaySendFile(statusName, btnRefresh = null) {
+
+    if (isNullOrWhiteSpace(statusName))
+        return "<td class='text-left'></td>";
+    let firstChar = statusName[0].toLowerCase();
+    let greenGroup = ['a', 'b', 'd'];
+    let danger = ['e', 'f', 't'];
+    let succsess = ['i', 'đ', 'm'];
+    let cancel = ['o', 'p', 'q', 'g'];
+    let inverse = ['j', 'c', 'z', 'w'];
+    let colorClass = 'label-temp'
+    if (greenGroup.indexOf(firstChar) >= 0)
+        colorClass = 'label-green';
+    if (danger.indexOf(firstChar) >= 0)
+        colorClass = 'label-orrange'
+    if (succsess.indexOf(firstChar) >= 0)
+        colorClass = 'label-success'
+    if (inverse.indexOf(firstChar) >= 0)
+        colorClass = 'label-inverse'
+    if (cancel.indexOf(firstChar) >= 0)
+        colorClass = 'label-cancel'
+    if (btnRefresh == null)
+        btnRefresh = ''
+    var statusString = `<span class='label label-sm ${colorClass} arrowed arrowed-righ '>${statusName}</span>`;
+    return "<td class='text-left min-150'>" + statusString + btnRefresh + "</td>";
+}
+
 	
-	  function GetAllStatus() {
-        $.ajax({
-            type: "GET",
-            url: '@Url.Action("GetAllStatus", "Mirae")',
-
-            success: function (data) {
-                $('#ddlStatus').empty();
-                $('#ddlStatus').append("<option value='-1'></option>");
-                if (data != null) {
-                    $.each(data.data, function (index, optionData) {
-                        $('#ddlStatus').append("<option value='" + optionData.Code + "'>" + optionData.Name + "</option>");
-                    });
-                }
-                $('#ddlStatus').chosen().trigger("chosen:updated");
-
-            },
-            complete: function () {
-			
-		
-				  $('#ddlStatus').chosen().trigger("chosen:updated");
-
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    }
-
-
-
-     $('#btnImport').click(function (e) {
-        
-        var formData = new FormData();
-        formData.append('file', $('#file')[0].files[0]);
-       
-        $.ajax({
-            url: '/Mirae/Import',
-            type: 'POST',
-            data: formData,
-            processData: false,  // tell jQuery not to process the data
-            contentType: false,  // tell jQuery not to set contentType
-            success: function (data) {
-
-                if (data != null && data.success) {
-                    swal({
-                        title: "@Html.Raw(Global.Message_Title)",
-                        text: data.code,
-                        type: "success",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    }, function () {
-                        window.location = window.location
-                    });
-                }
-
-                else {
-                    swal({
-                        title: "@Html.Raw(Global.Message_Title)",
-                        text: data.code,
-                        type: "error",
-                        timer: 4000,
-                        showConfirmButton: true,
-                    });
-                }
-            },
-            complete: function () {
-            },
-            error: function (jqXHR, exception) {
-                showError(jqXHR, exception);
-            }
-        });
-    })
-    
    
 </script>
 
-<script>
-
-    function XemHS(id) {
-        window.location = "/QuanLyHoSo/XemHSByID?id=" + id;
-    }
-    function SuaHS(id) {
-        window.location = "/QuanLyHoSo/SuaHSByID?id=" + id;
-    }
-</script>

@@ -18,7 +18,9 @@ namespace VS_LOAN.Core.Web
           new Lazy<IUnityContainer>(() =>
           {
               var container = new UnityContainer();
+
               RegisterTypes(container);
+
               return container;
           });
 
@@ -75,6 +77,7 @@ namespace VS_LOAN.Core.Web
             container.RegisterType<IMiraeRepository, MiraeRepository>();
             container.RegisterType<MCreditService.Interfaces.IMiraeService, MiraeService>();
             
+
             container.RegisterType<IMiraeDeferRepository, MiraeDeferRepository>();
             container.RegisterType<IMiraeMaratialRepository, MiraeMaratialRepository>();
 

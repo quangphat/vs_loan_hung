@@ -108,6 +108,7 @@ namespace VS_LOAN.Core.Repository
                 }, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
+            
         }
 
 
@@ -124,12 +125,24 @@ namespace VS_LOAN.Core.Repository
 
         }
 
+       
         public async Task<MiraeModel> GetTemProfileByMcId(int id)
         {
 
             using (var con = GetConnection())
             {
                 var result = await con.QueryFirstOrDefaultAsync<MiraeModel>("sp_mirae_GetById", new { id }, commandType: CommandType.StoredProcedure);
+                return result;
+            }
+
+        }
+      
+        public async Task<MiraeDetailModel> GetDetail(int id)
+        {
+
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryFirstOrDefaultAsync<MiraeDetailModel>("sp_mirae_GetById", new { id }, commandType: CommandType.StoredProcedure);
                 return result;
             }
 
@@ -160,29 +173,8 @@ namespace VS_LOAN.Core.Repository
             }
         }
 
-        public async Task<bool> UpdateOCBProileReport(OcbStatusImportModel model)
-        {
-            var param = GetParams(model, ignoreKey: new string[]
-            {
-
-            });
-            using (var con = GetConnection())
-            {
-                var storeExecute = "sp_updateOCBStatus";
-                await con.ExecuteAsync(storeExecute, param, commandType: CommandType.StoredProcedure);
-                return true;
-            }
-        }
-
-        public async Task<bool> UpdateStatusComplete(int customerId, int id)
-        {
-            using (var con = GetConnection())
-            {
-                var storeExecute = "sp_update_customerId";
-                await con.ExecuteAsync(storeExecute, new { id,customerId }, commandType: CommandType.StoredProcedure);
-                return true;
-            }
-        }
+ 
+      
 
 
         public async Task<bool> UpdatStatusClient(ClientUpdateStatusRequest request)
@@ -268,6 +260,26 @@ namespace VS_LOAN.Core.Repository
             {
                 var storeExecute = "sp_updateMiraeStatus";
                 await con.ExecuteAsync(storeExecute, new { id, status,appid,userid }, commandType: CommandType.StoredProcedure);
+                return true;
+            }
+        }
+
+        public async Task<bool> UpdateStatusMAFC(int id, int status, int appid, int userid)
+        {
+            using (var con = GetConnection())
+            {
+                var storeExecute = "sp_updateMiraeStatusMafc";
+                await con.ExecuteAsync(storeExecute, new { id, status, appid, userid }, commandType: CommandType.StoredProcedure);
+                return true;
+            }
+        }
+
+        public async Task<bool> SetAppidProfile(int id,int appId)
+        {
+            using (var con = GetConnection())
+            {
+                var storeExecute = "setAppidProfile";
+                await con.ExecuteAsync(storeExecute, new { id, appId }, commandType: CommandType.StoredProcedure);
                 return true;
             }
         }

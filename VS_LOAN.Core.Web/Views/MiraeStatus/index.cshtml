@@ -609,6 +609,7 @@
             success: function (response) {
 
                 if (response.success == true) {
+                    
                     totalRecord = response.data.TotalRecord;
                     var search = this.url.replace("/MCredit/Temp", "");
                     search = search.replace("/Ocb/SearchTemps","")

@@ -17,10 +17,10 @@ namespace VS_LOAN.Core.Repository.Interfaces
       Task<List<int>> GetPeopleCanViewMyProfile(int profileId);
         Task<bool> InsertPeopleWhoCanViewProfile(int profileisUpdateMCIId, string peopleIds);
         Task<MiraeModel> GetTemProfileByMcId(int id);
-
+        Task<MiraeDetailModel> GetDetail(int id);
         Task<MiraeModel> GetByAppid(int appID);
 
-        Task<bool> UpdateStatusComplete(int customerId, int profileid);
+     
         Task<List<MiraeModelSearchModel>> GetTempProfiles(int page, int limit, string freeText, int userId, string status = null,DateTime? fromDate = null, DateTime? toDate = null, int loaiNgay=0, int manhom = 0,
 
               int mathanhvien = 0);
@@ -34,8 +34,8 @@ namespace VS_LOAN.Core.Repository.Interfaces
         Task<bool> UpdateStatus(int id, int status, int appid, int userid);
         Task<bool> UpdateDDE(MiraeDDEEditModel model);
 
-
-     
+        Task<bool> UpdateStatusMAFC(int id, int status, int appid, int userid);
+         Task<bool> SetAppidProfile(int id, int appId);
 
     }
 }

@@ -36,6 +36,11 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
 
         public DateTime Dob { get; set; }
 
+       
+
+
+
+
         public int Constid { get; set; }
 
         public string Tax_code { get; set; }

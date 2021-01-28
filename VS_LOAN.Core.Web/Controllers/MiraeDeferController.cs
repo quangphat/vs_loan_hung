@@ -40,18 +40,12 @@ namespace VS_LOAN.Core.Web.Controllers
             IMiraeDeferRepository deferRepository
             ) : base()
         {
-         
-         
             _odcService = odcService;
-    
             _deferRepository = deferRepository;
         }
 
         public async Task<JsonResult> PushPendHistory(string deferStatus,int appId, string documentType , string comment)
         {
-
-        
-
             var multiForm = new MultipartFormDataContent();
             multiForm.Add(new StringContent("EXT_SBK"), "usersname");
             multiForm.Add(new StringContent("mafc123!"), "password");
@@ -123,17 +117,6 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = DataPaging.Create(profiles, profiles[0].TotalRecord);
             return ToJsonResponse(true, "", result);
         }
-    
-        //public async Task<ActionResult> Index()
-        //{
-
-        //    await _odcService.CheckAuthen();
-
-
-        //    return View("Temp");
-        //}
-
-
 
         public async Task<JsonResult> GetAllMiraeDeferType()
         {
@@ -141,9 +124,6 @@ namespace VS_LOAN.Core.Web.Controllers
             return ToJsonResponse(true, "", data: result);
 
         }
-
-      
-
        
     }
 }

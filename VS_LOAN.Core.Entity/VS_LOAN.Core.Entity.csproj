@@ -179,6 +179,7 @@
     <Compile Include="MCreditModels\SqlModel\MiraeDeferSearchModel.cs" />
     <Compile Include="MCreditModels\SqlModel\MiraeEditModel.cs" />
     <Compile Include="MCreditModels\SqlModel\MiraeDeferModel.cs" />
+    <Compile Include="MCreditModels\SqlModel\MiraeDetailModel.cs" />
     <Compile Include="MCreditModels\SqlModel\MiraeModelSearchModel.cs" />
     <Compile Include="MCreditModels\SqlModel\MiraeModel.cs" />
     <Compile Include="MCreditModels\SqlModel\MiraeAddModel.cs" />

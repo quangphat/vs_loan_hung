@@ -1,12 +1,8 @@
 ﻿
 
 @using VS_LOAN.Core.Web.Resources;
-
-@{
-    var isAdmin = this.ViewData.ContainsKey("isAdmin") ? this.ViewData["isAdmin"].ToString() : "0";
-
-
-}
+@using VS_LOAN.Core.Web.Helpers;
+@using VS_LOAN.Core.Entity;
 <div class="main-content-inner">
   
     <div class="page-content" id="panel_body">
@@ -119,9 +115,57 @@
                     <div class="form-group">
                         <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Ghi chú</label>
                         <div class="col-md-11 col-sm-12 col-xs-12">
-                            <textarea class="form-control" id="txtGhiChu" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
+                            <textarea class="form-control" id="txtGhiChu" name ="noted" style="margin: 0px -4.5px 0px 0px; height: 50px;" placeholder="Nhập ghi chú"></textarea>
+                        </div>
+  
+                    </div>
+
+    @if (GlobalData.User.UserType == (int)UserTypeEnum.Admin)
+                    {
+
+
+                        <div class="form-group">
+                            <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
+                            <div class="col-sm-5 col-xs-12 ">
+                                <select id="ddlStatus" class="chosen-select form-control" data-placeholder="Chọn trạng thái">
+                                </select>
+                            </div>
+
+                        </div>
+                    }
+
+
+                    @if (GlobalData.User.UserType != (int)UserTypeEnum.Admin)
+                    {
+
+                        <div class="form-group">
+                            <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Trạng thái</label>
+                            <div class="col-sm-5 col-xs-12 ">
+                                <select id="ddlStatus" disable class="chosen-select form-control" data-placeholder="Trạng thái">
+                                </select>
+                            </div>
+
+                        </div>
+                    }
+
+                    <div class="form-group">
+                    
+
+                        
+
+                         <div class="col-md-8">
+                            <div class="activity-log">
+                                <div class="timline-addNote only-new-note">
+                                    <div class="timeline-date-event timline-date-event--margin mt-0" id="dsGhichu">
+
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+
                     
 
                        <div class="pull-right">
@@ -131,33 +175,44 @@
                         
                         </a>
 
-                          @if( isAdmin =="1")
-                        {
-                                <a class="btn btn-sm btn-primary"  id="btnCreateQDE">
-                                Tạo QDE
-                                </a>
-
-                                <a class="btn btn-sm btn-primary"  id="btnQDEToDDE">
-                                QDEToDDE
-                                </a>
-
-
-                                <a class="btn btn-sm btn-primary"  id="btnCreateDDE">
-                                Tạo DDE
-                                </a>
 
 
 
-                                <a class="btn btn-sm btn-primary"  id="btnDDEToPOR">
-                                DDEToPOR
-                                </a>
+                        
+                @if (GlobalData.User.UserType == (int)UserTypeEnum.Admin)
+                {
 
-                                <a class="btn btn-sm btn-primary" onclick ="uploadfileSubmi()" id="btnPushDDE">
-                                Đẩy file
-                                </a> 
+                            <a class="btn btn-sm btn-primary"  id="btnCreateQDE">
+                            Tạo QDE
+                            </a>
 
-                        }
+                            <a class="btn btn-sm btn-primary"  id="btnQDEToDDE">
+                            QDEToDDE
+                            </a>
 
+
+                            <a class="btn btn-sm btn-primary"  id="btnCreateDDE">
+                            Tạo DDE
+                            </a>
+
+
+
+                            <a class="btn btn-sm btn-primary"  id="btnDDEToPOR">
+                            DDEToPOR
+                            </a>
+
+
+                            <a class="btn btn-sm btn-primary" id="btnSendProfile">
+                            Nộp hồ sơ qua MAFC
+                            </a> 
+
+                            <a class="btn btn-sm btn-primary" onclick ="uploadfileSubmi()" id="btnPushDDE">
+                            Đẩy file
+                            </a> 
+
+
+                        
+                  }
 
 
 

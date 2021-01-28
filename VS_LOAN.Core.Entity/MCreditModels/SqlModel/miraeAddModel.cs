@@ -9,6 +9,7 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
     public class MiraeAddModel
     {
 
+        public string SellerNote { get; set; }
         public int Id { get; set; }
         public string Channel { get; set; }
         public string Schemeid { get; set; }
@@ -223,5 +224,9 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
         public string Notecode { get; set; }
 
         public string Notedetails { get; set; }
+
+        public string DobStr { get; set; }
+
+        public string NationalidissuedateStr { get; set; }
     }
 }

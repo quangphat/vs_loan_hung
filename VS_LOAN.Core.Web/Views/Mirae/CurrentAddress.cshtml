@@ -90,7 +90,7 @@
                         <div class="form-group displayRoom" >
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên chủ nhà trọ<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <input type="text" id="addressCur_landlord" name ="landlordCur" placeholder="nhân chủ nhà trọ" class="form-control" />
+                            <input type="text" id="addressCur_landlord" maxlength="40" name ="landlordCur" placeholder="nhân chủ nhà trọ" class="form-control" />
                         </div>
 
                         </div>
@@ -98,7 +98,7 @@
                         <div class="form-group displayRoom">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Phòng trọ số<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <input type="text" id="addressCur_roomno" name ="roomnoCur" placeholder="Phòng trọ số" class="form-control" />
+                            <input type="text" maxlength="8"  id="addressCur_roomno" name ="roomnoCur" placeholder="Phòng trọ số" class="form-control" />
                         </div>
 
                         </div>
@@ -107,11 +107,14 @@
                        
 						<label class="col-sm-2 control-label no-padding-right">Mô tả đường đi</label>
                         <div class="col-sm-4">
-                              <input type="text" id="addressCur_landmark" name ="landmarkCur"  placeholder="Mô tả đường đi" class="form-control" />
+                              <input type="text" id="addressCur_landmark" maxlength="200" name ="landmarkCur"  placeholder="Mô tả đường đi" class="form-control" />
                         </div>
 						
                     </div>
 					
+			
+
+                
 				<div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Địa chỉ thường trú trùng địa chỉ hiện tại</label>
                         <div class="col-sm-4">
@@ -119,11 +122,13 @@
                                 <input name="IsDuplicateAdrees" id ="IsDuplicateAdreesHas" type="radio"  value="true" class="ace">
                                 <span class="lbl"> Có</span>
                             </label>
-                            <label class="control-label no-padding-right" id ="IsDuplicateAdreesNo" style="margin-left:20px">
-                                <input name="IsDuplicateAdrees" type="radio" value="false" class="ace">
+                            <label class="control-label no-padding-right" style="margin-left:20px">
+                                <input name="IsDuplicateAdrees" id ="IsDuplicateAdreesNo" type="radio" value="false" checked class="ace">
                                 <span class="lbl"> Không</span>
                             </label>
                         </div>
+
+                        
                         
 				</div>
 

@@ -129,7 +129,7 @@ namespace VS_LOAN.Core.Web.Helpers
                     new SiteMenuItem("Quản lý hồ sơ","menu-icon qlhs",IndexMenu.M_2,"#",new int[] { }),
                         new SiteMenuItem("Danh sách hồ sơ","", IndexMenu.M_2_2,ControllerRoles.Roles["profile_list"]._href, ControllerRoles.Roles["profile_list"]._mangChucNang), // 1.3     
                         new SiteMenuItem("Duyệt hồ sơ","", IndexMenu.M_2_3,ControllerRoles.Roles["profile_approve"]._href, ControllerRoles.Roles["profile_approve"]._mangChucNang) ,// 1.2  
-                    new SiteMenuItem("Check Duplicate","menu-icon duplicate",IndexMenu.M_5,"#",new int[] { }),
+                    new SiteMenuItem("Check PCB TPbank","menu-icon duplicate",IndexMenu.M_5,"#",new int[] { }),
                         new SiteMenuItem("Tạo mới","", IndexMenu.M_5_1,ControllerRoles.Roles["checkdup_addnew"]._href, ControllerRoles.Roles["checkdup_addnew"]._mangChucNang), // 1.3     
                         new SiteMenuItem("Danh sách","", IndexMenu.M_5_2,ControllerRoles.Roles["checkdup_list"]._href, ControllerRoles.Roles["checkdup_list"]._mangChucNang), // 1.2  
                     new SiteMenuItem("Công ty","menu-icon company",IndexMenu.M_8,"#",new int[] { }),
@@ -149,7 +149,7 @@ namespace VS_LOAN.Core.Web.Helpers
                    new SiteMenuItem("Ocb","menu-icon courier",IndexMenu.M_15,"#",new int[] { }),
                         new SiteMenuItem("Danh sạch tạo mới","", IndexMenu.M_15_1, ControllerRoles.Roles["ocbList"]._href, ControllerRoles.Roles["mcedit_checkcat"]._mangChucNang),
                 new SiteMenuItem("Mirae","menu-icon courier",IndexMenu.M_16,"#",new int[] { }),
-                        new SiteMenuItem("Lên mới hồ sơ","", IndexMenu.M_16_1, ControllerRoles.Roles["mirae_list"]._href, ControllerRoles.Roles["mirae_list"]._mangChucNang),
+                        new SiteMenuItem("Tạo mới hồ sơ","", IndexMenu.M_16_1, ControllerRoles.Roles["mirae_list"]._href, ControllerRoles.Roles["mirae_list"]._mangChucNang),
                         new SiteMenuItem("Check DUP","", IndexMenu.M_16_2, ControllerRoles.Roles["mirae_checkDuplicate"]._href, ControllerRoles.Roles["mirae_checkDuplicate"]._mangChucNang),
                            
                          new SiteMenuItem("Quản lý trạng thái Hồ sơ","", IndexMenu.M_16_3, ControllerRoles.Roles["mirae_managementstatus"]._href, ControllerRoles.Roles["mirae_checkDefer"]._mangChucNang)

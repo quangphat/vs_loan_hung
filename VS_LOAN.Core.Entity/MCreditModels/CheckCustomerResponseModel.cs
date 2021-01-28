@@ -212,9 +212,9 @@ namespace VS_LOAN.Core.Entity.MCreditModels
 
         public string Product { get; set; }
 
-        public double? Maxamtfin { get; set; }
+        public double Maxamtfin { get; set; }
 
-        public double? Minamtfin { get; set; }
+        public double Minamtfin { get; set; }
 
         public int Maxtenure { get; set; }
 

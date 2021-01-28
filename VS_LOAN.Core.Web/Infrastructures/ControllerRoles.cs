@@ -37,7 +37,7 @@ namespace VS_LOAN.Core.Web.Infrastructures
              { "mcedit_list_temp", new ActionInfo{ _formindex = IndexMenu.M_9_5, _href = "MCredit/Temp", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
              { "mcedit_list", new ActionInfo{ _formindex = IndexMenu.M_9_6, _href = "MCredit/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
              { "revoke_list", new ActionInfo{ _formindex = IndexMenu.M_10_1, _href = "Revoke/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
-             { "mirae_list", new ActionInfo{ _formindex = IndexMenu.M_16, _href = "mirae/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "mirae_list", new ActionInfo{ _formindex = IndexMenu.M_16, _href = "Mirae/AddNew", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
 
              { "mirae_checkDefer", new ActionInfo{ _formindex = IndexMenu.M_16_3, _href = "MiraeDefer/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
 

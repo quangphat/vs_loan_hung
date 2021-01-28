@@ -74,9 +74,12 @@ namespace VS_LOAN.Core.Business
 
         public async Task<BaseResponse<int>> CreateAsync(CheckDupAddModel model, int createdBy)
         {
+            model.PartnerId = 1;
             if (model.PartnerId <= 0)
                 return ToResponse(0, false, "Vui lòng chọn đối tác");
-            var obj = _mapper.Map<CheckDupAddSql>(model);
+
+          
+           var obj = _mapper.Map<CheckDupAddSql>(model);
             obj.CICStatus = (int)CheckDupCICStatus.NotDebt;
             obj.PartnerStatus = (int)CheckDupPartnerStatus.NotCheck;
             var response = await _rpCheckDup.CreateAsync(obj,createdBy);

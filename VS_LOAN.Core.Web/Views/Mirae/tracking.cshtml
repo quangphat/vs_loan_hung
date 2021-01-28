@@ -74,7 +74,10 @@
  @Html.Partial("infomationApp", null, new ViewDataDictionary { { "isAdmin", ViewBag.isAdmin } })
 </div>
 <div id="Paris" class="tabcontent">
+
+
          <div class="row">
+       
             <div class="col-xs-12">
                 <h3 class="header smaller lighter blue">3.Hồ sơ đính kèm:</h3>
                 <div class="row">
@@ -83,9 +86,24 @@
                     </div>
                 </div>
 
+
+
+
             </div>
 
         </div>
+
+         <div class="row">
+      <div class="pull-right">
+            
+                <a class="btn btn-sm btn-primary"  onclick ="uploadHosoTab()">
+                    Uploadchứng từ
+                
+                </a>
+        </div>
+         </div>
+
+  
 
      
 </div>
@@ -169,6 +187,8 @@ function openCity(evt, cityName) {
             $(this).prev().focus();
         });
 
+      
+         Getcomments();
 
       $('#frmAdd select').each(
        function(index){  
@@ -246,20 +266,29 @@ function lowerFirstLetter(string) {
     function bindData()
     {
 
-     
-
         var model = @Html.Raw(Json.Encode(ViewBag.model));
-     
-        console.log(model);
+
+        if(model.AppId != null && model.appId !="")
+        {
+            $("#btnCreateQDE").hide();
+
+        }
+
+        if(model.isQDEToPor)
+        {
+            $("#btnQDEToDDE").hide();
+            $("#btnCreateDDE").hide();
+            $("#btnDDEToPOR").hide();
+        }
+
         for(var key in model) {
 
             var keylower = lowerFirstLetter(key);
             var value = model[key];
-                if(keylower =="lname")
-                {
-                  
-                }
-            
+            if(keylower =="lname")
+            {
+                
+            }
              if(value != "")
 
             {
@@ -325,12 +354,7 @@ function lowerFirstLetter(string) {
 
     $(document).ready(function () {
     
-        LayDSTinh('ddlTinhCur');
-        LayDSTinh('ddlTinhPer');
-        LayDSTinh('cityCompany');
-
-      
-	
+  
         $('#ddlTinhCur').on('change', function () {
                     LayDSHuyen(this.value,"ddlHuyenCur");
           });
@@ -423,12 +447,16 @@ function lowerFirstLetter(string) {
         LayDanhSachSaleOfficer();
         LayDSSanPham();
         GetAllBank();
-        var modelbindViewbag = @Html.Raw(Json.Encode(ViewBag));        
-       laydanhsachtinh("#ddlTinhPer", modelbind.AddressPer_City, modelbind.AddressPer_District, "#ddlHuyenPer" , "#ddlRewardPer" , modelbind.AddressPer_Ward );
+          GetAllStatus(datamodel.Status);
+
+     
+        var modelbindViewbag = @Html.Raw(Json.Encode(ViewBag));      
+               
         laydanhsachtinh("#ddlTinhCur", modelbind.AddressCur_City, modelbind.AddressCur_District, "#ddlHuyenCur" , "#ddlRewardCur" , modelbind.AddressCur_Ward );
+
         laydanhsachtinh("#cityCompany", modelbind.CityCompany, modelbind.DistrictCompany, "#districtCompany" , "#wardCompany" , modelbind.WardCompany );
-
-
+  
+       laydanhsachtinh("#ddlTinhPer", modelbind.AddressPer_City, modelbind.AddressPer_District, "#ddlHuyenPer" , "#ddlRewardPer" , modelbind.AddressPer_Ward );
 
   if( datamodel.addressCur_in_propertystatus =="R")
   {
@@ -444,6 +472,40 @@ function lowerFirstLetter(string) {
 
       
   }
+
+  if(datamodel.IsQDEToDDE)
+  {
+        $("#btnQDEToDDE").hide();
+  }
+  else 
+  {
+      $("#btnQDEToDDE").show();
+  }
+
+  if(datamodel.IsQDEToPor)
+  {
+        $("#btnCreateDDE").hide();
+        $("#btnDDEToPOR").hide();
+           $("#btnSendProfile").hide();
+   
+  }
+  else 
+  {
+        $("#btnCreateDDE").show();
+        $("#btnDDEToPOR").show();
+  }
+
+
+  if(datamodel.IsPushDoucment)
+  {
+        $("#btnSendProfile").hide();
+        $("#btnPushDDE").hide();
+  }
+  else 
+  {
+    
+  }
+      
 
 $("#maritalstatus").val(datamodel.Maritalstatus);
 $("#maritalstatus").chosen().trigger("chosen:updated");
@@ -481,7 +543,7 @@ $("#refferee2_Refereerelation").chosen().trigger("chosen:updated");
 
 $("#refferee3_Refereere1ation").val(datamodel.Refferee3_Refereere1ation);
 $("#refferee3_Refereerelation").chosen().trigger("chosen:updated");
-     if(datamodel.IsDuplicateAdrees)
+     if(datamodel.IsDuplicateAdrees )
         {
                 $('#IsDuplicateAdreesHas').prop('checked',true);
         }
@@ -492,9 +554,8 @@ $("#refferee3_Refereerelation").chosen().trigger("chosen:updated");
         }
 
 
-
-
-        if(datamodel.Laa_app_ins_applicable)
+     
+        if(datamodel.Laa_app_ins_applicable == "True")
         {
                 $('#IsLaa_app_ins_applicableHas').prop('checked',true);
         }
@@ -546,7 +607,7 @@ $("#refferee3_Refereerelation").chosen().trigger("chosen:updated");
                          $(idTinh).append("<option value='" + optionData.Stateid + "'>" + optionData.Statedesc + "</option>");
                     });
                 }
-                $(idTinh).chosen().trigger("chosen:updated");
+               
                   
             },
             complete: function () {
@@ -729,17 +790,15 @@ $("#refferee3_Refereerelation").chosen().trigger("chosen:updated");
             $(controlId).empty();
             $(controlId).append("<option value='0'></option>");
             if (data !== null) {
-              
-
                   $.each(data.data, function (index, optionData) {
                          $(controlId).append("<option value='" + optionData.Stateid + "'>" + optionData.Statedesc + "</option>");
                     });
             }
             if (value !== null)
-                $(controlId).val(value);
+            $(controlId).val(value).change();
             $(controlId).chosen().trigger("chosen:updated");
 
-            console.log(value);
+        
 
         },
         complete: function () {
@@ -1099,14 +1158,26 @@ function GetAllBank() {
 
         $('#btn_Temp').click(function (e) {
 
-
+    
         
         var data = {};
+        data.SellerNote =$('#txtGhiChu').val();
+        data.Status = $("#ddlStatus").val();
         $("#frmAdd").serializeArray().map(function(x){data[x.name] = x.value;});     
 		
          var model = @Html.Raw(Json.Encode(ViewBag.model));
           data.Id =model.Id; 
+          data.dob= $("#dob").val();
+        data.dob= $("#dob").val();
+
+           data.DobStr = $("#dob").val();
+           data.NationalidissuedateStr = $("#nationalidissuedate").val();
+
+          console.log(data);
+
          var objectSend = JSON.stringify(data);
+
+       
 
         if(save ==true)
         {
@@ -1131,10 +1202,8 @@ function GetAllBank() {
                         timer: 4000,
                         showConfirmButton: true,
                     }, function () {
-                            save = false;
-                            
-
-                              uploadHoso(@ViewBag.model.Id, true);
+                            save = false; 
+                            uploadHoso(@ViewBag.model.Id, true);
                     });
                 }
                 else {
@@ -1164,16 +1233,7 @@ function GetAllBank() {
 
       function uploadfile()
     {
-
-
          uploadHoso(@ViewBag.model.Id, true);
-
-    }
-
-    function uploadfileSubmi()
-    {
-  
-         PushFile(@ViewBag.model.Id);
 
     }
 
@@ -1243,8 +1303,80 @@ function GetAllBank() {
     });
                        
 
+
+var savebtnSendProfile = false;
+
+    $('#btnSendProfile').click(function (e) {
+
+        var data = {};
+        if(savebtnSendProfile ==true)
+        {
+            return;
+        }
+        
+        var dataobject = {
+                id : datamodel.Id
+            };
+      
+           var objectSend = JSON.stringify(dataobject);
+      
+        $.ajax({
+            traditional: true,
+            url: '@Url.Action("PushToMafc", "Mirae")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                console.log(data);
+                if (data.success == true) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: data.code,
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                            savebtnSendProfile = false;
+                            //window.location = window.location;
+                    });
+                }
+                else {
+
+                    var mesageError = data.code;
+
+                    if(data.code =="")
+                    {
+                        mesageError = data.data.Message;
+                    }
+                    swal({
+                        title: "Có lỗi",
+                        text: mesageError,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                          savebtnSendProfile =false;
+                         
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+
+                 $('#panel_body').unblock();
+                  savebtnSendProfile = false;
+            },
+        });
+    });
+
+
  var savepushDDE = false;
     
+
+
 
 
     $('#btnCreateDDE').click(function (e) {
@@ -1255,7 +1387,7 @@ function GetAllBank() {
             return;
         }
         
-        var dataobject = {
+         var dataobject = {
                 id : datamodel.Id
             };
       
@@ -1522,10 +1654,70 @@ var savePushToPOR =false;
 
        }
 
-
-
     });
  
+
+ function uploadHosoTab()
+ {
+    uploadHoso( @ViewBag.model.Id, true);
+ }
+
+  function GetAllStatus(status) {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetAllStatus", "Ocb")',
+
+            success: function (data) {
+                $('#ddlStatus').empty();
+                $('#ddlStatus').append("<option value='-1'></option>");
+                if (data != null) {
+                    $.each(data.data, function (index, optionData) {
+                        $('#ddlStatus').append("<option value='" + optionData.Code + "'>" + optionData.Name + "</option>");
+                    });
+                }
+                $('#ddlStatus').chosen().trigger("chosen:updated");
+
+            },
+            complete: function () {
+			
+				$('#ddlStatus').val(status);
+				  $('#ddlStatus').chosen().trigger("chosen:updated");
+
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+     function Getcomments() {
+        //$('#ddlTrangThai').empty();
+        $.ajax({
+            type: "POST",
+            url: `/Mirae/Comments?profileId=${@ViewBag.model.Id}`,
+            data: {},
+            success: function (data) {
+                if (data.data != null && data.success == true) {
+                    $.each(data.data, function (index, item) {
+                        $('#dsGhichu').append(
+                            '<div class="timeline-event-content  active">' +
+                            '<div class="timeline-item">' +
+                            '<div class="timeline-body">' +
+                            '<div class="timeline__message-container">' +
+                            '<strong>' + item.Commentator + ' (' + SetFormatDateTimeDMY(item.CommentTime) + '): </strong><span>' + item.Noidung + '</span>' +
+                            '</div></div></div></div>'
+                        )
+                    });
+                }
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
 </script>
 
 

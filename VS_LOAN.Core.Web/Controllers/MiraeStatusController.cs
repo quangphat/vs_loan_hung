@@ -43,8 +43,6 @@ namespace VS_LOAN.Core.Web.Controllers
             _bizMedia = mediaBusiness;
             _ocbBusiness = ocbBusiness;
         }
-
-      
     
         public async Task<JsonResult> SearchTemps(string freeText, string status, int page = 1, int limit = 10, string fromDate = null, string toDate = null, int loaiNgay = 0, int manhom = 0,
 
@@ -52,13 +50,14 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             page = page <= 0 ? 1 : page;
 
-            DateTime dtFromDate = DateTime.MinValue, dtToDate = DateTime.Now.AddDays(3);
+            DateTime dtFromDate = DateTime.Now.AddYears(-2);
+            DateTime dtToDate = DateTime.Now.AddDays(3);
             if (fromDate != "")
                 dtFromDate = DateTimeFormat.ConvertddMMyyyyToDateTimeNew(fromDate);
             if (toDate != "")
                 dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTimeNew(toDate);
 
-            var profiles = await _rpMCredit.GetTempProfiles(page, limit, freeText, GlobalData.User.IDUser, status, dtFromDate, dtToDate, loaiNgay, manhom, mathanhvien = 0);
+            var profiles = await _rpMCredit.GetTempProfiles(page, limit, freeText, GlobalData.User.IDUser, status, dtFromDate, dtToDate, loaiNgay, manhom, mathanhvien );
             if (profiles == null || !profiles.Any())
             {
                 return ToJsonResponse(true, "", DataPaging.Create(null as List<MiraeModelSearchModel>, 0));
@@ -79,7 +78,6 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<JsonResult> SendFile(int id)
         {
             int profileId = id;
-            id = 19;
             var model = await _rpMCredit.GetTemProfileByMcId(profileId);
             var allTaiLieu = await _rpTailieu.GetTailieuMiraeHosoId(model.Id, 7);
             var multiForm = new MultipartFormDataContent();
@@ -87,21 +85,29 @@ namespace VS_LOAN.Core.Web.Controllers
             multiForm.Add(new StringContent("mafc123"), "password");
             multiForm.Add(new StringContent(model.AppId), "appid");
             multiForm.Add(new StringContent("EXT_SBK"), "salecode");
-
             multiForm.Add(new StringContent(""), "warning");
             multiForm.Add(new StringContent(""), "warning_msg");
+            if (allTaiLieu.Count < 6)
+            {
+                return ToJsonResponse(false, "Ít nhất phải là 6 chứng từ bắt buộc", new PushToUNDReponse()
+                {
+                    Data = "Ít nhất phải là 6 chứng từ bắt buộc",
+                    Message = "Ít nhất phải là 6 chứng từ bắt buộc",
+                    Success = false
+                });
+            }
 
+          
             foreach (var item in allTaiLieu)
             {
+
                 string filePath = Server.MapPath(item.FileUrl);
                 multiForm.Add(new ByteArrayContent(System.IO.File.ReadAllBytes(filePath)),item.Keycode , System.IO.Path.GetFileName(filePath));
             }
-
-             var result =  await _odcService.PushToUND(multiForm);
-
+            var result =  await _odcService.PushToUND(multiForm);
             if (result.Success)
             {
-                await _rpMCredit.UpdateStatus(id,3, int.Parse(model.AppId), GlobalData.User.IDUser);
+                await _rpMCredit.UpdateStatus(model.Id,3, int.Parse(model.AppId), GlobalData.User.IDUser);
             }
             return ToJsonResponse(result.Success,result.Data,result);
 
@@ -114,16 +120,13 @@ namespace VS_LOAN.Core.Web.Controllers
 
             return View();
         }
-
       
         public async Task<ActionResult> Index()
         {
-          
+            await _odcService.CheckAuthen();
+
             return View("miraeStatus");
         }
-   
-       
-       
         public async Task<JsonResult> UploadFile(int key, int fileId, int type)
         {
             type = 7;
