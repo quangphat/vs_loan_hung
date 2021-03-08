@@ -45,9 +45,11 @@ namespace VS_LOAN.Core.Web.Infrastructures
             
 
 
-            { "mirae_checkDuplicate", new ActionInfo{ _formindex = IndexMenu.M_16_2, _href = "mirae/CheckCIC", _mangChucNang = new int[] { (int)QuyenIndex.Public } } }
+            { "mirae_checkDuplicate", new ActionInfo{ _formindex = IndexMenu.M_16_2, _href = "mirae/CheckCIC", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+            { "mirae_checkS37", new ActionInfo{ _formindex = IndexMenu.M_16_4, _href = "mirae/CheckS37", _mangChucNang = new int[] { (int)QuyenIndex.Public } } }
 
 
+            
 
         };
     }

@@ -443,14 +443,11 @@ function lowerFirstLetter(string) {
          bindData();
         LayDSTaiLieu(modelbind.Id);
         datamodel =modelbind;
-
         LayDanhSachSaleOfficer();
         LayDSSanPham();
         GetAllBank();
-          GetAllStatus(datamodel.Status);
-
-     
-        var modelbindViewbag = @Html.Raw(Json.Encode(ViewBag));      
+        GetAllStatus(datamodel.Status);     
+        var modelbindViewbag = @Html.Raw(Json.Encode(ViewBag));     
                
         laydanhsachtinh("#ddlTinhCur", modelbind.AddressCur_City, modelbind.AddressCur_District, "#ddlHuyenCur" , "#ddlRewardCur" , modelbind.AddressCur_Ward );
 
@@ -458,54 +455,54 @@ function lowerFirstLetter(string) {
   
        laydanhsachtinh("#ddlTinhPer", modelbind.AddressPer_City, modelbind.AddressPer_District, "#ddlHuyenPer" , "#ddlRewardPer" , modelbind.AddressPer_Ward );
 
-  if( datamodel.addressCur_in_propertystatus =="R")
-  {
-      
-       if(val =="R")
-       {
-         $(".displayRoom").show();
-       }
-       else  {
-        $(".displayRoom").hide();
+        if( datamodel.addressCur_in_propertystatus =="R")
+        {
+            
+            if(val =="R")
+            {
+                $(".displayRoom").show();
+            }
+            else  {
+                $(".displayRoom").hide();
 
-       }
+            }
 
-      
-  }
+            
+        }
 
-  if(datamodel.IsQDEToDDE)
-  {
-        $("#btnQDEToDDE").hide();
-  }
-  else 
-  {
-      $("#btnQDEToDDE").show();
-  }
+        if(datamodel.IsQDEToDDE)
+        {
+                $("#btnQDEToDDE").hide();
+        }
+        else 
+        {
+            $("#btnQDEToDDE").show();
+        }
 
-  if(datamodel.IsQDEToPor)
-  {
-        $("#btnCreateDDE").hide();
-        $("#btnDDEToPOR").hide();
-           $("#btnSendProfile").hide();
-   
-  }
-  else 
-  {
-        $("#btnCreateDDE").show();
-        $("#btnDDEToPOR").show();
-  }
+        if(datamodel.IsQDEToPor)
+        {
+                $("#btnCreateDDE").hide();
+                $("#btnDDEToPOR").hide();
+                $("#btnSendProfile").hide();
+        
+        }
+        else 
+        {
+                $("#btnCreateDDE").show();
+                $("#btnDDEToPOR").show();
+        }
 
 
-  if(datamodel.IsPushDoucment)
-  {
-        $("#btnSendProfile").hide();
-        $("#btnPushDDE").hide();
-  }
-  else 
-  {
-    
-  }
-      
+        if(datamodel.IsPushDoucment)
+        {
+                $("#btnSendProfile").hide();
+                $("#btnPushDDE").hide();
+        }
+        else 
+        {
+            
+        }
+            
 
 $("#maritalstatus").val(datamodel.Maritalstatus);
 $("#maritalstatus").chosen().trigger("chosen:updated");
@@ -530,6 +527,7 @@ $("#addressCur_in_propertystatus").chosen().trigger("chosen:updated");
 
 $("#priority_c").val(datamodel.Priority_c);
 $("#priority_c").chosen().trigger("chosen:updated");
+
 $("#addresstype").val(datamodel.Addresstype);
 $("#addresstype").chosen().trigger("chosen:updated");
 $("#refferee1_Refereere1ation").val(datamodel.Refferee1_Refereere1ation);
@@ -794,14 +792,15 @@ $("#refferee3_Refereerelation").chosen().trigger("chosen:updated");
                          $(controlId).append("<option value='" + optionData.Stateid + "'>" + optionData.Statedesc + "</option>");
                     });
             }
-            if (value !== null)
-            $(controlId).val(value).change();
-            $(controlId).chosen().trigger("chosen:updated");
+           
 
         
 
         },
         complete: function () {
+             if (value !== null)
+            $(controlId).val(value);
+            $(controlId).chosen().trigger("chosen:updated");
          
             getDistricts(districtControlId, value,districtValue,controliIDReward , valueReward );
 
@@ -828,18 +827,20 @@ function getDistricts(controlId,provinceId, value = null,controliIDReward , valu
                         $(controlId).append("<option value='" + optionData.Lmc_CITYID_C + "'>" + optionData.Lmc_CITYNAME_C + "</option>");
                     });
             }
-           
-            
-               
-
+          
           
         },
         complete: function () {
-             if (value !== null)
-             $(controlId).val(value);
-               $(controlId).chosen().trigger("chosen:updated");
             
-             getReward(controliIDReward,value,valueReward);
+             if (value !== null)
+             {
+
+                $(controlId).val(value);
+                $(controlId).chosen().trigger("chosen:updated");
+                getReward(controliIDReward,value,valueReward);
+             }
+              
+            
 
         },
         error: function (jqXHR, exception) {
@@ -881,7 +882,7 @@ function getReward(controlId, value, valueReward = null) {
                   {
                       valueReward = "0" + valueReward;
                   }
-                 $(controlId).val(valueReward);
+                $(controlId).val(valueReward);
                 $(controlId).chosen().trigger("chosen:updated");
               }
                
@@ -1082,11 +1083,7 @@ function GetAllBank() {
                     filesUpload[existKeyIndex].files.push(file);
                 }
             }
-           
-            //if (isReach5Files(filesUpload, key) === false) {
-              //  let newAttachhFileId = getNewGuid();
-                //renderOneItemFilMirae(key, newAttachhFileId, '', false, 'mt-46', true, [], [], true, false, onUploadFile, onDeleteFile)
-           // }
+     
         }
         function onDeleteFile(key, fileId, isExist) {
             
@@ -1708,6 +1705,30 @@ var savePushToPOR =false;
                             '</div></div></div></div>'
                         )
                     });
+                }
+
+            },
+            complete: function () {
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            }
+        });
+    }
+
+   
+         function createFile() {
+        //$('#ddlTrangThai').empty();
+        $.ajax({
+            type: "POST",
+            url: `/mirae/GetFilePdfExport?id=${@ViewBag.model.Id}`,
+            data: {},
+            success: function (data) {
+                if (data.data != null && data.success == true) {
+                    let a= document.createElement('a');
+                    a.target= '_blank';
+                    a.href= data.data;;
+                    a.click();
                 }
 
             },

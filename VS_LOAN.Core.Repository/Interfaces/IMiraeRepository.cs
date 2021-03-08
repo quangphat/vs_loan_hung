@@ -12,9 +12,7 @@ namespace VS_LOAN.Core.Repository.Interfaces
     public interface IMiraeRepository
     {
 
-      
-
-      Task<List<int>> GetPeopleCanViewMyProfile(int profileId);
+        Task<List<int>> GetPeopleCanViewMyProfile(int profileId);
         Task<bool> InsertPeopleWhoCanViewProfile(int profileisUpdateMCIId, string peopleIds);
         Task<MiraeModel> GetTemProfileByMcId(int id);
         Task<MiraeDetailModel> GetDetail(int id);
@@ -24,6 +22,8 @@ namespace VS_LOAN.Core.Repository.Interfaces
         Task<List<MiraeModelSearchModel>> GetTempProfiles(int page, int limit, string freeText, int userId, string status = null,DateTime? fromDate = null, DateTime? toDate = null, int loaiNgay=0, int manhom = 0,
 
               int mathanhvien = 0);
+
+        Task<List<S37profileSearchModel>> GetS37Profiles(int page, int limit, int userId);
         Task<int> CreateDraftProfile(MiraeModel model);
         Task<bool> UpdateDraftProfile(MiraeModel model);
         Task<bool> UpdatStatusClient(ClientUpdateStatusRequest request);
@@ -32,10 +32,13 @@ namespace VS_LOAN.Core.Repository.Interfaces
         Task<List<GhichuViewModel>> GetCommentsAsync(int profileId);
         Task<BaseResponse<bool>> AddNoteAsync(int profileId, string content, int userId);
         Task<bool> UpdateStatus(int id, int status, int appid, int userid);
+        Task<bool> UpdateS37(int id, string requestedId);
         Task<bool> UpdateDDE(MiraeDDEEditModel model);
 
         Task<bool> UpdateStatusMAFC(int id, int status, int appid, int userid);
          Task<bool> SetAppidProfile(int id, int appId);
+
+        Task<int> CreateS37Profile(S37profileModel model);
 
     }
 }

@@ -259,7 +259,7 @@ namespace VS_LOAN.Core.Repository
                 p.Add("FileName", model.FileName);
                 p.Add("ProfileId", model.ProfileId);
                 p.Add("ProfileTypeId", model.ProfileTypeId);
-                await con.ExecuteAsync("sp_TAI_LIEU_HS_ThemMirate", p,
+                await con.ExecuteAsync("sp_TAI_LIEU_HS_ThemOCB", p,
                     commandType: CommandType.StoredProcedure);
                 return true;
             }

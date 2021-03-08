@@ -20,6 +20,45 @@ namespace VS_LOAN.Core.Repository
             _rpNote = rpNote;
 
         }
+        
+        public async Task<int> CreateS37Profile(S37profileModel model)
+        {
+            try
+            {
+                model.Id = 0;
+                var param = GetParams(model, "Id", ignoreKey: new string[] {
+                nameof(model.CreatedTime),
+                nameof(model.IsDeleted),
+                 nameof(model.Id)
+
+                 });
+
+                using (var con = GetConnection())
+                {
+
+                        var result =  await con.ExecuteAsync("sp_s37profile_Them", param, commandType: CommandType.StoredProcedure);
+                        return result;
+                }
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
+        }
+        public async Task<List<S37profileSearchModel>> GetS37Profiles(int page, int limit, int userId       )
+        {
+            using (var con = GetConnection())
+            {
+                var result = await con.QueryAsync<S37profileSearchModel>("sp_s37profile_Gets", new
+                {
+                    userId,
+                    page,
+                    limit
+                }, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+
+        }
 
         public async Task<int> CreateDraftProfile(MiraeModel model)
         {
@@ -301,6 +340,17 @@ namespace VS_LOAN.Core.Repository
             {
                 var storeExecute = "sp_update_MiraeDDE_Item";
                 await con.ExecuteAsync(storeExecute, param, commandType: CommandType.StoredProcedure);
+                return true;
+            }
+        }
+
+        public async Task<bool> UpdateS37(int id, string requestedId)
+        {
+
+            using (var con = GetConnection())
+            {
+                var storeExecute = "sp_updateS37Requested";
+                await con.ExecuteAsync(storeExecute, new { id, requestedId }, commandType: CommandType.StoredProcedure);
                 return true;
             }
         }

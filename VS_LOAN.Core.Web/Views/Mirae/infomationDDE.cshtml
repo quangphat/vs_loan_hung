@@ -10,16 +10,16 @@
 
 
 
-                      <div class="form-group">
+                    <div class="form-group">
                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Tên lót<span class="required">(*)</span></label>
                         <div class="col-sm-4">
                             <input type="text" id="mname" name ="mname" placeholder="Nhập tên lót" class="form-control" />
                         </div>
-                        <label class="col-sm-2 control-label no-padding-right">Tên<span class="required">(*)</span></label>
+                        <label for="form-field-1"  class="col-sm-2 control-label no-padding-right">Tên<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <div class="input-group">
+                         
                               <input type="text"name ="lname" id ="lname" placeholder="Nhập tên" class="form-control" />
-                            </div>
+                           
                         </div>
                     </div>
 					
@@ -64,13 +64,36 @@
 					
 					
 				
-                    <div class="form-group">
-                         <label for="form-field-1" class="col-sm-2 control-label no-padding-right">Số CMND/CCCD<span class="required">(*)</span></label>
+ 
+
+                  <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right">CMND<span class="required">(*)</span></label>
                         <div class="col-sm-4">
-                            <input type="text" id="nationalid" name  ="nationalid" placeholder="Nhập số CMND" class="form-control" />
-                        </div>
                         
+                                <input type="text" id="nationalid" name  ="nationalid" placeholder="Nhập số CMND" class="form-control" />
+                         
+                            <div style="margin-top:10px">
+                                <a class="btn btn-info" id="btn_CheckCIC" style="
+                            background-color: #0D622F !important;
+                                ">
+                                    Check CIC
+                                </a>
+                                <a class="btn btn-info" id="btn_CheckDup" style="
+                                 background-color: #0D622F !important;
+                                ">
+                                    Check Duplicate
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <p id="checkdupResult" style="color:green"></p>
+                            </div>
+
+                        </div>
                     </div>
+
+                    
                    
 					
 <div class="form-group">
@@ -98,6 +121,11 @@
                 </div>
             </div>
         </div>
+
+
+
+
+
     
 		
 					 <div class="form-group">
@@ -187,21 +215,7 @@
         </div>
 
 
-          <div class="form-group">
-        
-        <label class="col-sm-2 control-label no-padding-right">Người hôn phối</label>
-        <div class="col-sm-4">
-                <input type="text" id="spousename" name ="spousename" placeholder="Tên người hôn phối" class="form-control" />
-        </div>
-        </div>
-
-        <div class="form-group">
-        
-        <label class="col-sm-2 control-label no-padding-right">CMND người hôn phối</label>
-        <div class="col-sm-4">
-                <input type="text" id="spouse_id_c" name ="Spouse_id_c" placeholder="CMND người hôn phối" class="form-control" />
-        </div>
-    </div>
+         
     
 
 
@@ -321,3 +335,81 @@
                 
             </div>  
       
+<script>
+
+
+$('#btn_CheckDup').click(function (e) {
+let value = $("#nationalid").val();
+checkDUP( value);
+});
+
+
+$('#btn_CheckCIC').click(function (e) {
+let value = $("#nationalid").val();
+CheckCIC( value);
+});
+
+function checkDUP( value) {
+   
+    if(value =="" || value.length >12 || value.length < 9)
+    {
+            swal({
+                    title: "Thành công",
+                    text: ` Dữ liệu không hợp lệ:  CMND 9 số, CCCD  là 10 số`,
+                    type: "error",
+                    timer: 4000,
+                    showConfirmButton: true,
+                }, function () {
+
+                });
+            return;
+    }
+
+    $('#panel_body').block();
+
+    if (isNullOrWhiteSpace(value))
+        return;
+        var objectSend = JSON.stringify({
+            'Value': value
+        });
+        $.ajax({
+            traditional: true,
+            url: '/mirae/CheckCMND',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: objectSend,
+            success: function (data) {
+                var result =data.data.Data;
+                if (result.StatusNumber == "0") {
+                    swal({
+                        title: "Thành công",
+                        text: 'Đủ điều kiện',
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+
+                    });
+                }
+                else {
+                    swal({
+                        title: "Khách hàng",
+                        text: 'Không đủ điều kiện',
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+              
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+   
+
+}
+</script>

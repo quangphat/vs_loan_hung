@@ -10,6 +10,7 @@ namespace VS_LOAN.Core.Utility
    public class Path
     {
         public static  string DownloadBill = "/App_Data/Download/";
+        public static string UploadGen = "/Upload/generateFile/";
         public static string ReportTemplate = "/App_Data/TemplateReport/";
         public static string UploadFile(string root,string fileName)
         {

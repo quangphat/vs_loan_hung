@@ -211,6 +211,7 @@ namespace MCreditService
         }
         public async Task<QDEToDDERePonse> QDEToDDE(QDEToDDEReQuest model)
         {
+
             var client = new HttpClient();
             client.BaseAddress = new Uri(_baseUrl);
                client.BaseAddress = new Uri(_baseUrl);
@@ -242,6 +243,7 @@ namespace MCreditService
           
             //client.DefaultRequestHeaders.Add("Authorization", "Basic ZGF0YWVudHJ5bWNpOm1pcmFlNTIzNDUhQCMlJA==");
             client.DefaultRequestHeaders.Add("Authorization", "Basic M3AtZGF0YWVudHJ5LXNiazp1aDlObFVtTkR3anN1Y3BHaFF5d202YndrOXlobEdBaA==");
+
             client.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue(_contentType));
             var url = _createLead;
@@ -414,5 +416,91 @@ namespace MCreditService
                 return new PushToHistoryReponse();
             }
         }
+
+
+     
+
+        public async Task<CheckSubmitS37ResponseModel> CheckSubmitS37(string ididValue)
+        {
+
+       
+            var client = new HttpClient();
+            //client.BaseAddress = new Uri(_baseUrls37);
+            var userName = "mirae-3p";
+            var password = "123456";
+            var vendorCode = "Test";
+           
+            client.DefaultRequestHeaders.Add("Authorization", "Basic bWlyYWUtM3A6MTIzNDU2");
+       
+            client.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue(_contentType));
+
+            var url = "/submit-s37";
+
+
+            var request = new CheckSubmitS37RequestModel()
+            {
+                vendorCode = vendorCode,
+                idValue = ididValue
+            };
+            var json = JsonConvert.SerializeObject(request);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+          
+          
+            var response = await client.PostAsync("https://apigw-staging.mafc.vn/cic/submit-s37", data);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                CheckSubmitS37ResponseModel contributors = JsonConvert.DeserializeObject<CheckSubmitS37ResponseModel>(content);
+                return await Task.FromResult(contributors);
+            }
+            else
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                CheckSubmitS37ResponseModel contributors = JsonConvert.DeserializeObject<CheckSubmitS37ResponseModel>(content);
+                return contributors;
+            }
+
+        }
+
+
+        public async Task<GetpollingS37ResponseModel> GetpollingS37(GetpollingS37RequestModel request)
+        {
+
+
+            var client = new HttpClient();
+            //client.BaseAddress = new Uri(_baseUrls37);
+            var userName = "mirae-3p";
+            var password = "123456";
+            var vendorCode = "Test";
+
+            client.DefaultRequestHeaders.Add("Authorization", "Basic bWlyYWUtM3A6MTIzNDU2");
+
+            client.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue(_contentType));
+
+            var url = "/submit-s37";
+            
+            var json = JsonConvert.SerializeObject(request);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+
+            var response = await client.PostAsync("https://apigw-staging.mafc.vn/cic/polling-s37", data);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                GetpollingS37ResponseModel contributors = JsonConvert.DeserializeObject<GetpollingS37ResponseModel>(content);
+                return await Task.FromResult(contributors);
+            }
+            else
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                GetpollingS37ResponseModel contributors = JsonConvert.DeserializeObject<GetpollingS37ResponseModel>(content);
+                return contributors;
+            }
+
+        }
+
+
     }
 }

@@ -23,6 +23,9 @@ namespace MCreditService
         //protected static string _baseUrl1 = "https://apigw.mafc.vn";
          protected static string _createLead = "/thirdparty/dataentryi";
         protected static string _baseUrl = "https://apigw.mafc.vn";
+
+        protected static string _baseUrls37 = "https://apigw-staging.mafc.vn/cic";
+
         //protected static string _createLead = "/dataentry-mci";
 
 

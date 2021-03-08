@@ -15,6 +15,8 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
         public bool? IsQDEToPor { get; set; }
 
         public bool? IsPushDoucment { get; set; }
+
+        public string S37IdReqested { get; set; }
     }
 
 

@@ -21,10 +21,17 @@ using VS_LOAN.Core.Web.Helpers;
 using System.Net.Http;
 using System.Text;
 using System.Net.Http.Headers;
+using PdfSharp.Pdf;
+using TheArtOfDev.HtmlRenderer.PdfSharp;
+using PdfSharp;
+using System.Web.UI;
+using Rotativa;
+using VS_LOAN.Core.Web.ModelExport;
+using System.Net;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
-    public class MiraeController : BaseController
+    public partial class MiraeController : BaseController
     {
 
         protected readonly IMiraeRepository _rpMCredit;
@@ -89,6 +96,16 @@ namespace VS_LOAN.Core.Web.Controllers
             return View();
         }
 
+   
+
+
+        public async Task<ActionResult> AddNew()
+
+        {
+            await _odcService.CheckAuthen();
+            return View();
+        }
+
         public async Task<ActionResult> Tracking(int id)
         {
             var result = await _rpMCredit.GetDetail(id);
@@ -108,14 +125,149 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = await _odcService.CheckCustomer(model.Value, "SBK");
             var item = result.Data;
             var boolSuccess = false;
-
-
-
             if (item.StatusNumber == "0" || item.StatusNumber == "302")
             {
                 boolSuccess = true;
             }
             return ToJsonResponse(boolSuccess, result.Data?.ToString(), result);
+        }
+
+
+        public async Task<JsonResult> CheckS37API(StringModel2 model)
+        {
+            if(string.IsNullOrEmpty(model.Value) || string.IsNullOrWhiteSpace(model.Value))
+            {
+
+                return ToJsonResponse(false, "Chưa nhập số cmnd để gửi yêu cầu", "");
+            }
+         
+            var result = await _odcService.CheckSubmitS37(model.Value);
+
+            if (result.Success)
+            {
+                if(result.Data.GetType() == typeof(string))
+                {
+                    var id = -1;
+                    try
+                    {
+
+                        id = int.Parse(model.Value2);
+                    }
+                    catch (Exception)
+                    {  
+
+
+                    }
+                    var profile = new S37profileModel() { 
+                    CMND =model.Value,
+                    Content = result.Data.ToString(),
+                    Suscess =   result.Success == true? 1: 0,
+                    CreatedBy = GlobalData.User.IDUser ,
+                    DataMessage = result.Message,
+                    TypeRecord ="S",
+                    RequestId = result.Data?.ToString()
+
+                    };
+
+                    await _rpMCredit.CreateS37Profile(profile);
+                
+                       
+                }
+                else
+                {
+
+                    var id = -1;
+                    try
+                    {
+
+                        id = int.Parse(model.Value2);
+                    }
+                    catch (Exception)
+                    {
+
+
+                    }
+                    var profile = new S37profileModel()
+                    {
+                        CMND = model.Value,
+                        Content = result.Data.ToString(),
+                        Suscess = result.Success == true ? 1 : 0,
+                        CreatedBy = GlobalData.User.IDUser,
+                        DataMessage = result.Message,
+                        TypeRecord = "S",
+                        RequestId = result.Data?.ToString()
+
+                    };
+
+                    await _rpMCredit.CreateS37Profile(profile);
+
+
+                }
+
+            }
+            return ToJsonResponse(result.Success, result.Data?.ToString(), result);
+        }
+
+
+        public async Task<JsonResult> GetpollingS37(StringModel2 model)
+        {
+
+
+
+
+            if (string.IsNullOrEmpty(model.Value) || string.IsNullOrWhiteSpace(model.Value))
+            {
+
+                return ToJsonResponse(false, "Chưa nhập số cmnd để gửi yêu cầu", "");
+            }
+
+            if (string.IsNullOrEmpty(model.Value2) || string.IsNullOrWhiteSpace(model.Value2))
+            {
+
+                return ToJsonResponse(false, "Chưa cung cấp mã  yêu cầu", "");
+            }
+
+            var request = new GetpollingS37RequestModel()
+            {
+                idValue = model.Value,
+                requestId =model.Value2,
+                vendorCode = "Test"
+            };
+                
+             
+
+            var result = await _odcService.GetpollingS37(request);
+            
+            
+           
+                var id = -1;
+                try
+                {
+
+                    id = int.Parse(model.Value2);
+                }
+                catch (Exception)
+                {
+
+
+                }
+                var profile = new S37profileModel()
+                {
+                    CMND = model.Value,
+                    Content = result.Data?.ToString(),
+                    Suscess = result.Success == true ? 1 : 0,
+                    CreatedBy = GlobalData.User.IDUser,
+                    DataMessage = result.Message,
+                    TypeRecord = "G",
+                    RequestId = model.Value2
+
+                };
+
+                await _rpMCredit.CreateS37Profile(profile);
+
+
+           
+            return ToJsonResponse(result.Success, result.Data?.ToString(), result);
         }
         public async Task<JsonResult> SearchTemps(string freeText, string status, int page = 1, int limit = 10, string fromDate = null, string toDate = null, int loaiNgay = 0, int manhom = 0,
 
@@ -275,6 +427,8 @@ namespace VS_LOAN.Core.Web.Controllers
             profilerequest.Natureofbuss = model.Natureofbuss;
             profilerequest.Addresstype = model.Addresstype;
 
+          
+
 
 
             profilerequest.UpdatedBy = GlobalData.User.IDUser;
@@ -285,9 +439,13 @@ namespace VS_LOAN.Core.Web.Controllers
             profilerequest.Fixphone = model.Fixphone;
             profilerequest.Mobile = model.Mobile;
             profilerequest.IsDuplicateAdrees = model.IsDuplicateAdrees;
-
-
-
+            
+            profilerequest.PrivateInfo = model.PrivateInfo;
+            profilerequest.PrivateInfoOther = model.PrivateInfoOther;
+            profilerequest.NotedDetailPrivate = model.NotedDetailPrivate;
+            profilerequest.Spouse_phoneNumber = model.Spouse_phoneNumber;
+            profilerequest.Spouse_companyName = model.Spouse_companyName;
+            profilerequest.Spouse_addressName = model.Spouse_addressName;
             var result = await _rpMCredit.UpdateDraftProfile(profilerequest);
             return ToJsonResponse(true);
         }
@@ -392,7 +550,7 @@ namespace VS_LOAN.Core.Web.Controllers
             return ToJsonResponse(result.Success, "", result);
 
         }
-        public async Task<JsonResult> BDEToPor(int id)
+       public async Task<JsonResult> BDEToPor(int id)
         {
             var model = await _rpMCredit.GetTemProfileByMcId(id);
             if (model == null)
@@ -428,7 +586,7 @@ namespace VS_LOAN.Core.Web.Controllers
             return ToJsonResponse(response.Success, "", response);
         }
 
-        private MiraeQDELeadReQuest MiramodelToQDERequest( MiraeModel model)
+        private MiraeQDELeadReQuest MiramodelToQDERequest(MiraeModel model)
         {
 
 
@@ -665,14 +823,14 @@ namespace VS_LOAN.Core.Web.Controllers
             return request;
 
         }
-        public async Task<JsonResult> SumbitToOcb (int id)
+        public async Task<JsonResult> SumbitToOcb(int id)
         {
             var model = await _rpMCredit.GetTemProfileByMcId(id);
             var request = MiramodelToQDERequest(model);
 
-              var ressult =  await _odcService.QDESubmit(request);
-                if(ressult.Success)
-                {
+            var ressult = await _odcService.QDESubmit(request);
+            if (ressult.Success)
+            {
                 var appid = 0;
                 try
                 {
@@ -686,11 +844,11 @@ namespace VS_LOAN.Core.Web.Controllers
 
                 await _rpMCredit.SetAppidProfile(model.Id, appid);
 
-            
-               
-           }
 
-            return ToJsonResponse(ressult.Success, "",ressult);
+
+            }
+
+            return ToJsonResponse(ressult.Success, "", ressult);
         }
         public async Task<JsonResult> QDEToDDE(int id)
         {
@@ -714,12 +872,12 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             var response = await _odcService.QDEToDDE(new QDEToDDEReQuest()
             {
-               
+
                 p_appid = appId
 
             });
 
-            if(response.Success)
+            if (response.Success)
             {
                 await _rpMCredit.UpdateStatusMAFC(id, 1, int.Parse(model.AppId), GlobalData.User.IDUser);
             }
@@ -727,7 +885,7 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> UpdateMirae(MiraeEditModel model)
         {
-                       
+
             if (model == null)
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             var profilerequest = await _rpMCredit.GetTemProfileByMcId(model.Id);
@@ -833,13 +991,13 @@ namespace VS_LOAN.Core.Web.Controllers
             profilerequest.Mobile = model.Mobile;
             profilerequest.IsDuplicateAdrees = model.IsDuplicateAdrees;
 
-           profilerequest.Maritalstatus = model.Maritalstatus;
+            profilerequest.Maritalstatus = model.Maritalstatus;
             profilerequest.Qualifyingyear = model.Qualifyingyear;
             profilerequest.Qualifyingyear = "0";
             profilerequest.Eduqualify = model.Eduqualify;
             profilerequest.Noofdependentin = model.Noofdependentin;
             profilerequest.Paymentchannel = model.Paymentchannel;
-       
+
             profilerequest.Familybooknumber = model.Familybooknumber;
             profilerequest.Idissuer = model.Idissuer;
             profilerequest.Spousename = model.Spousename;
@@ -859,8 +1017,14 @@ namespace VS_LOAN.Core.Web.Controllers
             profilerequest.Spouse_id_c = model.Spouse_id_c;
             profilerequest.Status = model.Status;
             profilerequest.Notedetails = model.Notedetails;
-         
-             if (GlobalData.User.UserType != (int)UserTypeEnum.Admin)
+
+            profilerequest.PrivateInfo = model.PrivateInfo;
+            profilerequest.PrivateInfoOther = model.PrivateInfoOther;
+            profilerequest.NotedDetailPrivate = model.NotedDetailPrivate;
+            profilerequest.Spouse_companyName = model.Spouse_companyName;
+            profilerequest.Spouse_addressName = model.Spouse_addressName;
+            profilerequest.Spouse_phoneNumber = model.Spouse_phoneNumber;
+            if (GlobalData.User.UserType != (int)UserTypeEnum.Admin)
             {
                 var checkError = ValidateProfile(profilerequest);
 
@@ -891,10 +1055,10 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> CreateDraft(MiraeAddModel model)
         {
-            
 
 
-            if (model.Natureofbuss=="")
+
+            if (model.Natureofbuss == "")
             {
                 model.Natureofbuss = "hoat dong lam thue cac cong viec trong cac hgd,sx sp vat chat va dich vu tu tieu dung cua ho gia dinh";
             }
@@ -980,7 +1144,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 DistrictCompany = model.DistrictCompany,
                 WardCompany = model.WardCompany,
                 Addressline = model.Addressline,
-               Natureofbuss = model.Natureofbuss,
+                Natureofbuss = model.Natureofbuss,
                 Position = model.Position,
                 Phone = model.Phone,
                 Fixphone = model.Fixphone,
@@ -989,36 +1153,43 @@ namespace VS_LOAN.Core.Web.Controllers
                 Bankname = model.Bankname,
                 Categoryid = model.Categoryid,
                 Eduqualify = model.Eduqualify,
-                Dueday =model.Dueday,
+                Dueday = model.Dueday,
                 Familybooknumber = model.Familybooknumber,
                 Idissuer = model.Idissuer,
                 IsDuplicateAdrees = model.IsDuplicateAdrees,
-                Maritalstatus =model.Maritalstatus,
+                Maritalstatus = model.Maritalstatus,
                 Accno = model.Accno,
-                Nationalidissuedate =model.Nationalidissuedate,
+                Nationalidissuedate = model.Nationalidissuedate,
                 Noofdependentin = model.Noofdependentin,
-                Notedetails =model.Notedetails,
-                Notecode =model.Notecode,
+                Notedetails = model.Notedetails,
+                Notecode = model.Notecode,
                 Acctype = model.Acctype,
-                Paymentchannel =model.Paymentchannel,
+                Paymentchannel = model.Paymentchannel,
                 Others = model.Others,
                 Referalgroup = "3",
-                Qualifyingyear =model.Qualifyingyear,
-                Spousename =model.Spousename,
+                Qualifyingyear = model.Qualifyingyear,
+                Spousename = model.Spousename,
                 Spouse_id_c = model.Spouse_id_c,
                 Status = 0
             };
 
+            profile.PrivateInfo = model.PrivateInfo;
+            profile.PrivateInfoOther = model.PrivateInfoOther;
+            profile.NotedDetailPrivate = model.NotedDetailPrivate;
+            profile.Spouse_phoneNumber = model.Spouse_phoneNumber;
+            profile.Spouse_companyName = model.Spouse_companyName;
+            profile.Spouse_addressName = model.Spouse_addressName;
+
             var checkMessage = ValidateProfile(profile);
-            if(!string.IsNullOrEmpty(checkMessage))
+            if (!string.IsNullOrEmpty(checkMessage))
             {
-                return ToJsonResponse( false, checkMessage, checkMessage);
+                return ToJsonResponse(false, checkMessage, checkMessage);
             }
 
-            if(!string.IsNullOrEmpty(model.SellerNote))
+            if (!string.IsNullOrEmpty(model.SellerNote))
             {
                 await _rpMCredit.AddNoteAsync(model.Id, model.SellerNote, GlobalData.User.IDUser);
-             
+
             }
 
 
@@ -1031,23 +1202,23 @@ namespace VS_LOAN.Core.Web.Controllers
 
             profile.Dob = string.IsNullOrWhiteSpace(model.DobStr) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(model.DobStr);
 
-           
+
             profile.Nationalidissuedate = model.Nationalidissuedate;
             profile.Nationalidissuedate = string.IsNullOrWhiteSpace(model.NationalidissuedateStr) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(model.NationalidissuedateStr);
             profile.Amount = model.Amount;
-            if(string.IsNullOrEmpty(model.Head))
+            if (string.IsNullOrEmpty(model.Head))
             {
                 profile.Head = "NETINCOM";
             }
-          
+
             var id = await _rpMCredit.CreateDraftProfile(profile);
             if (id > 0)
             {
-               
+
             }
-            return ToJsonResponse(id>0, "", id);
+            return ToJsonResponse(id > 0, "", id);
         }
-         public async Task<ActionResult> Mirae(int id)
+        public async Task<ActionResult> Mirae(int id)
         {
             var result = await _rpMCredit.GetTemProfileByMcId(id);
             ViewBag.isAdmin = GlobalData.User.TypeUser == (int)UserTypeEnum.Admin ? true : false;
@@ -1092,15 +1263,15 @@ namespace VS_LOAN.Core.Web.Controllers
 
             foreach (var item in allTaiLieu)
             {
-                if(listRequireDocCode.Contains(item.Keycode))
+                if (listRequireDocCode.Contains(item.Keycode))
                 {
                     listRequireDocCode.Remove(item.Keycode);
                 }
                 string filePath = Server.MapPath(item.FileUrl);
-                multiForm.Add(new ByteArrayContent(System.IO.File.ReadAllBytes(filePath)),item.Keycode , System.IO.Path.GetFileName(filePath));
+                multiForm.Add(new ByteArrayContent(System.IO.File.ReadAllBytes(filePath)), item.Keycode, System.IO.Path.GetFileName(filePath));
             }
 
-            if(listRequireDocCode.Count !=0)
+            if (listRequireDocCode.Count != 0)
             {
                 return ToJsonResponse(false, "Chưa nhập đủ yêu cầu chứng từ bắt buộc", new PushToUNDReponse()
                 {
@@ -1111,143 +1282,143 @@ namespace VS_LOAN.Core.Web.Controllers
 
             }
 
-             var result =  await _odcService.PushToUND(multiForm);
+            var result = await _odcService.PushToUND(multiForm);
 
             if (result.Success)
             {
-                await _rpMCredit.UpdateStatusMAFC(id,4, int.Parse(model.AppId), GlobalData.User.IDUser);
+                await _rpMCredit.UpdateStatusMAFC(id, 4, int.Parse(model.AppId), GlobalData.User.IDUser);
             }
 
-            return ToJsonResponse(result.Success,result.Data,result);
+            return ToJsonResponse(result.Success, result.Data, result);
 
         }
         public async Task<ActionResult> Temp()
         {
 
-          await _odcService.CheckAuthen();
+            await _odcService.CheckAuthen();
 
 
             return View();
         }
 
-        private string ValidateProfile<T>(T profile) where  T :MiraeModel
+        private string ValidateProfile<T>(T profile) where T : MiraeModel
 
         {
-                string message = "";
-                if (string.IsNullOrEmpty(profile.Nationalid) || profile.Nationalid.Length < 9 || profile.Nationalid.Length > 12)
+            string message = "";
+            if (string.IsNullOrEmpty(profile.Nationalid) || profile.Nationalid.Length < 9 || profile.Nationalid.Length > 12)
 
-                {
-                    message = "Số chứng mình nhân dân không hợp lệ hoặc chưa nhập";
+            {
+                message = "Số chứng mình nhân dân không hợp lệ hoặc chưa nhập";
 
-                }
+            }
 
-                else if (string.IsNullOrEmpty(profile.Idissuer))
-                {
-                    message = "Chưa cho biết thông tin địa chỉ nơi cấp CMND";
-                }
-                else if (profile.Dob == DateTime.MinValue)
-                {
+            else if (string.IsNullOrEmpty(profile.Idissuer))
+            {
+                message = "Chưa cho biết thông tin địa chỉ nơi cấp CMND";
+            }
+            else if (profile.Dob == DateTime.MinValue)
+            {
 
-                    message = "Chưa có thông tin ngày sinh";
-                }
-                else if (!profile.Nationalidissuedate.HasValue)
-                {
-                    message = "Ngày cấp chứng minh nhân dân chưa nhập";
+                message = "Chưa có thông tin ngày sinh";
+            }
+            else if (!profile.Nationalidissuedate.HasValue)
+            {
+                message = "Ngày cấp chứng minh nhân dân chưa nhập";
 
-                }
-                else if (string.IsNullOrEmpty(profile.Familybooknumber))
-                {
-                    message = "Sổ hộ khẩu chưa nhập";
+            }
+            else if (string.IsNullOrEmpty(profile.Familybooknumber))
+            {
+                message = "Sổ hộ khẩu chưa nhập";
 
-                }
+            }
 
-                else if (string.IsNullOrEmpty(profile.Schemeid))
-                {
-                    message = "Mã sản phẩm chưa nhập";
-                }
-                else if (string.IsNullOrEmpty(profile.Title))
-                {
-                    message = "Xưng hô  khách hàng chưa nhập";
+            else if (string.IsNullOrEmpty(profile.Schemeid))
+            {
+                message = "Mã sản phẩm chưa nhập";
+            }
+            else if (string.IsNullOrEmpty(profile.Title))
+            {
+                message = "Xưng hô  khách hàng chưa nhập";
 
-                }
-                else if (string.IsNullOrEmpty(profile.Salesofficer) || profile.Salesofficer == "0")
-                {
-                    message = "Mã số kinh doanh chưa nhập";
+            }
+            else if (string.IsNullOrEmpty(profile.Salesofficer) || profile.Salesofficer == "0")
+            {
+                message = "Mã số kinh doanh chưa nhập";
 
-                }
-                else if (string.IsNullOrEmpty(profile.Maritalstatus))
-                {
-                    message = "Tình trạng hôn nhân chưa nhập";
-                }
-                else if( string.IsNullOrEmpty(profile.Eduqualify))
-                {
+            }
+            else if (string.IsNullOrEmpty(profile.Maritalstatus))
+            {
+                message = "Tình trạng hôn nhân chưa nhập";
+            }
+            else if (string.IsNullOrEmpty(profile.Eduqualify))
+            {
                 message = "Bạn chưa nhập trình độ học vẫn";
 
-                 }
-                else if(string.IsNullOrEmpty(profile.Dueday))
-                {
+            }
+            else if (string.IsNullOrEmpty(profile.Dueday))
+            {
                 message = "Bạn chưa điền thông tin ngày thanh toán hàng tháng";
-                }
+            }
 
-                else if (string.IsNullOrEmpty(profile.Loanpurpose))
-                {
-                    message = "Mục đích vay chưa nhập";
-                }
+            else if (string.IsNullOrEmpty(profile.Loanpurpose))
+            {
+                message = "Mục đích vay chưa nhập";
+            }
 
-                else if (profile.Tenure < 1)
-                {
-                    message = "Thời gian  vay chưa nhập";
-                }
-                else if(profile.Schemeid =="0" || string.IsNullOrEmpty(profile.Schemeid))
-                {
-                     message = "Bạn chưa chọn sản phẩm vay";
-                }
-                else if(string.IsNullOrEmpty(profile.Amount))
-                {
+            else if (profile.Tenure < 1)
+            {
+                message = "Thời gian  vay chưa nhập";
+            }
+            else if (profile.Schemeid == "0" || string.IsNullOrEmpty(profile.Schemeid))
+            {
+                message = "Bạn chưa chọn sản phẩm vay";
+            }
+            else if (string.IsNullOrEmpty(profile.Amount))
+            {
                 message = "Bạn chưa điền thông tin thu nhập";
-                 }
-                else if(string.IsNullOrEmpty(profile.Accountbank))
-                {
+            }
+            else if (string.IsNullOrEmpty(profile.Accountbank))
+            {
                 message = "Bạn chưa nhập thông tin hình thức thu nhập";
             }
-                else if (!profile.Totalloanamountreq.HasValue)
-                {
-                    message = "Chưa nhập số tiền vay";
-                }
+            else if (!profile.Totalloanamountreq.HasValue)
+            {
+                message = "Chưa nhập số tiền vay";
+            }
 
-                else if (string.IsNullOrEmpty(profile.Mobile))
-                {
-                    message = "Số điện thoại chưa nhập";
-                }
-                else if (profile.AddressCur_City < 1 || profile.AddressCur_Ward < 1 || profile.AddressCur_District < 1 || string.IsNullOrEmpty(profile.AddressCur_address1stline))
-                {
-                    message = "Nhập đủ thông tin địa chỉ hiện tại";
-                }
-                else if (profile.CityCompany < 1 || profile.WardCompany < 1 || profile.DistrictCompany < 1 || string.IsNullOrEmpty(profile.Addressline)
-                || string.IsNullOrEmpty(profile.Position))
-                
-                {
-                    message = "Nhập đủ thông tin nghề nghiệp ( Địa chỉ, thời gian làm việc, chức vụ";
-                }
-                else if(string.IsNullOrEmpty(profile.Others))
-                {
-                     message = "Chưa nhập tên công ty";
-                }
-              
-                else if(string.IsNullOrEmpty(profile.Refferee1_Refereename) ||  string.IsNullOrEmpty(profile.Refferee1_in_title)
+            else if (string.IsNullOrEmpty(profile.Mobile))
+            {
+                message = "Số điện thoại chưa nhập";
+            }
+            else if (profile.AddressCur_City < 1 || profile.AddressCur_Ward < 1 || profile.AddressCur_District < 1 || string.IsNullOrEmpty(profile.AddressCur_address1stline))
+            {
+                message = "Nhập đủ thông tin địa chỉ hiện tại";
+            }
+            else if (profile.CityCompany < 1 || profile.WardCompany < 1 || profile.DistrictCompany < 1 || string.IsNullOrEmpty(profile.Addressline)
+            || string.IsNullOrEmpty(profile.Position))
 
-                || string.IsNullOrEmpty(profile.Refferee1_Phone1) || string.IsNullOrEmpty(profile.Refferee1_Refereerelation))
-                 {
-                    message = "Nhập đủ thông tin tham chiếu thứ nhất";
-                }
+            {
+                message = "Nhập đủ thông tin nghề nghiệp ( Địa chỉ, thời gian làm việc, chức vụ";
+            }
+            else if (string.IsNullOrEmpty(profile.Others))
+            {
+                message = "Chưa nhập tên công ty";
+            }
+
+            else if (string.IsNullOrEmpty(profile.Refferee1_Refereename) || string.IsNullOrEmpty(profile.Refferee1_in_title)
+
+            || string.IsNullOrEmpty(profile.Refferee1_Phone1) || string.IsNullOrEmpty(profile.Refferee1_Refereerelation))
+            {
+                message = "Nhập đủ thông tin tham chiếu thứ nhất";
+            }
 
             else if (!string.IsNullOrEmpty(profile.Refferee2_Refereename))
             {
-               
-                if( string.IsNullOrEmpty(profile.Refferee2_in_title)
+
+                if (string.IsNullOrEmpty(profile.Refferee2_in_title)
 
             || string.IsNullOrEmpty(profile.Refferee2_Phone1) || string.IsNullOrEmpty(profile.Refferee2_Refereerelation))
-                message = "Nhập đủ thông tin tham chiếu thứ hai";
+                    message = "Nhập đủ thông tin tham chiếu thứ hai";
             }
 
             else if (!string.IsNullOrEmpty(profile.Refferee3_Refereename))
@@ -1259,10 +1430,10 @@ namespace VS_LOAN.Core.Web.Controllers
                     message = "Nhập đủ thông tin tham chiếu thứ ba";
             }
 
-             else if(!profile.IsDuplicateAdrees.Value)
+            else if (!profile.IsDuplicateAdrees.Value)
             {
 
-                 if (profile.AddressPer_City < 1 || profile.AddressPer_Ward < 1 || profile.AddressPer_District < 1 || string.IsNullOrEmpty(profile.AddressPer_address1stline))
+                if (profile.AddressPer_City < 1 || profile.AddressPer_Ward < 1 || profile.AddressPer_District < 1 || string.IsNullOrEmpty(profile.AddressPer_address1stline))
                 {
                     message = "Nhập đủ thông tin địa chỉ thường trú";
                 }
@@ -1284,7 +1455,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     message = "Thời hạn vay không hợp lệ, Thời hạn vay tối thiêu là " + itemProduct.Maxtenure;
                 }
 
-                else if (itemProduct.Minamtfin > (double) profile.Totalloanamountreq.Value)
+                else if (itemProduct.Minamtfin > (double)profile.Totalloanamountreq.Value)
                 {
                     message = "Số tiền vay ở dưới mức tối thiểu, số tiền vay tối thiểu là " + itemProduct.Minamtfin;
                 }
@@ -1298,14 +1469,14 @@ namespace VS_LOAN.Core.Web.Controllers
             }
 
             return message;
-            }
+        }
         public async Task<JsonResult> PushToMafc(int id)
         {
             var profile = await _rpMCredit.GetDetail(id);
             var checkMessage = ValidateProfile(profile);
-            if(string.IsNullOrWhiteSpace(checkMessage))
+            if (string.IsNullOrWhiteSpace(checkMessage))
             {
-                
+
             }
 
             else
@@ -1329,10 +1500,10 @@ namespace VS_LOAN.Core.Web.Controllers
                 var request = MiramodelToQDERequest(model);
                 var ressultQDE = await _odcService.QDESubmit(request);
 
-              
+
                 if (ressultQDE.Success)
                 {
-                   
+
 
 
                     var appId = int.Parse(ressultQDE.Data);
@@ -1343,7 +1514,7 @@ namespace VS_LOAN.Core.Web.Controllers
 
                     });
 
-              
+
                     var bankName = model.Bankname;
                     try
                     {
@@ -1366,8 +1537,8 @@ namespace VS_LOAN.Core.Web.Controllers
                     if (response.Success)
                     {
 
-                       
-                        await _rpMCredit.UpdateStatusMAFC(id, 1,appId, GlobalData.User.IDUser);
+
+                        await _rpMCredit.UpdateStatusMAFC(id, 1, appId, GlobalData.User.IDUser);
                         //DDE
 
                         var requestDDE = new MiraeDDELeadReQuest()
@@ -1381,7 +1552,7 @@ namespace VS_LOAN.Core.Web.Controllers
                             in_nationalidissuedate = model.Nationalidissuedate.Value.ToShortDateString(),
                             in_familybooknumber = model.Familybooknumber,
                             in_idissuer = model.Idissuer,
-                            
+
                             in_spousename = model.Spousename,
                             in_spouse_id_c = model.Spouse_id_c,
                             in_categoryid = model.Categoryid,
@@ -1391,21 +1562,21 @@ namespace VS_LOAN.Core.Web.Controllers
                             in_accno = model.Accno,
                             in_dueday = model.Dueday,
                             in_notecode = model.Notecode,
-                           
+
                             in_notedetails = model.Notedetails
                         };
                         requestDDE.in_qualifyingyear = "0";
                         requestDDE.in_notecode = "DE_MOBILE";
                         requestDDE.in_channel = "SBK";
                         requestDDE.in_userid = "EXT_SBK";
-                        
+
                         requestDDE.in_categoryid = "SBK";
                         var resultDDE = await _odcService.DDESubmit(requestDDE);
 
                         if (resultDDE.Success)
                         {
 
-                            await _rpMCredit.UpdateStatusMAFC(id, 2,appId, GlobalData.User.IDUser);
+                            await _rpMCredit.UpdateStatusMAFC(id, 2, appId, GlobalData.User.IDUser);
                             var responseToPOR = await _odcService.DDEToPoR(new DDEToPORReQuest()
                             {
                                 in_channel = "SBK",
@@ -1425,7 +1596,7 @@ namespace VS_LOAN.Core.Web.Controllers
 
                                 return ToJsonResponse(false, "DDE to POr thất bại", response);
                             }
-                          
+
                         }
                         else
                         {
@@ -1444,7 +1615,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 else
 
                 {
-                    return ToJsonResponse(false,"Đẩy QDE thất bại", ressultQDE);
+                    return ToJsonResponse(false, "Đẩy QDE thất bại", ressultQDE);
                 }
             }
 
@@ -1452,7 +1623,7 @@ namespace VS_LOAN.Core.Web.Controllers
 
         }
 
-       
+
 
         public async Task<ActionResult> Index()
         {
@@ -1462,12 +1633,7 @@ namespace VS_LOAN.Core.Web.Controllers
 
             return View("Temp");
         }
-        public async Task<ActionResult> AddNew()
 
-        {
-            await _odcService.CheckAuthen();
-            return View();
-        }
         public async Task<JsonResult> GetAllStatus()
         {
             var result = await _rpMCredit.GetAllStatus();
@@ -1539,6 +1705,7 @@ namespace VS_LOAN.Core.Web.Controllers
                         Stream stream = fileContent.InputStream;
                         string root = Server.MapPath($"~{Utility.FileUtils._profile_parent_folder}");
                         stream.Position = 0;
+                       
                         file = _bizMedia.GetFileUploadUrl(fileContent.FileName, root, Utility.FileUtils.GenerateOcbProfile());
                         using (var fileStream = System.IO.File.Create(file.FullPath))
                         {
@@ -1672,6 +1839,417 @@ namespace VS_LOAN.Core.Web.Controllers
         }
 
 
+        private string RenderPartialViewToString(string viewName, object viewmodel)
+        {
+            if (string.IsNullOrEmpty(viewName))
+            {
+                viewName = this.ControllerContext.RouteData.GetRequiredString("action");
+            }
+
+            ViewData.Model = viewmodel;
+
+            using (var sw = new StringWriter())
+            {
+                ViewEngineResult viewResult = System.Web.Mvc.ViewEngines.Engines.FindPartialView(this.ControllerContext, viewName);
+                var viewContext = new ViewContext(this.ControllerContext, viewResult.View, this.ViewData, this.TempData, sw);
+                viewResult.View.Render(viewContext, sw);
+                viewResult.ViewEngine.ReleaseView(ControllerContext, viewResult.View);
+
+                return sw.GetStringBuilder().ToString();
+            }
+        }
+        public ActionResult GetFilePdf()
+        {
+            return View("templateExport");
+            var htmlString = RenderPartialViewToString("templateExport", new object());
+            PdfDocument pdf = PdfGenerator.GeneratePdf(htmlString, PageSize.A4);
+            pdf.Save(
+            System.IO.Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+            "document.pdf"));
+
+            return View();
+
+        }
+
+        static string[] mNumText = "không;một;hai;ba;bốn;năm;sáu;bảy;tám;chín".Split(';');
+        //Viết hàm chuyển số hàng chục, giá trị truyền vào là số cần chuyển và một biến đọc phần lẻ hay không ví dụ 101 => một trăm lẻ một
+        private static string DocHangChuc(double so, bool daydu)
+        {
+            string chuoi = "";
+            //Hàm để lấy số hàng chục ví dụ 21/10 = 2
+            Int64 chuc = Convert.ToInt64(Math.Floor((double)(so / 10)));
+            //Lấy số hàng đơn vị bằng phép chia 21 % 10 = 1
+            Int64 donvi = (Int64)so % 10;
+            //Nếu số hàng chục tồn tại tức >=20
+            if (chuc > 1)
+            {
+                chuoi = " " + mNumText[chuc] + " mươi";
+                if (donvi == 1)
+                {
+                    chuoi += " mốt";
+                }
+            }
+            else if (chuc == 1)
+            {//Số hàng chục từ 10-19
+                chuoi = " mười";
+                if (donvi == 1)
+                {
+                    chuoi += " một";
+                }
+            }
+            else if (daydu && donvi > 0)
+            {//Nếu hàng đơn vị khác 0 và có các số hàng trăm ví dụ 101 => thì biến daydu = true => và sẽ đọc một trăm lẻ một
+                chuoi = " lẻ";
+            }
+            if (donvi == 5 && chuc >= 1)
+            {//Nếu đơn vị là số 5 và có hàng chục thì chuỗi sẽ là " lăm" chứ không phải là " năm"
+                chuoi += " lăm";
+            }
+            else if (donvi > 1 || (donvi == 1 && chuc == 0))
+            {
+                chuoi += " " + mNumText[donvi];
+            }
+            return chuoi;
+        }
+        private static string DocHangTram(double so, bool daydu)
+        {
+            string chuoi = "";
+            //Lấy số hàng trăm ví du 434 / 100 = 4 (hàm Floor sẽ làm tròn số nguyên bé nhất)
+            Int64 tram = Convert.ToInt64(Math.Floor((double)so / 100));
+            //Lấy phần còn lại của hàng trăm 434 % 100 = 34 (dư 34)
+            so = so % 100;
+            if (daydu || tram > 0)
+            {
+                chuoi = " " + mNumText[tram] + " trăm";
+                chuoi += DocHangChuc(so, true);
+            }
+            else
+            {
+                chuoi = DocHangChuc(so, false);
+            }
+            return chuoi;
+        }
+
+       
+        private static string DocHangTrieu(double so, bool daydu)
+        {
+            string chuoi = "";
+            //Lấy số hàng triệu
+            Int64 trieu = Convert.ToInt64(Math.Floor((double)so / 1000000));
+            //Lấy phần dư sau số hàng triệu ví dụ 2,123,000 => so = 123,000
+            so = so % 1000000;
+            if (trieu > 0)
+            {
+                chuoi = DocHangTram(trieu, daydu) + " triệu";
+                daydu = true;
+            }
+            //Lấy số hàng nghìn
+            Int64 nghin = Convert.ToInt64(Math.Floor((double)so / 1000));
+            //Lấy phần dư sau số hàng nghin 
+            so = so % 1000;
+            if (nghin > 0)
+            {
+                chuoi += DocHangTram(nghin, daydu) + " nghìn";
+                daydu = true;
+            }
+            if (so > 0)
+            {
+                chuoi += DocHangTram(so, daydu);
+            }
+            return chuoi;
+        }
+
+
+        public static string ChuyenSoSangChuoi(double so)
+        {
+            if (so == 0)
+                return mNumText[0];
+            string chuoi = "", hauto = "";
+            Int64 ty;
+            do
+            {
+                //Lấy số hàng tỷ
+                ty = Convert.ToInt64(Math.Floor((double)so / 1000000000));
+                //Lấy phần dư sau số hàng tỷ
+                so = so % 1000000000;
+                if (ty > 0)
+                {
+                    chuoi = DocHangTrieu(so, true) + hauto + chuoi;
+                }
+                else
+                {
+                    chuoi = DocHangTrieu(so, false) + hauto + chuoi;
+                }
+                hauto = " tỷ";
+            } while (ty > 0);
+            return chuoi + " đồng";
+        }
+        private string GetAddressDetail  (int idtinh, int idHuyen, int idthanhpho, string addressInfo)
+        {
+
+            var ddlTinh = MiraeService.AllProvince.Where(x => x.Stateid == idtinh.ToString()).FirstOrDefault();
+            var tinhText = "";
+            if(ddlTinh!=null)
+            {
+                tinhText = ddlTinh.Statedesc;
+            }
+
+            var ddlHuyen = MiraeService.AllDistrict.Where(x => x.Lmc_CITYID_C == idHuyen.ToString()).FirstOrDefault();
+            var huyenText = "";
+            if (ddlHuyen != null)
+            {
+                huyenText = ddlHuyen.Lmc_CITYNAME_C;
+            }
+      
+            var ddlPHuong = MiraeService.AllWard.Where(x => x.Zipcode == idthanhpho.ToString()).FirstOrDefault();
+            var phuongText = "";
+            if (ddlPHuong != null)
+            {
+                phuongText = ddlPHuong.Zipdesc;
+            }
+
+            return string.Concat(addressInfo, " ", phuongText, " ", huyenText, " ", tinhText);
+        }
+
+        public async Task<ActionResult> GetFilePdfExport(int id = 324)
+        {
+
+            var miraeItem = await _rpMCredit.GetDetail(id);
+
+            var eduqualify = miraeItem.Eduqualify;
+
+            var eduqualifyText = miraeItem.Eduqualify;
+
+            var currentAddressInfo = GetAddressDetail(miraeItem.AddressCur_City, miraeItem.AddressCur_District, miraeItem.AddressCur_Ward, miraeItem.AddressCur_address1stline);
+            var permetAddressInfo = GetAddressDetail(miraeItem.AddressPer_City, miraeItem.AddressPer_District, miraeItem.AddressPer_Ward, miraeItem.AddressPer_address1stline);
+            var companyInfoInfo = GetAddressDetail(miraeItem.CityCompany, miraeItem.DistrictCompany, miraeItem.WardCompany, miraeItem.Addressline);
+
+
+            var schemeid = miraeItem.Schemeid;
+            switch (miraeItem.Eduqualify)
+            {
+
+                case "CE":
+                    eduqualifyText = " Cao đăng hoặc tương đương";
+                    break;
+                case "HG":
+                    eduqualifyText = "Phổ thông(lớp12)";
+                    break;
+                case "LG":
+                    eduqualifyText = "Dưới phổ thông";
+                    break;
+                case "U":
+                    eduqualifyText = "Đại học";
+                    break;
+
+                case "UU":
+                    eduqualifyText = "Cao học";
+                    break;
+                default:
+                    break;
+            }
+
+
+
+            var totalloanamountreqText = "";
+            var totalloanamountreqTextInclue = "";
+
+
+            if (miraeItem.Totalloanamountreq >0)
+            {
+                totalloanamountreqText = ChuyenSoSangChuoi(Decimal.ToDouble(miraeItem.Totalloanamountreq.Value));
+
+
+
+                var percent = 5.5;
+
+                var totalinlcudebaohien = Decimal.ToDouble(miraeItem.Totalloanamountreq.Value) + Decimal.ToDouble(miraeItem.Totalloanamountreq.Value) * percent / 100;
+
+                totalloanamountreqTextInclue = ChuyenSoSangChuoi(totalinlcudebaohien);
+            }
+
+            else
+            {
+
+
+            }
+            var amountText = "";
+
+            if (miraeItem.Amount != "")
+            {
+                amountText = ChuyenSoSangChuoi(Double.Parse (miraeItem.Amount));
+            }
+
+            else
+            {
+
+
+            }
+
+            var sanphamvayText = "";
+            var sanphamvayObject = MiraeService.Allproduct.Where(x => x.Schemeid.ToString() == miraeItem.Schemeid).FirstOrDefault();
+
+            if (sanphamvayObject !=null)
+            {
+                sanphamvayText = sanphamvayObject.Schemename;
+
+            }
+
+            var bankNameText = "";
+
+
+            var bankNameObject = MiraeService.AllBank.Where(x => x.Bankid.ToString() == miraeItem.Bankname).FirstOrDefault();
+
+            if(bankNameObject != null)
+            {
+                bankNameText = bankNameObject.Bankdesc;
+            }
+            var data = new MiraeExport()
+            {
+
+                FullName = string.Concat(miraeItem.Fname, " ", miraeItem.Mname, " ", miraeItem.Lname),
+                Dob = miraeItem.Dob,
+                Nationalid = miraeItem.Nationalid,
+                Nationalidissuedate = miraeItem.Nationalidissuedate,
+                Notedetails = miraeItem.Notedetails,
+                Mobile = miraeItem.Mobile,
+                Maritalstatus = miraeItem.Maritalstatus,
+                Eduqualify = miraeItem.Eduqualify,
+                Noofdependentin = miraeItem.Noofdependentin,
+                EduqualifyText = eduqualifyText,
+                CurrentAddressText = currentAddressInfo,
+                PermetAddressText = permetAddressInfo,
+                CompanyAddressText = companyInfoInfo,
+                AddressCur_stayduratcuradd_m = miraeItem.AddressCur_stayduratcuradd_m,
+                AddressCur_stayduratcuradd_y = miraeItem.AddressCur_stayduratcuradd_y,
+                AddressCur_in_propertystatus = miraeItem.AddressCur_in_propertystatus,
+                AddressCur_mobile = miraeItem.AddressCur_mobile,
+                AddressCur_landlord = miraeItem.AddressCur_landlord,
+                AddressCur_roomno = miraeItem.AddressCur_roomno,
+                AddressCur_landmark = miraeItem.AddressCur_landmark,
+                IsDuplicateAdrees = miraeItem.IsDuplicateAdrees,
+                Familybooknumber = miraeItem.Familybooknumber,
+                AddressPer_mobile = miraeItem.AddressPer_mobile,
+                Loanpurpose = miraeItem.Loanpurpose,
+                Dueday = miraeItem.Dueday,
+                Totalloanamountreq = miraeItem.Totalloanamountreq,
+                TotalloanamountreqText = totalloanamountreqText,
+                Tenure = miraeItem.Tenure,
+                Gender = miraeItem.Gender,
+                Amount = miraeItem.Amount,
+                AmountText = amountText,
+                Priority_c = miraeItem.Priority_c,
+                Others = miraeItem.Others,
+                AddressCompanyInfo = companyInfoInfo,
+                Tax_code = miraeItem.Tax_code,
+                Presentjobyear = miraeItem.Presentjobyear,
+                Presentjobmth = miraeItem.Presentjobmth,
+                Position = miraeItem.Position,
+                Refferee1_in_title = miraeItem.Refferee1_in_title,
+                Refferee1_Phone1 = miraeItem.Refferee1_Phone1,
+                Refferee1_Refereename  = miraeItem.Refferee1_Refereename,
+                Refferee1_Refereerelation = getNameRelationShip( miraeItem.Refferee1_Refereerelation),
+                Refferee1_Phone2  = miraeItem.Refferee1_Phone2,
+
+
+                Refferee2_in_title = miraeItem.Refferee2_in_title,
+                Refferee2_Phone1 = miraeItem.Refferee2_Phone1,
+                Refferee2_Refereename = miraeItem.Refferee2_Refereename,
+                Refferee2_Refereerelation = getNameRelationShip(miraeItem.Refferee2_Refereerelation),
+                Refferee2_Phone2 = miraeItem.Refferee2_Phone2,
+
+                Refferee3_in_title = miraeItem.Refferee3_in_title,
+                Refferee3_Phone1 = miraeItem.Refferee3_Phone1,
+                Refferee3_Refereename = miraeItem.Refferee3_Refereename,
+                Refferee3_Refereerelation = getNameRelationShip( miraeItem.Refferee3_Refereerelation),
+                Refferee3_Phone2 = miraeItem.Refferee3_Phone2,
+                Laa_app_ins_applicable = miraeItem.Laa_app_ins_applicable,
+                Spousename =miraeItem.Spousename,
+                Spouse_id_c = miraeItem.Spouse_id_c,
+               
+                Accountbank = miraeItem.Accountbank,
+                SanphamvayText = sanphamvayText,
+                Bankname =miraeItem.Bankname,
+                Accno = miraeItem.Accno,
+                Acctype = miraeItem.Acctype,
+               
+                Bankbranch = miraeItem.Bankbranch,
+                Bankbranchcode =miraeItem.Bankbranchcode,
+                BankNameText  = bankNameText,
+                Idissuer = miraeItem.Idissuer,
+                PrivateInfo = miraeItem.PrivateInfo,
+                PrivateInfoOther = miraeItem.PrivateInfoOther,
+                NotedDetailPrivate = miraeItem.NotedDetailPrivate,
+                Spouse_phoneNumber = miraeItem.Spouse_phoneNumber,
+                Spouse_companyName = miraeItem.Spouse_companyName,
+                Spouse_addressName =miraeItem.Spouse_addressName,
+                Phone = miraeItem.Phone,
+
+                TotalloanamountreqTextInclue = totalloanamountreqTextInclue
+
+
+
+            };
+        
+
+
+
+             ViewBag.isAdmin = GlobalData.User.RoleId == (int)UserTypeEnum.Admin ? 1 : 0;   
+            var htmlString = RenderPartialViewToString("templateExport", data);
+            PdfDocument pdf = PdfGenerator.GeneratePdf(htmlString, PageSize.A4);
+            var stringpath = VS_LOAN.Core.Utility.Path.UploadGen + "/" + DateTime.Now.Year.ToString() + "/" + DateTime.Now.Month.ToString() + "/";
+            bool exists = System.IO.Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + stringpath);
+            if (!exists)
+                System.IO.Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + stringpath);
+            string fileName = miraeItem.AppId + "TTTT" + DateTime.Now.ToString("ddMMyyyyHHmmssfff") + ".pdf";
+            pdf.Save(Server.MapPath(stringpath + fileName));
+            var hrefLink = Server.MapPath(stringpath + fileName);
+
+            var newUrl = "/File/GetFile?path=" + stringpath + fileName;
+            return ToResponse(true, "", newUrl);
+
+
+        }
+
+        private static string getNameRelationShip ( string relationshipCode)
+        {
+            switch (relationshipCode)
+            {
+                case "R":
+                    return "Người thân";
+                case "CA":
+                    return "Đồng vay";
+                case "WH":
+                    return "Vợ chồng";
+                case "F":
+                    return "Bạn bè";
+                case "C":
+                    return "Đồng nghiệp";
+                default:
+                    return string.Empty;
+                    
+            }
+
+
+        }
+
+        public ActionResult CheckS37()
+        {
+            return View();
+        }
+
+        public async Task<JsonResult> SearchS37Temps( int page = 1, int limit = 10)
+        {
+            page = page <= 0 ? 1 : page;
+            var profiles = await _rpMCredit.GetS37Profiles(page, limit, GlobalData.User.IDUser);
+            if (profiles == null || !profiles.Any())
+            {
+                return ToJsonResponse(true, "", DataPaging.Create(null as List<S37profileSearchModel>, 0));
+            }
+            var result = DataPaging.Create(profiles, profiles[0].TotalRecord);
+            return ToJsonResponse(true, "", result);
+        }
 
 
     }

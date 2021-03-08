@@ -8,6 +8,7 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
 {
     public class MiraeModelSearchModel : MiraeModel
     {
+        
         public int TotalRecord { get; set; }    
         public string CreatedUser { get; set; }
         public string VbFUserUpdate { get; set; }

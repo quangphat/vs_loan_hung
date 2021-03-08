@@ -228,5 +228,17 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
         public string DobStr { get; set; }
 
         public string NationalidissuedateStr { get; set; }
+
+        public string PrivateInfo { get; set; }
+
+        public string PrivateInfoOther { get; set; }
+
+        public string NotedDetailPrivate { get; set; }
+
+        public string Spouse_phoneNumber { get; set; }
+        public string Spouse_companyName { get; set; }
+        public string Spouse_addressName { get; set; }
+
+
     }
 }

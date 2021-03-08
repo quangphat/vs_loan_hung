@@ -180,6 +180,8 @@
     <Compile Include="MCreditModels\SqlModel\MiraeEditModel.cs" />
     <Compile Include="MCreditModels\SqlModel\MiraeDeferModel.cs" />
     <Compile Include="MCreditModels\SqlModel\MiraeDetailModel.cs" />
+    <Compile Include="MCreditModels\SqlModel\S37profileSearchModel.cs" />
+    <Compile Include="MCreditModels\SqlModel\S37profileModel.cs" />
     <Compile Include="MCreditModels\SqlModel\MiraeModelSearchModel.cs" />
     <Compile Include="MCreditModels\SqlModel\MiraeModel.cs" />
     <Compile Include="MCreditModels\SqlModel\MiraeAddModel.cs" />

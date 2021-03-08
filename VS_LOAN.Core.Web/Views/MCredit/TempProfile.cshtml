@@ -300,9 +300,12 @@
                                     Cập nhật
                                 </a>
 
-                                <a class="btn btn-sm btn-primary" id="btn_Save">
-                                    Nộp hồ sơ qua MCredit
-                                </a>
+                                 if (GlobalData.User.UserType == (int)UserTypeEnum.Admin)
+                                    {
+                                            <a class="btn btn-sm btn-primary" id="btn_Save">
+                                            Nộp hồ sơ qua MCredit
+                                            </a>
+                                    }
                             }
 
                         }

@@ -16,7 +16,7 @@
 					
                         @Html.Partial("infomationDDE")
                          @Html.Partial("incomInfo") 
-<h3 class="header smaller lighter blue">5.Thông tin khoản vay:</h3>
+                    <h3 class="header smaller lighter blue">5.Thông tin khoản vay:</h3>
 					
                     <div class="form-group">
                         <label class="col-sm-2 control-label no-padding-right">Mục đích vay<span class="required">(*)</span></label>
@@ -97,8 +97,47 @@
         
 
 		    	          @Html.Partial("informationCarrer") 
-                   
+                         @Html.Partial("vochong") 
                           @Html.Partial("relationship") 
+
+                
+                    <h3 class="header smaller lighter blue">8. Ghi chú thông tin khoản vay và khách hàng</h3>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label no-padding-right">Bảo mật thông tin vay với:<span class="required">(*)</span></label>
+                                <div class="col-sm-4">
+                                    <select name ="privateInfo"  id ="privateInfo" class="chosen-select form-control" data-placeholder="Chọn đường">
+                                          <option value="-1">Không có</option>
+                                    <option value="1">Người thân</option>
+                                    <option value="2">Vợ/Chồng </option>
+
+                                    <option value="3">Khác</option>
+
+
+                                    <select>
+                                </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label no-padding-right"> Nếu chọn bảo mật thông tin khác thì điền thông tin:<span class="required">(*)</span></label>
+                            <div class="col-sm-4">
+                                    <input type="text" id="privateInfoOther" name ="privateInfoOther"    placeholder="Bảo mật thông tin khác" class="form-control" />
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right"> Ghi chú chi tiết:<span class="required">(*)</span></label>
+                        <div class="col-sm-4">
+                                <input type="text" id="notedDetailPrivate" name ="notedDetailPrivate"    placeholder="Bảo mật thông tin khác" class="form-control" />
+                        </div>
+
+                        </div>
     
                 </form>
             </div>
@@ -167,7 +206,7 @@
 
 
                     
-
+  
                        <div class="pull-right">
                       
                         <a class="btn btn-sm btn-primary"  id="btn_Temp">
@@ -175,8 +214,14 @@
                         
                         </a>
 
+                @if (GlobalData.User.UserType != (int)UserTypeEnum.Admin)
+                {
+                    <a onclick="createFile()" href="javascript:void(0)" class="btn btn-sm btn-primary" id="btnCreateFileTTTT">
+                                Tạo file Thu thập thông tin
+                    </a> 
 
 
+                }
 
                         
                 @if (GlobalData.User.UserType == (int)UserTypeEnum.Admin)
@@ -204,6 +249,10 @@
 
                             <a class="btn btn-sm btn-primary" id="btnSendProfile">
                             Nộp hồ sơ qua MAFC
+                            </a> 
+
+                            <a onclick="createFile()" href="javascript:void(0)" class="btn btn-sm btn-primary" id="btnCreateFileTTTT">
+                                     Tạo file thu thập thông tin
                             </a> 
 
                             <a class="btn btn-sm btn-primary" onclick ="uploadfileSubmi()" id="btnPushDDE">

@@ -151,7 +151,8 @@ namespace VS_LOAN.Core.Web.Helpers
                 new SiteMenuItem("Mirae","menu-icon courier",IndexMenu.M_16,"#",new int[] { }),
                         new SiteMenuItem("Tạo mới hồ sơ","", IndexMenu.M_16_1, ControllerRoles.Roles["mirae_list"]._href, ControllerRoles.Roles["mirae_list"]._mangChucNang),
                         new SiteMenuItem("Check DUP","", IndexMenu.M_16_2, ControllerRoles.Roles["mirae_checkDuplicate"]._href, ControllerRoles.Roles["mirae_checkDuplicate"]._mangChucNang),
-                           
+                         new SiteMenuItem("Check S37","", IndexMenu.M_16_4, ControllerRoles.Roles["mirae_checkS37"]._href, ControllerRoles.Roles["mirae_checkS37"]._mangChucNang),
+
                          new SiteMenuItem("Quản lý trạng thái Hồ sơ","", IndexMenu.M_16_3, ControllerRoles.Roles["mirae_managementstatus"]._href, ControllerRoles.Roles["mirae_checkDefer"]._mangChucNang)
 
 

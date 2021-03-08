@@ -332,4 +332,63 @@ namespace VS_LOAN.Core.Entity.MCreditModels
     }
 
 
+    public class CheckSubmitS37ResponseModel
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
+        public object Data { get; set; }
+
+    }
+
+
+    public class GetpollingS37ResponseModel
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
+        public object Data { get; set; }
+       
+        public object Extra_info { get; set; }
+
+
+    }
+
+
+    public class GetpollingS37RequestModel
+    {
+
+
+
+        public string vendorCode { get; set; }
+
+        public string idValue { get; set; }
+
+        public string requestId { get; set; }
+        public GetpollingS37RequestModel()
+        {
+
+            vendorCode = "";
+        }
+
+    }
+
+
+    public class CheckSubmitS37RequestModel
+    {
+
+  
+
+        public string vendorCode { get; set; }
+
+        public string idValue { get; set; }
+        public CheckSubmitS37RequestModel()
+        {
+
+            vendorCode = "";
+        }
+
+    }
+
+    
+
+
 }

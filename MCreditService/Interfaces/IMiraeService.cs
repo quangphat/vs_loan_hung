@@ -13,6 +13,9 @@ namespace MCreditService.Interfaces
     public interface IMiraeService
     {
         Task<CheckCustomerResponseModel> CheckCustomer(string searchVal, string partner);
+        Task<GetpollingS37ResponseModel> GetpollingS37(GetpollingS37RequestModel request);
+
+        Task<CheckSubmitS37ResponseModel> CheckSubmitS37( string idValue);
         Task<bool> Authen();
         Task<bool> CheckAuthen();
 
