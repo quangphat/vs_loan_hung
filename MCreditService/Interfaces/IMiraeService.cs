@@ -38,8 +38,12 @@ namespace MCreditService.Interfaces
         Task<BankReponseModel> GetAllBank(BankRequestModel model);
 
         Task<PushToUNDReponse> PushToUND(MultipartFormDataContent content);
-
+        
         Task<PushToHistoryReponse> PushToPendHistory(MultipartFormDataContent request);
+
+
+        Task<Mirae3PReponse> Update3p(Mirae3PRequest model);
+
 
     }
 }

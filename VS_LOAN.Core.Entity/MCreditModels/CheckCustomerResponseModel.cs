@@ -14,11 +14,36 @@ namespace VS_LOAN.Core.Entity.MCreditModels
         public string searchVal { get; set; }
 
         public string partner { get; set; }
+
+        
         public CheckCustomerRequestModel()
         {
-            partner = "DIGI";
+            partner = "EXT_SBK";
         }
     }
+
+
+    public class CheckCustomerRequestV2Model
+    {
+
+        public string cmnd { get; set; }
+
+        public string phone { get; set; }
+
+
+        public string taxCode { get; set; }
+
+        public string partner { get; set; }
+
+
+        public CheckCustomerRequestV2Model()
+        {
+            partner = "EXT_SBK";
+        }
+    }
+
+
+
     public class CheckCustomerResponseModel
     {
 
@@ -26,6 +51,15 @@ namespace VS_LOAN.Core.Entity.MCreditModels
 
         public string Messsage { get; set; }
         public CheckCustomerDataReponseModel Data { get; set; }
+
+    }
+
+
+    public class CheckCustomerV2ResponseModel
+    {
+        public bool Success { get; set; }
+        public string Messsage { get; set; }
+        public object Data { get; set; }
 
     }
 
@@ -48,6 +82,8 @@ namespace VS_LOAN.Core.Entity.MCreditModels
 
       
     }
+
+
     public class MiraeCityResponseModel
     {
 

@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace VS_LOAN.Core.Entity.MCreditModels
 {
-    public class MiraeQDELeadReQuest
+
+     public class MiraeQDELeadReQuest
     {
         public string in_channel { get; set; }
         public int in_schemeid { get; set; }

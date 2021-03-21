@@ -148,7 +148,7 @@
                 , {// Thao tác
                     data: null,
                     bSortable: false,
-                    "render": function (data, type, full, meta) {
+                     "render": function (data, type, full, meta) {
                         var thaoTac = "";
                         thaoTac += "<div class='action-buttons'>";
                         thaoTac += "<a title='@Global.Button_View' class=\"blue\" style='cursor: pointer' id='" + data.ID + `' href='/ToNhom/ChiTiet/${data.ID}'>`;
@@ -157,6 +157,10 @@
                         thaoTac += "</a>";
                         thaoTac += "<a title='@Global.Button_Edit' class=\"green\" style='cursor: pointer' id='" + data.ID + `' href='/ToNhom/Sua/${data.ID}'>`;
                         thaoTac += "<i class=\"ace-icon fa fa-pencil bigger-130\">";
+                        thaoTac += "</i>";
+                        thaoTac += "</a>";
+                        thaoTac += "<a class =\"btnxoa\" title='Xóa' class=\"green\" style='cursor: pointer' id='" + data.ID +  `' onclick='deleteGroup(${data.ID})'>`;
+                        thaoTac += "<i class=\"ace-icon fa fa-trash bigger-130\">";
                         thaoTac += "</i>";
                         thaoTac += "</a>";
                         thaoTac += "</a>";
@@ -242,5 +246,88 @@
     function XemToNhom(element) {
         var id = $(element).attr("ID");
         window.location = "/ToNhom/XemToNhomByID/" + id;
+    }
+
+
+
+    
+
+    
+ function deleteGroup(element) {
+	 
+ 
+
+ swal({
+    title: "Bạn muốn xóa",
+    
+    type: "warning",
+    showCancelButton: true,
+    confirmButtonColor: '#DD6B55',
+    confirmButtonText: 'Xóa',
+    cancelButtonText: "Quay lại",
+    closeOnConfirm: false,
+    closeOnCancel: false
+ },
+ function(isConfirm){
+
+   if (isConfirm){
+	   
+	   
+	   
+		
+		   var sendInfo = {
+           Id:element
+		};
+   
+        $.ajax({
+            traditional: true,
+            url: '/ToNhom/Xoa',
+            type: "POST",
+            contentType: "application/json;",
+            dataType: 'json',
+            data: JSON.stringify(sendInfo),
+            success: function (data) {
+                if (data.success == true ) {
+                    swal({
+                        title: "@Html.Raw(Global.Message_Title)",
+                        text: 'Đã xóa thành công',
+                        type: "success",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    }, function () {
+                        window.location = window.location
+                    });
+
+                }
+                else {
+                    swal({
+                        title: "Lỗi",
+                        text: data.code,
+                        type: "error",
+                        timer: 4000,
+                        showConfirmButton: true,
+                    });
+                }
+
+            },
+            error: function (jqXHR, exception) {
+                showError(jqXHR, exception);
+            },
+            complete: function () {
+                $('#panel_body').unblock();
+            },
+        });
+    
+
+    } else {
+      
+	  swal.close();
+         
+    }
+ });
+
+  
+	 
+	 
     }
 </script>

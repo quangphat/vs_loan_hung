@@ -19,16 +19,13 @@ namespace MCreditService
 {
     public abstract class MiraeServiceBase
     {
-        //pro
-        //protected static string _baseUrl1 = "https://apigw.mafc.vn";
+      
          protected static string _createLead = "/thirdparty/dataentryi";
         protected static string _baseUrl = "https://apigw.mafc.vn";
 
         protected static string _baseUrls37 = "https://apigw-staging.mafc.vn/cic";
-
-        //protected static string _createLead = "/dataentry-mci";
-
-
+        
+        
         protected static string _userName = "vietbank_test";
         protected static string _password = "Abc@1234!";
         protected static string _authenToken = "Basic bWFzdGVyZGF0YW1jaTptYWZjMzI0MTJeJiVeJA==";
@@ -44,9 +41,8 @@ namespace MCreditService
         protected static string _getAllProvince = "api/MasterData/GetAllProvince";
         protected static string _getallcity = "masterdatamci";
         protected static string _getallWard = "api/MasterData/GetAllWard";
-
         
-
+        
         protected static string _token = "/token";
         protected readonly HttpClient _httpClient;
         protected HttpRequestMessage _requestMessage;

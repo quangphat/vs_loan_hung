@@ -209,6 +209,8 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
         public string Acctype { get; set; }
         public string Accno { get; set; }
         public string Dueday { get; set; }
+
+        public string DuedayRecomend { get; set; } 
         public string Notecode { get; set; }
         public string Notedetails { get; set; }
 
@@ -222,6 +224,8 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
         public string Spouse_phoneNumber { get; set; }
         public string Spouse_companyName { get; set; }
         public string Spouse_addressName { get; set; }
+
+
 
 
 
@@ -250,14 +254,6 @@ namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
         public string Status { get; set; }
 
         public DateTime BussinessTime { get; set; }
-
-
-
-
-
-
-
-
         public string Rejeccode { get; set; }
 
         public string Reason { get; set; }

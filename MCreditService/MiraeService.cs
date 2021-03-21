@@ -349,6 +349,7 @@ namespace MCreditService
 
             AllSelectUser = result.Data;
 
+
             return result;
         }
         public async Task<SaleOfficeReponseModel> GetAllSaleOffice(SaleOfficeRequestModel model)
@@ -356,6 +357,8 @@ namespace MCreditService
             var result = await GetMasterData<SaleOfficeReponseModel>("post", "masterdatamci", "getSaleOffice");
 
             AllOfficeUser = result.Data.Where(x => x.Inspectorname.Contains("SBK")).ToList();
+
+         
      
 
             return result;
@@ -416,9 +419,6 @@ namespace MCreditService
                 return new PushToHistoryReponse();
             }
         }
-
-
-     
 
         public async Task<CheckSubmitS37ResponseModel> CheckSubmitS37(string ididValue)
         {
@@ -483,8 +483,7 @@ namespace MCreditService
             
             var json = JsonConvert.SerializeObject(request);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
-
-
+            
             var response = await client.PostAsync("https://apigw-staging.mafc.vn/cic/polling-s37", data);
             if (response.IsSuccessStatusCode)
             {
@@ -498,9 +497,31 @@ namespace MCreditService
                 GetpollingS37ResponseModel contributors = JsonConvert.DeserializeObject<GetpollingS37ResponseModel>(content);
                 return contributors;
             }
-
         }
 
+        public async Task<Mirae3PReponse> Update3p(Mirae3PRequest model)
+        {
+
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Authorization", "Basic bWlyYWUtM3A6MTIzNDU2");
+            client.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue(_contentType));
+            var url = _createLead;
+            var json = JsonConvert.SerializeObject(model);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync("https://apigw-staging.mafc.vn/3p/v2/data-entry-update", data);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var resultReponse = JsonConvert.DeserializeObject<Mirae3PReponse>(content);
+                return resultReponse;
+            }
+            return new Mirae3PReponse();
+        }
+
+
+     
 
     }
 }

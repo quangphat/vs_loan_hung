@@ -36,7 +36,7 @@ namespace VS_LOAN.Core.Web.Controllers
 
         protected readonly IMiraeRepository _rpMCredit;
         protected readonly IMediaBusiness _bizMedia;
-        protected readonly IMiraeService _odcService;
+        protected readonly IMiraeService _miraeService;
         public readonly IOcbBusiness _ocbBusiness;
         public readonly IMiraeMaratialRepository _rpTailieu;
         public static ProvinceResponseModel _provinceResponseModel;
@@ -46,7 +46,7 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             _rpTailieu = tailieuBusiness;
             _rpMCredit = rpMCredit;
-            _odcService = odcService;
+            _miraeService = odcService;
             _bizMedia = mediaBusiness;
             _ocbBusiness = ocbBusiness;
 
@@ -58,7 +58,6 @@ namespace VS_LOAN.Core.Web.Controllers
             return ToJsonResponse(true, "", MiraeService.AllProvince.ToList());
 
         }
-
         public JsonResult GetAllBank()
         {
             return ToJsonResponse(true, "", MiraeService.AllBank.ToList());
@@ -74,7 +73,6 @@ namespace VS_LOAN.Core.Web.Controllers
             return ToJsonResponse(true, "", MiraeService.AllWard.Where(x => x.City == cityCode).ToList());
 
         }
-
         public JsonResult GetAllSelectUser(string cityCode)
         {
             return ToJsonResponse(true, "", MiraeService.AllSelectUser.ToList());
@@ -85,7 +83,6 @@ namespace VS_LOAN.Core.Web.Controllers
             return ToJsonResponse(true, "", MiraeService.AllOfficeUser.ToList());
 
         }
-
         public JsonResult GetAllProduct(string cityCode)
         {
             return ToJsonResponse(true, "", MiraeService.Allproduct.ToList());
@@ -95,17 +92,12 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             return View();
         }
-
-   
-
-
         public async Task<ActionResult> AddNew()
 
         {
-            await _odcService.CheckAuthen();
+            await _miraeService.CheckAuthen();
             return View();
         }
-
         public async Task<ActionResult> Tracking(int id)
         {
             var result = await _rpMCredit.GetDetail(id);
@@ -122,7 +114,7 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             if (model == null || string.IsNullOrWhiteSpace(model.Value))
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
-            var result = await _odcService.CheckCustomer(model.Value, "SBK");
+            var result = await _miraeService.CheckCustomer(model.Value, "SBK");
             var item = result.Data;
             var boolSuccess = false;
             if (item.StatusNumber == "0" || item.StatusNumber == "302")
@@ -132,7 +124,6 @@ namespace VS_LOAN.Core.Web.Controllers
             return ToJsonResponse(boolSuccess, result.Data?.ToString(), result);
         }
 
-
         public async Task<JsonResult> CheckS37API(StringModel2 model)
         {
             if(string.IsNullOrEmpty(model.Value) || string.IsNullOrWhiteSpace(model.Value))
@@ -141,7 +132,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToJsonResponse(false, "Chưa nhập số cmnd để gửi yêu cầu", "");
             }
          
-            var result = await _odcService.CheckSubmitS37(model.Value);
+            var result = await _miraeService.CheckSubmitS37(model.Value);
 
             if (result.Success)
             {
@@ -207,8 +198,6 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             return ToJsonResponse(result.Success, result.Data?.ToString(), result);
         }
-
-
         public async Task<JsonResult> GetpollingS37(StringModel2 model)
         {
 
@@ -236,7 +225,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 
              
 
-            var result = await _odcService.GetpollingS37(request);
+            var result = await _miraeService.GetpollingS37(request);
             
             
            
@@ -540,7 +529,7 @@ namespace VS_LOAN.Core.Web.Controllers
             request.in_channel = "SBK";
             request.in_userid = "EXT_SBK";
             request.in_categoryid = "SBK";
-            var result = await _odcService.DDESubmit(request);
+            var result = await _miraeService.DDESubmit(request);
 
             if (result.Success)
             {
@@ -570,7 +559,7 @@ namespace VS_LOAN.Core.Web.Controllers
             catch (Exception)
             {
             }
-            var response = await _odcService.DDEToPoR(new DDEToPORReQuest()
+            var response = await _miraeService.DDEToPoR(new DDEToPORReQuest()
             {
                 in_channel = "SBK",
                 in_userid = "EXT_SBK",
@@ -588,9 +577,6 @@ namespace VS_LOAN.Core.Web.Controllers
 
         private MiraeQDELeadReQuest MiramodelToQDERequest(MiraeModel model)
         {
-
-
-
             model.Sourcechannel = "ADVT";
             model.Userid = "EXT_SBK";
 
@@ -828,7 +814,7 @@ namespace VS_LOAN.Core.Web.Controllers
             var model = await _rpMCredit.GetTemProfileByMcId(id);
             var request = MiramodelToQDERequest(model);
 
-            var ressult = await _odcService.QDESubmit(request);
+            var ressult = await _miraeService.QDESubmit(request);
             if (ressult.Success)
             {
                 var appid = 0;
@@ -870,7 +856,7 @@ namespace VS_LOAN.Core.Web.Controllers
             catch (Exception)
             {
             }
-            var response = await _odcService.QDEToDDE(new QDEToDDEReQuest()
+            var response = await _miraeService.QDEToDDE(new QDEToDDEReQuest()
             {
 
                 p_appid = appId
@@ -1009,6 +995,7 @@ namespace VS_LOAN.Core.Web.Controllers
             profilerequest.Acctype = model.Acctype;
             profilerequest.Accno = model.Accno;
             profilerequest.Dueday = model.Dueday;
+            profilerequest.DuedayRecomend = model.DuedayRecomend;
             profilerequest.Notecode = "DE_MOBILE";
             profilerequest.Notedetails = model.Notedetails;
             profilerequest.UpdatedBy = GlobalData.User.IDUser;
@@ -1154,6 +1141,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 Categoryid = model.Categoryid,
                 Eduqualify = model.Eduqualify,
                 Dueday = model.Dueday,
+                DuedayRecomend = model.Dueday,
                 Familybooknumber = model.Familybooknumber,
                 Idissuer = model.Idissuer,
                 IsDuplicateAdrees = model.IsDuplicateAdrees,
@@ -1282,7 +1270,7 @@ namespace VS_LOAN.Core.Web.Controllers
 
             }
 
-            var result = await _odcService.PushToUND(multiForm);
+            var result = await _miraeService.PushToUND(multiForm);
 
             if (result.Success)
             {
@@ -1295,7 +1283,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<ActionResult> Temp()
         {
 
-            await _odcService.CheckAuthen();
+            await _miraeService.CheckAuthen();
 
 
             return View();
@@ -1498,7 +1486,7 @@ namespace VS_LOAN.Core.Web.Controllers
             else {
                 var model = await _rpMCredit.GetTemProfileByMcId(id);
                 var request = MiramodelToQDERequest(model);
-                var ressultQDE = await _odcService.QDESubmit(request);
+                var ressultQDE = await _miraeService.QDESubmit(request);
 
 
                 if (ressultQDE.Success)
@@ -1508,7 +1496,7 @@ namespace VS_LOAN.Core.Web.Controllers
 
                     var appId = int.Parse(ressultQDE.Data);
                     await _rpMCredit.SetAppidProfile(model.Id, appId);
-                    var response = await _odcService.QDEToDDE(new QDEToDDEReQuest()
+                    var response = await _miraeService.QDEToDDE(new QDEToDDEReQuest()
                     {
                         p_appid = int.Parse(ressultQDE.Data)
 
@@ -1571,13 +1559,13 @@ namespace VS_LOAN.Core.Web.Controllers
                         requestDDE.in_userid = "EXT_SBK";
 
                         requestDDE.in_categoryid = "SBK";
-                        var resultDDE = await _odcService.DDESubmit(requestDDE);
+                        var resultDDE = await _miraeService.DDESubmit(requestDDE);
 
                         if (resultDDE.Success)
                         {
 
                             await _rpMCredit.UpdateStatusMAFC(id, 2, appId, GlobalData.User.IDUser);
-                            var responseToPOR = await _odcService.DDEToPoR(new DDEToPORReQuest()
+                            var responseToPOR = await _miraeService.DDEToPoR(new DDEToPORReQuest()
                             {
                                 in_channel = "SBK",
                                 in_userid = "EXT_SBK",
@@ -1628,7 +1616,7 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<ActionResult> Index()
         {
 
-            await _odcService.CheckAuthen();
+            await _miraeService.CheckAuthen();
 
 
             return View("Temp");
@@ -2184,6 +2172,7 @@ namespace VS_LOAN.Core.Web.Controllers
                 Spouse_phoneNumber = miraeItem.Spouse_phoneNumber,
                 Spouse_companyName = miraeItem.Spouse_companyName,
                 Spouse_addressName =miraeItem.Spouse_addressName,
+                DuedayRecomend = miraeItem.DuedayRecomend,
                 Phone = miraeItem.Phone,
 
                 TotalloanamountreqTextInclue = totalloanamountreqTextInclue
@@ -2251,6 +2240,259 @@ namespace VS_LOAN.Core.Web.Controllers
             return ToJsonResponse(true, "", result);
         }
 
+
+
+        public Mirae3PRequest MiraemodelToMirae3p (MiraeModel  model)
+        {
+            var request = new Mirae3PRequest()
+            {
+
+                in_appid = model.AppId,
+                in_salesofficer = 0, //not
+                in_loanpurpose = model.Loanpurpose,
+                in_priority_c = model.Priority_c, //note
+                in_schemeid = int.Parse(model.Schemeid),
+                in_totalloanamountreq = model.Totalloanamountreq,
+                in_tenure = model.Tenure,
+                in_laa_app_ins_applicable = model.Laa_app_ins_applicable,//note
+                in_title = model.Title,
+                in_fname = model.Fname,
+                in_mname = model.Mname,
+                in_lname = model.Lname,
+                in_gender = model.Gender, //noted 
+                in_nationalid = model.Nationalid,
+                in_dob = "",
+                in_tax_code = model.Tax_code,
+                in_presentjobyear = model.Presentjobyear,
+                in_presentjobmth = model.Presentjobmth,
+                in_others = model.Others,
+                in_position = model.Position,
+                in_amount = model.Amount,
+                in_accountbank = model.Accountbank, //noted
+                in_maritalstatus = model.Maritalstatus,
+                in_eduqualify = model.Eduqualify,
+                in_noofdependentin = model.Noofdependentin,
+                in_paymentchannel = model.Paymentchannel,
+                in_nationalidissuedate = model.Nationalidissuedate.Value.ToShortDateString(),//noted
+                in_familybooknumber = model.Familybooknumber,
+                in_idissuer = model.Idissuer,  //noted
+                in_spousename = model.Spousename, //noted
+                in_spouse_id_c = model.Spouse_id_c,
+                in_bankname = model.Bankname,
+                in_bankbranch = model.Bankbranch,
+                in_accno = model.Accno
+            };
+            if (model.IsDuplicateAdrees.HasValue)
+            {
+                if (model.IsDuplicateAdrees.Value)
+                {
+                    request.address = new List<AddressItem>()
+                     {
+                            new AddressItem()
+                            {
+                                in_mobile = model.Mobile,
+                                in_address1stline = model.AddressCur_address1stline,
+                                in_addresstype = "CURRES",
+                                in_city = model.AddressCur_City,
+                                in_country = 189,
+                                in_district =model.AddressCur_District,
+                                in_landlord = model.AddressCur_landlord,
+                                in_landmark = model.AddressCur_landmark,
+                                in_mailingaddress = "Y",
+                                in_propertystatus = model.AddressCur_in_propertystatus,
+                                in_roomno = model.AddressCur_roomno!=null?model.AddressCur_roomno:"",
+                                in_stayduratcuradd_m = model.AddressCur_stayduratcuradd_m!=null ?  int.Parse( model.AddressCur_stayduratcuradd_m):0,
+                                in_stayduratcuradd_y = model.AddressCur_stayduratcuradd_y!=null ?  int.Parse( model.AddressCur_stayduratcuradd_y):0,
+                                in_ward = model.AddressCur_Ward,
+                            }
+                    };
+                }
+                else
+                {
+                    request.address = new List<AddressItem>()
+                    {
+                        new AddressItem()
+                        {
+                            in_mobile = model.Mobile,
+                            in_address1stline = model.AddressCur_address1stline,
+                            in_addresstype = "CURRES",
+                            in_city = model.AddressCur_City,
+                            in_country = 189,
+                            in_district =model.AddressCur_District,
+                            in_landlord = model.AddressCur_landlord,
+                            in_landmark = model.AddressCur_landmark,
+                            in_mailingaddress = "Y",
+                            in_propertystatus = model.AddressCur_in_propertystatus,
+                            in_roomno = model.AddressCur_roomno,
+                            in_stayduratcuradd_m = model.AddressCur_stayduratcuradd_m!=null ?  int.Parse( model.AddressCur_stayduratcuradd_m):0,
+                            in_stayduratcuradd_y = model.AddressCur_stayduratcuradd_y!=null ?  int.Parse( model.AddressCur_stayduratcuradd_y):0,
+                            in_ward = model.AddressCur_Ward,
+
+                        },
+                         new AddressItem()
+                        {
+                            in_mobile = model.AddressPer_mobile,
+                            in_address1stline = model.AddressPer_address1stline,
+                            in_addresstype = "PERMNENT",
+                            in_city = model.AddressPer_City,
+                            in_country = 189,
+                            in_district =model.AddressPer_District,
+                            in_landlord = model.AddressPer_landlord,
+                            in_landmark = model.AddressPer_landmark,
+                            in_mailingaddress = "N",
+                            in_propertystatus = model.AddressPer_in_propertystatus,
+                            in_roomno = model.AddressPer_roomno,
+                            in_stayduratcuradd_m = model.AddressPer_stayduratPeradd_m!=null ?  int.Parse( model.AddressPer_stayduratPeradd_m):0,
+                            in_stayduratcuradd_y = model.AddressPer_stayduratPeradd_y!=null ?  int.Parse( model.AddressPer_stayduratPeradd_y):0,
+                            in_ward = model.AddressPer_Ward,
+
+                        },
+
+                 };
+
+
+                }
+
+            }
+            else
+            {
+
+                request.address = new List<AddressItem>()
+                    {
+                        new AddressItem()
+                        {
+                            in_mobile = model.Mobile,
+                            in_fixphone ="",
+                            in_address1stline = model.AddressCur_address1stline,
+                            in_addresstype = "CURRES",
+                            in_city = model.AddressCur_City,
+                            in_country = 189,
+                            in_district =model.AddressCur_District,
+                            in_landlord = model.AddressCur_landlord,
+                            in_landmark = model.AddressCur_landmark,
+                            in_mailingaddress = "Y",
+                            in_propertystatus = model.AddressCur_in_propertystatus,
+                            in_roomno = model.AddressCur_roomno,
+                            in_stayduratcuradd_m = model.AddressCur_stayduratcuradd_m!=null ?  int.Parse( model.AddressCur_stayduratcuradd_m):0,
+                            in_stayduratcuradd_y = model.AddressCur_stayduratcuradd_y!=null ?  int.Parse( model.AddressCur_stayduratcuradd_y):0,
+                            in_ward = model.AddressCur_Ward,
+
+                        },
+                         new AddressItem()
+                        {
+                            in_mobile ="",
+                            in_fixphone ="",
+                            in_address1stline = model.AddressPer_address1stline,
+                            in_addresstype = "PERMNENT",
+                            in_city = model.AddressPer_City,
+                            in_country = 189,
+                            in_district =model.AddressPer_District,
+                            in_landlord = model.AddressPer_landlord,
+                            in_landmark = model.AddressPer_landmark,
+                            in_mailingaddress = "N",
+                            in_propertystatus = model.AddressPer_in_propertystatus,
+                            in_roomno = model.AddressPer_roomno,
+                            in_stayduratcuradd_m = model.AddressPer_stayduratPeradd_m!=null ?  int.Parse( model.AddressPer_stayduratPeradd_m):0,
+                            in_stayduratcuradd_y = model.AddressPer_stayduratPeradd_y!=null ?  int.Parse( model.AddressPer_stayduratPeradd_y):0,
+                            in_ward = model.AddressPer_Ward,
+
+                        },
+
+                 };
+
+
+            }
+
+            request.reference = new List<ReferenceItem>();
+
+            if (string.IsNullOrEmpty(model.Refferee1_Refereename) == false)
+            {
+                request.reference.Add(new ReferenceItem()
+                {
+                    in_phone_1 = model.Refferee1_Phone1,
+                    in_phone_2 = "",
+                    in_title = model.Refferee1_in_title + '.',
+                    in_refereename = model.Refferee1_Refereename,
+                    in_refereerelation = model.Refferee1_Refereerelation
+                });
+
+            }
+
+            if (string.IsNullOrEmpty(model.Refferee2_Refereename) == false)
+            {
+                request.reference.Add(new ReferenceItem()
+                {
+                    in_title = model.Refferee2_in_title + '.',
+                    in_phone_1 = model.Refferee2_Phone1 + '.',
+                    in_phone_2 = "",
+                    in_refereename = model.Refferee2_Refereename,
+                    in_refereerelation = model.Refferee2_Refereerelation
+                });
+
+            }
+
+            if (string.IsNullOrEmpty(model.Refferee3_Refereename) == false)
+            {
+                request.reference.Add(new ReferenceItem()
+                {
+                    in_title = model.Refferee3_in_title + '.',
+                    in_phone_1 = model.Refferee3_Phone1 + '.',
+                    in_phone_2 = "",
+                    in_refereename = model.Refferee3_Refereename,
+                    in_refereerelation = model.Refferee3_Refereerelation
+                });
+
+            }
+
+
+            request.in_channel = "SBK";
+            request.in_userid = "EXT_SBK";
+            request.in_categoryid = "SBK";
+
+            return request;
+        }
+        public async Task<JsonResult> Update3p(int id)
+        {
+            var data = await _rpMCredit.GetTemProfileByMcId(id);
+            if (data == null)
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+
+            if (data.Nationalidissuedate == null || data.Nationalidissuedate.HasValue == false)
+            {
+                return ToJsonResponse(false, "Vui lòng điền ngày cấp chứng minh nhân dân");
+
+            }
+            else if (string.IsNullOrEmpty(data.Idissuer))
+            {
+                return ToJsonResponse(false, "Chưa chọn địa chỉ cung cấp CMND");
+
+            }
+            else if (string.IsNullOrEmpty(data.Maritalstatus))
+            {
+
+                return ToJsonResponse(false, "Vui lòng chọn trạng thái hôn nhân");
+            }
+            else if (string.IsNullOrEmpty(data.Familybooknumber))
+            {
+
+                return ToJsonResponse(false, "Vui lòng  cung cấp thông tin sổ hộ khẩu");
+            }
+            else if (string.IsNullOrEmpty(data.Eduqualify))
+            {
+
+                return ToJsonResponse(false, "Vui lòng chọn trình độ học vấn");
+            }
+            else if (string.IsNullOrEmpty(data.Acctype))
+            {
+
+                return ToJsonResponse(false, "Vui lòng chọn loại tài khoản ");
+            }
+            var requestData = MiraemodelToMirae3p(data);
+
+            var result = await _miraeService.Update3p(requestData);
+
+            return ToJsonResponse(result.Success, "", result);
+        }
 
     }
 }

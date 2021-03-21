@@ -648,6 +648,19 @@ namespace VS_LOAN.Core.Repository
             
         }
 
+        public async Task<bool> Delete(int id)
+        {
+
+            using (var con = GetConnection())
+            {
+                var p = new DynamicParameters();
+                p.Add("Id", id);
+                await con.ExecuteAsync("sp_Group_Delete", p,
+                    commandType: CommandType.StoredProcedure);
+                return true;
+            }
+        }
+
 
     }
 }

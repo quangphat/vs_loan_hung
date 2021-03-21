@@ -153,6 +153,7 @@
     <Compile Include="MCreditModels\AuthenResponseObj.cs" />
     <Compile Include="MCreditModels\MCreditRequestModelBase.cs" />
     <Compile Include="MCreditModels\MCreditUserToken.cs" />
+    <Compile Include="MCreditModels\Mirae3PRequest.cs" />
     <Compile Include="MCreditModels\MiraModel\UploadDeferRequest.cs" />
     <Compile Include="MCreditModels\NoteAddRequestModel.cs" />
     <Compile Include="MCreditModels\NoteAddResponseModel.cs" />

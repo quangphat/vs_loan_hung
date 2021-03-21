@@ -225,5 +225,22 @@ namespace VS_LOAN.Core.Web.Controllers
                 return ToResponse(false, null, ex.Message);
             }
         }
+
+
+        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.QLToNhom })]
+        public async Task<ActionResult> Xoa(int id)
+        {
+            if (id <= 0)
+            {
+                return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            }
+            var isAdmin = GlobalData.User.UserType == (int)UserTypeEnum.Admin ? true : false;
+            if (!isAdmin)
+            {
+                return ToJsonResponse(false, "Bạn không đủ quyền để xóa nhân viên");
+            }
+            var result = await _rpGroup.Delete(id);
+            return ToJsonResponse(result);
+        }
     }
 }

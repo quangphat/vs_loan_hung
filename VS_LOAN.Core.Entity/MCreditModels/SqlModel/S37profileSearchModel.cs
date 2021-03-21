@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace VS_LOAN.Core.Entity.MCreditModels.SqlModel
+{
+    public class S37profileSearchModel :S37profileModel
+    {
+        public int TotalRecord { get; set; }
+
+        public string Vbf { get; set; }
+
+        public string CreatedUser { get; set; }
+    }
+
+}

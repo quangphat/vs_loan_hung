@@ -21,5 +21,6 @@ namespace VS_LOAN.Core.Repository.Interfaces
         bool Sua(NhomModel nhom, List<int> lstThanhVien);
         List<ThongTinNhanVienModel> LayDSChiTietThanhVienNhom(int maNhom);
         List<NhomDropDownModel> LayDSCuaNhanVien(int userId);
+        Task<bool> Delete(int groupId);
     }
 }
