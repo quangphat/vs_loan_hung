@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using VS_LOAN.Core.Entity;
 
 namespace VS_LOAN.Core.Utility
@@ -7,8 +8,13 @@ namespace VS_LOAN.Core.Utility
     {
         public static DateTime ConvertddMMyyyyToDateTime(string str)
         {
-            string[] p = str.Split(new string[] { "-" }, StringSplitOptions.RemoveEmptyEntries);
-            DateTime date = new DateTime(Convert.ToInt32(p[2]), Convert.ToInt32(p[1]), Convert.ToInt32(p[0]));
+            DateTime date;
+            string[] formats = { "dd-MM-yyyy", "d-M-yyyy", "dd/MM/yyyy", "d/M/yyyy" };
+            if (!DateTime.TryParseExact(str ?? string.Empty, formats, CultureInfo.InvariantCulture,
+                DateTimeStyles.None, out date))
+            {
+                throw new FormatException("Ngày tháng không đúng định dạng. Vui lòng dùng dd-MM-yyyy hoặc dd/MM/yyyy.");
+            }
             return date;
 
         }
