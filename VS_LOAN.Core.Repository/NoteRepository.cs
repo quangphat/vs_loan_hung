@@ -18,14 +18,13 @@ namespace VS_LOAN.Core.Repository
         {
             using (var con = GetConnection())
             {
-                await con.ExecuteAsync("insert into Ghichu (UserId,Noidung,HosoId, CommentTime,TypeId) values(@userId,@noidung,@hosoId,@commentTime,@typeId)",
+                await con.ExecuteAsync("insert into Ghichu (UserId,Noidung,HosoId, CommentTime) values(@userId,@noidung,@hosoId,@commentTime)",
                     new
                     {
                         userId = model.UserId,
                         noidung = model.Noidung,
                         hosoId = model.HosoId,
-                        commentTime = DateTime.Now,
-                        typeId = model.TypeId
+                        commentTime = DateTime.Now
                     }, commandType: CommandType.Text);
             }
         }
@@ -36,8 +35,7 @@ namespace VS_LOAN.Core.Repository
                 var result = await con.QueryAsync<GhichuViewModel>("sp_GetGhichuByHosoId",
                     new
                     {
-                        hosoId = id,
-                        typeId
+                        hosoId = id
                     }, commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }

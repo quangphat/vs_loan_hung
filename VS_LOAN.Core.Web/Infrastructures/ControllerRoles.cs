@@ -15,7 +15,7 @@ namespace VS_LOAN.Core.Web.Infrastructures
              { "home_version", new ActionInfo{ _formindex = IndexMenu.M_0_3, _href = "Home/PhienBan", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
              { "profile_addnew", new ActionInfo{ _formindex = IndexMenu.M_1_1, _href = "HoSo/AddNew", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
              { "profile_list", new ActionInfo{ _formindex = IndexMenu.M_2_2, _href = "QuanLyHoSo/DanhSachHoSo", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
-             { "profile_approve", new ActionInfo{ _formindex = IndexMenu.M_2_2, _href = "DuyetHoSo/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
+             { "profile_approve", new ActionInfo{ _formindex = IndexMenu.M_2_2, _href = "DuyetHoSo/Index", _mangChucNang = new int[] { (int)QuyenIndex.DuyetHoSo } } },
              { "checkdup_list", new ActionInfo{ _formindex = IndexMenu.M_5_2, _href = "Customer/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
              { "checkdup_addnew", new ActionInfo{ _formindex = IndexMenu.M_5_1, _href = "Customer/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },
              { "company_list", new ActionInfo{ _formindex = IndexMenu.M_8_2, _href = "Company/Index", _mangChucNang = new int[] { (int)QuyenIndex.Public } } },

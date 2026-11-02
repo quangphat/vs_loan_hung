@@ -1,4 +1,154 @@
-﻿html, body, h1, h2, h3, h4, h5, h6 {
+﻿/* Shared form and list presentation */
+.page-content {
+    padding: 22px 24px;
+    background: #f5f7fb;
+}
+.app-card,
+.app-filter-panel {
+    background: #fff;
+    border: 1px solid #e4eaf2;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(31, 54, 82, .05);
+    padding: 20px;
+    margin-bottom: 18px;
+}
+.app-section-heading {
+    color: #24476b;
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #edf1f6;
+}
+.app-card .form-group,
+.app-filter-panel .form-group {
+    margin-left: 0;
+    margin-right: 0;
+}
+.app-card .form-control,
+.app-filter-panel .form-control {
+    min-height: 38px;
+    border-color: #d8e0eb;
+    border-radius: 5px;
+    box-shadow: none;
+}
+.app-card .form-control:focus,
+.app-filter-panel .form-control:focus {
+    border-color: #4b91d1;
+    box-shadow: 0 0 0 3px rgba(75, 145, 209, .12);
+}
+.app-form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-top: 14px;
+    border-top: 1px solid #edf1f6;
+}
+.app-form-actions .btn,
+.app-filter-panel .btn {
+    border-radius: 5px;
+    min-height: 36px;
+}
+.app-table-card {
+    background: #fff;
+    border: 1px solid #e4eaf2;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.app-table-card .table-header {
+    background: #315f88;
+    padding: 11px 14px;
+}
+.app-company-filter {
+    margin-bottom: 18px;
+}
+.app-company-filter .form-group {
+    display: flex;
+    align-items: center;
+}
+.app-company-filter .control-label {
+    text-align: left;
+}
+.app-company-filter-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+.app-company-filter-actions .btn {
+    white-space: nowrap;
+}
+.app-table-card .dataTables_wrapper > .row {
+    margin: 0;
+    padding: 12px 14px 0;
+}
+.app-table-card .report-table-custom--overflow {
+    padding: 0 14px 14px;
+}
+.group-member-picker .form-group {
+    margin-bottom: 0;
+}
+.group-member-hint {
+    color: #65758b;
+    margin: 0 0 12px;
+}
+.group-member-picker .bootstrap-duallistbox-container .info-container {
+    color: #65758b;
+    font-size: 12px;
+}
+.group-member-picker .bootstrap-duallistbox-container select {
+    min-height: 250px;
+    border-color: #d8e0eb;
+    border-radius: 5px;
+}
+.group-member-picker .bootstrap-duallistbox-container .btn {
+    border-radius: 4px;
+}
+.group-member-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 12px;
+    color: #65758b;
+}
+.group-member-pagination .btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.group-member-pagination .btn-group > .btn {
+    border-radius: 4px;
+}
+@media (max-width: 767px) {
+    .page-content {
+        padding: 12px;
+    }
+
+    .app-card,
+    .app-filter-panel {
+        padding: 14px;
+    }
+
+    .app-card .form-group > [class*="col-"] {
+        margin-bottom: 10px;
+    }
+
+    .app-company-filter .form-group,
+    .group-member-pagination {
+        display: block;
+    }
+
+    .app-company-filter-actions {
+        justify-content: flex-start;
+        margin-top: 10px;
+    }
+
+    .group-member-pagination .btn-group {
+        margin-top: 8px;
+    }
+}
+html, body, h1, h2, h3, h4, h5, h6 {
     font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
 }
 .activity-log{

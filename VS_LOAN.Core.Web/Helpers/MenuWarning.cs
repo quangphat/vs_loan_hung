@@ -39,8 +39,11 @@ namespace VS_LOAN.Core.Web.Helpers
                             var lstNotApprove = new HoSoBLL().DSHoSoDuyetChuaXem(GlobalData.User.IDUser, 0, 0, tuNgay, denNgay, string.Empty, string.Empty, 1, trangthai);
                             if (lstNotApprove != null)
                             {
+                                var profileBLL = new HoSoBLL();
                                 foreach (var item in lstNotApprove)
                                 {
+                                    if (!profileBLL.CanUserAccessProfile(item.ID, GlobalData.User.IDUser, GlobalData.User.UserType))
+                                        continue;
                                     RedirectLink rl = new RedirectLink();
 
                                     rl.Title = "[" + item.MaHoSo + "] " + item.TenKH;

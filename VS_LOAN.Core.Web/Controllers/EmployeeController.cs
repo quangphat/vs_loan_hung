@@ -91,6 +91,10 @@ namespace VS_LOAN.Core.Web.Controllers
             {
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
             }
+            if (!Enum.IsDefined(typeof(UserTypeEnum), entity.RoleId))
+            {
+                return ToJsonResponse(false, "Vai trò không hợp lệ");
+            }
             if (string.IsNullOrWhiteSpace(entity.UserName))
             {
                 return ToJsonResponse(false, "Tên đăng nhập không được để trống");
@@ -171,6 +175,10 @@ namespace VS_LOAN.Core.Web.Controllers
             if (model == null || model.Id <= 0)
             {
                 return ToJsonResponse(false, "Dữ liệu không hợp lệ");
+            }
+            if (!Enum.IsDefined(typeof(UserTypeEnum), model.RoleId))
+            {
+                return ToJsonResponse(false, "Vai trò không hợp lệ");
             }
                 
             model.UpdatedBy = GlobalData.User.IDUser;
@@ -260,11 +268,15 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public async Task<JsonResult> GetAllEmployee()
         {
+            if (GlobalData.User == null || GlobalData.User.UserType != (int)UserTypeEnum.Admin)
+                return ToJsonResponse(false, "Bạn không có quyền xem danh sách nhân sự");
             var result = await _rpEmployee.GetAllEmployee(GlobalData.User.OrgId);
             return ToJsonResponse(true, data: result);
         }
         public async Task<JsonResult> GetAllEmployeePaging(string freeText, int page = 1)
         {
+            if (GlobalData.User == null || GlobalData.User.UserType != (int)UserTypeEnum.Admin)
+                return ToJsonResponse(false, "Bạn không có quyền xem danh sách nhân sự");
             var result = await _rpEmployee.GetAllEmployeePaging(GlobalData.User.OrgId, page, freeText);
             return ToJsonResponse(true, data: result);
         }

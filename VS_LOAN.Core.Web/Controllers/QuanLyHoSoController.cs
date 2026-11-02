@@ -97,11 +97,13 @@ namespace VS_LOAN.Core.Web.Controllers
                 if (toDate != "")
                     dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTime(toDate);
 
-                string trangthai = string.IsNullOrWhiteSpace(status) ? Helpers.Helpers.GetAllStatusString() : status;
+                string trangthai = string.IsNullOrWhiteSpace(status)
+                    ? Helpers.Helpers.GetAllStatusString() + "," + (int)TrangThaiHoSo.Nhap
+                    : status;
                 //trangthai += 
                 var isAdmin = await _rpEmployee.CheckIsAdmin(GlobalData.User.IDUser);
-                totalRecord = new HoSoBLL().CountHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freetext);
-                lstHoso = new HoSoBLL().TimHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freetext, page, limit, isAdmin: isAdmin);
+                totalRecord = new HoSoBLL().CountHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freetext, GlobalData.User.UserType);
+                lstHoso = new HoSoBLL().TimHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freetext, page, limit, isAdmin: isAdmin, userType: GlobalData.User.UserType);
                 if (lstHoso == null)
                     lstHoso = new List<HoSoQuanLyModel>();
                 var result = DataPaging.Create(lstHoso, totalRecord);
@@ -115,16 +117,23 @@ namespace VS_LOAN.Core.Web.Controllers
 
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
-        public JsonResult LayDSNhom()
+        public async Task<JsonResult> LayDSNhom()
         {
-            List<NhomDropDownModel> rs = new GroupRepository().LayDSCuaNhanVien(GlobalData.User.IDUser);
+            List<NhomDropDownModel> rs = GlobalData.User.UserType == (int)UserTypeEnum.Admin
+                ? await _rpGroup.GetAll(GlobalData.User.IDUser)
+                : _rpGroup.LayDSCuaNhanVien(GlobalData.User.IDUser);
             if (rs == null)
                 rs = new List<NhomDropDownModel>();
+            if (GlobalData.User.UserType == (int)UserTypeEnum.Teamlead)
+                rs.RemoveAll(group => !new HoSoBLL().CanUserAccessGroup(group.ID, GlobalData.User.IDUser, GlobalData.User.UserType));
             return ToJsonResponse(true, null, rs);
         }
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<JsonResult> LayDSThanhVienNhom(int maNhom)
         {
+            if (maNhom > 0 && GlobalData.User.UserType != (int)UserTypeEnum.Admin
+                && !new HoSoBLL().CanUserAccessGroup(maNhom, GlobalData.User.IDUser, GlobalData.User.UserType))
+                return ToJsonResponse(false, "Bạn không có quyền xem thành viên nhóm này");
             var rs = new List<OptionSimple>();
             if (maNhom > 0)
                 rs =await  _rpEmployee.LayDSThanhVienNhomCaConAsync(maNhom, GlobalData.User.IDUser);
@@ -134,6 +143,8 @@ namespace VS_LOAN.Core.Web.Controllers
                 List<NhomDropDownModel> lstNhom = _rpGroup.LayDSCuaNhanVien(GlobalData.User.IDUser);
                 if (lstNhom != null)
                 {
+                    if (GlobalData.User.UserType == (int)UserTypeEnum.Teamlead)
+                        lstNhom.RemoveAll(group => !new HoSoBLL().CanUserAccessGroup(group.ID, GlobalData.User.IDUser, GlobalData.User.UserType));
                     for (int i = 0; i < lstNhom.Count; i++)
                     {
                         var lstThanhVien = await _rpGroup.LayDSThanhVienNhomAsync(lstNhom[i].ID, GlobalData.User.IDUser);
@@ -163,6 +174,8 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<ActionResult> Detail(int id)
         {
+            if (!CanAccessProfile(id))
+                return RedirectToAction("DanhSachHoSo");
             ViewBag.formindex = LstRole["DanhSachHoSo"]._formindex;
             if (id < 0)
                 return RedirectToAction("Index");
@@ -178,6 +191,8 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult XemHSByID(int id)
         {
+            if (!CanAccessProfile(id))
+                return RedirectToAction("DanhSachHoSo");
             Session["QL_HoSoID"] = id;
             return RedirectToAction("Detail", new { id = id });
         }
@@ -199,12 +214,15 @@ namespace VS_LOAN.Core.Web.Controllers
         public async Task<ActionResult> Save(string hoten, string phone, string phone2, string ngayNhanDon, int hoSoCuaAi, string cmnd, int gioiTinh
            , int maKhuVuc, string diaChi, int sanPhamVay, string tenCuaHang,
             bool baoHiem, int thoiHanVay, string soTienVay, int trangthai, string ghiChu,
-             string birthDayStr, string cmndDayStr, int courier = 0, List<int> FileRequireIds = null)
+             string birthDayStr, string cmndDayStr, int courier = 0, List<int> FileRequireIds = null, bool submitToManager = true)
         {
+            var currentProfileId = Session["QL_HoSoID"] == null ? 0 : Convert.ToInt32(Session["QL_HoSoID"]);
+            if (!CanAccessProfile(currentProfileId))
+                return ToJsonResponse(false, "Bạn không có quyền cập nhật hồ sơ này");
 
             string error = "";
-            if (GlobalData.User.UserType == (int)UserTypeEnum.Sale
-                || trangthai == (int)TrangThaiHoSo.Nhap)
+            if ((GlobalData.User.UserType == (int)UserTypeEnum.Sale && submitToManager)
+                || (GlobalData.User.UserType != (int)UserTypeEnum.Sale && trangthai == (int)TrangThaiHoSo.Nhap))
             {
                 trangthai = (int)TrangThaiHoSo.NhapLieu;
             }
@@ -252,7 +270,7 @@ namespace VS_LOAN.Core.Web.Controllers
                     return ToJsonResponse(false, "Vui lòng nhập ngày cấp cmnd");
 
                 }
-                if (trangthai <= 0)
+                if (trangthai <= 0 && !(GlobalData.User.UserType == (int)UserTypeEnum.Sale && !submitToManager))
                 {
                     return ToJsonResponse(false, "Vui lòng chọn trạng thái");
                 }
@@ -339,6 +357,17 @@ namespace VS_LOAN.Core.Web.Controllers
                     var hoso = new HoSoBLL().LayChiTiet(hs.ID);
                     if (hoso == null)
                         return ToJsonResponse(false, "Hồ sơ không tồn tại", hs.ID);
+                    if (GlobalData.User.UserType == (int)UserTypeEnum.Sale)
+                    {
+                        if (hoso.MaTrangThai != (int)TrangThaiHoSo.Nhap
+                            && hoso.MaTrangThai != (int)TrangThaiHoSo.BoSungHoSo)
+                            return ToJsonResponse(false, "Hồ sơ không ở trạng thái cho phép nhân viên cập nhật");
+                        hs.MaTrangThai = submitToManager
+                            ? (int)TrangThaiHoSo.NhapLieu
+                            : hoso.MaTrangThai;
+                    }
+                    if (GlobalData.User.UserType != (int)UserTypeEnum.Admin)
+                        hs.HoSoCuaAi = hoso.HoSoCuaAi;
                     hs.DisbursementDate = hoso.DisbursementDate;
                     if (hs.MaTrangThai == (int)TrangThaiHoSo.GiaiNgan)
                         hs.DisbursementDate = DateTime.Now;
@@ -373,6 +402,9 @@ namespace VS_LOAN.Core.Web.Controllers
            , int maKhuVuc, string diaChi, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay, string soTienVay, int trangthai,
             string ghiChu, string birthDayStr, string cmndDayStr, int courier = 0)
         {
+            var currentProfileId = Session["QL_HoSoID"] == null ? 0 : Convert.ToInt32(Session["QL_HoSoID"]);
+            if (currentProfileId > 0 && !CanAccessProfile(currentProfileId))
+                return ToJsonResponse(false, "Bạn không có quyền cập nhật hồ sơ này");
 
             if (trangthai <= 0 && GlobalData.User.UserType != (int)UserTypeEnum.Sale)
             {
@@ -404,7 +436,10 @@ namespace VS_LOAN.Core.Web.Controllers
                 {
                     hs.NgayNhanDon = DateTimeFormat.ConvertddMMyyyyToDateTime(ngayNhanDon);
                 }
-                hs.HoSoCuaAi = hoSoCuaAi;
+                var existingProfile = hs.ID > 0 ? new HoSoBLL().LayChiTiet(hs.ID) : null;
+                hs.HoSoCuaAi = GlobalData.User.UserType == (int)UserTypeEnum.Admin
+                    ? hoSoCuaAi
+                    : existingProfile != null ? existingProfile.HoSoCuaAi : GlobalData.User.IDUser;
                 hs.MaNguoiTao = GlobalData.User.IDUser;
                 hs.NgayTao = DateTime.Now;
                 hs.CMND = cmnd;
@@ -480,8 +515,12 @@ namespace VS_LOAN.Core.Web.Controllers
             }
 
         }
+        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<JsonResult> UploadHoSo(string key)
         {
+            var currentProfileId = Session["QL_HoSoID"] == null ? 0 : Convert.ToInt32(Session["QL_HoSoID"]);
+            if (currentProfileId > 0 && !CanAccessProfile(currentProfileId))
+                return ToJsonResponse(false, "Bạn không có quyền cập nhật tài liệu hồ sơ này");
             string fileUrl = "";
             var file = new FileModel();
             try
@@ -569,8 +608,12 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             return Json(new { Result = fileUrl });
         }
+        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult Delete(string key)
         {
+            var currentProfileId = Session["QL_HoSoID"] == null ? 0 : Convert.ToInt32(Session["QL_HoSoID"]);
+            if (currentProfileId > 0 && !CanAccessProfile(currentProfileId))
+                return ToJsonResponse(false, "Bạn không có quyền xóa tài liệu hồ sơ này");
             string fileUrl = "";
             try
             {
@@ -589,6 +632,8 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult SuaHSByID(int id)
         {
+            if (!CanAccessProfile(id))
+                return RedirectToAction("DanhSachHoSo");
             Session["QL_HoSoID"] = id;
             return RedirectToAction("Edit", new { id = id });
         }
@@ -596,6 +641,8 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<ActionResult> Edit(int id)
         {
+            if (!CanAccessProfile(id))
+                return RedirectToAction("DanhSachHoSo");
             ViewBag.formindex = LstRole["DanhSachHoSo"]._formindex;
             if (id <= 0)
                 return RedirectToAction("DanhSachHoSo");
@@ -610,6 +657,8 @@ namespace VS_LOAN.Core.Web.Controllers
         }
         public JsonResult LayDSGhichu(int id)
         {
+            if (!CanAccessProfile(id))
+                return ToJsonResponse(false, "Bạn không có quyền xem ghi chú hồ sơ này");
             List<GhichuViewModel> rs = new HoSoBLL().LayDanhsachGhichu(id);
             if (rs == null)
                 rs = new List<GhichuViewModel>();
@@ -618,8 +667,6 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult DownloadReport(int maNhom, int maThanhVien, string fromDate, string toDate, string maHS, string cmnd, int loaiNgay)
         {
-            if (GlobalData.User.IDUser != 1)
-                return RedirectToAction("DanhSachHoSo");
             string newUrl = string.Empty;
             try
             {
@@ -630,8 +677,8 @@ namespace VS_LOAN.Core.Web.Controllers
                 if (toDate != "")
                     dtToDate = DateTimeFormat.ConvertddMMyyyyToDateTime(toDate);
 
-                string trangthai = Helpers.Helpers.GetAllStatusString();
-                int totalRecord = new HoSoBLL().CountHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freeText: null);
+                string trangthai = Helpers.Helpers.GetAllStatusString() + "," + (int)TrangThaiHoSo.Nhap;
+                int totalRecord = new HoSoBLL().CountHoSoQuanLy(GlobalData.User.IDUser, maNhom, maThanhVien, dtFromDate, dtToDate, maHS, cmnd, trangthai, loaiNgay, freeText: null, userType: GlobalData.User.UserType);
                 if (totalRecord <= 0)
                     return ToResponse(false, "Không có dữ liệu");
                 rs = new HoSoBLL().TimHoSoQuanLy(maNVDangNhap: GlobalData.User.IDUser,
@@ -646,7 +693,9 @@ namespace VS_LOAN.Core.Web.Controllers
                    freeText: string.Empty,
                    page: 1,
                    limit: totalRecord,
-                   isDownload: true);
+                   isDownload: true,
+                   isAdmin: GlobalData.User.UserType == (int)UserTypeEnum.Admin,
+                   userType: GlobalData.User.UserType);
                 if (rs == null)
                     rs = new List<HoSoQuanLyModel>();
                 string destDirectory = VS_LOAN.Core.Utility.Path.DownloadBill + "/" + DateTime.Now.Year.ToString() + "/" + DateTime.Now.Month.ToString() + "/";

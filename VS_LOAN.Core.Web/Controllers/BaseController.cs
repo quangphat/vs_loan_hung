@@ -10,7 +10,9 @@ using VS_LOAN.Core.Entity.HosoCourrier;
 using VS_LOAN.Core.Entity.MCreditModels;
 using VS_LOAN.Core.Entity.MCreditModels.SqlModel;
 using VS_LOAN.Core.Entity.Model;
+using VS_LOAN.Core.Repository;
 using VS_LOAN.Core.Utility;
+using VS_LOAN.Core.Web.Helpers;
 
 namespace VS_LOAN.Core.Web.Controllers
 {
@@ -133,6 +135,19 @@ namespace VS_LOAN.Core.Web.Controllers
                 code = string.IsNullOrWhiteSpace(message) ? Resources.Global.Message_Error : message;
             }
             return Json(new { data, success, code }, JsonRequestBehavior.AllowGet);
+        }
+
+        protected bool CanAccessProfile(int profileId)
+        {
+            return GlobalData.User != null
+                && new HoSoBLL().CanUserAccessProfile(profileId, GlobalData.User.IDUser, GlobalData.User.UserType);
+        }
+
+        protected bool CanReviewProfiles()
+        {
+            return GlobalData.User != null
+                && (GlobalData.User.UserType == (int)UserTypeEnum.Admin
+                    || GlobalData.User.UserType == (int)UserTypeEnum.Teamlead);
         }
         //public JsonResult ToJsonResponse(bool success, string message = null, object data = null)
         //{

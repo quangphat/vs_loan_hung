@@ -105,8 +105,6 @@ namespace VS_LOAN.Core.Repository
                                 commandAdd.Parameters.Add(new SqlParameter("@HoSoCuaAi", hoSoModel.HoSoCuaAi));
                                 commandAdd.Parameters.Add(new SqlParameter("@birthDay", hoSoModel.BirthDay));
                                 commandAdd.Parameters.Add(new SqlParameter("@cmndDay", hoSoModel.CmndDay));
-                                
-                                commandAdd.Parameters.Add(new SqlParameter("@DisbursementDate", hoSoModel.DisbursementDate));
                                 if (hoSoModel.MaKetQua == 0)
                                 {
                                     commandAdd.Parameters.Add(new SqlParameter("@KetQuaHS", DBNull.Value));
@@ -244,11 +242,6 @@ namespace VS_LOAN.Core.Repository
                         command.Parameters.Add(new SqlParameter("@SDT", hoSoModel.SDT));
                         command.Parameters.Add(new SqlParameter("@SDT2", hoSoModel.SDT2));
                         command.Parameters.Add(new SqlParameter("@GioiTinh", hoSoModel.GioiTinh));
-                        if (hoSoModel.ID <= 0)
-                        {
-                            command.Parameters.Add(new SqlParameter("@NgayTao", hoSoModel.NgayTao));
-                            command.Parameters.Add(new SqlParameter("@MaNguoiTao", hoSoModel.MaNguoiTao));
-                        }
                         command.Parameters.Add(new SqlParameter("@HoSoCuaAi", hoSoModel.HoSoCuaAi));
                         command.Parameters.Add(new SqlParameter("@birthDay", hoSoModel.BirthDay));
                         command.Parameters.Add(new SqlParameter("@cmndDay", hoSoModel.CmndDay));
@@ -383,7 +376,6 @@ namespace VS_LOAN.Core.Repository
                         command.Parameters.Add(new SqlParameter("@HoSoCuaAi", hoSoModel.HoSoCuaAi));
                         command.Parameters.Add(new SqlParameter("@birthDay", hoSoModel.BirthDay));
                         command.Parameters.Add(new SqlParameter("@cmndDay", hoSoModel.CmndDay));
-                        command.Parameters.Add(new SqlParameter("@DisbursementDate", hoSoModel.DisbursementDate));
                         //command.Parameters.Add(new SqlParameter("@MaTrangThai", hoSoModel.MaTrangThai));
                         if (hoSoModel.MaKetQua == 0)
                         {
@@ -464,7 +456,6 @@ namespace VS_LOAN.Core.Repository
                     command.CommandText = "sp_GetGhichuByHosoId";
                     command.Parameters.Clear();
                     command.Parameters.Add(new SqlParameter("@hosoId", hosoId));
-                    command.Parameters.Add(new SqlParameter("@typeId", typeId));
                     var dt = new DataTable();
                     dt.Load(command.ExecuteReader());
                     List<GhichuViewModel> lstGhichu = new List<GhichuViewModel>();
@@ -857,7 +848,8 @@ namespace VS_LOAN.Core.Repository
             string cmnd,
             int loaiNgay,
             string trangThai,
-            string freeText = null
+            string freeText = null,
+            int userType = (int)UserTypeEnum.Sale
             )
         {
             string query = string.IsNullOrWhiteSpace(freeText) ? string.Empty : freeText;
@@ -869,17 +861,20 @@ namespace VS_LOAN.Core.Repository
                     IDbCommand command = new SqlCommand();
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_HO_SO_Count_TimHoSoDuyet";
-                    command.Parameters.Add(new SqlParameter("@MaNVDangNhap", maNVDangNhap));
-                    command.Parameters.Add(new SqlParameter("@MaNhom", maNhom));
-                    command.Parameters.Add(new SqlParameter("@MaThanhVien", maThanhVien));
-                    command.Parameters.Add(new SqlParameter("@TuNgay", tuNgay));
-                    command.Parameters.Add(new SqlParameter("@DenNgay", denNgay));
-                    command.Parameters.Add(new SqlParameter("@MaHS", maHS));
-                    command.Parameters.Add(new SqlParameter("@CMND", cmnd));
-                    command.Parameters.Add(new SqlParameter("@LoaiNgay", loaiNgay));
-                    command.Parameters.Add(new SqlParameter("@TrangThai", trangThai));
-                    command.Parameters.Add(new SqlParameter("@freeText", query));
+                    command.CommandText = "sp_Profile_SearchScoped";
+                    command.Parameters.Add(new SqlParameter("@UserId", maNVDangNhap));
+                    command.Parameters.Add(new SqlParameter("@UserType", userType));
+                    command.Parameters.Add(new SqlParameter("@Flow", 2));
+                    command.Parameters.Add(new SqlParameter("@Mode", 0));
+                    command.Parameters.Add(new SqlParameter("@GroupId", maNhom));
+                    command.Parameters.Add(new SqlParameter("@MemberId", maThanhVien));
+                    command.Parameters.Add(new SqlParameter("@FromDate", tuNgay));
+                    command.Parameters.Add(new SqlParameter("@ToDate", denNgay));
+                    command.Parameters.Add(new SqlParameter("@ProfileCode", maHS ?? string.Empty));
+                    command.Parameters.Add(new SqlParameter("@IdentityNumber", cmnd ?? string.Empty));
+                    command.Parameters.Add(new SqlParameter("@DateType", loaiNgay));
+                    command.Parameters.Add(new SqlParameter("@Statuses", trangThai ?? string.Empty));
+                    command.Parameters.Add(new SqlParameter("@FreeText", query));
                     DataTable dt = new DataTable();
                     dt.Load(command.ExecuteReader());
                     if (dt != null && dt.Rows != null && dt.Rows.Count > 0)
@@ -904,7 +899,8 @@ namespace VS_LOAN.Core.Repository
             int loaiNgay,
             string trangThai,
             string freeText = null,
-            int page = 1, int limit = 10, bool isDowload = false)
+            int page = 1, int limit = 10, bool isDowload = false,
+            int userType = (int)UserTypeEnum.Sale)
         {
 
             page = page <= 0 ? 1 : page;
@@ -919,19 +915,22 @@ namespace VS_LOAN.Core.Repository
                     IDbCommand command = new SqlCommand();
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_HO_SO_TimHoSoDuyet";
-                    command.Parameters.Add(new SqlParameter("@MaNVDangNhap", maNVDangNhap));
-                    command.Parameters.Add(new SqlParameter("@MaNhom", maNhom));
-                    command.Parameters.Add(new SqlParameter("@MaThanhVien", maThanhVien));
-                    command.Parameters.Add(new SqlParameter("@TuNgay", tuNgay));
-                    command.Parameters.Add(new SqlParameter("@DenNgay", denNgay));
-                    command.Parameters.Add(new SqlParameter("@MaHS", maHS));
-                    command.Parameters.Add(new SqlParameter("@CMND", cmnd));
-                    command.Parameters.Add(new SqlParameter("@LoaiNgay", loaiNgay));
-                    command.Parameters.Add(new SqlParameter("@TrangThai", trangThai));
-                    command.Parameters.Add(new SqlParameter("@offset", offset));
-                    command.Parameters.Add(new SqlParameter("@limit", limit));
-                    command.Parameters.Add(new SqlParameter("@freeText", query));
+                    command.CommandText = "sp_Profile_SearchScoped";
+                    command.Parameters.Add(new SqlParameter("@UserId", maNVDangNhap));
+                    command.Parameters.Add(new SqlParameter("@UserType", userType));
+                    command.Parameters.Add(new SqlParameter("@Flow", 2));
+                    command.Parameters.Add(new SqlParameter("@Mode", 1));
+                    command.Parameters.Add(new SqlParameter("@GroupId", maNhom));
+                    command.Parameters.Add(new SqlParameter("@MemberId", maThanhVien));
+                    command.Parameters.Add(new SqlParameter("@FromDate", tuNgay));
+                    command.Parameters.Add(new SqlParameter("@ToDate", denNgay));
+                    command.Parameters.Add(new SqlParameter("@ProfileCode", maHS ?? string.Empty));
+                    command.Parameters.Add(new SqlParameter("@IdentityNumber", cmnd ?? string.Empty));
+                    command.Parameters.Add(new SqlParameter("@DateType", loaiNgay));
+                    command.Parameters.Add(new SqlParameter("@Statuses", trangThai ?? string.Empty));
+                    command.Parameters.Add(new SqlParameter("@FreeText", query));
+                    command.Parameters.Add(new SqlParameter("@Offset", offset));
+                    command.Parameters.Add(new SqlParameter("@Limit", limit));
                     DataTable dt = new DataTable();
                     dt.Load(command.ExecuteReader());
                     if (dt != null)
@@ -995,7 +994,8 @@ namespace VS_LOAN.Core.Repository
             string cmnd,
             string trangthai,
             int loaiNgay,
-            string freeText = null
+            string freeText = null,
+            int userType = (int)UserTypeEnum.Sale
             )
         {
             string query = string.IsNullOrWhiteSpace(freeText) ? string.Empty : freeText;
@@ -1007,18 +1007,20 @@ namespace VS_LOAN.Core.Repository
                     IDbCommand command = new SqlCommand();
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_HO_SO_Count_TimHoSoQuanLy";
-
-                    command.Parameters.Add(new SqlParameter("@MaNVDangNhap", maNVDangNhap));
-                    command.Parameters.Add(new SqlParameter("@MaNhom", maNhom));
-                    command.Parameters.Add(new SqlParameter("@MaThanhVien", maThanhVien));
-                    command.Parameters.Add(new SqlParameter("@TuNgay", tuNgay));
-                    command.Parameters.Add(new SqlParameter("@DenNgay", denNgay));
-                    command.Parameters.Add(new SqlParameter("@MaHS", maHS));
-                    command.Parameters.Add(new SqlParameter("@CMND", cmnd));
-                    command.Parameters.Add(new SqlParameter("@TrangThai", trangthai));
-                    command.Parameters.Add(new SqlParameter("@LoaiNgay", loaiNgay));
-                    command.Parameters.Add(new SqlParameter("@freeText", query));
+                    command.CommandText = "sp_Profile_SearchScoped";
+                    command.Parameters.Add(new SqlParameter("@UserId", maNVDangNhap));
+                    command.Parameters.Add(new SqlParameter("@UserType", userType));
+                    command.Parameters.Add(new SqlParameter("@Flow", 1));
+                    command.Parameters.Add(new SqlParameter("@Mode", 0));
+                    command.Parameters.Add(new SqlParameter("@GroupId", maNhom));
+                    command.Parameters.Add(new SqlParameter("@MemberId", maThanhVien));
+                    command.Parameters.Add(new SqlParameter("@FromDate", tuNgay));
+                    command.Parameters.Add(new SqlParameter("@ToDate", denNgay));
+                    command.Parameters.Add(new SqlParameter("@ProfileCode", maHS ?? string.Empty));
+                    command.Parameters.Add(new SqlParameter("@IdentityNumber", cmnd ?? string.Empty));
+                    command.Parameters.Add(new SqlParameter("@DateType", loaiNgay));
+                    command.Parameters.Add(new SqlParameter("@Statuses", trangthai ?? string.Empty));
+                    command.Parameters.Add(new SqlParameter("@FreeText", query));
                     DataTable dt = new DataTable();
                     dt.Load(command.ExecuteReader());
                     if (dt != null && dt.Rows != null && dt.Rows.Count > 0)
@@ -1045,7 +1047,8 @@ namespace VS_LOAN.Core.Repository
                 string freeText = null,
                 int page = 1, int limit = 10,
                 bool isDownload = false,
-                bool isAdmin = false
+                bool isAdmin = false,
+                int userType = (int)UserTypeEnum.Sale
                 )
         {
             page = page <= 0 ? 1 : page;
@@ -1060,20 +1063,22 @@ namespace VS_LOAN.Core.Repository
                     IDbCommand command = new SqlCommand();
                     command.Connection = session.Connection;
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "sp_HO_SO_TimHoSoQuanLy";
-
-                    command.Parameters.Add(new SqlParameter("@MaNVDangNhap", maNVDangNhap));
-                    command.Parameters.Add(new SqlParameter("@MaNhom", maNhom));
-                    command.Parameters.Add(new SqlParameter("@MaThanhVien", maThanhVien));
-                    command.Parameters.Add(new SqlParameter("@TuNgay", tuNgay));
-                    command.Parameters.Add(new SqlParameter("@DenNgay", denNgay));
-                    command.Parameters.Add(new SqlParameter("@MaHS", maHS));
-                    command.Parameters.Add(new SqlParameter("@CMND", cmnd));
-                    command.Parameters.Add(new SqlParameter("@TrangThai", trangthai));
-                    command.Parameters.Add(new SqlParameter("@LoaiNgay", loaiNgay));
-                    command.Parameters.Add(new SqlParameter("@offset", offset));
-                    command.Parameters.Add(new SqlParameter("@limit", limit));
-                    command.Parameters.Add(new SqlParameter("@freeText", query));
+                    command.CommandText = "sp_Profile_SearchScoped";
+                    command.Parameters.Add(new SqlParameter("@UserId", maNVDangNhap));
+                    command.Parameters.Add(new SqlParameter("@UserType", userType));
+                    command.Parameters.Add(new SqlParameter("@Flow", 1));
+                    command.Parameters.Add(new SqlParameter("@Mode", 1));
+                    command.Parameters.Add(new SqlParameter("@GroupId", maNhom));
+                    command.Parameters.Add(new SqlParameter("@MemberId", maThanhVien));
+                    command.Parameters.Add(new SqlParameter("@FromDate", tuNgay));
+                    command.Parameters.Add(new SqlParameter("@ToDate", denNgay));
+                    command.Parameters.Add(new SqlParameter("@ProfileCode", maHS ?? string.Empty));
+                    command.Parameters.Add(new SqlParameter("@IdentityNumber", cmnd ?? string.Empty));
+                    command.Parameters.Add(new SqlParameter("@DateType", loaiNgay));
+                    command.Parameters.Add(new SqlParameter("@Statuses", trangthai ?? string.Empty));
+                    command.Parameters.Add(new SqlParameter("@FreeText", query));
+                    command.Parameters.Add(new SqlParameter("@Offset", offset));
+                    command.Parameters.Add(new SqlParameter("@Limit", limit));
                     DataTable dt = new DataTable();
                     dt.Load(command.ExecuteReader());
                     if (dt != null)
@@ -1132,6 +1137,58 @@ namespace VS_LOAN.Core.Repository
             catch (BusinessException ex)
             {
                 throw ex;
+            }
+        }
+
+        public bool CanUserAccessProfile(int profileId, int userId, int userType)
+        {
+            if (profileId <= 0 || userId <= 0)
+                return false;
+
+            try
+            {
+                using (var session = LOANSessionManager.OpenSession())
+                {
+                    IDbCommand command = new SqlCommand();
+                    command.Connection = session.Connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "sp_Profile_CanUserAccess";
+                    command.Parameters.Add(new SqlParameter("@ProfileId", profileId));
+                    command.Parameters.Add(new SqlParameter("@UserId", userId));
+                    command.Parameters.Add(new SqlParameter("@UserType", userType));
+                    var result = command.ExecuteScalar();
+                    return result != null && result != DBNull.Value && Convert.ToBoolean(result);
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool CanUserAccessGroup(int groupId, int userId, int userType)
+        {
+            if (groupId <= 0 || userId <= 0)
+                return false;
+
+            try
+            {
+                using (var session = LOANSessionManager.OpenSession())
+                {
+                    IDbCommand command = new SqlCommand();
+                    command.Connection = session.Connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "sp_Profile_CanUserAccessGroup";
+                    command.Parameters.Add(new SqlParameter("@GroupId", groupId));
+                    command.Parameters.Add(new SqlParameter("@UserId", userId));
+                    command.Parameters.Add(new SqlParameter("@UserType", userType));
+                    var result = command.ExecuteScalar();
+                    return result != null && result != DBNull.Value && Convert.ToBoolean(result);
+                }
+            }
+            catch
+            {
+                return false;
             }
         }
 

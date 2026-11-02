@@ -139,6 +139,9 @@ namespace VS_LOAN.Core.Web.Controllers
            , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay,
             string soTienVay, string ghiChu, string birthDayStr, string cmndDayStr, string link = null, int provinceId = 0, int doitacF88Value = 0, List<int> FileRequireIds = null, int partnerType = 0)
         {
+            var profileId = Session["AddNewHoSoID"] == null ? 0 : Convert.ToInt32(Session["AddNewHoSoID"]);
+            if (profileId > 0 && !CanAccessProfile(profileId))
+                return ToResponse(false, "Bạn không có quyền cập nhật hồ sơ này");
             if (!string.IsNullOrWhiteSpace(ghiChu) && ghiChu.Length > 200)
             {
                 return ToResponse(false, "Nội dung ghi chú không được lớn hơn 200");
@@ -211,7 +214,10 @@ namespace VS_LOAN.Core.Web.Controllers
                 }
                 hs.BirthDay = string.IsNullOrWhiteSpace(birthDayStr) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(birthDayStr);
                 hs.CmndDay = string.IsNullOrWhiteSpace(cmndDayStr) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(cmndDayStr);
-                hs.HoSoCuaAi = hoSoCuaAi;
+                var existingProfile = hs.ID > 0 ? new HoSoBLL().LayChiTiet(hs.ID) : null;
+                hs.HoSoCuaAi = GlobalData.User.UserType == (int)UserTypeEnum.Admin
+                    ? hoSoCuaAi
+                    : existingProfile != null ? existingProfile.HoSoCuaAi : GlobalData.User.IDUser;
                 hs.MaNguoiTao = GlobalData.User.IDUser;
                 hs.NgayTao = DateTime.Now;
                 hs.CMND = cmnd;
@@ -282,8 +288,11 @@ namespace VS_LOAN.Core.Web.Controllers
             }
 
         }
+        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<JsonResult> UploadToHoso(int hosoId, bool isReset, List<FileUploadModelGroupByKey> filesGroup)
         {
+            if (!CanAccessProfile(hosoId))
+                return ToJsonResponse(false, "Bạn không có quyền cập nhật tài liệu hồ sơ này");
             if (hosoId <= 0 || filesGroup == null)
                 return ToJsonResponse(false);
 
@@ -314,8 +323,12 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             return ToJsonResponse(true);
         }
+        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<JsonResult> UploadFile(int key, int fileId, int type)
         {
+            var currentProfileId = Session["AddNewHoSoID"] == null ? 0 : Convert.ToInt32(Session["AddNewHoSoID"]);
+            if ((currentProfileId > 0 && !CanAccessProfile(currentProfileId)) || (fileId > 0 && currentProfileId <= 0))
+                return ToJsonResponse(false, "Bạn không có quyền cập nhật tài liệu hồ sơ này");
             string fileUrl = "";
             var _type = string.Empty;
             string deleteURL = string.Empty;
@@ -397,8 +410,11 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             return Json(new { Result = fileUrl });
         }
+        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<JsonResult> RemoveTailieuByHoso(int hosoId, int fileId)
         {
+            if (!CanAccessProfile(hosoId))
+                return ToJsonResponse(false, "Bạn không có quyền cập nhật tài liệu hồ sơ này");
             if (fileId <= 0)
             {
                 return ToJsonResponse(false, null, "Dữ liệu không hợp lệ");
@@ -406,8 +422,11 @@ namespace VS_LOAN.Core.Web.Controllers
             var result = await _rpTailieu.RemoveTailieu(hosoId, fileId);
             return ToJsonResponse(true);
         }
+        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<JsonResult> TailieuByHosoForEdit(int hosoId, int typeId = 1)
         {
+            if (!CanAccessProfile(hosoId))
+                return ToJsonResponse(false, "Bạn không có quyền xem tài liệu hồ sơ này");
             if (hosoId <= 0)
             {
                 return ToJsonResponse(false, null, "Dữ liệu không hợp lệ");
@@ -436,8 +455,11 @@ namespace VS_LOAN.Core.Web.Controllers
             }
             return ToJsonResponse(true, null, result);
         }
+        [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public async Task<JsonResult> TailieuByHoso(int hosoId, int type = 1)
         {
+            if (!CanAccessProfile(hosoId))
+                return ToJsonResponse(false, "Bạn không có quyền xem tài liệu hồ sơ này");
             var result = await _rpTailieu.GetTailieuByHosoId(hosoId, type);
             if (result == null)
                 result = new List<FileUploadModel>();
@@ -454,6 +476,9 @@ namespace VS_LOAN.Core.Web.Controllers
             , int maKhuVuc, string diaChi, int courier, int sanPhamVay, string tenCuaHang, int baoHiem, int thoiHanVay, string soTienVay,
             string ghiChu, string birthDayStr, string cmndDayStr)
         {
+            var profileId = Session["AddNewHoSoID"] == null ? 0 : Convert.ToInt32(Session["AddNewHoSoID"]);
+            if (profileId > 0 && !CanAccessProfile(profileId))
+                return ToResponse(false, "Bạn không có quyền cập nhật hồ sơ này");
             if (!string.IsNullOrWhiteSpace(ghiChu) && ghiChu.Length > 200)
             {
                 return ToResponse(false, "Nội dung ghi chú không được lớn hơn 200");
@@ -477,7 +502,10 @@ namespace VS_LOAN.Core.Web.Controllers
 
                 hs.BirthDay = string.IsNullOrWhiteSpace(birthDayStr) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(birthDayStr);
                 hs.CmndDay = string.IsNullOrWhiteSpace(cmndDayStr) ? DateTime.Now : DateTimeFormat.ConvertddMMyyyyToDateTime(cmndDayStr);
-                hs.HoSoCuaAi = hoSoCuaAi;
+                var existingProfile = hs.ID > 0 ? new HoSoBLL().LayChiTiet(hs.ID) : null;
+                hs.HoSoCuaAi = GlobalData.User.UserType == (int)UserTypeEnum.Admin
+                    ? hoSoCuaAi
+                    : existingProfile != null ? existingProfile.HoSoCuaAi : GlobalData.User.IDUser;
                 hs.MaNguoiTao = GlobalData.User.IDUser;
                 hs.NgayTao = DateTime.Now;
                 hs.CMND = cmnd;
@@ -573,6 +601,8 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult XemHSByID(int id, string fromDate, string toDate, string mahs)
         {
+            if (!CanAccessProfile(id))
+                return RedirectToAction("Index");
             Session["HoSo_ChiTietHoSo_ID"] = id;
             return RedirectToAction("ChiTietHoSo", new { fromDate = fromDate, toDate = toDate, mahs });
         }
@@ -582,6 +612,8 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             ViewBag.formindex = Infrastructures.ControllerRoles.Roles["profile_list"]._formindex;
             if (Session["HoSo_ChiTietHoSo_ID"] == null)
+                return RedirectToAction("Index");
+            if (!CanAccessProfile(Convert.ToInt32(Session["HoSo_ChiTietHoSo_ID"])))
                 return RedirectToAction("Index");
             var hoso = new HoSoBLL().LayChiTiet((int)Session["HoSo_ChiTietHoSo_ID"]);
             ViewBag.HoSo = hoso;
@@ -595,6 +627,8 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public ActionResult SuaHSByID(int id, string fromDate, string toDate, string makh)
         {
+            if (!CanAccessProfile(id))
+                return RedirectToAction("Index");
             Session["AddNewHoSoID"] = id;
             return RedirectToAction("SuaHoSo", new { fromDate = fromDate, toDate = toDate, makh });
         }
@@ -604,6 +638,8 @@ namespace VS_LOAN.Core.Web.Controllers
         {
             ViewBag.formindex = Infrastructures.ControllerRoles.Roles["profile_list"]._formindex;
             if (Session["AddNewHoSoID"] == null)
+                return RedirectToAction("Index");
+            if (!CanAccessProfile(Convert.ToInt32(Session["AddNewHoSoID"])))
                 return RedirectToAction("Index");
             var hoso = new HoSoBLL().LayChiTiet((int)Session["AddNewHoSoID"]);
             ViewBag.HoSo = hoso;
@@ -616,6 +652,10 @@ namespace VS_LOAN.Core.Web.Controllers
         [CheckPermission(MangChucNang = new int[] { (int)QuyenIndex.Public })]
         public JsonResult XoaHS(int hsID)
         {
+            if (GlobalData.User.UserType == (int)UserTypeEnum.Teamlead)
+                return ToJsonResponse(false, "Team Lead không có quyền xóa hồ sơ");
+            if (!CanAccessProfile(hsID))
+                return ToJsonResponse(false, "Bạn không có quyền xóa hồ sơ này");
             try
             {
                 bool rs = new HoSoBLL().XoaHS(hsID, GlobalData.User.IDUser, DateTime.Now);

@@ -246,14 +246,15 @@
                                             Cập nhật
                                         </a>
                                     }
-                                    else if ((ViewBag.HoSo.MaTrangThai == ((int)VS_LOAN.Core.Entity.TrangThaiHoSo.BoSungHoSo))
-                                    && VS_LOAN.Core.Web.Helpers.GlobalData.User.UserType == (int)VS_LOAN.Core.Entity.UserTypeEnum.Sale)
+                                    else if ((ViewBag.HoSo.MaTrangThai == ((int)VS_LOAN.Core.Entity.TrangThaiHoSo.Nhap)
+                                        || ViewBag.HoSo.MaTrangThai == ((int)VS_LOAN.Core.Entity.TrangThaiHoSo.BoSungHoSo))
+                                        && VS_LOAN.Core.Web.Helpers.GlobalData.User.UserType == (int)VS_LOAN.Core.Entity.UserTypeEnum.Sale)
                                     {
-                                        <a class="btn btn-sm btn-primary" id="btn_Temp">
-                                            Lưu tạm
+                                        <a class="btn btn-sm btn-primary" id="btn_Update">
+                                            Cập nhật
                                         </a>
                                         <a class="btn btn-sm btn-primary" id="btn_Save">
-                                            Cập nhật
+                                            Nộp hồ sơ
                                         </a>
                                     }
                                     else if (ViewBag.HoSo.MaTrangThai == (int)VS_LOAN.Core.Entity.TrangThaiHoSo.Nhap)
@@ -714,7 +715,14 @@
         });
     });
 
+    $('#btn_Update').click(function (e) {
+        e.preventDefault();
+        $('#btn_Save').data('submitToManager', false).trigger('click');
+    });
+
     $('#btn_Save').click(function (e) {
+        var submitToManager = $(this).data('submitToManager') !== false;
+        $(this).data('submitToManager', true);
         if ($('#txtHoTen').val() == "" || $('#txtHoTen').val() == undefined) {
             swal({
                 title: "@Html.Raw(Global.Message_Title)",
@@ -797,6 +805,7 @@
             'sanPhamVay': parseInt($('#ddlSanPhamVay').val()), 'tenCuaHang': $('#txtTenCuaHang').val(),
             'baoHiem': $('#cbbaohiem').is(":checked"), 'thoiHanVay': parseInt($('#spnThoiHanVay').val()),
             'ghiChu': $('#txtGhiChu').val(), 'trangThai': trangthai,
+            'submitToManager': submitToManager,
             'soTienVay': $('#txtTienDeNghiVay').val().replace(/\./g, ''),
             'birthDayStr': $('#txtBirhDay').val(),
             'cmndDayStr': $('#txtCmndDay').val(),

@@ -17,29 +17,22 @@
     <div class="page-content" id="panel_body">
         <div class="row">
             <div class="col-xs-12">
-                <form class="form-horizontal" role="form">
-                    <div class="space-4"></div>
+                <form class="app-filter-panel app-company-filter" role="search">
                     <div class="form-group">
-
-                        <label class="col-sm-1  col-xs-12 control-label no-padding-right" for="form-field-1">Tìm kiếm</label>
-                        <div class="col-sm-5 col-xs-12 ">
-                            <input type="text" class="form-control" id="txtFreeText" placeholder="Tìm kiếm" />
+                        <label class="col-sm-2 col-xs-12 control-label no-padding-right" for="txtFreeText">Tìm công ty</label>
+                        <div class="col-sm-7 col-xs-12">
+                            <input type="text" class="form-control" id="txtFreeText" placeholder="Nhập tên công ty hoặc mã số thuế" />
                         </div>
-
-                    </div>
-                    <div class="form-group text-right">
-                        <div class="col-xs-12 ">
-                            <a class="btn btn-primary" id="btn_search">
-                                Tìm kiếm
-                            </a>
-                            <a class="btn btn-primary" href="/Company/AddNew">
-                                Thêm mới
+                        <div class="col-sm-3 col-xs-12 app-company-filter-actions">
+                            <button type="button" class="btn btn-primary" id="btn_search">
+                                <i class="fa fa-search"></i> Tìm kiếm
+                            </button>
+                            <a class="btn btn-success" href="/Company/AddNew">
+                                <i class="fa fa-plus"></i> Thêm mới
                             </a>
                         </div>
                     </div>
-
                 </form>
-                <hr>
             </div>
         </div>
         <div class="row">
@@ -47,10 +40,11 @@
                 <div class="clearfix">
                     <div class="pull-right tableTools-container"></div>
                 </div>
-                <div class="table-header">
-                    Danh sách hồ sơ
-                </div>
-                <div class="dataTables_wrapper form-inline no-footer">
+                <div class="app-table-card">
+                    <div class="table-header">
+                        Danh sách công ty
+                    </div>
+                    <div class="dataTables_wrapper form-inline no-footer">
                     <div class="row">
                         <div class="col-xs-6">
                             <label>
@@ -64,10 +58,10 @@
                             </label>
                         </div>
                     </div>
-                </div>
+                    </div>
                 <!-- div.table-responsive -->
                 <!-- div.dataTables_borderWrap -->
-                <div class="col">
+                    <div class="col">
                     <div class="report-table-custom--overflow">
                         <table id="dtSource" class="report-table-custom table table-striped table-bordered table-hover">
                             <thead class="table-header">
@@ -85,6 +79,7 @@
                             </thead>
                             <tbody></tbody>
                         </table>
+                    </div>
                     </div>
                 </div>
                 <div class="clearfix" />
