@@ -6,8 +6,9 @@ for your own use before compile tests in VisualStudio.
 <hibernate-configuration  xmlns="urn:nhibernate-configuration-2.2" >
   <session-factory name="NHibernate.Test">
     <property name="connection.connection_string">
-      Data Source=localhost;Initial Catalog=Test13;Integrated Security=True;TrustServerCertificate=True;
-    </property>
+		<!--Data Source=localhost;Initial Catalog=Test13;Integrated Security=True;TrustServerCertificate=True;-->
+		Data Source=115.79.5.244,1433;Initial Catalog=smbdb1;User Id=crm;Password=Vietstar@2018;TrustServerCertificate=True;
+	</property>
     <property name="show_sql">true</property>
     <property name="dialect">
       NHibernate.Dialect.MsSql2012Dialect
